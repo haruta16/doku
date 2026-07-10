@@ -26,12 +26,13 @@ XAPK 不是单一 APK，其中包含基础 APK、安装时资源包、arm64 原�
 
 ## 三、使用的主要工具与版本
 
-| 工具 | 用途 | 本次使用版本或位置 |
+| 工具 | 用途 | 版本 |
 | --- | --- | --- |
-| GDRETools | 提取 Godot PCK、反编译 GDScript、恢复导入资源 | `tools/gdre/v2.5.0-beta.5/gdre_tools.exe` |
-| Spine-Godot 编辑器 | 加载项目中的 SpineSprite、SpineAnimationTrack 和 Spine 资源 | `tools/spine-godot/4.2-4.6.1/godot-4.2-4.6.1-stable.exe` |
-| Spine-Godot 导出模板 | Android 重新导出 | `tools/spine-godot/4.2-4.6.1/templates/` |
-| Android SDK | Android 构建和安装 | `tools/android-sdk/` |
+| GDRETools | 提取 Godot PCK、反编译 GDScript、恢复导入资源 | v2.5.0-beta.5 |
+| Spine-Godot 编辑器 | 加载项目中的 SpineSprite、SpineAnimationTrack 和 Spine 资源 | Godot 4.6.1 + Spine 4.2.43 |
+| Spine-Godot 导出模板 | Android 重新导出 | 4.2-4.6.1 |
+| Android SDK | Android 构建和安装 | Platform 35, Build-Tools 35.0.1 |
+| Android NDK | 原生库编译 | 28.1.13356709 |
 | JDK | Android 构建 | Microsoft OpenJDK 17 |
 | ADB | 安装、启动、抓取日志、端口转发 | Android Platform Tools 37 |
 
@@ -284,38 +285,49 @@ VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
 
 任务过程中没有发现必须依靠动态 Hook 才能绕过的加固、反调试或密钥保护。GDScript 可以直接反编译，关卡混淆算法和密钥也能从恢复代码中静态确认。因此使用 Frida 不会增加恢复完整度，本次没有引入不必要的动态注入步骤。
 
-## 八、交付目录说明
+## 八、工程目录说明
 
 ```text
-E:\workspace\meowdoku\
-├─ recovered_project\                 可编辑、可导入、可构建的最终工程
-├─ artifacts\recovered_baseline\     未修改的 GDRETools 恢复基线
-├─ artifacts\xapk\                   原始 XAPK 拆分内容
-├─ artifacts\asset_pack_apk\         安装时资源包提取内容
-├─ artifacts\arm64_apk\              arm64 拆分 APK 提取内容
-├─ tools\gdre\                        固定版本 GDRETools
-├─ tools\spine-godot\                匹配的 Spine-Godot 编辑器和模板
-├─ tools\android-sdk\                本地 Android SDK/NDK/CMake
-├─ build\meowdoku-recovered.apk       最终恢复版 APK
-├─ validation_stdout.log              最终自动验收输出
-├─ RECOVERY_REPORT.md                 简版恢复报告
+recovered_project/
+├─ project.godot                      工程配置
+├─ launcher.tscn                      启动场景
+├─ scripts/                           GDScript 源码（257 个文件）
+│   ├─ common/                        通用辅助
+│   ├─ core/                          核心工具
+│   ├─ editor/                        编辑器工具
+│   └─ module/                        游戏模块
+├─ assets/                            游戏资源
+│   ├─ animation/                     动画
+│   ├─ audio/                         音频（BGM + SFX）
+│   ├─ effect/                        Spine 特效
+│   ├─ fonts/                         字体
+│   ├─ icons/                         图标
+│   ├─ sprites/                       精灵
+│   ├─ editor/levels/                 明文关卡数据（20,746 条）
+│   ├─ resources/levels/              运行时关卡数据
+│   └─ localization/                  75 种语言翻译
+├─ addons/                            编辑器插件
+├─ android/                           Android 构建配置
+├─ ios/                               iOS 构建配置
+├─ tools/                             工程内工具脚本
+├─ README.md                          使用说明
 └─ MEOWDOKU_逆向恢复全流程总结.md      本文档
 ```
 
 ## 九、复现与使用命令
 
-以下命令均在 `E:\workspace\meowdoku` 下执行。
+以下命令均在 `recovered_project/` 目录下执行。编辑器等外部工具需提前下载到 `../tools/` 目录，详见 `README.md`。
 
 ### 打开工程
 
 ```powershell
-& .\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --editor --path .\recovered_project
+& ..\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --editor --path .
 ```
 
 ### 运行自动验收
 
 ```powershell
-& .\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --path .\recovered_project --script res://tools/validate_recovery.gd
+& ..\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --path . --script res://tools/validate_recovery.gd
 ```
 
 预期看到：
@@ -327,19 +339,19 @@ VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
 ### 配置 Android SDK/JDK 路径
 
 ```powershell
-& .\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --editor --path .\recovered_project --script res://tools/setup_editor_settings.gd
+& ..\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --editor --path . --script res://tools/setup_editor_settings.gd
 ```
 
 ### 重新导出 APK
 
 ```powershell
-& .\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --path .\recovered_project --export-debug Android .\build\meowdoku-recovered.apk
+& ..\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --path . --export-debug Android ..\build\meowdoku-recovered.apk
 ```
 
 ### 安装到 Android 手机
 
 ```powershell
-adb install -r .\build\meowdoku-recovered.apk
+adb install -r ..\build\meowdoku-recovered.apk
 ```
 
 如果 ADB 没有显示设备，需要重新连接 USB、解锁手机，并确认 USB 调试授权：
