@@ -1,0 +1,2555 @@
+[gd_scene format=3 uid="uid://suhl6qvpas1v"]
+
+[ext_resource type="Texture2D" uid="uid://kv5mu1mumvs1" path="res://assets/effect/texture/glow/et_glow_002.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bw41xxl3yvyo" path="res://assets/effect/texture/rainbow/et_rainbow_001.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bkvp8og7hwo1h" path="res://assets/sprites/encourage/ui_mao_glc_pic_01.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dtjxthi0v1cut" path="res://assets/sprites/encourage/ui_mao_glc_pic_02.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://de8ncl6uvyomv" path="res://assets/sprites/encourage/ui_mao_glc_pic_03.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bq3tlr2mywv6i" path="res://assets/sprites/encourage/ui_mao_glc_pic_04.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://02w45r1m3eh3" path="res://assets/sprites/encourage/ui_mao_glc_pic_05.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b0d50uiai8xb7" path="res://assets/sprites/encourage/ui_mao_glc_pic_06.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://dkt856rf7vkpi" path="res://assets/sprites/encourage/ui_mao_glc_pic_01a.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://cy4q3fflqlpoi" path="res://assets/sprites/encourage/ui_mao_glc_pic_02a.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://b48bwt5vjuqyf" path="res://assets/sprites/encourage/ui_mao_glc_pic_03a.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://bwfh2ph67x3ee" path="res://assets/sprites/encourage/ui_mao_glc_pic_04a.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://g1h1bdqn22dm" path="res://assets/sprites/encourage/ui_mao_glc_pic_05a.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://dbl4x05qmogjw" path="res://assets/sprites/encourage/ui_mao_glc_pic_06a.png" id="16"]
+
+[sub_resource type="Curve" id="Curve_j6au7"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.16329704, 0.86072266), 0.4508511, 0.4508511, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_acu2v"]
+_limits = [0.0, 6.0, 0.0, 1.0]
+_data = [Vector2(0, 2.6811736), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="Gradient" id="Gradient_b8ll0"]
+offsets = PackedFloat32Array(0, 0.28782287, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_repx4"]
+offsets = PackedFloat32Array(0, 0.28782287, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_3riox"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.32037324, -0.7799163), 0.0, 0.0, 0, 0, Vector2(0.3265941, -0.00090789795), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_f2ajt"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1e-05, 0.49564892), 0.0, 0.0, 0, 0, Vector2(0.08540371, 1), -0.014455572, -0.014455572, 0, 0, Vector2(0.30482113, 0.61993825), -0.23037542, -0.23037542, 0, 0, Vector2(0.44409937, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0, Vector2(1, 0.41316164), 0.0, 0.0, 0, 0]
+point_count = 7
+
+[sub_resource type="Gradient" id="Gradient_047g3"]
+offsets = PackedFloat32Array(0.004950495, 0.47131148, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.41085273, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_acu2v"]
+offsets = PackedFloat32Array(0.14876033)
+colors = PackedColorArray(0.47369397, 0.74751675, 1, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_6wwm6"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_8s8ty"]
+offsets = PackedFloat32Array(0.7982301)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_wo4a4"]
+offsets = PackedFloat32Array(0.78547853)
+colors = PackedColorArray(1, 0.7180653, 0.46492523, 1)
+
+[sub_resource type="Gradient" id="Gradient_hju1s"]
+offsets = PackedFloat32Array(0.79646015)
+colors = PackedColorArray(1, 0.7711986, 0.56576514, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_047g3"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_5lknn"]
+offsets = PackedFloat32Array(0.004950495, 0.42975205, 0.70413226, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.36578894, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_m8jff"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.8980392, 0.58431375, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_4pcxg"]
+offsets = PackedFloat32Array(0.75867766)
+colors = PackedColorArray(0.9490196, 0.7882353, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_4ivt6"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 0.52177143, 0.42985052, 1)
+
+[sub_resource type="Gradient" id="Gradient_j6au7"]
+offsets = PackedFloat32Array(0.75867766)
+colors = PackedColorArray(1, 0.7961123, 0.6709894, 1)
+
+[sub_resource type="Gradient" id="Gradient_oo86q"]
+offsets = PackedFloat32Array(0, 0.28782287, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_oh2b2"]
+offsets = PackedFloat32Array(0, 0.24958678, 0.45123968, 0.7933884)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.9665654, 1, 1, 1, 0)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_exmdh"]
+
+[sub_resource type="Gradient" id="Gradient_bpc41"]
+offsets = PackedFloat32Array(0.21946903, 0.7787611)
+colors = PackedColorArray(0.8999927, 0.5833025, 1, 1, 0.57891816, 0.7148354, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_qknih"]
+offsets = PackedFloat32Array(0.22654867, 0.7787611)
+colors = PackedColorArray(0.94944805, 0.7893666, 1, 1, 0.6753737, 0.7801569, 1, 1)
+
+[sub_resource type="Animation" id="Animation_oh2b2"]
+resource_name = "Encourage01"
+length = 1.0166667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.7, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6083958, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(2, 2, 0, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.5892639, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0166667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("5"), ExtResource("5")]
+}
+
+[sub_resource type="Animation" id="Animation_bpc41"]
+resource_name = "Encourage02"
+length = 1.0166667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.68333334, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6083958, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.5892639, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0166683),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("6"), ExtResource("6")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Star_2_alp:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_2_add:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_oo86q"]
+resource_name = "Encourage03"
+length = 1.0166667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.68333334, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6083958, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.5892639, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0166683),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("7"), ExtResource("7")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_alp:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_add:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_alp2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_add2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_5lknn"]
+resource_name = "Encourage"
+length = 1.0333333
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.7, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6785463, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.68492365, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("8"), ExtResource("8")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_4_add:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_alp:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_add:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_alp2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_add2:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_4_alp:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_q1j5l"]
+resource_name = "Encourage05"
+length = 1.0333333
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.7, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6785463, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.68492365, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("9"), ExtResource("9")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_alp:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_add:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_alp2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_add2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_5_add:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_5_alp:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_4ivt6"]
+resource_name = "Encourage05"
+length = 1.0666667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.71666664, 1.0666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.66579163, 1.61, -0.02777778, 0, 0.055555552, 0, 1.05, -0.055555552, 0, 0.10000001, 0, 1.2, -0.10000001, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.25, 0.55)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6594143, 1.61, -0.02777778, 0, 0.055555552, 0, 1.05, -0.055555552, 0, 0.10000001, 0, 1.2, -0.10000001, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.25, 0.55)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("10"), ExtResource("10")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_6_add:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_alp_1:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_alp_2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_add_1:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_add_2:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_alp:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_add:emitting")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_alp2:emitting")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_add2:emitting")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_6_alp:emitting")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_qknih"]
+resource_name = "Encourage01_2"
+length = 1.0166667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.7, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6083958, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.5892639, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0166667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("11"), ExtResource("11")]
+}
+
+[sub_resource type="Animation" id="Animation_repx4"]
+resource_name = "Encourage02_2"
+length = 1.0166667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.68333334, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6083958, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.5892639, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0166683),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("12"), ExtResource("12")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Star_2_alp:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_2_add:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_m8jff"]
+resource_name = "Encourage03_2"
+length = 1.0166667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.68333334, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6083958, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.5892639, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.08888888, 0, 1.2, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.5)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0166683),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("13"), ExtResource("13")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_alp:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_add:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_alp2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_add2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_4pcxg"]
+resource_name = "Encourage04_2"
+length = 1.0333333
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.7, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6785463, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.68492365, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("14"), ExtResource("14")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_4_add:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_alp:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_add:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_alp2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_add2:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_4_alp:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.017282663, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_8s8ty"]
+resource_name = "Encourage05_2"
+length = 1.0333333
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.7, 1.0333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6785463, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.68492365, 1.61, -0.02777778, 0, 0.050000004, 0, 1.05, -0.050000004, 0, 0.09444444, 0, 1.2, -0.09444444, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.23333333, 0.51666665)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.0333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("15"), ExtResource("15")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_alp:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_add:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_alp2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_add2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_5_add:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_5_alp:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_hju1s"]
+resource_name = "Encourage06_2"
+length = 1.0666667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.71666664, 1.0666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.66579163, 1.61, -0.02777778, 0, 0.055555552, 0, 1.05, -0.055555552, 0, 0.10000001, 0, 1.2, -0.10000001, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.25, 0.55)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EncourageImage:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 2, 2, 2),
+"points": PackedFloat32Array(0.508, 0, 0, 0.016666668, 0.6594143, 1.61, -0.02777778, 0, 0.055555552, 0, 1.05, -0.055555552, 0, 0.10000001, 0, 1.2, -0.10000001, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.083333336, 0.25, 0.55)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EncourageImage:texture")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [ExtResource("16"), ExtResource("16")]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_6_add:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_alp_1:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_alp_2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_add_1:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_add_2:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_alp:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_add:emitting")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_alp2:emitting")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_add2:emitting")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_6_alp:emitting")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0, 0.016666668, 1.05),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="Resource" id="Resource_m8jff"]
+metadata/__load_path__ = "res://assets/sprites/combo_encourage/ui_gulic_pic_04.png"
+
+[sub_resource type="Animation" id="Animation_j6au7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Encourage/EncourageImage:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Encourage/EncourageImage:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("Resource_m8jff")]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Encourage/EffectEmcpirageParticles/Star_2_alp:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Encourage/EffectEmcpirageParticles/Star_2_add:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_alp:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_add:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_alp2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Encourage/EffectEmcpirageParticles/Star_3_add2:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_4_add:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_alp:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_add:emitting")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_alp2:emitting")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("Encourage/EffectEmcpirageParticles/Star_4_add2:emitting")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_4_alp:emitting")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_alp:emitting")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_add:emitting")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_alp2:emitting")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("Encourage/EffectEmcpirageParticles/Star_5_add2:emitting")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_5_add:emitting")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/19/type = "value"
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_5_alp:emitting")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/20/type = "value"
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/path = NodePath("Encourage/EffectEmcpirageParticles/Glow_6_add:emitting")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/21/type = "value"
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_alp_1:emitting")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/22/type = "value"
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_alp_2:emitting")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/23/type = "value"
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_add_1:emitting")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/24/type = "value"
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/path = NodePath("Encourage/EffectEmcpirageParticles/Rainbow_6_add_2:emitting")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/25/type = "value"
+tracks/25/imported = false
+tracks/25/enabled = true
+tracks/25/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_alp:emitting")
+tracks/25/interp = 1
+tracks/25/loop_wrap = true
+tracks/25/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/26/type = "value"
+tracks/26/imported = false
+tracks/26/enabled = true
+tracks/26/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_add:emitting")
+tracks/26/interp = 1
+tracks/26/loop_wrap = true
+tracks/26/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/27/type = "value"
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_alp2:emitting")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Encourage/EffectEmcpirageParticles/Star_6_add2:emitting")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/29/type = "value"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Encourage/EffectEmcpirageGlowAlp/Glow_6_alp:emitting")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b8ll0"]
+_data = {
+&"Encourage01_1": SubResource("Animation_oh2b2"),
+&"Encourage01_2": SubResource("Animation_bpc41"),
+&"Encourage01_3": SubResource("Animation_oo86q"),
+&"Encourage01_4": SubResource("Animation_5lknn"),
+&"Encourage01_5": SubResource("Animation_q1j5l"),
+&"Encourage01_6": SubResource("Animation_4ivt6"),
+&"Encourage02_1": SubResource("Animation_qknih"),
+&"Encourage02_2": SubResource("Animation_repx4"),
+&"Encourage02_3": SubResource("Animation_m8jff"),
+&"Encourage02_4": SubResource("Animation_4pcxg"),
+&"Encourage02_5": SubResource("Animation_8s8ty"),
+&"Encourage02_6": SubResource("Animation_hju1s"),
+&"RESET": SubResource("Animation_j6au7")
+}
+
+[node name="鼓励此+combo" type="Node2D" unique_id=181493257]
+
+[node name="Encourage" type="Control" parent="." unique_id=586635824]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -221.0
+offset_top = -66.0
+offset_right = 229.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.833, 0.833)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="EffectEmcpirageGlowAlp" type="Control" parent="Encourage" unique_id=1155090494]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Glow_4_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageGlowAlp" unique_id=1306234784]
+modulate = Color(1, 1, 1, 0.47058824)
+position = Vector2(239, 57)
+emitting = false
+amount = 2
+texture = ExtResource("1")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("Curve_j6au7")
+split_scale = true
+scale_curve_x = SubResource("Curve_acu2v")
+scale_curve_y = null
+color = Color(1, 0.24000001, 0.74666655, 0.23529412)
+color_ramp = SubResource("Gradient_b8ll0")
+
+[node name="Glow_5_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageGlowAlp" unique_id=722861021]
+modulate = Color(1, 1, 1, 0.47058824)
+position = Vector2(239, 57)
+emitting = false
+amount = 2
+texture = ExtResource("1")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_min = 0.8
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_j6au7")
+split_scale = true
+scale_curve_x = SubResource("Curve_acu2v")
+scale_curve_y = null
+color = Color(1, 0.05464977, 0, 0.47058824)
+color_ramp = SubResource("Gradient_repx4")
+
+[node name="Glow_6_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageGlowAlp" unique_id=1884655920]
+modulate = Color(1, 1, 1, 0.47058824)
+position = Vector2(239, 57)
+emitting = false
+amount = 2
+texture = ExtResource("1")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("Curve_j6au7")
+split_scale = true
+scale_curve_x = SubResource("Curve_acu2v")
+scale_curve_y = null
+color = Color(1, 0.24132377, 0.7471078, 0.47058824)
+color_ramp = SubResource("Gradient_b8ll0")
+
+[node name="EncourageImage" type="Sprite2D" parent="Encourage" unique_id=1551105665]
+self_modulate = Color(1, 1, 1, 0)
+position = Vector2(226, 63)
+scale = Vector2(1.2, 1.2)
+
+[node name="EffectEmcpirageParticles" type="Control" parent="Encourage" unique_id=1046467429]
+anchors_preset = 0
+offset_left = 229.0
+offset_top = 47.0
+offset_right = 269.0
+offset_bottom = 87.0
+
+[node name="Star_2_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=2147326756]
+position = Vector2(-30, 19)
+emitting = false
+amount = 2
+texture = ExtResource("2")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270433
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(300, 80)
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 0.5
+radial_accel_min = 2800.0
+radial_accel_max = 5600.0
+radial_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_047g3")
+color_initial_ramp = SubResource("Gradient_acu2v")
+
+[node name="Star_2_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1111249331]
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(-30, 19)
+emitting = false
+amount = 2
+texture = ExtResource("3")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270433
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(300, 80)
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 0.5
+radial_accel_min = 2800.0
+radial_accel_max = 5600.0
+radial_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color = Color(1, 1, 1, 0.3137255)
+color_ramp = SubResource("Gradient_047g3")
+color_initial_ramp = SubResource("Gradient_8s8ty")
+
+[node name="Star_3_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1541222130]
+position = Vector2(106, 59)
+emitting = false
+amount = 2
+texture = ExtResource("2")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957268937
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(120, 75)
+direction = Vector2(0, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.05
+initial_velocity_max = 0.05
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_047g3")
+color_initial_ramp = SubResource("Gradient_wo4a4")
+
+[node name="Star_3_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=914960953]
+modulate = Color(1, 1, 1, 0.8627451)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(106, 59)
+emitting = false
+amount = 2
+texture = ExtResource("3")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957268937
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(120, 75)
+direction = Vector2(0, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.05
+initial_velocity_max = 0.05
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color = Color(1, 1, 1, 0.47058824)
+color_ramp = SubResource("Gradient_047g3")
+color_initial_ramp = SubResource("Gradient_hju1s")
+
+[node name="Star_3_alp2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1264448501]
+position = Vector2(-92, 23)
+emitting = false
+amount = 2
+texture = ExtResource("2")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957269064
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(120, 75)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.05
+initial_velocity_max = 0.05
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_047g3")
+color_initial_ramp = SubResource("Gradient_wo4a4")
+
+[node name="Star_3_add2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1944001283]
+modulate = Color(1, 1, 1, 0.8627451)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(-92, 23)
+emitting = false
+amount = 2
+texture = ExtResource("3")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957269064
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(120, 75)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.05
+initial_velocity_max = 0.05
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color = Color(1, 1, 1, 0.47058824)
+color_ramp = SubResource("Gradient_047g3")
+color_initial_ramp = SubResource("Gradient_hju1s")
+
+[node name="Glow_4_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1617385857]
+modulate = Color(1, 1, 1, 0.50980395)
+material = SubResource("CanvasItemMaterial_047g3")
+position = Vector2(-11, 8)
+emitting = false
+amount = 2
+texture = ExtResource("1")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_min = 0.93
+scale_amount_max = 0.93
+scale_amount_curve = SubResource("Curve_j6au7")
+split_scale = true
+scale_curve_x = SubResource("Curve_acu2v")
+scale_curve_y = null
+color = Color(1, 0, 0.6666665, 0.23529412)
+color_ramp = SubResource("Gradient_b8ll0")
+
+[node name="Star_4_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1895060737]
+position = Vector2(83, 24)
+emitting = false
+amount = 3
+texture = ExtResource("2")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957271473
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(156, 90)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_m8jff")
+
+[node name="Star_4_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=117630447]
+modulate = Color(1, 1, 1, 0.50980395)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(83, 24)
+emitting = false
+amount = 3
+texture = ExtResource("3")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957271473
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(156, 90)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_4pcxg")
+
+[node name="Star_4_alp2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=829744665]
+position = Vector2(-108, 26)
+emitting = false
+amount = 3
+texture = ExtResource("2")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957271473
+lifetime_randomness = 0.12
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(120, 90)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_m8jff")
+
+[node name="Star_4_add2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1411883729]
+modulate = Color(1, 1, 1, 0.47058824)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(-108, 26)
+emitting = false
+amount = 3
+texture = ExtResource("3")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957271473
+lifetime_randomness = 0.12
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(120, 90)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_4pcxg")
+
+[node name="Star_5_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=306636735]
+position = Vector2(85, -10)
+emitting = false
+amount = 4
+texture = ExtResource("2")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270664
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(156, 90)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_4ivt6")
+
+[node name="Star_5_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=131739288]
+modulate = Color(1, 1, 1, 0.627451)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(85, -10)
+emitting = false
+amount = 4
+texture = ExtResource("3")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270664
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(156, 90)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_j6au7")
+
+[node name="Star_5_alp2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1805808516]
+position = Vector2(-85, 5)
+emitting = false
+amount = 4
+texture = ExtResource("2")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270715
+lifetime_randomness = 0.08
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(156, 90)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_4ivt6")
+
+[node name="Star_5_add2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1858618731]
+modulate = Color(1, 1, 1, 0.627451)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(-85, 5)
+emitting = false
+amount = 4
+texture = ExtResource("3")
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270715
+lifetime_randomness = 0.08
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(156, 90)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_j6au7")
+
+[node name="Glow_5_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1890150495]
+material = SubResource("CanvasItemMaterial_047g3")
+position = Vector2(-11, 8)
+emitting = false
+amount = 2
+texture = ExtResource("1")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_min = 0.93
+scale_amount_max = 0.93
+scale_amount_curve = SubResource("Curve_j6au7")
+split_scale = true
+scale_curve_x = SubResource("Curve_acu2v")
+scale_curve_y = null
+color = Color(1, 0.106847346, 0, 0.47058824)
+color_ramp = SubResource("Gradient_b8ll0")
+
+[node name="Rainbow_6_alp_1" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=594590406]
+modulate = Color(1, 1, 1, 0.7058824)
+position = Vector2(-142, 14)
+emitting = false
+amount = 1
+texture = ExtResource("4")
+lifetime = 0.85
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+scale_amount_min = 1.37
+scale_amount_max = 1.37
+scale_amount_curve = SubResource("Curve_j6au7")
+color = Color(1, 1, 1, 0.7058824)
+color_ramp = SubResource("Gradient_oo86q")
+
+[node name="Rainbow_6_alp_2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=807134543]
+modulate = Color(1, 1, 1, 0.7058824)
+position = Vector2(142, 14)
+emitting = false
+amount = 1
+texture = ExtResource("4")
+lifetime = 0.85
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+angle_min = 180.0
+angle_max = 180.0
+scale_amount_min = 1.37
+scale_amount_max = 1.37
+scale_amount_curve = SubResource("Curve_j6au7")
+color = Color(1, 1, 1, 0.7058824)
+color_ramp = SubResource("Gradient_oh2b2")
+
+[node name="Rainbow_6_add_1" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=422683452]
+modulate = Color(0, 0.34843564, 1, 1)
+material = SubResource("CanvasItemMaterial_047g3")
+position = Vector2(-142, 14)
+emitting = false
+amount = 1
+texture = ExtResource("4")
+lifetime = 0.85
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+scale_amount_min = 1.37
+scale_amount_max = 1.37
+scale_amount_curve = SubResource("Curve_j6au7")
+color = Color(1, 1, 1, 0.7058824)
+color_ramp = SubResource("Gradient_oo86q")
+
+[node name="Rainbow_6_add_2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1599314715]
+modulate = Color(0, 0.34843564, 1, 1)
+material = SubResource("CanvasItemMaterial_047g3")
+position = Vector2(144, 12)
+emitting = false
+amount = 1
+texture = ExtResource("4")
+lifetime = 0.85
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 100.0
+angle_min = 180.0
+angle_max = 180.0
+scale_amount_min = 1.37
+scale_amount_max = 1.37
+scale_amount_curve = SubResource("Curve_j6au7")
+color = Color(1, 1, 1, 0.7058824)
+color_ramp = SubResource("Gradient_oh2b2")
+
+[node name="Star_6_alp" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=685087695]
+material = SubResource("CanvasItemMaterial_exmdh")
+position = Vector2(138, 10)
+emitting = false
+amount = 5
+texture = ExtResource("2")
+lifetime = 0.95
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270460
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(185, 90)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_bpc41")
+
+[node name="Star_6_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=202697415]
+modulate = Color(1, 1, 1, 0.54901963)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(138, 10)
+emitting = false
+amount = 5
+texture = ExtResource("3")
+lifetime = 0.95
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270460
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(185, 90)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color = Color(1, 1, 1, 0.8509804)
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_qknih")
+
+[node name="Star_6_alp2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=867017346]
+material = SubResource("CanvasItemMaterial_exmdh")
+position = Vector2(-194, 7)
+emitting = false
+amount = 5
+texture = ExtResource("2")
+lifetime = 0.95
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270440
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(185, 90)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_bpc41")
+
+[node name="Star_6_add2" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=1497304294]
+modulate = Color(1, 1, 1, 0.54901963)
+material = SubResource("CanvasItemMaterial_6wwm6")
+position = Vector2(-194, 7)
+emitting = false
+amount = 5
+texture = ExtResource("3")
+lifetime = 0.95
+one_shot = true
+explosiveness = 0.65
+use_fixed_seed = true
+seed = 1957270440
+lifetime_randomness = 0.37
+fixed_fps = 60
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(185, 90)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 0.5
+linear_accel_min = 2800.0
+linear_accel_max = 4200.0
+linear_accel_curve = SubResource("Curve_3riox")
+scale_amount_min = 0.25
+scale_amount_max = 0.52
+scale_amount_curve = SubResource("Curve_f2ajt")
+color = Color(1, 1, 1, 0.8509804)
+color_ramp = SubResource("Gradient_5lknn")
+color_initial_ramp = SubResource("Gradient_qknih")
+
+[node name="Glow_6_add" type="CPUParticles2D" parent="Encourage/EffectEmcpirageParticles" unique_id=215999016]
+modulate = Color(1, 1, 1, 0.7058824)
+material = SubResource("CanvasItemMaterial_047g3")
+position = Vector2(-16, -9)
+emitting = false
+amount = 2
+texture = ExtResource("1")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("Curve_j6au7")
+split_scale = true
+scale_curve_x = SubResource("Curve_acu2v")
+scale_curve_y = null
+color = Color(1, 0.24132377, 0.7471078, 0.47058824)
+color_ramp = SubResource("Gradient_b8ll0")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1806049332]
+libraries/ = SubResource("AnimationLibrary_b8ll0")

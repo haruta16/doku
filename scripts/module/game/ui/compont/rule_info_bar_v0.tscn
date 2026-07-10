@@ -1,0 +1,205 @@
+[gd_scene format=3 uid="uid://cd1l2i70mtu74"]
+
+[ext_resource type="Texture2D" uid="uid://bflj20cut4jl6" path="res://assets/effect/texture/mask/et_mask_001.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://c8q6brpj155ft" path="res://assets/sprites/game/rule_highlight.png" id="2"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://15mmj0qwd3ml" path="res://assets/sprites/game/rule_diagram_color.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c4w1g8oxty023" path="res://assets/sprites/game/rule_diagram_line.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://c103h5x4imejn" path="res://assets/sprites/game/rule_diagram_touch.png" id="6"]
+
+[sub_resource type="StyleBoxFlat" id="sf_rules_outer"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+
+[sub_resource type="StyleBoxFlat" id="sf_rule_pill"]
+bg_color = Color(0.9843137, 0.95686275, 0.93333334, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[node name="RuleInfoBarV0" type="Control" unique_id=762604087]
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1080.0
+offset_bottom = 170.0
+
+[node name="Control" type="Control" parent="." unique_id=251566448]
+custom_minimum_size = Vector2(1080, 200)
+anchors_preset = 0
+offset_top = -14.0
+offset_right = 1080.0
+offset_bottom = 186.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Glow" type="NinePatchRect" parent="Control" unique_id=1209328736]
+modulate = Color(1, 0.58695984, 0, 1)
+layout_mode = 0
+offset_left = -12.0
+offset_top = -24.0
+offset_right = 1098.0
+offset_bottom = 226.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("1")
+region_rect = Rect2(0, 0, 256, 256)
+patch_margin_left = 120
+patch_margin_top = 117
+patch_margin_right = 116
+patch_margin_bottom = 116
+
+[node name="RulesBg" type="Panel" parent="Control" unique_id=396909778]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -504.0
+offset_top = -82.0
+offset_right = 504.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("sf_rules_outer")
+
+[node name="RulePill1" type="Panel" parent="Control" unique_id=2013923947]
+layout_mode = 1
+offset_left = 56.0
+offset_top = 40.0
+offset_right = 366.0
+offset_bottom = 160.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_rule_pill")
+
+[node name="RulePill2" type="Panel" parent="Control" unique_id=441318523]
+layout_mode = 1
+offset_left = 385.0
+offset_top = 40.0
+offset_right = 695.0
+offset_bottom = 160.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_rule_pill")
+
+[node name="RulePill3" type="Panel" parent="Control" unique_id=1380762424]
+layout_mode = 1
+offset_left = 714.0
+offset_top = 40.0
+offset_right = 1024.0
+offset_bottom = 160.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_rule_pill")
+
+[node name="RuleHighlight1" type="TextureRect" parent="Control" unique_id=8414203]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 46.0
+offset_top = 30.0
+offset_right = 376.0
+offset_bottom = 170.0
+mouse_filter = 2
+texture = ExtResource("2")
+
+[node name="RuleHighlight2" type="TextureRect" parent="Control" unique_id=1485130023]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 375.0
+offset_top = 30.0
+offset_right = 705.0
+offset_bottom = 170.0
+mouse_filter = 2
+texture = ExtResource("2")
+
+[node name="RuleHighlight3" type="TextureRect" parent="Control" unique_id=1279575683]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 704.0
+offset_top = 30.0
+offset_right = 1034.0
+offset_bottom = 170.0
+mouse_filter = 2
+texture = ExtResource("2")
+
+[node name="RuleLabel1" type="Label" parent="Control" unique_id=1030785257]
+layout_mode = 1
+offset_left = 56.0
+offset_top = 41.0
+offset_right = 366.0
+offset_bottom = 159.0
+theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_constants/line_spacing = -10
+theme_override_font_sizes/font_size = 36
+text = "GAME_RULE_ONE_PER_COLOR"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+script = ExtResource("3")
+
+[node name="RuleLabel2" type="Label" parent="Control" unique_id=156835570]
+layout_mode = 1
+offset_left = 386.0
+offset_top = 41.0
+offset_right = 696.0
+offset_bottom = 159.0
+theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_constants/line_spacing = -10
+theme_override_font_sizes/font_size = 36
+text = "GAME_RULE_ONE_PER_LINE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+script = ExtResource("3")
+
+[node name="RuleLabel3" type="Label" parent="Control" unique_id=1112577084]
+layout_mode = 1
+offset_left = 714.0
+offset_top = 40.0
+offset_right = 1024.0
+offset_bottom = 158.0
+theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_constants/line_spacing = -10
+theme_override_font_sizes/font_size = 36
+text = "GAME_RULE_NO_TOUCH"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+script = ExtResource("3")
+
+[node name="RuleDiagram1" type="TextureRect" parent="Control" unique_id=153970685]
+visible = false
+layout_mode = 0
+offset_left = 161.0
+offset_top = 50.0
+offset_right = 261.0
+offset_bottom = 150.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RuleDiagram2" type="TextureRect" parent="Control" unique_id=1519933676]
+visible = false
+layout_mode = 0
+offset_left = 490.0
+offset_top = 50.0
+offset_right = 590.0
+offset_bottom = 150.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RuleDiagram3" type="TextureRect" parent="Control" unique_id=1823064503]
+visible = false
+layout_mode = 0
+offset_left = 819.0
+offset_top = 50.0
+offset_right = 919.0
+offset_bottom = 150.0
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 5

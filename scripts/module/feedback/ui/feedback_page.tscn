@@ -1,0 +1,182 @@
+[gd_scene format=3 uid="uid://r61qg5m0xl8t"]
+
+[ext_resource type="Script" uid="uid://cyobiaxtmoovw" path="res://scripts/module/feedback/view/feedback_page.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="3"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="4"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="5"]
+
+[sub_resource type="StyleBoxFlat" id="sf_card"]
+bg_color = Color(1, 0.984, 0.969, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="sf_title_bg"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_content_bg"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="sf_input_bg"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_anim"]
+_data = {
+&"GenericPopup": ExtResource("5")
+}
+
+[node name="FeedbackPage" type="Control" unique_id=1446133297]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=735465581]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -540.0
+offset_right = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=211257626]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1000.0
+offset_right = 1000.0
+offset_bottom = 2600.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="Root" unique_id=580004001]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Card" type="Panel" parent="Root/Content" unique_id=1628542963]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -500.0
+offset_right = 450.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("sf_card")
+
+[node name="TitleBg" type="Panel" parent="Root/Content/Card" unique_id=1855294632]
+visible = false
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title_bg")
+
+[node name="TitleLabel" type="Label" parent="Root/Content/Card" unique_id=1919358241]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 900.0
+offset_bottom = 116.0
+theme_override_colors/font_color = Color(0.427, 0.325, 0.345, 1)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 86
+text = "FEEDBACK_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseBtn" type="TextureButton" parent="Root/Content/Card" unique_id=1602209023]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+texture_normal = ExtResource("3")
+
+[node name="ContentArea" type="Panel" parent="Root/Content/Card" unique_id=1524524044]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 850.0
+offset_bottom = 690.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_content_bg")
+
+[node name="InputText" type="TextEdit" parent="Root/Content/Card/ContentArea" unique_id=865161301]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 770.0
+offset_bottom = 460.0
+theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_colors/font_placeholder_color = Color(0.5764706, 0.3529412, 0.3529412, 0.7019608)
+theme_override_font_sizes/font_size = 70
+theme_override_styles/normal = SubResource("sf_input_bg")
+theme_override_styles/focus = SubResource("sf_input_bg")
+placeholder_text = "FEEDBACK_DESC"
+wrap_mode = 1
+
+[node name="SubmitBtn" parent="Root/Content/Card" unique_id=256697999 instance=ExtResource("4")]
+visible = false
+layout_mode = 0
+offset_left = 56.0
+offset_top = 681.0
+offset_right = 840.0
+offset_bottom = 939.0
+btn_text = "FEEDBACK_SUBMIT"
+show_difficult = false
+
+[node name="SubmitBtnDisabled" parent="Root/Content/Card" unique_id=456187696 instance=ExtResource("4")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 681.0
+offset_right = 840.0
+offset_bottom = 939.0
+bg_color = Color(0.7058824, 0.7058824, 0.7058824, 1)
+shadow_color = Color(0.7058824, 0.7058824, 0.7058824, 1)
+btn_text = "FEEDBACK_SUBMIT"
+show_difficult = false
+show_shadow = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=580004002]
+libraries/ = SubResource("AnimationLibrary_anim")
+
+[connection signal="pressed" from="Root/Content/Card/CloseBtn" to="." method="_on_close_pressed"]
+[connection signal="tag_pressed" from="Root/Content/Card/SubmitBtn" to="." method="_on_submit_pressed"]

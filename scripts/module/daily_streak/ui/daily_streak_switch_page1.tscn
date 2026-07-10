@@ -1,0 +1,374 @@
+[gd_scene format=3 uid="uid://cnux0rmvsaqf7"]
+
+[ext_resource type="Script" uid="uid://b5lwd11vc3ab8" path="res://scripts/module/daily_streak/view/daily_streak_switch_page1.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://chartedoeymwu" path="res://assets/sprites/daily_streak/daily_streak_switch_page1/dialog_frame.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dupq3l7hgqwc7" path="res://assets/sprites/common/shape_81.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="5"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="6"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="7"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="8"]
+[ext_resource type="Texture2D" uid="uid://kvlehlqmxfkb" path="res://assets/sprites/daily_streak/daily_streak_switch_page1/btn_frame.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b7w7ijun1f4k8" path="res://assets/sprites/daily_streak/daily_streak_switch_page1/tool_cat.png" id="10"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="11"]
+[ext_resource type="Texture2D" uid="uid://dmk4q5u3ld82m" path="res://assets/sprites/daily_streak/daily_streak_switch_page1/hint_icon.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://c13c13ngw57wp" path="res://assets/sprites/common/small_star.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://bo2s741omuaag" path="res://assets/sprites/common/big_star.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://dfgojvl84jec2" path="res://assets/sprites/common/love_heart.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="16"]
+
+[sub_resource type="Animation" id="Animation_reset1"]
+resource_name = "RESET"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_anim1"]
+_data = {
+&"GenericPopup": ExtResource("2"),
+&"RESET": SubResource("Animation_reset1")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ho70o"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0f4om"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[node name="DailyStreakSwitchPage1" type="Control" unique_id=1355361945]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1039794059]
+libraries/ = SubResource("AnimationLibrary_anim1")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=1235221152]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="." unique_id=1393707803]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -1200.0
+offset_right = 540.0
+offset_bottom = 1200.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CommonDialog" type="Control" parent="Content" unique_id=1067490384]
+anchors_preset = 0
+offset_top = 263.0
+offset_right = 1080.0
+offset_bottom = 1790.0
+
+[node name="DialogFrame" type="Control" parent="Content/CommonDialog" unique_id=844330540]
+anchors_preset = 0
+offset_left = 90.0
+offset_top = 347.0
+offset_right = 990.0
+offset_bottom = 1527.0
+
+[node name="Visual" type="TextureRect" parent="Content/CommonDialog/DialogFrame" unique_id=1320548342]
+layout_mode = 0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 914.0
+offset_bottom = 1198.0
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="@Panel@25344" type="Panel" parent="Content/CommonDialog" unique_id=125723374]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 837.0
+offset_right = 940.0
+offset_bottom = 1217.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ho70o")
+
+[node name="DialogTitleFrame" type="Control" parent="Content/CommonDialog" unique_id=427608160]
+anchors_preset = 0
+offset_left = 90.0
+offset_top = 347.0
+offset_right = 990.0
+offset_bottom = 477.0
+
+[node name="DialogTitleFrame" type="Panel" parent="Content/CommonDialog/DialogTitleFrame" unique_id=88498668]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_0f4om")
+
+[node name="CloseBtn" type="Button" parent="Content/CommonDialog" unique_id=994833778]
+layout_mode = 0
+offset_left = 870.0
+offset_top = 367.0
+offset_right = 970.0
+offset_bottom = 467.0
+flat = true
+
+[node name="Shape" type="Control" parent="Content/CommonDialog/CloseBtn" unique_id=1715171274]
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 27.0
+offset_right = 73.666664
+offset_bottom = 73.66667
+mouse_filter = 2
+
+[node name="Visual" type="TextureRect" parent="Content/CommonDialog/CloseBtn/Shape" unique_id=483377511]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 51.666656
+offset_bottom = 51.666748
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="Btn" parent="Content/CommonDialog" unique_id=407271969 instance=ExtResource("5")]
+layout_mode = 0
+offset_left = 146.0
+offset_top = 1218.0
+offset_right = 930.0
+offset_bottom = 1476.0
+btn_text = "AD_REWARD_RESTORED_COLLECT"
+show_difficult = false
+
+[node name="DialogTitle" type="Control" parent="Content/CommonDialog" unique_id=1301029788]
+anchors_preset = 0
+offset_left = 230.0
+offset_top = 363.0
+offset_right = 850.0
+offset_bottom = 463.0
+
+[node name="PopupWindowTitleTxt" type="Label" parent="Content/CommonDialog/DialogTitle" unique_id=1539235196]
+layout_mode = 0
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 635.0
+offset_bottom = 115.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -25
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 86
+text = "DAILY_STREAK_MAJOR_UPDATE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 86
+min_font_size = 50
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="PopUpText" type="Control" parent="Content/CommonDialog" unique_id=1488494027]
+anchors_preset = 0
+offset_left = 190.0
+offset_top = 919.0
+offset_right = 910.0
+offset_bottom = 1137.0
+
+[node name="PopUpTextTxt" type="Label" parent="Content/CommonDialog/PopUpText" unique_id=901721771]
+layout_mode = 0
+offset_top = -45.0
+offset_right = 720.0
+offset_bottom = 263.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -2
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 54
+text = "DAILY_STREAK_SWITCH1_DESC"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ToolGroup" type="Control" parent="Content/CommonDialog" unique_id=337853281]
+anchors_preset = 0
+offset_top = 547.0
+offset_right = 1080.0
+offset_bottom = 773.0
+
+[node name="ToolGroup" type="Control" parent="Content/CommonDialog/ToolGroup" unique_id=516458929]
+anchors_preset = 0
+offset_left = 300.0
+offset_right = 470.0
+offset_bottom = 226.0
+
+[node name="BtnFrame" type="Control" parent="Content/CommonDialog/ToolGroup/ToolGroup" unique_id=1619621274]
+anchors_preset = 0
+offset_right = 170.0
+offset_bottom = 170.0
+
+[node name="BtnFrame" type="Control" parent="Content/CommonDialog/ToolGroup/ToolGroup/BtnFrame" unique_id=4373977]
+anchors_preset = 0
+offset_right = 170.0
+offset_bottom = 170.0
+
+[node name="Visual" type="TextureRect" parent="Content/CommonDialog/ToolGroup/ToolGroup/BtnFrame/BtnFrame" unique_id=1130854838]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 190.0
+offset_bottom = 198.0
+texture = ExtResource("9")
+expand_mode = 1
+
+[node name="ToolIcon" type="Control" parent="Content/CommonDialog/ToolGroup/ToolGroup" unique_id=777995579]
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 138.0
+offset_bottom = 138.0
+
+[node name="ToolCatImg" type="TextureRect" parent="Content/CommonDialog/ToolGroup/ToolGroup/ToolIcon" unique_id=1501645357]
+layout_mode = 0
+offset_right = 106.0
+offset_bottom = 106.0
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="ToolCount" type="Control" parent="Content/CommonDialog/ToolGroup/ToolGroup" unique_id=404402666]
+anchors_preset = 0
+offset_left = 47.0
+offset_top = 202.0
+offset_right = 124.0
+offset_bottom = 250.0
+
+[node name="X1Txt" type="Label" parent="Content/CommonDialog/ToolGroup/ToolGroup/ToolCount" unique_id=965978131]
+layout_mode = 0
+offset_right = 77.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -63
+theme_override_fonts/font = ExtResource("11")
+theme_override_font_sizes/font_size = 70
+text = "x2"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="@Control@25345" type="Control" parent="Content/CommonDialog/ToolGroup" unique_id=1277957003]
+anchors_preset = 0
+offset_left = 610.0
+offset_right = 780.0
+offset_bottom = 226.0
+
+[node name="BtnFrame" type="Control" parent="Content/CommonDialog/ToolGroup/@Control@25345" unique_id=542079466]
+anchors_preset = 0
+offset_right = 170.0
+offset_bottom = 170.0
+
+[node name="BtnFrame" type="Control" parent="Content/CommonDialog/ToolGroup/@Control@25345/BtnFrame" unique_id=956320710]
+anchors_preset = 0
+offset_right = 170.0
+offset_bottom = 170.0
+
+[node name="Visual" type="TextureRect" parent="Content/CommonDialog/ToolGroup/@Control@25345/BtnFrame/BtnFrame" unique_id=1272665972]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 190.0
+offset_bottom = 198.0
+texture = ExtResource("9")
+expand_mode = 1
+
+[node name="ToolIcon" type="Control" parent="Content/CommonDialog/ToolGroup/@Control@25345" unique_id=1554739535]
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 138.0
+offset_bottom = 138.0
+
+[node name="HintIconImg" type="TextureRect" parent="Content/CommonDialog/ToolGroup/@Control@25345/ToolIcon" unique_id=372884817]
+layout_mode = 0
+offset_left = 20.0
+offset_right = 87.0
+offset_bottom = 106.0
+texture = ExtResource("12")
+expand_mode = 1
+
+[node name="ToolCount" type="Control" parent="Content/CommonDialog/ToolGroup/@Control@25345" unique_id=1379443108]
+anchors_preset = 0
+offset_left = 47.0
+offset_top = 202.0
+offset_right = 124.0
+offset_bottom = 250.0
+
+[node name="X1Txt" type="Label" parent="Content/CommonDialog/ToolGroup/@Control@25345/ToolCount" unique_id=2072875595]
+layout_mode = 0
+offset_right = 77.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -63
+theme_override_fonts/font = ExtResource("11")
+theme_override_font_sizes/font_size = 70
+text = "x2"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CatDialog" type="Control" parent="Content/CommonDialog" unique_id=1568772615]
+anchors_preset = 0
+offset_left = 247.0
+offset_right = 832.0
+offset_bottom = 407.0
+
+[node name="SmallStarImg" type="TextureRect" parent="Content/CommonDialog/CatDialog" unique_id=1067572813]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 280.0
+offset_right = 81.0
+offset_bottom = 325.0
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="BigStarImg" type="TextureRect" parent="Content/CommonDialog/CatDialog" unique_id=1655689300]
+layout_mode = 0
+offset_left = 453.0
+offset_right = 497.0
+offset_bottom = 53.0
+texture = ExtResource("14")
+expand_mode = 1
+
+[node name="LoveHeartImg" type="TextureRect" parent="Content/CommonDialog/CatDialog" unique_id=244643748]
+layout_mode = 0
+offset_top = 152.0
+offset_right = 74.0
+offset_bottom = 224.0
+texture = ExtResource("15")
+expand_mode = 1
+
+[node name="CatImg" type="TextureRect" parent="Content/CommonDialog/CatDialog" unique_id=579830346]
+layout_mode = 0
+offset_left = 98.0
+offset_right = 585.0
+offset_bottom = 407.0
+texture = ExtResource("16")
+expand_mode = 1
+
+[connection signal="pressed" from="Content/CommonDialog/CloseBtn" to="." method="_on_close_pressed"]
+[connection signal="tag_pressed" from="Content/CommonDialog/Btn" to="." method="_on_action_pressed"]

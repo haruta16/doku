@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://bgn0t60ile8qd"]
+
+[ext_resource type="Script" uid="uid://dy0anpi42ts8m" path="res://scripts/module/splash/view/privacy_dialog.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="2"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="3"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="4"]
+
+[sub_resource type="StyleBoxFlat" id="sf_panel_bg"]
+bg_color = Color(1, 0.984, 0.969, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_title_bg"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_anim"]
+_data = {
+&"GenericPopup": ExtResource("4")
+}
+
+[node name="PrivacyDialog" type="Control" unique_id=112209489]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=580001001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=1523234036]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="Root" unique_id=580001002]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.8, 0.8)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Panel" type="Panel" parent="Root/Content" unique_id=1025976428]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -450.0
+offset_right = 450.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("sf_panel_bg")
+
+[node name="TitleHeader" type="Panel" parent="Root/Content/Panel" unique_id=1700001001]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title_bg")
+
+[node name="TitleLabel" type="Label" parent="Root/Content/Panel" unique_id=949826378]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 16.0
+offset_right = 868.0
+offset_bottom = 116.0
+theme_override_colors/font_color = Color(0.427, 0.325, 0.345, 1)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 86
+text = "PRIVACY_DIALOG_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="ContentLabel" type="RichTextLabel" parent="Root/Content/Panel" unique_id=1176066702]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 187.0
+offset_right = 840.0
+offset_bottom = 597.0
+theme_override_colors/default_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_font_sizes/normal_font_size = 70
+bbcode_enabled = true
+text = "PRIVACY_DIALOG_DESC_RICH"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AcceptButton" parent="Root/Content/Panel" unique_id=256697999 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 580.0
+offset_right = 839.0
+offset_bottom = 838.0
+theme_override_fonts/font = ExtResource("2")
+btn_text = "PRIVACY_DIALOG_ACCEPT"
+show_difficult = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=580001003]
+libraries/ = SubResource("AnimationLibrary_anim")
+
+[connection signal="tag_pressed" from="Root/Content/Panel/AcceptButton" to="." method="_on_accept_btn_pressed"]

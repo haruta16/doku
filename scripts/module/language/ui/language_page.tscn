@@ -1,0 +1,288 @@
+[gd_scene format=3 uid="uid://wa06g3rljadq"]
+
+[ext_resource type="Script" uid="uid://c27molw2grg25" path="res://scripts/module/language/view/language_page.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="3"]
+[ext_resource type="PackedScene" uid="uid://h3bqtdvcxj35" path="res://scripts/module/language/ui/language_option.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://bwx8toi556ejv" path="res://assets/sprites/common/btn_primary.png" id="5"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="6"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="7"]
+
+[sub_resource type="StyleBoxFlat" id="sf_popup_frame"]
+bg_color = Color(0.99607843, 0.9843137, 0.9647059, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_title_bg"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8kdo"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q378b"]
+resource_name = "sf_scroll_grabber"
+bg_color = Color(0.9372549, 0.92156863, 0.9098039, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6iiqt"]
+resource_name = "sf_scroll_track"
+content_margin_left = 6.0
+content_margin_right = 6.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="Theme" id="Theme_e14ro"]
+resource_name = "Theme_scrollbar"
+VScrollBar/styles/grabber = SubResource("StyleBoxFlat_q378b")
+VScrollBar/styles/grabber_highlight = null
+VScrollBar/styles/grabber_pressed = null
+VScrollBar/styles/scroll = SubResource("StyleBoxFlat_6iiqt")
+VScrollBar/styles/scroll_focus = null
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_udu05"]
+bg_color = Color(0.2784314, 0.7019608, 0.3419608, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7drn7"]
+bg_color = Color(0.2784314, 0.7019608, 0.3419608, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmcon"]
+bg_color = Color(0.2784314, 0.7019608, 0.3419608, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxEmpty" id="sf_btn_empty"]
+
+[sub_resource type="AnimationLibrary" id="anim_lib"]
+_data = {
+&"GenericPopup": ExtResource("7")
+}
+
+[node name="LanguagePage" type="Control" unique_id=1270236916]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=1124496297]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=1482170443]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -999.99994
+offset_right = 1000.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="Root" unique_id=1458723191]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -649.5
+offset_right = 450.0
+offset_bottom = 649.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0001018, 1.0001018)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="PopupFrame" type="Panel" parent="Root/Content" unique_id=126738573]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -649.5
+offset_right = 450.0
+offset_bottom = 649.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_popup_frame")
+
+[node name="TitleBg" type="Panel" parent="Root/Content" unique_id=1703175417]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title_bg")
+
+[node name="CloseBtn" type="Button" parent="Root/Content/TitleBg" unique_id=1396040053]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -119.03369
+offset_top = -44.435974
+offset_right = -19.033691
+offset_bottom = 55.564026
+grow_horizontal = 0
+grow_vertical = 2
+pivot_offset_ratio = Vector2(1, 0.5)
+theme_override_styles/normal = SubResource("StyleBoxFlat_c8kdo")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_c8kdo")
+theme_override_styles/hover = SubResource("StyleBoxFlat_c8kdo")
+theme_override_styles/focus = SubResource("StyleBoxFlat_c8kdo")
+
+[node name="CloseIcon" type="TextureRect" parent="Root/Content/TitleBg/CloseBtn" unique_id=568706632]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="Root/Content" unique_id=420753707]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_right = 300.0
+offset_bottom = 125.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0)
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -25
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 86
+text = "SETTING_LANGUAGE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Root/Content" unique_id=602466111]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 880.0
+offset_bottom = 989.0
+theme = SubResource("Theme_e14ro")
+theme_override_constants/scrollbar_h_separation = 18
+horizontal_scroll_mode = 0
+
+[node name="OptionsList" type="VBoxContainer" parent="Root/Content/ScrollContainer" unique_id=602466943]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+
+[node name="LanguageOption" parent="Root/Content/ScrollContainer/OptionsList" unique_id=898991772 instance=ExtResource("4")]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_udu05")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7drn7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tmcon")
+
+[node name="NativeLabel" parent="Root/Content/ScrollContainer/OptionsList/LanguageOption/VBox" parent_id_path=PackedInt32Array(898991772, 542112623) index="0" unique_id=846625846]
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="SubLabel" parent="Root/Content/ScrollContainer/OptionsList/LanguageOption/VBox" parent_id_path=PackedInt32Array(898991772, 542112623) index="1" unique_id=33945398]
+visible = true
+theme_override_colors/font_color = Color(0.5686275, 0.81960785, 0.6039216, 1)
+
+[node name="LanguageOption2" parent="Root/Content/ScrollContainer/OptionsList" unique_id=543664143 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption3" parent="Root/Content/ScrollContainer/OptionsList" unique_id=661995040 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption4" parent="Root/Content/ScrollContainer/OptionsList" unique_id=1388191224 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption5" parent="Root/Content/ScrollContainer/OptionsList" unique_id=614303843 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption6" parent="Root/Content/ScrollContainer/OptionsList" unique_id=317472617 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption7" parent="Root/Content/ScrollContainer/OptionsList" unique_id=1900437192 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption8" parent="Root/Content/ScrollContainer/OptionsList" unique_id=1987946249 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption9" parent="Root/Content/ScrollContainer/OptionsList" unique_id=589345119 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="LanguageOption10" parent="Root/Content/ScrollContainer/OptionsList" unique_id=732881341 instance=ExtResource("4")]
+layout_mode = 2
+
+[node name="YesBtn" type="Control" parent="Root/Content" unique_id=1408324611]
+custom_minimum_size = Vector2(750, 160)
+anchors_preset = 0
+offset_left = 75.0
+offset_top = 1048.0
+offset_right = 825.0
+offset_bottom = 1208.0
+
+[node name="Visual" type="TextureRect" parent="Root/Content/YesBtn" unique_id=952225238]
+layout_mode = 0
+offset_left = -30.0
+offset_top = -20.0
+offset_right = 780.0
+offset_bottom = 200.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="Bg" type="Button" parent="Root/Content/YesBtn" unique_id=201921544]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("sf_btn_empty")
+theme_override_styles/pressed = SubResource("sf_btn_empty")
+theme_override_styles/hover = SubResource("sf_btn_empty")
+theme_override_styles/focus = SubResource("sf_btn_empty")
+text = "LANGUAGE_CONFIRM"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=2126093958]
+libraries/ = SubResource("anim_lib")
+
+[editable path="Root/Content/ScrollContainer/OptionsList/LanguageOption"]

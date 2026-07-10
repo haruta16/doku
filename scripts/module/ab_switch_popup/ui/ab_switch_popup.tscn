@@ -1,0 +1,249 @@
+[gd_scene format=3 uid="uid://067vfb3hgnqa"]
+
+[ext_resource type="Script" uid="uid://dsrxl6u3mha4b" path="res://scripts/module/ab_switch_popup/view/ab_switch_popup.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://ds45vgwsy0fmx" path="res://assets/sprites/common/dialog_frame_9patch.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="4"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://dupq3l7hgqwc7" path="res://assets/sprites/common/shape_81.png" id="6"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="7"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="8"]
+[ext_resource type="Texture2D" uid="uid://c13c13ngw57wp" path="res://assets/sprites/common/small_star.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bo2s741omuaag" path="res://assets/sprites/common/big_star.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://dfgojvl84jec2" path="res://assets/sprites/common/love_heart.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="12"]
+
+[sub_resource type="Animation" id="Animation_8p4ry"]
+resource_name = "RESET"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bqq2v"]
+_data = {
+&"GenericPopup": ExtResource("2"),
+&"RESET": SubResource("Animation_8p4ry")
+}
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_08gvj"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("3")
+texture_margin_left = 83.0
+texture_margin_top = 97.0
+texture_margin_right = 83.0
+texture_margin_bottom = 88.0
+expand_margin_left = 13.0
+expand_margin_top = 9.0
+expand_margin_right = 13.0
+expand_margin_bottom = 18.0
+region_rect = Rect2(0, 0, 200, 200)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xt28l"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_syh3c"]
+content_margin_left = 49.0
+content_margin_top = 32.0
+content_margin_right = 49.0
+content_margin_bottom = 32.0
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="AbSwitchPopup" type="Control" unique_id=36596976]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1731062853]
+libraries/ = SubResource("AnimationLibrary_bqq2v")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=999980459]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="." unique_id=839113614]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -1200.0
+offset_right = 540.0
+offset_bottom = 1200.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CenterContainer" type="CenterContainer" parent="Content" unique_id=1786837966]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BgSizeBox" type="VBoxContainer" parent="Content/CenterContainer" unique_id=2028435379]
+layout_mode = 2
+
+[node name="Bg" type="PanelContainer" parent="Content/CenterContainer/BgSizeBox" unique_id=1861031366]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_08gvj")
+
+[node name="BgVBox" type="VBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg" unique_id=2031224137]
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=239141210]
+custom_minimum_size = Vector2(0, 131.58)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Bg" type="Panel" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title" unique_id=759041909]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xt28l")
+
+[node name="Text" type="Label" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title" unique_id=1025602134]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 1.0
+offset_right = 775.0
+offset_bottom = 131.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -25
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 86
+text = "DAILY_STREAK_MAJOR_UPDATE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("5")
+max_font_size = 86
+min_font_size = 50
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="CloseBtn" type="Button" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title" unique_id=175834760]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+flat = true
+
+[node name="Shape" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title/CloseBtn" unique_id=1805073126]
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 27.0
+offset_right = 73.666664
+offset_bottom = 73.66667
+mouse_filter = 2
+
+[node name="Visual" type="TextureRect" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title/CloseBtn/Shape" unique_id=930988134]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 51.666504
+offset_bottom = 51.666748
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="TextAdapt" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=2083288092]
+custom_minimum_size = Vector2(900, 70)
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=557838645]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Content" unique_id=536730990]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_syh3c")
+
+[node name="PopUpText" type="Label" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Content/Panel" unique_id=377878691]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -3
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 70
+text = "DAILY_STREAK_SWITCH3_DESC"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Btn" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1387139512 instance=ExtResource("8")]
+custom_minimum_size = Vector2(784, 258)
+layout_mode = 2
+size_flags_horizontal = 4
+btn_text = "DAILY_STREAK_GET_IT"
+show_difficult = false
+
+[node name="BtnAdapt" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1915810241]
+custom_minimum_size = Vector2(900, 53)
+layout_mode = 2
+
+[node name="CatDialog" type="Control" parent="Content" unique_id=166949339]
+anchors_preset = 0
+offset_left = 247.0
+offset_top = 310.0
+offset_right = 832.0
+offset_bottom = 717.0
+mouse_filter = 2
+
+[node name="SmallStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=497272828]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 280.0
+offset_right = 81.0
+offset_bottom = 325.0
+texture = ExtResource("9")
+expand_mode = 1
+
+[node name="BigStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=430351163]
+layout_mode = 0
+offset_left = 453.0
+offset_right = 497.0
+offset_bottom = 53.0
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="LoveHeartImg" type="TextureRect" parent="Content/CatDialog" unique_id=1712990591]
+layout_mode = 0
+offset_top = 152.0
+offset_right = 74.0
+offset_bottom = 224.0
+texture = ExtResource("11")
+expand_mode = 1
+
+[node name="CatImg" type="TextureRect" parent="Content/CatDialog" unique_id=1825800482]
+layout_mode = 0
+offset_left = 98.0
+offset_right = 585.0
+offset_bottom = 407.0
+texture = ExtResource("12")
+expand_mode = 1
+
+[connection signal="pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title/CloseBtn" to="." method="_on_close_pressed"]
+[connection signal="tag_pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Btn" to="." method="_on_action_pressed"]

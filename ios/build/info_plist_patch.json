@@ -1,0 +1,40 @@
+{
+  "_comment": "iOS UniKit / LearningsKit 接入所需 Info.plist key。本文件由 addons/unikit_ios_exporter 解析为 plist XML,通过 add_ios_plist_content 注入到 Godot 生成的 Xcode 工程 Info.plist。Bundle ID com.oakever.meowdoku 在 export_presets.cfg L263 配置,不在此处。",
+
+  "_comment_display_name": "CFBundleDisplayName 是 iOS 主屏幕显示名 (优先级高于 CFBundleName)。Godot iOS exporter 没暴露 application/display_name 选项,只能走本文件注入;CFBundleName 仍跟随 Xcode 工程名 vita-meowdoku-godot。",
+  "CFBundleDisplayName": "Meowdoku",
+
+  "_comment_app_identifier_prefix": "LearningsKit LUID 模块需要:Xcode 在打包时把 $(AppIdentifierPrefix) 展开为团队 ID(形如 ABCDE12345.),SDK 据此把 LUID 写入 keychain group com.learningsSharingGroup。AppIdentifierPrefix 字段缺失会导致 LUID 退化为一次性 UUID,卸载重装不可恢复,跨 Learnings 系产品无法共享标识。需配合 .entitlements 中 keychain-access-groups=com.learningsSharingGroup,详见 ios/build/README.md 的 LUID 章节。",
+  "AppIdentifierPrefix": "$(AppIdentifierPrefix)",
+
+  "LEARNINGS_PRODUCT_IDENTIFIER": "69d62f6de0ea6d0115f091d6",
+  "LEARNINGS_ANALYTICS_KEY": "D7zvzxZBPKhr7Iah3",
+  "LEARNINGS_ANALYTICS_SECRET": "42t5wpH5,hhz}5%",
+  "LEARNINGS_PURCHASE_VERIFY_RECEIPT_PASSWORD": "",
+  "LEARNINGS_PUSH_KEY_ID": "meowdoku-SYqBgXxy80WyhdJ8G",
+  "LEARNINGS_PUSH_SECRET": "ts5FlKJXN8igGGrGSp1hJnmY9mglXSGqcf",
+  "LEARNINGS_APPSFLYER_DEV_KEY": "qNsTSFixbaPufCv5sQ6yJV",
+  "LEARNINGS_APP_STORE_ID": "6761760135",
+  "LEARNINGS_APP_STORE_URL": "https://apps.apple.com/app/id6761760135",
+
+  "GADApplicationIdentifier": "ca-app-pub-4286071012672876~9517623945",
+
+  "FacebookAppID": "2724140174607113",
+  "FacebookClientToken": "4295e3ec7780b937e316da9688fe1450",
+  "FacebookDisplayName": "Meowdoku",
+
+  "NSUserTrackingUsageDescription": "We use this identifier to deliver personalized ads to you.",
+
+  "UIBackgroundModes": ["remote-notification"],
+
+  "CFBundleURLTypes": [
+    {
+      "CFBundleURLName": "com.oakever.meowdoku.deeplink",
+      "CFBundleURLSchemes": ["meowdoku"]
+    },
+    {
+      "CFBundleURLName": "com.oakever.meowdoku.facebook",
+      "CFBundleURLSchemes": ["fb2724140174607113"]
+    }
+  ]
+}

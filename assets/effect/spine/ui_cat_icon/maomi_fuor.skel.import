@@ -1,0 +1,14 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://cgdbi0h04x5mg"
+path="res://.godot/imported/maomi_fuor.skel-e563681eb280df4efe999b49e84443c6.spskel"
+
+[deps]
+
+source_file="res://assets/effect/spine/ui_cat_icon/maomi_fuor.skel"
+dest_files=["res://.godot/imported/maomi_fuor.skel-e563681eb280df4efe999b49e84443c6.spskel"]
+
+[params]
+

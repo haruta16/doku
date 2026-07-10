@@ -1,0 +1,157 @@
+[gd_scene format=3 uid="uid://cbmixvncpcbf6"]
+
+[ext_resource type="Script" uid="uid://h5wvl77ypgal" path="res://scripts/module/rate_us/view/rate_us_page.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="2"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://b0segitj2urk3" path="res://assets/sprites/rate_us/star.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://d2vd2rjcdqaif" path="res://assets/sprites/rate_us/star_dim.png" id="5"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="6"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="7"]
+
+[sub_resource type="StyleBoxFlat" id="sf_dialog"]
+bg_color = Color(1, 0.984, 0.969, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_anim"]
+_data = {
+&"GenericPopup": ExtResource("7")
+}
+
+[node name="RateUsPage" type="Control" unique_id=1378404037]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=1034954818]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -540.0
+offset_right = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=235065746]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1000.0
+offset_right = 1000.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="Root" unique_id=580003001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0094355, 1.0094355)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Dialog" type="Panel" parent="Root/Content" unique_id=566807301]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 750.0
+offset_right = 990.0
+offset_bottom = 1650.0
+theme_override_styles/panel = SubResource("sf_dialog")
+
+[node name="CloseBtn" type="TextureButton" parent="Root/Content/Dialog" unique_id=1436630658]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+texture_normal = ExtResource("2")
+
+[node name="TitleLabel" type="Label" parent="Root/Content/Dialog" unique_id=874357845]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 140.0
+offset_right = 800.0
+offset_bottom = 377.0
+theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_font_sizes/font_size = 80
+text = "RATE_US_QUESTION"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("3")
+max_font_size = 80
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="StarsRow" type="HBoxContainer" parent="Root/Content/Dialog" unique_id=1785805021]
+layout_mode = 0
+offset_top = 433.0
+offset_right = 900.0
+offset_bottom = 577.00024
+alignment = 1
+
+[node name="Star1" type="TextureRect" parent="Root/Content/Dialog/StarsRow" unique_id=121461427]
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="Root/Content/Dialog/StarsRow" unique_id=1113347871]
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="Root/Content/Dialog/StarsRow" unique_id=1793698754]
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star4" type="TextureRect" parent="Root/Content/Dialog/StarsRow" unique_id=333975288]
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star5" type="TextureRect" parent="Root/Content/Dialog/StarsRow" unique_id=180225263]
+custom_minimum_size = Vector2(144, 144)
+layout_mode = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RateUsBtn" parent="Root/Content/Dialog" unique_id=256697999 instance=ExtResource("6")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 581.0
+offset_right = 840.0
+offset_bottom = 839.0
+btn_text = "RATE_US_TITLE"
+show_difficult = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=580003002]
+libraries/ = SubResource("AnimationLibrary_anim")
+
+[connection signal="pressed" from="Root/Content/Dialog/CloseBtn" to="." method="_on_close_btn_pressed"]
+[connection signal="tag_pressed" from="Root/Content/Dialog/RateUsBtn" to="." method="_on_rate_us_btn_pressed"]

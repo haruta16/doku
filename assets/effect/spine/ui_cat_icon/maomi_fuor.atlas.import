@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://chdvd36o33b60"
+path="res://.godot/imported/maomi_fuor.atlas-a30f0c23b34819c355e772c24605ed43.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/ui_cat_icon/maomi_fuor.atlas"
+dest_files=["res://.godot/imported/maomi_fuor.atlas-a30f0c23b34819c355e772c24605ed43.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

@@ -1,0 +1,240 @@
+[gd_scene format=3 uid="uid://caye6owieiq5f"]
+
+[ext_resource type="Script" uid="uid://cuinwegbc0mrq" path="res://scripts/module/daily_streak/view/daily_streak_switch_page3.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://chy1yoxheufsf" path="res://assets/sprites/daily_streak/daily_streak_switch_page3/dialog_frame.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dupq3l7hgqwc7" path="res://assets/sprites/common/shape_81.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="5"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="6"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="7"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="8"]
+[ext_resource type="Texture2D" uid="uid://c13c13ngw57wp" path="res://assets/sprites/common/small_star.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bo2s741omuaag" path="res://assets/sprites/common/big_star.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://dfgojvl84jec2" path="res://assets/sprites/common/love_heart.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="12"]
+
+[sub_resource type="Animation" id="Animation_8p4ry"]
+resource_name = "RESET"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bqq2v"]
+_data = {
+&"GenericPopup": ExtResource("2"),
+&"RESET": SubResource("Animation_8p4ry")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdbmg"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xt28l"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[node name="DailyStreakSwitchPage3" type="Control" unique_id=36596976]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1731062853]
+libraries/ = SubResource("AnimationLibrary_bqq2v")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=999980459]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="." unique_id=839113614]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -1200.0
+offset_right = 540.0
+offset_bottom = 1200.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CommonDialog" type="Control" parent="Content" unique_id=1837415328]
+anchors_preset = 0
+offset_left = 90.0
+offset_top = 660.0
+offset_right = 990.0
+offset_bottom = 1740.0
+
+[node name="DialogFrame" type="Control" parent="Content/CommonDialog" unique_id=777736926]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 1080.0
+
+[node name="Visual" type="TextureRect" parent="Content/CommonDialog/DialogFrame" unique_id=1832922810]
+layout_mode = 0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 914.0
+offset_bottom = 1098.0
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="@Panel@26195" type="Panel" parent="Content/CommonDialog" unique_id=281635968]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 850.0
+offset_bottom = 770.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hdbmg")
+
+[node name="DialogTitleFrame" type="Control" parent="Content/CommonDialog" unique_id=239141210]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 130.0
+
+[node name="DialogTitleFrame" type="Panel" parent="Content/CommonDialog/DialogTitleFrame" unique_id=759041909]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xt28l")
+
+[node name="CloseBtn" type="Button" parent="Content/CommonDialog" unique_id=175834760]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+flat = true
+
+[node name="Shape" type="Control" parent="Content/CommonDialog/CloseBtn" unique_id=1805073126]
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 27.0
+offset_right = 73.666664
+offset_bottom = 73.66667
+mouse_filter = 2
+
+[node name="Visual" type="TextureRect" parent="Content/CommonDialog/CloseBtn/Shape" unique_id=930988134]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 51.666504
+offset_bottom = 51.666748
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="Btn" parent="Content/CommonDialog" unique_id=1387139512 instance=ExtResource("5")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 771.0
+offset_right = 840.0
+offset_bottom = 1029.0
+btn_text = "DAILY_STREAK_GET_IT"
+show_difficult = false
+
+[node name="DialogTitle" type="Control" parent="Content/CommonDialog" unique_id=313609209]
+anchors_preset = 0
+offset_left = 140.0
+offset_top = 16.0
+offset_right = 760.0
+offset_bottom = 116.0
+
+[node name="PopupWindowTitleTxt" type="Label" parent="Content/CommonDialog/DialogTitle" unique_id=1025602134]
+layout_mode = 0
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 635.0
+offset_bottom = 115.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -25
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 86
+text = "DAILY_STREAK_MAJOR_UPDATE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 86
+min_font_size = 50
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="PopUpText" type="Control" parent="Content" unique_id=22932022]
+anchors_preset = 0
+offset_left = 190.0
+offset_top = 879.0
+offset_right = 890.0
+offset_bottom = 1405.0
+mouse_filter = 2
+
+[node name="PopUpTextTxt" type="Label" parent="Content/PopUpText" unique_id=1109779215]
+layout_mode = 0
+offset_top = 13.0
+offset_right = 700.0
+offset_bottom = 513.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -3
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 70
+text = "DAILY_STREAK_SWITCH3_DESC"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CatDialog" type="Control" parent="Content" unique_id=166949339]
+anchors_preset = 0
+offset_left = 247.0
+offset_top = 313.0
+offset_right = 832.0
+offset_bottom = 720.0
+mouse_filter = 2
+
+[node name="SmallStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=497272828]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 280.0
+offset_right = 81.0
+offset_bottom = 325.0
+texture = ExtResource("9")
+expand_mode = 1
+
+[node name="BigStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=430351163]
+layout_mode = 0
+offset_left = 453.0
+offset_right = 497.0
+offset_bottom = 53.0
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="LoveHeartImg" type="TextureRect" parent="Content/CatDialog" unique_id=1712990591]
+layout_mode = 0
+offset_top = 152.0
+offset_right = 74.0
+offset_bottom = 224.0
+texture = ExtResource("11")
+expand_mode = 1
+
+[node name="CatImg" type="TextureRect" parent="Content/CatDialog" unique_id=1825800482]
+layout_mode = 0
+offset_left = 98.0
+offset_right = 585.0
+offset_bottom = 407.0
+texture = ExtResource("12")
+expand_mode = 1
+
+[connection signal="pressed" from="Content/CommonDialog/CloseBtn" to="." method="_on_close_pressed"]
+[connection signal="tag_pressed" from="Content/CommonDialog/Btn" to="." method="_on_action_pressed"]

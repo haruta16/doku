@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://bsgt4q8dem77"]
+
+[ext_resource type="Script" uid="uid://b5t837xx0kijm" path="res://scripts/module/debug/view/mock_banner_page.gd" id="1"]
+
+[node name="MockBannerPage" type="Control" unique_id=1290123340]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="Bar" type="Control" parent="." unique_id=2082156290]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -180.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Bg" type="ColorRect" parent="Bar" unique_id=1958050231]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.12, 0.45, 0.3, 0.95)
+
+[node name="InfoLabel" type="Label" parent="Bar" unique_id=1605071976]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+text = "MOCK Banner"
+horizontal_alignment = 1
+vertical_alignment = 1

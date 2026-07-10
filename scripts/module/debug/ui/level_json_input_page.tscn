@@ -1,0 +1,175 @@
+[gd_scene format=3 uid="uid://7sx7u84mu5qn"]
+
+[ext_resource type="Script" uid="uid://d4bg16ionjgj7" path="res://scripts/module/debug/view/level_json_input_page.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="sf_panel"]
+content_margin_left = 50.0
+content_margin_top = 50.0
+content_margin_right = 50.0
+content_margin_bottom = 50.0
+bg_color = Color(0.08, 0.08, 0.08, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.55, 0.55, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="sf_input"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+bg_color = Color(0.14, 0.14, 0.14, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="sf_btn"]
+content_margin_left = 28.0
+content_margin_top = 18.0
+content_margin_right = 28.0
+content_margin_bottom = 18.0
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.55, 0.55, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="sf_btn_pressed"]
+content_margin_left = 28.0
+content_margin_top = 18.0
+content_margin_right = 28.0
+content_margin_bottom = 18.0
+bg_color = Color(0.4, 0.4, 0.4, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.85, 0.85, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="LevelJsonInputPage" type="Control" unique_id=1786064799]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=127053881]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterPanel" type="PanelContainer" parent="." unique_id=910160985]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -480.0
+offset_top = -960.0
+offset_right = 480.0
+offset_bottom = 960.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("sf_panel")
+
+[node name="Margin" type="MarginContainer" parent="CenterPanel" unique_id=1599663730]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterPanel/Margin" unique_id=1884395578]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Title" type="Label" parent="CenterPanel/Margin/VBox" unique_id=1130452341]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 56
+text = "导入关卡 JSON"
+horizontal_alignment = 1
+
+[node name="InputBox" type="TextEdit" parent="CenterPanel/Margin/VBox" unique_id=802266952]
+custom_minimum_size = Vector2(0, 1400)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_placeholder_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("sf_input")
+theme_override_styles/focus = SubResource("sf_input")
+placeholder_text = "粘贴题库单个 entry 的 JSON,例:
+{
+  \"id\": 13,
+  \"size\": 9,
+  \"r\": 4,
+  \"regionMap\": [[...], ...],
+  \"solution\": [3,0,2,4,1,7,5,8,6]
+}"
+wrap_mode = 1
+
+[node name="ErrorLabel" type="Label" parent="CenterPanel/Margin/VBox" unique_id=1301139867]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="CenterPanel/Margin/VBox" unique_id=1541613452]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="CloseBtn" type="Button" parent="CenterPanel/Margin/VBox/ButtonRow" unique_id=656447555]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("sf_btn")
+theme_override_styles/pressed = SubResource("sf_btn_pressed")
+theme_override_styles/hover = SubResource("sf_btn")
+text = "关闭"
+
+[node name="StartBtn" type="Button" parent="CenterPanel/Margin/VBox/ButtonRow" unique_id=1164513909]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("sf_btn")
+theme_override_styles/pressed = SubResource("sf_btn_pressed")
+theme_override_styles/hover = SubResource("sf_btn")
+text = "开始"
+
+[connection signal="pressed" from="CenterPanel/Margin/VBox/ButtonRow/CloseBtn" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="CenterPanel/Margin/VBox/ButtonRow/StartBtn" to="." method="_on_start_pressed"]

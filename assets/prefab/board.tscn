@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://wggnuvapc4as"]
+
+[ext_resource type="Script" uid="uid://bhl0scpkmv4ft" path="res://scripts/module/gameplay/view/board_view.gd" id="1"]
+
+[node name="BoardView" type="Control" unique_id=1298851597]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1")

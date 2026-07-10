@@ -1,0 +1,668 @@
+[
+  {
+    "size": 7,
+    "seed": 191,
+    "regionSeed": 1,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        2
+      ]
+    ],
+    "score": 84,
+    "maxTech": 1,
+    "steps": 6,
+    "tier": "hard"
+  },
+  {
+    "size": 7,
+    "seed": 262,
+    "regionSeed": 12,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        3
+      ]
+    ],
+    "score": 84,
+    "maxTech": 1,
+    "steps": 6,
+    "tier": "hard"
+  },
+  {
+    "size": 7,
+    "seed": 208,
+    "regionSeed": 24,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        2
+      ]
+    ],
+    "score": 103,
+    "maxTech": 2,
+    "steps": 7,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 500,
+    "regionSeed": 15,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        4,
+        0
+      ]
+    ],
+    "score": 110,
+    "maxTech": 2,
+    "steps": 8,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 36,
+    "regionSeed": 26,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        5,
+        2
+      ]
+    ],
+    "score": 113,
+    "maxTech": 2,
+    "steps": 9,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 108,
+    "regionSeed": 23,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        5,
+        0
+      ]
+    ],
+    "score": 113,
+    "maxTech": 2,
+    "steps": 8,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 270,
+    "regionSeed": 23,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        5,
+        0
+      ]
+    ],
+    "score": 113,
+    "maxTech": 2,
+    "steps": 8,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 136,
+    "regionSeed": 15,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        1
+      ]
+    ],
+    "score": 116,
+    "maxTech": 2,
+    "steps": 8,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 229,
+    "regionSeed": 2,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        1,
+        4
+      ]
+    ],
+    "score": 117,
+    "maxTech": 2,
+    "steps": 9,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 248,
+    "regionSeed": 8,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        3
+      ]
+    ],
+    "score": 117,
+    "maxTech": 2,
+    "steps": 9,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 416,
+    "regionSeed": 2,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        1,
+        4
+      ]
+    ],
+    "score": 117,
+    "maxTech": 2,
+    "steps": 9,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 9,
+    "regionSeed": 25,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        3
+      ]
+    ],
+    "score": 119,
+    "maxTech": 2,
+    "steps": 9,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 362,
+    "regionSeed": 25,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        3
+      ]
+    ],
+    "score": 119,
+    "maxTech": 2,
+    "steps": 9,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 384,
+    "regionSeed": 25,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        3
+      ]
+    ],
+    "score": 119,
+    "maxTech": 2,
+    "steps": 9,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 328,
+    "regionSeed": 13,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        0
+      ]
+    ],
+    "score": 120,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 370,
+    "regionSeed": 13,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        0
+      ]
+    ],
+    "score": 120,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 438,
+    "regionSeed": 13,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        0
+      ]
+    ],
+    "score": 120,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 495,
+    "regionSeed": 2,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        2
+      ]
+    ],
+    "score": 122,
+    "maxTech": 2,
+    "steps": 8,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 63,
+    "regionSeed": 25,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        6,
+        2
+      ]
+    ],
+    "score": 123,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 442,
+    "regionSeed": 25,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        6,
+        2
+      ]
+    ],
+    "score": 123,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 110,
+    "regionSeed": 12,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        0
+      ]
+    ],
+    "score": 124,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 435,
+    "regionSeed": 1,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        5
+      ]
+    ],
+    "score": 124,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 12,
+    "regionSeed": 15,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        2
+      ]
+    ],
+    "score": 125,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 158,
+    "regionSeed": 15,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        2
+      ]
+    ],
+    "score": 125,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 347,
+    "regionSeed": 15,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        2
+      ]
+    ],
+    "score": 125,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 64,
+    "regionSeed": 20,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        6
+      ]
+    ],
+    "score": 130,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 188,
+    "regionSeed": 20,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        6
+      ]
+    ],
+    "score": 130,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 424,
+    "regionSeed": 20,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        6
+      ]
+    ],
+    "score": 130,
+    "maxTech": 2,
+    "steps": 10,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 41,
+    "regionSeed": 11,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        5,
+        2
+      ]
+    ],
+    "score": 131,
+    "maxTech": 2,
+    "steps": 11,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 293,
+    "regionSeed": 2,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        1,
+        2
+      ]
+    ],
+    "score": 131,
+    "maxTech": 2,
+    "steps": 11,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 391,
+    "regionSeed": 2,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        1,
+        2
+      ]
+    ],
+    "score": 131,
+    "maxTech": 2,
+    "steps": 11,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 235,
+    "regionSeed": 8,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        1,
+        3
+      ]
+    ],
+    "score": 136,
+    "maxTech": 2,
+    "steps": 11,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 440,
+    "regionSeed": 6,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        3,
+        4
+      ]
+    ],
+    "score": 137,
+    "maxTech": 2,
+    "steps": 12,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 356,
+    "regionSeed": 4,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        5
+      ]
+    ],
+    "score": 139,
+    "maxTech": 2,
+    "steps": 12,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 478,
+    "regionSeed": 4,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        2,
+        5
+      ]
+    ],
+    "score": 139,
+    "maxTech": 2,
+    "steps": 12,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 296,
+    "regionSeed": 21,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        1,
+        2
+      ]
+    ],
+    "score": 159,
+    "maxTech": 2,
+    "steps": 12,
+    "tier": "expert"
+  },
+  {
+    "size": 7,
+    "seed": 466,
+    "regionSeed": 21,
+    "bias": 0.85,
+    "needsPrefill": true,
+    "prefillCount": 1,
+    "prefillPositions": [
+      [
+        1,
+        2
+      ]
+    ],
+    "score": 159,
+    "maxTech": 2,
+    "steps": 12,
+    "tier": "expert"
+  }
+]

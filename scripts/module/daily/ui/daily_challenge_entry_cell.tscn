@@ -1,0 +1,448 @@
+[gd_scene format=3 uid="uid://bq0i57qhkk7vb"]
+
+[ext_resource type="Script" uid="uid://c54rtql23vjnj" path="res://scripts/module/daily/view/daily_challenge_entry_cell.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://vthyl3xj33e2" path="res://assets/sprites/daily/state_normal.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="3"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://d33a2k6oi03iw" path="res://assets/sprites/game/icon_timer.png" id="5"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="6"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="7"]
+[ext_resource type="Texture2D" uid="uid://c4yd2751206ab" path="res://assets/sprites/daily/state_locked.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://c6hyhnojhdmu8" path="res://assets/sprites/home/lock.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://djalnxq8lyl8i" path="res://assets/sprites/home/daily_record.png" id="11"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8nd5n"]
+bg_color = Color(0.3518563, 0.35385624, 0.603846, 0.6)
+corner_radius_top_left = 270
+corner_radius_top_right = 298
+corner_radius_bottom_right = 298
+corner_radius_bottom_left = 270
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h0rl7"]
+bg_color = Color(0.90588236, 0.92941177, 0.9843137, 1)
+corner_radius_top_left = 270
+corner_radius_top_right = 298
+corner_radius_bottom_right = 298
+corner_radius_bottom_left = 270
+
+[sub_resource type="Curve" id="Curve_5gte6"]
+_data = [Vector2(0, 0), 0.0, 7.8406386, 0, 0, Vector2(0.37529138, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.7808838, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f7eyf"]
+bg_color = Color(0.3518563, 0.35385624, 0.603846, 0.6)
+corner_radius_top_left = 270
+corner_radius_top_right = 298
+corner_radius_bottom_right = 298
+corner_radius_bottom_left = 270
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k63os"]
+bg_color = Color(0.9807692, 0.39419308, 0.8830066, 1)
+corner_radius_top_left = 270
+corner_radius_top_right = 298
+corner_radius_bottom_right = 298
+corner_radius_bottom_left = 270
+
+[node name="DailyChallengeEntryCell" type="Control" unique_id=472529226]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 460.0
+offset_bottom = 590.0
+script = ExtResource("1")
+
+[node name="DcEntryImg" type="Control" parent="." unique_id=486015118]
+anchors_preset = 0
+offset_right = 460.0
+offset_bottom = 590.0
+
+[node name="StateNormal" type="Control" parent="DcEntryImg" unique_id=1205688021]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 440.0
+offset_bottom = 570.0
+
+[node name="Visual" type="TextureRect" parent="DcEntryImg/StateNormal" unique_id=1959612742]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -14.0
+offset_right = 440.0
+offset_bottom = 578.0
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="DailyChallengeTxt" type="Label" parent="DcEntryImg/StateNormal" unique_id=1225172816]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 14.0
+offset_right = 292.0
+offset_bottom = 154.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.33730215, 0.35048613, 0.6932696, 1)
+theme_override_constants/line_spacing = -18
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 54
+text = "DAILY_CHALLENGE_TITLE"
+autowrap_mode = 2
+script = ExtResource("4")
+min_font_size = 30
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="CountdownGroup" type="Control" parent="DcEntryImg/StateNormal" unique_id=1241890309]
+anchors_preset = 0
+offset_left = 26.0
+offset_top = 325.0
+offset_right = 396.0
+offset_bottom = 415.0
+
+[node name="Rectangle183" type="Panel" parent="DcEntryImg/StateNormal/CountdownGroup" unique_id=903461404]
+layout_mode = 0
+offset_right = 370.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8nd5n")
+
+[node name="Countdown" type="Control" parent="DcEntryImg/StateNormal/CountdownGroup" unique_id=843073654]
+anchors_preset = 0
+offset_left = 31.0
+offset_top = 2.0
+offset_right = 330.0
+offset_bottom = 88.0
+
+[node name="CountdownIcon" type="Control" parent="DcEntryImg/StateNormal/CountdownGroup/Countdown" unique_id=855627226]
+anchors_preset = 0
+offset_right = 86.0
+offset_bottom = 86.0
+
+[node name="Countdown" type="Control" parent="DcEntryImg/StateNormal/CountdownGroup/Countdown/CountdownIcon" unique_id=338014077]
+anchors_preset = 0
+offset_left = 13.76
+offset_top = 9.46
+offset_right = 73.1
+offset_bottom = 76.54
+
+[node name="Icon" type="TextureRect" parent="DcEntryImg/StateNormal/CountdownGroup/Countdown/CountdownIcon/Countdown" unique_id=1953125651]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TimeTxt" type="Label" parent="DcEntryImg/StateNormal/CountdownGroup/Countdown" unique_id=596381851]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 16.0
+offset_right = 299.0
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9650307, 0.9650307, 0.977564, 1)
+theme_override_constants/line_spacing = -25
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 54
+text = "21:55:44"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionBtn" type="Control" parent="DcEntryImg/StateNormal" unique_id=578009392]
+anchors_preset = 0
+offset_left = 25.0
+offset_top = 435.0
+offset_right = 395.0
+offset_bottom = 525.0
+
+[node name="Rectangle183" type="Panel" parent="DcEntryImg/StateNormal/ActionBtn" unique_id=1959592543]
+layout_mode = 0
+offset_right = 370.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_h0rl7")
+
+[node name="PlayTxt" type="Label" parent="DcEntryImg/StateNormal/ActionBtn" unique_id=387380107]
+layout_mode = 0
+offset_left = 126.0
+offset_top = 17.0
+offset_right = 244.0
+offset_bottom = 73.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.3372549, 0.34901962, 0.69411767, 1)
+theme_override_constants/line_spacing = -32
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 60
+text = "DAILY_CHALLENGE_PLAY"
+vertical_alignment = 1
+
+[node name="Jun3Txt" type="Label" parent="DcEntryImg/StateNormal" unique_id=1424591427]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 181.0
+offset_right = 224.0
+offset_bottom = 237.0
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -61
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 80
+text = "Jun 3"
+vertical_alignment = 1
+
+[node name="StateLocked" type="Control" parent="DcEntryImg" unique_id=1787922367]
+visible = false
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 440.0
+offset_bottom = 570.0
+
+[node name="Visual" type="TextureRect" parent="DcEntryImg/StateLocked" unique_id=1019458442]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -14.0
+offset_right = 440.0
+offset_bottom = 578.0
+texture = ExtResource("8")
+expand_mode = 1
+
+[node name="DailyChallengeTxt" type="Label" parent="DcEntryImg/StateLocked" unique_id=646120556]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 14.0
+offset_right = 292.0
+offset_bottom = 154.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.2784314, 0.2901961, 0.5411765, 1)
+theme_override_constants/line_spacing = -18
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 54
+text = "DAILY_CHALLENGE_TITLE"
+autowrap_mode = 2
+script = ExtResource("4")
+min_font_size = 30
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="LockGroup" type="Control" parent="DcEntryImg/StateLocked" unique_id=779405574]
+anchors_preset = 0
+offset_left = 52.0
+offset_top = 171.0
+offset_right = 367.0
+offset_bottom = 380.0
+
+[node name="UnlockAtLv21Txt" type="Label" parent="DcEntryImg/StateLocked/LockGroup" unique_id=230363733]
+layout_mode = 0
+offset_top = 153.0
+offset_right = 315.0
+offset_bottom = 209.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9647059, 0.9647059, 0.9764706, 1)
+theme_override_constants/line_spacing = -12
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 46
+text = "DAILY_CHALLENGE_UNLOCK_AT"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4")
+max_font_size = 46
+min_font_size = 22
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="Lock" type="Control" parent="DcEntryImg/StateLocked/LockGroup" unique_id=1698551788]
+anchors_preset = 0
+offset_left = 107.0
+offset_right = 207.0
+offset_bottom = 127.0
+
+[node name="Lock" type="ColorRect" parent="DcEntryImg/StateLocked/LockGroup/Lock" unique_id=54358075]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 127.0
+color = Color(0.9411765, 0.9411765, 0.972549, 0)
+
+[node name="Icon" type="TextureRect" parent="DcEntryImg/StateLocked/LockGroup/Lock" unique_id=276765338]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 127.0
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="StateDone" type="Control" parent="DcEntryImg" unique_id=1371422892]
+visible = false
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 440.0
+offset_bottom = 570.0
+
+[node name="Visual" type="TextureRect" parent="DcEntryImg/StateDone" unique_id=1684436885]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -14.0
+offset_right = 440.0
+offset_bottom = 578.0
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="DcEntryImg/StateDone/Visual" unique_id=498827866]
+modulate = Color(1, 1, 1, 0.9019608)
+self_modulate = Color(1, 1, 1, 0.7058824)
+texture_repeat = 1
+position = Vector2(364, 117)
+amount = 1
+texture = ExtResource("10")
+lifetime = 2.0
+speed_scale = 1.4
+explosiveness = 1.0
+randomness = 0.75
+lifetime_randomness = 0.08
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 80.0
+spread = 0.0
+gravity = Vector2(0, 0)
+angle_min = -15.0
+angle_max = 15.0
+scale_amount_min = 0.04
+scale_amount_max = 0.15
+scale_amount_curve = SubResource("Curve_5gte6")
+
+[node name="DailyChallengeTxt" type="Label" parent="DcEntryImg/StateDone" unique_id=887239165]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 5.0
+offset_right = 292.0
+offset_bottom = 163.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.33730215, 0.35048613, 0.6932696, 1)
+theme_override_constants/line_spacing = -18
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 60
+text = "DAILY_CHALLENGE_TITLE"
+autowrap_mode = 2
+script = ExtResource("4")
+min_font_size = 30
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="Countdown" type="Control" parent="DcEntryImg/StateDone" unique_id=1032904053]
+anchors_preset = 0
+offset_left = 82.0
+offset_top = 351.0
+offset_right = 332.0
+offset_bottom = 407.0
+
+[node name="CountdownGroup" type="Control" parent="DcEntryImg/StateDone" unique_id=1209236654]
+anchors_preset = 0
+offset_left = 26.0
+offset_top = 325.0
+offset_right = 396.0
+offset_bottom = 415.0
+
+[node name="Rectangle183" type="Panel" parent="DcEntryImg/StateDone/CountdownGroup" unique_id=777880824]
+layout_mode = 0
+offset_right = 370.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_f7eyf")
+
+[node name="Countdown" type="Control" parent="DcEntryImg/StateDone/CountdownGroup" unique_id=1981544159]
+anchors_preset = 0
+offset_left = 68.5
+offset_top = 2.0
+offset_right = 292.5
+offset_bottom = 88.0
+
+[node name="CountdownIcon" type="Control" parent="DcEntryImg/StateDone/CountdownGroup/Countdown" unique_id=412416765]
+anchors_preset = 0
+offset_right = 86.0
+offset_bottom = 86.0
+
+[node name="GreenCountdownIcon" type="Control" parent="DcEntryImg/StateDone/CountdownGroup/Countdown/CountdownIcon" unique_id=43960646]
+anchors_preset = 0
+offset_left = 13.76
+offset_top = 9.46
+offset_right = 73.1
+offset_bottom = 76.54
+
+[node name="Icon" type="TextureRect" parent="DcEntryImg/StateDone/CountdownGroup/Countdown/CountdownIcon/GreenCountdownIcon" unique_id=1145133732]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TimeTxt" type="Label" parent="DcEntryImg/StateDone/CountdownGroup/Countdown" unique_id=1935059100]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 16.0
+offset_right = 224.0
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9650307, 0.9650307, 0.977564, 1)
+theme_override_constants/line_spacing = -25
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 54
+text = "08:55"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ActionBtn" type="Control" parent="DcEntryImg/StateDone" unique_id=1279495858]
+anchors_preset = 0
+offset_left = 25.0
+offset_top = 435.0
+offset_right = 395.0
+offset_bottom = 525.0
+
+[node name="Rectangle183" type="Panel" parent="DcEntryImg/StateDone/ActionBtn" unique_id=946755147]
+layout_mode = 0
+offset_right = 370.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_k63os")
+
+[node name="TOP90Txt" type="Label" parent="DcEntryImg/StateDone/ActionBtn" unique_id=900832156]
+layout_mode = 0
+offset_left = 62.0
+offset_top = 17.0
+offset_right = 308.0
+offset_bottom = 73.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -32
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 60
+text = "TOP 90%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Jun3Txt" type="Label" parent="DcEntryImg/StateDone" unique_id=491183987]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 150.5
+offset_right = 224.0
+offset_bottom = 267.5
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -61
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 80
+text = "Jun 3"
+vertical_alignment = 1
+
+[node name="ClickBtn" type="Button" parent="." unique_id=480981899]
+layout_mode = 0
+offset_right = 460.0
+offset_bottom = 590.0
+flat = true
+
+[connection signal="pressed" from="ClickBtn" to="." method="_on_click_pressed"]

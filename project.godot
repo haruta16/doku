@@ -1,0 +1,93 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Meowdoku"
+config/version="0.0.1"
+run/main_scene="uid://b7eqvkjrlbffh"
+config/quit_on_go_back=false
+config/features=PackedStringArray("4.6", "Mobile")
+boot_splash/bg_color=Color(0.969, 0.949, 0.933, 1)
+boot_splash/image="res://assets/icons/ios_launch_3x.png"
+config/icon="uid://b26ajkmkt5kpb"
+run/disable_stdout.rel=true
+config/mcp_port=6800
+
+[autoload]
+
+GameState="*res://scripts/module/game_state/game_state.gd"
+SoundManager="*res://scripts/module/sound/sound_manager.gd"
+UIManager="*res://scripts/module/ui/ui_manager.gd"
+CheatBus="*res://addons/cheat_manager/cheat_bus.gd"
+UniKitManager="*res://scripts/common/unikit_manager.gd"
+SessionManager="*res://scripts/module/session/session_manager.gd"
+Tracker="*res://scripts/module/tracker/tracker.gd"
+DebugApiServerManager="*res://scripts/module/debug/debug_api_server_manager.gd"
+ABTestManager="*res://scripts/module/abtest/abtest_manager.gd"
+StreakManager="*res://scripts/module/daily_streak/core/feature_daily_streak.gd"
+LanguageManager="*res://scripts/module/language/language_manager.gd"
+ScreenshotHotkey="*uid://ivaigcrt7kjq"
+MCPScreenshot="*res://addons/godot_mcp/mcp_screenshot_service.gd"
+MCPInputService="*res://addons/godot_mcp/mcp_input_service.gd"
+MCPGameInspector="*res://addons/godot_mcp/mcp_game_inspector_service.gd"
+ScreenManager="*res://scripts/module/common/screen_manager.gd"
+AwardManager="*res://scripts/module/award/award_manager.gd"
+HomeSettingAnchor="*res://scripts/module/ui/home_setting_anchor.gd"
+HelpshiftManager="*res://scripts/common/helpshift_manager.gd"
+RedDotCenter="*res://scripts/module/ui/red_dot_center.gd"
+
+[debug]
+
+settings/gdscript/always_track_call_stacks=true
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=2400
+window/size/window_width_override=1080
+window/size/window_height_override=2400
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+window/vsync/vsync_mode=0
+
+[dotnet]
+
+project/assembly_name="Meowdoku"
+
+[editor_overrides]
+
+text_editor/behavior/indent/type=1
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/helpshift_plugin/plugin.cfg", "res://addons/in_app_review_plugin/plugin.cfg", "res://addons/level_bank_encryptor/plugin.cfg", "res://addons/resolution_picker/plugin.cfg", "res://addons/screenshot_tool/plugin.cfg", "res://addons/shortcut_plugin/plugin.cfg", "res://addons/ui_code_generator/plugin.cfg", "res://addons/unikit_ios_exporter/plugin.cfg", "res://addons/vibrate_plugin/plugin.cfg")
+
+[gui]
+
+theme/custom_font="uid://bvxeo4fq0ps17"
+
+[internationalization]
+
+rendering/root_node_layout_direction=1
+locale/translations=PackedStringArray("res://assets/localization/translations.en.translation", "res://assets/localization/translations.zh_CN.translation", "res://assets/localization/translations.pt_BR.translation", "res://assets/localization/translations.hi.translation", "res://assets/localization/translations.id.translation", "res://assets/localization/translations.fil.translation", "res://assets/localization/translations.zh_TW.translation", "res://assets/localization/translations.ru.translation", "res://assets/localization/translations.ja.translation", "res://assets/localization/translations.de.translation", "res://assets/localization/translations.fr.translation", "res://assets/localization/translations.ko.translation", "res://assets/localization/translations.pt.translation", "res://assets/localization/translations.es.translation", "res://assets/localization/translations.az.translation", "res://assets/localization/translations.be.translation", "res://assets/localization/translations.hr.translation", "res://assets/localization/translations.cs.translation", "res://assets/localization/translations.da.translation", "res://assets/localization/translations.ar_EG.translation", "res://assets/localization/translations.fi.translation", "res://assets/localization/translations.el.translation", "res://assets/localization/translations.hu.translation", "res://assets/localization/translations.fa.translation", "res://assets/localization/translations.he.translation", "res://assets/localization/translations.it.translation", "res://assets/localization/translations.ar_LB.translation", "res://assets/localization/translations.lt.translation", "res://assets/localization/translations.ms.translation", "res://assets/localization/translations.ar_MA.translation", "res://assets/localization/translations.nl_NL.translation", "res://assets/localization/translations.nb.translation", "res://assets/localization/translations.ar_OM.translation", "res://assets/localization/translations.en_PH.translation", "res://assets/localization/translations.pl.translation", "res://assets/localization/translations.ro.translation", "res://assets/localization/translations.ar_SA.translation", "res://assets/localization/translations.sk.translation", "res://assets/localization/translations.sv.translation", "res://assets/localization/translations.th.translation", "res://assets/localization/translations.ar_TN.translation", "res://assets/localization/translations.tr.translation", "res://assets/localization/translations.uk.translation", "res://assets/localization/translations.ar_AE.translation", "res://assets/localization/translations.uz.translation", "res://assets/localization/translations.vi.translation", "res://assets/localization/translations.af.translation", "res://assets/localization/translations.am.translation", "res://assets/localization/translations.bn.translation", "res://assets/localization/translations.bs.translation", "res://assets/localization/translations.ca.translation", "res://assets/localization/translations.es_ES.translation", "res://assets/localization/translations.es_MX.translation", "res://assets/localization/translations.es_US.translation", "res://assets/localization/translations.fr_CA.translation", "res://assets/localization/translations.gu.translation", "res://assets/localization/translations.is.translation", "res://assets/localization/translations.kk.translation", "res://assets/localization/translations.km.translation", "res://assets/localization/translations.kn.translation", "res://assets/localization/translations.lo.translation", "res://assets/localization/translations.mk.translation", "res://assets/localization/translations.ml.translation", "res://assets/localization/translations.mn.translation", "res://assets/localization/translations.mr.translation", "res://assets/localization/translations.ne.translation", "res://assets/localization/translations.pa.translation", "res://assets/localization/translations.pt_PT.translation", "res://assets/localization/translations.si.translation", "res://assets/localization/translations.sl.translation", "res://assets/localization/translations.sr.translation", "res://assets/localization/translations.sw.translation", "res://assets/localization/translations.ta.translation", "res://assets/localization/translations.te.translation", "res://assets/localization/translations.ur.translation")
+locale/test="en"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true

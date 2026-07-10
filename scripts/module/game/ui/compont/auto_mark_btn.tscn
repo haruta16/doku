@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://dhvh6jct7wei6"]
+
+[ext_resource type="Script" uid="uid://jh626tj1tpgl" path="res://scripts/module/game/ui/compont/auto_mark_btn.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://0456odo3curq" path="res://assets/sprites/game/btn_auto_mark_2.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://boxfv8jh55b7c" path="res://assets/sprites/game/btn_auto_mark_1.png" id="3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ur6nf"]
+bg_color = Color(0, 0, 0, 0)
+
+[node name="AutoMarkBtn" type="Control" unique_id=1553380378]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 25.0
+offset_bottom = 20.0
+script = ExtResource("1")
+
+[node name="BtnAutoMark" type="Sprite2D" parent="." unique_id=230888075]
+position = Vector2(13, 9)
+texture = ExtResource("2")
+
+[node name="BtnAutoUnMark" type="Sprite2D" parent="." unique_id=228175319]
+position = Vector2(14, 13)
+texture = ExtResource("3")
+
+[node name="Hit" type="Button" parent="." unique_id=648581182]
+layout_mode = 0
+offset_left = -26.0
+offset_top = -23.0
+offset_right = 50.0
+offset_bottom = 29.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_ur6nf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ur6nf")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ur6nf")
+theme_override_styles/focus = SubResource("StyleBoxFlat_ur6nf")
+flat = true
+
+[node name="Panel" type="Panel" parent="Hit" unique_id=286330201]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

@@ -1,0 +1,267 @@
+[gd_scene format=3 uid="uid://oglawp08n8qu"]
+
+[ext_resource type="Script" uid="uid://433qy3v2lcla" path="res://scripts/module/debug/view/playtest_simulator_page.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="sf_panel"]
+content_margin_left = 50.0
+content_margin_top = 50.0
+content_margin_right = 50.0
+content_margin_bottom = 50.0
+bg_color = Color(0.08, 0.08, 0.08, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.55, 0.55, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="sf_input"]
+content_margin_left = 24.0
+content_margin_top = 14.0
+content_margin_right = 24.0
+content_margin_bottom = 14.0
+bg_color = Color(0.14, 0.14, 0.14, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="sf_btn"]
+content_margin_left = 28.0
+content_margin_top = 18.0
+content_margin_right = 28.0
+content_margin_bottom = 18.0
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.55, 0.55, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="PlaytestSimulatorPage" type="Control" unique_id=290686138]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1615604019]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterPanel" type="PanelContainer" parent="." unique_id=1164540698]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -540.0
+offset_right = 450.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("sf_panel")
+
+[node name="Margin" type="MarginContainer" parent="CenterPanel" unique_id=666915010]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterPanel/Margin" unique_id=1903030359]
+layout_mode = 2
+theme_override_constants/separation = 28
+
+[node name="Title" type="Label" parent="CenterPanel/Margin/VBox" unique_id=738261708]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 50
+text = "玩家行为模拟"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="CenterPanel/Margin/VBox" unique_id=1416785527]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 26
+text = "固定配置: locate 1/3, hint 1/3, restart 1/10, size_cycle=0"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="WarnLabel" type="Label" parent="CenterPanel/Margin/VBox" unique_id=632189639]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.4, 1)
+theme_override_font_sizes/font_size = 26
+text = "⚠️ 会 reset_all 当前存档,跑完只恢复关号。策略/道具/索引会清空。"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CountRow" type="HBoxContainer" parent="CenterPanel/Margin/VBox" unique_id=117657046]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CountLabel" type="Label" parent="CenterPanel/Margin/VBox/CountRow" unique_id=210632702]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "模拟次数:"
+
+[node name="CountInput" type="LineEdit" parent="CenterPanel/Margin/VBox/CountRow" unique_id=1436301635]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("sf_input")
+theme_override_styles/focus = SubResource("sf_input")
+text = "100"
+placeholder_text = "100"
+alignment = 1
+max_length = 6
+
+[node name="RnrRow" type="HBoxContainer" parent="CenterPanel/Margin/VBox" unique_id=2078234910]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RnrLabel" type="Label" parent="CenterPanel/Margin/VBox/RnrRow" unique_id=2078234911]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "rnr (空=SDK 真值,0~11 覆盖):"
+
+[node name="RnrInput" type="LineEdit" parent="CenterPanel/Margin/VBox/RnrRow" unique_id=2078234912]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("sf_input")
+theme_override_styles/focus = SubResource("sf_input")
+placeholder_text = "0~11"
+alignment = 1
+max_length = 2
+
+[node name="ScRow" type="HBoxContainer" parent="CenterPanel/Margin/VBox" unique_id=2078234920]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ScLabel" type="Label" parent="CenterPanel/Margin/VBox/ScRow" unique_id=2078234921]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "size_cycle (空=SDK,2=对照):"
+
+[node name="ScInput" type="LineEdit" parent="CenterPanel/Margin/VBox/ScRow" unique_id=2078234922]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("sf_input")
+theme_override_styles/focus = SubResource("sf_input")
+placeholder_text = "2~5"
+alignment = 1
+max_length = 1
+
+[node name="PresetRow" type="HBoxContainer" parent="CenterPanel/Margin/VBox" unique_id=2078234901]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Preset100Btn" type="Button" parent="CenterPanel/Margin/VBox/PresetRow" unique_id=2078234902]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("sf_btn")
+theme_override_styles/pressed = SubResource("sf_btn")
+theme_override_styles/hover = SubResource("sf_btn")
+text = "100"
+
+[node name="Preset1000Btn" type="Button" parent="CenterPanel/Margin/VBox/PresetRow" unique_id=2078234903]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("sf_btn")
+theme_override_styles/pressed = SubResource("sf_btn")
+theme_override_styles/hover = SubResource("sf_btn")
+text = "1000"
+
+[node name="Preset10000Btn" type="Button" parent="CenterPanel/Margin/VBox/PresetRow" unique_id=2078234904]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("sf_btn")
+theme_override_styles/pressed = SubResource("sf_btn")
+theme_override_styles/hover = SubResource("sf_btn")
+text = "10000"
+
+[node name="ErrorLabel" type="Label" parent="CenterPanel/Margin/VBox" unique_id=1386410935]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ResultLabel" type="Label" parent="CenterPanel/Margin/VBox" unique_id=1707635893]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="CenterPanel/Margin/VBox" unique_id=869658767]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="CloseBtn" type="Button" parent="CenterPanel/Margin/VBox/ButtonRow" unique_id=613475059]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("sf_btn")
+theme_override_styles/pressed = SubResource("sf_btn")
+theme_override_styles/hover = SubResource("sf_btn")
+text = "关闭"
+
+[node name="StartBtn" type="Button" parent="CenterPanel/Margin/VBox/ButtonRow" unique_id=569618333]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("sf_btn")
+theme_override_styles/pressed = SubResource("sf_btn")
+theme_override_styles/hover = SubResource("sf_btn")
+text = "开始模拟"
+
+[connection signal="pressed" from="CenterPanel/Margin/VBox/PresetRow/Preset100Btn" to="." method="_on_preset_100_pressed"]
+[connection signal="pressed" from="CenterPanel/Margin/VBox/PresetRow/Preset1000Btn" to="." method="_on_preset_1000_pressed"]
+[connection signal="pressed" from="CenterPanel/Margin/VBox/PresetRow/Preset10000Btn" to="." method="_on_preset_10000_pressed"]
+[connection signal="pressed" from="CenterPanel/Margin/VBox/ButtonRow/CloseBtn" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="CenterPanel/Margin/VBox/ButtonRow/StartBtn" to="." method="_on_start_pressed"]

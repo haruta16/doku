@@ -1,0 +1,370 @@
+[gd_scene format=3 uid="uid://b0rx7bqhok6do"]
+
+[ext_resource type="Script" uid="uid://bwk1ykgy00nsp" path="res://scripts/module/bank/view/bank_page.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="sf_back_normal"]
+bg_color = Color(0.3, 0.3, 0.3, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="sf_back_pressed"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="sf_transparent"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="sf_blue_normal"]
+bg_color = Color(0.25, 0.45, 0.75, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="sf_blue_pressed"]
+bg_color = Color(0.18, 0.35, 0.62, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="BankPage" type="Control" unique_id=593513764]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=166685753]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.941, 0.929, 0.91, 1)
+
+[node name="Header" type="Control" parent="." unique_id=406239260 groups=["_safe_top"]]
+layout_mode = 1
+anchors_preset = 0
+offset_right = 1080.0
+offset_bottom = 220.0
+
+[node name="BackBtn" type="Button" parent="Header" unique_id=952362788]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 60.0
+offset_right = 232.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("sf_back_normal")
+theme_override_styles/pressed = SubResource("sf_back_pressed")
+theme_override_styles/hover = SubResource("sf_back_normal")
+theme_override_styles/focus = SubResource("sf_transparent")
+text = "返回主页"
+
+[node name="TitleLabel" type="Label" parent="Header" unique_id=259996055]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -50.0
+offset_right = 300.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 56
+text = "题  库"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SizePanel" type="Control" parent="." unique_id=1391667611]
+anchors_preset = 0
+offset_top = 220.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+
+[node name="SizeScroll" type="ScrollContainer" parent="SizePanel" unique_id=1637226112]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 40.0
+offset_right = 1030.0
+offset_bottom = 1700.0
+
+[node name="VBox" type="VBoxContainer" parent="SizePanel/SizeScroll" unique_id=1623802571]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+
+[node name="TierPanel" type="Control" parent="." unique_id=1039211401]
+visible = false
+anchors_preset = 0
+offset_top = 220.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+
+[node name="TierHeader" type="HBoxContainer" parent="TierPanel" unique_id=786691035]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1056.0
+offset_bottom = 140.0
+theme_override_constants/separation = 20
+
+[node name="TierBackBtn" type="Button" parent="TierPanel/TierHeader" unique_id=329545700]
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("sf_blue_normal")
+theme_override_styles/pressed = SubResource("sf_blue_pressed")
+theme_override_styles/hover = SubResource("sf_blue_normal")
+theme_override_styles/focus = SubResource("sf_transparent")
+text = "< 返回"
+
+[node name="TierTitle" type="Label" parent="TierPanel/TierHeader" unique_id=1225717651]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 44
+vertical_alignment = 1
+
+[node name="TierSubtitle" type="Label" parent="TierPanel" unique_id=425924623]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 148.0
+offset_right = 1056.0
+offset_bottom = 196.0
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_font_sizes/font_size = 30
+text = "选择策略等级"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="TierPanel" unique_id=547252769]
+layout_mode = 0
+offset_top = 200.0
+offset_right = 1080.0
+offset_bottom = 1900.0
+
+[node name="TierVBox" type="VBoxContainer" parent="TierPanel/Scroll" unique_id=1387148039]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="ListPanel" type="Control" parent="." unique_id=1721541585]
+visible = false
+anchors_preset = 0
+offset_top = 220.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+
+[node name="ListHeader" type="HBoxContainer" parent="ListPanel" unique_id=214426749]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1056.0
+offset_bottom = 140.0
+theme_override_constants/separation = 20
+
+[node name="ListBackBtn" type="Button" parent="ListPanel/ListHeader" unique_id=1397662095]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("sf_blue_normal")
+theme_override_styles/pressed = SubResource("sf_blue_pressed")
+theme_override_styles/hover = SubResource("sf_blue_normal")
+theme_override_styles/focus = SubResource("sf_transparent")
+text = "< 返回"
+
+[node name="ListTitle" type="Label" parent="ListPanel/ListHeader" unique_id=913183933]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 40
+vertical_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="ListPanel" unique_id=1129922497]
+layout_mode = 0
+offset_top = 160.0
+offset_right = 1080.0
+offset_bottom = 1700.0
+
+[node name="LevelList" type="VBoxContainer" parent="ListPanel/Scroll" unique_id=1653921060]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="LKPanel" type="Control" parent="." unique_id=196013865]
+visible = false
+anchors_preset = 0
+offset_top = 220.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+
+[node name="LKHeader" type="HBoxContainer" parent="LKPanel" unique_id=1669036924]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1056.0
+offset_bottom = 140.0
+theme_override_constants/separation = 20
+
+[node name="LKBackBtn" type="Button" parent="LKPanel/LKHeader" unique_id=1692408147]
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("sf_blue_normal")
+theme_override_styles/pressed = SubResource("sf_blue_pressed")
+theme_override_styles/hover = SubResource("sf_blue_normal")
+theme_override_styles/focus = SubResource("sf_transparent")
+text = "< 返回"
+
+[node name="LKTitle" type="Label" parent="LKPanel/LKHeader" unique_id=1809298784]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.04, 0.4, 0.76, 1)
+theme_override_font_sizes/font_size = 44
+text = "LK 题库"
+vertical_alignment = 1
+
+[node name="LKInfoLabel" type="Label" parent="LKPanel" unique_id=1296902702]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 148.0
+offset_right = 1056.0
+offset_bottom = 196.0
+theme_override_colors/font_color = Color(0.55, 0.55, 0.55, 1)
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+
+[node name="LKSelectorContainer" type="Control" parent="LKPanel" unique_id=729223184]
+anchors_preset = 0
+offset_left = 24.0
+offset_top = 210.0
+offset_right = 1056.0
+offset_bottom = 390.0
+
+[node name="LKScroll" type="ScrollContainer" parent="LKPanel" unique_id=487723390]
+layout_mode = 0
+offset_top = 400.0
+offset_right = 1080.0
+offset_bottom = 1900.0
+
+[node name="LKList" type="VBoxContainer" parent="LKPanel/LKScroll" unique_id=243685571]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="RegularSizePanel" type="Control" parent="." unique_id=-847933591]
+visible = false
+anchors_preset = 0
+offset_top = 220.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+
+[node name="RegHeader" type="HBoxContainer" parent="RegularSizePanel" unique_id=-847933590]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1056.0
+offset_bottom = 140.0
+theme_override_constants/separation = 20
+
+[node name="RegBackBtn" type="Button" parent="RegularSizePanel/RegHeader" unique_id=-847933589]
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("sf_blue_normal")
+theme_override_styles/pressed = SubResource("sf_blue_pressed")
+theme_override_styles/hover = SubResource("sf_blue_normal")
+theme_override_styles/focus = SubResource("sf_transparent")
+text = "< 返回"
+
+[node name="RegTitle" type="Label" parent="RegularSizePanel/RegHeader" unique_id=-847933588]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.18, 0.55, 0.28, 1)
+theme_override_font_sizes/font_size = 44
+text = "常规题库"
+vertical_alignment = 1
+
+[node name="RegScroll" type="ScrollContainer" parent="RegularSizePanel" unique_id=-847933587]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 160.0
+offset_right = 1030.0
+offset_bottom = 1900.0
+
+[node name="RegVBox" type="VBoxContainer" parent="RegularSizePanel/RegScroll" unique_id=-847933586]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+
+[node name="LKStyleSizePanel" type="Control" parent="." unique_id=583917234]
+visible = false
+anchors_preset = 0
+offset_top = 220.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+
+[node name="LKSSHeader" type="HBoxContainer" parent="LKStyleSizePanel" unique_id=471839025]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 1056.0
+offset_bottom = 140.0
+theme_override_constants/separation = 20
+
+[node name="LKSSBackBtn" type="Button" parent="LKStyleSizePanel/LKSSHeader" unique_id=395827164]
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("sf_blue_normal")
+theme_override_styles/pressed = SubResource("sf_blue_pressed")
+theme_override_styles/hover = SubResource("sf_blue_normal")
+theme_override_styles/focus = SubResource("sf_transparent")
+text = "< 返回"
+
+[node name="LKSSTitle" type="Label" parent="LKStyleSizePanel/LKSSHeader" unique_id=628374951]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.38, 0.18, 0.72, 1)
+theme_override_font_sizes/font_size = 44
+text = "LK 优化题库"
+vertical_alignment = 1
+
+[node name="LKSSScroll" type="ScrollContainer" parent="LKStyleSizePanel" unique_id=194728365]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 160.0
+offset_right = 1030.0
+offset_bottom = 1900.0
+
+[node name="LKSSVBox" type="VBoxContainer" parent="LKStyleSizePanel/LKSSScroll" unique_id=837261904]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+
+[connection signal="pressed" from="Header/BackBtn" to="." method="_on_back_btn_pressed"]
+[connection signal="pressed" from="TierPanel/TierHeader/TierBackBtn" to="." method="_on_tier_back_btn_pressed"]
+[connection signal="pressed" from="ListPanel/ListHeader/ListBackBtn" to="." method="_on_list_back_btn_pressed"]
+[connection signal="pressed" from="LKPanel/LKHeader/LKBackBtn" to="." method="_on_lk_back_btn_pressed"]
+[connection signal="pressed" from="RegularSizePanel/RegHeader/RegBackBtn" to="." method="_on_regular_back_btn_pressed"]
+[connection signal="pressed" from="LKStyleSizePanel/LKSSHeader/LKSSBackBtn" to="." method="_on_lkss_back_btn_pressed"]

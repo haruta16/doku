@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://c2uuw3xdcl7r7"]
+
+[ext_resource type="Script" uid="uid://dvso57dqdj1uy" path="res://addons/cheat_manager/cheat_overlay.gd" id="1"]
+[ext_resource type="Script" uid="uid://bqnr22p77r8cc" path="res://addons/cheat_manager/fps_button.gd" id="2"]
+[ext_resource type="Script" uid="uid://b7xpgketatrar" path="res://addons/cheat_manager/cheat_panel.gd" id="3"]
+
+[node name="CheatOverlay" type="CanvasLayer" unique_id=3580937]
+layer = 900
+script = ExtResource("1")
+
+[node name="FpsButton" type="Button" parent="." unique_id=2096389112]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -137.0
+offset_top = -222.0
+offset_right = -17.0
+offset_bottom = -102.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 50
+text = "60"
+script = ExtResource("2")
+
+[node name="CheatPanel" type="Control" parent="." unique_id=323941505]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3")
+
+[node name="BgPanel" type="Panel" parent="CheatPanel" unique_id=1381774270]
+modulate = Color(0, 0, 0, 0.78431374)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="CheatPanel" unique_id=1247514857]
+layout_mode = 0
+offset_right = 1080.0
+offset_bottom = 1920.0
+
+[node name="Margin" type="MarginContainer" parent="CheatPanel/PanelContainer" unique_id=112233445]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="VBox" type="VBoxContainer" parent="CheatPanel/PanelContainer/Margin" unique_id=525959643]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleRow" type="HBoxContainer" parent="CheatPanel/PanelContainer/Margin/VBox" unique_id=862765329]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CheatPanel/PanelContainer/Margin/VBox/TitleRow" unique_id=1076744174]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 60
+text = "Cheat Manager"
+
+[node name="CloseBtn" type="Button" parent="CheatPanel/PanelContainer/Margin/VBox/TitleRow" unique_id=1075825008]
+custom_minimum_size = Vector2(160, 120)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 68
+text = "✕"
+
+[node name="TabContainer" type="TabContainer" parent="CheatPanel/PanelContainer/Margin/VBox" unique_id=700000001]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 52
+
+[node name="InputRow" type="HBoxContainer" parent="CheatPanel/PanelContainer/Margin/VBox" unique_id=951781585]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="CmdInput" type="LineEdit" parent="CheatPanel/PanelContainer/Margin/VBox/InputRow" unique_id=792960793]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 52
+placeholder_text = "输入命令..."
+
+[node name="RunBtn" type="Button" parent="CheatPanel/PanelContainer/Margin/VBox/InputRow" unique_id=144048545]
+custom_minimum_size = Vector2(240, 130)
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+text = "执行"

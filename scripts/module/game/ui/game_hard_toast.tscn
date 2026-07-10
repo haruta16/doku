@@ -1,0 +1,742 @@
+[gd_scene format=3 uid="uid://jgwaeahdm5ht"]
+
+[ext_resource type="Script" uid="uid://4rfqmobqxn4r" path="res://scripts/module/game/view/game_hard_toast.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://d2llqk745kk6n" path="res://assets/sprites/pop/bg_hard_toast.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c3qtucbhxvvo7" path="res://assets/sprites/pop/icon_fire.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="4"]
+[ext_resource type="FontFile" uid="uid://bvxeo4fq0ps17" path="res://assets/fonts/Roboto.ttf" id="5"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ll3nt"]
+content_margin_left = 90.0
+content_margin_top = 128.0
+content_margin_right = 90.0
+content_margin_bottom = 35.0
+texture = ExtResource("2")
+texture_margin_top = 220.88678
+texture_margin_bottom = 116.20348
+expand_margin_left = 24.0
+expand_margin_top = 24.0
+expand_margin_right = 24.0
+expand_margin_bottom = 24.0
+region_rect = Rect2(0, 0, 955, 537)
+
+[sub_resource type="FontVariation" id="fnt_medium"]
+base_font = ExtResource("5")
+variation_opentype = {
+2003072104: 100,
+2003265652: 500
+}
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8ium1"]
+content_margin_left = 90.0
+content_margin_top = 109.0
+content_margin_right = 90.0
+content_margin_bottom = 35.0
+texture = ExtResource("2")
+texture_margin_top = 220.88678
+texture_margin_bottom = 116.20348
+expand_margin_left = 24.0
+expand_margin_top = 24.0
+expand_margin_right = 24.0
+expand_margin_bottom = 24.0
+region_rect = Rect2(0, 0, 955, 537)
+
+[sub_resource type="Gradient" id="Gradient_grad4"]
+offsets = PackedFloat32Array(0, 0.05, 0.197, 0.8, 0.95, 1)
+colors = PackedColorArray(0.266667, 0.14902, 0.14902, 0, 0.266667, 0.14902, 0.14902, 0.45, 0.266667, 0.14902, 0.14902, 0.9, 0.266667, 0.14902, 0.14902, 0.9, 0.266667, 0.14902, 0.14902, 0.45, 0.266667, 0.14902, 0.14902, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_grad4"]
+gradient = SubResource("Gradient_grad4")
+width = 1080
+height = 340
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_grad4"]
+content_margin_left = 110.0
+content_margin_top = 25.0
+content_margin_right = 110.0
+content_margin_bottom = 10.0
+texture = SubResource("GradientTexture2D_grad4")
+
+[sub_resource type="Animation" id="Animation_0isbc"]
+resource_name = "Beginning"
+length = 0.683335
+step = 0.016666668
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Disappear",
+"time": 0.3666667
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.102020636, 0.6340667, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249, 0.679333, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_8ium1"]
+resource_name = "Card2"
+step = 0.016666668
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark",
+"time": 0.36666667
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.102020636, 0.6340667, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card/Card2:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card/Card2:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249, 0.679333, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_4iwew"]
+resource_name = "Card4"
+step = 0.016666668
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark",
+"time": 0.36666667
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.102020636, 0.6340667, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249, 0.679333, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_rbntm"]
+resource_name = "Card5"
+step = 0.016666668
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark",
+"time": 0.36666667
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.102020636, 0.6340667, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card/Card5:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card/Card5:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249, 0.679333, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_ll3nt"]
+resource_name = "Card6"
+step = 0.016666668
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark",
+"time": 0.36666667
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.102020636, 0.6340667, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.077880085, 0, 0.43519592, 0, 1.05, -0.049761694, 0, 0.05579388, 0, 0.8, -0.05579388, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249, 0.679333, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_3bdtv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8ium1"]
+_data = {
+&"Beginning": SubResource("Animation_0isbc"),
+&"Card2": SubResource("Animation_8ium1"),
+&"Card4": SubResource("Animation_4iwew"),
+&"Card5": SubResource("Animation_rbntm"),
+&"Card6": SubResource("Animation_ll3nt"),
+&"RESET": SubResource("Animation_3bdtv")
+}
+
+[node name="GameHardToast" type="CanvasLayer" unique_id=296620677]
+layer = 11
+script = ExtResource("1")
+
+[node name="Root" type="Control" parent="." unique_id=1752108990]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Card" type="Control" parent="Root" unique_id=1954993437]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Card2" type="Control" parent="Root/Card" unique_id=1409017066]
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -304.0
+offset_bottom = -304.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0000001, 1.0000001)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="PanelContainer" type="PanelContainer" parent="Root/Card/Card2" unique_id=294716368]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -453.5
+offset_top = -244.5
+offset_right = 453.5
+offset_bottom = 244.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ll3nt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/Card/Card2/PanelContainer" unique_id=1637263598]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/Card/Card2/PanelContainer/VBoxContainer" unique_id=1532811828]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="FireIcon" type="TextureRect" parent="Root/Card/Card2/PanelContainer/VBoxContainer/HBoxContainer" unique_id=234532390]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("3")
+
+[node name="HardLabel" type="Label" parent="Root/Card/Card2/PanelContainer/VBoxContainer/HBoxContainer" unique_id=17654722]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 0.373, 0.373, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 96
+text = "GAME_HARD_TAG"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Label" type="RichTextLabel" parent="Root/Card/Card2/PanelContainer/VBoxContainer" unique_id=2107423774]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 16
+theme_override_constants/text_highlight_h_padding = 3
+theme_override_constants/table_v_separation = 3
+theme_override_fonts/normal_font = SubResource("fnt_medium")
+theme_override_fonts/bold_font = ExtResource("4")
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 60
+bbcode_enabled = true
+text = "GAME_TOAST_FIRST_TRY"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Card4" type="Control" parent="Root/Card" unique_id=228810068]
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.78, 0.78)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Root/Card/Card4" unique_id=665709212]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.5
+offset_top = -247.065
+offset_right = 450.5
+offset_bottom = 247.065
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_8ium1")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/Card/Card4/PanelContainer" unique_id=1981765421]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/Card/Card4/PanelContainer/VBoxContainer" unique_id=911182834]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="FireIcon" type="TextureRect" parent="Root/Card/Card4/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1148271626]
+custom_minimum_size = Vector2(89, 103)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("3")
+
+[node name="HardLabel" type="Label" parent="Root/Card/Card4/PanelContainer/VBoxContainer/HBoxContainer" unique_id=770267219]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 0.373, 0.373, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 102
+text = "GAME_HARD_TAG"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Label" type="RichTextLabel" parent="Root/Card/Card4/PanelContainer/VBoxContainer" unique_id=1189101509]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 6
+theme_override_constants/text_highlight_h_padding = 3
+theme_override_constants/table_v_separation = 3
+theme_override_fonts/normal_font = SubResource("fnt_medium")
+theme_override_fonts/bold_font = ExtResource("4")
+theme_override_font_sizes/normal_font_size = 66
+theme_override_font_sizes/bold_font_size = 66
+bbcode_enabled = true
+text = "GAME_TOAST_FIRST_TRY"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Card5" type="Control" parent="Root/Card" unique_id=1941547440]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = 425.0
+offset_bottom = 425.0
+grow_horizontal = 2
+scale = Vector2(1.0000001, 1.0000001)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Root/Card/Card5" unique_id=1567453104]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -453.5
+offset_top = -244.5
+offset_right = 453.5
+offset_bottom = 244.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ll3nt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/Card/Card5/PanelContainer" unique_id=793918600]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/Card/Card5/PanelContainer/VBoxContainer" unique_id=751262177]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="FireIconCtrl" type="Control" parent="Root/Card/Card5/PanelContainer/VBoxContainer/HBoxContainer" unique_id=189122751]
+custom_minimum_size = Vector2(80, 93)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="FireIcon" type="TextureRect" parent="Root/Card/Card5/PanelContainer/VBoxContainer/HBoxContainer/FireIconCtrl" unique_id=1217031034]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -56.2
+offset_right = 40.0
+offset_bottom = 36.800003
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("3")
+
+[node name="HardLabel" type="Label" parent="Root/Card/Card5/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1955495222]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 0.373, 0.373, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 96
+text = "GAME_HARD_TAG"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Label" type="RichTextLabel" parent="Root/Card/Card5/PanelContainer/VBoxContainer" unique_id=1404358313]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 16
+theme_override_constants/text_highlight_h_padding = 3
+theme_override_constants/table_v_separation = 3
+theme_override_fonts/normal_font = SubResource("fnt_medium")
+theme_override_fonts/bold_font = ExtResource("4")
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 60
+bbcode_enabled = true
+text = "GAME_TOAST_FIRST_TRY"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Card6" type="Control" parent="Root/Card" unique_id=924147907]
+visible = false
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Root/Card/Card6" unique_id=1012030574]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -539.9996
+offset_top = -169.99986
+offset_right = 540.00037
+offset_bottom = 170.74013
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_grad4")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/Card/Card6/PanelContainer" unique_id=1601972990]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = -12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/Card/Card6/PanelContainer/VBoxContainer" unique_id=360807112]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="FireIcon" type="TextureRect" parent="Root/Card/Card6/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1694937536]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("3")
+
+[node name="HardLabel" type="Label" parent="Root/Card/Card6/PanelContainer/VBoxContainer/HBoxContainer" unique_id=611940298]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.373, 0.373, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 96
+text = "GAME_HARD_TAG"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="RichTextLabel" parent="Root/Card/Card6/PanelContainer/VBoxContainer" unique_id=1744580542]
+custom_minimum_size = Vector2(694, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 18
+theme_override_fonts/normal_font = SubResource("fnt_medium")
+theme_override_fonts/bold_font = ExtResource("4")
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 60
+bbcode_enabled = true
+text = "GAME_TOAST_FIRST_TRY"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1010498766]
+libraries/ = SubResource("AnimationLibrary_8ium1")

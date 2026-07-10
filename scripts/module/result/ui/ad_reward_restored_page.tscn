@@ -1,0 +1,362 @@
+[gd_scene format=3 uid="uid://bothlalxuxu8t"]
+
+[ext_resource type="Script" uid="uid://c7i0vluq87n8e" path="res://scripts/module/result/view/ad_reward_restored_page.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="2"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://d1hbgjbf4dovx" path="res://assets/prefab/tool_button.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://blcq54buvrrv5" path="res://assets/sprites/game/tool_cat_item.png" id="6"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="7"]
+[ext_resource type="Texture2D" uid="uid://ibovplgqc6eg" path="res://assets/sprites/game/icon_hint_lamp.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://02creoi2t2wl" path="res://assets/sprites/game/icon_undo.png" id="9"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="10"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="11"]
+
+[sub_resource type="StyleBoxFlat" id="sf_dialog_bg"]
+bg_color = Color(1, 0.984, 0.969, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="sf_title_bg"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_content_bg"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="Animation" id="Animation_itla2"]
+resource_name = "RESET"
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Overlay:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0028596316),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Content:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.040604103, 0.2724554),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Content:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.041228004, 0.27625215),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Content:pivot_offset_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, 0.5)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Content:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_popup"]
+_data = {
+&"GenericPopup": ExtResource("11"),
+&"RESET": SubResource("Animation_itla2")
+}
+
+[node name="AdRewardRestoredPage" type="Control" unique_id=1049591787]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=1913037810]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=917883633]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="Root" unique_id=1950496738]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="DialogRoot" type="Control" parent="Root/Content" unique_id=1162513418]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -590.0
+offset_right = 540.0
+offset_bottom = 590.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogBg" type="Panel" parent="Root/Content/DialogRoot" unique_id=1233306733]
+layout_mode = 0
+offset_left = 90.0
+offset_right = 990.0
+offset_bottom = 1180.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_dialog_bg")
+
+[node name="TitleBgPanel" type="Panel" parent="Root/Content/DialogRoot" unique_id=1943209980]
+layout_mode = 0
+offset_left = 90.0
+offset_right = 990.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title_bg")
+
+[node name="TitleLabel" type="Label" parent="Root/Content/DialogRoot" unique_id=1565260154]
+layout_mode = 0
+offset_left = 199.9955
+offset_top = 16.0
+offset_right = 865.7185
+offset_bottom = 116.0
+theme_override_colors/font_color = Color(0.427, 0.325, 0.345, 1)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 68
+text = "AD_REWARD_RESTORED_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="CloseButton" type="TextureButton" parent="Root/Content/DialogRoot" unique_id=114098299]
+layout_mode = 0
+offset_left = 870.0
+offset_top = 20.0
+offset_right = 970.0
+offset_bottom = 120.0
+texture_normal = ExtResource("4")
+ignore_texture_size = true
+stretch_mode = 1
+
+[node name="ToolGroup" type="HBoxContainer" parent="Root/Content/DialogRoot" unique_id=883351395]
+layout_mode = 0
+offset_top = 187.0
+offset_right = 1080.0
+offset_bottom = 437.0
+mouse_filter = 2
+theme_override_constants/separation = 38
+alignment = 1
+
+[node name="RevealBtn" parent="Root/Content/DialogRoot/ToolGroup" unique_id=2034969391 instance=ExtResource("5")]
+custom_minimum_size = Vector2(210, 250)
+layout_mode = 2
+icon_tex = ExtResource("6")
+label_text = "x1"
+state = 2
+badge_count = 3
+show_badge = false
+icon_size = Vector2(106, 106)
+
+[node name="ToolIcon" parent="Root/Content/DialogRoot/ToolGroup/RevealBtn/Control" parent_id_path=PackedInt32Array(2034969391, 1625222328) index="2" unique_id=379512301]
+offset_right = 56.0
+offset_bottom = 45.0
+
+[node name="ToolLabel" parent="Root/Content/DialogRoot/ToolGroup/RevealBtn" index="1" unique_id=1873770658]
+offset_left = 2.0000029
+offset_top = 186.0
+offset_right = 212.0
+offset_bottom = 289.0
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 70
+text = "x1"
+
+[node name="ToolIcon" parent="Root/Content/DialogRoot/ToolGroup/RevealBtn/ControlObtain" parent_id_path=PackedInt32Array(2034969391, 365221098) index="2" unique_id=779829219]
+offset_right = 56.0
+offset_bottom = 45.0
+
+[node name="ToolLabelObtain" parent="Root/Content/DialogRoot/ToolGroup/RevealBtn" index="3" unique_id=257138930]
+text = "x1"
+
+[node name="Badge" parent="Root/Content/DialogRoot/ToolGroup/RevealBtn" index="5" unique_id=789042874]
+visible = false
+offset_left = 119.0
+
+[node name="HintBtn" parent="Root/Content/DialogRoot/ToolGroup" unique_id=1787642135 instance=ExtResource("5")]
+custom_minimum_size = Vector2(210, 250)
+layout_mode = 2
+icon_tex = ExtResource("8")
+label_text = "x1"
+state = 2
+badge_count = 3
+show_badge = false
+icon_size = Vector2(67, 106)
+
+[node name="ToolIcon" parent="Root/Content/DialogRoot/ToolGroup/HintBtn/Control" parent_id_path=PackedInt32Array(1787642135, 1625222328) index="2" unique_id=379512301]
+offset_left = -30.0
+offset_top = -60.0975
+offset_right = 37.0
+offset_bottom = 46.097504
+texture = ExtResource("8")
+
+[node name="ToolLabel" parent="Root/Content/DialogRoot/ToolGroup/HintBtn" index="1" unique_id=1873770658]
+offset_left = 1.0
+offset_top = 187.0
+offset_right = 211.0
+offset_bottom = 290.0
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 70
+text = "x1"
+
+[node name="ToolIcon" parent="Root/Content/DialogRoot/ToolGroup/HintBtn/ControlObtain" parent_id_path=PackedInt32Array(1787642135, 365221098) index="2" unique_id=779829219]
+offset_left = -30.0
+offset_top = -60.0975
+offset_right = 37.0
+offset_bottom = 46.097504
+texture = ExtResource("8")
+
+[node name="ToolLabelObtain" parent="Root/Content/DialogRoot/ToolGroup/HintBtn" index="3" unique_id=257138930]
+text = "x1"
+
+[node name="Badge" parent="Root/Content/DialogRoot/ToolGroup/HintBtn" index="5" unique_id=789042874]
+visible = false
+
+[node name="UndoBtn" parent="Root/Content/DialogRoot/ToolGroup" unique_id=305374981 instance=ExtResource("5")]
+custom_minimum_size = Vector2(210, 250)
+layout_mode = 2
+icon_tex = ExtResource("9")
+label_text = "x1"
+badge_count = 3
+show_badge = false
+icon_size = Vector2(92, 90)
+
+[node name="ToolIcon" parent="Root/Content/DialogRoot/ToolGroup/UndoBtn/Control" parent_id_path=PackedInt32Array(305374981, 1625222328) index="2" unique_id=379512301]
+offset_left = -46.0
+offset_top = -51.0
+offset_right = 46.0
+offset_bottom = 39.0
+texture = ExtResource("9")
+
+[node name="ToolLabel" parent="Root/Content/DialogRoot/ToolGroup/UndoBtn" index="1" unique_id=1873770658]
+offset_left = -1.0
+offset_top = 187.0
+offset_right = 209.0
+offset_bottom = 290.0
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 70
+text = "x1"
+
+[node name="ToolIcon" parent="Root/Content/DialogRoot/ToolGroup/UndoBtn/ControlObtain" parent_id_path=PackedInt32Array(305374981, 365221098) index="2" unique_id=779829219]
+offset_left = -46.0
+offset_top = -51.0
+offset_right = 46.0
+offset_bottom = 39.0
+texture = ExtResource("9")
+
+[node name="ToolLabelObtain" parent="Root/Content/DialogRoot/ToolGroup/UndoBtn" index="3" unique_id=257138930]
+text = "x1"
+
+[node name="Badge" parent="Root/Content/DialogRoot/ToolGroup/UndoBtn" index="5" unique_id=789042874]
+visible = false
+
+[node name="ContentBg" type="Panel" parent="Root/Content/DialogRoot" unique_id=978182902]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 491.0
+offset_right = 940.0
+offset_bottom = 871.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_content_bg")
+
+[node name="ContentLabel" type="Label" parent="Root/Content/DialogRoot" unique_id=1207904399]
+layout_mode = 0
+offset_left = 189.0
+offset_top = 517.0
+offset_right = 909.0
+offset_bottom = 842.0
+theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_constants/line_spacing = -4
+theme_override_font_sizes/font_size = 54
+text = "AD_REWARD_RESTORED_DESC"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("3")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="CollectButton" parent="Root/Content/DialogRoot" unique_id=3643437 instance=ExtResource("10")]
+layout_mode = 0
+offset_left = 146.0
+offset_top = 863.00006
+offset_right = 896.0
+offset_bottom = 1023.0
+btn_text = "AD_REWARD_RESTORED_COLLECT"
+show_difficult = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=854159892]
+libraries/ = SubResource("AnimationLibrary_popup")
+
+[connection signal="pressed" from="Root/Content/DialogRoot/CloseButton" to="." method="_on_close_btn_pressed"]
+[connection signal="tag_pressed" from="Root/Content/DialogRoot/CollectButton" to="." method="_on_collect_btn_tag_pressed"]
+
+[editable path="Root/Content/DialogRoot/ToolGroup/RevealBtn"]
+[editable path="Root/Content/DialogRoot/ToolGroup/HintBtn"]
+[editable path="Root/Content/DialogRoot/ToolGroup/UndoBtn"]

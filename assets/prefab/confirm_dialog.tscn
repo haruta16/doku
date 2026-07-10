@@ -1,0 +1,149 @@
+[gd_scene format=3 uid="uid://1r82wteeg1jo"]
+
+[ext_resource type="Script" uid="uid://b7nwipfx2t61a" path="res://scripts/module/common/confirm_dialog.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="3"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="4"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="5"]
+
+[sub_resource type="StyleBoxFlat" id="sf_dialog_bg"]
+bg_color = Color(1, 0.984, 0.969, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="sf_title"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lr8f8"]
+_data = {
+&"GenericPopup": ExtResource("5")
+}
+
+[node name="ConfirmDialog" type="Control" unique_id=434429956]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=54992120]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=688694909]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="Content" type="Control" parent="Root" unique_id=1146033353]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="DialogRoot" type="Control" parent="Root/Content" unique_id=889603603]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -450.0
+offset_right = 450.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogBg" type="Panel" parent="Root/Content/DialogRoot" unique_id=958577251]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_dialog_bg")
+
+[node name="TitleBgPanel" type="Panel" parent="Root/Content/DialogRoot" unique_id=658465291]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title")
+
+[node name="TitleLabel" type="Label" parent="Root/Content/DialogRoot" unique_id=1245937560]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 900.0
+offset_bottom = 116.0
+theme_override_colors/font_color = Color(0.427, 0.325, 0.345, 1)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 86
+text = "DIALOG_QUIT_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" type="TextureButton" parent="Root/Content/DialogRoot" unique_id=894288041]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+texture_normal = ExtResource("3")
+ignore_texture_size = true
+stretch_mode = 1
+
+[node name="ContentLabel" type="Label" parent="Root/Content/DialogRoot" unique_id=1519444282]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 189.0
+offset_right = 859.66
+offset_bottom = 601.72
+theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
+theme_override_font_sizes/font_size = 80
+text = "DIALOG_QUIT_MSG"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ActionButton" parent="Root/Content/DialogRoot" unique_id=256697999 instance=ExtResource("4")]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 580.0
+offset_right = 839.0
+offset_bottom = 838.0
+bg_color = Color(0.8509804, 0.28235295, 0.28235295, 1)
+shadow_color = Color(0.8509804, 0.28235295, 0.28235295, 1)
+btn_text = "DIALOG_QUIT_BTN"
+show_difficult = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=1081786407]
+libraries/ = SubResource("AnimationLibrary_lr8f8")
+
+[connection signal="pressed" from="Root/Content/DialogRoot/CloseButton" to="." method="_on_close_btn_pressed"]
+[connection signal="tag_pressed" from="Root/Content/DialogRoot/ActionButton" to="." method="_on_action_btn_pressed"]

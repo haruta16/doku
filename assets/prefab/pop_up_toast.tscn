@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://dss10nspod6vh"]
+
+[ext_resource type="Script" uid="uid://b3q1gvq3oqyno" path="res://scripts/module/ui/common/pop_up_toast.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="sf_toast"]
+content_margin_left = 60.0
+content_margin_top = 20.0
+content_margin_right = 60.0
+content_margin_bottom = 20.0
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="Animation" id="Animation_nowy8"]
+resource_name = "Appear"
+length = 0.6
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark",
+"time": 0.3
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Panel:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0028596316, 0.36666667, 0.5666666),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Panel:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.040604103, 0.2724554, 1.05, -0.03321153, 0, 0.06678848, 0, 1, -0.06678848, 0, 0.049761694, 0, 1, -0.06678848, 0, 0.049761694, 0),
+"times": PackedFloat32Array(0, 0.09963459, 0.3, 0.56666666)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Panel:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.041228004, 0.27625215, 1.05, -0.03321153, 0, 0.06678848, 0, 1, -0.06678848, 0, 0.049761694, 0, 1, -0.06678848, 0, 0.049761694, 0),
+"times": PackedFloat32Array(0, 0.09963459, 0.3, 0.56666666)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Panel:pivot_offset_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, 0.5)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Panel:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.05483741, 0.36666667, 0.5666666),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_icajr"]
+resource_name = "RESET"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Panel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Panel:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_icajr"]
+_data = {
+&"Appear": SubResource("Animation_nowy8"),
+&"RESET": SubResource("Animation_icajr")
+}
+
+[node name="PopUpToast" type="Control" unique_id=699836016]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1")
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=2045273502]
+layout_mode = 0
+offset_left = -435.0
+offset_top = -54.0
+offset_right = 435.0
+offset_bottom = 54.0
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_toast")
+
+[node name="Label" type="Label" parent="Panel" unique_id=1269776573]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5764706, 0.3529412, 0.3529412, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 46
+text = "Toast"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2123525874]
+libraries/ = SubResource("AnimationLibrary_icajr")

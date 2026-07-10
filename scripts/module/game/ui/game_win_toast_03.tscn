@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://w3wlndufyfes"]
+
+[ext_resource type="Script" uid="uid://dpva8mddh4w06" path="res://scripts/module/game/view/game_win_toast.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://ckw47gsghder0" path="res://assets/sprites/game/win_toast/bg.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ch1ggf4u1nxw0" path="res://assets/sprites/game/game_win_toast03/union_86.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="4"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="5"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="6"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2ns7j"]
+_data = {
+&"GenericPopup": ExtResource("6")
+}
+
+[node name="GameWinToast03" type="CanvasLayer" unique_id=1530640329]
+layer = 11
+visible = false
+script = ExtResource("1")
+highlight_color = Color(1, 0.513725, 0.984314, 1)
+
+[node name="Content" type="Control" parent="." unique_id=1827817076]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -450.0
+offset_top = 756.0
+offset_right = 450.0
+offset_bottom = 1121.0
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Frame" type="Control" parent="Content" unique_id=2112684141]
+anchors_preset = 0
+offset_top = -8.0
+offset_right = 900.0
+offset_bottom = 365.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Bg" type="TextureRect" parent="Content/Frame" unique_id=842665189]
+layout_mode = 0
+offset_top = 3.0
+offset_right = 900.0
+offset_bottom = 373.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="Like" type="Control" parent="Content" unique_id=470553810]
+anchors_preset = 0
+offset_left = 410.0
+offset_top = 18.0
+offset_right = 489.50504
+offset_bottom = 99.36813
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="UnionImg" type="TextureRect" parent="Content/Like" unique_id=1845248530]
+layout_mode = 0
+offset_left = -11.999296
+offset_top = -2.7364252
+offset_right = 91.00274
+offset_bottom = 84.26288
+pivot_offset = Vector2(51.50102, 43.499653)
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="MessageTxt" type="RichTextLabel" parent="Content" unique_id=1893694346]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 125.0
+offset_right = 810.0
+offset_bottom = 305.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 18
+theme_override_fonts/normal_font = ExtResource("4")
+theme_override_fonts/bold_font = ExtResource("5")
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 60
+bbcode_enabled = true
+text = "GAME_WIN_TOAST_ALMOST_FLAWLESS"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1581689855]
+libraries/ = SubResource("AnimationLibrary_2ns7j")
