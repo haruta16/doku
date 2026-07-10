@@ -1,26 +1,24 @@
-# Meowdoku recovered Godot project
+# Meowdoku 恢复工程
 
-This is the editable, buildable recovery of Meowdoku 1.8.1 (`com.oakever.meowdoku`, version code 418).
+Meowdoku 1.8.1（`com.oakever.meowdoku`，version code 418）的可编辑、可构建恢复工程。
 
-## Prerequisites
+## 前置条件
 
-The project uses Spine 4.2.43 assets. A stock Godot editor cannot load `SpineSprite`, `SpineAnimationTrack`, or the Spine resource importers — the project will fail to open. You must use the matching Spine-Godot editor.
+项目使用了 Spine 4.2.43 骨骼动画资源。官方 Godot 编辑器无法识别 `SpineSprite`、`SpineAnimationTrack` 等类型，直接打开会报错。必须使用匹配的 Spine-Godot 编辑器。
 
-Download the editor for your platform from the Spine-Godot releases page:
+从 Spine-Godot 发布页下载对应平台的编辑器：
 
 <https://github.com/EsotericSoftware/spine-runtimes/releases>
 
-Place it outside the repo, relative to the project root:
+放到工程目录外部，相对路径为：
 
 ```
 ../tools/spine-godot/4.2-4.6.1/godot-4.2-4.6.1-stable.exe
 ```
 
-The project was recovered from a Windows build; the editor on other platforms is functionally identical.
+## 打开工程
 
-## Open the project
-
-From the project root:
+在工程根目录执行：
 
 **Windows:**
 ```powershell
@@ -32,50 +30,50 @@ From the project root:
 ../tools/spine-godot/4.2-4.6.1/godot-4.2-4.6.1-stable --editor --path .
 ```
 
-## Validate
+## 运行验收
 
 ```powershell
 & ..\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --path . --script res://tools/validate_recovery.gd
 ```
 
-Expected output:
+预期输出：
 
 ```
 VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
 ```
 
-## Android build
+## Android 构建
 
-Requires the Spine-Godot Android export templates and a full Android SDK/NDK setup. Download the matching export templates from the same releases page above and extract them to:
+需要 Spine-Godot Android 导出模板和 Android SDK/NDK 环境。从上述 releases 页面下载匹配的导出模板，解压到：
 
 ```
 ../tools/spine-godot/4.2-4.6.1/templates/
 ```
 
-Configure SDK and JDK paths once:
+配置 SDK 和 JDK 路径（只需一次）：
 
 ```powershell
 & ..\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --editor --path . --script res://tools/setup_editor_settings.gd
 ```
 
-Export:
+导出 APK：
 
 ```powershell
 & ..\tools\spine-godot\4.2-4.6.1\godot-4.2-4.6.1-stable.exe --headless --path . --export-debug Android ..\build\meowdoku-recovered.apk
 ```
 
-The reconstructed build uses `com.oakever.meowdoku.recovered`, so it coexists with the store version.
+恢复版使用独立包名 `com.oakever.meowdoku.recovered`，可与商店版共存。
 
-## Recovery notes
+## 恢复概况
 
-- 257/257 exported GDScript bytecode files were decompiled without failure.
-- 740/741 imported resources were converted. The sole failed item was the Rider editor GDExtension descriptor whose platform binaries were intentionally absent from the Android export.
-- All 75 compiled runtime translation resources are preserved. The incomplete CSV source reconstruction (875/1035 keys) is retained under `.assets/` as evidence.
-- 26 XOR-obfuscated level-bank files were decoded to editable JSON under `assets/editor/levels`; together they contain 20,746 entries. The `Level Bank Encryptor` editor plugin regenerates the runtime copies under `assets/resources/levels`.
-- The standalone build uses the GDScript offline adapter when the proprietary UniKit advertising/analytics Android plugin is unavailable. Core gameplay, saves, localization, audio, Spine animation, tutorial, level progression, settings, and debug API are functional.
+- 257 个 GDScript 字节码文件全部反编译成功。
+- 740/741 个导入资源完成转换。唯一失败项是 Rider 编辑器 GDExtension 描述文件，因 Android 导出包不含其平台二进制。
+- 75 个运行时翻译资源全部保留。
+- 26 个 XOR 混淆的关卡库文件已解码为可编辑 JSON（`assets/editor/levels/`），共 20,746 条关卡记录。`Level Bank Encryptor` 编辑器插件可将编辑后的明文重新加密到运行时目录 `assets/resources/levels/`。
+- 专有的 UniKit 广告/统计 Android 插件在导出包中缺失，独立构建使用 GDScript 离线适配层。核心玩法、存档、本地化、音频、Spine 动画、教程、关卡推进、设置和调试 API 均正常可用。
 
-## References
+## 参考资料
 
-- Spine-Godot runtime documentation: <https://esotericsoftware.com/spine-godot>
-- Godot Android export documentation: <https://docs.godotengine.org/en/4.6/tutorials/export/exporting_for_android.html>
-- Godot MCP Pro source: <https://github.com/youichi-uda/godot-mcp-pro>
+- Spine-Godot 运行时文档：<https://esotericsoftware.com/spine-godot>
+- Godot Android 导出文档：<https://docs.godotengine.org/en/4.6/tutorials/export/exporting_for_android.html>
+- Godot MCP Pro 源码：<https://github.com/youichi-uda/godot-mcp-pro>
