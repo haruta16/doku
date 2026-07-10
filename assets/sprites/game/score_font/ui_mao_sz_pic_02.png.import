@@ -3,6 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cn8yqalmalik8"
+path.s3tc="res://.godot/imported/ui_mao_sz_pic_02.png-8536514d10f55e1600a22e8a345f7d5a.s3tc.ctex"
 path.etc2="res://.godot/imported/ui_mao_sz_pic_02.png-8536514d10f55e1600a22e8a345f7d5a.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
@@ -12,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/game/score_font/ui_mao_sz_pic_02.png"
-dest_files=["res://.godot/imported/ui_mao_sz_pic_02.png-8536514d10f55e1600a22e8a345f7d5a.etc2.ctex"]
+dest_files=["res://.godot/imported/ui_mao_sz_pic_02.png-8536514d10f55e1600a22e8a345f7d5a.s3tc.ctex", "res://.godot/imported/ui_mao_sz_pic_02.png-8536514d10f55e1600a22e8a345f7d5a.etc2.ctex"]
 
 [params]
 
@@ -28,6 +29,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=false
 process/premult_alpha=false
 process/normal_map_invert_y=false

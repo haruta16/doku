@@ -3,6 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dw1dj2d6v6tml"
+path.s3tc="res://.godot/imported/vector.png-14f853fe396ec7e6cbda0d98acc89b1d.s3tc.ctex"
 path.etc2="res://.godot/imported/vector.png-14f853fe396ec7e6cbda0d98acc89b1d.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
@@ -12,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/language/setting_language_v3/vector.png"
-dest_files=["res://.godot/imported/vector.png-14f853fe396ec7e6cbda0d98acc89b1d.etc2.ctex"]
+dest_files=["res://.godot/imported/vector.png-14f853fe396ec7e6cbda0d98acc89b1d.s3tc.ctex", "res://.godot/imported/vector.png-14f853fe396ec7e6cbda0d98acc89b1d.etc2.ctex"]
 
 [params]
 
@@ -28,6 +29,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=false
 process/premult_alpha=false
 process/normal_map_invert_y=false

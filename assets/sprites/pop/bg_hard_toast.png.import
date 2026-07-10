@@ -3,6 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2llqk745kk6n"
+path.s3tc="res://.godot/imported/bg_hard_toast.png-c76ca2bf76f9b319e134eafff3ef4d7d.s3tc.ctex"
 path.etc2="res://.godot/imported/bg_hard_toast.png-c76ca2bf76f9b319e134eafff3ef4d7d.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
@@ -12,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/pop/bg_hard_toast.png"
-dest_files=["res://.godot/imported/bg_hard_toast.png-c76ca2bf76f9b319e134eafff3ef4d7d.etc2.ctex"]
+dest_files=["res://.godot/imported/bg_hard_toast.png-c76ca2bf76f9b319e134eafff3ef4d7d.s3tc.ctex", "res://.godot/imported/bg_hard_toast.png-c76ca2bf76f9b319e134eafff3ef4d7d.etc2.ctex"]
 
 [params]
 
@@ -28,6 +29,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=false
 process/premult_alpha=false
 process/normal_map_invert_y=false

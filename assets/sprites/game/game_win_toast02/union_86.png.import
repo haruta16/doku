@@ -3,6 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hldrw5u0l2ey"
+path.s3tc="res://.godot/imported/union_86.png-7be11c925ddff78b002a110b7d19f613.s3tc.ctex"
 path.etc2="res://.godot/imported/union_86.png-7be11c925ddff78b002a110b7d19f613.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
@@ -12,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/game/game_win_toast02/union_86.png"
-dest_files=["res://.godot/imported/union_86.png-7be11c925ddff78b002a110b7d19f613.etc2.ctex"]
+dest_files=["res://.godot/imported/union_86.png-7be11c925ddff78b002a110b7d19f613.s3tc.ctex", "res://.godot/imported/union_86.png-7be11c925ddff78b002a110b7d19f613.etc2.ctex"]
 
 [params]
 
@@ -28,6 +29,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=false
 process/premult_alpha=false
 process/normal_map_invert_y=false
