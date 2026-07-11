@@ -39,7 +39,8 @@ Meowdoku 1.8.1（`com.oakever.meowdoku`，version code 418）的可编辑、可�
 预期输出：
 
 ```
-VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
+LEVEL_DATA_INFO: 63 original solution entries are rejected by runtime validation
+VALIDATION_OK: 257 recovered scripts, 74 scenes, 75 translations, 26 level banks, 20,746 records, and 20,710 solution entries
 ```
 
 ## Android 构建
@@ -67,10 +68,13 @@ VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
 ## 恢复概况
 
 - 257 个 GDScript 字节码文件全部反编译成功。
+- 格式化前逐脚本重新编译并与 APK 字节码比较：255/257 字节完全一致；另 2 份仅有明确的非 Android/iOS 导出环境适配。没有发现合成变量名，也没有为了易读性重命名原标识符。
 - 740/741 个导入资源完成转换。唯一失败项是 Rider 编辑器 GDExtension 描述文件，因 Android 导出包不含其平台二进制。
 - 75 个运行时翻译资源全部保留。
 - 26 个 XOR 混淆的关卡库文件已解码为可编辑 JSON（`assets/editor/levels/`），共 20,746 条关卡记录。`Level Bank Encryptor` 编辑器插件可将编辑后的明文重新加密到运行时目录 `assets/resources/levels/`。
 - 专有的 UniKit 广告/统计 Android 插件在导出包中缺失，独立构建使用 GDScript 离线适配层。核心玩法、存档、本地化、音频、Spine 动画、教程、关卡推进、设置和调试 API 均正常可用。
+
+完整的源码同一性、格式修复、未进入 APK 的代码边界和复核证据见 [`RECOVERY_FIDELITY_AUDIT.md`](RECOVERY_FIDELITY_AUDIT.md)。
 
 ## 参考资料
 

@@ -6,7 +6,7 @@
 
 最终结果：**恢复工程已经能够使用匹配的 Spine-Godot 编辑器无错误导入，能够重新导出 arm64 Android APK，并已在 Pixel 6a 上完成冷启动、教程、关卡、设置、返回导航和调试 API 验证。**
 
-需要说明的是，发布包本身不包含原开发仓库的版本历史、注释、未导出源文件和专有第三方插件源码，因此无法声称与原始开发仓库逐字节一致。本次交付属于“功能可用、可编辑、可复现构建”的工程级恢复。
+需要说明的是，发布包本身不包含原开发仓库的版本历史、注释、未导出源文件和专有第三方插件源码，因此无法声称与原始开发仓库逐字节一致。但对 APK 内实际存在的 257 份 GDScript，格式化前重新编译比较得到 255/257 字节完全一致，其余 2 份仅是明确的导出/环境适配。详细证据见 `RECOVERY_FIDELITY_AUDIT.md`。
 
 ## 二、输入文件与基础信息
 
@@ -108,23 +108,24 @@ recovered_project/assets/editor/levels/
 
 同时重建 `addons/level_bank_encryptor` 编辑器插件，提供 `Encrypt Level Banks` 菜单，可以将编辑后的明文 JSON 重新编码回运行时目录 `assets/resources/levels`，从而恢复关卡的正常编辑和再打包工作流。
 
-### 5. 缺失代码与插件重建
+### 5. 未导出代码与开发工具
 
-发布包会排除部分只在开发期使用的源文件和插件，因此根据现存调用关系、数据格式和运行时行为完成以下重建：
+原始全局类缓存与 APK 实际脚本对照显示，有 29 个类路径没有进入发布包：28 个属于 `addons/art2godot/` 美术/Figma 编辑器工具，另 1 个是 `scripts/editor/queendoku/level_generator_editor.gd`。
 
-1. 重建 `scripts/editor/queendoku/level_generator_editor.gd`。
+1. `scripts/editor/queendoku/level_generator_editor.gd` 保留一份兼容性重建。
    - 支持 4×4 至 10×10 棋盘；
    - 每行、每列恰好一个猫位置；
    - 猫之间不能相邻或对角接触；
    - 能生成连通区域和对应颜色数据；
    - 接口与现有调试页面保持兼容。
+   - APK 只保存了类路径和调用接口，没有该文件的字节码，无法证明原生成算法；因此该文件不计入核心业务还原率，也不作为准确性验收条件。
 
 2. 恢复 Godot MCP Pro。
    - 原发布包排除了插件文件，但残留了 Autoload 配置；
    - 使用公开的 v1.15.0、提交 `1beb50bc7b6fe6b1b5a440da5cb7187646afd9d0` 恢复 `addons/godot_mcp`。
 
 3. 移除发布包中不存在的编辑器插件引用。
-   - `art2godot`；
+   - `art2godot`（28 个类路径均没有随 APK 导出，未猜写实现）；
    - `build_helper`；
    - 缺少平台二进制的 Rider GDExtension。
 
@@ -220,14 +221,17 @@ build/meowdoku-recovered-step2.png
 新增 `recovered_project/tools/validate_recovery.gd`，自动执行以下检查：
 
 - 加载项目主场景；
-- 检查 4、5、6、7、8、9、10、12 尺寸关卡库；
-- 检查 57 个特殊关卡和教程数据；
-- 对 4×4 至 10×10 生成器逐一生成并验证规则。
+- 加载 APK 对应的 257 个恢复脚本、74 个场景和 75 个运行时翻译资源；
+- 逐份解密比较 26 个编辑/运行时关卡库；
+- 核对 20,746 条记录、20,710 条 solution、8 种关卡尺寸、57 个特殊关卡和教程数据；
+- 明确报告原数据中会被运行时校验拒绝的 63 条 solution；
+- 不使用缺少 APK 字节码的编辑器生成器作为核心质量证明。
 
 最终验收命令退出码为 0，输出：
 
 ```text
-VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
+LEVEL_DATA_INFO: 63 original solution entries are rejected by runtime validation
+VALIDATION_OK: 257 recovered scripts, 74 scenes, 75 translations, 26 level banks, 20,746 records, and 20,710 solution entries
 ```
 
 完整输出保存在工作区根目录的 `validation_stdout.log`。
@@ -278,8 +282,15 @@ VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
    - 独立包名可保护原版应用和存档不被覆盖。
 
 5. **源码同一性**
-   - 反编译结果无法恢复原注释、格式、变量原名保证、Git 历史和未随发布包导出的文件；
-   - 因此本项目保证的是已验证的可用性和可复现性，而不是原始开发仓库的字节级同一性。
+   - 反编译无法恢复原注释、Git 历史和未随发布包导出的文件；
+   - APK GDScript token 保存了标识符。本工程未发现合成变量名，也没有做易读化重命名；变量名可保证与 APK 可恢复名称一致，但不能证明等于更早、混淆前的仓库名称；
+   - 257 份 APK 脚本已统一修复反编译格式损失。格式化前重新编译比较为 255/257 字节完全一致，2 份环境适配有明确记录；
+   - 因此可以对 APK 内核心业务代码作高强度同一性声明，但不能对整个原始开发仓库作 100% 声明。
+
+6. **没有进入 APK 的类**
+   - 全局类缓存中有 28 个 `art2godot` 编辑器工具类和 1 个 `LevelGeneratorEditor` 没有对应字节码；
+   - `art2godot` 未作推测性重写；编辑器生成器只作为兼容实现保留，并明确标注为非原版证明内容；
+   - 这些文件不参与正常游戏核心运行。
 
 ## 七、为什么没有使用 Frida
 
@@ -333,7 +344,8 @@ recovered_project/
 预期看到：
 
 ```text
-VALIDATION_OK: main scene, level banks, tutorial data, and generators 4x4-10x10
+LEVEL_DATA_INFO: 63 original solution entries are rejected by runtime validation
+VALIDATION_OK: 257 recovered scripts, 74 scenes, 75 translations, 26 level banks, 20,746 records, and 20,710 solution entries
 ```
 
 ### 配置 Android SDK/JDK 路径
@@ -369,4 +381,4 @@ adb devices -l
 
 ---
 
-本次恢复完成日期：2026-07-10。
+初次恢复完成日期：2026-07-10。源码同一性与格式审计完成日期：2026-07-11。

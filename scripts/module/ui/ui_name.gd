@@ -1,10 +1,6 @@
 class_name UiName
 extends RefCounted
 
-
-
-
-
 const SPLASH: StringName = &"splash"
 const HOME: StringName = &"home"
 const GAME: StringName = &"game"
@@ -36,15 +32,12 @@ const STREAK_SWITCH2: StringName = &"streak_switch2"
 const STREAK_SWITCH3: StringName = &"streak_switch3"
 const AB_SWITCH_POPUP: StringName = &"ab_switch_popup"
 
-
 const DEBUG: StringName = &"debug"
 const GENERATOR: StringName = &"generator"
-
 
 const AB_DEBUG: StringName = &"ab_debug"
 const LEVEL_JSON_INPUT: StringName = &"level_json_input"
 const PLAYTEST_SIMULATOR: StringName = &"playtest_simulator"
-
 
 const MOCK_AD: StringName = &"mock_ad"
 const MOCK_BANNER: StringName = &"mock_banner"

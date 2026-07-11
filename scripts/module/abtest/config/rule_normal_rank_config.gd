@@ -1,46 +1,6 @@
 extends AbConfigBase
 class_name RuleNormalRankConfig
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const VALUE_CONTROL: int = 0
 const VALUE_EXPERIMENT_A: int = 1
 const VALUE_EXPERIMENT_B: int = 2
@@ -54,51 +14,52 @@ const VALUE_GROUP_I: int = 9
 const VALUE_GROUP_J: int = 10
 const VALUE_GROUP_K: int = 11
 
-func _init() -> void :
-    key = "rule_normal_rank"
-    default_value = VALUE_EXPERIMENT_B
-    timing = ABTestManager.TIMING_GAME_START_NORMAL
+
+func _init() -> void:
+	key = "rule_normal_rank"
+	default_value = VALUE_EXPERIMENT_B
+	timing = ABTestManager.TIMING_GAME_START_NORMAL
 
 
 func is_experiment_a() -> bool:
-    return value() == VALUE_EXPERIMENT_A
+	return value() == VALUE_EXPERIMENT_A
 
 
 func is_experiment_b() -> bool:
-    return value() == VALUE_EXPERIMENT_B
+	return value() == VALUE_EXPERIMENT_B
 
 
 func is_experiment_c() -> bool:
-    return value() == VALUE_EXPERIMENT_C
+	return value() == VALUE_EXPERIMENT_C
 
 
 func is_experiment_d() -> bool:
-    return value() == VALUE_EXPERIMENT_D
+	return value() == VALUE_EXPERIMENT_D
 
 
 func is_experiment_e() -> bool:
-    return value() == VALUE_EXPERIMENT_E
+	return value() == VALUE_EXPERIMENT_E
 
 
 func is_group_f() -> bool:
-    return value() == VALUE_GROUP_F
+	return value() == VALUE_GROUP_F
 
 
 func is_group_g() -> bool:
-    return value() == VALUE_GROUP_G
+	return value() == VALUE_GROUP_G
 
 
 func is_group_h() -> bool:
-    return value() == VALUE_GROUP_H
+	return value() == VALUE_GROUP_H
 
 
 func is_group_i() -> bool:
-    return value() == VALUE_GROUP_I
+	return value() == VALUE_GROUP_I
 
 
 func is_group_j() -> bool:
-    return value() == VALUE_GROUP_J
+	return value() == VALUE_GROUP_J
 
 
 func is_group_k() -> bool:
-    return value() == VALUE_GROUP_K
+	return value() == VALUE_GROUP_K
