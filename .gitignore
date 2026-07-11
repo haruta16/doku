@@ -1,3 +1,5 @@
 .godot/
 *.log
 originals/
+.DS_Store
+.vscode/

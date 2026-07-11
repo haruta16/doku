@@ -320,9 +320,7 @@ recovered_project/
 ├─ addons/                            编辑器插件
 ├─ android/                           Android 构建配置
 ├─ ios/                               iOS 构建配置
-├─ tools/                             工程内工具脚本
-├─ README.md                          使用说明
-└─ MEOWDOKU_逆向恢复全流程总结.md      本文档
+└─ tools/                             工程内工具脚本
 ```
 
 ## 九、复现与使用命令
