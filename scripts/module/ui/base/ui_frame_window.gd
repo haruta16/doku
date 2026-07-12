@@ -126,7 +126,7 @@ var _close_btn: BaseButton = null
 
 func _do_create() -> void:
 	super._do_create()
-	var btn := find_child("CloseBtn", true, false) as BaseButton
+	var btn : BaseButton = find_child("CloseBtn", true, false) as BaseButton
 	if btn != null and _close_btn == null:
 		_close_btn = btn
 

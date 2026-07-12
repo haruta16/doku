@@ -46,7 +46,7 @@ static func _classify_pair(a: Vector2i, b: Vector2i, regions: Array) -> int:
 
 
 static func classify_violation(r: int, c: int, placed_cats: Array, regions: Array) -> int:
-	var here := Vector2i(r, c)
+	var here : Vector2i = Vector2i(r, c)
 	var best: int = Rule.NONE
 	for cat: Vector2i in placed_cats:
 		var k: int = _classify_pair(here, cat, regions)
@@ -59,10 +59,8 @@ static func classify_violation(r: int, c: int, placed_cats: Array, regions: Arra
 	return best
 
 
-static func find_conflicting_cats(
-	r: int, c: int, placed_cats: Array, regions: Array
-) -> Array[Vector2i]:
-	var here := Vector2i(r, c)
+static func find_conflicting_cats(r: int, c: int, placed_cats: Array, regions: Array) -> Array[Vector2i]:
+	var here : Vector2i = Vector2i(r, c)
 	var result: Array[Vector2i] = []
 	for cat: Vector2i in placed_cats:
 		if _classify_pair(here, cat, regions) != Rule.NONE:
@@ -91,7 +89,7 @@ static func constraint_cells_for_cat(cat: Vector2i, size: int, regions: Array) -
 		for c in range(size):
 			if r == cat.x and c == cat.y:
 				continue
-			var p := Vector2i(r, c)
+			var p : Vector2i = Vector2i(r, c)
 			if r == cat.x:
 				row_cells.append(p)
 			if c == cat.y:
@@ -115,7 +113,7 @@ static func cells_excluded_by_cat_no_region(cat: Vector2i, size: int) -> Array[V
 
 
 static func is_complete(board: Array, size: int, regions: Array) -> bool:
-	var piece_count := 0
+	var piece_count : int = 0
 	for r in range(size):
 		for c in range(size):
 			if board[r][c] == CellState.CAT:

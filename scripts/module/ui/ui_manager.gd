@@ -119,7 +119,7 @@ func hide_all_except(names: Array[String]) -> void:
 func _get_or_create(ui_name: String) -> UIFrameWindow:
 	var cached: Variant = _cache.get(ui_name, null)
 	if is_instance_valid(cached):
-		var win := cached as UIFrameWindow
+		var win : UIFrameWindow = cached as UIFrameWindow
 		if win.get_parent() == null:
 			get_tree().current_scene.add_child(win)
 		else:
@@ -539,8 +539,8 @@ func _load_scene_async(ui_name: String) -> PackedScene:
 
 
 func _create_and_cache(ui_name: String, packed: PackedScene) -> UIFrameWindow:
-	var node := packed.instantiate()
-	var win := node as UIFrameWindow
+	var node : Node = packed.instantiate()
+	var win : UIFrameWindow = node as UIFrameWindow
 	if win == null:
 		push_error("UIManager: '%s' root must extend UIFrameWindow" % ui_name)
 		node.queue_free()
