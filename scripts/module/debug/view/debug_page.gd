@@ -1,8 +1,13 @@
+# 调试页总目录：把「解题技巧 / V3 尺寸示例 / R1-R5 策略」排成卡片列表，点「体验」带调试参数直接进 GAME 页
+# 只在非 Android 构建里注册（UIRegistry._DEBUG_PAGES）；脚本内没有别的调用点，只有 GeneratorPage 的返回按钮会回到本页
 class_name DebugPage
 extends UIFrameWindow
 
-@onready var _content_vbox: VBoxContainer = $ScrollContainer/ContentVBox
+# ---- 子节点引用 ----
+@onready var _content_vbox: VBoxContainer = $ScrollContainer/ContentVBox # 卡片都塞进这个纵向容器（子节点全部由脚本创建）
 
+# ---- 卡片数据：解题技巧（config 为 null 表示暂无对应关卡，卡片置灰） ----
+# 每项含 label 标题 / level 徽章 / desc 说明 / config（作为 GAME 页的 debug_config）
 const TECHNIQUE_ENTRIES: Array[Dictionary] = [
 	{"label": "整行整列交叉", "level": "L1", "desc": "整行+整列同色 → 交叉点放猫", "config": null},
 	{
@@ -53,6 +58,7 @@ const TECHNIQUE_ENTRIES: Array[Dictionary] = [
 	{"label": "大集合逻辑(K>=5)", "level": "L4", "desc": "5+区域恰占K行/列 → 锁定", "config": null},
 ]
 
+# ---- 卡片数据：V3 尺寸示例 4×4 ~ 10×10（固定 seed 与 attempt，保证每次都是同一张图） ----
 const SIZE_DEMO_ENTRIES: Array[Dictionary] = [
 	{
 		"label": "4×4 V3关卡",
@@ -91,6 +97,7 @@ const SIZE_DEMO_ENTRIES: Array[Dictionary] = [
 	},
 ]
 
+# ---- 卡片数据：R1-R5 策略体验（r=难度档决定配色，size=棋盘边长，地图现场生成） ----
 const STRATEGY_ENTRIES: Array[Dictionary] = [
 	{"label": "4×4 R1 Beginner", "r": 1, "size": 4},
 	{"label": "4×4 R2 Easy", "r": 2, "size": 4},
@@ -102,6 +109,7 @@ const STRATEGY_ENTRIES: Array[Dictionary] = [
 	{"label": "8×8 R4 Hard", "r": 4, "size": 8},
 ]
 
+# ---- 样式表：层级配色（L1~L4 是技巧层级，V3 给尺寸示例用） ----
 const LEVEL_COLORS: Dictionary = {
 	"L1":
 	{
@@ -134,6 +142,7 @@ const LEVEL_COLORS: Dictionary = {
 		"border": Color(0.753, 0.518, 0.988)
 	},
 }
+# ---- 样式表：R1~R5 配色（下标 0 留空，方便直接用 r 当索引） ----
 const R_COLORS: Array[Dictionary] = [
 	{},
 	{
@@ -163,23 +172,29 @@ const R_COLORS: Array[Dictionary] = [
 	},
 ]
 
-const _FS_SM: int = 25
-const _FS_MD: int = 28
-const _FS_BTN: int = 30
-const _FS_LG: int = 36
-const _FS_TIT: int = 39
-const _CARD_MARGIN: int = 22
-const _CARD_PAD: int = 28
-const _BADGE_H: int = 50
+# ---- 字号（像素）与卡片留白 ----
+const _FS_SM: int = 25 # 小号字（徽章、暂无）
+const _FS_MD: int = 28 # 中号字（描述、按钮）
+const _FS_BTN: int = 30 # 按钮字
+const _FS_LG: int = 36 # 大号字（卡片标题）
+const _FS_TIT: int = 39 # 分组标题字
+const _CARD_MARGIN: int = 22 # 卡片左右外边距（像素）
+const _CARD_PAD: int = 28 # 卡片内边距（像素）
+const _BADGE_H: int = 50 # 徽章最小高度（像素）
 
 
+# ================= 生命周期 =================
+# 进场景树时一次性把所有卡片建出来
 func _ready() -> void:
 	_build_content()
 
 
+# 按「生成器入口 → 技巧 → 尺寸示例 → 策略」搭列表，最后统一处理鼠标穿透
 func _build_content() -> void:
+	# 顶部先给一个直达关卡生成器的入口
 	_content_vbox.add_child(_make_generator_btn())
 
+	# 三个分组，之间用分隔线断开
 	_content_vbox.add_child(_make_section_header("解题技巧调试", Color(0.118, 0.251, 0.686)))
 	for entry: Dictionary in TECHNIQUE_ENTRIES:
 		_content_vbox.add_child(_make_technique_card(entry))
@@ -196,10 +211,13 @@ func _build_content() -> void:
 	for entry: Dictionary in STRATEGY_ENTRIES:
 		_content_vbox.add_child(_make_strategy_card(entry))
 
+	# 底部留 60 像素空白，避免最后一张卡贴边
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0, 60)
 	_content_vbox.add_child(spacer)
 
+	# 把整棵子树里的非按钮 Control 的 mouse_filter 设成 PASS，
+	# 否则 ScrollContainer 收不到拖动事件（按钮保留自己的点击）
 	var _bfs: Array[Node] = []
 	_bfs.append_array(_content_vbox.get_children())
 	while not _bfs.is_empty():
@@ -209,6 +227,8 @@ func _build_content() -> void:
 			(_n as Control).mouse_filter = Control.MOUSE_FILTER_PASS
 
 
+# ================= 卡片构造 =================
+# 造分组标题（大号彩色字，左右留卡片边距）
 func _make_section_header(title: String, color: Color) -> Control:
 	var mc := MarginContainer.new()
 	mc.add_theme_constant_override("margin_left", _CARD_MARGIN)
@@ -223,6 +243,7 @@ func _make_section_header(title: String, color: Color) -> Control:
 	return mc
 
 
+# 造一条浅灰分隔线
 func _make_divider() -> Control:
 	var mc := MarginContainer.new()
 	mc.add_theme_constant_override("margin_left", _CARD_MARGIN)
@@ -238,6 +259,7 @@ func _make_divider() -> Control:
 	return mc
 
 
+# 造顶部「✨ 关卡生成器」大按钮
 func _make_generator_btn() -> Control:
 	var outer := MarginContainer.new()
 	outer.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -263,13 +285,17 @@ func _make_generator_btn() -> Control:
 	btn.add_theme_stylebox_override("pressed", btn_style)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# 点一下打开关卡生成器页
 	btn.pressed.connect(func() -> void: UIManager.show_ui(UiName.GENERATOR))
 	outer.add_child(btn)
 	return outer
 
 
+# 造一张技巧卡：层级徽章 + 标题 + 说明，右侧「体验」按钮；无 config 时整卡置灰
 func _make_technique_card(entry: Dictionary) -> Control:
+	# 按 level 取配色，取不到就退到 L1
 	var colors: Dictionary = LEVEL_COLORS.get(entry["level"], LEVEL_COLORS["L1"])
+	# 有 config 才能开局，否则置灰并显示「暂无关卡」
 	var available: bool = entry["config"] != null
 
 	var outer := MarginContainer.new()
@@ -326,6 +352,7 @@ func _make_technique_card(entry: Dictionary) -> Control:
 
 	hbox.add_child(left_vbox)
 
+	# 右侧：可用就给「体验」按钮，不可用就给灰字提示
 	if available:
 		hbox.add_child(_make_play_btn(entry["config"]))
 	else:
@@ -342,6 +369,7 @@ func _make_technique_card(entry: Dictionary) -> Control:
 	return outer
 
 
+# 造一张尺寸示例卡（配色固定用 V3 紫），右侧永远有「体验」
 func _make_size_demo_card(entry: Dictionary) -> Control:
 	var colors: Dictionary = LEVEL_COLORS["V3"]
 
@@ -402,10 +430,12 @@ func _make_size_demo_card(entry: Dictionary) -> Control:
 	return outer
 
 
+# 造一张策略卡：R 徽章 + 名称 + 「体验」；点击时现场生成地图
 func _make_strategy_card(entry: Dictionary) -> Control:
+	# r 决定配色，sz 决定棋盘边长
 	var r: int = entry["r"]
 	var sz: int = entry.get("size", 4)
-	var colors: Dictionary = R_COLORS[r] if r < R_COLORS.size() else R_COLORS[1]
+	var colors: Dictionary = R_COLORS[r] if r < R_COLORS.size() else R_COLORS[1] # 超出表格范围就退到 R1 配色
 
 	var outer := MarginContainer.new()
 	outer.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -485,6 +515,7 @@ func _make_strategy_card(entry: Dictionary) -> Control:
 	btn.add_theme_stylebox_override("hover", btn_normal)
 	btn.add_theme_stylebox_override("pressed", btn_normal)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	# 点击后现场生成（seed 固定 1、最多试 300 次），成功就带 regions / solution 开局
 	btn.pressed.connect(
 		func() -> void:
 			var result: Dictionary = (
@@ -523,9 +554,10 @@ func _make_strategy_card(entry: Dictionary) -> Control:
 	return outer
 
 
+# 造左上角的层级徽章（最小 88×50，不可用时变灰）
 func _make_badge(level_text: String, colors: Dictionary, available: bool) -> Control:
 	var badge_panel := PanelContainer.new()
-	badge_panel.custom_minimum_size = Vector2(88, _BADGE_H)
+	badge_panel.custom_minimum_size = Vector2(88, _BADGE_H) # 宽固定 88，高取 _BADGE_H
 	var badge_style := StyleBoxFlat.new()
 	badge_style.bg_color = colors["bg"] if available else Color(0.9, 0.9, 0.9)
 	badge_style.corner_radius_top_left = 11
@@ -545,6 +577,7 @@ func _make_badge(level_text: String, colors: Dictionary, available: bool) -> Con
 	return badge_panel
 
 
+# 造「体验」按钮，点击按 debug_config 打开 GAME 页
 func _make_play_btn(config: Dictionary) -> Button:
 	var btn := Button.new()
 	btn.text = "体验"
@@ -564,10 +597,11 @@ func _make_play_btn(config: Dictionary) -> Button:
 	btn.add_theme_stylebox_override("hover", btn_normal)
 	btn.add_theme_stylebox_override("pressed", btn_normal)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	btn.pressed.connect(func() -> void: UIManager.show_ui(UiName.GAME, {"debug_config": config}))
+	btn.pressed.connect(func() -> void: UIManager.show_ui(UiName.GAME, {"debug_config": config})) # debug_config 由 GamePage 映射成 EntryMode.DEBUG_CONFIG
 	return btn
 
 
+# Header 的返回按钮：回主页并关掉本页
 func _on_back_btn_pressed() -> void:
 	UIManager.show_ui(UiName.HOME)
 	UIManager.hide_ui(UiName.DEBUG)

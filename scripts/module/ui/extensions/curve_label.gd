@@ -1,42 +1,50 @@
+# 曲线文字 Label（@tool）：不用内置排版，逐个字形绘制，按 Curve 采样决定每个字的 y 偏移，可选让字沿切线旋转
 @tool
 class_name CurveLabel
 extends Label
 
+# ---- Inspector 参数 ----
+# 起伏曲线：采样 x∈[0,1] → y∈[0,1]，0.5 是基线；置空会给一条默认拱形曲线
 @export var curve: Curve:
 	set(v):
-		if curve != null and curve.changed.is_connected(queue_redraw):
+		if curve != null and curve.changed.is_connected(queue_redraw): # 换曲线时先把旧的 changed 连接摘掉
 			curve.changed.disconnect(queue_redraw)
 		curve = v
 		if curve == null:
-			curve = _make_default_curve()
-		if not curve.changed.is_connected(queue_redraw):
+			curve = _make_default_curve() # curve 为 null 时兜底成默认曲线
+		if not curve.changed.is_connected(queue_redraw): # 监听曲线编辑：数据一变就重绘
 			curve.changed.connect(queue_redraw)
 		queue_redraw()
 
-@export var amplitude: float = 80.0:
+@export var amplitude: float = 80.0: # 起伏幅度（像素）：y 偏移 = (curve(t) - 0.5) * amplitude * 2
 	set(v):
 		amplitude = v
 		queue_redraw()
 
-@export var align_to_tangent: bool = false:
+@export var align_to_tangent: bool = false: # 是否让每个字形沿曲线切线旋转（做弧形标题用）
 	set(v):
 		align_to_tangent = v
 		queue_redraw()
 
 
+# ================= 生命周期 =================
+# 进树就把可见字数置 0：彻底关掉内置排版，画面全交给 _draw
 func _enter_tree() -> void:
 	visible_characters = 0
 
 
+# 保证 curve 不为空
 func _ready() -> void:
 	if curve == null:
 		curve = _make_default_curve()
 
 
+# ================= 绘制 =================
+# 逐个字形绘制：先量总宽，超宽就整体缩字号再拉伸回满宽，然后按曲线算每个字的 y，可选按切线旋转
 func _draw() -> void:
-	if visible_characters != 0:
+	if visible_characters != 0: # 内置绘制已被禁用（visible_characters=0），这里只画自定义部分
 		visible_characters = 0
-	var display_text: String = atr(text)
+	var display_text: String = atr(text) # 文案走翻译
 	if display_text.is_empty() or curve == null:
 		return
 
@@ -45,7 +53,7 @@ func _draw() -> void:
 		return
 	var font_size: int = _resolve_font_size()
 
-	var ts: TextServer = TextServerManager.get_primary_interface()
+	var ts: TextServer = TextServerManager.get_primary_interface() # 直接找 TextServer 拿字形表，才拿得到每个字的 advance 与 offset
 	var line := TextLine.new()
 	line.add_string(display_text, font, font_size)
 	var glyphs: Array = ts.shaped_text_get_glyphs(line.get_rid())
@@ -57,7 +65,7 @@ func _draw() -> void:
 		return
 
 	var effective_font_size := font_size
-	if size.x > 0.0 and total_advance > size.x:
+	if size.x > 0.0 and total_advance > size.x: # 文本比控件宽：按比例缩小字号，然后重新取一遍字形
 		effective_font_size = maxi(1, int(float(font_size) * size.x / total_advance))
 		line = TextLine.new()
 		line.add_string(display_text, font, effective_font_size)
@@ -68,9 +76,9 @@ func _draw() -> void:
 		if total_advance <= 0.0:
 			return
 
-	var x_scale: float = size.x if size.x > 0.0 else total_advance
+	var x_scale: float = size.x if size.x > 0.0 else total_advance # 归一化用的总宽；size.x 无效时退回文本自身宽度
 
-	var fill_scale := 1.0
+	var fill_scale := 1.0 # 缩过字号的情况：把字距按比例拉回控件宽度（等比填充）
 	var offset_x := 0.0
 	if effective_font_size < font_size and size.x > 0.0 and total_advance > 0.0:
 		fill_scale = size.x / total_advance
@@ -86,22 +94,23 @@ func _draw() -> void:
 		var adv: float = g["advance"]
 		var glyph_w: float = adv * fill_scale
 		var x := offset_x + cumulative * fill_scale
-		var t := clampf((x + glyph_w * 0.5) / x_scale, 0.0, 1.0)
-		var y := size.y * 0.5 - (curve.sample(t) - 0.5) * amplitude * 2.0
+		var t := clampf((x + glyph_w * 0.5) / x_scale, 0.0, 1.0) # t = 字形中心在整段文字里的比例，用来采样曲线
+		var y := size.y * 0.5 - (curve.sample(t) - 0.5) * amplitude * 2.0 # 曲线 0.5 处为基线，偏离量乘 amplitude*2 换成像素
 		var glyph_offset: Vector2 = g["offset"]
-		if align_to_tangent:
+		if align_to_tangent: # 沿切线对齐：以字形中心为轴旋转，再以中心为原点绘制
 			var pivot := Vector2(x + glyph_w * 0.5, y) + glyph_offset
 			draw_set_transform(pivot, _tangent_angle(t, x_scale))
-			_draw_glyph(g, Vector2(-glyph_w * 0.5, 0.0), effective_font_size, ts)
+			_draw_glyph(g, Vector2(-glyph_w * 0.5, 0.0), effective_font_size, ts) # 左移半个字宽，让旋转轴落在字形中心
 		else:
 			var pos := Vector2(x, y) + glyph_offset
 			_draw_glyph(g, pos, effective_font_size, ts)
 		cumulative += adv
 
-	if align_to_tangent:
+	if align_to_tangent: # 收尾：清掉画布变换，免得影响后续绘制
 		draw_set_transform(Vector2.ZERO)
 
 
+# 画单个字形：按 阴影 → 描边 → 字面 的顺序；样式优先取 label_settings，否则取主题
 func _draw_glyph(g: Dictionary, pos: Vector2, font_size: int, ts: TextServer) -> void:
 	var font_color: Color
 	var outline_size: int
@@ -146,6 +155,7 @@ func _draw_glyph(g: Dictionary, pos: Vector2, font_size: int, ts: TextServer) ->
 	ts.font_draw_glyph(font_rid, canvas, font_size, pos, index, font_color)
 
 
+# 用中心差分估算曲线在 t 处的倾角（返回弧度）
 func _tangent_angle(t: float, x_scale: float) -> float:
 	const DT := 0.01
 	var t0 := clampf(t - DT, 0.0, 1.0)
@@ -156,18 +166,21 @@ func _tangent_angle(t: float, x_scale: float) -> float:
 	return tangent.angle()
 
 
+# 字体：优先 label_settings，其次主题
 func _resolve_font() -> Font:
 	if label_settings != null and label_settings.font != null:
 		return label_settings.font
 	return get_theme_font(&"font")
 
 
+# 字号：同上
 func _resolve_font_size() -> int:
 	if label_settings != null and label_settings.font_size > 0:
 		return label_settings.font_size
 	return get_theme_font_size(&"font_size")
 
 
+# 默认曲线：两端 0.5、中间 1.0 的拱形
 func _make_default_curve() -> Curve:
 	var c := Curve.new()
 	c.add_point(Vector2(0.0, 0.5), 0.0, 2.0)

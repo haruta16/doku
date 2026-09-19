@@ -1,19 +1,29 @@
+# 作弊面板命令集：把开发用的调试操作注册成 CheatBus 命令与 7 个标签页
+# 只在非 release 构建由 launcher.gd add_child 进来；_ready 先清空再注册，重载场景不会重复
 extends Node
 
-var _command_defs: Array = []
+# ---- 命令表 ----
+var _command_defs: Array = [] # {name, label, default_args, handler}；没有 handler 的由对局页自己订阅处理
 
-var _clickdbg_enabled: bool = false
+var _clickdbg_enabled: bool = false # clickdbg 开关：打开后打印每次点击命中的节点
 
+# ---- 「日志」页的过滤状态（切走再回来还保留） ----
+# show_info/show_warn/show_error 是等级开关，keyword 是关键词过滤
 var _log_filter_state: Dictionary = {
 	"show_info": true, "show_warn": true, "show_error": true, "keyword": ""
 }
 
 
+# ================= 初始化 ===================
+# 面板初始化：清掉上一份注册（场景重载会再 new 一份），登记 AB 参数、命令、标签页与分发
 func _ready() -> void:
+	# 三条 clear 先把上一份注册清干净（launcher 重载会再 new 一份，不清会重复注册）
 	CheatBus.clear_commands()
 	CheatBus.clear_tabs()
 	CheatBus.clear_ab_params()
 	_register_ab_params()
+	# 命令表：name 是输入框里敲的名字，label 是按钮文案，default_args 会预填进输入框
+	# 没有 handler 的命令（win / draft_win / lives / lifeplus / dumpjson）由对局页自己订阅处理
 	_command_defs = [
 		{"name": "re_login", "label": "重新登录(重看splash文案)", "handler": _cmd_re_login},
 		{"name": "reset_tutorial", "label": "重置引导", "handler": _cmd_reset_tutorial},
@@ -131,23 +141,38 @@ func _ready() -> void:
 		{"name": "uuid", "label": "获取UUID并复制", "handler": _cmd_uuid},
 		{"name": "test_att", "label": "测试ATT流程", "handler": _cmd_test_att, "editor_only": true},
 	]
+	# 生成 CheatCommand 并注册给 CheatBus
 	_register_commands()
+	# 注册 7 个标签页的构建函数（切到该页时 CheatPanel 才调用）
 	_register_tabs()
+	# 输入框回车后 CheatBus 发命令，这里分发到对应 handler
 	CheatBus.command_issued.connect(_on_command_issued)
 
 
+# ================= 标签页构建 ===================
+# 注册标签页；builder 由 CheatPanel 在切页时调用，签名是 (ScrollContainer, CheatPanel)
 func _register_tabs() -> void:
+	# 命令按钮墙（平铺 + 搜索）
 	CheatBus.register_tab("命令", _build_command_tab)
+	# AB 参数列表
 	CheatBus.register_tab("AB测", _build_ab_tab)
+	# 广告状态与各条门槛的 bypass 开关
 	CheatBus.register_tab("广告", _build_ad_tab)
+	# 语言切换
 	CheatBus.register_tab("语言", _build_lang_tab)
+	# 运行日志查看器
 	CheatBus.register_tab("日志", _build_log_tab)
+	# 题库调试（交给 PuzzleSessionTracker）
 	CheatBus.register_tab("题库", _build_puzzle_tab)
+	# 分页版命令：目前只有第 1 页填了内容，其余是占位
 	CheatBus.register_tab("命令(新)", _build_categorized_command_tab)
 
 
+# 在标签内容区上方加一条搜索栏 + 清空按钮，并把滚动内容下推；返回搜索框给调用方接过滤
 func _add_tab_search_header(content: ScrollContainer, placeholder: String) -> LineEdit:
-	const SEARCH_H: float = 96.0
+	# 搜索栏高度（像素）：滚动内容从上往下让出这么多
+	const SEARCH_H: float = 96.0 # 搜索栏高度（像素）
+	# 搜索栏挂到 ScrollContainer 的父节点上（那里才是整页），不能挂在滚动内容里
 	var page: Control = content.get_parent()
 	var header := HBoxContainer.new()
 	header.set_anchors_preset(Control.PRESET_TOP_WIDE)
@@ -155,6 +180,7 @@ func _add_tab_search_header(content: ScrollContainer, placeholder: String) -> Li
 	header.add_theme_constant_override("separation", 12)
 	page.add_child(header)
 
+	# 输入框：文本变化由调用方接过滤逻辑
 	var search := LineEdit.new()
 	search.placeholder_text = placeholder
 	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -162,6 +188,7 @@ func _add_tab_search_header(content: ScrollContainer, placeholder: String) -> Li
 	search.add_theme_font_size_override("font_size", 42)
 	header.add_child(search)
 
+	# 清空按钮：顺手补发一次 text_changed，保证过滤逻辑也会跑
 	var clear_btn := Button.new()
 	clear_btn.text = "✕"
 	clear_btn.custom_minimum_size = Vector2(110, 0)
@@ -174,28 +201,38 @@ func _add_tab_search_header(content: ScrollContainer, placeholder: String) -> Li
 			search.text_changed.emit("")
 	)
 
+	# 把滚动内容整体下移，别被搜索栏压住
 	content.offset_top = SEARCH_H
 	return search
 
 
+# 「命令」页：把命令表平铺成按钮墙；点按钮只把「名字 + 默认参数」填进输入框，不直接执行
 func _build_command_tab(content: ScrollContainer, panel: CheatPanel) -> void:
+	# 让滚动区支持鼠标拖动
 	ScrollDragHelper.attach(content)
+	# 搜索框：按 name / label 过滤按钮
 	var search := _add_tab_search_header(content, "搜索命令(name / 名称)…")
-	const MAX_BTN_WIDTH: float = 600.0
+	# 按钮最大宽度（像素），超了就裁字
+	const MAX_BTN_WIDTH: float = 600.0 # 按钮最大宽度（像素）
+	# 流式布局：按钮按宽度自动换行
 	var flow := HFlowContainer.new()
 	flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	flow.add_theme_constant_override("h_separation", 16)
 	flow.add_theme_constant_override("v_separation", 16)
 	content.add_child(flow)
 
-	var searchable: Array = []
+	# [{btn, text}]：搜索时按 text 做子串匹配
+	var searchable: Array = [] # [{btn, text}]：搜索时按 text 匹配
 
+	# 每个命令一个按钮；文案优先用 label
 	for cmd in CheatBus.get_commands():
 		var btn := Button.new()
 		btn.text = cmd.label if cmd.label != "" else cmd.name
 		btn.custom_minimum_size = Vector2(0, 100)
 		btn.add_theme_font_size_override("font_size", 48)
-		var captured_cmd: CheatCommand = cmd
+		# 闭包捕获到局部变量，避免循环变量串号
+		var captured_cmd: CheatCommand = cmd # 闭包捕获到局部变量，避免循环变量串号
+		# 点击只是预填输入框，真正执行交给输入框回车
 		btn.pressed.connect(
 			func() -> void:
 				var raw: String = captured_cmd.name
@@ -204,7 +241,8 @@ func _build_command_tab(content: ScrollContainer, panel: CheatPanel) -> void:
 				panel.fill_input(raw)
 		)
 		flow.add_child(btn)
-		var natural_w: float = btn.get_minimum_size().x
+		# 先按文字自然宽度定尺寸，过宽再限制到 MAX_BTN_WIDTH
+		var natural_w: float = btn.get_minimum_size().x # 先按文字自然宽度定尺寸
 		if natural_w > MAX_BTN_WIDTH:
 			btn.clip_text = true
 			btn.custom_minimum_size = Vector2(MAX_BTN_WIDTH, 100)
@@ -212,6 +250,7 @@ func _build_command_tab(content: ScrollContainer, panel: CheatPanel) -> void:
 			btn.custom_minimum_size = Vector2(natural_w + 30, 100)
 		searchable.append({"btn": btn, "text": (cmd.name + " " + cmd.label).to_lower()})
 
+	# 搜索：name + label 拼起来做小写子串匹配
 	search.text_changed.connect(
 		func(q: String) -> void:
 			var needle: String = q.strip_edges().to_lower()
@@ -220,6 +259,7 @@ func _build_command_tab(content: ScrollContainer, panel: CheatPanel) -> void:
 	)
 
 
+# 「命令(新)」页的分页表：每页一个命令名数组，只有第 1 页填了内容，其余留空占位
 const _NEW_CMD_PAGES: Array = [
 	["reset_first_easy", "streak", "streak_clear", "streak_skip", "streak_6"],
 	[],
@@ -230,12 +270,16 @@ const _NEW_CMD_PAGES: Array = [
 ]
 
 
+# 「命令(新)」页：上面 TabBar 分页，下面每页一个滚动区，给命令分类腾地方
 func _build_categorized_command_tab(content: ScrollContainer, panel: CheatPanel) -> void:
+	# 支持拖动滚动
 	ScrollDragHelper.attach(content)
+	# 竖向排布：TabBar + 页面容器
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_child(vbox)
 
+	# 分页栏
 	var tab_bar := TabBar.new()
 	tab_bar.custom_minimum_size = Vector2(0, 80)
 	tab_bar.add_theme_font_size_override("font_size", 40)
@@ -243,12 +287,14 @@ func _build_categorized_command_tab(content: ScrollContainer, panel: CheatPanel)
 		tab_bar.add_tab(str(i + 1))
 	vbox.add_child(tab_bar)
 
+	# 页面容器：固定最小高度，滚动交给每一页自己
 	var pages_container := Control.new()
 	pages_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	pages_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	pages_container.custom_minimum_size = Vector2(0, 1800)
 	vbox.add_child(pages_container)
 
+	# 所有子页一次性建好，只切 visible，避免切页时才创建
 	var sub_pages: Array[Control] = []
 	for i: int in range(_NEW_CMD_PAGES.size()):
 		var page := Control.new()
@@ -258,6 +304,7 @@ func _build_categorized_command_tab(content: ScrollContainer, panel: CheatPanel)
 		sub_pages.append(page)
 		_build_sub_page_buttons(page, panel, _NEW_CMD_PAGES[i])
 
+	# 切页只改可见性，不销毁重建
 	tab_bar.tab_changed.connect(
 		func(idx: int) -> void:
 			for i: int in range(sub_pages.size()):
@@ -265,8 +312,11 @@ func _build_categorized_command_tab(content: ScrollContainer, panel: CheatPanel)
 	)
 
 
+# 构建分页里的某一页：按命令名找定义并平铺成按钮（逻辑同「命令」页）
 func _build_sub_page_buttons(page: Control, panel: CheatPanel, cmd_names: Array) -> void:
-	const MAX_BTN_WIDTH: float = 600.0
+	# 与「命令」页一致的最大按钮宽度
+	const MAX_BTN_WIDTH: float = 600.0 # 与「命令」页一致的最大按钮宽度
+	# 每页自己一个滚动区，只允许竖向滚
 	var scroll := ScrollContainer.new()
 	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -279,10 +329,12 @@ func _build_sub_page_buttons(page: Control, panel: CheatPanel, cmd_names: Array)
 	flow.add_theme_constant_override("v_separation", 16)
 	scroll.add_child(flow)
 
-	var cmd_map: Dictionary = {}
+	# 先建 name -> CheatCommand 索引，方便按名字取
+	var cmd_map: Dictionary = {} # name -> CheatCommand 索引
 	for cmd in CheatBus.get_commands():
 		cmd_map[cmd.name] = cmd
 
+	# 表里没有的名字直接跳过（比如该构建没注册这条命令）
 	for cmd_name: String in cmd_names:
 		if not cmd_map.has(cmd_name):
 			continue
@@ -308,10 +360,14 @@ func _build_sub_page_buttons(page: Control, panel: CheatPanel, cmd_names: Array)
 			btn.custom_minimum_size = Vector2(natural_w + 30, 100)
 
 
+# 「AB测」页：列出所有 AB 参数与当前取值；点一行把「ab key 当前值」填进输入框
 func _build_ab_tab(content: ScrollContainer, panel: CheatPanel) -> void:
+	# 支持拖动滚动
 	ScrollDragHelper.attach(content)
+	# 搜索框：按 key / label 过滤
 	var search := _add_tab_search_header(content, "搜索 AB 参数(key / 名称)…")
 
+	# 一行一个参数，竖向排布
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vbox.add_theme_constant_override("separation", 16)
@@ -319,14 +375,17 @@ func _build_ab_tab(content: ScrollContainer, panel: CheatPanel) -> void:
 
 	var searchable: Array = []
 
+	# 按 key 字母序排，方便找
 	var params: Array = CheatBus.get_ab_params()
 	params.sort_custom(
 		func(a: Dictionary, b: Dictionary) -> bool: return a["key"].to_lower() < b["key"].to_lower()
 	)
+	# 每行：按钮文本带当前值，点一下预填 ab 命令
 	for param in params:
 		var key: String = param["key"]
 		var label: String = param["label"]
-		var value_fn: Callable = param["current_value_fn"]
+		# 取当前值的回调，由 AbConfigBase 提供
+		var value_fn: Callable = param["current_value_fn"] # 取当前值的回调（AbConfigBase 提供）
 
 		var row := HBoxContainer.new()
 		row.custom_minimum_size = Vector2(0, 110)
@@ -356,11 +415,14 @@ func _build_ab_tab(content: ScrollContainer, panel: CheatPanel) -> void:
 	)
 
 
+# 「题库」页：直接交给 PuzzleSessionTracker 构建（题库调试逻辑不放在这里）
 func _build_puzzle_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	PuzzleSessionTracker.build_cheat_tab(content)
 
 
+# 「日志」页：读 InGameLogBuffer，按等级/关键词过滤，每秒重绘一次
 func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
+	# 日志缓冲没初始化（例如没走 launcher）就给个提示
 	var buf: InGameLogBuffer = InGameLogBuffer.instance
 	if buf == null:
 		var hint := Label.new()
@@ -369,8 +431,10 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 		content.add_child(hint)
 		return
 
-	content.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	# 关掉外层滚动，改由 RichTextLabel 自己滚
+	content.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED # 关掉外层滚动，改由 RichTextLabel 自己滚
 
+	# 竖向排布：等级工具条 + 关键词行 + 日志正文
 	var vbox := VBoxContainer.new()
 	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -378,12 +442,15 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	vbox.add_theme_constant_override("separation", 12)
 	content.add_child(vbox)
 
-	var state: Dictionary = _log_filter_state
+	# 直接引用成员字典，改动跨标签切换保留
+	var state: Dictionary = _log_filter_state # 直接引用成员字典，改动跨标签切换保留
 
+	# 等级开关工具条
 	var toolbar := HBoxContainer.new()
 	toolbar.add_theme_constant_override("separation", 16)
 	vbox.add_child(toolbar)
 
+	# 小工具：按当前状态造一个等级开关按钮
 	var make_toggle := func(label: String, key: String, color: Color) -> Button:
 		var btn := Button.new()
 		btn.text = label
@@ -394,20 +461,24 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 		btn.add_theme_color_override("font_pressed_color", color)
 		return btn
 
+	# Log / Warn / Error 三个等级开关
 	toolbar.add_child(make_toggle.call("Log", "show_info", Color.WHITE))
 	toolbar.add_child(make_toggle.call("Warn", "show_warn", Color.YELLOW))
 	toolbar.add_child(make_toggle.call("Error", "show_error", Color.RED))
 
+	# 清空按钮：清掉日志缓冲区
 	var clear_btn := Button.new()
 	clear_btn.text = "清空"
 	clear_btn.custom_minimum_size = Vector2(0, 90)
 	clear_btn.add_theme_font_size_override("font_size", 40)
 	toolbar.add_child(clear_btn)
 
+	# 关键词过滤行
 	var filter_row := HBoxContainer.new()
 	filter_row.add_theme_constant_override("separation", 16)
 	vbox.add_child(filter_row)
 
+	# 关键词输入框：回填上次的过滤词
 	var filter_input := LineEdit.new()
 	filter_input.placeholder_text = "关键词过滤..."
 	filter_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -416,6 +487,7 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	filter_input.text = state.keyword
 	filter_row.add_child(filter_input)
 
+	# 日志正文：BBCode 渲染，自动跟随最新一行
 	var log_label := RichTextLabel.new()
 	log_label.bbcode_enabled = true
 	log_label.fit_content = false
@@ -427,9 +499,12 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	log_label.add_theme_font_size_override("mono_font_size", 32)
 	vbox.add_child(log_label)
 
-	const _LOG_ENTRY_MAX_CHARS: int = 300
+	# 单条日志最多显示 300 字，超出截断
+	const _LOG_ENTRY_MAX_CHARS: int = 300 # 单条日志最多显示 300 字
 
+	# 重绘：按等级开关 + 关键词过滤后拼成 BBCode
 	var render_log := func() -> void:
+		# 时间前缀用秒（保留 1 位小数）
 		var entries: Array[Dictionary] = buf.get_entries()
 		var lines: PackedStringArray = []
 		var kw: String = state.keyword
@@ -441,14 +516,17 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 				continue
 			if lv == InGameLogBuffer.Level.ERROR and not state.show_error:
 				continue
+			# 关键词过滤：不区分大小写的子串匹配，没命中就跳过这条
 			var text: String = e.text
 			if not kw.is_empty() and text.findn(kw) == -1:
 				continue
 			var sec: float = e.time_ms * 0.001
 			var prefix: String = "%.1f|" % sec
+			# 文本过长先截断，避免一帧塞太多 BBCode
 			if text.length() > _LOG_ENTRY_MAX_CHARS:
 				text = text.left(_LOG_ENTRY_MAX_CHARS) + "..."
-			var escaped: String = text.replace("[", "[lb]")
+			var escaped: String = text.replace("[", "[lb]") # 转义方括号，防止日志里的 [ 被当成 BBCode 标签
+			# 按等级上色：ERROR 红、WARN 黄，其余不上色
 			match lv:
 				InGameLogBuffer.Level.ERROR:
 					lines.append("[color=red]%s%s[/color]" % [prefix, escaped])
@@ -458,12 +536,14 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 					lines.append(prefix + escaped)
 		log_label.text = "\n".join(lines) if not lines.is_empty() else "[color=gray]（暂无日志）[/color]"
 
+	# 每秒重绘一次：日志缓冲区是被动收集的，只能轮询
 	var timer := Timer.new()
 	timer.wait_time = 1.0
 	timer.autostart = true
 	timer.timeout.connect(func() -> void: render_log.call())
 	vbox.add_child(timer)
 
+	# 把三个开关接到 state，切一下立即重绘
 	for btn in toolbar.get_children():
 		if btn is Button and btn.toggle_mode:
 			var key: String = ""
@@ -479,11 +559,13 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 						state[k] = on
 						render_log.call()
 				)
+	# 清空：清缓冲并重绘
 	clear_btn.pressed.connect(
 		func() -> void:
 			buf.clear_entries()
 			render_log.call()
 	)
+	# 关键词变化立即重绘
 	filter_input.text_changed.connect(
 		func(new_text: String) -> void:
 			state.keyword = new_text.strip_edges()
@@ -493,8 +575,11 @@ func _build_log_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	render_log.call()
 
 
+# 「语言」页：列出所有支持的语言，点一下切换并落盘
 func _build_lang_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
+	# 支持拖动滚动
 	ScrollDragHelper.attach(content)
+	# 语言清单：[locale 代码, 中文名]，Godot 用 locale 代码切翻译
 	const LANG_DEFS: Array = [
 		["en", "英语"],
 		["zh_CN", "简体中文"],
@@ -572,12 +657,14 @@ func _build_lang_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 		["te", "泰卢固语"],
 		["ur", "乌尔都语"],
 	]
+	# 流式按钮墙
 	var flow := HFlowContainer.new()
 	flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	flow.add_theme_constant_override("h_separation", 16)
 	flow.add_theme_constant_override("v_separation", 16)
 	content.add_child(flow)
 
+	# 「跟随系统」按钮：清掉手动覆盖
 	var sys_btn := Button.new()
 	sys_btn.text = "跟随系统"
 	sys_btn.add_theme_font_size_override("font_size", 44)
@@ -585,6 +672,7 @@ func _build_lang_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	flow.add_child(sys_btn)
 	sys_btn.custom_minimum_size = Vector2(sys_btn.get_minimum_size().x + 30, 100)
 
+	# 每种语言一个按钮
 	for d in LANG_DEFS:
 		var code: String = d[0]
 		var btn := Button.new()
@@ -595,23 +683,29 @@ func _build_lang_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 		btn.custom_minimum_size = Vector2(btn.get_minimum_size().x + 30, 100)
 
 
+# 「广告」页：广告 SDK 状态、展示总开关，以及各条 AB 门槛的 bypass 开关
 func _build_ad_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
+	# 支持拖动滚动
 	ScrollDragHelper.attach(content)
+	# 竖向排布：刷新按钮 + 四段状态文本 + 两个 bypass 分组
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vbox.add_theme_constant_override("separation", 16)
 	content.add_child(vbox)
 
+	# 四段状态文本：SDK 状态 / 最近未展示原因 / 存档统计 / 其余明细
 	var status_label := _make_ad_label()
 	var recent_label := _make_ad_label()
 	var save_label := _make_ad_label()
 	var other_label := _make_ad_label()
+	# 刷新闭包：重算四段文本（刷新按钮和各开关都会调它）
 	var refresh := func() -> void:
 		status_label.text = _ad_text_status()
 		recent_label.text = _ad_text_recent()
 		save_label.text = _ad_text_save()
 		other_label.text = _ad_text_other()
 
+	# 手动刷新按钮
 	var refresh_btn := Button.new()
 	refresh_btn.text = "刷新"
 	refresh_btn.custom_minimum_size = Vector2(0, 90)
@@ -628,6 +722,7 @@ func _build_ad_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	vbox.add_child(recent_label)
 	_add_ad_gap(vbox)
 
+	# 插屏广告的五条 AB 门槛（勾上＝bypass，强制放行）
 	_build_bypass_section(
 		vbox,
 		"插屏广告 bypass:",
@@ -642,6 +737,7 @@ func _build_ad_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	)
 	_add_ad_gap(vbox)
 
+	# banner 广告的四条 AB 门槛
 	_build_bypass_section(
 		vbox,
 		"banner 广告 bypass:",
@@ -663,15 +759,18 @@ func _build_ad_tab(content: ScrollContainer, _panel: CheatPanel) -> void:
 	refresh.call()
 
 
+# 广告页的段间留白（像素）
 func _add_ad_gap(parent: VBoxContainer) -> void:
 	var sp := Control.new()
 	sp.custom_minimum_size = Vector2(0, 28)
 	parent.add_child(sp)
 
 
-const _AD_TAB_FONT_SIZE: int = 36
+# ---- 广告页的字体与勾选框图标 ----
+const _AD_TAB_FONT_SIZE: int = 36 # 广告页正文统一字号
 
 
+# 造一个自动换行的多行文本标签（广告页统一用它）
 func _make_ad_label() -> Label:
 	var l := Label.new()
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -680,6 +779,7 @@ func _make_ad_label() -> Label:
 	return l
 
 
+# 三个广告展示总开关：关掉后对应类型一律不展示
 func _build_ad_show_toggles(parent: VBoxContainer) -> void:
 	var title := Label.new()
 	title.text = "广告展示开关:"
@@ -689,6 +789,7 @@ func _build_ad_show_toggles(parent: VBoxContainer) -> void:
 	parent.add_child(title)
 	var grid := _make_check_grid()
 	parent.add_child(grid)
+	# 插屏 / 激励视频 / banner 三个开关，直接写 UniKitManager 的静态开关
 	grid.add_child(
 		_make_ad_check(
 			"展示插屏广告",
@@ -712,6 +813,7 @@ func _build_ad_show_toggles(parent: VBoxContainer) -> void:
 	)
 
 
+# 造一个两列复选网格，广告页所有开关共用
 func _make_check_grid() -> GridContainer:
 	var grid := GridContainer.new()
 	grid.columns = 2
@@ -721,11 +823,13 @@ func _make_check_grid() -> GridContainer:
 	return grid
 
 
-const _AD_CHECK_ICON_PX: int = 56
-var _ad_check_icon_checked: ImageTexture = null
-var _ad_check_icon_unchecked: ImageTexture = null
+# ---- 勾选框图标（把主题图标放大后缓存） ----
+const _AD_CHECK_ICON_PX: int = 56 # 勾选框图标边长（像素）
+var _ad_check_icon_checked: ImageTexture = null # 放大后的「已勾选」图标
+var _ad_check_icon_unchecked: ImageTexture = null # 放大后的「未勾选」图标
 
 
+# 懒加载勾选框图标：从主题里取默认图标并放大到 _AD_CHECK_ICON_PX
 func _ensure_ad_check_icons() -> void:
 	if _ad_check_icon_checked != null and _ad_check_icon_unchecked != null:
 		return
@@ -735,6 +839,7 @@ func _ensure_ad_check_icons() -> void:
 	tmp.free()
 
 
+# 把主题图标等比缩放到指定像素（LANCZOS 插值，放大后不糊）
 func _scale_check_icon(tex: Texture2D) -> ImageTexture:
 	if tex == null:
 		return null
@@ -745,6 +850,7 @@ func _scale_check_icon(tex: Texture2D) -> ImageTexture:
 	return ImageTexture.create_from_image(img)
 
 
+# 造一个复选项：放大图标 + 可调字号，toggled 直接接外部回调
 func _make_ad_check(
 	text: String, pressed: bool, on_toggled: Callable, font_size: int = _AD_TAB_FONT_SIZE
 ) -> CheckBox:
@@ -763,6 +869,7 @@ func _make_ad_check(
 	return cb
 
 
+# 状态段：广告 SDK 是否初始化、插屏与激励视频当前有没有填充
 func _ad_text_status() -> String:
 	var lines: Array[String] = []
 	lines.append("广告 SDK 已初始化: %s" % str(UniKitManager.is_ad_inited()))
@@ -773,6 +880,7 @@ func _ad_text_status() -> String:
 	return "\n".join(lines)
 
 
+# 最近段：最近一次插屏/banner 未展示原因、补发判定结果与待补发道具
 func _ad_text_recent() -> String:
 	return (
 		"最近插屏未展示原因: %s\n最近 banner 未展示原因: %s\n最近补发判定结果: %s\n%s"
@@ -785,8 +893,10 @@ func _ad_text_recent() -> String:
 	)
 
 
+# 把待补发奖励按道具类型汇总成「kind xN」
 func _ad_text_pending_rewards() -> String:
 	var counts: Dictionary = {}
+	# 待补发记录先按广告位映射成具体道具，映射不到就归到「其它」
 	for r in GameState.get_pending_rewards():
 		var items: Array = UniKitManager.restore_items_for_position(str(r.get("source", "")))
 		if items.is_empty():
@@ -804,6 +914,7 @@ func _ad_text_pending_rewards() -> String:
 	return "当前待补发道具: %s" % " / ".join(parts)
 
 
+# 存档段：关卡与策略等级、session 与今日完局数、活跃时长、安装天数与生命周期段
 func _ad_text_save() -> String:
 	var lines: Array[String] = []
 	lines.append("【进度 / 关卡】")
@@ -835,9 +946,11 @@ func _ad_text_save() -> String:
 	return "\n".join(lines)
 
 
+# 明细段：插屏/banner 各条 AB 门槛的当前值、判定结果与 bypass 标记
 func _ad_text_other() -> String:
 	var lines: Array[String] = []
-	var page: Node = _get_active_game_page()
+	# 有活跃对局页才有「当前关/当前题」这类上下文
+	var page: Node = _get_active_game_page() # 有活跃对局页才有当前关/当前题上下文
 	lines.append("【插屏 AB 门槛(当前值)】")
 	lines.append(
 		(
@@ -893,6 +1006,7 @@ func _ad_text_other() -> String:
 			)
 		)
 	)
+	# 插屏运行态与最终判定：直接调对局页的判定函数，看到的就是真实结果
 	lines.append("")
 	lines.append("【插屏运行态】")
 	lines.append("dev 广告开关: %s" % str(UniKitManager.is_debug_ad_enabled()))
@@ -908,6 +1022,7 @@ func _ad_text_other() -> String:
 		lines.append("(无活跃游戏页,进游戏页后点刷新可见判定结果)")
 	lines.append("")
 
+	# banner 判定还要当前关卡号与题目尺寸
 	var b_level: int = -1
 	var b_size: int = -1
 	if page != null:
@@ -915,6 +1030,7 @@ func _ad_text_other() -> String:
 		if lc is Dictionary:
 			b_level = int(lc.get("level", -1))
 			b_size = int(lc.get("size", -1))
+	# banner 各条门槛（带当前关/当前题的实际解锁情况）
 	lines.append("【Banner AB 门槛(当前值)】")
 	lines.append(
 		(
@@ -943,7 +1059,8 @@ func _ad_text_other() -> String:
 			]
 		)
 	)
-	var b_protect: Dictionary = ABTestManager.banner_extra_protect_lc.eval_start_banner()
+	# 当前是否被保护策略拦下
+	var b_protect: Dictionary = ABTestManager.banner_extra_protect_lc.eval_start_banner() # 当前是否被保护策略拦下
 	lines.append(
 		(
 			"banner_extra_protect_lc: %s (当前阻拦=%s%s)%s"
@@ -980,6 +1097,7 @@ func _ad_text_other() -> String:
 		)
 	)
 	lines.append("")
+	# banner 最终判定
 	lines.append("【最终判定 _eval_start_banner】")
 	if page != null and page.has_method("_eval_start_banner"):
 		var br: Dictionary = page.call("_eval_start_banner")
@@ -991,6 +1109,7 @@ func _ad_text_other() -> String:
 	return "\n".join(lines)
 
 
+# 造一组 bypass 复选项：勾选＝把这些 AB 配置标记成 debug_disabled（强制放行）
 func _build_bypass_section(
 	parent: VBoxContainer, title: String, groups: Array, refresh: Callable
 ) -> void:
@@ -1002,6 +1121,7 @@ func _build_bypass_section(
 	parent.add_child(section_title)
 	var grid := _make_check_grid()
 	parent.add_child(grid)
+	# 一个复选项可以对应多条 AB 配置：只要有一条被禁用就先显示未勾选
 	for group: Array in groups:
 		var cb_text: String = group[0]
 		var cfgs: Array = group[1]
@@ -1012,6 +1132,7 @@ func _build_bypass_section(
 				break
 		var captured_cfgs: Array = cfgs
 		var captured_refresh: Callable = refresh
+		# 勾选/取消时批量改 debug_disabled，然后刷新文本
 		var on_toggled := func(pressed: bool) -> void:
 			for c: AbConfigBase in captured_cfgs:
 				c.set_debug_disabled(not pressed)
@@ -1019,15 +1140,19 @@ func _build_bypass_section(
 		grid.add_child(_make_ad_check(cb_text, not any_disabled, on_toggled))
 
 
+# 给被 bypass 的配置加 [已 bypass] 后缀，没有就返回空串
 func _bypass_tag(cfg: AbConfigBase) -> String:
 	return " [已 bypass]" if cfg != null and cfg.is_debug_disabled() else ""
 
 
+# ================= 注册与命令分发 ===================
+# 把 ABTestManager 的所有配置登记给 CheatBus（ab 命令与「AB测」页都靠它）
 func _register_ab_params() -> void:
 	for cfg: AbConfigBase in ABTestManager.get_all_configs():
 		CheatBus.register_ab_param(cfg.key, cfg.cheat_label(), cfg.cheat_value_str)
 
 
+# 把命令表转成 CheatCommand 注册；editor_only 的命令在非编辑器构建里跳过
 func _register_commands() -> void:
 	for def: Dictionary in _command_defs:
 		if def.get("editor_only", false) and not OS.has_feature("editor"):
@@ -1039,6 +1164,7 @@ func _register_commands() -> void:
 		CheatBus.register_command(cmd)
 
 
+# 命令分发：按名字找 handler 执行；没有 handler 的命令由对局页自己订阅处理
 func _on_command_issued(cmd_name: String, args: Array[String]) -> void:
 	for def: Dictionary in _command_defs:
 		if def["name"] == cmd_name and def.has("handler"):
@@ -1046,6 +1172,7 @@ func _on_command_issued(cmd_name: String, args: Array[String]) -> void:
 			return
 
 
+# clickdbg 打开时，打印每次鼠标按下命中的控件与它的 mouse_filter
 func _input(event: InputEvent) -> void:
 	if not _clickdbg_enabled:
 		return
@@ -1066,6 +1193,8 @@ func _input(event: InputEvent) -> void:
 		)
 
 
+# ================= 通用命令 ===================
+# 重新登录：清掉今日闪屏标记、收起所有页面重放闪屏，3 秒兜底强制结束
 func _cmd_re_login(_args: Array[String]) -> void:
 	GameState.set_last_splash_date("")
 	UIManager.hide_all()
@@ -1085,30 +1214,36 @@ func _cmd_re_login(_args: Array[String]) -> void:
 	)
 
 
+# 重置引导：教程标记与关卡都退回起点，然后直接打开引导页
 func _cmd_reset_tutorial(_args: Array[String]) -> void:
 	GameState.set_tutorial_done(false)
 	GameState.set_current_level(1)
 	UIManager.show_ui(UiName.TUTORIAL)
 
 
+# 清存档并退出进程（所有本地进度都会重置）
 func _cmd_clear(_args: Array[String]) -> void:
 	GameState.reset_all()
 	get_tree().quit()
 
 
+# 弹一个 Toast；参数拼成文本，缺省 Hello Toast!
 func _cmd_toast(args: Array[String]) -> void:
 	var msg: String = " ".join(args) if args.size() > 0 else "Hello Toast!"
 	Toast.popup(msg, self)
 
 
+# 直接杀掉进程（测崩溃/被系统杀掉的表现）
 func _cmd_kill(_args: Array[String]) -> void:
 	OS.kill(OS.get_process_id())
 
 
+# 触发一次最强震动
 func _cmd_vibrate(_args: Array[String]) -> void:
 	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL3)
 
 
+# 打开反馈页，关闭后回主页
 func _cmd_feedback(_args: Array[String]) -> void:
 	var page := UIManager.show_ui(UiName.FEEDBACK)
 	await page.closed
@@ -1116,18 +1251,22 @@ func _cmd_feedback(_args: Array[String]) -> void:
 	UIManager.show_ui(UiName.HOME)
 
 
+# 强制显示设置页里的 CMP 行并打开设置页
 func _cmd_show_cmp(_args: Array[String]) -> void:
 	SettingPage.debug_force_show_cmp = true
 	UIManager.show_ui(UiName.SETTING)
 	print("[Cheat] show_cmp: 已强制显示 CMP 行并打开设置页")
 
 
+# ================= 关卡与对局命令 ===================
+# 跳关：改存档里的当前关，再带参数打开对局页
 func _cmd_level(args: Array[String]) -> void:
 	var idx: int = int(args[0]) if args.size() > 0 else 1
 	GameState.cheat_jump_to_level(idx)
 	UIManager.show_ui(UiName.GAME, {"level_index": idx})
 
 
+# 给「定位」道具加次数：读按钮角标再累加
 func _cmd_locate(args: Array[String]) -> void:
 	var amount: int = int(args[0]) if args.size() > 0 else 3
 	var page: Node = _get_active_game_page()
@@ -1137,6 +1276,7 @@ func _cmd_locate(args: Array[String]) -> void:
 	page.set_tool_count("locate", btn.badge_count + amount)
 
 
+# 给「提示」道具加次数
 func _cmd_hint(args: Array[String]) -> void:
 	var amount: int = int(args[0]) if args.size() > 0 else 3
 	var page: Node = _get_active_game_page()
@@ -1146,6 +1286,7 @@ func _cmd_hint(args: Array[String]) -> void:
 	page.set_tool_count("hint", btn.badge_count + amount)
 
 
+# 给「撤销」道具加次数
 func _cmd_undo(args: Array[String]) -> void:
 	var amount: int = int(args[0]) if args.size() > 0 else 3
 	var page: Node = _get_active_game_page()
@@ -1157,6 +1298,7 @@ func _cmd_undo(args: Array[String]) -> void:
 	page.set_tool_count("undo", btn.badge_count + amount)
 
 
+# 开关滑动保护区可视化（只有 swipe_protect 实验组才看得到效果）
 func _cmd_swipe_viz(_args: Array[String]) -> void:
 	var page: Node = _get_active_game_page()
 	if page == null:
@@ -1170,6 +1312,7 @@ func _cmd_swipe_viz(_args: Array[String]) -> void:
 	print("[Cheat] 保护区可视化: %s (需 swipe_protect 非对照组 + 滑动锁定后可见)" % ("开" if on else "关"))
 
 
+# 道具免费态：hint/locate/all/off，写 BaseGamePage 的静态开关并同步工具条
 func _cmd_free(args: Array[String]) -> void:
 	var which: String = args[0] if args.size() > 0 else "all"
 	if which not in ["hint", "locate", "all", "off"]:
@@ -1183,6 +1326,7 @@ func _cmd_free(args: Array[String]) -> void:
 	print('[Cheat] free → debug_force_free_tool = "%s"' % BaseGamePage.debug_force_free_tool)
 
 
+# 设置 +1 血特效的触发秒门槛（写 BaseGamePage 的静态字段）
 func _cmd_lifeplus_sec(args: Array[String]) -> void:
 	if args.is_empty():
 		print("[Cheat] lifeplus_sec 用法: lifeplus_sec <秒>")
@@ -1195,6 +1339,7 @@ func _cmd_lifeplus_sec(args: Array[String]) -> void:
 	print("[Cheat] lifeplus_sec → debug_life_plus_min_sec = %.1f" % sec)
 
 
+# 找当前可见的对局页（普通对局或每日挑战），没有就返回 null
 func _get_active_game_page() -> Node:
 	for page_name in ["game", "daily_game"]:
 		var p: Node = UIManager.get_ui(page_name)
@@ -1203,6 +1348,7 @@ func _get_active_game_page() -> Node:
 	return null
 
 
+# 打开每日挑战；带参数则覆盖「今天」的天数偏移，先清掉今日完成记录
 func _cmd_daily(args: Array[String]) -> void:
 	if args.is_empty():
 		DailyGamePage.debug_day_override = -1
@@ -1212,6 +1358,7 @@ func _cmd_daily(args: Array[String]) -> void:
 	UIManager.show_ui(UiName.DAILY_GAME)
 
 
+# 伪造今日每日挑战成绩为 Top N%，然后回主页（用来预览榜单样式）
 func _cmd_daily_top(args: Array[String]) -> void:
 	var top_pct: float = float(args[0]) if not args.is_empty() else 4.1
 	var beat: float = 100.0 - top_pct
@@ -1221,10 +1368,13 @@ func _cmd_daily_top(args: Array[String]) -> void:
 	UIManager.show_ui(UiName.HOME)
 
 
+# ================= 连胜打卡命令 ===================
+# 打开连胜打卡主页
 func _cmd_streak_open(_args: Array[String]) -> void:
 	StreakPage.open_main()
 
 
+# 清掉今日打卡记录，方便反复测打卡流程
 func _cmd_streak_clear(_args: Array[String]) -> void:
 	StreakManager.cheat_clear_today()
 	print(
@@ -1232,6 +1382,7 @@ func _cmd_streak_clear(_args: Array[String]) -> void:
 	)
 
 
+# 把打卡数据跨一天（测断签与连续签到）
 func _cmd_streak_skip(_args: Array[String]) -> void:
 	StreakManager.cheat_skip_day()
 	var data: StreakData = StreakManager.get_data()
@@ -1243,33 +1394,43 @@ func _cmd_streak_skip(_args: Array[String]) -> void:
 	)
 
 
+# 造出「已连打 6 天、今天还没打」的状态：今天打卡即触发满 7 天发奖
 func _cmd_streak_6(_args: Array[String]) -> void:
 	StreakManager.cheat_setup_six_days()
 	print("[Cheat] streak_6: 6 天已打 + 今未打,今天 do_checkin 触发满 7 发奖")
 
 
+# ================= 页面跳转命令 ===================
+# 打开题库页
 func _cmd_bank(_args: Array[String]) -> void:
 	UIManager.show_ui(UiName.BANK)
 
 
+# 打开手输 JSON 开局页
 func _cmd_level_json(_args: Array[String]) -> void:
 	UIManager.show_ui(UiName.LEVEL_JSON_INPUT)
 
 
+# 打开玩家行为模拟器
 func _cmd_playtest(_args: Array[String]) -> void:
 	UIManager.show_ui(UiName.PLAYTEST_SIMULATOR)
 
 
+# ================= 评分 / 题库 / 调试工具命令 ===================
+# 重置评分弹窗的已展示标记
 func _cmd_reset_rate_us(_args: Array[String]) -> void:
 	GameState.reset_rate_us_shown()
 	print("[Cheat] reset_rate_us → has_shown_rate_us = ", GameState.has_shown_rate_us())
 
 
+# 预览题库某一条：按题池取关、可选做对称变换，然后带 prebuilt 数据直接开局
 func _cmd_bank_preview(args: Array[String]) -> void:
+	# 参数：序号 idx、变换编号 transform(0~11)、题池 key（类型_尺寸_rank）
 	var idx: int = clampi(int(args[0]) if args.size() > 0 else 1, 1, 9999)
 	var transform: int = clampi(int(args[1]) if args.size() > 1 else 0, 0, 11)
 	var pool_key: String = args[2] if args.size() > 2 else "reg_10_3"
 
+	# 解析题池 key：reg=普通池 / lks=锁样式池 / lkm=改造池
 	var parts: Array = pool_key.split("_")
 	if parts.size() < 3:
 		print("[bank_preview] pool 格式错误，应为 类型_尺寸_rank，如 reg_10_3")
@@ -1278,6 +1439,7 @@ func _cmd_bank_preview(args: Array[String]) -> void:
 	var sz: int = int(parts[1])
 	var rank: int = int(parts[2])
 
+	# 按类型取题库；lkm 还要按 size 与 rank 过滤
 	var levels: Array = []
 	match pool_type:
 		"lks":
@@ -1294,8 +1456,9 @@ func _cmd_bank_preview(args: Array[String]) -> void:
 		print("[bank_preview] 题库为空: ", pool_key)
 		return
 
-	var entry_idx: int = (idx - 1) % levels.size()
+	var entry_idx: int = (idx - 1) % levels.size() # 序号按池子大小取模，超了从头再来
 	var entry: Dictionary = levels[entry_idx]
+	# 题库里的 regionMap / solution 存的是字符串，先转成 int 数组
 	var sol_1d: Array = []
 	for v in entry.get("solution", []):
 		sol_1d.append(int(v))
@@ -1305,6 +1468,7 @@ func _cmd_bank_preview(args: Array[String]) -> void:
 		for v in row_arr:
 			int_row.append(int(v))
 		int_regions.append(int_row)
+	# transform > 0 时对区域与解做对称变换，用来测同一题的多种形态
 	if transform > 0:
 		var transformed: Array = LevelData.apply_transform(int_regions, sol_1d, sz, transform)
 		int_regions = transformed[0]
@@ -1315,6 +1479,7 @@ func _cmd_bank_preview(args: Array[String]) -> void:
 			% [pool_key, entry_idx + 1, levels.size(), transform, sz, rank]
 		)
 	)
+	# 用 prebuilt_* 参数开局：对局页直接用这份题目，不再自己抽题
 	(
 		UIManager
 		. show_ui(
@@ -1334,6 +1499,7 @@ func _cmd_bank_preview(args: Array[String]) -> void:
 	)
 
 
+# 把对局页上藏起来的调试按钮（清空、坐标）显示出来
 func _cmd_show_debug_tools(_args: Array[String]) -> void:
 	var page: Node = _get_active_game_page()
 	if page == null:
@@ -1346,6 +1512,8 @@ func _cmd_show_debug_tools(_args: Array[String]) -> void:
 		coord_btn.visible = true
 
 
+# ================= 语言 / 广告 / AB / 埋点命令 ===================
+# 切换语言并落盘；空 / clear / system 表示清除覆盖、跟随系统
 func _apply_locale(locale: String) -> void:
 	if locale == "" or locale == "clear" or locale == "system":
 		GameState.set_apply_locale("")
@@ -1357,14 +1525,17 @@ func _apply_locale(locale: String) -> void:
 	print("[Cheat] locale = ", LanguageManager.get_locale(), " (已落盘)")
 
 
+# 打开广告调试面板
 func _cmd_ad_debug(_args: Array[String]) -> void:
 	UniKitManager.open_ad_debug_view()
 
 
+# 隐藏/显示对局页的一批 UI 节点（截屏用）：以第一个节点的当前可见性为准整组取反
 func _cmd_hide_ui(_args: Array[String]) -> void:
 	var page: Node = _get_active_game_page()
 	if page == null:
 		return
+	# 要一起切换的节点路径：顶部信息栏 + 底部道具按钮
 	const PATHS: Array[String] = [
 		"Root/VBoxContainer/Header/GearBtn",
 		"Root/VBoxContainer/Header/LevelLabel",
@@ -1376,6 +1547,7 @@ func _cmd_hide_ui(_args: Array[String]) -> void:
 		"Root/VBoxContainer/BottomTools/HintBtn",
 	]
 
+	# 先探测第一个节点现在的可见性，作为整组的目标状态
 	var target_visible: bool = true
 	for path: String in PATHS:
 		var node: Node = page.get_node_or_null(path)
@@ -1388,6 +1560,7 @@ func _cmd_hide_ui(_args: Array[String]) -> void:
 			(node as CanvasItem).visible = target_visible
 
 
+# 设置 AB 参数覆盖值：字符串类型直接传字符串，其余按整数解析
 func _cmd_ab(args: Array[String]) -> void:
 	if args.size() < 2:
 		print("[Cheat] ab 用法: ab <key> <value>  例: ab region_color 1")
@@ -1403,15 +1576,18 @@ func _cmd_ab(args: Array[String]) -> void:
 	print("[Cheat] ab %s = %s" % [key, str(value)])
 
 
+# 打开 AB 分流调试页
 func _cmd_ab_debug(_args: Array[String]) -> void:
 	UIManager.show_ui(UiName.AB_DEBUG)
 
 
+# 打印当前 AB 染色标签
 func _cmd_ab_tag(_args: Array[String]) -> void:
 	var tag: String = ABTestManager.get_ab_dyeing_tag()
 	print('[Cheat] ab_dyeing_tag = "%s"' % tag)
 
 
+# 点击命中调试开关：on / off / toggle（缺省 toggle）
 func _cmd_clickdbg(args: Array[String]) -> void:
 	var mode: String = args[0] if args.size() > 0 else "toggle"
 	match mode:
@@ -1424,6 +1600,7 @@ func _cmd_clickdbg(args: Array[String]) -> void:
 	print("[ClickDbg] ", "ON" if _clickdbg_enabled else "OFF")
 
 
+# iOS 专用：模拟一次广告加载失败回调，验证错误桥接
 func _cmd_mock_ad_fail(_args: Array[String]) -> void:
 	if not OS.has_feature("ios"):
 		print("[cheat] mock_ad_fail: iOS only")
@@ -1432,18 +1609,21 @@ func _cmd_mock_ad_fail(_args: Array[String]) -> void:
 	print("[cheat] mock_ad_fail: dispatched")
 
 
+# 主动弹一次插屏（有填充才弹）
 func _cmd_inter(_args: Array[String]) -> void:
 	var show_id := UniKitManager.gen_show_id()
 	if UniKitManager.is_interstitial_ready("interstitial", "cheat", show_id):
 		UniKitManager.try_show_interstitial("interstitial", "cheat", show_id)
 
 
+# 主动弹一次激励视频（有填充才弹）
 func _cmd_reward(_args: Array[String]) -> void:
 	var show_id := UniKitManager.gen_show_id()
 	if UniKitManager.is_reward_ready("reward", "cheat", show_id):
 		UniKitManager.show_reward("reward", "cheat", show_id)
 
 
+# 模拟激励视频「漏奖补发」：打开开关并补满近 3 天的正常领奖记录（去掉防刷限制）
 func _cmd_mock_reward_miss(args: Array[String]) -> void:
 	var enabled: bool = (int(args[0]) if args.size() > 0 else 1) != 0
 	UniKitManager.set_debug_reward_miss(enabled)
@@ -1464,11 +1644,13 @@ func _cmd_mock_reward_miss(args: Array[String]) -> void:
 	)
 
 
+# 手动推进一次 session（测跨 session 的广告与统计门槛）
 func _cmd_add_session(_args: Array[String]) -> void:
 	SessionManager.debug_advance_session()
 	print("[Cheat] add_session → session 计数 = ", GameState.get_session_count())
 
 
+# 设置本 session 的激励视频观看次数（inter_prob 门槛用它判断）
 func _cmd_inter_prob_count(args: Array[String]) -> void:
 	var n: int = int(args[0]) if args.size() > 0 else 3
 	GameState.set_session_reward_view_count(n)
@@ -1477,6 +1659,7 @@ func _cmd_inter_prob_count(args: Array[String]) -> void:
 	)
 
 
+# 调对局页自动完成按钮的 Y 偏移（写对局页内部字段）
 func _cmd_ac_offset(args: Array[String]) -> void:
 	var page: Node = _get_active_game_page()
 	if page == null:
@@ -1487,30 +1670,38 @@ func _cmd_ac_offset(args: Array[String]) -> void:
 	print("[Cheat] ac_offset = ", offset_val)
 
 
+# ================= 引导与 auto_mark 状态重置 ===================
+# 重置「首局降档」：下次进关可再触发一次
 func _cmd_reset_first_easy(_args: Array[String]) -> void:
 	GameState.cheat_reset_daily_first_easy()
 	print("[Cheat] reset_first_easy: 已重置,下次进关可触发首局降档")
 
 
+# 重置 auto_mark 新手引导标记，下次满足条件会重新弹
 func _cmd_reset_auto_mark_tutorial(_args: Array[String]) -> void:
 	GameState.reset_auto_mark_tutorial_done()
 	print("[Cheat] reset_auto_mark_tutorial: 已重置,下次 game_auto_mark==2 且 lv>30 进关重新触发引导")
 
 
+# 直接弹每日挑战的 auto_mark 引导弹窗
 func _cmd_daily_auto_mark_popup(_args: Array[String]) -> void:
 	UIManager.show_ui(UiName.DAILY_AUTO_MARK_POPUP)
 
 
+# 清掉今日 auto_mark 激活标记，方便反复测该弹窗
 func _cmd_reset_daily_auto_mark(_args: Array[String]) -> void:
 	GameState.reset_daily_auto_mark_enabled()
 	print("[Cheat] reset_daily_auto_mark: 已清今日激活,下次进 daily 重弹引导(需 game_auto_mark==5)")
 
 
+# 清掉生涯级 FREE 已消费标记，方便反复测「首次免费」
 func _cmd_reset_free_auto_mark(_args: Array[String]) -> void:
 	GameState.reset_daily_auto_mark_free_consumed()
 	print("[Cheat] reset_free_auto_mark: 已清生涯 FREE,下次进 daily(已清今日激活)弹出 FREE 模式")
 
 
+# ================= 设备标识 / ATT / 存档自检 ===================
+# 取 LUID 复制到剪贴板；编辑器里拿不到就给个占位值
 func _cmd_luid(_args: Array[String]) -> void:
 	var luid: String = UniKitManager.get_luid()
 	if luid.is_empty() and OS.has_feature("editor"):
@@ -1520,6 +1711,7 @@ func _cmd_luid(_args: Array[String]) -> void:
 	Toast.popup("LUID: %s (已复制)" % luid, self)
 
 
+# 取 UUID 复制到剪贴板（同上，编辑器给占位值）
 func _cmd_uuid(_args: Array[String]) -> void:
 	var uuid: String = UniKitManager.get_uuid()
 	if uuid.is_empty() and OS.has_feature("editor"):
@@ -1529,6 +1721,7 @@ func _cmd_uuid(_args: Array[String]) -> void:
 	Toast.popup("UUID: %s (已复制)" % uuid, self)
 
 
+# 编辑器专用：强制重走 launcher 的 ATT 流程（重载当前场景）
 func _cmd_test_att(_args: Array[String]) -> void:
 	if not OS.has_feature("editor"):
 		return
@@ -1542,7 +1735,9 @@ func _cmd_test_att(_args: Array[String]) -> void:
 	get_tree().reload_current_scene()
 
 
+# 存档容错自检：造出 8 种「主/备/旧档 好或坏」的组合，验证 SaveStore 挑档是否正确
 func _cmd_savetest(_args: Array[String]) -> void:
+	# 自检用的临时目录与文件名（跑完会删掉整个目录）
 	var pw := "savetest_pw_0123456789ABCDEF0123"
 	var dir := "user://save_test_fi/"
 	var path_a := dir + "save_a.cfg"
@@ -1552,6 +1747,7 @@ func _cmd_savetest(_args: Array[String]) -> void:
 	var eg := dir + "endgame.cfg"
 	DirAccess.make_dir_recursive_absolute(dir)
 
+	# 三个小工具：清场、写一份好档（加密）、写一份坏档
 	var clean := func() -> void:
 		for p in [path_a, path_b, flag, legacy, eg, path_a + ".tmp", path_b + ".tmp", eg + ".tmp"]:
 			if FileAccess.file_exists(p):
@@ -1569,8 +1765,9 @@ func _cmd_savetest(_args: Array[String]) -> void:
 		f.store_string(slot)
 		f = null
 
+	# 跑一个用例：按 dual 建 SaveStore，读档并比对 marker 是否符合预期
 	var results: Array[String] = []
-	var pass_count := {"n": 0}
+	var pass_count := {"n": 0} # 用字典当计数器：闭包里改不了外部 int
 	var run_case := func(name: String, dual: bool, expect: String) -> void:
 		var store := (
 			SaveStore.new(pw, dir, dual, path_a, path_b, flag, legacy)
@@ -1581,11 +1778,12 @@ func _cmd_savetest(_args: Array[String]) -> void:
 		var got := "null" if cfg == null else str(cfg.get_value("p", "marker", "?"))
 		var ok: bool = got == expect
 		if ok:
-			pass_count.n += 1
+			pass_count.n += 1 # 字典字面量语法，pass_count.n 等价于 pass_count["n"]
 		var line := "%s %s got=%s expect=%s" % ["[PASS]" if ok else "[FAIL]", name, got, expect]
 		results.append(line)
 		print("[savetest] %s" % line)
 
+	# 八个用例：每个都先清场再造文件，避免相互影响
 	clean.call()
 	set_flag.call("A")
 	write_corrupt.call(path_a)
@@ -1630,13 +1828,15 @@ func _cmd_savetest(_args: Array[String]) -> void:
 	if DirAccess.dir_exists_absolute(dir):
 		DirAccess.remove_absolute(dir)
 
+	# 汇总：打印通过数并弹 Toast
 	var total := results.size()
 	print("[savetest] ===== %d/%d 通过 =====" % [pass_count.n, total])
 	Toast.popup("存档容错自检: %d/%d 通过" % [pass_count.n, total], self)
 
 
+# 设置游戏速度倍率（写 Engine.time_scale，范围 0.1~10 倍）
 func _cmd_speed(args: Array[String]) -> void:
 	var scale: float = float(args[0]) if args.size() > 0 else 1.0
 	scale = clampf(scale, 0.1, 10.0)
-	Engine.time_scale = scale
+	Engine.time_scale = scale # 改全局时间缩放：所有 tween / 计时器都会跟着变快
 	Toast.popup("游戏速度: %.1fx" % scale, self)

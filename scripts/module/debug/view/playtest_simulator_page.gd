@@ -1,12 +1,18 @@
+# Playtest 模拟器页：不真玩，按概率伪造「定位 / 提示 / 失败 / 通关」的走关序列，
+# 用真实的 GameState / LevelData 连跑 N 局，专门复现「同一个 puzzle_id 反复出现」的重复题问题，
+# 结束后把统计与明细写成 res://docs/level-bank/playtest-simulation-*.md 报告。
+# 只在非 rel 的构建里注册（UIRegistry._DEV_PAGES）；由作弊面板的 playtest 命令打开
 extends UIFrameWindow
 
-@onready var _count_input: LineEdit = $CenterPanel/Margin/VBox/CountRow/CountInput
-@onready var _rnr_input: LineEdit = $CenterPanel/Margin/VBox/RnrRow/RnrInput
-@onready var _sc_input: LineEdit = $CenterPanel/Margin/VBox/ScRow/ScInput
-@onready var _error_label: Label = $CenterPanel/Margin/VBox/ErrorLabel
-@onready var _result_label: Label = $CenterPanel/Margin/VBox/ResultLabel
-@onready var _start_btn: Button = $CenterPanel/Margin/VBox/ButtonRow/StartBtn
+# ---- 子节点引用 ----
+@onready var _count_input: LineEdit = $CenterPanel/Margin/VBox/CountRow/CountInput # 模拟局数
+@onready var _rnr_input: LineEdit = $CenterPanel/Margin/VBox/RnrRow/RnrInput # rule_normal_rank 覆盖值（留空 = 用 SDK 真值）
+@onready var _sc_input: LineEdit = $CenterPanel/Margin/VBox/ScRow/ScInput # size_cycle 覆盖值（留空 = 用 SDK 真值）
+@onready var _error_label: Label = $CenterPanel/Margin/VBox/ErrorLabel # 参数 / 流程错误提示
+@onready var _result_label: Label = $CenterPanel/Margin/VBox/ResultLabel # 跑完后的摘要
+@onready var _start_btn: Button = $CenterPanel/Margin/VBox/ButtonRow/StartBtn # 开始按钮，跑的过程中禁用防重入
 
+# ---- size_cycle 分组表：每组一张「第 N 关用多大棋盘」的循环表（长度 10，超出取模），CTRL 是对照组 ----
 const _SIZE_CYCLE_CTRL_1_10: Array[int] = [4, 4, 6, 6, 8, 6, 6, 8, 8, 7]
 const _SIZE_CYCLE_CTRL_11_20: Array[int] = [6, 6, 8, 8, 10, 8, 9, 10, 9, 8]
 const _SIZE_CYCLE_CTRL_21_50: Array[int] = [8, 9, 10, 9, 10, 8, 9, 10, 9, 10]
@@ -33,6 +39,8 @@ const _SIZE_CYCLE_F_11_50: Array[int] = [8, 10, 10, 9, 10, 10, 9, 10, 10, 10]
 const _SIZE_CYCLE_F_51_PLUS: Array[int] = [8, 10, 11, 9, 10, 11, 9, 10, 11, 10]
 
 
+# ================= size_cycle 查表 =================
+# 按 size_cycle 分组算第 level_num 关该用多大棋盘：sc 3~8 对应 A~F 组，其余走对照组
 func _compute_ab_size(level_num: int, sc: int) -> int:
 	match sc:
 		3:
@@ -85,6 +93,8 @@ func _compute_ab_size(level_num: int, sc: int) -> int:
 			return _SIZE_CYCLE_CTRL_51_PLUS[(level_num - 51) % 10]
 
 
+# ================= 界面生命周期与入口 =================
+# 每次打开都清提示、把局数恢复成 100 并启用开始按钮
 func on_show(_params: Dictionary = {}) -> void:
 	_error_label.text = ""
 	_error_label.visible = false
@@ -96,10 +106,12 @@ func on_show(_params: Dictionary = {}) -> void:
 	_start_btn.disabled = false
 
 
+# CloseBtn：关掉本页
 func _on_close_pressed() -> void:
 	UIManager.hide_ui(UiName.PLAYTEST_SIMULATOR)
 
 
+# StartBtn：校验局数 1~100000 → 让界面重绘一帧 → 跑模拟 → 显示摘要
 func _on_start_pressed() -> void:
 	var raw: String = _count_input.text.strip_edges()
 	if not raw.is_valid_int():
@@ -137,27 +149,33 @@ func _on_start_pressed() -> void:
 	_start_btn.disabled = false
 
 
+# 预设 100 局：填好数字直接开跑
 func _on_preset_100_pressed() -> void:
 	_count_input.text = "100"
 	_on_start_pressed()
 
 
+# 预设 1000 局
 func _on_preset_1000_pressed() -> void:
 	_count_input.text = "1000"
 	_on_start_pressed()
 
 
+# 预设 10000 局
 func _on_preset_10000_pressed() -> void:
 	_count_input.text = "10000"
 	_on_start_pressed()
 
 
+# 同时把错误写到界面和 warning 日志
 func _show_error(msg: String) -> void:
 	_error_label.text = msg
 	_error_label.visible = true
 	push_warning("[playtest] " + msg)
 
 
+# ================= 记录元数据 =================
+# 把 regionMap 按行优先拼成字符串后取 sha256 前 16 位，用来肉眼比对两张图是否同形
 static func _rm_sha256(rm: Array) -> String:
 	var parts: PackedStringArray = PackedStringArray()
 	for row in rm:
@@ -166,6 +184,7 @@ static func _rm_sha256(rm: Array) -> String:
 	return ",".join(parts).sha256_text().substr(0, 16)
 
 
+# 把一个时刻的上下文打包成一条记录：关卡、pid、题库来源、AB 参数、随机动作，写报告时直接用
 func _build_record_meta(
 	iter_idx: int,
 	lv: int,
@@ -196,9 +215,12 @@ func _build_record_meta(
 	}
 
 
+# ---- 「池小」判定阈值：某桶题数不超过它，同桶撞重就算已知噪声 ----
 const POOL_SMALL_THRESHOLD: int = 30
 
 
+# ================= 题库桶大小（判定池小噪声） =================
+# 从记录里取 prev_ / curr_ 侧的尺寸、rank、tier、来源，算出属于哪个题库桶并返回该桶题数；算不出返回 -1
 static func _bucket_pool_size(side: String, r: Dictionary, pool_sizes: Dictionary) -> int:
 	var sz: int = int(r.get("%s_sz" % side, 0))
 	var rank: int = int(r.get("%s_rank" % side, 0))
@@ -214,6 +236,7 @@ static func _bucket_pool_size(side: String, r: Dictionary, pool_sizes: Dictionar
 	return int(pool_sizes.get(key, -1))
 
 
+# 判定这条 dedup 是否属已知的「池小噪声」：前后同桶且该桶题数不超过阈值
 static func _is_known_pool_small_dup(r: Dictionary, pool_sizes: Dictionary) -> bool:
 	if int(r.get("prev_sz", 0)) != int(r.get("curr_sz", 0)):
 		return false
@@ -227,9 +250,11 @@ static func _is_known_pool_small_dup(r: Dictionary, pool_sizes: Dictionary) -> b
 	return pool > 0 and pool <= POOL_SMALL_THRESHOLD
 
 
+# 扫一遍题库统计每个桶的题数（main_ 尺寸_rank_tier 与 lkmod_ 尺寸_maxR），供池小判定用
 static func _compute_pool_sizes() -> Dictionary:
 	var sizes: Dictionary = {}
 
+	# 主线 / LK 风格题库：按「尺寸 + rank」以及再细分 tier 两级统计
 	for sz in [4, 5, 6, 7, 8, 9, 10, 11, 12]:
 		for rank in [1, 2, 3, 4, 5]:
 			var r_all: int = (BankData.get_levels(sz, rank) as Array).size()
@@ -243,6 +268,7 @@ static func _compute_pool_sizes() -> Dictionary:
 				if rt + lt > 0:
 					sizes["main_%d_%d_%s" % [sz, rank, tier]] = rt + lt
 
+	# LK-Modified 题库没有 rank / tier，按「尺寸 + maxR」统计
 	var lkmod_buckets: Dictionary = {}
 	for e in BankData.get_lk_modified_levels():
 		var sz: int = int(e.get("size", 0))
@@ -256,13 +282,20 @@ static func _compute_pool_sizes() -> Dictionary:
 	return sizes
 
 
+# ================= 模拟主流程 =================
+# 模拟主循环：重置存档 → 逐局取题并登记撞重 → 随机判胜负 → 汇总统计并写报告 → 还原原关卡
+# 注意：会真的改存档（reset_all / record_puzzle / 胜负推进都会落盘），也会写报告文件
 func _run_simulation(count: int) -> Dictionary:
+	# 先把玩家当前关卡记下来，跑完要还原
 	var orig_lv: int = GameState.get_current_level()
+	# reset_all 会落盘：当前关卡回 1、策略回 1、最近题目记录清空
 	GameState.reset_all()
 
+	# 先扫题库桶，后面判「池小噪声」要用
 	var pool_sizes: Dictionary = _compute_pool_sizes()
 	print("[playtest] 扫描题库桶完成,共 %d 个桶,小池阈值=%d" % [pool_sizes.size(), POOL_SMALL_THRESHOLD])
 
+	# rnr（rule_normal_rank）可选覆盖：填了才动 AB 配置，跑完清掉
 	var rnr_overridden: bool = false
 	var rnr_raw: String = _rnr_input.text.strip_edges()
 	if rnr_raw.is_valid_int():
@@ -271,6 +304,7 @@ func _run_simulation(count: int) -> Dictionary:
 		rnr_overridden = true
 		print("[playtest] rnr override = %d" % rnr_val)
 
+	# size_cycle 可选覆盖：没填就用 SDK 真值
 	var sc_raw: String = _sc_input.text.strip_edges()
 	var sc_value: int
 	if sc_raw.is_valid_int():
@@ -280,18 +314,25 @@ func _run_simulation(count: int) -> Dictionary:
 		sc_value = ABTestManager.size_cycle.value()
 		print("[playtest] size_cycle = %d (SDK 真值)" % sc_value)
 
+	# 逐局日志行
 	var log_lines: Array = []
+	# prefix（去掉 transform 后缀的 pid）→ 命中列表，用来找重复组
 	var by_prefix: Dictionary = {}
 
+	# 完整 pid → 最近一次出现的记录，撞重时当 PREV 侧
 	var by_pid_full_record: Dictionary = {}
 
+	# 每次「跨 level 撞重」都往这里塞一条明细
 	var dedup_reports: Array = []
 
+	# 主循环：每一轮 = 进一关 → 可能操作 → 随机胜 / 负
 	for i in range(count):
+		# 本轮关卡号（上一轮的胜负会推进它）
 		var lv: int = GameState.get_current_level()
 
 		var entry: Dictionary
 		var source: String
+		# 上一轮失败会留下 retry_puzzle 缓存，优先复用它，复现线上重试路径
 		var cached: Dictionary = GameState.get_retry_puzzle(lv)
 		if not cached.is_empty():
 			entry = {
@@ -304,36 +345,46 @@ func _run_simulation(count: int) -> Dictionary:
 				"_bank_source_main": cached.get("bank_source_main", ""),
 				"_bank_source": cached.get("bank_source", "regular"),
 			}
-			source = "cached"
+			source = "cached" # 命中重试缓存
 		else:
+			# 否则按 size_cycle 表取一张新题
 			entry = LevelData.get_level_entry(lv, _compute_ab_size(lv, sc_value))
-			source = "fresh"
+			source = "fresh" # 新取的题
 
+		# 取不到题就中止，并把玩家关卡还原
 		if entry.is_empty() or not entry.has("regionMap"):
 			GameState.cheat_jump_to_level(orig_lv)
 			return {"ok": false, "error": "get_level_entry(%d) 返回空 entry" % lv}
 
+		# size 为 0 时用 regionMap 行数兜底
 		var sz: int = int(entry.get("size", 0))
 		if sz == 0:
 			sz = (entry["regionMap"] as Array).size()
 		var rm: Array = entry["regionMap"]
+		# 完整 pid 含 transform 后缀
 		var full_pid: String = LevelData.compute_puzzle_id(sz, rm)
 
+		# 本轮做过的事：各 1/3 概率「定位」「提示」，两者都会把关卡标记为脏
 		var actions: PackedStringArray = PackedStringArray()
-		if randf() < 1.0 / 3.0:
+		if randf() < 1.0 / 3.0: # 1/3 概率点定位
 			actions.append("locate")
 			GameState.mark_current_level_dirty()
-		if randf() < 1.0 / 3.0:
+		if randf() < 1.0 / 3.0: # 1/3 概率点提示
 			actions.append("hint")
 			GameState.mark_current_level_dirty()
 
+		# 本轮上下文，撞重报告里当 CURR 侧
 		var curr_meta: Dictionary = _build_record_meta(
 			i + 1, lv, sz, source, full_pid, entry, rm, actions
 		)
+		# 登记本轮 pid；返回非空表示历史上出现过（跨 level 即撞重）
 		var dup_prev: Dictionary = GameState.record_puzzle(full_pid, lv)
 		var dedup_triggered: bool = false
+		# 撞重后按线上逻辑推进题库指针再重取一次题，看修复路径会不会再撞
 		if not dup_prev.is_empty() and int(dup_prev.get("level", -1)) != lv:
+			# 推进 main / lk_mod 的题库下标
 			LevelData.advance_for_entry(entry, sz)
+			# 重取时第二参传 0，表示仍用关卡默认尺寸
 			var retry_entry: Dictionary = LevelData.get_level_entry(lv, 0)
 			if not retry_entry.is_empty() and retry_entry.has("regionMap"):
 				var retry_sz: int = int(retry_entry.get("size", 0))
@@ -351,9 +402,11 @@ func _run_simulation(count: int) -> Dictionary:
 					retry_rm,
 					actions
 				)
+				# 重取后仍然撞重，才写成报告里的 dedup
 				var retry_dup: Dictionary = GameState.record_puzzle(retry_pid, lv)
 				if not retry_dup.is_empty() and int(retry_dup.get("level", -1)) != lv:
 					dedup_triggered = true
+					# 取这个 pid 上次出现的记录；找不到就用占位默认值，字段照常写全
 					var prev_meta: Dictionary = (
 						by_pid_full_record
 						. get(
@@ -406,6 +459,7 @@ func _run_simulation(count: int) -> Dictionary:
 						"prev_actions": String(prev_meta.get("actions", "?")),
 						"curr_actions": String(retry_meta["actions"]),
 					}
+					# 补上前后两侧的桶大小与「是否池小」判定
 					dedup_entry["bucket_pool_size_curr"] = _bucket_pool_size(
 						"curr", dedup_entry, pool_sizes
 					)
@@ -415,17 +469,22 @@ func _run_simulation(count: int) -> Dictionary:
 					dedup_entry["is_known_pool"] = _is_known_pool_small_dup(dedup_entry, pool_sizes)
 					dedup_reports.append(dedup_entry)
 
+				# 本轮正式改用重取后的题
 				entry = retry_entry
 				sz = retry_sz
 				rm = retry_rm
 				full_pid = retry_pid
 				curr_meta = retry_meta
 
+		# 记住这个 pid 的最新上下文，供下次撞重当 PREV
 		by_pid_full_record[full_pid] = curr_meta
 
+		# 归一到「形状前缀」维度做等价类统计
 		var prefix: String = _strip_suffix(full_pid)
 
+		# 1/10 概率判失败，否则算通关；失败会把本题缓存进 retry_puzzle
 		var outcome: String
+		# 失败：标记关卡重试并缓存本题，下一轮就命中 cached 分支
 		if randf() < 1.0 / 10.0:
 			outcome = "restart"
 			GameState.on_level_failed(lv)
@@ -453,6 +512,7 @@ func _run_simulation(count: int) -> Dictionary:
 			GameState.on_level_won(lv)
 		actions.append(outcome)
 
+		# 撞重的行加个 [DEDUP] 尾巴，方便在报告里 grep
 		var dedup_mark: String = "  [DEDUP]" if dedup_triggered else ""
 		log_lines.append(
 			(
@@ -460,6 +520,7 @@ func _run_simulation(count: int) -> Dictionary:
 				% [i + 1, lv, full_pid, source, ",".join(actions), dedup_mark]
 			)
 		)
+		# 按前缀累积命中记录
 		if not by_prefix.has(prefix):
 			by_prefix[prefix] = []
 		(
@@ -474,6 +535,7 @@ func _run_simulation(count: int) -> Dictionary:
 			)
 		)
 
+	# 统计「同一前缀出现在 2 个及以上不同 level」的组
 	var cross_lv_dups: Array = []
 	for p in by_prefix.keys():
 		var hits: Array = by_prefix[p]
@@ -484,6 +546,7 @@ func _run_simulation(count: int) -> Dictionary:
 		if unique_lvs.size() >= 2:
 			cross_lv_dups.append({"prefix": p, "hits": hits, "unique_lvs": unique_lvs})
 
+	# 统计「相邻不超过 10 关内同前缀」的短窗口重复
 	var window_dups: Array = []
 	for p in by_prefix.keys():
 		var hits: Array = by_prefix[p]
@@ -495,22 +558,27 @@ func _run_simulation(count: int) -> Dictionary:
 			if a["lv"] != b["lv"] and absi(b["lv"] - a["lv"]) <= 10:
 				window_dups.append({"prefix": p, "a": a, "b": b})
 
+	# 写 Markdown 报告到 res://docs/level-bank/
 	var report_path: String = _write_report(
 		count, log_lines, by_prefix, cross_lv_dups, window_dups, dedup_reports
 	)
 
+	# 还原玩家的关卡
 	GameState.cheat_jump_to_level(orig_lv)
 
+	# 清掉临时 AB 覆盖，避免影响后续游玩
 	if rnr_overridden:
 		ABTestManager.rule_normal_rank.clear_debug_override()
 		print("[playtest] rnr override cleared")
 
+	# 把 dedup 拆成「已知池小」和「未知根因」两类计数
 	var dedup_known_count: int = 0
 	for r in dedup_reports:
 		if bool(r.get("is_known_pool", false)):
 			dedup_known_count += 1
 	var dedup_unknown_count: int = dedup_reports.size() - dedup_known_count
 
+	# 摘要回给界面显示
 	return {
 		"ok": true,
 		"unique_count": by_prefix.size(),
@@ -523,6 +591,8 @@ func _run_simulation(count: int) -> Dictionary:
 	}
 
 
+# ================= 报告生成 =================
+# 往报告里追加一条 dedup 的 PREV / CURR 对照表
 static func _append_dedup_detail(out: PackedStringArray, r: Dictionary) -> void:
 	out.append(
 		(
@@ -562,11 +632,13 @@ static func _append_dedup_detail(out: PackedStringArray, r: Dictionary) -> void:
 	out.append("")
 
 
+# 去掉 puzzle_id 末尾的 transform 后缀，只留「形状前缀」，用于归等价类
 func _strip_suffix(full_id: String) -> String:
 	var parts: PackedStringArray = full_id.split("_", false, 2)
-	return parts[0] + "_" + parts[1] if parts.size() >= 2 else full_id
+	return parts[0] + "_" + parts[1] if parts.size() >= 2 else full_id # pid 形如 前缀_后缀，只取前两段
 
 
+# 把统计、dedup 明细、重复组和全量日志写成 Markdown 报告，返回文件路径
 func _write_report(
 	count: int,
 	log_lines: Array,
@@ -575,11 +647,14 @@ func _write_report(
 	window_dups: Array,
 	dedup_reports: Array
 ) -> String:
+	# 文件名用系统时间戳（冒号换短横、T 换下划线）
 	var ts: String = Time.get_datetime_string_from_system().replace(":", "-").replace("T", "_")
 	var path: String = "res://docs/level-bank/playtest-simulation-%s.md" % ts
 
+	# 目录不存在就先建出来
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://docs/level-bank"))
 
+	# 报告按小节拼装
 	var out: PackedStringArray = PackedStringArray()
 	out.append("# Playtest 模拟报告")
 	out.append("")
@@ -593,6 +668,7 @@ func _write_report(
 	out.append("- 跨 level 重复组(同 prefix 出现在 ≥2 个 level): **%d**" % cross_lv_dups.size())
 	out.append("- 短窗口重复对(相邻 ≤10 关内同 prefix): **%d**" % window_dups.size())
 
+	# 按「是否池小」把 dedup 拆成两组，分别成节
 	var dedup_known: Array = []
 	var dedup_unknown: Array = []
 	for r in dedup_reports:
@@ -751,6 +827,7 @@ func _write_report(
 		out.append(line)
 	out.append("```")
 
+	# 写盘；打不开就返回带说明的假路径
 	var f: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	if f == null:
 		return "(写文件失败:%s)" % path
