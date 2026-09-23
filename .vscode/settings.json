@@ -1,0 +1,11 @@
+{
+  "godotTools.editorPath.godot4": "/Users/haruta16/.godot-bin/godot-4.6.1",
+    // Godot 编辑器内置的 LSP 没有实现 textDocument/documentHighlight（它自己声明的能力里
+    // documentHighlightProvider 就是 false），而 godot-tools 仍会发这个请求，于是每次
+    // 光标移动都会在 GDScriptLanguageClient 输出里刷一条 -32601 Method not found。
+    // 关掉「同名符号高亮」就掐断了触发源；注意 editor.selectionHighlight（选中文本的同名
+    // 高亮）是另一套机制，不受影响，仍然可用。
+    "[gdscript]": {
+        "editor.occurrencesHighlight": "off"
+    }
+}

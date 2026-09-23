@@ -2,4 +2,8 @@
 *.log
 originals/
 .DS_Store
-.vscode/
+# 忽略 .vscode 下的一切,但放行 settings.json。
+# 必须用 .vscode/*(而不是 .vscode/):父目录被整体排除时,! 无法把里面
+# 的文件捞回来。该文件用 ~/.godot-bin/ 下的版本化别名,与设备无关,可安全提交。
+.vscode/*
+!.vscode/settings.json
