@@ -1,13 +1,13 @@
-# 动画播放工具（全静态）：play 前先回 RESET 基线并推进到第 0 帧，避免首帧闪
-# 当前仓库内没有调用方，属于预留工具；缺动画时直接 push_error，不静默失败
+## 动画播放工具（全静态）：play 前先回 RESET 基线并推进到第 0 帧，避免首帧闪
+## 当前仓库内没有调用方，属于预留工具；缺动画时直接 push_error，不静默失败
 class_name AnimUtil
 extends RefCounted
 
-# 约定的基线动画名：各 AnimationPlayer 用它回到初始姿态
+## 约定的基线动画名：各 AnimationPlayer 用它回到初始姿态
 const RESET_ANIM: StringName = &"RESET"
 
 
-# 播放动画；reset=true 时先播 RESET 打基线。player 为空或动画缺失都只报错返回
+## 播放动画；reset=true 时先播 RESET 打基线。player 为空或动画缺失都只报错返回
 static func play(player: AnimationPlayer, anim: StringName, reset: bool = true) -> void:
 	if player == null:
 		push_error("[AnimUtil] play: player 为 null (anim=%s)" % anim) # 报错而不是静默跳过，编辑器里立刻能看到

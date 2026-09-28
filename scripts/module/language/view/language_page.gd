@@ -1,9 +1,9 @@
-# 语言选择弹窗：列表 = 系统语言置顶 + 9 个常用语言（系统语言不在其中时共 10 项）；按「确定」立刻切 locale 并写入存档
-# 不需要重启：LanguageManager.set_locale 直接改 TranslationServer，各页面收到翻译变化通知后自行刷新
+## 语言选择弹窗：列表 = 系统语言置顶 + 9 个常用语言（系统语言不在其中时共 10 项）；按「确定」立刻切 locale 并写入存档
+## 不需要重启：LanguageManager.set_locale 直接改 TranslationServer，各页面收到翻译变化通知后自行刷新
 class_name LanguagePage
 extends UIFrameWindow
 
-# 选项按钮的场景（LanguageOption：本族语名 + 副标题 + 选中勾）
+## 选项按钮的场景（LanguageOption：本族语名 + 副标题 + 选中勾）
 const _OPTION_SCENE: PackedScene = preload("res://scripts/module/language/ui/language_option.tscn")
 
 # ---- 固定提供的 9 个语言：locale / 本族语名 / 名字翻译 key ----
@@ -103,7 +103,7 @@ var _confirmed: bool = false  # 是否已按过确定
 
 
 # ================= 生命周期 =================
-# 创建时调用一次：清掉场景里预置的选项节点，并给滚动容器加拖拽助手
+## 创建时调用一次：清掉场景里预置的选项节点，并给滚动容器加拖拽助手
 func on_create() -> void:
 	# 场景里可能留了编辑期占位节点，先全部移除
 	for child in _options_list.get_children():
@@ -114,7 +114,7 @@ func on_create() -> void:
 	ScrollDragHelper.attach(_scroll, true)
 
 
-# 每次被显示时调用：构建列表、按需建节点、绑信号、定位当前语言
+## 每次被显示时调用：构建列表、按需建节点、绑信号、定位当前语言
 func on_show(_params: Dictionary = {}) -> void:
 	# 复位确认标记（上一次的「确定」不影响这次的关闭埋点）
 	_confirmed = false
@@ -148,7 +148,7 @@ func on_show(_params: Dictionary = {}) -> void:
 	_anim.play_section_with_markers("GenericPopup", &"", &"Mark")
 
 
-# 每次被隐藏时调用：没点过确定就补一条「取消」埋点，然后播关闭动画
+## 每次被隐藏时调用：没点过确定就补一条「取消」埋点，然后播关闭动画
 func on_hide() -> void:
 	if not _confirmed:
 		Tracker.track_btn_click(Tracker.Btn.LANGUAGE_CANCEL, self)
@@ -157,13 +157,13 @@ func on_hide() -> void:
 	await _anim.animation_finished
 
 
-# 埋点用的弹窗名（Tracker.Dlg.LANGUAGE_PICKER）
+## 埋点用的弹窗名（Tracker.Dlg.LANGUAGE_PICKER）
 func get_dlg_name() -> String:
 	return Tracker.Dlg.LANGUAGE_PICKER
 
 
 # ================= 列表构建 =================
-# 拼出要显示的语言列表：系统语言置顶，其余按 _OPTIONS 原顺序
+## 拼出要显示的语言列表：系统语言置顶，其余按 _OPTIONS 原顺序
 func _build_display() -> Array[Dictionary]:
 	# 系统语言的解析结果（不支持的语言会回落成 en）
 	var sys: String = LanguageManager.resolve_system_locale()
@@ -206,7 +206,7 @@ func _build_display() -> Array[Dictionary]:
 	return list
 
 
-# 按需实例化选项节点：缺多少补多少，多余的隐藏
+## 按需实例化选项节点：缺多少补多少，多余的隐藏
 func _ensure_option_nodes(count: int) -> void:
 	while _option_nodes.size() < count:
 		var opt := _OPTION_SCENE.instantiate() as LanguageOption
@@ -217,7 +217,7 @@ func _ensure_option_nodes(count: int) -> void:
 		_option_nodes[i].visible = (i < count)
 
 
-# 刷新每个选项的文案：主标题是本族语名，副标题优先用翻译
+## 刷新每个选项的文案：主标题是本族语名，副标题优先用翻译
 func _refresh_labels() -> void:
 	for i in range(_display.size()):
 		# 显示列表与节点下标一一对应
@@ -233,7 +233,7 @@ func _refresh_labels() -> void:
 		_option_nodes[i].setup(opt["native"], subtitle)
 
 
-# 算出当前生效语言在显示列表里的下标
+## 算出当前生效语言在显示列表里的下标
 func _resolve_current_index() -> int:
 	# 存档里玩家选过的 locale
 	var applied: String = GameState.get_apply_locale()
@@ -256,7 +256,7 @@ func _resolve_current_index() -> int:
 
 
 # ================= 交互 =================
-# 点选一项：只改选中态，不立刻生效（要按「确定」）
+## 点选一项：只改选中态，不立刻生效（要按「确定」）
 func _on_option_pressed(idx: int) -> void:
 	# 下标越界直接忽略
 	if idx < 0 or idx >= _display.size():
@@ -269,7 +269,7 @@ func _on_option_pressed(idx: int) -> void:
 	_refresh_selection()
 
 
-# 按「确定」：切换语言并关闭自己
+## 按「确定」：切换语言并关闭自己
 func _on_yes_pressed() -> void:
 	# 没有有效选中项就不做任何事
 	if _selected_index < 0 or _selected_index >= _display.size():
@@ -289,7 +289,7 @@ func _on_yes_pressed() -> void:
 	UIManager.hide_ui(get_ui_name())
 
 
-# 刷新所有选项的选中态
+## 刷新所有选项的选中态
 func _refresh_selection() -> void:
 	for i in range(_display.size()):
 		_option_nodes[i].set_selected(i == _selected_index)

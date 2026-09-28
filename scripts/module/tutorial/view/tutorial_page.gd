@@ -1,12 +1,12 @@
-# 新手教学页（注册名 UiName.TUTORIAL）：用一局 4×4 教学关把「放猫 / 打叉 / 滑动排除」演给玩家
-# 步骤数据来自题库 SP 里 pattern == "guide" 的那一关；走完最后一步 = 写存档标记 + 直接进正式对局第 1 关
+## 新手教学页（注册名 UiName.TUTORIAL）：用一局 4×4 教学关把「放猫 / 打叉 / 滑动排除」演给玩家
+## 步骤数据来自题库 SP 里 pattern == "guide" 的那一关；走完最后一步 = 写存档标记 + 直接进正式对局第 1 关
 class_name TutorialPage
 extends UIFrameWindow
 
-# 遮罩层用的临时格子场景：遮罩压暗整盘时，提示格靠它保持亮色
+## 遮罩层用的临时格子场景：遮罩压暗整盘时，提示格靠它保持亮色
 const _CELL_SCENE: PackedScene = preload("res://assets/prefab/cell.tscn")
 
-# 教学关答案（行 → 列），与题库 solution 一致，用于自由阶段的通关判定
+## 教学关答案（行 → 列），与题库 solution 一致，用于自由阶段的通关判定
 const TUTORIAL_SOLUTION: Array[Vector2i] = [
 	Vector2i(0, 2),
 	Vector2i(1, 0),
@@ -89,7 +89,7 @@ var _iq_value: int = IQ_INIT # 当前 IQ 值，只有 iq 分组流程用得到
 
 
 # ================= 生命周期与三条流程 =================
-# 建连：棋盘拖拽三个信号、提示条点击、消息框尺寸变化，并量一次消息面板与棋盘的初始间距
+## 建连：棋盘拖拽三个信号、提示条点击、消息框尺寸变化，并量一次消息面板与棋盘的初始间距
 func _ready() -> void:
 	_board_view.cell_drag_start.connect(_on_board_cell_drag_start)
 	_board_view.cell_drag_over.connect(_on_board_cell_drag_over)
@@ -102,7 +102,7 @@ func _ready() -> void:
 	_msg_to_board_gap = _board_container.offset_top - _msg_panel.offset_bottom # 记下初始间距，供 _align_msg_panel_to_board 复用
 
 
-# 每次打开本页：复位 UI 与棋盘，再按 A/B 分组跑三条流程之一（默认 / check / iq）
+## 每次打开本页：复位 UI 与棋盘，再按 A/B 分组跑三条流程之一（默认 / check / iq）
 func on_show(_params: Dictionary = {}) -> void:
 	_flow_token += 1 # 让上一轮没跑完的步骤协程失效
 
@@ -129,7 +129,7 @@ func on_show(_params: Dictionary = {}) -> void:
 		await _run_guide_flow_default()
 
 
-# 默认流程：7 个步骤顺序 await，每步完成后埋一次进度点
+## 默认流程：7 个步骤顺序 await，每步完成后埋一次进度点
 func _run_guide_flow_default() -> void:
 	var _tok: int = _flow_token # 本轮令牌，下面每步都校验
 	await _step_1_place_first_cat()
@@ -164,7 +164,7 @@ func _run_guide_flow_default() -> void:
 	await _step_finish()
 
 
-# check 分组流程：步骤相同，但去掉「每色一只」确认步，改成每步播一次成功反馈动画
+## check 分组流程：步骤相同，但去掉「每色一只」确认步，改成每步播一次成功反馈动画
 func _run_guide_flow_check() -> void:
 	var _tok: int = _flow_token
 	await _step_1_place_first_cat(_step1_feedback_combined_msg())
@@ -213,13 +213,13 @@ func _run_guide_flow_check() -> void:
 	await _step_finish()
 
 
-# check 分组的步骤反馈：播一次成功勾选动画并等它播完
+## check 分组的步骤反馈：播一次成功勾选动画并等它播完
 func _play_check_feedback() -> void:
 	_anim_guide_encourage.play("SuccessCheck")
 	await _anim_guide_encourage.animation_finished
 
 
-# iq 分组流程：与 check 相同，只是把成功反馈换成 IQ 进度条上涨
+## iq 分组流程：与 check 相同，只是把成功反馈换成 IQ 进度条上涨
 func _run_guide_flow_iq() -> void:
 	var _tok: int = _flow_token
 	_init_iq_bar()
@@ -268,7 +268,7 @@ func _run_guide_flow_iq() -> void:
 	await _step_finish(true)
 
 
-# 初始化 IQ 条：数值回到初始、显示进度条并播出现动画
+## 初始化 IQ 条：数值回到初始、显示进度条并播出现动画
 func _init_iq_bar() -> void:
 	_iq_value = IQ_INIT
 	_set_iq_fill_right(_iq_fill_right(float(IQ_INIT)))
@@ -277,14 +277,14 @@ func _init_iq_bar() -> void:
 	_anim_guide_encourage.play("IqBarAppear")
 
 
-# 播 IQ 条消失动画，播完隐藏
+## 播 IQ 条消失动画，播完隐藏
 func _play_iq_disappear() -> void:
 	_anim_guide_encourage.play("IqBarDisAppear")
 	await _anim_guide_encourage.animation_finished
 	_iq_bar.visible = false
 
 
-# 一次 IQ 反馈：数值加一档（封顶），进度条与数字同步补间 0.4 秒
+## 一次 IQ 反馈：数值加一档（封顶），进度条与数字同步补间 0.4 秒
 func _play_iq_feedback() -> void:
 	var old_v: int = _iq_value
 	var new_v: int = min(old_v + IQ_STEP, IQ_MAX)
@@ -305,23 +305,23 @@ func _play_iq_feedback() -> void:
 	await grow.finished
 
 
-# 把 IQ 数值换算成进度条右边界坐标（像素）
+## 把 IQ 数值换算成进度条右边界坐标（像素）
 func _iq_fill_right(v: float) -> float:
 	var frac: float = clampf(v / float(IQ_MAX), 0.0, 1.0)
 	return _IQ_BAR_PAD + frac * _IQ_BAR_INNER_W
 
 
-# 补间回调：写进度条填充宽度
+## 补间回调：写进度条填充宽度
 func _set_iq_fill_right(x: float) -> void:
 	_iq_fill.offset_right = x
 
 
-# 补间回调：把 IQ 数值写进本地化格式文本
+## 补间回调：把 IQ 数值写进本地化格式文本
 func _set_iq_number(v: float) -> void:
 	_iq_label.text = tr("TUTORIAL_IQ_FORMAT") % int(round(v))
 
 
-# 从题库 SP 列表里挑出 pattern == "guide" 的教学关，铺到 BoardView，再把所有格子清空
+## 从题库 SP 列表里挑出 pattern == "guide" 的教学关，铺到 BoardView，再把所有格子清空
 func _setup_board() -> void:
 	_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sp_levels: Array = BankData.get_sp_levels()
@@ -353,7 +353,7 @@ func _setup_board() -> void:
 
 
 # ================= 教学步骤（按顺序 await） =================
-# 拼第 1 步的操作指引富文本：给关键词加呼吸高亮
+## 拼第 1 步的操作指引富文本：给关键词加呼吸高亮
 func _step1_rich_action_line() -> String:
 	var hl: String = tr("TUTORIAL_STEP1_HIGHLIGHT")
 	var breath_seg: String = (
@@ -363,12 +363,12 @@ func _step1_rich_action_line() -> String:
 	return tr("TUTORIAL_STEP1_RICH").format({"breath": breath_seg})
 
 
-# 第 1 步的合并文案：规则说明 + 操作指引（check / iq 分组用）
+## 第 1 步的合并文案：规则说明 + 操作指引（check / iq 分组用）
 func _step1_feedback_combined_msg() -> String:
 	return tr("TUTORIAL_STEP1_ONE_PER_COLOR") + "\n" + _step1_rich_action_line()
 
 
-# 第 1 步：只允许点 (0,2) 放第一只猫（双击），完成后收起手势与遮罩
+## 第 1 步：只允许点 (0,2) 放第一只猫（双击），完成后收起手势与遮罩
 func _step_1_place_first_cat(override_msg: String = "") -> void:
 	if override_msg != "":
 		_show_message("[center]" + override_msg + "[/center]")
@@ -389,7 +389,7 @@ func _step_1_place_first_cat(override_msg: String = "") -> void:
 	await get_tree().create_timer(0.4).timeout
 
 
-# 第 2 步：纯文字确认「每色一只」，点「我知道了」才继续
+## 第 2 步：纯文字确认「每色一只」，点「我知道了」才继续
 func _step_2_confirm_one_per_color() -> void:
 	_show_message("[center]" + tr("TUTORIAL_STEP2_RICH") + "[/center]")
 	_show_confirm_btn(tr("TUTORIAL_GOT_IT"))
@@ -399,7 +399,7 @@ func _step_2_confirm_one_per_color() -> void:
 	_hide_confirm_btn()
 
 
-# 第 3 步：手动打掉 6 个同行同列的排除格，全打完才算过
+## 第 3 步：手动打掉 6 个同行同列的排除格，全打完才算过
 func _step_3_mark_row_col() -> void:
 	# 文案 key 沿用 TUTORIAL_STEP5_RICH（历史命名，与步骤号不对应）
 	_show_message("[center]" + tr("TUTORIAL_STEP5_RICH") + "[/center]")
@@ -427,7 +427,7 @@ func _step_3_mark_row_col() -> void:
 	await get_tree().create_timer(0.4).timeout
 
 
-# 第 4 步：在 (3,1) 放第二只猫；文案按 A/B 分组给真实颜色名或写死的「粉色」
+## 第 4 步：在 (3,1) 放第二只猫；文案按 A/B 分组给真实颜色名或写死的「粉色」
 func _step_4_place_second_cat() -> void:
 	var _pink_msg: String
 	if not ABTestManager.region_color.value() == RegionColorConfig.VALUE_CONTROL:
@@ -454,7 +454,7 @@ func _step_4_place_second_cat() -> void:
 	await get_tree().create_timer(0.4).timeout
 
 
-# 第 5 步：一次滑动打掉 3 个八邻接格，文案与手势在两种 A/B 版本间切换
+## 第 5 步：一次滑动打掉 3 个八邻接格，文案与手势在两种 A/B 版本间切换
 func _step_5_mark_neighbors() -> void:
 	var step3_key: String = (
 		"TUTORIAL_STEP3_RICH_DIAGONAL"
@@ -486,7 +486,7 @@ func _step_5_mark_neighbors() -> void:
 	await get_tree().create_timer(0.4).timeout
 
 
-# 第 6 步：在 (1,0) 放第三只猫
+## 第 6 步：在 (1,0) 放第三只猫
 func _step_6_place_third_cat() -> void:
 	var _blue_msg: String
 	if not ABTestManager.region_color.value() == RegionColorConfig.VALUE_CONTROL:
@@ -518,7 +518,7 @@ func _step_6_place_third_cat() -> void:
 	await get_tree().create_timer(0.4).timeout
 
 
-# 第 7 步：只剩一格，交给玩家自由点；提示按钮可用，摆完即通关
+## 第 7 步：只剩一格，交给玩家自由点；提示按钮可用，摆完即通关
 func _step_7_free_play() -> void:
 	_show_message("[center]" + tr("TUTORIAL_LAST_ONE_RICH") + "[/center]")
 	# 整个教学只剩这一格可点
@@ -540,7 +540,7 @@ func _step_7_free_play() -> void:
 	await get_tree().create_timer(0.5).timeout
 
 
-# 第 7 步的提示按钮：分三层升级——先排除蓝猫那行、再排除粉猫那行、最后直接代打答案
+## 第 7 步的提示按钮：分三层升级——先排除蓝猫那行、再排除粉猫那行、最后直接代打答案
 func _step7_show_hint() -> void:
 	if _step7_hint_phase > 0:
 		_apply_step7_hint()
@@ -591,7 +591,7 @@ func _step7_show_hint() -> void:
 		_show_hand()
 
 
-# 收尾步：显示结束文案与「开始游戏」按钮，确认后调 complete_tutorial()
+## 收尾步：显示结束文案与「开始游戏」按钮，确认后调 complete_tutorial()
 func _step_finish(use_fireworks: bool = false) -> void:
 	_show_message("[center]" + tr("TUTORIAL_STEP6_RICH") + "[/center]")
 	_show_confirm_btn(tr("TUTORIAL_START_GAME")) # 按钮文案：开始游戏
@@ -610,13 +610,13 @@ func _step_finish(use_fireworks: bool = false) -> void:
 	complete_tutorial()
 
 
-# 烟花动画播完后再收起 IQ 条（只有 iq 分组走这条路）
+## 烟花动画播完后再收起 IQ 条（只有 iq 分组走这条路）
 func _hide_iq_bar_after_fireworks() -> void:
 	await _anim_effect_fireworks.animation_finished
 	await _play_iq_disappear()
 
 
-# 教学完成：上报耗时、写存档标记，然后跳转正式对局第 1 关
+## 教学完成：上报耗时、写存档标记，然后跳转正式对局第 1 关
 func complete_tutorial() -> void:
 	# 从 on_show 记下的时刻算起（秒）
 	var time_sec: float = (Time.get_ticks_msec() - _guide_start_ms) / 1000.0
@@ -628,7 +628,7 @@ func complete_tutorial() -> void:
 
 
 # ================= UI 显示与隐藏 =================
-# 把所有临时 UI（面板 / 手势 / 遮罩 / IQ 条）复位成初始的不可见状态
+## 把所有临时 UI（面板 / 手势 / 遮罩 / IQ 条）复位成初始的不可见状态
 func _reset_ui() -> void:
 	_sub_msg_panel.visible = false
 	_hint_tool_panel.visible = false
@@ -642,61 +642,61 @@ func _reset_ui() -> void:
 	_mask_layer.modulate.a = 1.0
 
 
-# 显示主提示文案并播出现动画
+## 显示主提示文案并播出现动画
 func _show_message(text: String) -> void:
 	_msg_rich.text = text
 	_anim_msg_appear_2.play("MessagePanel_appear_2")
 
 
-# 显示棋盘下方的副提示并播出现动画
+## 显示棋盘下方的副提示并播出现动画
 func _show_sub_message(text: String) -> void:
 	_sub_msg_rich.text = text
 	_sub_msg_panel.visible = true
 	_anim_sub_msg_appear.play("SubMsgPanel_appear")
 
 
-# 隐藏副提示
+## 隐藏副提示
 func _hide_sub_message() -> void:
 	_sub_msg_panel.visible = false
 
 
-# 显示第 7 步的提示工具条并播出现动画
+## 显示第 7 步的提示工具条并播出现动画
 func _show_hint_tool_panel() -> void:
 	_hint_tool_panel.visible = true
 	_anim_hint_tool_appear.play("HintToolPanel_appear")
 
 
-# 隐藏提示工具条
+## 隐藏提示工具条
 func _hide_hint_tool_panel() -> void:
 	_hint_tool_panel.visible = false
 
 
-# 显示确认按钮、写入按钮文案并播呼吸动画
+## 显示确认按钮、写入按钮文案并播呼吸动画
 func _show_confirm_btn(text: String) -> void:
 	_confirm_btn.set("btn_text", text)
 	_confirm_btn.visible = true
 	_anim_confirm_loop.play("ConfirmBtn_loop")
 
 
-# 隐藏确认按钮并停掉呼吸动画
+## 隐藏确认按钮并停掉呼吸动画
 func _hide_confirm_btn() -> void:
 	_confirm_btn.visible = false
 	_anim_confirm_loop.stop()
 
 
-# 显示手势提示，并让 Spine 手播 click 动画
+## 显示手势提示，并让 Spine 手播 click 动画
 func _show_hand() -> void:
 	_hand_hint.visible = true
 	_hand_spine.get_animation_state().set_animation("click", true, 0)
 
 
-# 隐藏手势提示
+## 隐藏手势提示
 func _hide_hand() -> void:
 	_hand_hint.visible = false
 
 
 # ================= 手势与遮罩提示 =================
-# 把选中框对准某格（按 BoardView 缩放换算）；本文件内没有调用点
+## 把选中框对准某格（按 BoardView 缩放换算）；本文件内没有调用点
 func _position_select_frame(cell: Vector2i) -> void:
 	var s: float = _board_view.scale.x
 	var rect: Rect2 = _board_view.cell_to_local_rect(cell.x, cell.y)
@@ -705,7 +705,7 @@ func _position_select_frame(cell: Vector2i) -> void:
 	_select_frame.size = rect.size * s + Vector2(pad * 2.0, pad * 2.0)
 
 
-# 把手势提示挪到指定格：以基准格 (0,2) 的偏移为起点，按格宽逐格累加
+## 把手势提示挪到指定格：以基准格 (0,2) 的偏移为起点，按格宽逐格累加
 func _position_hand_at_cell(cell: Vector2i) -> void:
 	const BASE_ROW: int = 0
 	const BASE_COL: int = 2
@@ -721,7 +721,7 @@ func _position_hand_at_cell(cell: Vector2i) -> void:
 	_hand_hint.offset_bottom = _hand_hint.offset_top + 120.0
 
 
-# 循环播「滑动打叉」手势：沿给定格子依次平移，最后淡出并从头再来
+## 循环播「滑动打叉」手势：沿给定格子依次平移，最后淡出并从头再来
 func _start_swipe_hand_loop(cells: Array[Vector2i]) -> void:
 	if cells.is_empty():
 		return
@@ -776,7 +776,7 @@ func _start_swipe_hand_loop(cells: Array[Vector2i]) -> void:
 	_swipe_hand_tween = tw # 存下来，_stop_swipe_hand_loop 要 kill 它
 
 
-# 停掉滑动手势补间，并把静态手图换回 Spine 手
+## 停掉滑动手势补间，并把静态手图换回 Spine 手
 func _stop_swipe_hand_loop() -> void:
 	if _swipe_hand_tween != null and _swipe_hand_tween.is_valid():
 		_swipe_hand_tween.kill()
@@ -786,7 +786,7 @@ func _stop_swipe_hand_loop() -> void:
 	_hand_spine.visible = true
 
 
-# 把副提示面板移到棋盘正下方（先等一帧，等布局结算完）
+## 把副提示面板移到棋盘正下方（先等一帧，等布局结算完）
 func _move_sub_msg_below_board() -> void:
 	await get_tree().process_frame
 	var board_bottom: float = _board_container.position.y + _board_container.size.y
@@ -796,7 +796,7 @@ func _move_sub_msg_below_board() -> void:
 	_sub_msg_panel.offset_bottom = offset_top + 190.0
 
 
-# 在遮罩层点亮提示格 cells，并铺出已填好的镜像格 mirror_cells；同时清掉棋盘自带的用法提示
+## 在遮罩层点亮提示格 cells，并铺出已填好的镜像格 mirror_cells；同时清掉棋盘自带的用法提示
 func _show_mask_hints(cells: Array[Vector2i], mirror_cells: Array[Vector2i] = []) -> void:
 	for cell in cells:
 		_spawn_mask_hint_cell(cell)
@@ -809,7 +809,7 @@ func _show_mask_hints(cells: Array[Vector2i], mirror_cells: Array[Vector2i] = []
 		_fade_in_mask_layer()
 
 
-# 复制一个格子到遮罩层：同步位置、缩放、圆角与区域色，并登记进 _mask_hint_cells
+## 复制一个格子到遮罩层：同步位置、缩放、圆角与区域色，并登记进 _mask_hint_cells
 func _instantiate_mask_temp(cell: Vector2i) -> CellView:
 	var s: float = _board_view.scale.x
 	var local_rect: Rect2 = _board_view.cell_to_local_rect(cell.x, cell.y)
@@ -835,13 +835,13 @@ func _instantiate_mask_temp(cell: Vector2i) -> CellView:
 	return temp
 
 
-# 铺一个带「提示闪烁」动画的遮罩格
+## 铺一个带「提示闪烁」动画的遮罩格
 func _spawn_mask_hint_cell(cell: Vector2i) -> void:
 	var temp: CellView = _instantiate_mask_temp(cell)
 	temp.play_hint()
 
 
-# 铺一个镜像格：照抄棋盘上该格的状态，不播提示动画
+## 铺一个镜像格：照抄棋盘上该格的状态，不播提示动画
 func _spawn_mask_mirror_cell(cell: Vector2i) -> void:
 	var temp: CellView = _instantiate_mask_temp(cell)
 	var src: CellView = _board_view.get_cell_view(cell.x, cell.y)
@@ -849,21 +849,21 @@ func _spawn_mask_mirror_cell(cell: Vector2i) -> void:
 		temp.change_state({"state": src.get_state(), "play_anim": false})
 
 
-# 释放所有遮罩格并清空登记表
+## 释放所有遮罩格并清空登记表
 func _clear_mask_hint_cells() -> void:
 	for key in _mask_hint_cells.keys():
 		(_mask_hint_cells[key] as CellView).queue_free()
 	_mask_hint_cells.clear()
 
 
-# 棋盘某格状态变了，同步给遮罩层里的同名副本
+## 棋盘某格状态变了，同步给遮罩层里的同名副本
 func _mirror_state_to_mask_hint_cell(r: int, c: int, state: int) -> void:
 	var key := Vector2i(r, c)
 	if _mask_hint_cells.has(key):
 		(_mask_hint_cells[key] as CellView).change_state({"state": state})
 
 
-# 淡入遮罩层（0.12 秒）
+## 淡入遮罩层（0.12 秒）
 func _fade_in_mask_layer() -> void:
 	if _mask_tween != null and _mask_tween.is_valid():
 		_mask_tween.kill()
@@ -877,7 +877,7 @@ func _fade_in_mask_layer() -> void:
 	_mask_tween.tween_property(_mask_layer, "modulate:a", 1.0, 0.12)
 
 
-# 淡出遮罩层，结束时隐藏并恢复 IQ 数字颜色
+## 淡出遮罩层，结束时隐藏并恢复 IQ 数字颜色
 func _fade_out_mask_layer() -> void:
 	if not _mask_layer.visible:
 		return
@@ -895,7 +895,7 @@ func _fade_out_mask_layer() -> void:
 	)
 
 
-# 默认流程的彩带效果：页面顶部随机生成 30 片彩色纸片下落，落完自毁
+## 默认流程的彩带效果：页面顶部随机生成 30 片彩色纸片下落，落完自毁
 func _spawn_confetti() -> void:
 	var colors: Array[Color] = [
 		Color("#FF5252"),
@@ -929,7 +929,7 @@ func _spawn_confetti() -> void:
 
 
 # ================= 玩家输入 =================
-# 提示工具条的点击处理：只有第 7 步自由阶段才响应
+## 提示工具条的点击处理：只有第 7 步自由阶段才响应
 func _on_hint_tool_panel_gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton):
 		return
@@ -942,14 +942,14 @@ func _on_hint_tool_panel_gui_input(event: InputEvent) -> void:
 	_step7_show_hint()
 
 
-# 确认按钮回调（场景里接的是 tag_pressed 信号）：只有 CONFIRM 模式放行
+## 确认按钮回调（场景里接的是 tag_pressed 信号）：只有 CONFIRM 模式放行
 func _on_confirm_btn_pressed() -> void:
 	if _current_mode != StepMode.CONFIRM:
 		return
 	_step_completed.emit()
 
 
-# 判断某格是否在当前步骤允许操作的名单里
+## 判断某格是否在当前步骤允许操作的名单里
 func _is_allowed(r: int, c: int) -> bool:
 	for cell in _allowed_cells:
 		if cell == Vector2i(r, c):
@@ -957,7 +957,7 @@ func _is_allowed(r: int, c: int) -> bool:
 	return false
 
 
-# 拖拽开始：记下起点格，并决定这次拖拽是「打叉」还是「擦除」
+## 拖拽开始：记下起点格，并决定这次拖拽是「打叉」还是「擦除」
 func _on_board_cell_drag_start(pos: Vector2) -> void:
 	var cell: Vector2i = _board_view.pointer_to_cell(pos.x, pos.y)
 	if cell.x < 0:
@@ -984,7 +984,7 @@ func _on_board_cell_drag_start(pos: Vector2) -> void:
 		_drag_target_state = CellState.MARK if CellState.is_blank(cur) else CellState.EMPTY # 空白 → 盖叉；已有叉 → 擦掉
 
 
-# 拖拽经过格子：按当前模式实时改状态，并同步遮罩层副本
+## 拖拽经过格子：按当前模式实时改状态，并同步遮罩层副本
 func _on_board_cell_drag_over(pos: Vector2) -> void:
 	var cell: Vector2i = _board_view.pointer_to_cell(pos.x, pos.y)
 	if cell.x < 0:
@@ -1026,7 +1026,7 @@ func _on_board_cell_drag_over(pos: Vector2) -> void:
 		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
 
 
-# 拖拽结束：没有移动过就当成单击，按当前模式分派给对应处理
+## 拖拽结束：没有移动过就当成单击，按当前模式分派给对应处理
 func _on_board_cell_drag_end() -> void:
 	if _drag_start_cell == Vector2i(-1, -1):
 		return
@@ -1052,7 +1052,7 @@ func _on_board_cell_drag_end() -> void:
 
 
 # ================= 单击处理与通关判定 =================
-# 打叉模式单击：空白格盖叉，攒够 _required_marks 即算这一步完成
+## 打叉模式单击：空白格盖叉，攒够 _required_marks 即算这一步完成
 func _handle_mark_tap(r: int, c: int) -> void:
 	if not CellState.is_blank(_board_view.get_cell_state(r, c)):
 		return
@@ -1064,7 +1064,7 @@ func _handle_mark_tap(r: int, c: int) -> void:
 		_step_completed.emit()
 
 
-# 放猫模式单击：0.35 秒内连点同一格两次才落猫
+## 放猫模式单击：0.35 秒内连点同一格两次才落猫
 func _handle_place_cat_tap(r: int, c: int) -> void:
 	# 第二次点到同一格才算确认，避免误触
 	if _last_tap_cell == Vector2i(r, c):
@@ -1082,7 +1082,7 @@ func _handle_place_cat_tap(r: int, c: int) -> void:
 		)
 
 
-# 自由阶段单击：提示阶段 1 / 2 只打叉，其余双击落猫、单击涂改
+## 自由阶段单击：提示阶段 1 / 2 只打叉，其余双击落猫、单击涂改
 func _handle_free_play_tap(r: int, c: int) -> void:
 	# 提示阶段：在提示格上打叉 / 取消叉，全部打满才进入下一层
 	if _step7_hint_phase == 1 or _step7_hint_phase == 2:
@@ -1118,7 +1118,7 @@ func _handle_free_play_tap(r: int, c: int) -> void:
 		_do_single_tap_toggle(r, c)
 
 
-# 检查第 7 步当前提示阶段的格子是否都打了叉，是则回到「放最后一只猫」状态
+## 检查第 7 步当前提示阶段的格子是否都打了叉，是则回到「放最后一只猫」状态
 func _step7_check_phase_complete() -> void:
 	# 提示格全部变成叉就收尾
 	for cell in _allowed_cells:
@@ -1135,7 +1135,7 @@ func _step7_check_phase_complete() -> void:
 	_show_message("[center]" + tr("TUTORIAL_LAST_ONE_RICH") + "[/center]")
 
 
-# 再点一次提示按钮：直接把当前阶段的答案代打掉（打叉或落猫）
+## 再点一次提示按钮：直接把当前阶段的答案代打掉（打叉或落猫）
 func _apply_step7_hint() -> void:
 	# 阶段 1 / 2：把该阶段所有空格直接代打上叉
 	if _step7_hint_phase == 1 or _step7_hint_phase == 2:
@@ -1158,7 +1158,7 @@ func _apply_step7_hint() -> void:
 		_check_free_play_complete()
 
 
-# 自由阶段单击非答案格：在「叉」和「空」之间切换，并记录连点时间窗
+## 自由阶段单击非答案格：在「叉」和「空」之间切换，并记录连点时间窗
 func _do_single_tap_toggle(r: int, c: int) -> void:
 	# 当前状态决定这次点击是盖叉还是擦掉
 	var cur: int = _board_view.get_cell_state(r, c)
@@ -1177,7 +1177,7 @@ func _do_single_tap_toggle(r: int, c: int) -> void:
 	)
 
 
-# 往格子里落猫：先清掉同格的叉，格子非空则不动
+## 往格子里落猫：先清掉同格的叉，格子非空则不动
 func _place_cat(r: int, c: int) -> void:
 	if _board_view.get_cell_state(r, c) == CellState.MARK:
 		_board_view.set_cell_state(r, c, CellState.EMPTY)
@@ -1186,7 +1186,7 @@ func _place_cat(r: int, c: int) -> void:
 	_board_view.set_cell_state(r, c, CellState.CAT)
 
 
-# 自由阶段通关判定：TUTORIAL_SOLUTION 四格都是猫就震动并发射步骤完成信号
+## 自由阶段通关判定：TUTORIAL_SOLUTION 四格都是猫就震动并发射步骤完成信号
 func _check_free_play_complete() -> void:
 	for sol in TUTORIAL_SOLUTION:
 		if _board_view.get_cell_state(sol.x, sol.y) != CellState.CAT:
@@ -1197,7 +1197,7 @@ func _check_free_play_complete() -> void:
 
 
 # ================= 消息面板与配色文案 =================
-# 消息文本尺寸变化时，同步面板高度并重新对齐棋盘
+## 消息文本尺寸变化时，同步面板高度并重新对齐棋盘
 func _on_msg_rich_resized() -> void:
 	if not is_inside_tree():
 		return
@@ -1206,7 +1206,7 @@ func _on_msg_rich_resized() -> void:
 	_align_msg_panel_to_board()
 
 
-# 把消息面板贴着棋盘上沿摆放，间距用 _ready 里量到的值
+## 把消息面板贴着棋盘上沿摆放，间距用 _ready 里量到的值
 func _align_msg_panel_to_board() -> void:
 	var board_top: float = _board_container.global_position.y
 	var msg_height: float = _msg_panel.size.y
@@ -1216,7 +1216,7 @@ func _align_msg_panel_to_board() -> void:
 
 
 # ================= 颜色名工具 =================
-# 取某格区域颜色的富文本片段（带色号），供文案指代「哪种颜色」
+## 取某格区域颜色的富文本片段（带色号），供文案指代「哪种颜色」
 func _color_name_bbcode_for_cell(r: int, c: int) -> String:
 	var region_idx: int = (
 		_guide_regions[r][c] if r < _guide_regions.size() and c < _guide_regions[r].size() else -1
@@ -1270,7 +1270,7 @@ func _color_name_bbcode_for_cell(r: int, c: int) -> String:
 	return "[color=%s]%s[/color]" % [hex, name]
 
 
-# 在预置色表里找最接近的颜色名（比较 RGB 距离平方，省一次开方）
+## 在预置色表里找最接近的颜色名（比较 RGB 距离平方，省一次开方）
 func _nearest_color_name(color: Color) -> String:
 	var known: Array = [
 		[Color("#CBCB24"), tr("COLOR_OLIVE_YELLOW")],

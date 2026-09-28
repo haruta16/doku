@@ -1,4 +1,4 @@
-# 提示浮层：展示策略文案与操作按钮，按 AB 流程切换按钮组合，并贴着棋盘上下摆放
+## 提示浮层：展示策略文案与操作按钮，按 AB 流程切换按钮组合，并贴着棋盘上下摆放
 class_name HintOverlay
 extends CanvasLayer
 
@@ -30,13 +30,13 @@ var _next_step_revealed: bool = false # 是否已点过「下一步」
 
 
 # ================= 生命周期 =================
-# 进树：给详情按钮绑按压缩放反馈
+## 进树：给详情按钮绑按压缩放反馈
 func _ready() -> void:
 	UIHelper.bind_press_release_scale(_detail_btn)
 
 
 # ================= 显示流程 =================
-# 显示提示：先按 strategy 定文案，再按 AB 流程定按钮组合
+## 显示提示：先按 strategy 定文案，再按 AB 流程定按钮组合
 func show_hint(hint: Dictionary) -> void:
 	# 记下这份数据，按钮回调与调试都要用
 	_hint = hint
@@ -160,31 +160,31 @@ func show_hint(hint: Dictionary) -> void:
 
 
 # ================= 按钮回调 =================
-# 应用按钮：关掉浮层，通知页面执行这条提示
+## 应用按钮：关掉浮层，通知页面执行这条提示
 func _on_apply_btn_pressed() -> void:
 	visible = false
 	hint_applied.emit()
 
 
-# 忽略按钮：关掉浮层，通知页面
+## 忽略按钮：关掉浮层，通知页面
 func _on_dismiss_btn_pressed() -> void:
 	visible = false
 	hint_dismissed.emit()
 
 
-# 取消按钮：同忽略
+## 取消按钮：同忽略
 func _on_cancel_btn_pressed() -> void:
 	visible = false
 	hint_dismissed.emit()
 
 
-# 关闭按钮：同忽略
+## 关闭按钮：同忽略
 func _on_close_btn_pressed() -> void:
 	visible = false
 	hint_dismissed.emit()
 
 
-# 下一步按钮：展开后续步骤并请求页面补充文案
+## 下一步按钮：展开后续步骤并请求页面补充文案
 func _on_next_btn_pressed() -> void:
 	# 标记已展开，按钮位换成应用
 	_next_step_revealed = true
@@ -202,7 +202,7 @@ func _on_next_btn_pressed() -> void:
 	call_deferred("_align_to_board")
 
 
-# 详情按钮：拉宽文案区并请求完整说明
+## 详情按钮：拉宽文案区并请求完整说明
 func _on_detail_btn_pressed() -> void:
 	# 详情按钮用完即隐
 	_detail_btn.visible = false
@@ -211,7 +211,7 @@ func _on_detail_btn_pressed() -> void:
 
 
 # ================= 文案与布局 =================
-# 把文案在 190 像素高的区域内垂直居中
+## 把文案在 190 像素高的区域内垂直居中
 func _center_desc_label() -> void:
 	var content_h: float = _desc_label.get_content_height()
 	var total_h: float = 190.0
@@ -220,13 +220,13 @@ func _center_desc_label() -> void:
 	_desc_label.offset_bottom = top + content_h
 
 
-# 外部更新文案内容
+## 外部更新文案内容
 func update_desc(text: String) -> void:
 	_desc_label.clear()
 	_desc_label.append_text(text)
 
 
-# 显示忽略按钮（老流程才有）
+## 显示忽略按钮（老流程才有）
 func show_dismiss_btn() -> void:
 	if ABTestManager.hint_ue.is_any_new_flow():
 		# 新流程不提供忽略按钮
@@ -235,7 +235,7 @@ func show_dismiss_btn() -> void:
 		_dismiss_btn.visible = true
 
 
-# 把横幅贴到棋盘上方、按钮组贴到棋盘下方
+## 把横幅贴到棋盘上方、按钮组贴到棋盘下方
 func _align_to_board() -> void:
 	var board := _find_board()
 	if board == null:
@@ -255,7 +255,7 @@ func _align_to_board() -> void:
 	_btn_group.offset_bottom = _btn_group.offset_top + btn_h
 
 
-# 找到棋盘节点（页面结构固定）
+## 找到棋盘节点（页面结构固定）
 func _find_board() -> Control:
 	var page_root := get_parent()
 	if page_root == null:

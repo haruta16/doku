@@ -1,4 +1,4 @@
-# 奖励总闸（Autoload 节点）：dispatch 登记奖励并选渲染形态，真正入账在 _persist_award
+## 奖励总闸（Autoload 节点）：dispatch 登记奖励并选渲染形态，真正入账在 _persist_award
 extends Node
 
 # 展示形态：DIRECT 立即到账（无界面）/ STREAK_GIFT 走签到宝箱弹窗
@@ -18,13 +18,13 @@ var _renders: Dictionary = {} # uid → AwardRender 实例；入账后从这里�
 
 
 # ================= 生命周期 =================
-# 节点就绪时做一次冷启动补发
+## 节点就绪时做一次冷启动补发
 func _ready() -> void:
 	# 冷启动补发：上次没走完的奖励不能丢
 	_sweep_in_flight_on_cold_start()
 
 
-# 扫描存档里的「中转队列」，逐笔直接入账（跳过界面）
+## 扫描存档里的「中转队列」，逐笔直接入账（跳过界面）
 func _sweep_in_flight_on_cold_start() -> void:
 	# 中转队列写进存档，进程被杀也还在
 	var entries: Array = GameState.get_in_flight_awards()
@@ -32,7 +32,7 @@ func _sweep_in_flight_on_cold_start() -> void:
 		_persist_award(int(entry.get("uid", -1)))
 
 
-# 派发一笔奖励：校验 → 记进中转队列 → 建 Render，返回 uid；失败返回 -1
+## 派发一笔奖励：校验 → 记进中转队列 → 建 Render，返回 uid；失败返回 -1
 func dispatch(items: Array, display_type: int, reason: String, bonus_reason: String = "") -> int:
 	# 空 items 直接拒绝
 	if items.is_empty():
@@ -76,7 +76,7 @@ func dispatch(items: Array, display_type: int, reason: String, bonus_reason: Str
 	return uid
 
 
-# 触发展示（STREAK_GIFT 这类要玩家操作的形态用）
+## 触发展示（STREAK_GIFT 这类要玩家操作的形态用）
 func show_award(uid: int, display_params: Dictionary = {}) -> void:
 	# uid 不在说明已入账，或被冷启动清扫过
 	if not _renders.has(uid):
@@ -85,7 +85,7 @@ func show_award(uid: int, display_params: Dictionary = {}) -> void:
 	(_renders[uid] as AwardRender).show_award(display_params)
 
 
-# 注册「本笔奖励结束」回调，只触发一次（奖励入账后）
+## 注册「本笔奖励结束」回调，只触发一次（奖励入账后）
 func continue_when_award_end(uid: int, callback: Callable) -> void:
 	# 没有 Render 就没法挂回调
 	if not _renders.has(uid):
@@ -100,7 +100,7 @@ func continue_when_award_end(uid: int, callback: Callable) -> void:
 	)
 
 
-# 标记本笔奖励翻倍：入账时按 bonus_reason 再发一份
+## 标记本笔奖励翻倍：入账时按 bonus_reason 再发一份
 func double_award(uid: int) -> void:
 	# 没有 Render 就没法标记
 	if not _renders.has(uid):
@@ -109,7 +109,7 @@ func double_award(uid: int) -> void:
 	(_renders[uid] as AwardRender).double_award()
 
 
-# 真正入账：写 GameState 道具数、记埋点、清中转队列；doubled 时再发一份
+## 真正入账：写 GameState 道具数、记埋点、清中转队列；doubled 时再发一份
 func _persist_award(uid: int) -> void:
 	# 从存档队列里找到这一笔
 	var entry: Dictionary = GameState.find_in_flight_award(uid)
@@ -166,7 +166,7 @@ func _persist_award(uid: int) -> void:
 	_renders.erase(uid)
 
 
-# 按 display_type 造渲染实现，未知类型告警并回退 DIRECT
+## 按 display_type 造渲染实现，未知类型告警并回退 DIRECT
 func _make_render(display_type: int) -> AwardRender:
 	match display_type:
 		DisplayType.DIRECT:
@@ -178,7 +178,7 @@ func _make_render(display_type: int) -> AwardRender:
 			return _RENDER_DIRECT.new() as AwardRender
 
 
-# 把入参统一成 Dictionary 数组（AwardItem → dict，Dictionary 原样保留）
+## 把入参统一成 Dictionary 数组（AwardItem → dict，Dictionary 原样保留）
 func _items_to_dicts(items: Array) -> Array:
 	var out: Array = []
 	for it in items:

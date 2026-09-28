@@ -1,11 +1,11 @@
-# 区域配色器：给每块区域分一个色号，保证相邻区域不同色、且尽量挑视觉差异大的颜色
-# 4 个变体共用同一套贪心挑色，差别只在颜色表、区域处理顺序、是否给图案区域预留暗色
+## 区域配色器：给每块区域分一个色号，保证相邻区域不同色、且尽量挑视觉差异大的颜色
+## 4 个变体共用同一套贪心挑色，差别只在颜色表、区域处理顺序、是否给图案区域预留暗色
 class_name LevelGenerator
 extends RefCounted
 
 
 # ================= 基础贪心挑色 =================
-# 按内置 12 色表给区域配色；返回 color_map：下标是区域编号，值是颜色序号（0~11，用来查下面的 rgb 表）
+## 按内置 12 色表给区域配色；返回 color_map：下标是区域编号，值是颜色序号（0~11，用来查下面的 rgb 表）
 static func compute_color_map(size: int, regions: Array) -> Array[int]:
 	var num_colors: int = 12 # 候选色号个数，等于 rgb 表的长度
 
@@ -87,7 +87,7 @@ static func compute_color_map(size: int, regions: Array) -> Array[int]:
 	return color_map # 只返回色号，具体 RGB 由调用方查表
 
 
-# 同 compute_color_map，但调色板由调用方传入，可选色号范围随 rgb.size() 变化
+## 同 compute_color_map，但调色板由调用方传入，可选色号范围随 rgb.size() 变化
 static func compute_color_map_for_rgb(size: int, regions: Array, rgb: Array) -> Array[int]:
 	var num_colors: int = rgb.size() # 色号范围 = 传入调色板的长度
 	var adj: Array = []
@@ -148,7 +148,7 @@ static func compute_color_map_for_rgb(size: int, regions: Array, rgb: Array) -> 
 
 
 # ================= 带随机种子 / 图案优先的变体 =================
-# 带种子版：用 seed 洗牌决定区域挑色顺序，同一 seed 得到同一套配色；seed 为 0 时退回 compute_color_map
+## 带种子版：用 seed 洗牌决定区域挑色顺序，同一 seed 得到同一套配色；seed 为 0 时退回 compute_color_map
 static func compute_color_map_with_seed(size: int, regions: Array, seed: int) -> Array[int]:
 	if seed == 0: # 0 号种子表示不随机，直接走默认顺序那版
 		return compute_color_map(size, regions)
@@ -227,7 +227,7 @@ static func compute_color_map_with_seed(size: int, regions: Array, seed: int) ->
 	return color_map
 
 
-# 图案优先版：按亮度把调色板劈成暗色池/亮色池，图案区域只从暗色池取色，其余区域用亮色池
+## 图案优先版：按亮度把调色板劈成暗色池/亮色池，图案区域只从暗色池取色，其余区域用亮色池
 static func compute_color_map_for_rgb_with_pattern(
 	size: int, regions: Array, rgb: Array, pattern_regions: Array
 ) -> Array[int]:

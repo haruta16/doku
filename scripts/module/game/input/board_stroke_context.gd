@@ -1,4 +1,4 @@
-# 一次手势（按下 → 拖动 → 抬起）的共享状态，同一笔里所有 Operation 都读写它
+## 一次手势（按下 → 拖动 → 抬起）的共享状态，同一笔里所有 Operation 都读写它
 class_name BoardStrokeContext
 extends RefCounted
 
@@ -12,7 +12,7 @@ var changed: bool = false # 这一笔是否真的改过格子
 var wants_double_tap_window: bool = false # 是否需要双击判定窗口
 
 
-# 复位成「没有手势」的状态
+## 复位成「没有手势」的状态
 func reset() -> void:
 	start_cell = Vector2i(-1, -1)
 	last_cell = Vector2i(-1, -1)
@@ -23,6 +23,6 @@ func reset() -> void:
 	wants_double_tap_window = false
 
 
-# 是否有进行中的手势
+## 是否有进行中的手势
 func is_active() -> bool:
 	return start_cell != Vector2i(-1, -1)

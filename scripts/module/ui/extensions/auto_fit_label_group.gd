@@ -1,4 +1,4 @@
-# 自适应字号的 VBox 组（@tool）：让组内所有 Label 共用同一个字号，整体高度塞进预算
+## 自适应字号的 VBox 组（@tool）：让组内所有 Label 共用同一个字号，整体高度塞进预算
 @tool
 class_name AutoFitLabelGroup
 extends VBoxContainer
@@ -30,25 +30,25 @@ var _probe: Label = null # 隐藏探针 Label，用来量每个 Label 的高度
 
 
 # ================= 生命周期 =================
-# 进树后先排一次自适应
+## 进树后先排一次自适应
 func _ready() -> void:
 	_queue_fit()
 
 
-# 语言切换后文案变化，重新算
+## 语言切换后文案变化，重新算
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED:
 		_queue_fit()
 
 
 # ================= 自适应入口 =================
-# 立即重算一次（外部也可以手动调）
+## 立即重算一次（外部也可以手动调）
 func refit() -> void:
 	_fit_queued = false
 	_apply_fit()
 
 
-# 合并式排队：同一帧多次请求只算一次
+## 合并式排队：同一帧多次请求只算一次
 func _queue_fit() -> void:
 	if _fit_queued:
 		return
@@ -57,7 +57,7 @@ func _queue_fit() -> void:
 	call_deferred("_deferred_fit")
 
 
-# 延迟执行入口：确认请求还有效再算
+## 延迟执行入口：确认请求还有效再算
 func _deferred_fit() -> void:
 	if not _fit_queued:
 		return
@@ -66,7 +66,7 @@ func _deferred_fit() -> void:
 
 
 # ================= 核心算法 =================
-# 核心：收集组内 Label，二分找「所有 Label 高度 + 间距」不超预算的最大字号，再统一写入
+## 核心：收集组内 Label，二分找「所有 Label 高度 + 间距」不超预算的最大字号，再统一写入
 func _apply_fit() -> void:
 	if _fitting or not is_inside_tree():
 		return
@@ -104,7 +104,7 @@ func _apply_fit() -> void:
 	_fitting = false
 
 
-# 试算：该字号下所有 Label 高度加 separation 的总和是否不超过预算
+## 试算：该字号下所有 Label 高度加 separation 的总和是否不超过预算
 func _group_fits(labels: Array[Node], fs: int, budget: float) -> bool:
 	var sep: int = get_theme_constant(&"separation")
 	var total: float = float(sep * maxi(0, labels.size() - 1))
@@ -115,7 +115,7 @@ func _group_fits(labels: Array[Node], fs: int, budget: float) -> bool:
 	return true
 
 
-# 用探针按这个 Label 的换行宽度，量出它在指定字号下的高度
+## 用探针按这个 Label 的换行宽度，量出它在指定字号下的高度
 func _measure_label_height(label: Label, fs: int) -> float:
 	var font: Font = label.get_theme_font(&"font")
 	if font == null:
@@ -136,7 +136,7 @@ func _measure_label_height(label: Label, fs: int) -> float:
 	return probe.get_minimum_size().y
 
 
-# 惰性创建 / 复用探针
+## 惰性创建 / 复用探针
 func _ensure_probe() -> Label:
 	if _probe != null and is_instance_valid(_probe) and _probe.get_parent() == self:
 		return _probe
@@ -149,7 +149,7 @@ func _ensure_probe() -> Label:
 	return _probe
 
 
-# 出树时释放探针
+## 出树时释放探针
 func _exit_tree() -> void:
 	if _probe != null and is_instance_valid(_probe):
 		_probe.queue_free()

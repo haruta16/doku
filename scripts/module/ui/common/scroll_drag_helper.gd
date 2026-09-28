@@ -1,4 +1,4 @@
-# 滚动容器拖拽增强：手指按住拖动 + 松手惯性滑行 + 越界橡皮筋回弹；由 attach 挂到 ScrollContainer 下当一个子节点
+## 滚动容器拖拽增强：手指按住拖动 + 松手惯性滑行 + 越界橡皮筋回弹；由 attach 挂到 ScrollContainer 下当一个子节点
 class_name ScrollDragHelper
 extends Node
 
@@ -29,7 +29,7 @@ var _active_pointer_index: int = -1 # 正在追踪的指针号：触摸=手指 i
 
 
 # ================= 挂载 =================
-# 给 ScrollContainer 挂一个助手（已存在就复用并更新参数），返回助手实例
+## 给 ScrollContainer 挂一个助手（已存在就复用并更新参数），返回助手实例
 static func attach(scroll: ScrollContainer, with_inertia: bool = false) -> ScrollDragHelper:
 	if scroll == null:
 		push_error("ScrollDragHelper.attach: scroll is null")
@@ -48,7 +48,7 @@ static func attach(scroll: ScrollContainer, with_inertia: bool = false) -> Scrol
 	return helper
 
 
-# 进树：容器隐藏时清状态，并关掉 _process（有动画时才开）
+## 进树：容器隐藏时清状态，并关掉 _process（有动画时才开）
 func _ready() -> void:
 	# 容器一旦不可见就要把拖拽 / 惯性状态清干净，否则再显示时会残留
 	if (
@@ -59,14 +59,14 @@ func _ready() -> void:
 	set_process(false)
 
 
-# 节点被删时兜底清状态，避免补间回调碰到已释放的对象
+## 节点被删时兜底清状态，避免补间回调碰到已释放的对象
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
 		_reset_all()
 
 
 # ================= 惯性滑行 =================
-# 进入惯性滑行；容器滚不动时直接不进入
+## 进入惯性滑行；容器滚不动时直接不进入
 func _start_drift() -> void:
 	if _scroll == null or _max_scroll() <= 0:
 		_stop_drift()
@@ -75,14 +75,14 @@ func _start_drift() -> void:
 	set_process(true)
 
 
-# 结束惯性：清零速度并关 _process
+## 结束惯性：清零速度并关 _process
 func _stop_drift() -> void:
 	_state = State.IDLE
 	_velocity = Vector2.ZERO
 	set_process(false)
 
 
-# 每帧按状态分派：只有 DRIFTING / ELASTIC 需要跑
+## 每帧按状态分派：只有 DRIFTING / ELASTIC 需要跑
 func _process(delta: float) -> void:
 	match _state:
 		State.DRIFTING:
@@ -91,7 +91,7 @@ func _process(delta: float) -> void:
 			_tick_elastic(delta)
 
 
-# 惯性每帧：按速度推进滚动位置；越界就转橡皮筋，速度按 friction 衰减到阈值以下停
+## 惯性每帧：按速度推进滚动位置；越界就转橡皮筋，速度按 friction 衰减到阈值以下停
 func _tick_drift(delta: float) -> void:
 	var new_y: float = float(_scroll.scroll_vertical) + _velocity.y * delta
 	var max_y: float = float(_max_scroll())
@@ -109,7 +109,7 @@ func _tick_drift(delta: float) -> void:
 		_stop_drift()
 
 
-# 进入越界态：越界量夹在上下限内，滚动条贴边，之后靠手动位移做视觉
+## 进入越界态：越界量夹在上下限内，滚动条贴边，之后靠手动位移做视觉
 func _enter_elastic(out_of_bounds: float) -> void:
 	_state = State.ELASTIC
 	_overscroll = clampf(out_of_bounds, -elastic_max_overscroll, elastic_max_overscroll) # out_of_bounds 是「超出边界多少」，夹紧后最多拉 elastic_max_overscroll 像素
@@ -122,7 +122,7 @@ func _enter_elastic(out_of_bounds: float) -> void:
 	set_process(true)
 
 
-# 越界每帧：速度没耗尽就继续拉大越界量（带额外阻力），耗尽后交给回弹补间
+## 越界每帧：速度没耗尽就继续拉大越界量（带额外阻力），耗尽后交给回弹补间
 func _tick_elastic(delta: float) -> void:
 	if absf(_velocity.y) > 0.1:
 		_overscroll += _velocity.y * delta
@@ -137,7 +137,7 @@ func _tick_elastic(delta: float) -> void:
 		_start_bounce_back()
 
 
-# 起一个补间把越界量拉回 0；补间结束回到 IDLE 并关 _process
+## 起一个补间把越界量拉回 0；补间结束回到 IDLE 并关 _process
 func _start_bounce_back() -> void:
 	if _bounce_tween != null:
 		_bounce_tween.kill()
@@ -151,13 +151,13 @@ func _start_bounce_back() -> void:
 	)
 
 
-# 回弹补间的回调：更新越界量并刷新视觉
+## 回弹补间的回调：更新越界量并刷新视觉
 func _set_overscroll(v: float) -> void:
 	_overscroll = v
 	_apply_overscroll_visual()
 
 
-# 越界视觉：直接改容器第一个子节点的 y（ScrollContainer 自身无法越界）
+## 越界视觉：直接改容器第一个子节点的 y（ScrollContainer 自身无法越界）
 func _apply_overscroll_visual() -> void:
 	if _scroll == null or _scroll.get_child_count() == 0:
 		return
@@ -168,13 +168,13 @@ func _apply_overscroll_visual() -> void:
 	content.position.y = -float(_scroll.scroll_vertical) - _overscroll # 内容 y = -滚动量 - 越界量，于是越界时内容被拉出边界
 
 
-# 容器不可见时重置（隐藏后不该继续滑）
+## 容器不可见时重置（隐藏后不该继续滑）
 func _on_scroll_visibility_changed() -> void:
 	if _scroll != null and not _scroll.is_visible_in_tree():
 		_reset_all()
 
 
-# 全量重置：状态 / 速度 / 越界 / 补间 / 指针追踪全部清空
+## 全量重置：状态 / 速度 / 越界 / 补间 / 指针追踪全部清空
 func _reset_all() -> void:
 	_state = State.IDLE
 	_velocity = Vector2.ZERO
@@ -191,7 +191,7 @@ func _reset_all() -> void:
 	set_process(false)
 
 
-# 最大可滚动量 = 纵向滚动条 max - page，不可滚动时为 0
+## 最大可滚动量 = 纵向滚动条 max - page，不可滚动时为 0
 func _max_scroll() -> int:
 	if _scroll == null:
 		return 0
@@ -202,7 +202,7 @@ func _max_scroll() -> int:
 
 
 # ================= 输入处理 =================
-# 全局输入：触摸与鼠标两路，统一转成 _handle_press / _handle_motion
+## 全局输入：触摸与鼠标两路，统一转成 _handle_press / _handle_motion
 func _input(event: InputEvent) -> void:
 	if _scroll == null or not _scroll.is_visible_in_tree():
 		_reset()
@@ -222,7 +222,7 @@ func _input(event: InputEvent) -> void:
 			_handle_motion(event.position)
 
 
-# 处理按下 / 抬起：按下开始追踪；抬起时决定是继续滑行还是直接收尾
+## 处理按下 / 抬起：按下开始追踪；抬起时决定是继续滑行还是直接收尾
 func _handle_press(pos: Vector2, pressed: bool, pointer_index: int) -> void:
 	if pressed:
 		var rect: Rect2 = _scroll.get_global_rect()
@@ -274,7 +274,7 @@ func _handle_press(pos: Vector2, pressed: bool, pointer_index: int) -> void:
 			get_viewport().set_input_as_handled()
 
 
-# 处理移动：超过阈值才算拖拽；拖拽期间直接改滚动值并吞掉事件
+## 处理移动：超过阈值才算拖拽；拖拽期间直接改滚动值并吞掉事件
 func _handle_motion(pos: Vector2) -> void:
 	if not _is_pressing:
 		return
@@ -300,7 +300,7 @@ func _handle_motion(pos: Vector2) -> void:
 	_last_pos = pos
 
 
-# 轻量重置：结束按下 / 拖拽，但不动惯性与越界
+## 轻量重置：结束按下 / 拖拽，但不动惯性与越界
 func _reset() -> void:
 	_is_pressing = false
 	_drag_active = false
@@ -309,7 +309,7 @@ func _reset() -> void:
 	_recent_motions.clear()
 
 
-# 只保留最近 _MOTION_WINDOW_SEC 内的样本，让速度反映「松手前」而不是整段拖动
+## 只保留最近 _MOTION_WINDOW_SEC 内的样本，让速度反映「松手前」而不是整段拖动
 func _trim_recent_motions() -> void:
 	var total_dt: float = 0.0
 	for m in _recent_motions:
@@ -320,7 +320,7 @@ func _trim_recent_motions() -> void:
 		total_dt -= oldest.dt
 
 
-# 用样本的平均速度估算松手速度；取负号是因为屏幕位移方向与滚动方向相反
+## 用样本的平均速度估算松手速度；取负号是因为屏幕位移方向与滚动方向相反
 func _calc_release_velocity() -> float:
 	var total_dy: float = 0.0
 	var total_dt: float = 0.0
@@ -333,7 +333,7 @@ func _calc_release_velocity() -> float:
 	return -total_dy / total_dt
 
 
-# 递归取消子按钮的按下态（拖拽开始后按钮不该保持高亮）
+## 递归取消子按钮的按下态（拖拽开始后按钮不该保持高亮）
 func _cancel_pressed_buttons(node: Node) -> void:
 	if node is BaseButton:
 		var btn := node as BaseButton

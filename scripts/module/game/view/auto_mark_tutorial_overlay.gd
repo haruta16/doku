@@ -1,4 +1,4 @@
-# 自动标记新手引导：把目标列与按钮抬到遮罩之上，用手型动画指路，点任意处关闭并回传是否点中按钮
+## 自动标记新手引导：把目标列与按钮抬到遮罩之上，用手型动画指路，点任意处关闭并回传是否点中按钮
 class_name AutoMarkTutorialOverlay
 extends Control
 
@@ -28,13 +28,13 @@ var _btn_hit_rect: Rect2 = Rect2() # 目标按钮的屏幕矩形
 var _toast: PopUpToast = null # 顶部气泡提示
 
 
-# 进树；具体引导由 setup 驱动
+## 进树；具体引导由 setup 驱动
 func _ready() -> void:
 	pass
 
 
 # ================= 引导入口 =================
-# 对某一列的自动标记按钮做引导；参数非法时打错误日志并放弃
+## 对某一列的自动标记按钮做引导；参数非法时打错误日志并放弃
 func setup(board_view: BoardView, col: int) -> void:
 	if board_view == null:
 		push_error("[AutoMarkTutorialOverlay] setup: board_view == null")
@@ -80,7 +80,7 @@ func setup(board_view: BoardView, col: int) -> void:
 
 
 # ================= 内部工具 =================
-# 取父节点 z_index 作为基准（没有就按 0）
+## 取父节点 z_index 作为基准（没有就按 0）
 func _resolve_base_z() -> int:
 	var p: Node = get_parent()
 	if p == null or not "z_index" in p:
@@ -88,7 +88,7 @@ func _resolve_base_z() -> int:
 	return p.z_index
 
 
-# 在棋盘上方弹一条气泡提示
+## 在棋盘上方弹一条气泡提示
 func _spawn_toast(board_view: BoardView, base_z: int) -> void:
 	_toast = _POP_UP_TOAST_SCENE.instantiate() as PopUpToast
 	add_child(_toast)
@@ -114,14 +114,14 @@ func _spawn_toast(board_view: BoardView, base_z: int) -> void:
 	_toast.pop_up()
 
 
-# 把一个节点抬到遮罩之上，并记住它原来的 z 值
+## 把一个节点抬到遮罩之上，并记住它原来的 z 值
 func _hoist(node: CanvasItem, base_z: int) -> void:
 	_hoisted.append({"node": node, "prev_z": node.z_index, "prev_rel": node.z_as_relative})
 	node.z_as_relative = false
 	node.z_index = base_z + _Z_DELTA_HOIST
 
 
-# 还原所有被抬起的节点
+## 还原所有被抬起的节点
 func _restore_z() -> void:
 	for entry in _hoisted:
 		var node: CanvasItem = entry["node"] as CanvasItem
@@ -133,7 +133,7 @@ func _restore_z() -> void:
 
 
 # ================= 输入与关闭 =================
-# 全局输入：点任意位置都关闭引导，并回传是否点中按钮
+## 全局输入：点任意位置都关闭引导，并回传是否点中按钮
 func _input(event: InputEvent) -> void:
 	if _is_closed:
 		return
@@ -165,7 +165,7 @@ func _input(event: InputEvent) -> void:
 	closed.emit(hit_btn)
 
 
-# 把气泡转挂到父节点，让它播完消失动画再自毁
+## 把气泡转挂到父节点，让它播完消失动画再自毁
 func _detach_and_dismiss_toast() -> void:
 	if _toast == null or not is_instance_valid(_toast):
 		return
@@ -179,6 +179,6 @@ func _detach_and_dismiss_toast() -> void:
 	_toast = null
 
 
-# 退出场景树时兜底还原 z 值
+## 退出场景树时兜底还原 z 值
 func _exit_tree() -> void:
 	_restore_z()

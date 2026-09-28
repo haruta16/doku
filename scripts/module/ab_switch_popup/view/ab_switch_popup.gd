@@ -1,9 +1,9 @@
-# 通用提示弹窗：标题 / 正文 / 按钮文案都可覆盖，猫头跟着背景框定位
+## 通用提示弹窗：标题 / 正文 / 按钮文案都可覆盖，猫头跟着背景框定位
 @tool
 class_name AbSwitchPopup
 extends UIFrameWindow
 
-# 猫相对背景框顶部的纵向偏移（像素），改完立刻重排
+## 猫相对背景框顶部的纵向偏移（像素），改完立刻重排
 @export var cat_y_offset: float = -350:
 	set(v):
 		cat_y_offset = v # 写回新值
@@ -32,13 +32,13 @@ func _ready() -> void:
 	call_deferred("_sync_cat")
 
 
-# 编辑器专用：每帧刷新猫的位置（运行时不需要）
+## 编辑器专用：每帧刷新猫的位置（运行时不需要）
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
 		_sync_cat()
 
 
-# 把猫贴到背景框顶部：逐级累加父节点 y（各级锚点不同，不能用全局坐标）
+## 把猫贴到背景框顶部：逐级累加父节点 y（各级锚点不同，不能用全局坐标）
 func _sync_cat() -> void:
 	# 节点未就绪时跳过（@export 的 setter 可能提前调用）
 	if not is_node_ready():
@@ -54,7 +54,7 @@ func _sync_cat() -> void:
 	_cat_dialog.position.y = bg_top + cat_y_offset
 
 
-# 打开：三个参数都可选，非空才覆盖场景里的默认文案
+## 打开：三个参数都可选，非空才覆盖场景里的默认文案
 func on_show(params: Dictionary = {}) -> void:
 	# 正文文案
 	var text: String = params.get("text", "")
@@ -72,11 +72,11 @@ func on_show(params: Dictionary = {}) -> void:
 		_btn.set("btn_text", btn_text)
 
 
-# 点确认按钮：关闭自己
+## 点确认按钮：关闭自己
 func _on_action_pressed() -> void:
 	UIManager.hide_ui(get_ui_name())
 
 
-# 点关闭按钮：关闭自己
+## 点关闭按钮：关闭自己
 func _on_close_pressed() -> void:
 	UIManager.hide_ui(get_ui_name())

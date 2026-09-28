@@ -1,4 +1,4 @@
-# 每日挑战失败页：显示还差几只猫，给「免费/看广告复活」和「重开一局」两条路
+## 每日挑战失败页：显示还差几只猫，给「免费/看广告复活」和「重开一局」两条路
 class_name DailyFailPage
 extends UIFrameWindow
 
@@ -15,15 +15,15 @@ signal revive_ad_started # 广告即将播放，先让棋盘上的猫回位
 @onready var _revive_btn: Control = $Root/BottomGroup/VBoxContainer/ReviveBtn # 复活按钮
 @onready var _try_again_btn: Control = $Root/BottomGroup/VBoxContainer/TryAgainBtn # 重开按钮
 @onready var _anim: AnimationPlayer = $AnimationPlayer # 页面进出场动画
-# 复活按钮上的广告图标
+## 复活按钮上的广告图标
 @onready
 var _revive_ad_icon: TextureRect = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/TextIconRow/Icon
 @onready var _revive_badge: GameAdBadge = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/Badge # 复活按钮上的角标（免费 / AD）
 
-# 图标+文字行；两行文案时整行上移
+## 图标+文字行；两行文案时整行上移
 @onready
 var _revive_text_icon_row: HBoxContainer = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/TextIconRow
-# 复活按钮主文案
+## 复活按钮主文案
 @onready
 var _revive_main_label: Label = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/TextIconRow/Label
 @onready var _revive_subtitle: Label = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/SubtitleLabel # 复活按钮副标题（两行样式才显示）
@@ -45,21 +45,21 @@ var _encourage_fade_tween: Tween = null # 鼓励文案淡入用的 Tween
 
 
 # ================= 生命周期 =================
-# 记下图标行的初始位置，并刷一遍随语言变化的排版
+## 记下图标行的初始位置，并刷一遍随语言变化的排版
 func _ready() -> void:
 	_revive_row_init_top = _revive_text_icon_row.offset_top
 	_revive_row_init_bottom = _revive_text_icon_row.offset_bottom
 	_refresh_dynamic_text()
 
 
-# 切换语言后要重新排版（按钮字号是量出来的）
+## 切换语言后要重新排版（按钮字号是量出来的）
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
 		_refresh_dynamic_text()
 
 
 # ================= 文案与自适应 =================
-# 按 AB 实验决定按钮文案（普通 / 3 条命）与是否两行，然后重排
+## 按 AB 实验决定按钮文案（普通 / 3 条命）与是否两行，然后重排
 func _refresh_dynamic_text() -> void:
 	var main_key: String = (
 		"FAIL_REVIVE_3FISH" if ABTestManager.revive_life.is_alt_button_text() else "FAIL_REVIVE"
@@ -77,7 +77,7 @@ func _refresh_dynamic_text() -> void:
 	_fit_main_label_width()
 
 
-# 主文案超宽就按可用宽度等比缩小字号（用同一个字体量宽度）
+## 主文案超宽就按可用宽度等比缩小字号（用同一个字体量宽度）
 func _fit_main_label_width() -> void:
 	if _revive_main_label == null:
 		return
@@ -106,7 +106,7 @@ func _fit_main_label_width() -> void:
 
 
 # ================= 失败展示 =================
-# 暂停 BGM，从参数里取关卡配置与剩余猫数
+## 暂停 BGM，从参数里取关卡配置与剩余猫数
 func on_show(params: Dictionary = {}) -> void:
 	SoundManager.set_bgm_paused(true)
 	var lc: Dictionary = params.get("level_config", {})
@@ -114,7 +114,7 @@ func on_show(params: Dictionary = {}) -> void:
 	show_fail(lc, rc)
 
 
-# 显示失败：填剩余猫数、决定复活按钮能否用、刷文案并播动画
+## 显示失败：填剩余猫数、决定复活按钮能否用、刷文案并播动画
 func show_fail(level_config: Dictionary, remaining_cats: int = 0) -> void:
 	visible = true
 	_root.modulate = Color(1, 1, 1, 1)
@@ -167,7 +167,7 @@ func show_fail(level_config: Dictionary, remaining_cats: int = 0) -> void:
 
 
 # ================= 猫 Spine 控制 =================
-# 把两只失败猫停在 in 第 0 帧并隐藏，作为「还没出场」状态
+## 把两只失败猫停在 in 第 0 帧并隐藏，作为「还没出场」状态
 func _reset_fail_cat_spines() -> void:
 	for sp: SpineSprite in [$Root/SpineSprite, $Root/SpineSprite2]:
 		if sp == null:
@@ -181,7 +181,7 @@ func _reset_fail_cat_spines() -> void:
 		sp.visible = false
 
 
-# 恢复两只猫的时间缩放，让动画真正跑起来
+## 恢复两只猫的时间缩放，让动画真正跑起来
 func _resume_fail_cat_spines() -> void:
 	for sp: SpineSprite in [$Root/SpineSprite, $Root/SpineSprite2]:
 		if sp == null:
@@ -192,7 +192,7 @@ func _resume_fail_cat_spines() -> void:
 
 
 # ================= 鼓励文案 =================
-# 先杀掉上一次的淡入 Tween，再按实验选复活推广或普通鼓励
+## 先杀掉上一次的淡入 Tween，再按实验选复活推广或普通鼓励
 func _refresh_encourage_label(level_config: Dictionary, remaining_cats: int) -> void:
 	if _encourage_fade_tween != null and _encourage_fade_tween.is_valid():
 		_encourage_fade_tween.kill()
@@ -230,7 +230,7 @@ func _refresh_encourage_label(level_config: Dictionary, remaining_cats: int) -> 
 
 
 # ================= 离场 =================
-# 恢复 BGM、断开广告回调，播完退场动画再隐藏
+## 恢复 BGM、断开广告回调，播完退场动画再隐藏
 func on_hide() -> void:
 	SoundManager.set_bgm_paused(false)
 	_disconnect_self_reward_callbacks()
@@ -246,7 +246,7 @@ func on_hide() -> void:
 
 
 # ================= 复活与重开 =================
-# 是否免费复活：调试强制 / 等级还没到要看广告 / 实验判定免费
+## 是否免费复活：调试强制 / 等级还没到要看广告 / 实验判定免费
 func _is_free_revive() -> bool:
 	if BaseGamePage.debug_force_free_tool == "all":
 		return true
@@ -255,7 +255,7 @@ func _is_free_revive() -> bool:
 	return ABTestManager.revive_free_logic.should_free_revive()
 
 
-# 复活按钮：免费直接复原；否则校验广告就绪后拉激励视频，看完才发 revive_requested
+## 复活按钮：免费直接复原；否则校验广告就绪后拉激励视频，看完才发 revive_requested
 func _on_revive_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.REVIVE, self)
 
@@ -291,7 +291,7 @@ func _on_revive_btn_pressed() -> void:
 	UniKitManager.show_reward("reward", pos, show_id)
 
 
-# 遍历两个广告信号，只断开 callable 属于本节点的连接
+## 遍历两个广告信号，只断开 callable 属于本节点的连接
 func _disconnect_self_reward_callbacks() -> void:
 	for c: Dictionary in UniKitManager.ad_rewarded.get_connections():
 		var cb: Callable = c.callable
@@ -303,7 +303,7 @@ func _disconnect_self_reward_callbacks() -> void:
 			UniKitManager.ad_closed.disconnect(cb)
 
 
-# 重开：走 LevelOps 的重开流程，并以 RESTART 状态重进每日页
+## 重开：走 LevelOps 的重开流程，并以 RESTART 状态重进每日页
 func _on_try_again_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.RESTART, self)
 
@@ -311,6 +311,6 @@ func _on_try_again_btn_pressed() -> void:
 	UIManager.show_ui(UiName.DAILY_GAME, {"_tracker_status": Tracker.GameStatus.RESTART})
 
 
-# 埋点页面名
+## 埋点页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.DAILY_GAME_FAIL

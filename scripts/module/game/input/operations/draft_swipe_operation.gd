@@ -1,9 +1,9 @@
-# 草稿模式滑动：在空白格上刷草稿标记，正式标记与草稿猫都跳过
+## 草稿模式滑动：在空白格上刷草稿标记，正式标记与草稿猫都跳过
 class_name DraftSwipeOperation
 extends BaseSwipeOperation
 
 
-# 滑动经过一格
+## 滑动经过一格
 func on_paint(r: int, c: int, stroke: BoardStrokeContext, _is_current: bool) -> CellAction:
 	# 当前格状态
 	var cur: int = board.get_cell_state(r, c)

@@ -1,5 +1,5 @@
-# 连续打卡（每日连胜）的核心逻辑，注册为自动加载单例 StreakManager
-# 负责打卡判定、连续天数累计与断签清零、每 7 天一份宝箱奖励，数据存在 user://streak.cfg
+## 连续打卡（每日连胜）的核心逻辑，注册为自动加载单例 StreakManager
+## 负责打卡判定、连续天数累计与断签清零、每 7 天一份宝箱奖励，数据存在 user://streak.cfg
 extends Node
 
 const SAVE_PATH := "user://streak.cfg" # 存档路径（ConfigFile 格式，只有 [streak] 一段）
@@ -21,7 +21,7 @@ var _last_seen_jdn: int = 0 # 上次看到的「今天」的儒略日序号，�
 
 
 # ================= 生命周期与跨天检测 =================
-# 读存档、补一次断签检查，并挂 1 秒心跳来发现跨天
+## 读存档、补一次断签检查，并挂 1 秒心跳来发现跨天
 func _ready() -> void:
 	_load_data()
 
@@ -41,7 +41,7 @@ func _ready() -> void:
 	add_child(watch)
 
 
-# 心跳：日期没变直接返回，变了才做断签检查并发 streak_updated
+## 心跳：日期没变直接返回，变了才做断签检查并发 streak_updated
 func _on_day_watch_tick() -> void:
 	var today_jdn: int = _today_jdn()
 	if today_jdn == _last_seen_jdn:
@@ -52,27 +52,27 @@ func _on_day_watch_tick() -> void:
 
 
 # ================= AB 实验开关 =================
-# 当前分组编号：0 控制 / 1 基础 / 2 仅挑战 / 3 无奖励 / 4 不点亮
+## 当前分组编号：0 控制 / 1 基础 / 2 仅挑战 / 3 无奖励 / 4 不点亮
 func get_ab_group() -> int:
 	return ABTestManager.daily_streak.value()
 
 
-# 实验是否开启（非控制组）
+## 实验是否开启（非控制组）
 func is_enabled() -> bool:
 	return ABTestManager.daily_streak.is_enabled()
 
 
-# 本分组是否发第 7 天宝箱
+## 本分组是否发第 7 天宝箱
 func has_reward() -> bool:
 	return ABTestManager.daily_streak.has_reward()
 
 
-# 本分组是否跳过「首次点亮」那一屏
+## 本分组是否跳过「首次点亮」那一屏
 func should_skip_lit() -> bool:
 	return ABTestManager.daily_streak.is_skip_lit()
 
 
-# 功能对玩家是否可见：实验开启且新手引导已完成
+## 功能对玩家是否可见：实验开启且新手引导已完成
 func is_unlocked() -> bool:
 	if not is_enabled():
 		return false
@@ -80,7 +80,7 @@ func is_unlocked() -> bool:
 
 
 # ================= 分组切换说明页 =================
-# 启动染色后由主页调用：比对存档里的旧分组与当前分组，映射出要弹的说明页
+## 启动染色后由主页调用：比对存档里的旧分组与当前分组，映射出要弹的说明页
 func notify_group_dyed() -> void:
 	var cur: int = get_ab_group()
 	# 每次判定都打日志，方便排查为什么弹 / 不弹
@@ -126,7 +126,7 @@ func notify_group_dyed() -> void:
 	_save_data()
 
 
-# 分组变化 → 说明页编号的映射；返回 0 表示不用弹
+## 分组变化 → 说明页编号的映射；返回 0 表示不用弹
 func _map_switch_page(old_group: int, new_group: int) -> int:
 	if (old_group == 1 or old_group == 2 or old_group == 4) and (new_group == 0 or new_group == 3):
 		return 1
@@ -137,19 +137,19 @@ func _map_switch_page(old_group: int, new_group: int) -> int:
 	return 0
 
 
-# 待弹的说明页编号（0 = 不弹），只有本次启动有资格时才返回
+## 待弹的说明页编号（0 = 不弹），只有本次启动有资格时才返回
 func get_pending_switch_page() -> int:
 	return _data.pending_switch_page if _pending_switch_eligible else 0
 
 
-# 消费掉待弹说明页并写存档（主页弹完就调）
+## 消费掉待弹说明页并写存档（主页弹完就调）
 func consume_pending_switch() -> void:
 	_data.pending_switch_page = 0
 	_pending_switch_eligible = false
 	_save_data()
 
 
-# 补发切组礼包：直接进背包（DIRECT 展示），不走宝箱动画
+## 补发切组礼包：直接进背包（DIRECT 展示），不走宝箱动画
 func grant_switch_gift() -> void:
 	var items: Array = _build_reward_items()
 	if items.is_empty():
@@ -158,12 +158,12 @@ func grant_switch_gift() -> void:
 
 
 # ================= 打卡 =================
-# 今天还能不能打卡：最近打卡日期不是今天就还能打
+## 今天还能不能打卡：最近打卡日期不是今天就还能打
 func can_checkin_today() -> bool:
 	return _data.last_checkin_date != _today_str()
 
 
-# 哪种胜利算打卡：默认主线与每日挑战都算，「仅挑战」档只算每日挑战
+## 哪种胜利算打卡：默认主线与每日挑战都算，「仅挑战」档只算每日挑战
 func is_win_qualifies(source: StringName) -> bool:
 	if not is_enabled():
 		return false
@@ -172,7 +172,7 @@ func is_win_qualifies(source: StringName) -> bool:
 	return source == &"main" or source == &"challenge"
 
 
-# 游戏胜利时的入口：未解锁 / 今天已打卡 / 胜利类型不符都直接返回，否则打卡
+## 游戏胜利时的入口：未解锁 / 今天已打卡 / 胜利类型不符都直接返回，否则打卡
 func notify_win(source: StringName) -> void:
 	if not is_unlocked():
 		return
@@ -183,7 +183,7 @@ func notify_win(source: StringName) -> void:
 	do_checkin()
 
 
-# 真正打卡：记日期、连续天数与周期天数各 +1，满 7 天发奖励，然后写存档并发信号
+## 真正打卡：记日期、连续天数与周期天数各 +1，满 7 天发奖励，然后写存档并发信号
 func do_checkin() -> Dictionary:
 	# 先落日期：同一天再调用 can_checkin_today 就会返回 false
 	var today := _today_str()
@@ -242,13 +242,13 @@ func do_checkin() -> Dictionary:
 
 
 # ================= 对外数据 =================
-# 当前打卡数据（UI 只读，不要直接改）
+## 当前打卡数据（UI 只读，不要直接改）
 func get_data() -> StreakData:
 	return _data
 
 
-# 7 个格子的展示数据，每项是 {weekday: 0~6, checked: bool}
-# 点亮格数 = reward_cycle_day % 7；刚好满 7 天且今天打过卡时 7 格全亮
+## 7 个格子的展示数据，每项是 {weekday: 0~6, checked: bool}
+## 点亮格数 = reward_cycle_day % 7；刚好满 7 天且今天打过卡时 7 格全亮
 func get_week_slots() -> Array[Dictionary]:
 	var slots: Array[Dictionary] = []
 	# 本轮还没开始时以今天为起点（只影响显示，不写存档）
@@ -273,17 +273,17 @@ func get_week_slots() -> Array[Dictionary]:
 
 
 # ================= 奖励展示 =================
-# 是否有打卡待演（uid >= 0）；uid > 0 才代表真有奖励
+## 是否有打卡待演（uid >= 0）；uid > 0 才代表真有奖励
 func has_pending_show() -> bool:
 	return _pending_show_uid >= 0
 
 
-# 待展示的奖励 uid（-1 = 无）
+## 待展示的奖励 uid（-1 = 无）
 func get_pending_show_uid() -> int:
 	return _pending_show_uid
 
 
-# 把奖励弹给玩家（uid > 0 才真弹）；参数 _double 目前没有用到
+## 把奖励弹给玩家（uid > 0 才真弹）；参数 _double 目前没有用到
 func claim_reward(_double: bool = false) -> Dictionary:
 	if _pending_show_uid < 0:
 		return {}
@@ -293,13 +293,13 @@ func claim_reward(_double: bool = false) -> Dictionary:
 	return {}
 
 
-# 清掉待展示标记（打卡页演完动画后调用）
+## 清掉待展示标记（打卡页演完动画后调用）
 func consume_pending_show() -> void:
 	_pending_show_uid = -1
 
 
 # ================= 重置与断签 =================
-# 整份重置；账号数据被清空时调用，并写存档、发信号
+## 整份重置；账号数据被清空时调用，并写存档、发信号
 func reset() -> void:
 	_data = StreakData.new()
 	_pending_show_uid = -1
@@ -308,7 +308,7 @@ func reset() -> void:
 	streak_updated.emit(_data)
 
 
-# 断签检查：距上次打卡超过 1 天就清零（连续天数、周期天数、本轮起点、待展示奖励）
+## 断签检查：距上次打卡超过 1 天就清零（连续天数、周期天数、本轮起点、待展示奖励）
 func _check_continuity() -> void:
 	# 从没打过卡，不用检查
 	if _data.last_checkin_date.is_empty():
@@ -327,12 +327,12 @@ func _check_continuity() -> void:
 
 
 # ================= 奖励构建 =================
-# 奖励字典的副本（目前没有调用方）
+## 奖励字典的副本（目前没有调用方）
 func _build_reward() -> Dictionary:
 	return StreakData.REWARD_BASE.duplicate()
 
 
-# 把奖励基数转成 AwardItem 列表，数量为 0 的道具跳过
+## 把奖励基数转成 AwardItem 列表，数量为 0 的道具跳过
 func _build_reward_items() -> Array:
 	var items: Array = []
 	for kind: String in StreakData.REWARD_BASE:
@@ -343,7 +343,7 @@ func _build_reward_items() -> Array:
 
 
 # ================= 存档读写 =================
-# 整份写进 streak.cfg 的 [streak] 段
+## 整份写进 streak.cfg 的 [streak] 段
 func _save_data() -> void:
 	var cfg := ConfigFile.new()
 	var d: Dictionary = _data.to_dict()
@@ -352,7 +352,7 @@ func _save_data() -> void:
 	cfg.save(SAVE_PATH)
 
 
-# 读 streak.cfg；文件不存在或读失败就保持默认数据
+## 读 streak.cfg；文件不存在或读失败就保持默认数据
 func _load_data() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load(SAVE_PATH) != OK:
@@ -364,7 +364,7 @@ func _load_data() -> void:
 
 
 # ================= 调试作弊接口（CheatBus 调用） =================
-# 造出「已连续 6 天」的存档，方便测第 7 天开箱
+## 造出「已连续 6 天」的存档，方便测第 7 天开箱
 func cheat_setup_six_days() -> void:
 	_data.current_streak = 6
 	_data.reward_cycle_day = 6
@@ -376,7 +376,7 @@ func cheat_setup_six_days() -> void:
 	streak_updated.emit(_data)
 
 
-# 撤回今天的打卡（日期改成昨天、天数各减 1），用于反复测打卡流程
+## 撤回今天的打卡（日期改成昨天、天数各减 1），用于反复测打卡流程
 func cheat_clear_today() -> void:
 	if _data.last_checkin_date != _today_str():
 		push_warning("[StreakCheat] 今天本来就没打卡,clear no-op")
@@ -391,7 +391,7 @@ func cheat_clear_today() -> void:
 	streak_updated.emit(_data)
 
 
-# 把上次打卡日期再往前挪一天，用来触发断签
+## 把上次打卡日期再往前挪一天，用来触发断签
 func cheat_skip_day() -> void:
 	if _data.last_checkin_date.is_empty():
 		push_warning("[StreakCheat] last_checkin_date 空,跳过 skip")
@@ -402,13 +402,13 @@ func cheat_skip_day() -> void:
 
 
 # ================= 日期工具（纯 static，不碰状态） =================
-# 今天往前 / 后偏移若干天的日期串
+## 今天往前 / 后偏移若干天的日期串
 static func _date_offset_str(days: int) -> String:
 	var dt: Dictionary = Time.get_date_dict_from_system(false)
 	return _date_offset_str_from("%d-%02d-%02d" % [dt.year, dt.month, dt.day], days)
 
 
-# 把日期串偏移若干天：先转 Unix 时间戳，加减天数后再格式化
+## 把日期串偏移若干天：先转 Unix 时间戳，加减天数后再格式化
 static func _date_offset_str_from(base_date_str: String, days: int) -> String:
 	var parts: PackedStringArray = base_date_str.split("-")
 	if parts.size() < 3:
@@ -430,25 +430,25 @@ static func _date_offset_str_from(base_date_str: String, days: int) -> String:
 	return "%d-%02d-%02d" % [off.year, off.month, off.day]
 
 
-# 今天的日期串 yyyy-mm-dd（本地时间）
+## 今天的日期串 yyyy-mm-dd（本地时间）
 static func _today_str() -> String:
 	var dt: Dictionary = Time.get_date_dict_from_system(false)
 	return "%d-%02d-%02d" % [dt.year, dt.month, dt.day]
 
 
-# 今天是星期几（0 = 周日）
+## 今天是星期几（0 = 周日）
 static func _today_weekday() -> int:
 	var dt: Dictionary = Time.get_date_dict_from_system(false)
 	return dt.weekday as int
 
 
-# 今天的儒略日序号，用于比较两个日期差几天
+## 今天的儒略日序号，用于比较两个日期差几天
 static func _today_jdn() -> int:
 	var dt: Dictionary = Time.get_date_dict_from_system(false)
 	return _local_date_to_jdn(dt.year, dt.month, dt.day)
 
 
-# 日期串 → 儒略日序号（格式不对时返回 0）
+## 日期串 → 儒略日序号（格式不对时返回 0）
 static func _date_str_to_jdn(date_str: String) -> int:
 	var parts: PackedStringArray = date_str.split("-")
 	if parts.size() < 3:
@@ -456,7 +456,7 @@ static func _date_str_to_jdn(date_str: String) -> int:
 	return _local_date_to_jdn(parts[0].to_int(), parts[1].to_int(), parts[2].to_int())
 
 
-# 公历 → 儒略日序号的经典公式（纯整数运算）
+## 公历 → 儒略日序号的经典公式（纯整数运算）
 static func _local_date_to_jdn(year: int, month: int, day: int) -> int:
 	var a: int = (14 - month) / 12
 	var y: int = year + 4800 - a

@@ -1,5 +1,5 @@
-# UI 管理器（autoload 单例 UIManager）：页面注册、显示/隐藏、层级栈、全局遮罩、安全区适配的唯一入口
-# 用法：UIManager.show_ui(UiName.XXX, params) / hide_ui(UiName.XXX)；窗口实例常驻缓存，隐藏不销毁
+## UI 管理器（autoload 单例 UIManager）：页面注册、显示/隐藏、层级栈、全局遮罩、安全区适配的唯一入口
+## 用法：UIManager.show_ui(UiName.XXX, params) / hide_ui(UiName.XXX)；窗口实例常驻缓存，隐藏不销毁
 extends Node
 
 # ---- 注册表与缓存（key 都是 UiName 常量） ----
@@ -22,14 +22,14 @@ var _tracker_observer: UITrackerObserver = null # 订阅 events.window_shown，�
 
 
 # ================= 生命周期 =================
-# 启动时建注册表并挂上埋点观察者（UIManager 是 autoload，比任何页面都早）
+## 启动时建注册表并挂上埋点观察者（UIManager 是 autoload，比任何页面都早）
 func _ready() -> void:
 	_registry = UIRegistry.build_registry()
 	_tracker_observer = UITrackerObserver.new(events)
 
 
 # ================= 显示 / 隐藏（对外主入口） =================
-# 显示页面：查表 → 取/建实例 → 定层入栈 → 起遮罩 → 真正 show；返回窗口给调用方用
+## 显示页面：查表 → 取/建实例 → 定层入栈 → 起遮罩 → 真正 show；返回窗口给调用方用
 func show_ui(ui_name: String, params: Dictionary = {}) -> UIFrameWindow:
 	# 名字不在注册表里＝写错，或者这个构建根本没注册它（调试页在 Android 上就没有）
 	if not _registry.has(ui_name):
@@ -78,7 +78,7 @@ func show_ui(ui_name: String, params: Dictionary = {}) -> UIFrameWindow:
 	return win
 
 
-# 隐藏页面：置 CLOSING → 收遮罩 → 播关闭动画 → on_hide → 出栈并发 window_hidden
+## 隐藏页面：置 CLOSING → 收遮罩 → 播关闭动画 → on_hide → 出栈并发 window_hidden
 func hide_ui(ui_name: String) -> void:
 	# 没有缓存、或本来就没显示：直接返回（重复 hide 是安全的）
 	var cached: Variant = _cache.get(ui_name, null)
@@ -130,7 +130,7 @@ func get_ui(ui_name: String) -> UIFrameWindow:
 	return null
 
 
-# 这个页面当前是否已经创建过（只看缓存，不触发创建）
+## 这个页面当前是否已经创建过（只看缓存，不触发创建）
 func has_ui(ui_name: String) -> bool:
 	return get_ui(ui_name) != null
 
@@ -143,7 +143,7 @@ func hide_all() -> void:
 			hide_ui(ui_name)
 
 
-# 收起除名单外的所有已显示页面（名单里的保持原样）
+## 收起除名单外的所有已显示页面（名单里的保持原样）
 func hide_all_except(names: Array[String]) -> void:
 	for ui_name in _cache.keys():
 		if ui_name in names:
@@ -174,7 +174,7 @@ func _get_or_create(ui_name: String) -> UIFrameWindow:
 	return _create_and_cache(ui_name, packed)
 
 
-# 入栈：同层做过就把旧的挪到栈顶（重新显示算最新）
+## 入栈：同层做过就把旧的挪到栈顶（重新显示算最新）
 func _push_stack(layer: int, win: UIFrameWindow) -> void:
 	if not _stacks.has(layer):
 		_stacks[layer] = []
@@ -183,7 +183,7 @@ func _push_stack(layer: int, win: UIFrameWindow) -> void:
 	stack.append(win)
 
 
-# 出栈：把窗口从它那一层的栈里删掉
+## 出栈：把窗口从它那一层的栈里删掉
 func _pop_stack(layer: int, win: UIFrameWindow) -> void:
 	if _stacks.has(layer):
 		_stacks[layer].erase(win)
@@ -200,7 +200,7 @@ func _ordered_windows() -> Array[UIFrameWindow]:
 	return ordered
 
 
-# 从栈顶往下扫：第一个全屏窗口之上都可见，被它盖住的窗口隐藏并回调 on_stack_bottom
+## 从栈顶往下扫：第一个全屏窗口之上都可见，被它盖住的窗口隐藏并回调 on_stack_bottom
 func _refresh_occlusion() -> void:
 	var ordered: Array[UIFrameWindow] = _ordered_windows()
 	var occluded: bool = false
@@ -224,7 +224,7 @@ func _refresh_occlusion() -> void:
 			occluded = true
 
 
-# 分配 z_index：每层从 layer 基址起按 Z_STEP 递增，保证后开的更高
+## 分配 z_index：每层从 layer 基址起按 Z_STEP 递增，保证后开的更高
 func _assign_z_index(win: UIFrameWindow, layer: int) -> void:
 	# 该层第一次用到，起点就是层基址
 	if not _next_z.has(layer):
@@ -237,7 +237,7 @@ func _assign_z_index(win: UIFrameWindow, layer: int) -> void:
 	_next_z[layer] += UILayerConfig.Z_STEP
 
 
-# 压缩重排：只保留可见窗口，按原 z_index 顺序重新均匀分配
+## 压缩重排：只保留可见窗口，按原 z_index 顺序重新均匀分配
 func _compact_z_indices(layer: int) -> void:
 	var stack: Array = _stacks.get(layer, [])
 	var visible_wins: Array[UIFrameWindow] = []
@@ -253,19 +253,19 @@ func _compact_z_indices(layer: int) -> void:
 	_next_z[layer] = layer + visible_wins.size() * UILayerConfig.Z_STEP
 
 
-# 整层显示/隐藏；注意直接改 visible，不会触发 on_stack_top / on_stack_bottom 回调
+## 整层显示/隐藏；注意直接改 visible，不会触发 on_stack_top / on_stack_bottom 回调
 func set_layer_visible(layer: int, is_visible: bool) -> void:
 	var stack: Array = _stacks.get(layer, [])
 	for win: UIFrameWindow in stack:
 		win.visible = is_visible
 
 
-# 某层栈里有几个窗口（含当前不可见的）
+## 某层栈里有几个窗口（含当前不可见的）
 func get_window_count(layer: int) -> int:
 	return _stacks.get(layer, []).size()
 
 
-# 预热：提前实例化并保持隐藏，避免第一次打开时卡在加载
+## 预热：提前实例化并保持隐藏，避免第一次打开时卡在加载
 func warm_pool(ui_name: String) -> void:
 	if _cache.has(ui_name):
 		return
@@ -275,20 +275,20 @@ func warm_pool(ui_name: String) -> void:
 		(cached as UIFrameWindow).visible = false
 
 
-# Android 返回键：Godot 把它转成这个通知
+## Android 返回键：Godot 把它转成这个通知
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		_on_back_button()
 
 
-# Esc / ui_cancel 走同一条返回逻辑，并标记已处理，避免继续往下传
+## Esc / ui_cancel 走同一条返回逻辑，并标记已处理，避免继续往下传
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		_on_back_button()
 		get_viewport().set_input_as_handled()
 
 
-# 返回：从最高层的栈顶往下找第一个可见窗口，交给它 on_escape()；只处理这一个
+## 返回：从最高层的栈顶往下找第一个可见窗口，交给它 on_escape()；只处理这一个
 func _on_back_button() -> void:
 	var layers: Array = _stacks.keys()
 	layers.sort()
@@ -305,7 +305,7 @@ func _on_back_button() -> void:
 const _INPUT_BLOCKER_NAME: StringName = &"_InputBlocker" # 挡板节点名，重入时先找到旧的那块
 
 
-# 在 target 上盖一层全屏透明挡板，duration 秒内吞掉所有点击（防连点、防动画期误触）
+## 在 target 上盖一层全屏透明挡板，duration 秒内吞掉所有点击（防连点、防动画期误触）
 func block_input_briefly(target: Control, duration: float = 1.5) -> void:
 	if target == null or duration <= 0.0:
 		return
@@ -329,7 +329,7 @@ func block_input_briefly(target: Control, duration: float = 1.5) -> void:
 	)
 
 
-# 请求显示遮罩：引用计数 +1，不透明度和堆叠位置都按当前窗口刷新
+## 请求显示遮罩：引用计数 +1，不透明度和堆叠位置都按当前窗口刷新
 func _show_mask(opacity: float) -> void:
 	_mask_ref_count += 1 # 有一个窗口算一个，最后一个走了才收
 
@@ -350,7 +350,7 @@ func _show_mask(opacity: float) -> void:
 	_mask.visible = true
 
 
-# 请求收起遮罩：引用计数 -1
+## 请求收起遮罩：引用计数 -1
 func _hide_mask() -> void:
 	# 归零：副遮罩直接干掉；主遮罩只在没有淡出 tween 时才隐藏
 	_mask_ref_count -= 1
@@ -381,7 +381,7 @@ func _hide_mask() -> void:
 			_restack_mask()
 
 
-# 把遮罩贴到「最上面那个需要遮罩的窗口」下面一格：z_index 与同级子节点顺序一起调
+## 把遮罩贴到「最上面那个需要遮罩的窗口」下面一格：z_index 与同级子节点顺序一起调
 func _restack_mask() -> void:
 	if _mask == null or not is_instance_valid(_mask):
 		return
@@ -409,7 +409,7 @@ func _restack_mask() -> void:
 		parent.move_child(_mask, target)
 
 
-# 遮罩整体淡出；duration <= 0 就直接隐藏
+## 遮罩整体淡出；duration <= 0 就直接隐藏
 func _fade_out_mask(duration: float) -> void:
 	if _mask == null or not is_instance_valid(_mask):
 		return
@@ -426,21 +426,21 @@ func _fade_out_mask(duration: float) -> void:
 	)
 
 
-# 杀掉主遮罩的 tween 并置空（凡是要直接改遮罩状态的地方都先调它）
+## 杀掉主遮罩的 tween 并置空（凡是要直接改遮罩状态的地方都先调它）
 func _kill_mask_tween() -> void:
 	if _mask_tween != null and _mask_tween.is_valid():
 		_mask_tween.kill()
 	_mask_tween = null
 
 
-# 同上，针对副遮罩
+## 同上，针对副遮罩
 func _kill_mask_secondary_tween() -> void:
 	if _mask_secondary_tween != null and _mask_secondary_tween.is_valid():
 		_mask_secondary_tween.kill()
 	_mask_secondary_tween = null
 
 
-# 交叉淡化还没播完就被打断：把副遮罩顶上主位，旧主遮罩直接隐藏
+## 交叉淡化还没播完就被打断：把副遮罩顶上主位，旧主遮罩直接隐藏
 func _abort_mask_crossfade() -> void:
 	if (
 		_mask_secondary == null
@@ -457,7 +457,7 @@ func _abort_mask_crossfade() -> void:
 		old_primary.visible = false
 
 
-# 关闭中的窗口把遮罩交接给下一个窗口：旧遮罩淡出、新遮罩淡入，两者时长一致
+## 关闭中的窗口把遮罩交接给下一个窗口：旧遮罩淡出、新遮罩淡入，两者时长一致
 func _start_mask_crossfade(closing_win: UIFrameWindow, duration: float) -> void:
 	# 找除自己以外、z_index 最高且需要遮罩的可见窗口
 	var next_top: UIFrameWindow = null
@@ -524,7 +524,7 @@ const _SAFE_BOTTOM_BASELINE_META: StringName = &"_safe_bottom_baseline" # 底部
 const _COLLAPSE_WHEN_TOP_SAFE_GROUP: StringName = &"_collapse_when_top_safe" # 顶部有刘海时应该收起来的分组名
 const _COLLAPSE_BASELINE_META: StringName = &"_collapse_when_top_safe_baseline" # 这类节点 可见性 / 最小高度 / 垂直尺寸标志 的基线 meta 键
 
-# 只对这几个页面做安全区适配，弹窗等其它页面自己处理
+## 只对这几个页面做安全区适配，弹窗等其它页面自己处理
 const _SAFE_AREA_PAGES: Array[StringName] = [
 	&"home",
 	&"game",
@@ -536,7 +536,7 @@ const _SAFE_AREA_PAGES: Array[StringName] = [
 ]
 
 
-# 把安全区插入量加到被标记节点的 offset 上；只在 Android/iOS 且页面在白名单里时执行
+## 把安全区插入量加到被标记节点的 offset 上；只在 Android/iOS 且页面在白名单里时执行
 func _apply_safe_area(page_name: String, node: Node) -> void:
 	# 桌面平台没有安全区，直接跳过
 	if not (OS.has_feature("android") or OS.has_feature("ios")):
@@ -594,7 +594,7 @@ func _apply_safe_area(page_name: String, node: Node) -> void:
 var _loading: Dictionary = {} # UiName -> 正在后台加载中，用来做并发去重
 
 
-# 异步版 show_ui：场景走线程加载，避免大页面同步 load 卡帧；已在加载中则等它结束
+## 异步版 show_ui：场景走线程加载，避免大页面同步 load 卡帧；已在加载中则等它结束
 func show_ui_async(ui_name: String, params: Dictionary = {}) -> UIFrameWindow:
 	# 名字校验同 show_ui
 	if not _registry.has(ui_name):
@@ -619,7 +619,7 @@ func show_ui_async(ui_name: String, params: Dictionary = {}) -> UIFrameWindow:
 	return show_ui(ui_name, params)
 
 
-# 异步预热：后台加载并实例化后保持隐藏（进游戏前先铺路）
+## 异步预热：后台加载并实例化后保持隐藏（进游戏前先铺路）
 func warm_pool_async(ui_name: String) -> void:
 	# 已经有缓存、或正在加载，就不用再来一次
 	if _cache.has(ui_name) or _loading.has(ui_name):
@@ -634,7 +634,7 @@ func warm_pool_async(ui_name: String) -> void:
 		win.visible = false
 
 
-# 线程加载场景并等到结束；_loading 在整个过程中占位去重
+## 线程加载场景并等到结束；_loading 在整个过程中占位去重
 func _load_scene_async(ui_name: String) -> PackedScene:
 	# 先占位，避免并发重复加载
 	_loading[ui_name] = true
@@ -651,7 +651,7 @@ func _load_scene_async(ui_name: String) -> PackedScene:
 	return packed
 
 
-# 实例化、挂到当前场景根、写缓存、跑 _do_create 并发 window_created
+## 实例化、挂到当前场景根、写缓存、跑 _do_create 并发 window_created
 func _create_and_cache(ui_name: String, packed: PackedScene) -> UIFrameWindow:
 	# 根节点必须是 UIFrameWindow，否则报错并释放（注册表和场景对不上时能立刻发现）
 	var node : Node = packed.instantiate()

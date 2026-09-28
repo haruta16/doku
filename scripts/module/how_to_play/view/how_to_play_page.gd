@@ -1,12 +1,12 @@
-# 「玩法说明」整页版（注册名 UiName.HOW_TO_PLAY）：三张卡片各放一块只读演示棋盘，循环播放规则动画
-# 打开时全局静音，任意点击即关闭；由正式对局页右上角的 info 按钮拉起
+## 「玩法说明」整页版（注册名 UiName.HOW_TO_PLAY）：三张卡片各放一块只读演示棋盘，循环播放规则动画
+## 打开时全局静音，任意点击即关闭；由正式对局页右上角的 info 按钮拉起
 class_name HowToPlayPage
 extends UIFrameWindow
 
-# 关闭后广播，供调用方续接流程
+## 关闭后广播，供调用方续接流程
 signal closed # 本页自己只是隐藏，不做跳转
 
-# 演示棋盘用的格子场景：只做展示，鼠标事件全部忽略
+## 演示棋盘用的格子场景：只做展示，鼠标事件全部忽略
 const _CELL_SCENE: PackedScene = preload("res://assets/prefab/cell.tscn")
 
 # ---- 演示棋盘尺寸与渲染参数 ----
@@ -53,8 +53,8 @@ const _LEN_CROSS: float = 0.35 # 打叉动画兜底时长（秒）
 const _LEN_ERROR: float = 1.1 # 错误动画兜底时长（秒）
 
 # ---- 三块演示棋盘的数据 ----
-# 三张卡片依次讲：每色一只 / 同行同列 / 八邻接不相贴；colors 每行一个字符串，B 蓝 P 粉 Y 黄
-# frame 是 60 FPS 下的帧号；error 为空字典表示这块不做错误示范
+## 三张卡片依次讲：每色一只 / 同行同列 / 八邻接不相贴；colors 每行一个字符串，B 蓝 P 粉 Y 黄
+## frame 是 60 FPS 下的帧号；error 为空字典表示这块不做错误示范
 var _DEMOS: Array = [
 	{
 		"colors": ["BBBBP", "BBBPY", "BBPYP"],
@@ -125,14 +125,14 @@ var _demo_token: int = 0 # 演示协程令牌：自增即让旧协程退出
 
 
 # ================= 生命周期与版式 =================
-# 摆好版式并搭出三块演示棋盘
+## 摆好版式并搭出三块演示棋盘
 func _ready() -> void:
 	_center_content()
 	_layout()
 	_build_boards()
 
 
-# 把 Content 容器锚到屏幕中心（设计稿 1080×2400 坐标系）
+## 把 Content 容器锚到屏幕中心（设计稿 1080×2400 坐标系）
 func _center_content() -> void:
 	var c := get_node_or_null("Root/Content") as Control
 	if c == null:
@@ -147,7 +147,7 @@ func _center_content() -> void:
 	c.offset_bottom = 1200.0
 
 
-# 按设计稿坐标摆放三张卡片、标题、棋盘与分隔线
+## 按设计稿坐标摆放三张卡片、标题、棋盘与分隔线
 func _layout() -> void:
 	var board_render_w: float = 4.0 * _RENDER_SLOT + _CELL_PX * _BOARD_SCALE
 	for b in range(_CARD_TOP.size()):
@@ -169,7 +169,7 @@ func _layout() -> void:
 
 
 # ================= 打开与关闭 =================
-# 每次打开：全局静音 + 播开场动画，然后重启演示协程
+## 每次打开：全局静音 + 播开场动画，然后重启演示协程
 func on_show(_params: Dictionary = {}) -> void:
 	SoundManager.set_silent(true) # 与 _stop_demo 里的 false 成对
 
@@ -178,17 +178,17 @@ func on_show(_params: Dictionary = {}) -> void:
 	_run_demo(_demo_token) # 不 await：让演示自己跑，随时可被令牌打断
 
 
-# 页面隐藏时停掉演示并恢复声音
+## 页面隐藏时停掉演示并恢复声音
 func on_hide() -> void:
 	_stop_demo()
 
 
-# ESC 返回键（UIFrameWindow.on_escape 会调到这里）
+## ESC 返回键（UIFrameWindow.on_escape 会调到这里）
 func _on_back_request() -> void:
 	_close()
 
 
-# 全局输入：本页是最上层可见窗口时，任意点击都关闭
+## 全局输入：本页是最上层可见窗口时，任意点击都关闭
 func _input(event: InputEvent) -> void:
 	if not visible or not _is_topmost_visible_page():
 		return
@@ -201,13 +201,13 @@ func _input(event: InputEvent) -> void:
 		_close()
 
 
-# 对外广播 closed，并让 UIManager 隐藏本页
+## 对外广播 closed，并让 UIManager 隐藏本页
 func _close() -> void:
 	closed.emit()
 	UIManager.hide_ui(UiName.HOW_TO_PLAY)
 
 
-# 判断自己是不是同级里最上层且可见的窗口（避免抢了下层弹窗的点击）
+## 判断自己是不是同级里最上层且可见的窗口（避免抢了下层弹窗的点击）
 func _is_topmost_visible_page() -> bool:
 	if not is_inside_tree():
 		return false
@@ -223,14 +223,14 @@ func _is_topmost_visible_page() -> bool:
 	return true
 
 
-# 停演示：令牌自增让协程退出，并恢复声音
+## 停演示：令牌自增让协程退出，并恢复声音
 func _stop_demo() -> void:
 	_demo_token += 1 # 令牌变化 → 正在跑的演示协程自行退出
 	SoundManager.set_silent(false) # 恢复声音
 
 
 # ================= 演示棋盘搭建 =================
-# 把颜色字符（B / P / Y）换成调色板里的颜色
+## 把颜色字符（B / P / Y）换成调色板里的颜色
 func _char_color(ch: String) -> Color:
 	if _palette.is_empty():
 		_palette = BoardView.resolve_region_palette()
@@ -243,7 +243,7 @@ func _char_color(ch: String) -> Color:
 	return _palette[idx] if idx < _palette.size() else Color(0.5, 0.5, 0.5)
 
 
-# 一次搭出三块演示棋盘的所有格子（初始全空）
+## 一次搭出三块演示棋盘的所有格子（初始全空）
 func _build_boards() -> void:
 	if _built:
 		return
@@ -269,7 +269,7 @@ func _build_boards() -> void:
 
 
 # ================= 演示动画时间轴 =================
-# 演示主循环：先把后两块摆成完成态，再逐块循环播放动画
+## 演示主循环：先把后两块摆成完成态，再逐块循环播放动画
 func _run_demo(token: int) -> void:
 	_reset_all()
 
@@ -292,7 +292,7 @@ func _run_demo(token: int) -> void:
 		cur = nxt
 
 
-# 播一块棋盘的演示：把各格动画按帧号排序后依次触发；返回 false 表示被中断
+## 播一块棋盘的演示：把各格动画按帧号排序后依次触发；返回 false 表示被中断
 func _play_demo(idx: int, token: int) -> bool:
 	var demo: Dictionary = _DEMOS[idx]
 
@@ -334,7 +334,7 @@ func _play_demo(idx: int, token: int) -> bool:
 	return true
 
 
-# 清场：先播消失动画，再复位格子状态
+## 清场：先播消失动画，再复位格子状态
 func _clear_board(idx: int, token: int) -> bool:
 	var cells: Array = _clearable_cells(idx)
 	if cells.is_empty():
@@ -348,7 +348,7 @@ func _clear_board(idx: int, token: int) -> bool:
 	return true
 
 
-# 需要清场的格子 = 参与演示的格子去掉两块常驻格
+## 需要清场的格子 = 参与演示的格子去掉两块常驻格
 func _clearable_cells(idx: int) -> Array:
 	var demo: Dictionary = _DEMOS[idx]
 	var skip: Dictionary = {}
@@ -363,7 +363,7 @@ func _clearable_cells(idx: int) -> Array:
 	return out
 
 
-# 把某块棋盘一次性摆成「已播完」的样子（静置展示用）
+## 把某块棋盘一次性摆成「已播完」的样子（静置展示用）
 func _fill_demo_complete(idx: int) -> void:
 	var demo: Dictionary = _DEMOS[idx]
 	for c: Vector2i in demo["cat_appear"]:
@@ -380,7 +380,7 @@ func _fill_demo_complete(idx: int) -> void:
 			_cell(idx, c).demo_play(_CROSS_ANIM, true)
 
 
-# 把三块棋盘的所有格子复位成空
+## 把三块棋盘的所有格子复位成空
 func _reset_all() -> void:
 	for b in range(_cells.size()):
 		for r in range(_ROWS):
@@ -388,7 +388,7 @@ func _reset_all() -> void:
 				(_cells[b][r][c] as CellView).demo_clear()
 
 
-# 某块演示里出现过的所有格子坐标
+## 某块演示里出现过的所有格子坐标
 func _content_cells(idx: int) -> Array:
 	var demo: Dictionary = _DEMOS[idx]
 	var out: Array = []
@@ -404,12 +404,12 @@ func _content_cells(idx: int) -> Array:
 
 
 # ================= 小工具 =================
-# 按棋盘序号和坐标取 CellView
+## 按棋盘序号和坐标取 CellView
 func _cell(board: int, c: Vector2i) -> CellView:
 	return _cells[board][c.x][c.y] as CellView
 
 
-# 取某个演示动画的时长（秒）：优先问 CellView，拿不到再用常量兜底
+## 取某个演示动画的时长（秒）：优先问 CellView，拿不到再用常量兜底
 func _anim_len(anim_name: String) -> float:
 	if not _cells.is_empty():
 		var v: float = (_cells[0][0][0] as CellView).demo_anim_length(anim_name)
@@ -418,12 +418,12 @@ func _anim_len(anim_name: String) -> float:
 	return _LEN_ERROR if anim_name == _ERROR_ANIM else _LEN_CROSS # 拿不到动画长度时的兜底
 
 
-# 等待若干帧（按 60 FPS 折算成秒）
+## 等待若干帧（按 60 FPS 折算成秒）
 func _wait_frames(frames: int, token: int) -> bool:
 	return await _wait(float(frames) / _FPS, token)
 
 
-# 等待若干秒；返回 false 表示期间页面被关闭或重新打开过
+## 等待若干秒；返回 false 表示期间页面被关闭或重新打开过
 func _wait(sec: float, token: int) -> bool:
 	await get_tree().create_timer(sec).timeout
 	return token == _demo_token and visible

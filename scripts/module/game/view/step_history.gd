@@ -1,4 +1,4 @@
-# 步骤历史：一次操作（可能跨多格）记成一条 StepRecord，供撤销回退与撤销高亮
+## 步骤历史：一次操作（可能跨多格）记成一条 StepRecord，供撤销回退与撤销高亮
 class_name StepHistory
 extends RefCounted
 
@@ -17,51 +17,51 @@ var _history: Array[StepRecord] = [] # 记录栈，back() 是最新一步
 
 
 # ================= 栈操作 =================
-# 压入一步；空步骤不入栈
+## 压入一步；空步骤不入栈
 func push_step(step: StepRecord) -> void:
 	if step.cells.is_empty():
 		return
 	_history.append(step)
 
 
-# 弹出最新一步；没有则返回 null
+## 弹出最新一步；没有则返回 null
 func pop_last() -> StepRecord:
 	if _history.is_empty():
 		return null
 	return _history.pop_back()
 
 
-# 看最新一步但不弹出
+## 看最新一步但不弹出
 func peek_last() -> StepRecord:
 	if _history.is_empty():
 		return null
 	return _history.back()
 
 
-# 按索引查看某一步
+## 按索引查看某一步
 func peek_at(index: int) -> StepRecord:
 	if index < 0 or index >= _history.size():
 		return null
 	return _history[index]
 
 
-# 是否还有步骤（撤销按钮的可用性判断）
+## 是否还有步骤（撤销按钮的可用性判断）
 func has_step() -> bool:
 	return not _history.is_empty()
 
 
-# 清空历史
+## 清空历史
 func clear() -> void:
 	_history.clear()
 
 
-# 当前步数
+## 当前步数
 func size() -> int:
 	return _history.size()
 
 
 # ================= 序列化 =================
-# 序列化成一维数组，用于存档
+## 序列化成一维数组，用于存档
 func serialize() -> Array:
 	var result: Array = []
 	for step: StepRecord in _history:
@@ -76,7 +76,7 @@ func serialize() -> Array:
 	return result
 
 
-# 从序列化数据恢复（读档）；没有格子的记录会被丢弃
+## 从序列化数据恢复（读档）；没有格子的记录会被丢弃
 func deserialize(data: Array) -> void:
 	_history.clear()
 	for item in data:

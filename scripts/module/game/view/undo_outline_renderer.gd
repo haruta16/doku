@@ -1,4 +1,4 @@
-# 撤销描边渲染器：把一组格子并成连通簇，算出并集轮廓，用发光带 + 黄色描边画出来并做脉冲
+## 撤销描边渲染器：把一组格子并成连通簇，算出并集轮廓，用发光带 + 黄色描边画出来并做脉冲
 class_name UndoOutlineRenderer
 extends Node2D
 
@@ -18,26 +18,26 @@ var _cluster_cells: Array = [] # 每个簇包含的格子
 
 
 # ================= 对外接口 =================
-# 簇数量（供撤销执行器遍历）
+## 簇数量（供撤销执行器遍历）
 func get_cluster_count() -> int:
 	return _cluster_cells.size()
 
 
-# 取第 i 个簇的挂载节点
+## 取第 i 个簇的挂载节点
 func get_cluster_wrapper(i: int) -> Node2D:
 	if i < _line_pairs.size():
 		return _line_pairs[i]["wrapper"]
 	return null
 
 
-# 取第 i 个簇包含的格子
+## 取第 i 个簇包含的格子
 func get_cluster_cells(i: int) -> Array[Vector2i]:
 	if i < _cluster_cells.size():
 		return _cluster_cells[i]
 	return []
 
 
-# 画出这些格子的并集轮廓；cells 为空则隐藏
+## 画出这些格子的并集轮廓；cells 为空则隐藏
 func show_outline(
 	cells: Array[Vector2i], cell_size: int, board_padding: int, slot_px: int, cell_gap: int
 ) -> void:
@@ -118,7 +118,7 @@ func show_outline(
 		hide_outline()
 
 
-# 隐藏：淡出后置为不可见
+## 隐藏：淡出后置为不可见
 func hide_outline() -> void:
 	if not visible:
 		return
@@ -126,7 +126,7 @@ func hide_outline() -> void:
 
 
 # ================= 内部渲染 =================
-# 按需创建簇对应的节点组（wrapper + 光晕线 + 描边线）
+## 按需创建簇对应的节点组（wrapper + 光晕线 + 描边线）
 func _ensure_line_pairs(count: int) -> void:
 	# 光晕用的条纹贴图
 	var tex: Texture2D = load("res://assets/sprites/game/undo_glow_strip.png")
@@ -159,7 +159,7 @@ func _ensure_line_pairs(count: int) -> void:
 		_line_pairs.append({"wrapper": wrapper, "stroke": stroke, "glow": glow})
 
 
-# 开始脉冲：从全透明淡入
+## 开始脉冲：从全透明淡入
 func _start_pulse() -> void:
 	_stop_pulse()
 	_set_lines_alpha(0.0)
@@ -168,14 +168,14 @@ func _start_pulse() -> void:
 	_pulse_tween.tween_method(_set_lines_alpha, 0.0, 1.0, 0.067)
 
 
-# 停掉脉冲 Tween
+## 停掉脉冲 Tween
 func _stop_pulse() -> void:
 	if _pulse_tween != null and _pulse_tween.is_valid():
 		_pulse_tween.kill()
 		_pulse_tween = null
 
 
-# 淡出后置为不可见
+## 淡出后置为不可见
 func _fade_out() -> void:
 	_stop_pulse()
 	_pulse_tween = create_tween()
@@ -184,7 +184,7 @@ func _fade_out() -> void:
 	_pulse_tween.tween_callback(func() -> void: visible = false)
 
 
-# 设置所有线条的透明度
+## 设置所有线条的透明度
 func _set_lines_alpha(a: float) -> void:
 	for pair in _line_pairs:
 		(pair["glow"] as Line2D).modulate.a = a
@@ -192,7 +192,7 @@ func _set_lines_alpha(a: float) -> void:
 
 
 # ================= 光晕材质 =================
-# 生成光晕裁剪材质：用内轮廓挖空、外轮廓裁掉多余部分（GLSL 内联在下面）
+## 生成光晕裁剪材质：用内轮廓挖空、外轮廓裁掉多余部分（GLSL 内联在下面）
 func _create_glow_clip_material() -> ShaderMaterial:
 	var shader := Shader.new()
 	shader.code = "\nshader_type canvas_item;\nuniform sampler2D poly_tex : filter_nearest;\nuniform int poly_count = 0;\nuniform sampler2D outer_tex : filter_nearest;\nuniform int outer_count = 0;\n\nvarying vec2 local_pos;\n\nbool point_in_polygon(vec2 p, sampler2D tex, int count) {\n\tbool inside = false;\n\tint j = count - 1;\n\tfor (int i = 0; i < count; i++) {\n\t\tvec2 vi = texelFetch(tex, ivec2(i, 0), 0).xy * 4096.0;\n\t\tvec2 vj = texelFetch(tex, ivec2(j, 0), 0).xy * 4096.0;\n\t\tif (((vi.y > p.y) != (vj.y > p.y)) &&\n\t\t\t(p.x < (vj.x - vi.x) * (p.y - vi.y) / (vj.y - vi.y) + vi.x)) {\n\t\t\tinside = !inside;\n\t\t}\n\t\tj = i;\n\t}\n\treturn inside;\n}\n\nvoid vertex() {\n\tlocal_pos = VERTEX;\n}\n\nvoid fragment() {\n\tif (point_in_polygon(local_pos, poly_tex, poly_count)) {\n\t\tdiscard;\n\t}\n\tif (outer_count > 0 && !point_in_polygon(local_pos, outer_tex, outer_count)) {\n\t\tdiscard;\n\t}\n\tCOLOR = texture(TEXTURE, UV) * COLOR;\n}\n"
@@ -202,7 +202,7 @@ func _create_glow_clip_material() -> ShaderMaterial:
 	return mat
 
 
-# 把描边轮廓写进 shader 的裁剪多边形纹理
+## 把描边轮廓写进 shader 的裁剪多边形纹理
 func _update_glow_clip_polygon(glow: Line2D, clip_path: PackedVector2Array) -> void:
 	var mat: ShaderMaterial = glow.material as ShaderMaterial
 	if mat == null:
@@ -223,7 +223,7 @@ func _update_glow_clip_polygon(glow: Line2D, clip_path: PackedVector2Array) -> v
 	mat.set_shader_parameter("poly_count", count)
 
 
-# 把外边界轮廓写进 shader（光晕只画在这个范围内）
+## 把外边界轮廓写进 shader（光晕只画在这个范围内）
 func _update_glow_outer_clip(glow: Line2D, outer_path: PackedVector2Array) -> void:
 	var mat: ShaderMaterial = glow.material as ShaderMaterial
 	if mat == null:
@@ -242,7 +242,7 @@ func _update_glow_outer_clip(glow: Line2D, outer_path: PackedVector2Array) -> vo
 	mat.set_shader_parameter("outer_count", count)
 
 
-# 备用材质：按 UV.y 阈值裁剪（当前没有调用方）
+## 备用材质：按 UV.y 阈值裁剪（当前没有调用方）
 func _create_glow_shader_material() -> ShaderMaterial:
 	var shader := Shader.new()
 	shader.code = "\nshader_type canvas_item;\nuniform float clip_threshold : hint_range(0.0, 1.0) = 0.7;\nvoid fragment() {\n\tvec4 tex_color = texture(TEXTURE, UV);\n\tif (UV.y > clip_threshold) {\n\t\tdiscard;\n\t}\n\tCOLOR = tex_color * COLOR;\n}\n"
@@ -257,7 +257,7 @@ func _create_glow_shader_material() -> ShaderMaterial:
 	return mat
 
 
-# 备用光晕渐变（当前没有调用方）
+## 备用光晕渐变（当前没有调用方）
 func _create_glow_gradient() -> GradientTexture2D:
 	var grad := Gradient.new()
 	grad.set_offset(0, 0.0)
@@ -279,7 +279,7 @@ func _create_glow_gradient() -> GradientTexture2D:
 
 
 # ================= 轮廓算法 =================
-# 把格子按四邻接分成连通簇（BFS），返回簇数组
+## 把格子按四邻接分成连通簇（BFS），返回簇数组
 func _find_clusters(cells: Array[Vector2i], cell_set: Dictionary) -> Array:
 	var visited: Dictionary = {}
 	# 每个格子只归一个簇
@@ -304,7 +304,7 @@ func _find_clusters(cells: Array[Vector2i], cell_set: Dictionary) -> Array:
 	return clusters
 
 
-# 用「并集的边界边」拼出有序轮廓，再按 pad 把拐点向外推（直角轮廓）
+## 用「并集的边界边」拼出有序轮廓，再按 pad 把拐点向外推（直角轮廓）
 func _compute_contour_simple(
 	cells: Array[Vector2i],
 	cell_set: Dictionary,
@@ -382,7 +382,7 @@ func _compute_contour_simple(
 	return merged
 
 
-# 在简单轮廓基础上把每个角换成二次贝塞尔圆角
+## 在简单轮廓基础上把每个角换成二次贝塞尔圆角
 func _compute_contour_bezier(
 	cells: Array[Vector2i],
 	cell_set: Dictionary,
@@ -432,7 +432,7 @@ func _compute_contour_bezier(
 	return result
 
 
-# 早期的合并版轮廓算法：等于 simple + bezier 两步，但逻辑重复，当前没有调用方
+## 早期的合并版轮廓算法：等于 simple + bezier 两步，但逻辑重复，当前没有调用方
 func _compute_contour(
 	cells: Array[Vector2i],
 	cell_set: Dictionary,

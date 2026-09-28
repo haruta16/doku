@@ -1,9 +1,9 @@
-# 正常模式点击：空白/草稿 → 打叉，已有叉 → 取消，猫与错误叉、锁定叉不响应
+## 正常模式点击：空白/草稿 → 打叉，已有叉 → 取消，猫与错误叉、锁定叉不响应
 class_name NormalTapOperation
 extends BaseTapOperation
 
 
-# 单击一格，返回最多一个改状态动作
+## 单击一格，返回最多一个改状态动作
 func on_tap(r: int, c: int, stroke: BoardStrokeContext) -> Array[CellAction]:
 	var out: Array[CellAction] = []
 

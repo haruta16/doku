@@ -1,4 +1,4 @@
-# 单个生命槽：只负责一颗心的显隐与得失动画，总生命数由页面统一驱动
+## 单个生命槽：只负责一颗心的显隐与得失动画，总生命数由页面统一驱动
 class_name LifeSlot
 extends Control
 
@@ -7,12 +7,12 @@ extends Control
 var _is_lost: bool = false # 是否已失去（防止重复播放丢失动画）
 
 
-# 只标记为已失去，不播动画（进场时同步历史结果用）
+## 只标记为已失去，不播动画（进场时同步历史结果用）
 func mark_lost() -> void:
 	_is_lost = true
 
 
-# 显示为存活：回到 RESET 末帧
+## 显示为存活：回到 RESET 末帧
 func show_alive() -> void:
 	_is_lost = false
 	# RESET 的末帧就是存活态
@@ -21,7 +21,7 @@ func show_alive() -> void:
 		_anim.seek(_anim.current_animation_length, true)
 
 
-# 显示为已失去；animate = false 时直接跳到动画末帧
+## 显示为已失去；animate = false 时直接跳到动画末帧
 func show_lost(animate: bool) -> void:
 	if _anim == null:
 		return
@@ -36,7 +36,7 @@ func show_lost(animate: bool) -> void:
 		_anim.seek(_anim.current_animation_length, true)
 
 
-# 复活特效：播放另一个动画器上的 Revive
+## 复活特效：播放另一个动画器上的 Revive
 func play_revive() -> void:
 	var life_plus_anim := get_node_or_null("AnimLifePlus") as AnimationPlayer
 	if life_plus_anim != null and life_plus_anim.has_animation("Revive"):

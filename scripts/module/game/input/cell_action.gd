@@ -1,4 +1,4 @@
-# 棋盘操作数据包（命令对象）：一次改格请求的全部参数，输入层产出、页面解释执行
+## 棋盘操作数据包（命令对象）：一次改格请求的全部参数，输入层产出、页面解释执行
 class_name CellAction
 extends RefCounted
 
@@ -23,7 +23,7 @@ var vibrate: int = -1 # 震动等级，-1 表示不震动
 var source: int = BoardView.ChangeSource.USER_ACTION # 改动来源，见 BoardView.ChangeSource
 
 
-# 造一个 SET_STATE 动作：把 (r,c) 从 before_state 改成 target
+## 造一个 SET_STATE 动作：把 (r,c) 从 before_state 改成 target
 static func set_cell(
 	r: int,
 	c: int,
@@ -45,7 +45,7 @@ static func set_cell(
 	return a
 
 
-# 造一个 DOUBLE_TAP 动作：只带坐标，具体含义由页面判定
+## 造一个 DOUBLE_TAP 动作：只带坐标，具体含义由页面判定
 static func double_tap(r: int, c: int) -> CellAction:
 	var a := CellAction.new()
 	a.kind = Kind.DOUBLE_TAP
@@ -54,7 +54,7 @@ static func double_tap(r: int, c: int) -> CellAction:
 	return a
 
 
-# 造一个 SET_DRAFT 动作：把格子草稿设为 mark
+## 造一个 SET_DRAFT 动作：把格子草稿设为 mark
 static func set_draft(r: int, c: int, mark: int) -> CellAction:
 	var a := CellAction.new()
 	a.kind = Kind.SET_DRAFT

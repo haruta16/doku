@@ -1,5 +1,5 @@
-# 关卡生成器页：调 LevelGeneratorEditor 现场造一张地图直接送进 GAME 页试玩（入口在 DebugPage 顶部的「✨ 关卡生成器」）
-# 只在非 Android 构建里注册（UIRegistry._DEBUG_PAGES）；由 DebugPage 顶部的「✨ 关卡生成器」打开
+## 关卡生成器页：调 LevelGeneratorEditor 现场造一张地图直接送进 GAME 页试玩（入口在 DebugPage 顶部的「✨ 关卡生成器」）
+## 只在非 Android 构建里注册（UIRegistry._DEBUG_PAGES）；由 DebugPage 顶部的「✨ 关卡生成器」打开
 class_name GeneratorPage
 extends UIFrameWindow
 
@@ -20,17 +20,17 @@ const _FS_BTN: int = 33 # 按钮文字
 const _FS_BIG: int = 88 # 大号数字
 
 
-# 进场景树就搭界面（本页 .tscn 里只有一个空 Control，没有子节点）
+## 进场景树就搭界面（本页 .tscn 里只有一个空 Control，没有子节点）
 func _ready() -> void:
 	_build_ui()
 
 
-# -1 统一显示成「不限」，其余原样转字符串
+## -1 统一显示成「不限」，其余原样转字符串
 func _label_val(v: int) -> String:
 	return "不限" if v == -1 else str(v)
 
 
-# 从零搭出整页：底色 + 顶栏 + 三组「减 / 数字 / 加」+ 两个生成按钮 + 状态文字
+## 从零搭出整页：底色 + 顶栏 + 三组「减 / 数字 / 加」+ 两个生成按钮 + 状态文字
 func _build_ui() -> void:
 	# 淡紫底色，铺满全屏且不吃鼠标事件
 	var bg := ColorRect.new()
@@ -233,7 +233,7 @@ func _build_ui() -> void:
 	vbox.add_child(_status_label)
 
 
-# 造一个居中的灰色提示标签
+## 造一个居中的灰色提示标签
 func _make_hint_label(text: String) -> Label:
 	var lbl := Label.new()
 	lbl.text = text
@@ -243,7 +243,7 @@ func _make_hint_label(text: String) -> Label:
 	return lbl
 
 
-# 造一个圆形加减按钮，点击回调由调用方传入
+## 造一个圆形加减按钮，点击回调由调用方传入
 func _make_stepper_btn(label_text: String, callback: Callable) -> Button:
 	var btn := Button.new()
 	btn.text = label_text
@@ -264,7 +264,7 @@ func _make_stepper_btn(label_text: String, callback: Callable) -> Button:
 	return btn
 
 
-# 造一个通栏大按钮（最小宽 600、圆角 22、上下留白 28）
+## 造一个通栏大按钮（最小宽 600、圆角 22、上下留白 28）
 func _make_action_btn(label_text: String, bg_color: Color) -> Button:
 	var btn := Button.new()
 	btn.text = label_text
@@ -287,26 +287,26 @@ func _make_action_btn(label_text: String, bg_color: Color) -> Button:
 	return btn
 
 
-# 「← 返回」按钮：回到 DebugPage（本页的按钮都是脚本建的，不走 .tscn 信号连接）
+## 「← 返回」按钮：回到 DebugPage（本页的按钮都是脚本建的，不走 .tscn 信号连接）
 func _on_back_pressed() -> void:
 	UIManager.show_ui(UiName.DEBUG)
 
 
-# 普通生成：先刷状态文字并等一帧让界面重绘，再跑（生成会卡住主线程）
+## 普通生成：先刷状态文字并等一帧让界面重绘，再跑（生成会卡住主线程）
 func _on_generate_pressed() -> void:
 	_set_status("生成中...", Color(0.388, 0.4, 0.945))
 	await get_tree().process_frame # 等一帧，先让「生成中...」画出来
 	_do_generate(false)
 
 
-# 按策略生成：同上，只是走 by_strategy 分支
+## 按策略生成：同上，只是走 by_strategy 分支
 func _on_generate_by_strategy_pressed() -> void:
 	_set_status("按策略生成中...", Color(0.937, 0.62, 0.043))
 	await get_tree().process_frame # 同上，先让界面重绘
 	_do_generate(true)
 
 
-# 真正干活：组 config → 调编辑器生成 → 压成一维 solution → 打开 GAME 页试玩
+## 真正干活：组 config → 调编辑器生成 → 压成一维 solution → 打开 GAME 页试玩
 func _do_generate(by_strategy: bool) -> void:
 	# 用毫秒时间戳当种子，每次点都不一样
 	var seed_val: int = Time.get_ticks_msec() % 100000
@@ -368,7 +368,7 @@ func _do_generate(by_strategy: bool) -> void:
 	)
 
 
-# 更新状态标签的文字与颜色（具体语义色由调用方决定）
+## 更新状态标签的文字与颜色（具体语义色由调用方决定）
 func _set_status(text: String, color: Color) -> void:
 	_status_label.text = text
 	_status_label.add_theme_color_override("font_color", color)

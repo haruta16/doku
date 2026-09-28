@@ -1,5 +1,5 @@
-# 普通对局页面：入口参数 → 关卡配置/题面 → 棋盘 → 残局快照 → 通关/失败结算
-# 输入链路：BoardView 拖拽信号 → 父类 BaseGamePage 消费 CellAction → _validate_board 调 QueendokuCore 判通关
+## 普通对局页面：入口参数 → 关卡配置/题面 → 棋盘 → 残局快照 → 通关/失败结算
+## 输入链路：BoardView 拖拽信号 → 父类 BaseGamePage 消费 CellAction → _validate_board 调 QueendokuCore 判通关
 class_name GamePage
 extends BaseGamePage
 
@@ -18,7 +18,7 @@ enum EntryMode { NORMAL, BANK, BANK_SP, DEBUG_CONFIG, DEBUG_PREBUILT } # 入口�
 # ---- 开场提示条与入口按钮锁 ----
 var _active_toast: BaseGameToast = null # 当前挂着的提示条，没有则为 null
 
-# 入场动画期间先屏蔽的按钮（设置 / 返回主页）
+## 入场动画期间先屏蔽的按钮（设置 / 返回主页）
 @onready var _entry_locked_buttons: Array[Button] = [
 	$Root/VBoxContainer/Header/SettingsBtn,
 	$Root/VBoxContainer/Header/GearBtn,
@@ -59,7 +59,7 @@ const ENDGAME_PERSIST_DEBOUNCE_SEC: float = 0.5 # 防抖窗口：0.5 秒内的�
 
 var _is_endgame_restore_session: bool = false # 本次 on_show 是否来自残局快照复原
 
-# 自动标叉新手引导浮层的场景
+## 自动标叉新手引导浮层的场景
 const _AUTO_MARK_TUTORIAL_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/auto_mark_tutorial_overlay.tscn"
 )
@@ -91,14 +91,14 @@ var _warn_click_allowed: bool = false # 是否已过保护时间、允许点击�
 
 
 # ================= 顶部标题与难度图标 =================
-# 设置顶部关卡标题，可选同步标题里的关卡数字
+## 设置顶部关卡标题，可选同步标题里的关卡数字
 func _set_level_text(text: String, level_num: int = -1) -> void:
 	_level_label.text = text
 	if _level_display_value != null and level_num >= 0:
 		_level_display_value.text = "%d" % level_num
 
 
-# 切换标题旁的 Hard 火焰图标，并同步标题的四个 offset（有无图标宽度不同）
+## 切换标题旁的 Hard 火焰图标，并同步标题的四个 offset（有无图标宽度不同）
 func _set_hard_fire_visible(show: bool) -> void:
 	var icon: TextureRect = _level_label.get_node_or_null("HardFireIcon")
 	if icon != null:
@@ -117,7 +117,7 @@ func _set_hard_fire_visible(show: bool) -> void:
 		_level_label.offset_bottom = 98.0
 
 
-# 把火焰图标对齐到标题文字右侧（延迟调用：要等字体排版出宽度）
+## 把火焰图标对齐到标题文字右侧（延迟调用：要等字体排版出宽度）
 func _align_hard_fire_icon() -> void:
 	var icon: TextureRect = _level_label.get_node_or_null("HardFireIcon")
 	if icon == null or not icon.visible:
@@ -135,7 +135,7 @@ func _align_hard_fire_icon() -> void:
 
 
 # ================= 生命周期与入口流程 =================
-# 场景就绪：填入口派发表、接棋盘输入/变更信号、建残局快照防抖定时器
+## 场景就绪：填入口派发表、接棋盘输入/变更信号、建残局快照防抖定时器
 func _ready() -> void:
 	# 入口模式 → 初始化函数
 	_entry_handlers = {
@@ -187,12 +187,12 @@ func _ready() -> void:
 	add_child(_endgame_persist_timer)
 
 
-# 场景里 ClockTimer(0.5 秒) 的 tick 回调：本页不处理，游戏时长由父类 _process 累计
+## 场景里 ClockTimer(0.5 秒) 的 tick 回调：本页不处理，游戏时长由父类 _process 累计
 func _on_clock_timer_timeout() -> void:
 	pass
 
 
-# 把 on_show 入参映射成入口模式：题库 / SP 题库 / 两种调试 / 普通
+## 把 on_show 入参映射成入口模式：题库 / SP 题库 / 两种调试 / 普通
 func _resolve_entry_mode(params: Dictionary) -> EntryMode:
 	if params.get("bank_mode", false):
 		return EntryMode.BANK_SP if params.get("bank_sp", false) else EntryMode.BANK
@@ -203,7 +203,7 @@ func _resolve_entry_mode(params: Dictionary) -> EntryMode:
 	return EntryMode.NORMAL
 
 
-# 页面显示总入口：判定入口 → 载入题面 → 复位本局状态 → 播入场动画
+## 页面显示总入口：判定入口 → 载入题面 → 复位本局状态 → 播入场动画
 func on_show(params: Dictionary = {}) -> void:
 	# 埋点：本页的对局类型固定为普通
 	Tracker.set_active_game_type(Tracker.GameType.NORMAL)
@@ -506,7 +506,7 @@ func on_show(params: Dictionary = {}) -> void:
 	_try_restore_draft_marks_from_snapshot()
 
 
-# 题库入口：用外部传入的 regionMap/solution 直接组题面
+## 题库入口：用外部传入的 regionMap/solution 直接组题面
 func _setup_entry_bank(params: Dictionary) -> void:
 	var bank_sz: int = params["bank_size"]
 	var rank: int = params["bank_rank"]
@@ -583,7 +583,7 @@ func _setup_entry_bank(params: Dictionary) -> void:
 	_nav_total = params.get("bank_total", 1)
 
 
-# SP 题库入口：组题面，并从 BankData 补上该题的图案名与预置点位
+## SP 题库入口：组题面，并从 BankData 补上该题的图案名与预置点位
 func _setup_entry_bank_sp(params: Dictionary) -> void:
 	var bank_sz: int = params["bank_size"]
 	var rank: int = params["bank_rank"]
@@ -651,7 +651,7 @@ func _setup_entry_bank_sp(params: Dictionary) -> void:
 	_nav_total = params.get("bank_total", 1)
 
 
-# 调试入口：用编辑器配置现场生成题目（仅编辑器/调试包可用）
+## 调试入口：用编辑器配置现场生成题目（仅编辑器/调试包可用）
 func _setup_entry_debug_config(params: Dictionary) -> void:
 	var dc: Dictionary = params["debug_config"]
 	_level_config = dc.duplicate()
@@ -675,7 +675,7 @@ func _setup_entry_debug_config(params: Dictionary) -> void:
 	_nav_total = 0
 
 
-# 调试入口：直接用调用方给的 regions/solution 摆一局（不计关卡进度）
+## 调试入口：直接用调用方给的 regions/solution 摆一局（不计关卡进度）
 func _setup_entry_debug_prebuilt(params: Dictionary) -> void:
 	var dp: Dictionary = params["debug_prebuilt"]
 	var dp_sz: int = dp["size"]
@@ -693,7 +693,7 @@ func _setup_entry_debug_prebuilt(params: Dictionary) -> void:
 	_nav_total = 0
 
 
-# 普通入口：从 LevelData 取题面/难度/预置猫，并处理查重与缓存
+## 普通入口：从 LevelData 取题面/难度/预置猫，并处理查重与缓存
 func _setup_entry_normal(params: Dictionary) -> void:
 	var level_index: int = params.get("level_index", 1)
 	# 关卡号至少为 1
@@ -967,7 +967,7 @@ func _setup_entry_normal(params: Dictionary) -> void:
 	_nav_total = 0
 
 
-# 页面隐藏：取消入场等待、停表、落盘残局快照
+## 页面隐藏：取消入场等待、停表、落盘残局快照
 func on_hide() -> void:
 	super.on_hide()
 
@@ -1005,7 +1005,7 @@ func on_hide() -> void:
 
 
 # ================= 残局快照：复原与落盘 =================
-# 若存档里有本关的残局快照就原地复原；返回 true 表示已接管本次 on_show
+## 若存档里有本关的残局快照就原地复原；返回 true 表示已接管本次 on_show
 func _try_consume_endgame_snapshot(params: Dictionary) -> bool:
 	# 只有普通入口（非题库/调试）才吃快照
 	var lv_idx: int = params.get("level_index", 0)
@@ -1110,7 +1110,7 @@ func _try_consume_endgame_snapshot(params: Dictionary) -> bool:
 	return true
 
 
-# 快照里除了系统预置猫之外，玩家是否真的动过手
+## 快照里除了系统预置猫之外，玩家是否真的动过手
 func _has_user_progress_in_endgame_snapshot(level: int) -> bool:
 	var snapshot: Dictionary = GameState.get_endgame_snapshot()
 	if snapshot.is_empty():
@@ -1128,7 +1128,7 @@ func _has_user_progress_in_endgame_snapshot(level: int) -> bool:
 	return user_cats > 0 or user_marks > 0 or user_errors > 0 or user_locked > 0
 
 
-# 校验快照版本号与必备字段/尺寸（防旧档、坏档）
+## 校验快照版本号与必备字段/尺寸（防旧档、坏档）
 func _validate_endgame_snapshot(snapshot: Dictionary) -> bool:
 	if int(snapshot.get("version", 0)) != GameState.ENDGAME_SNAPSHOT_VERSION:
 		return false
@@ -1162,7 +1162,7 @@ func _validate_endgame_snapshot(snapshot: Dictionary) -> bool:
 	return true
 
 
-# 用快照里的猫位还原一张棋盘数组，交给 QueendokuCore 判是否已通关
+## 用快照里的猫位还原一张棋盘数组，交给 QueendokuCore 判是否已通关
 func _reconstruct_board_for_check(snapshot: Dictionary, sz: int) -> Array:
 	var board: Array = []
 	for _r: int in range(sz):
@@ -1178,7 +1178,7 @@ func _reconstruct_board_for_check(snapshot: Dictionary, sz: int) -> Array:
 	return board
 
 
-# 只给普通主线挂上「格子变更 → 残局快照」
+## 只给普通主线挂上「格子变更 → 残局快照」
 func _setup_endgame_persist_for_normal_entry(params: Dictionary) -> void:
 	if _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
 		_board_view.cell_state_changed.disconnect(_persist_endgame_snapshot)
@@ -1196,7 +1196,7 @@ func _setup_endgame_persist_for_normal_entry(params: Dictionary) -> void:
 		_board_view.cell_state_changed.connect(_persist_endgame_snapshot)
 
 
-# 排定入场动画：先看插屏出不出，再决定直接播还是挂广告回调等
+## 排定入场动画：先看插屏出不出，再决定直接播还是挂广告回调等
 func _schedule_entry_animation_after_interstitial(ad_position: String, elig: Dictionary) -> void:
 	_entry_anim_schedule_ts = Time.get_ticks_msec()
 
@@ -1230,7 +1230,7 @@ func _schedule_entry_animation_after_interstitial(ad_position: String, elig: Dic
 		UniKitManager.ad_closed.connect(_entry_anim_ad_closed_cb)
 
 
-# 广告结束（或回到前台）后真正开播入场动画，只生效一次
+## 广告结束（或回到前台）后真正开播入场动画，只生效一次
 func _fire_entry_anim(source: String) -> void:
 	if _entry_anim_pending_state == null:
 		return
@@ -1249,14 +1249,14 @@ func _fire_entry_anim(source: String) -> void:
 	_play_entry_animation()
 
 
-# 回到前台：如果还卡在等广告，就当作广告已结束继续播
+## 回到前台：如果还卡在等广告，就当作广告已结束继续播
 func _on_application_focus_in() -> void:
 	super._on_application_focus_in()
 	if _entry_anim_pending_state != null:
 		_fire_entry_anim("focus_in")
 
 
-# 取消等待：断开广告回调并清掉占位状态
+## 取消等待：断开广告回调并清掉占位状态
 func _cancel_pending_entry_animation_wait() -> void:
 	if _entry_anim_pending_state != null:
 		_entry_anim_pending_state["done"] = true
@@ -1271,7 +1271,7 @@ func _cancel_pending_entry_animation_wait() -> void:
 		_entry_anim_ad_closed_cb = Callable()
 
 
-# 播入场动画：显示棋盘、播音效、挂一次性结束回调
+## 播入场动画：显示棋盘、播音效、挂一次性结束回调
 func _play_entry_animation() -> void:
 	_board_view.visible = true
 	var board_intro := $Root as BoardContainerCell_01
@@ -1283,7 +1283,7 @@ func _play_entry_animation() -> void:
 			board_intro.animation_finished.connect(_on_appear_animation_finished, CONNECT_ONE_SHOT)
 
 
-# 入场动画播完：解锁入口按钮、补自动标叉和草稿引导
+## 入场动画播完：解锁入口按钮、补自动标叉和草稿引导
 func _on_appear_animation_finished() -> void:
 	# 要不要弹草稿引导，决定棋盘是否继续锁着
 	var will_show_onboarding: bool = _should_show_draft_onboarding_now()
@@ -1305,7 +1305,7 @@ func _on_appear_animation_finished() -> void:
 
 
 # ================= 挂机引导 =================
-# 每帧：处理挂机引导的两种触发（纯挂机开小差 / 走了几步没放猫）
+## 每帧：处理挂机引导的两种触发（纯挂机开小差 / 走了几步没放猫）
 func _process(delta: float) -> void:
 	super._process(delta)
 	if _idle_guide_shown or _level_config.get("level", 0) != 1 or _entry_anim_playing:
@@ -1357,7 +1357,7 @@ func _process(delta: float) -> void:
 			_show_idle_guide()
 
 
-# 只认玩家亲手放下的猫（复原/预置不算），用来关掉步骤触发
+## 只认玩家亲手放下的猫（复原/预置不算），用来关掉步骤触发
 func _on_cell_changed_for_step_trigger(r: int, c: int, state: int, source: int) -> void:
 	if _step_trigger_had_cat:
 		return
@@ -1372,7 +1372,7 @@ func _on_cell_changed_for_step_trigger(r: int, c: int, state: int, source: int) 
 	_step_trigger_had_cat = true
 
 
-# 弹挂机引导：找「独占一格」的区域当目标，把手和文字面板摆过去
+## 弹挂机引导：找「独占一格」的区域当目标，把手和文字面板摆过去
 func _show_idle_guide() -> void:
 	# 同一时间只允许一个提示类浮层
 	if not _hint_mutex.try_acquire("idle_guide"):
@@ -1496,7 +1496,7 @@ func _show_idle_guide() -> void:
 	)
 
 
-# 收掉挂机引导：补间、遮罩、浮层全清，并释放提示锁
+## 收掉挂机引导：补间、遮罩、浮层全清，并释放提示锁
 func _stop_idle_guide() -> void:
 	_hint_mutex.release("idle_guide")
 	if _idle_guide_tween != null and _idle_guide_tween.is_valid():
@@ -1514,13 +1514,13 @@ func _stop_idle_guide() -> void:
 		_idle_guide_overlay.visible = false
 
 
-# 复位挂机计时（顺带收掉引导层）
+## 复位挂机计时（顺带收掉引导层）
 func _reset_idle_hint() -> void:
 	super._reset_idle_hint()
 	_stop_idle_guide()
 
 
-# 挂机引导模式下第 1 关不出道具提示
+## 挂机引导模式下第 1 关不出道具提示
 func _play_idle_tool_hint() -> void:
 	if (
 		ABTestManager.idle_guide.suppresses_tool_hint_at_level1()
@@ -1531,7 +1531,7 @@ func _play_idle_tool_hint() -> void:
 
 
 # ================= 开场提示条 =================
-# 开场提示条：优先 IQ 文案，否则给「首次挑战/继续挑战」百分比
+## 开场提示条：优先 IQ 文案，否则给「首次挑战/继续挑战」百分比
 func _try_show_start_toast() -> void:
 	if _is_endgame_restore_session:
 		return
@@ -1580,7 +1580,7 @@ func _try_show_start_toast() -> void:
 	_active_toast.show_toast(params)
 
 
-# IQ 文案序号：每关只随机一次并缓存
+## IQ 文案序号：每关只随机一次并缓存
 func _resolve_iq_text_idx(lv: int) -> int:
 	var cached: int = GameState.get_start_toast_iq_idx(lv)
 	if cached > 0:
@@ -1590,7 +1590,7 @@ func _resolve_iq_text_idx(lv: int) -> int:
 	return idx
 
 
-# 百分比文案同理：每关每种类型只随机一次（存 GameState）
+## 百分比文案同理：每关每种类型只随机一次（存 GameState）
 func _resolve_start_toast_pct(lv: int, is_hard: bool, is_first_try: bool) -> float:
 	var kind: String = "first_try" if is_first_try else "keep_going"
 	var cached: float = GameState.get_start_toast_pct(lv, kind)
@@ -1610,7 +1610,7 @@ func _resolve_start_toast_pct(lv: int, is_hard: bool, is_first_try: bool) -> flo
 
 
 # ================= 按钮与输入事件 =================
-# 返回主页：关计时、标脏，切到 HOME 界面
+## 返回主页：关计时、标脏，切到 HOME 界面
 func _on_gear_btn_pressed() -> void:
 	if _is_complete:
 		return
@@ -1624,7 +1624,7 @@ func _on_gear_btn_pressed() -> void:
 	UIManager.hide_ui(UiName.GAME)
 
 
-# 设置里点重开：清草稿/连击/横幅，按原题重开一局
+## 设置里点重开：清草稿/连击/横幅，按原题重开一局
 func _on_restart_requested() -> void:
 	_combo_count = 0
 	_combo_score = 0
@@ -1685,7 +1685,7 @@ func _on_restart_requested() -> void:
 			on_show({"_tracker_status": Tracker.GameStatus.RESTART})
 
 
-# 错标后：只剩最后一条命时短暂锁棋盘，随后弹生命预警
+## 错标后：只剩最后一条命时短暂锁棋盘，随后弹生命预警
 func _on_wrong_guess(r: int, c: int) -> void:
 	super._on_wrong_guess(r, c)
 
@@ -1698,7 +1698,7 @@ func _on_wrong_guess(r: int, c: int) -> void:
 		)
 
 
-# 生命预警的一次性判定：AB 开关 + 全局只弹一次
+## 生命预警的一次性判定：AB 开关 + 全局只弹一次
 func _maybe_show_life_warning() -> void:
 	if not ABTestManager.warn_life.should_show_life_warning():
 		return
@@ -1709,7 +1709,7 @@ func _maybe_show_life_warning() -> void:
 	_show_life_warning()
 
 
-# 播生命预警：全屏遮罩 + 气泡动画，0.5 秒后才允许点击关闭
+## 播生命预警：全屏遮罩 + 气泡动画，0.5 秒后才允许点击关闭
 func _show_life_warning() -> void:
 	if _anim_tips == null:
 		return
@@ -1729,7 +1729,7 @@ func _show_life_warning() -> void:
 	get_tree().create_timer(0.5).timeout.connect(func() -> void: _warn_click_allowed = true)
 
 
-# 把气泡尾巴对齐到第 1 颗红心的水平中心
+## 把气泡尾巴对齐到第 1 颗红心的水平中心
 func _align_warn_tail_to_heart() -> void:
 	if _warn_tail == null or _heart1 == null:
 		return
@@ -1738,7 +1738,7 @@ func _align_warn_tail_to_heart() -> void:
 	_warn_tail.global_position.x = heart_center_x
 
 
-# 预警收尾动画播完：解除输入遮挡并释放提示锁
+## 预警收尾动画播完：解除输入遮挡并释放提示锁
 func _on_warn_anim_finished(anim_name: StringName) -> void:
 	if anim_name != "GenericPopup" or _warn_phase != 2:
 		return
@@ -1748,7 +1748,7 @@ func _on_warn_anim_finished(anim_name: StringName) -> void:
 		_warn_overlay.mouse_filter = Control.MOUSE_FILTER_PASS
 
 
-# 全局输入：引导层拦按钮；预警展示期间任意点击进入收尾
+## 全局输入：引导层拦按钮；预警展示期间任意点击进入收尾
 func _input(event: InputEvent) -> void:
 	# 挂机引导显示时，先吞掉落在被屏蔽按钮上的按下事件
 	if _idle_guide_overlay != null and _idle_guide_overlay.visible:
@@ -1778,7 +1778,7 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
-# 判断点击是否落在引导期间被屏蔽的按钮上
+## 判断点击是否落在引导期间被屏蔽的按钮上
 func _is_press_on_idle_blocked_button(screen_pos: Vector2) -> bool:
 	for btn in _idle_guide_block_buttons:
 		if (
@@ -1791,7 +1791,7 @@ func _is_press_on_idle_blocked_button(screen_pos: Vector2) -> bool:
 	return false
 
 
-# 复位生命预警的全部视觉与状态
+## 复位生命预警的全部视觉与状态
 func _reset_life_warning() -> void:
 	_hint_mutex.release("warn_life")
 	_warn_phase = 0
@@ -1807,7 +1807,7 @@ func _reset_life_warning() -> void:
 
 
 # ================= 结算：失败 / 复活 / 通关 =================
-# 三条命耗尽：上报失败、写重试缓存、拉起 FAIL 界面
+## 三条命耗尽：上报失败、写重试缓存、拉起 FAIL 界面
 func _on_game_over() -> void:
 	# 收起自动完成按钮
 	_hide_auto_complete_btn()
@@ -1909,12 +1909,12 @@ func _on_game_over() -> void:
 		fail.revive_ad_started.connect(_on_revive_ad_started)
 
 
-# 复活广告开始播放：先把猫恢复成待机动作
+## 复活广告开始播放：先把猫恢复成待机动作
 func _on_revive_ad_started() -> void:
 	_board_view.revive_all_cat_to_idle()
 
 
-# 看广告复活成功：补命、关失败界面、继续本局
+## 看广告复活成功：补命、关失败界面、继续本局
 func _on_revive_requested() -> void:
 	UIManager.hide_ui(UiName.FAIL)
 	_is_complete = false
@@ -1962,7 +1962,7 @@ func _on_revive_requested() -> void:
 			_show_idle_guide()
 
 
-# 通关：结算、上报、写关卡进度，再拉起胜利界面
+## 通关：结算、上报、写关卡进度，再拉起胜利界面
 func _on_game_complete() -> void:
 	_hide_auto_complete_btn()
 	if not _is_complete:
@@ -2009,12 +2009,12 @@ func _on_game_complete() -> void:
 	UIManager.show_ui(_win_ui_name(), {"level_config": _level_config, "board_view": _board_view})
 
 
-# 胜利界面名（普通对局固定 WIN）
+## 胜利界面名（普通对局固定 WIN）
 func _win_ui_name() -> StringName:
 	return UiName.WIN
 
 
-# 连胜流程：通知连胜管理器，需要展示就等它关掉再返回
+## 连胜流程：通知连胜管理器，需要展示就等它关掉再返回
 func _try_run_streak_flow_after_win(source: StringName, skip_cat_appear: bool = false) -> bool:
 	StreakManager.notify_win(source)
 	if not StreakManager.has_pending_show():
@@ -2065,7 +2065,7 @@ const _SIZE_CYCLE_F_11_50: Array[int] = [8, 10, 10, 9, 10, 10, 9, 10, 10, 10] # 
 const _SIZE_CYCLE_F_51_PLUS: Array[int] = [8, 10, 11, 9, 10, 11, 9, 10, 11, 10] # F 组 第 51 关起（按 10 关循环）
 
 
-# 按分组值与关卡号查出棋盘边长（表内按 10 关循环取模）
+## 按分组值与关卡号查出棋盘边长（表内按 10 关循环取模）
 func _get_ab_size(level_num: int) -> int:
 	match _size_cycle:
 		3:
@@ -2119,7 +2119,7 @@ func _get_ab_size(level_num: int) -> int:
 
 
 # ================= 规则提示与自动标叉教学 =================
-# 踩规则时闪一下对应的规则图标（受 AB 与关卡范围限制）
+## 踩规则时闪一下对应的规则图标（受 AB 与关卡范围限制）
 func _on_rule_violated(rule: int) -> void:
 	var cfg := ABTestManager.rule_highlight
 	if not cfg.is_highlight_violated():
@@ -2133,7 +2133,7 @@ func _on_rule_violated(rule: int) -> void:
 	_play_rule_highlight(rule)
 
 
-# 把预置猫写进棋盘（来源标 PREFILL，不算玩家操作）
+## 把预置猫写进棋盘（来源标 PREFILL，不算玩家操作）
 func _prefill_hints() -> void:
 	var positions: Array = _level_config.get("prefill_positions", [])
 	for pos in positions:
@@ -2143,7 +2143,7 @@ func _prefill_hints() -> void:
 		_board_view.set_cell_state(r, c, CellState.CAT, false, true, BoardView.ChangeSource.PREFILL)
 
 
-# 开局给预置猫补自动叉（残局复原局跳过）
+## 开局给预置猫补自动叉（残局复原局跳过）
 func _auto_mark_prefill_cats() -> void:
 	if _is_endgame_restore_session:
 		return
@@ -2160,7 +2160,7 @@ func _auto_mark_prefill_cats() -> void:
 			)
 
 
-# 自动标叉的首次教学：演示点一下列头，再自动收回
+## 自动标叉的首次教学：演示点一下列头，再自动收回
 func _maybe_show_auto_mark_tutorial() -> void:
 	if _auto_mark_tutorial_overlay != null:
 		return
@@ -2194,7 +2194,7 @@ func _maybe_show_auto_mark_tutorial() -> void:
 	_on_axis_auto_mark_pressed(1, _AUTO_MARK_TUTORIAL_COL, _is_marked_before)
 
 
-# 教学浮层关闭：记已完成，并把演示用的叉收回去
+## 教学浮层关闭：记已完成，并把演示用的叉收回去
 func _on_auto_mark_tutorial_closed(_hit_btn: bool) -> void:
 	GameState.mark_auto_mark_tutorial_done()
 	_free_auto_mark_tutorial_overlay()
@@ -2207,7 +2207,7 @@ func _on_auto_mark_tutorial_closed(_hit_btn: bool) -> void:
 	_on_axis_auto_mark_pressed(1, _AUTO_MARK_TUTORIAL_COL, true)
 
 
-# 等该列的自动标叉动画跑完再收叉（token 变了就放弃）
+## 等该列的自动标叉动画跑完再收叉（token 变了就放弃）
 func _wait_axis_idle_for_tutorial_uncross(col: int) -> void:
 	var token: int = _auto_mark_token
 	var key: String = _axis_key(1, col)
@@ -2217,7 +2217,7 @@ func _wait_axis_idle_for_tutorial_uncross(col: int) -> void:
 			return
 
 
-# 释放教学浮层实例
+## 释放教学浮层实例
 func _free_auto_mark_tutorial_overlay() -> void:
 	if _auto_mark_tutorial_overlay == null:
 		return
@@ -2227,12 +2227,12 @@ func _free_auto_mark_tutorial_overlay() -> void:
 
 
 # ================= 盘面复原与草稿回滚 =================
-# 从 _level_config 的 restore_state 复原棋盘
+## 从 _level_config 的 restore_state 复原棋盘
 func _restore_partial_board() -> void:
 	_restore_partial_board_from(_level_config.get("restore_state", {}))
 
 
-# 按类别复原：猫 / 叉 / 错误叉 / 锁定叉
+## 按类别复原：猫 / 叉 / 错误叉 / 锁定叉
 func _restore_partial_board_from(data: Dictionary) -> void:
 	if data.is_empty():
 		return
@@ -2270,7 +2270,7 @@ func _restore_partial_board_from(data: Dictionary) -> void:
 			_board_view.lock_mark(lr, lc, "StatusLock", false, BoardView.ChangeSource.RESTORE)
 
 
-# 颜色映射：优先用题目自带色表，否则按区域和种子现算
+## 颜色映射：优先用题目自带色表，否则按区域和种子现算
 func _compute_color_map_for_current(sz: int) -> Array[int]:
 	var raw_cm: Array = _level_config.get(
 		"custom_color_map", _level_config.get("bank_params", {}).get("custom_color_map", [])
@@ -2288,7 +2288,7 @@ func _compute_color_map_for_current(sz: int) -> Array[int]:
 	return color_map
 
 
-# 草稿死锁回滚：重摆棋盘，并复原进草稿前的正式标记
+## 草稿死锁回滚：重摆棋盘，并复原进草稿前的正式标记
 func _rollback_draft_deadlock() -> void:
 	if _board_view == null:
 		return
@@ -2308,7 +2308,7 @@ func _rollback_draft_deadlock() -> void:
 
 
 # ================= 调试命令与快照组装 =================
-# 调试命令分发（由 CheatBus 触发，仅调试包）
+## 调试命令分发（由 CheatBus 触发，仅调试包）
 func _on_cheat_command(cmd_name: String, args: Array[String]) -> void:
 	match cmd_name:
 		"win":
@@ -2325,13 +2325,13 @@ func _on_cheat_command(cmd_name: String, args: Array[String]) -> void:
 			_cmd_dumpjson(args)
 
 
-# cheat：播一次加命特效（参数 0 表示不带引导动画）
+## cheat：播一次加命特效（参数 0 表示不带引导动画）
 func _cmd_lifeplus(args: Array[String]) -> void:
 	var first: bool = args.is_empty() or args[0] != "0"
 	_play_life_plus_fx(first)
 
 
-# cheat：直接按答案自动完成本局
+## cheat：直接按答案自动完成本局
 func _cmd_win(_args: Array[String]) -> void:
 	if _entry_anim_playing or _is_complete or _wrong_guess_pending or _auto_completing:
 		return
@@ -2348,7 +2348,7 @@ func _cmd_win(_args: Array[String]) -> void:
 	_auto_completing = false
 
 
-# cheat：把答案写进草稿再一次性提交（验证草稿流程）
+## cheat：把答案写进草稿再一次性提交（验证草稿流程）
 func _cmd_draft_win(_args: Array[String]) -> void:
 	if _is_complete:
 		return
@@ -2366,12 +2366,12 @@ func _cmd_draft_win(_args: Array[String]) -> void:
 	_apply_draft_commit()
 
 
-# cheat：预留的跳关命令，目前不做事
+## cheat：预留的跳关命令，目前不做事
 func _cmd_level(_args: Array[String]) -> void:
 	pass
 
 
-# cheat：把题目或残局快照打成 JSON 复制到剪贴板
+## cheat：把题目或残局快照打成 JSON 复制到剪贴板
 func _cmd_dumpjson(args: Array[String]) -> void:
 	var mode: int = int(args[0]) if args.size() > 0 else 1
 	var base: Dictionary
@@ -2386,7 +2386,7 @@ func _cmd_dumpjson(args: Array[String]) -> void:
 	Toast.popup("题目 JSON 已复制到剪贴板", self)
 
 
-# 题目基础信息：尺寸 / 难度 / 题号 / 种子 / 区域图 / 答案列号
+## 题目基础信息：尺寸 / 难度 / 题号 / 种子 / 区域图 / 答案列号
 func _build_puzzle_base() -> Dictionary:
 	var sz: int = _level_config.get("size", 0)
 	var region_map: Array = _puzzle.get("regions", [])
@@ -2409,7 +2409,7 @@ func _build_puzzle_base() -> Dictionary:
 	}
 
 
-# 组装残局快照：题面 + 盘面各类格子 + 统计与历史
+## 组装残局快照：题面 + 盘面各类格子 + 统计与历史
 func _build_endgame_snapshot() -> Dictionary:
 	var base: Dictionary = _build_puzzle_base()
 	var sz: int = int(base["size"])
@@ -2461,7 +2461,7 @@ func _build_endgame_snapshot() -> Dictionary:
 
 
 # ================= 存档落盘与引导开关 =================
-# 自动叉已经预置到棋盘（动画还没播）就先落一次档
+## 自动叉已经预置到棋盘（动画还没播）就先落一次档
 func _on_auto_mark_preset_done() -> void:
 	if _endgame_persist_timer == null:
 		return
@@ -2471,7 +2471,7 @@ func _on_auto_mark_preset_done() -> void:
 	_flush_endgame_snapshot()
 
 
-# 草稿改动落盘：只有 AUTO_WIN_PERSIST 变体需要
+## 草稿改动落盘：只有 AUTO_WIN_PERSIST 变体需要
 func _on_draft_changed_for_persist(immediate: bool = false) -> void:
 	if ABTestManager.draft_mode.value() != ABTestManager.draft_mode.VALUE_AUTO_WIN_PERSIST:
 		return
@@ -2484,7 +2484,7 @@ func _on_draft_changed_for_persist(immediate: bool = false) -> void:
 		_endgame_persist_timer.start()
 
 
-# 残局复原后，把快照里的草稿标记补回棋盘
+## 残局复原后，把快照里的草稿标记补回棋盘
 func _try_restore_draft_marks_from_snapshot() -> void:
 	if ABTestManager.draft_mode.value() != ABTestManager.draft_mode.VALUE_AUTO_WIN_PERSIST:
 		return
@@ -2500,7 +2500,7 @@ func _try_restore_draft_marks_from_snapshot() -> void:
 	_restore_draft_marks_from_snapshot(data)
 
 
-# 是否该弹草稿功能新手引导（第 21 关起、没弹过才弹）
+## 是否该弹草稿功能新手引导（第 21 关起、没弹过才弹）
 func _should_show_draft_onboarding_now() -> bool:
 	return (
 		_level_config.get("level", 0) >= 21
@@ -2509,7 +2509,7 @@ func _should_show_draft_onboarding_now() -> bool:
 	)
 
 
-# 入场动画后弹草稿引导；任何一步不满足都要把棋盘解锁
+## 入场动画后弹草稿引导；任何一步不满足都要把棋盘解锁
 func _try_show_draft_onboarding_after_appear() -> void:
 	await _wait_start_toast_hidden_if_any()
 
@@ -2530,7 +2530,7 @@ func _try_show_draft_onboarding_after_appear() -> void:
 	tooltip.tree_exited.connect(_unlock_board_after_onboarding_skipped)
 
 
-# 等到当前开场提示条自己收起
+## 等到当前开场提示条自己收起
 func _wait_start_toast_hidden_if_any() -> void:
 	var active: BaseGameToast = _active_toast
 	if active == null or not active.visible:
@@ -2539,7 +2539,7 @@ func _wait_start_toast_hidden_if_any() -> void:
 		await active.visibility_changed
 
 
-# 锁入口按钮（序号 +1，供解锁回调判断时效）
+## 锁入口按钮（序号 +1，供解锁回调判断时效）
 func _lock_entry_buttons() -> void:
 	_entry_btn_lock_seq += 1
 	for b in _entry_locked_buttons:
@@ -2547,14 +2547,14 @@ func _lock_entry_buttons() -> void:
 			b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-# 解锁入口按钮
+## 解锁入口按钮
 func _unlock_entry_buttons() -> void:
 	for b in _entry_locked_buttons:
 		if is_instance_valid(b):
 			b.mouse_filter = Control.MOUSE_FILTER_STOP
 
 
-# 提示条收起后解锁入口按钮（序号变了就不再解锁）
+## 提示条收起后解锁入口按钮（序号变了就不再解锁）
 func _unlock_entry_buttons_after_toast(seq: int) -> void:
 	await _wait_start_toast_hidden_if_any()
 	if seq != _entry_btn_lock_seq:
@@ -2562,19 +2562,19 @@ func _unlock_entry_buttons_after_toast(seq: int) -> void:
 	_unlock_entry_buttons()
 
 
-# 没弹引导时把棋盘输入还回来
+## 没弹引导时把棋盘输入还回来
 func _unlock_board_after_onboarding_skipped() -> void:
 	if _board_view != null and is_instance_valid(_board_view):
 		_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
 
 
-# 草稿引导浮层的场景
+## 草稿引导浮层的场景
 const _DRAFT_ONBOARDING_TOOLTIP_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/draft_onboarding_tooltip.tscn"
 )
 
 
-# 实例化草稿引导并对齐到草稿按钮
+## 实例化草稿引导并对齐到草稿按钮
 func _show_draft_onboarding() -> DraftOnboardingTooltip:
 	if _draft_btn == null:
 		return null
@@ -2594,7 +2594,7 @@ func _show_draft_onboarding() -> DraftOnboardingTooltip:
 	return tooltip
 
 
-# 格子变更 → 残局快照：关键状态立刻写，其余延迟 0.5 秒写
+## 格子变更 → 残局快照：关键状态立刻写，其余延迟 0.5 秒写
 func _persist_endgame_snapshot(_r: int, _c: int, state: int, _source: int = 0) -> void:
 	if state == CellState.CAT or state == CellState.ERROR:
 		_endgame_persist_timer.stop()
@@ -2604,25 +2604,25 @@ func _persist_endgame_snapshot(_r: int, _c: int, state: int, _source: int = 0) -
 		_endgame_persist_timer.start()
 
 
-# 真正写档：GameState.set_endgame_snapshot
+## 真正写档：GameState.set_endgame_snapshot
 func _flush_endgame_snapshot() -> void:
 	GameState.set_endgame_snapshot(_build_endgame_snapshot())
 
 
 # ================= 题库翻页 =================
-# 上一题（先退草稿再翻页）
+## 上一题（先退草稿再翻页）
 func _on_prev_btn_pressed() -> void:
 	_exit_draft_mode_and_clear()
 	_nav_to(_nav_index - 1)
 
 
-# 下一题
+## 下一题
 func _on_next_btn_pressed() -> void:
 	_exit_draft_mode_and_clear()
 	_nav_to(_nav_index + 1)
 
 
-# 题库翻页：按题库来源取目标题，重新走 GAME 入口
+## 题库翻页：按题库来源取目标题，重新走 GAME 入口
 func _nav_to(new_index: int) -> void:
 	# 不可翻页
 	if _nav_total <= 0:
@@ -2704,12 +2704,12 @@ func _nav_to(new_index: int) -> void:
 
 
 # ================= 埋点与上报 =================
-# 埋点用的页面名
+## 埋点用的页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.NORMAL_GAME
 
 
-# 组装对局结束上报参数（时长、道具、步数、失误等一揽子统计）
+## 组装对局结束上报参数（时长、道具、步数、失误等一揽子统计）
 func _build_game_end_params(result: String) -> Dictionary:
 	var time_sec: int = (Time.get_ticks_msec() - _stat_start_ms) / 1000 # 本局时长（秒），同时累加进总时长统计
 

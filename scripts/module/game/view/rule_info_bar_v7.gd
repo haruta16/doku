@@ -1,4 +1,4 @@
-# 规则信息条（V7）：前 10 关显示三行固定规则，10 关之后换成可滑动的规则卡片
+## 规则信息条（V7）：前 10 关显示三行固定规则，10 关之后换成可滑动的规则卡片
 class_name RuleInfoBarV7
 extends Control
 
@@ -22,7 +22,7 @@ const _CONTROL_NODES: Array = [
 
 
 # ================= 形态切换 =================
-# 按关卡号切换形态
+## 按关卡号切换形态
 func apply_level(level: int) -> void:
 	# 关卡号决定形态
 	var swipe_mode: bool = level > 10
@@ -46,7 +46,7 @@ func apply_level(level: int) -> void:
 		)
 
 
-# 取某个标签的现有文案作为卡片文案（标签不存在时用 fallback 翻译 key）
+## 取某个标签的现有文案作为卡片文案（标签不存在时用 fallback 翻译 key）
 func _label_text(node_name: String, fallback: String) -> String:
 	var l := _control.get_node_or_null(node_name) as Label
 	return l.text if l != null else fallback

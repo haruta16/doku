@@ -1,4 +1,4 @@
-# 广告/免费角标：按 AB 合规配置在 AD 文字、AD 图标、+ 号之间切换，并提供 Free 态
+## 广告/免费角标：按 AB 合规配置在 AD 文字、AD 图标、+ 号之间切换，并提供 Free 态
 class_name GameAdBadge
 extends Control
 
@@ -9,17 +9,17 @@ extends Control
 @onready var _ad_tag: RichTextLabel = $GreenRoot/HBoxContainer/ADTag # AD 文字
 
 
-# 进树默认按合规配置显示
+## 进树默认按合规配置显示
 func _ready() -> void:
 	show_ad()
 
 
-# 需要显示 AD 文字的地区（语言代码里的地区后缀）
+## 需要显示 AD 文字的地区（语言代码里的地区后缀）
 const _AD_TEXT_REGIONS: Array[String] = ["US", "CA", "GB", "IE", "AU", "NZ"] # 命中这些地区的语言才显示 AD 文字
 
 
 # ================= 角标形态 =================
-# 按 AB 合规配置决定 AD 的呈现方式
+## 按 AB 合规配置决定 AD 的呈现方式
 func show_ad() -> void:
 	# 先全部收起、文字留空
 	_ad_tag.visible = true
@@ -51,7 +51,7 @@ func show_ad() -> void:
 			_ad_tag.text = "AD"
 
 
-# 图标 + AD 文字（供外部按需调用）
+## 图标 + AD 文字（供外部按需调用）
 func show_icon_with_ad() -> void:
 	_ad_icon.visible = false
 	_ad_icon2.visible = true
@@ -61,7 +61,7 @@ func show_icon_with_ad() -> void:
 
 
 # ================= 地区判断 =================
-# 当前语言是否属于「必须显示 AD 文字」的地区
+## 当前语言是否属于「必须显示 AD 文字」的地区
 static func _is_ad_text_region() -> bool:
 	var locale: String = LanguageManager.get_locale()
 	var parts: PackedStringArray = locale.split("_")
@@ -78,7 +78,7 @@ static func _is_ad_text_region() -> bool:
 	return false
 
 
-# 显示 Free 角标
+## 显示 Free 角标
 func show_free() -> void:
 	_ad_icon.visible = false
 	_ad_icon2.visible = false
@@ -87,7 +87,7 @@ func show_free() -> void:
 	_ad_tag.text = "Free"
 
 
-# 显示 + 号（引导去获取道具）
+## 显示 + 号（引导去获取道具）
 func show_plus() -> void:
 	_ad_icon.visible = false
 	_ad_icon2.visible = false

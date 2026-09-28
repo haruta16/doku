@@ -1,12 +1,12 @@
-# 分页版玩法说明（注册名 UiName.HOW_TO_PLAY_PAGED）：一页讲一条规则，共 3 页，底部按钮翻页
-# 每页一块演示棋盘循环播动画；最后一页按钮变成「我知道了」并关闭本页
+## 分页版玩法说明（注册名 UiName.HOW_TO_PLAY_PAGED）：一页讲一条规则，共 3 页，底部按钮翻页
+## 每页一块演示棋盘循环播动画；最后一页按钮变成「我知道了」并关闭本页
 class_name HowToPlayPagedPage
 extends UIFrameWindow
 
-# 关闭后广播，供调用方（设置页）续接后续流程
+## 关闭后广播，供调用方（设置页）续接后续流程
 signal closed # 本页自己只是隐藏，不做跳转
 
-# 演示棋盘用的格子场景（只展示，不接收输入）
+## 演示棋盘用的格子场景（只展示，不接收输入）
 const _CELL_SCENE: PackedScene = preload("res://assets/prefab/cell.tscn")
 
 # ---- 演示棋盘尺寸与版式（设计稿坐标） ----
@@ -35,7 +35,7 @@ const _SLIDE_SEC: float = 16.0 / 60.0 # 翻页滑动时长（秒）
 const _SLIDE_DX: float = _CLIP_W # 翻页滑动起始偏移（像素）= 一个容器宽
 
 # ---- 三页数据：颜色串 + 猫的位置 + 打叉波次 + 文案 key ----
-# colors 每行一个字符串（B 蓝 P 粉 Y 黄）；error 为空字典表示这页不做错误示范
+## colors 每行一个字符串（B 蓝 P 粉 Y 黄）；error 为空字典表示这页不做错误示范
 var _PAGES: Array = [
 	{
 		"colors": ["BBBY", "BBYY", "BBPY", "BBPY"],
@@ -102,7 +102,7 @@ var _PAGES: Array = [
 @onready var _anim: AnimationPlayer = $Root/AnimationPlayer # 页面级动画播放器
 
 # ---- 文案高亮：把规则关键词染红 ----
-# _RULE_HIGHLIGHTS：文案 key → 各语言里要染红的关键词
+## _RULE_HIGHLIGHTS：文案 key → 各语言里要染红的关键词
 const _HIGHLIGHT_COLOR: String = "#d94848"
 const _RULE_HIGHLIGHTS: Dictionary = {
 	"GAME_RULE_ONE_PER_COLOR": {"en": "color", "zh": "颜色"},
@@ -123,13 +123,13 @@ var _closing: bool = false # 正在播关闭动画，避免动画重入
 
 
 # ================= 生命周期与版式 =================
-# 居中内容容器，并搭出三页棋盘
+## 居中内容容器，并搭出三页棋盘
 func _ready() -> void:
 	_center_content()
 	_build_boards()
 
 
-# 把 Content 容器锚到屏幕中心（设计稿 1080×2400 坐标系）
+## 把 Content 容器锚到屏幕中心（设计稿 1080×2400 坐标系）
 func _center_content() -> void:
 	var c := get_node_or_null("Root/Content") as Control
 	if c == null:
@@ -145,7 +145,7 @@ func _center_content() -> void:
 
 
 # ================= 打开、关闭与翻页 =================
-# 每次打开：复位关闭标记、静音、播开场动画，并回到第 1 页
+## 每次打开：复位关闭标记、静音、播开场动画，并回到第 1 页
 func on_show(_params: Dictionary = {}) -> void:
 	_closing = false # 复位，允许收场动画再播一次
 
@@ -154,7 +154,7 @@ func on_show(_params: Dictionary = {}) -> void:
 	_go_to_page(0, false) # 打开时直接落在第 1 页，不播滑动
 
 
-# 隐藏时反向播一遍开场动画（先停演示、恢复声音）
+## 隐藏时反向播一遍开场动画（先停演示、恢复声音）
 func on_hide() -> void:
 	if _closing:
 		return
@@ -164,23 +164,23 @@ func on_hide() -> void:
 	await _anim.animation_finished
 
 
-# ESC 返回键：等同于关闭
+## ESC 返回键：等同于关闭
 func _on_back_request() -> void:
 	_close()
 
 
-# 右上角关闭按钮
+## 右上角关闭按钮
 func _on_close_btn_pressed() -> void:
 	_close()
 
 
-# 「上一页」按钮：已经在第 1 页则不动
+## 「上一页」按钮：已经在第 1 页则不动
 func _on_back_btn_pressed() -> void:
 	if _page > 0: # 第 1 页没有上一页
 		_go_to_page(_page - 1)
 
 
-# 「下一页 / 我知道了」按钮：最后一页改为关闭
+## 「下一页 / 我知道了」按钮：最后一页改为关闭
 func _on_main_btn_pressed() -> void:
 	if _page >= _PAGES.size() - 1: # 最后一页：按钮变成「我知道了」
 		_close()
@@ -188,20 +188,20 @@ func _on_main_btn_pressed() -> void:
 		_go_to_page(_page + 1)
 
 
-# 广播 closed 并让 UIManager 隐藏本页
+## 广播 closed 并让 UIManager 隐藏本页
 func _close() -> void:
 	closed.emit()
 	UIManager.hide_ui(UiName.HOW_TO_PLAY_PAGED)
 
 
-# 停演示：令牌自增 + 取消静音
+## 停演示：令牌自增 + 取消静音
 func _stop_demo() -> void:
 	_demo_token += 1 # 令牌变化 → 正在跑的演示协程自行退出
 	SoundManager.set_silent(false) # 恢复声音
 
 
 # ================= 演示棋盘搭建 =================
-# 把颜色字符（B / P / Y）换成调色板里的颜色
+## 把颜色字符（B / P / Y）换成调色板里的颜色
 func _char_color(ch: String) -> Color:
 	if _palette.is_empty():
 		_palette = BoardView.resolve_region_palette()
@@ -214,7 +214,7 @@ func _char_color(ch: String) -> Color:
 	return _palette[idx] if idx < _palette.size() else Color(0.5, 0.5, 0.5)
 
 
-# 一次搭出三页棋盘：按格数缩放、垫白卡、逐格建 CellView
+## 一次搭出三页棋盘：按格数缩放、垫白卡、逐格建 CellView
 func _build_boards() -> void:
 	if _built:
 		return
@@ -271,7 +271,7 @@ func _build_boards() -> void:
 		_cells.append(board_cells)
 
 
-# 切到第 i 页：只显示当前棋盘、换文案与按钮，再重启演示
+## 切到第 i 页：只显示当前棋盘、换文案与按钮，再重启演示
 func _go_to_page(i: int, slide: bool = true) -> void:
 	var prev: int = _page
 	# 夹回合法页号
@@ -291,7 +291,7 @@ func _go_to_page(i: int, slide: bool = true) -> void:
 	_run_demo(_demo_token, _page)
 
 
-# 翻页滑动动画：新棋盘从一侧滑到静止位（缓出）
+## 翻页滑动动画：新棋盘从一侧滑到静止位（缓出）
 func _animate_switch(dir: int) -> void:
 	if _slide_tween != null and _slide_tween.is_valid():
 		_slide_tween.kill()
@@ -308,7 +308,7 @@ func _animate_switch(dir: int) -> void:
 	)
 
 
-# 取消滑动补间并直接把棋盘摆回静止位（打开时用）
+## 取消滑动补间并直接把棋盘摆回静止位（打开时用）
 func _clear_slide() -> void:
 	if _slide_tween != null and _slide_tween.is_valid():
 		_slide_tween.kill()
@@ -316,7 +316,7 @@ func _clear_slide() -> void:
 		(_holders[_page] as Control).position.x = float(_board_rest_x[_page])
 
 
-# 按当前页刷新按钮：第 1 页藏「上一页」，最后一页按钮改文案并右移
+## 按当前页刷新按钮：第 1 页藏「上一页」，最后一页按钮改文案并右移
 func _refresh_buttons() -> void:
 	var is_first: bool = _page == 0
 	var is_last: bool = _page == _PAGES.size() - 1
@@ -332,7 +332,7 @@ func _refresh_buttons() -> void:
 		_main_btn.offset_right = 925.0
 
 
-# 给规则文案做居中处理，并把当前语言的关键词染红
+## 给规则文案做居中处理，并把当前语言的关键词染红
 func _build_rule_caption(rule_key: String) -> String:
 	var text: String = tr(rule_key)
 	var lang: String = TranslationServer.get_locale().get_slice("_", 0)
@@ -344,7 +344,7 @@ func _build_rule_caption(rule_key: String) -> String:
 
 
 # ================= 演示动画时间轴 =================
-# 把某页棋盘所有格子复位成空
+## 把某页棋盘所有格子复位成空
 func _reset_page(page: int) -> void:
 	for r in range(_cells[page].size()):
 		for c in range((_cells[page][r] as Array).size()):
@@ -353,7 +353,7 @@ func _reset_page(page: int) -> void:
 			)
 
 
-# 循环播放某页演示：先摆猫，再按帧号依次打叉 / 标错误，播完停留后再来一遍
+## 循环播放某页演示：先摆猫，再按帧号依次打叉 / 标错误，播完停留后再来一遍
 func _run_demo(token: int, page: int) -> void:
 	var data: Dictionary = _PAGES[page]
 	# 这一页用来示范的猫的位置
@@ -397,12 +397,12 @@ func _run_demo(token: int, page: int) -> void:
 
 
 # ================= 小工具 =================
-# 按页号和坐标取 CellView
+## 按页号和坐标取 CellView
 func _cell(page: int, c: Vector2i) -> CellView:
 	return _cells[page][c.x][c.y] as CellView
 
 
-# 猫出现动画播到第 8 帧时，重启它自带的粒子特效
+## 猫出现动画播到第 8 帧时，重启它自带的粒子特效
 func _ensure_cat_particles(token: int, page: int, c: Vector2i) -> void:
 	await get_tree().create_timer(8.0 / _FPS).timeout # 等猫出现动画走到第 8 帧
 	if token != _demo_token or not visible:
@@ -415,12 +415,12 @@ func _ensure_cat_particles(token: int, page: int, c: Vector2i) -> void:
 			(child as CPUParticles2D).restart()
 
 
-# 等待若干帧（按 60 FPS 折算成秒）
+## 等待若干帧（按 60 FPS 折算成秒）
 func _wait_frames(frames: int, token: int) -> bool:
 	return await _wait(float(frames) / _FPS, token)
 
 
-# 等待若干秒；返回 false 表示期间页面被关闭或换过页
+## 等待若干秒；返回 false 表示期间页面被关闭或换过页
 func _wait(sec: float, token: int) -> bool:
 	await get_tree().create_timer(sec).timeout
 	return token == _demo_token and visible

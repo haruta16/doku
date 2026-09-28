@@ -1,4 +1,4 @@
-# 语言选项按钮：一行本族语 + 一行副标题，选中态换成绿底并显示勾
+## 语言选项按钮：一行本族语 + 一行副标题，选中态换成绿底并显示勾
 class_name LanguageOption
 extends Button
 
@@ -16,19 +16,19 @@ const _C_NORMAL_SUB: Color = Color(0.8156863, 0.69803923, 0.67058825, 1)  # 常�
 @onready var _check_mark: Control = $CheckMark  # 右上角选中勾
 
 
-# _ready 只定初始态：副标题可见、勾隐藏；选中与否由 set_selected 决定
+## _ready 只定初始态：副标题可见、勾隐藏；选中与否由 set_selected 决定
 func _ready() -> void:
 	_sub_label.visible = true
 	_check_mark.visible = false
 
 
-# 填充文案：native_text 是本族语名，sub_text 是按当前语言翻译的名字
+## 填充文案：native_text 是本族语名，sub_text 是按当前语言翻译的名字
 func setup(native_text: String, sub_text: String) -> void:
 	_native_label.text = native_text
 	_sub_label.text = sub_text
 
 
-# 切换选中态：三种按钮状态都覆盖同一个 StyleBoxFlat，再换文字颜色和勾
+## 切换选中态：三种按钮状态都覆盖同一个 StyleBoxFlat，再换文字颜色和勾
 func set_selected(selected: bool) -> void:
 	# normal/hover/pressed 三态用同一个样式，避免悬停时视觉跳变
 	for state: String in ["normal", "hover", "pressed"]:

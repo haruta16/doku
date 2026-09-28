@@ -1,4 +1,4 @@
-# 规则卡片：三条规则图的左右滑动切换器，支持拖动滑动与圆点跳转
+## 规则卡片：三条规则图的左右滑动切换器，支持拖动滑动与圆点跳转
 class_name RuleSwipeCard
 extends Control
 
@@ -36,13 +36,13 @@ var _pressing: bool = false # 是否处于按下状态
 
 
 # ================= 初始化与切换 =================
-# 给三个圆点接上点击
+## 给三个圆点接上点击
 func _ready() -> void:
 	for i in range(_dots.size()):
 		_dots[i].pressed.connect(_on_dot_pressed.bind(i))
 
 
-# 注入规则文案（配图按索引取内置素材）
+## 注入规则文案（配图按索引取内置素材）
 func setup(texts: Array) -> void:
 	_rules = []
 	for i in range(texts.size()):
@@ -60,11 +60,11 @@ func setup(texts: Array) -> void:
 	_refresh_dots(true)
 
 
-# 单行文案的固定测量宽度（像素）
+## 单行文案的固定测量宽度（像素）
 const _LABEL_MEASURE_W: float = 848.0
 
 
-# 把第 rule_idx 条规则填进指定内容层
+## 把第 rule_idx 条规则填进指定内容层
 func _fill_content(content: Control, rule_idx: int) -> void:
 	if rule_idx < 0 or rule_idx >= _rules.size():
 		return
@@ -95,7 +95,7 @@ func _fill_content(content: Control, rule_idx: int) -> void:
 	content.queue_sort()
 
 
-# 切到第 target 条：旧层滑出、新层带回弹滑入
+## 切到第 target 条：旧层滑出、新层带回弹滑入
 func _go_to(target: int) -> void:
 	target = clampi(target, 0, _rules.size() - 1)
 	if target == _cur or _rules.is_empty():
@@ -145,7 +145,7 @@ func _go_to(target: int) -> void:
 	_refresh_dots(false)
 
 
-# 刷新圆点状态；instant = true 时直接设值，不淡入淡出
+## 刷新圆点状态；instant = true 时直接设值，不淡入淡出
 func _refresh_dots(instant: bool) -> void:
 	for i in range(_dots.size()):
 		var target_a: float = 1.0 if i == _cur else _DOT_DIM
@@ -156,13 +156,13 @@ func _refresh_dots(instant: bool) -> void:
 			tw.tween_property(_dots[i], "modulate:a", target_a, _DOT_FADE_SEC)
 
 
-# 点圆点跳页
+## 点圆点跳页
 func _on_dot_pressed(index: int) -> void:
 	_go_to(index)
 
 
 # ================= 滑动手势 =================
-# 处理触摸/鼠标的按下与抬起，用位移判断滑动
+## 处理触摸/鼠标的按下与抬起，用位移判断滑动
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		var t := event as InputEventScreenTouch
@@ -184,7 +184,7 @@ func _gui_input(event: InputEvent) -> void:
 				_resolve_swipe(mb.position.x - _press_x)
 
 
-# 按位移方向翻页：左滑看下一条，右滑看上一条
+## 按位移方向翻页：左滑看下一条，右滑看上一条
 func _resolve_swipe(dx: float) -> void:
 	# 左滑（负位移）→ 下一条
 	if dx <= -_SWIPE_THRESHOLD:
@@ -194,7 +194,7 @@ func _resolve_swipe(dx: float) -> void:
 		_go_to(_cur - 1)
 
 
-# 杀掉正在跑的 Tween
+## 杀掉正在跑的 Tween
 func _kill_tween() -> void:
 	if _tween != null and _tween.is_valid():
 		_tween.kill()

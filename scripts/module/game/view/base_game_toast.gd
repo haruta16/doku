@@ -1,4 +1,4 @@
-# Toast 基类：入场/退场动画、点击跳过、变体卡片选择与埋点；子类只提供动画名与文案路径
+## Toast 基类：入场/退场动画、点击跳过、变体卡片选择与埋点；子类只提供动画名与文案路径
 class_name BaseGameToast
 extends CanvasLayer
 
@@ -26,7 +26,7 @@ var _seq_token: int = 0 # 播放序号，用来作废过期的异步等待
 
 
 # ================= 生命周期 =================
-# 进树：接上动画结束回调、根节点点击，并调子类钩子
+## 进树：接上动画结束回调、根节点点击，并调子类钩子
 func _ready() -> void:
 	_anim_player.animation_finished.connect(_on_anim_finished)
 
@@ -36,12 +36,12 @@ func _ready() -> void:
 
 
 # ================= 子类覆写点与动画解析 =================
-# 子类返回默认入场动画名
+## 子类返回默认入场动画名
 func _appear_anim() -> StringName:
 	return &""
 
 
-# 解析真正要播的入场动画：变体动画存在就用变体，否则用子类默认
+## 解析真正要播的入场动画：变体动画存在就用变体，否则用子类默认
 func _resolve_appear_anim() -> StringName:
 	if (
 		_active_appear_anim != &""
@@ -52,7 +52,7 @@ func _resolve_appear_anim() -> StringName:
 	return _appear_anim()
 
 
-# 取动画里的退场标记时间；没有标记返回 -1
+## 取动画里的退场标记时间；没有标记返回 -1
 func _disappear_marker_time(anim: Animation) -> float:
 	if anim == null:
 		return -1.0
@@ -64,17 +64,17 @@ func _disappear_marker_time(anim: Animation) -> float:
 	return -1.0
 
 
-# 子类返回埋点用的弹窗名
+## 子类返回埋点用的弹窗名
 func _dlg_name() -> String:
 	return ""
 
 
-# 子类返回文案节点在卡片里的相对路径
+## 子类返回文案节点在卡片里的相对路径
 func _label_subpath() -> String:
 	return ""
 
 
-# 默认文案填充：翻译 text_key 后用 pct_str 替换占位符
+## 默认文案填充：翻译 text_key 后用 pct_str 替换占位符
 func _apply_text(params: Dictionary) -> void:
 	# 默认取首次尝试文案与 0.0%
 	var text_key: String = params.get("text_key", "GAME_TOAST_FIRST_TRY")
@@ -83,25 +83,25 @@ func _apply_text(params: Dictionary) -> void:
 	_label.text = tr(text_key) % pct_str
 
 
-# 子类可选的进树钩子
+## 子类可选的进树钩子
 func _on_ready_extra() -> void:
 	pass
 
 
 # ================= 展示与隐藏 =================
-# 把卡片左上角移到指定位置
+## 把卡片左上角移到指定位置
 func set_card_position(top_left: Vector2) -> void:
 	if _card != null:
 		_card.position = top_left
 
 
-# 把卡片中心对准指定位置
+## 把卡片中心对准指定位置
 func set_card_center(center: Vector2) -> void:
 	if _card != null:
 		_card.position = center - _card.size * 0.5
 
 
-# 显示 Toast：先关掉兄弟 Toast，再选卡片、填文案、播入场动画
+## 显示 Toast：先关掉兄弟 Toast，再选卡片、填文案、播入场动画
 func show_toast(params: Dictionary = {}) -> void:
 	if sibling_toast != null and is_instance_valid(sibling_toast) and sibling_toast.visible:
 		if sibling_toast.has_method("hide_toast"):
@@ -123,12 +123,12 @@ func show_toast(params: Dictionary = {}) -> void:
 	_play_entry_anim(_seq_token)
 
 
-# 当前 AB 分组是否要求点击穿透（取值 3/5/6）
+## 当前 AB 分组是否要求点击穿透（取值 3/5/6）
 func _is_click_through_group() -> bool:
 	return ABTestManager.normal_start_toast.value() in [3, 5, 6]
 
 
-# 按 AB 选中的卡片名切换显示，并缓存该卡片里的文案节点
+## 按 AB 选中的卡片名切换显示，并缓存该卡片里的文案节点
 func _select_variant_card() -> void:
 	var target: String = ABTestManager.normal_start_toast.get_variant_card()
 	# 只让目标卡片可见
@@ -148,7 +148,7 @@ func _select_variant_card() -> void:
 		_active_appear_anim = &""
 
 
-# 立即隐藏（不动画）
+## 立即隐藏（不动画）
 func hide_toast() -> void:
 	if not visible:
 		return
@@ -160,7 +160,7 @@ func hide_toast() -> void:
 	Tracker.notify_dlg_closed(_dlg_name())
 
 
-# 入场动画播完：恢复点击穿透；若期间被隐藏则补一次关闭埋点
+## 入场动画播完：恢复点击穿透；若期间被隐藏则补一次关闭埋点
 func _on_anim_finished(anim_name: StringName) -> void:
 	if anim_name == _resolve_appear_anim():
 		_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -171,14 +171,14 @@ func _on_anim_finished(anim_name: StringName) -> void:
 
 
 # ================= 输入与跳过 =================
-# 根节点收到点击：跳到退场点
+## 根节点收到点击：跳到退场点
 func _on_root_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
 		_skip_to_disappear()
 		_root.accept_event()
 
 
-# 全局输入兜底：只有点击穿透分组才需要在这里补一次「跳过」
+## 全局输入兜底：只有点击穿透分组才需要在这里补一次「跳过」
 func _input(event: InputEvent) -> void:
 	if not visible or not _is_click_through_group():
 		return
@@ -191,7 +191,7 @@ func _input(event: InputEvent) -> void:
 
 
 # ================= 动画细节 =================
-# 把入场动画快进到退场标记后继续播（点击跳过）
+## 把入场动画快进到退场标记后继续播（点击跳过）
 func _skip_to_disappear() -> void:
 	# 正在播的不是入场动画就不处理
 	var appear: StringName = _resolve_appear_anim()
@@ -217,7 +217,7 @@ func _skip_to_disappear() -> void:
 	_anim_player.play(appear)
 
 
-# 播入场动画：到退场标记处暂停 HOLD_AT_DISAPPEAR_SEC 秒再继续（即停留展示）
+## 播入场动画：到退场标记处暂停 HOLD_AT_DISAPPEAR_SEC 秒再继续（即停留展示）
 func _play_entry_anim(token: int) -> void:
 	var appear: StringName = _resolve_appear_anim()
 	var anim: Animation = _anim_player.get_animation(appear)

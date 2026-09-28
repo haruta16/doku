@@ -1,4 +1,4 @@
-# 撤销高亮执行器：把一步涉及的格子描边并做一次缩放脉冲，倒计时结束后才真正回滚棋盘
+## 撤销高亮执行器：把一步涉及的格子描边并做一次缩放脉冲，倒计时结束后才真正回滚棋盘
 class_name UndoHighlightExecutor
 extends RefCounted
 
@@ -24,19 +24,19 @@ var _hidden_cells: Array[CellView] = [] # 被副本顶替而临时隐藏的原�
 
 
 # ================= 对外接口 =================
-# 注入依赖，由页面初始化时调用一次
+## 注入依赖，由页面初始化时调用一次
 func setup(board_view: BoardView, timer_node: Node, page_node: Node) -> void:
 	_board_view = board_view
 	_timer_node = timer_node
 	_page_node = page_node
 
 
-# 是否正在执行（页面据此挡重复点击）
+## 是否正在执行（页面据此挡重复点击）
 func is_executing() -> bool:
 	return _is_executing
 
 
-# 懒创建描边渲染器并挂到页面上
+## 懒创建描边渲染器并挂到页面上
 func _ensure_renderer() -> void:
 	if _outline_renderer != null and is_instance_valid(_outline_renderer):
 		return
@@ -45,7 +45,7 @@ func _ensure_renderer() -> void:
 	_outline_renderer.visible = false
 
 
-# 执行一步：描边 + 缩放脉冲，duration 秒后收尾（UNDO 模式顺带回滚）
+## 执行一步：描边 + 缩放脉冲，duration 秒后收尾（UNDO 模式顺带回滚）
 func execute(step: StepHistory.StepRecord, mode: int, duration: float) -> void:
 	# 空步骤直接当完成，保证调用方总能收到结束信号
 	if step == null or step.cells.is_empty():
@@ -94,7 +94,7 @@ func execute(step: StepHistory.StepRecord, mode: int, duration: float) -> void:
 
 
 # ================= 内部执行 =================
-# 高亮计时结束：先清描边，UNDO 模式再回滚，最后发结束信号
+## 高亮计时结束：先清描边，UNDO 模式再回滚，最后发结束信号
 func _on_highlight_timeout(token: int) -> void:
 	# 过期回调直接丢弃
 	if token != _exec_token:
@@ -111,7 +111,7 @@ func _on_highlight_timeout(token: int) -> void:
 
 
 # ================= 缩放脉冲 =================
-# 缩放脉冲：把待撤销的格子复制到描边层上做整体放大再回落
+## 缩放脉冲：把待撤销的格子复制到描边层上做整体放大再回落
 func _play_appear_scale() -> void:
 	_kill_scale_tween()
 	_cleanup_clones()
@@ -181,7 +181,7 @@ func _play_appear_scale() -> void:
 	_scale_tween.tween_callback(_cleanup_clones)
 
 
-# 按缩放系数 s 重新摆放每个簇（以各自中心为轴）
+## 按缩放系数 s 重新摆放每个簇（以各自中心为轴）
 func _apply_per_cluster_scale(s: float) -> void:
 	if _outline_renderer == null or not is_instance_valid(_outline_renderer):
 		return
@@ -195,7 +195,7 @@ func _apply_per_cluster_scale(s: float) -> void:
 		wrapper.position = center * (1.0 - s)
 
 
-# 清理副本并恢复被隐藏的原格子
+## 清理副本并恢复被隐藏的原格子
 func _cleanup_clones() -> void:
 	for clone: Node in _cell_clones:
 		if is_instance_valid(clone):
@@ -213,14 +213,14 @@ func _cleanup_clones() -> void:
 				wrapper.position = Vector2.ZERO
 
 
-# 杀掉缩放 Tween
+## 杀掉缩放 Tween
 func _kill_scale_tween() -> void:
 	if _scale_tween != null and _scale_tween.is_valid():
 		_scale_tween.kill()
 		_scale_tween = null
 
 
-# 停止所有高亮：杀 Tween、清副本、隐藏描边
+## 停止所有高亮：杀 Tween、清副本、隐藏描边
 func _stop_all_highlights() -> void:
 	_kill_scale_tween()
 	_cleanup_clones()
@@ -230,7 +230,7 @@ func _stop_all_highlights() -> void:
 
 
 # ================= 回滚与取消 =================
-# 真正回滚：把每个格子写回 before，跳过已被猫/错误叉占用的格子
+## 真正回滚：把每个格子写回 before，跳过已被猫/错误叉占用的格子
 func _apply_undo(step: StepHistory.StepRecord) -> void:
 	for entry: Dictionary in step.cells:
 		var pos: Vector2i = entry["pos"]
@@ -245,7 +245,7 @@ func _apply_undo(step: StepHistory.StepRecord) -> void:
 		)
 
 
-# 取消执行：立刻回滚并作废计时回调（不发 execution_finished）
+## 取消执行：立刻回滚并作废计时回调（不发 execution_finished）
 func cancel() -> void:
 	# 没在执行就什么都不做
 	if not _is_executing:

@@ -1,4 +1,4 @@
-# A/B 实验总入口：注册 70 个实验配置、转发 UniKit 事件、按染色时机批量刷新取值
+## A/B 实验总入口：注册 70 个实验配置、转发 UniKit 事件、按染色时机批量刷新取值
 extends Node
 
 signal init_done # A/B 初始化完成，此时读取实验值才是安全的
@@ -110,7 +110,7 @@ const TIMING_NO_ACTION_270: String = "no_action_270" # 挂机 270 秒后
 
 
 # ================= 生命周期与注册 =================
-# 进树时注册全部配置，并订阅 UniKit 的 A/B 事件
+## 进树时注册全部配置，并订阅 UniKit 的 A/B 事件
 func _ready() -> void:
 	_register_configs()
 	UniKitManager.abtest_ready.connect(_on_abtest_ready)
@@ -119,7 +119,7 @@ func _ready() -> void:
 	UniKitManager.abtest_locsrv_fetched.connect(_on_abtest_locsrv_fetched)
 
 
-# 逐个 new 出配置实例，init_default 后按 key 建索引；时机常量在染色时按字符串匹配
+## 逐个 new 出配置实例，init_default 后按 key 建索引；时机常量在染色时按字符串匹配
 func _register_configs() -> void:
 	region_color = RegionColorConfig.new()
 	size_cycle = SizeCycleConfig.new()
@@ -269,7 +269,7 @@ func _register_configs() -> void:
 
 
 # ================= UniKit 事件回调 =================
-# A/B 就绪回调：只认第一次，置位后广播 init_done
+## A/B 就绪回调：只认第一次，置位后广播 init_done
 func _on_abtest_ready(_user_info: Dictionary) -> void:
 	if _is_init_done:
 		return
@@ -279,13 +279,13 @@ func _on_abtest_ready(_user_info: Dictionary) -> void:
 	_finalize_app_start_dye()
 
 
-# 远端配置就绪回调：与 init 谁后到谁负责收口染色
+## 远端配置就绪回调：与 init 谁后到谁负责收口染色
 func _on_abtest_remote_config_ready() -> void:
 	print("[ABTestManager] remote config ready")
 	_finalize_app_start_dye()
 
 
-# app_start 档位的一次性收口：染色 + 置 remote_ready（重复调用直接返回）
+## app_start 档位的一次性收口：染色 + 置 remote_ready（重复调用直接返回）
 func _finalize_app_start_dye() -> void:
 	if _app_start_dyed:
 		return
@@ -295,12 +295,12 @@ func _finalize_app_start_dye() -> void:
 	remote_ready.emit()
 
 
-# SDK 参数更新回调：原样转发，不主动刷新配置
+## SDK 参数更新回调：原样转发，不主动刷新配置
 func _on_abtest_params_updated(update_type: String, user_info: Dictionary) -> void:
 	params_updated.emit(update_type, user_info)
 
 
-# 地区服务拉取回调：记录成功与否并转发
+## 地区服务拉取回调：记录成功与否并转发
 func _on_abtest_locsrv_fetched(success: bool, error: String) -> void:
 	_is_locsrv_fetched = success
 	print("[ABTestManager] locsrv fetched: success=%s error=%s" % [success, error])
@@ -308,7 +308,7 @@ func _on_abtest_locsrv_fetched(success: bool, error: String) -> void:
 
 
 # ================= 等待就绪 =================
-# 逐帧等待 A/B 初始化，超时（默认 2 秒）返回 false，不会无限阻塞
+## 逐帧等待 A/B 初始化，超时（默认 2 秒）返回 false，不会无限阻塞
 func await_ready(timeout_sec: float = 2.0) -> bool:
 	if _is_init_done:
 		return true
@@ -318,7 +318,7 @@ func await_ready(timeout_sec: float = 2.0) -> bool:
 	return _is_init_done
 
 
-# 等待远端配置就绪；超时则强制执行一次 app_start 染色，保证后续取值有兜底
+## 等待远端配置就绪；超时则强制执行一次 app_start 染色，保证后续取值有兜底
 func await_remote_ready(timeout_sec: float = 2.0) -> bool:
 	if _is_remote_ready:
 		return true
@@ -331,114 +331,114 @@ func await_remote_ready(timeout_sec: float = 2.0) -> bool:
 
 
 # ================= UniKit 转发：取值与染色 =================
-# 转发 UniKit：按 key 取字符串型实验值
+## 转发 UniKit：按 key 取字符串型实验值
 func get_ab_string(key: String, default_value: String = "") -> String:
 	return UniKitManager.get_ab_string(key, default_value)
 
 
-# 转发 UniKit：按 key 取整数型实验值
+## 转发 UniKit：按 key 取整数型实验值
 func get_ab_int(key: String, default_value: int = 0) -> int:
 	return UniKitManager.get_ab_int(key, default_value)
 
 
-# 转发 UniKit：按 key 取浮点型实验值
+## 转发 UniKit：按 key 取浮点型实验值
 func get_ab_float(key: String, default_value: float = 0.0) -> float:
 	return UniKitManager.get_ab_float(key, default_value)
 
 
-# 转发 UniKit：上报一次实验染色（影响后台统计口径）
+## 转发 UniKit：上报一次实验染色（影响后台统计口径）
 func dye_ab(key: String) -> void:
 	UniKitManager.dye_ab(key)
 
 
-# 转发 UniKit：取全部实验分组（含未发布）
+## 转发 UniKit：取全部实验分组（含未发布）
 func get_all_ab_experiments() -> Dictionary:
 	return UniKitManager.get_all_ab_experiments()
 
 
-# 转发 UniKit：只取已发布的实验分组
+## 转发 UniKit：只取已发布的实验分组
 func get_all_publish_ab_experiments() -> Dictionary:
 	return UniKitManager.get_all_publish_ab_experiments()
 
 
-# 取当前已染色实验的汇总标签（上报用）
+## 取当前已染色实验的汇总标签（上报用）
 func get_ab_dyeing_tag() -> String:
 	return UniKitManager.get_ab_dyeing_tag()
 
 
-# 取全部实验的汇总标签（上报用）
+## 取全部实验的汇总标签（上报用）
 func get_ab_all_tag() -> String:
 	return UniKitManager.get_ab_all_tag()
 
 
-# 取分流用的 group id
+## 取分流用的 group id
 func get_ab_group_id() -> String:
 	return UniKitManager.get_ab_group_id()
 
 
-# 取分流用的国家/地区
+## 取分流用的国家/地区
 func get_ab_country() -> String:
 	return UniKitManager.get_ab_country()
 
 
 # ================= UniKit 转发：地区服务 =================
-# 取地区服务(locsrv)下发的实验参数
+## 取地区服务(locsrv)下发的实验参数
 func get_ab_locsrv(key: String, default_value: String = "") -> String:
 	return UniKitManager.get_ab_locsrv_param(key, default_value)
 
 
-# 取地区服务下发的全部参数
+## 取地区服务下发的全部参数
 func get_all_ab_locsrv() -> Dictionary:
 	return UniKitManager.get_all_ab_locsrv_params()
 
 
-# 异步拉取地区服务参数，结果通过 locsrv_fetched 信号回来
+## 异步拉取地区服务参数，结果通过 locsrv_fetched 信号回来
 func fetch_ab_locsrv() -> void:
 	UniKitManager.fetch_remote_ab_result()
 
 
-# 上报某个地区服务参数的染色
+## 上报某个地区服务参数的染色
 func dye_ab_locsrv(key: String) -> void:
 	UniKitManager.dye_ab_locsrv(key)
 
 
-# 上报地区服务参数的自定义标签
+## 上报地区服务参数的自定义标签
 func dye_ab_locsrv_tag(tag: String) -> void:
 	UniKitManager.dye_ab_locsrv_tag(tag)
 
 
-# 批量设置地区服务标签，参与后续上报
+## 批量设置地区服务标签，参与后续上报
 func set_ab_locsrv_all_tag(tags: Array[String]) -> void:
 	UniKitManager.set_ab_locsrv_all_tag(tags)
 
 
-# 取参与分流的用户信息（上报用）
+## 取参与分流的用户信息（上报用）
 func get_ab_user_info() -> Dictionary:
 	return UniKitManager.get_ab_user_info()
 
 
-# 强制指定 group id（调试/复现线上分组用）
+## 强制指定 group id（调试/复现线上分组用）
 func set_ab_group_id(group_id: String) -> void:
 	UniKitManager.set_ab_group_id(group_id)
 
 
-# 强制指定国家/地区（调试/复现线上分组用）
+## 强制指定国家/地区（调试/复现线上分组用）
 func set_ab_country(country: String) -> void:
 	UniKitManager.set_ab_country(country)
 
 
 # ================= 状态查询与配置查找 =================
-# A/B 是否已初始化完成
+## A/B 是否已初始化完成
 func is_ab_init_done() -> bool:
 	return _is_init_done
 
 
-# 地区服务参数是否已成功拉到
+## 地区服务参数是否已成功拉到
 func is_ab_locsrv_fetched() -> bool:
 	return _is_locsrv_fetched
 
 
-# 取全部配置实例（作弊面板遍历用），顺序为字典遍历序
+## 取全部配置实例（作弊面板遍历用），顺序为字典遍历序
 func get_all_configs() -> Array[AbConfigBase]:
 	var out: Array[AbConfigBase] = []
 	for cfg: AbConfigBase in _configs_by_key.values():
@@ -446,58 +446,58 @@ func get_all_configs() -> Array[AbConfigBase]:
 	return out
 
 
-# 按 key 找配置实例，找不到返回 null
+## 按 key 找配置实例，找不到返回 null
 func find_config(key: String) -> AbConfigBase:
 	return _configs_by_key.get(key, null) as AbConfigBase
 
 
 # ================= 按时机批量染色 =================
-# 刷新 app_start 时机的配置（由 _finalize_app_start_dye 调用）
+## 刷新 app_start 时机的配置（由 _finalize_app_start_dye 调用）
 func dye_at_app_start() -> void:
 	_dye_at_timing(TIMING_APP_START)
 
 
-# 刷新每局开局时机的配置（普通关与每日挑战开局都调）
+## 刷新每局开局时机的配置（普通关与每日挑战开局都调）
 func dye_at_game_start() -> void:
 	_dye_at_timing(TIMING_GAME_START)
 
 
-# 刷新普通模式开局时机的配置（仅在普通模式调）
+## 刷新普通模式开局时机的配置（仅在普通模式调）
 func dye_at_game_start_normal() -> void:
 	_dye_at_timing(TIMING_GAME_START_NORMAL)
 
 
-# 刷新第 11 关起生效的配置（GamePage 判关卡 >= 11 后调）
+## 刷新第 11 关起生效的配置（GamePage 判关卡 >= 11 后调）
 func dye_at_game_start_normal_11() -> void:
 	_dye_at_timing(TIMING_GAME_START_NORMAL_11)
 
 
-# 刷新第 21 关起生效的配置（GamePage 判关卡 >= 21 后调）
+## 刷新第 21 关起生效的配置（GamePage 判关卡 >= 21 后调）
 func dye_at_game_start_normal_21() -> void:
 	_dye_at_timing(TIMING_GAME_START_NORMAL_21)
 
 
-# 刷新本局失败结算时机的配置
+## 刷新本局失败结算时机的配置
 func dye_at_game_fail_end() -> void:
 	_dye_at_timing(TIMING_GAME_END)
 
 
-# 刷新每日挑战开局时机的配置
+## 刷新每日挑战开局时机的配置
 func dye_at_game_start_dc() -> void:
 	_dye_at_timing(TIMING_GAME_START_DC)
 
 
-# 刷新使用提示时机的配置
+## 刷新使用提示时机的配置
 func dye_at_hint_use() -> void:
 	_dye_at_timing(TIMING_HINT_USE)
 
 
-# 刷新挂机 270 秒时机的配置（由 ScreenManager 空闲超时调用）
+## 刷新挂机 270 秒时机的配置（由 ScreenManager 空闲超时调用）
 func dye_at_no_action_270() -> void:
 	_dye_at_timing(TIMING_NO_ACTION_270)
 
 
-# 遍历全部配置，把 timing 匹配的重新取值；reload_value 会写 SDK 染色标记
+## 遍历全部配置，把 timing 匹配的重新取值；reload_value 会写 SDK 染色标记
 func _dye_at_timing(t: String) -> void:
 	for cfg: AbConfigBase in _configs_by_key.values():
 		if cfg.timing == t:

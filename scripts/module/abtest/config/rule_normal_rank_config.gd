@@ -1,4 +1,4 @@
-# 普通关难度与规则分组实验（A~K 共 11 组）：决定关卡尺寸曲线、难度上限与随机方式。取值在 LevelData 里被当数字分支使用，不只是布尔判断
+## 普通关难度与规则分组实验（A~K 共 11 组）：决定关卡尺寸曲线、难度上限与随机方式。取值在 LevelData 里被当数字分支使用，不只是布尔判断
 extends AbConfigBase
 class_name RuleNormalRankConfig
 
@@ -17,63 +17,63 @@ const VALUE_GROUP_J: int = 10 # J 组：分档最细（21/51/101/201），自带
 const VALUE_GROUP_K: int = 11 # K 组：同 J 的封顶，但 201 关后的难关有一半概率不走 H 档
 
 
-# 初始化：登记实验 key、默认档与染色时机
+## 初始化：登记实验 key、默认档与染色时机
 func _init() -> void:
 	key = "rule_normal_rank"
 	default_value = VALUE_EXPERIMENT_B # 默认档：B 组
 	timing = ABTestManager.TIMING_GAME_START_NORMAL # 染色时机：普通模式开局时
 
 
-# 是否 A 组
+## 是否 A 组
 func is_experiment_a() -> bool:
 	return value() == VALUE_EXPERIMENT_A
 
 
-# 是否 B 组（默认档）
+## 是否 B 组（默认档）
 func is_experiment_b() -> bool:
 	return value() == VALUE_EXPERIMENT_B
 
 
-# 是否 C 组
+## 是否 C 组
 func is_experiment_c() -> bool:
 	return value() == VALUE_EXPERIMENT_C
 
 
-# 是否 D 组
+## 是否 D 组
 func is_experiment_d() -> bool:
 	return value() == VALUE_EXPERIMENT_D
 
 
-# 是否 E 组
+## 是否 E 组
 func is_experiment_e() -> bool:
 	return value() == VALUE_EXPERIMENT_E
 
 
-# 是否 F 组
+## 是否 F 组
 func is_group_f() -> bool:
 	return value() == VALUE_GROUP_F
 
 
-# 是否 G 组
+## 是否 G 组
 func is_group_g() -> bool:
 	return value() == VALUE_GROUP_G
 
 
-# 是否 H 组
+## 是否 H 组
 func is_group_h() -> bool:
 	return value() == VALUE_GROUP_H
 
 
-# 是否 I 组
+## 是否 I 组
 func is_group_i() -> bool:
 	return value() == VALUE_GROUP_I
 
 
-# 是否 J 组（多个页面据此切换尺寸/难关口径）
+## 是否 J 组（多个页面据此切换尺寸/难关口径）
 func is_group_j() -> bool:
 	return value() == VALUE_GROUP_J
 
 
-# 是否 K 组
+## 是否 K 组
 func is_group_k() -> bool:
 	return value() == VALUE_GROUP_K

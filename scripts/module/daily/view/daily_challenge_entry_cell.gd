@@ -1,4 +1,4 @@
-# 主页上的每日挑战入口格：一秒一跳，按 DailyEntryState 的三态切换三套子节点
+## 主页上的每日挑战入口格：一秒一跳，按 DailyEntryState 的三态切换三套子节点
 extends UIChildWindow
 
 # ---- 子节点引用（@onready：进场景树后才可用） ----
@@ -14,7 +14,7 @@ extends UIChildWindow
 @onready var _click_btn: Button = $ClickBtn # 整格点击按钮
 
 
-# 注册 1 秒心跳刷新，并给点击按钮接上按下/抬起缩放反馈
+## 注册 1 秒心跳刷新，并给点击按钮接上按下/抬起缩放反馈
 func on_create() -> void:
 	create_tick(1.0, _refresh)
 
@@ -22,12 +22,12 @@ func on_create() -> void:
 	_click_btn.button_up.connect(func() -> void: play_release_scale(self))
 
 
-# 每次显示先刷一遍三态
+## 每次显示先刷一遍三态
 func on_show(_params: Dictionary = {}) -> void:
 	_refresh()
 
 
-# 按当前状态只显示对应那一套，并填好该状态的文案
+## 按当前状态只显示对应那一套，并填好该状态的文案
 func _refresh() -> void:
 	var s: int = DailyEntryState.compute_state()
 	_state_normal.visible = s == DailyEntryState.State.NORMAL
@@ -45,7 +45,7 @@ func _refresh() -> void:
 			_done_rank.text = DailyEntryState.done_rank_text()
 
 
-# 点击：埋点 + 震动后交给 DailyEntryState 决定是弹 Toast 还是进游戏
+## 点击：埋点 + 震动后交给 DailyEntryState 决定是弹 Toast 还是进游戏
 func _on_click_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.DAILY_PLAY, self)
 	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)

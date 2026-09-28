@@ -1,9 +1,9 @@
-# 关卡生成器（开发/调试用）：先掷一个「相邻行的解不相贴」的解，再把棋盘向外长成大小不一的颜色区域
-# 全是 static 的纯工具类，不属于 @tool / EditorPlugin；正式包里可能整个文件被剔除（见 game_page 的 debug_config 入口）
+## 关卡生成器（开发/调试用）：先掷一个「相邻行的解不相贴」的解，再把棋盘向外长成大小不一的颜色区域
+## 全是 static 的纯工具类，不属于 @tool / EditorPlugin；正式包里可能整个文件被剔除（见 game_page 的 debug_config 入口）
 class_name LevelGeneratorEditor
 extends RefCounted
 
-# 四邻域方向，按 (行增量, 列增量) 使用：区域生长只看上下左右，不含斜角
+## 四邻域方向，按 (行增量, 列增量) 使用：区域生长只看上下左右，不含斜角
 const _ORTHOGONAL_DIRECTIONS: Array[Vector2i] = [
 	Vector2i(-1, 0),
 	Vector2i(1, 0),
@@ -13,13 +13,13 @@ const _ORTHOGONAL_DIRECTIONS: Array[Vector2i] = [
 
 
 # ================= 对外入口 =================
-# 生成入口：直接转发给 generate_solvable_puzzle（debug_config 等调用点走这里）
+## 生成入口：直接转发给 generate_solvable_puzzle（debug_config 等调用点走这里）
 static func generate_puzzle(config: Dictionary) -> Dictionary:
 	return generate_solvable_puzzle(config)
 
 
-# 掷出一整道可解题：最多重试 max_attempts 轮，全失败返回空字典 {}
-# config 只认 size / seed / min_region_size / max_attempts（debug 页传的 strip_count 本函数不读）
+## 掷出一整道可解题：最多重试 max_attempts 轮，全失败返回空字典 {}
+## config 只认 size / seed / min_region_size / max_attempts（debug 页传的 strip_count 本函数不读）
 static func generate_solvable_puzzle(config: Dictionary) -> Dictionary:
 	# 棋盘边长，夹到 4~12，默认 8
 	var size := clampi(int(config.get("size", 8)), 4, 12)
@@ -55,7 +55,7 @@ static func generate_solvable_puzzle(config: Dictionary) -> Dictionary:
 
 
 # ================= 内部实现 =================
-# 掷解：洗牌 0..size-1 的列号，直到相邻两行的列号差都 >1，即猫与猫不竖贴也不斜贴
+## 掷解：洗牌 0..size-1 的列号，直到相邻两行的列号差都 >1，即猫与猫不竖贴也不斜贴
 static func _generate_solution_columns(size: int, rng: RandomNumberGenerator) -> Array[int]:
 	var columns: Array[int] = []
 	for column in size:
@@ -76,7 +76,7 @@ static func _generate_solution_columns(size: int, rng: RandomNumberGenerator) ->
 	return []
 
 
-# 校验某个排列是否合规：相邻两行的列号差 <=1 就算相贴
+## 校验某个排列是否合规：相邻两行的列号差 <=1 就算相贴
 static func _is_non_touching(columns: Array[int]) -> bool:
 	for row in range(columns.size() - 1):
 		if absi(columns[row] - columns[row + 1]) <= 1:
@@ -84,8 +84,8 @@ static func _is_non_touching(columns: Array[int]) -> bool:
 	return true
 
 
-# 区域生长：每个解格先自成一区，再反复随机把空格并入相邻区域，优先把没达到 min_region_size 的区域补大
-# 中途长不下去（空格找不到任何相邻区域）就返回空数组，交给上层重掷
+## 区域生长：每个解格先自成一区，再反复随机把空格并入相邻区域，优先把没达到 min_region_size 的区域补大
+## 中途长不下去（空格找不到任何相邻区域）就返回空数组，交给上层重掷
 static func _grow_regions(
 		size: int,
 		solution_columns: Array[int],
@@ -162,7 +162,7 @@ static func _grow_regions(
 	return regions
 
 
-# 把解展开成 size×size 的 bool 网格：每行只有解列那格是 true
+## 把解展开成 size×size 的 bool 网格：每行只有解列那格是 true
 static func _to_solution_grid(size: int, solution_columns: Array[int]) -> Array:
 	var grid: Array = []
 	# 每行先铺 size 个 false，再把解列置 true

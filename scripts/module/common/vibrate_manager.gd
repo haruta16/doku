@@ -1,5 +1,5 @@
-# 震动总控：把游戏里的抽象档位 Level 翻译成 iOS / Android 各自的原生震动调用
-# 原生能力来自 VibratePlugin 单例，插件不存在时所有调用静默跳过
+## 震动总控：把游戏里的抽象档位 Level 翻译成 iOS / Android 各自的原生震动调用
+## 原生能力来自 VibratePlugin 单例，插件不存在时所有调用静默跳过
 class_name VibrateManager
 extends RefCounted
 
@@ -20,7 +20,7 @@ static var _map_low: Dictionary = {} # 低内存机的 Android 参数表（惰�
 static var _map_high: Dictionary = {} # 高内存机的 Android 参数表（惰性构建）
 static var _maps_ready: bool = false # 参数表是否已构建过
 
-# iOS 档位 → 系统震动反馈的方法名，直接反射调用
+## iOS 档位 → 系统震动反馈的方法名，直接反射调用
 static var _map_ios: Dictionary = {
 	Level.LEVEL1: "selectionChanged",
 	Level.LEVEL2: "feedbackMedium",
@@ -32,7 +32,7 @@ static var _map_ios: Dictionary = {
 }
 
 
-# 构建 Android 的两张参数表：d = 持续毫秒，a = 振幅（0~255）
+## 构建 Android 的两张参数表：d = 持续毫秒，a = 振幅（0~255）
 static func _build_maps() -> void:
 	if _maps_ready:
 		return
@@ -69,13 +69,13 @@ static func _build_maps() -> void:
 	}
 
 
-# 超过这个内存（MB）就算高内存机；只有 Android 需要区分
+## 超过这个内存（MB）就算高内存机；只有 Android 需要区分
 const _RAM_4G_MB: int = 3800
 static var _ram_ready: bool = false # 内存档位是否已探测过
 static var _is_high_ram: bool = false # 探测结果
 
 
-# 探测一次总内存，决定用哪张 Android 参数表；iOS 不需要
+## 探测一次总内存，决定用哪张 Android 参数表；iOS 不需要
 static func _ensure_ram() -> void:
 	if _ram_ready:
 		return
@@ -90,24 +90,24 @@ static func _ensure_ram() -> void:
 static var _enabled: bool = true # 总开关，由设置页的震动选项驱动
 
 
-# 开关震动（设置页里改）
+## 开关震动（设置页里改）
 static func set_enabled(on: bool) -> void:
 	_enabled = on
 
 
-# 当前是否允许震动
+## 当前是否允许震动
 static func is_enabled() -> bool:
 	return _enabled
 
 
-# 取原生插件单例；没装插件就返回 null，调用方一律判空
+## 取原生插件单例；没装插件就返回 null，调用方一律判空
 static func _plugin() -> Object:
 	if Engine.has_singleton("VibratePlugin"):
 		return Engine.get_singleton("VibratePlugin")
 	return null
 
 
-# 设备是否有振动器
+## 设备是否有振动器
 static func has_vibrator() -> bool:
 	var p: Object = _plugin()
 	if p == null:
@@ -115,7 +115,7 @@ static func has_vibrator() -> bool:
 	return p.hasVibrator() as bool
 
 
-# 是否支持控制振幅（iOS 一律不支持，只能选固定几种反馈）
+## 是否支持控制振幅（iOS 一律不支持，只能选固定几种反馈）
 static func has_amplitude_control() -> bool:
 	if _is_ios:
 		return false
@@ -125,7 +125,7 @@ static func has_amplitude_control() -> bool:
 	return p.hasAmplitudeControl() as bool
 
 
-# 对外主入口：按档位震一下，按平台分派
+## 对外主入口：按档位震一下，按平台分派
 static func play_vibrate(level: Level) -> void:
 	if not _enabled:
 		return
@@ -135,7 +135,7 @@ static func play_vibrate(level: Level) -> void:
 		_play_android(level)
 
 
-# 打断当前震动
+## 打断当前震动
 static func cancel() -> void:
 	var p: Object = _plugin()
 	if p == null:
@@ -143,7 +143,7 @@ static func cancel() -> void:
 	p.cancel()
 
 
-# iOS：按档位反射调用系统反馈方法名，表里没有的档位不震
+## iOS：按档位反射调用系统反馈方法名，表里没有的档位不震
 static func _play_ios(level: Level) -> void:
 	if not _map_ios.has(level):
 		return
@@ -154,7 +154,7 @@ static func _play_ios(level: Level) -> void:
 	p.call(method_name)
 
 
-# Android：先定内存档位，再从对应表里取 d/a 参数执行
+## Android：先定内存档位，再从对应表里取 d/a 参数执行
 static func _play_android(level: Level) -> void:
 	_ensure_ram()
 	_build_maps()
@@ -168,7 +168,7 @@ static func _play_android(level: Level) -> void:
 		_vibrate(data["d"] as int, data["a"] as int)
 
 
-# 单次震动：持续 duration_ms 毫秒，振幅 amplitude
+## 单次震动：持续 duration_ms 毫秒，振幅 amplitude
 static func _vibrate(duration_ms: int, amplitude: int) -> void:
 	var p: Object = _plugin()
 	if p == null:
@@ -176,7 +176,7 @@ static func _vibrate(duration_ms: int, amplitude: int) -> void:
 	p.vibrate(duration_ms, amplitude)
 
 
-# 节奏震动：timings_ms 与 amplitudes 两个数组描述「停多久 / 震多强」的交替序列
+## 节奏震动：timings_ms 与 amplitudes 两个数组描述「停多久 / 震多强」的交替序列
 static func _vibrate_pattern(timings_ms: PackedInt32Array, amplitudes: PackedInt32Array) -> void:
 	var p: Object = _plugin()
 	if p == null:

@@ -1,5 +1,5 @@
-# 关卡 JSON 粘贴页：把一段含 regionMap / solution 的 JSON 直接灌进 GAME 页开局，用来复现线上题目与残局
-# 只在非 rel 的构建里注册（UIRegistry._DEV_PAGES）；由作弊面板的 level_json 命令打开
+## 关卡 JSON 粘贴页：把一段含 regionMap / solution 的 JSON 直接灌进 GAME 页开局，用来复现线上题目与残局
+## 只在非 rel 的构建里注册（UIRegistry._DEV_PAGES）；由作弊面板的 level_json 命令打开
 extends UIFrameWindow
 
 # ---- 子节点引用 ----
@@ -7,18 +7,18 @@ extends UIFrameWindow
 @onready var _error_label: Label = $CenterPanel/Margin/VBox/ErrorLabel # 校验失败时的红字提示
 
 
-# 每次打开都清掉上一次的错误提示
+## 每次打开都清掉上一次的错误提示
 func on_show(_params: Dictionary = {}) -> void:
 	_error_label.text = ""
 	_error_label.visible = false # 默认隐藏
 
 
-# CloseBtn：直接关页面
+## CloseBtn：直接关页面
 func _on_close_pressed() -> void:
 	UIManager.hide_ui(UiName.LEVEL_JSON_INPUT)
 
 
-# StartBtn：解析并校验 JSON，通过就带 prebuilt / restore_state 打开 GAME 页
+## StartBtn：解析并校验 JSON，通过就带 prebuilt / restore_state 打开 GAME 页
 func _on_start_pressed() -> void:
 	var raw: String = _input.text.strip_edges()
 	if raw.is_empty():
@@ -99,14 +99,14 @@ func _on_start_pressed() -> void:
 	UIManager.show_ui(UiName.GAME, params)
 
 
-# 同时把错误写到界面和 warning 日志
+## 同时把错误写到界面和 warning 日志
 func _show_error(msg: String) -> void:
 	_error_label.text = msg
 	_error_label.visible = true
 	push_warning("[level_json_input] " + msg) # 日志带前缀方便过滤
 
 
-# 逐项校验 JSON：返回空串表示通过，否则返回给用户看的中文原因
+## 逐项校验 JSON：返回空串表示通过，否则返回给用户看的中文原因
 func _validate(entry: Dictionary) -> String:
 	# 两个必填字段
 	if not entry.has("regionMap"):

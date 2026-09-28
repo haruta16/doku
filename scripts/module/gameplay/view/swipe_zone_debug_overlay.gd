@@ -1,5 +1,5 @@
-# 滑动手势保护区调试可视化：把 SwipeAxisGuard 的锁定带画成绿色半透明条
-# 仅在非 release 构建里由 BoardView 创建，默认关闭，靠 cheat 命令切换
+## 滑动手势保护区调试可视化：把 SwipeAxisGuard 的锁定带画成绿色半透明条
+## 仅在非 release 构建里由 BoardView 创建，默认关闭，靠 cheat 命令切换
 class_name SwipeZoneDebugOverlay
 extends Control
 
@@ -12,13 +12,13 @@ var _enabled: bool = false # 是否显示（cheat 命令 toggle_swipe_zone_viz �
 var _lock: Dictionary = {} # 当前锁定带 {"axis","value","tol"}，空字典表示未锁定
 
 
-# 进树即设成不吃鼠标、画在最上层：只负责显示，不参与输入
+## 进树即设成不吃鼠标、画在最上层：只负责显示，不参与输入
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE # 鼠标事件穿透
 	z_index = 100 # 画在棋盘与格子之上
 
 
-# 注入棋盘布局尺寸并清空旧锁定带（BoardView._ensure_zone_viz 调用）
+## 注入棋盘布局尺寸并清空旧锁定带（BoardView._ensure_zone_viz 调用）
 func configure(slot_px: int, padding: int, puzzle_size: int) -> void:
 	_slot = slot_px
 	_padding = padding
@@ -27,20 +27,20 @@ func configure(slot_px: int, padding: int, puzzle_size: int) -> void:
 	queue_redraw()
 
 
-# 开关显示；不改变已有锁定数据
+## 开关显示；不改变已有锁定数据
 func set_enabled(on: bool) -> void:
 	_enabled = on
 	queue_redraw()
 
 
-# 更新锁定带数据；关闭状态下只存不重绘
+## 更新锁定带数据；关闭状态下只存不重绘
 func set_zone(lock: Dictionary) -> void:
 	_lock = lock
 	if _enabled: # 只有显示中才需要重绘
 		queue_redraw()
 
 
-# 画锁定带：band 是含容差的外圈，core 是被锁定的那一行/列，两条绿线标出容差边界
+## 画锁定带：band 是含容差的外圈，core 是被锁定的那一行/列，两条绿线标出容差边界
 func _draw() -> void:
 	if not _enabled or _lock.is_empty(): # 未开启或无锁定带时不画
 		return

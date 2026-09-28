@@ -1,11 +1,11 @@
-# 题库页面：只读浏览 BankData 的六类题库（常规 / LK / LK改 / LK优化 / GC / SP），点关卡直接开局
-# 界面全在代码里现拼；本页不写任何题库文件，只读数据 + 调 UIManager 打开 GamePage
+## 题库页面：只读浏览 BankData 的六类题库（常规 / LK / LK改 / LK优化 / GC / SP），点关卡直接开局
+## 界面全在代码里现拼；本页不写任何题库文件，只读数据 + 调 UIManager 打开 GamePage
 class_name BankPage
 extends UIFrameWindow
 
 # ---- 通用配色 ----
-# _COLOR_BG 页面底色、_COLOR_CARD 卡片白、_COLOR_CARD_HL 卡片按下态浅黄、_COLOR_BORDER_Y 卡片黄描边
-# _COLOR_LK 系列是 LK 主题蓝（主色 / 淡底 / 描边）；_COLOR_TEXT 主文字、_COLOR_GRAY 次要文字、_COLOR_SEPARATOR 列表分隔线
+## _COLOR_BG 页面底色、_COLOR_CARD 卡片白、_COLOR_CARD_HL 卡片按下态浅黄、_COLOR_BORDER_Y 卡片黄描边
+## _COLOR_LK 系列是 LK 主题蓝（主色 / 淡底 / 描边）；_COLOR_TEXT 主文字、_COLOR_GRAY 次要文字、_COLOR_SEPARATOR 列表分隔线
 const _COLOR_BG := Color("#f0ece6")
 const _COLOR_CARD := Color(1.0, 1.0, 1.0, 1.0)
 const _COLOR_CARD_HL := Color("#fff8e7")
@@ -18,7 +18,7 @@ const _COLOR_GRAY := Color("#888888")
 const _COLOR_SEPARATOR := Color(0.85, 0.85, 0.85, 1.0)
 
 # ---- 尺寸称号：4~10 每个尺寸配一个称号和主题色 ----
-# _SIZE_TIER_COLORS 是尺寸 -> 颜色，_SIZE_TIER_LABELS 是尺寸 -> 称号，只用在常规题库的尺寸卡片上
+## _SIZE_TIER_COLORS 是尺寸 -> 颜色，_SIZE_TIER_LABELS 是尺寸 -> 称号，只用在常规题库的尺寸卡片上
 const _SIZE_TIER_COLORS: Dictionary = {
 	4: Color("#4caf50"),
 	5: Color("#26a69a"),
@@ -40,8 +40,8 @@ const _SIZE_TIER_LABELS: Dictionary = {
 }
 
 # ---- 难度信息 R1~R5：难度卡片与列表徽章的文案和配色 ----
-# 每项字段：rank 难度号 / label 徽章文字 / desc 一句话说明 / bg 卡片底 / badge 徽章色 / go_color GO 按钮色
-# 取值一律用 _RANK_INFO[rank - 1]：rank 从 1 起算、下标从 0 起算，不要混
+## 每项字段：rank 难度号 / label 徽章文字 / desc 一句话说明 / bg 卡片底 / badge 徽章色 / go_color GO 按钮色
+## 取值一律用 _RANK_INFO[rank - 1]：rank 从 1 起算、下标从 0 起算，不要混
 const _RANK_INFO: Array[Dictionary] = [
 	{
 		rank = 1,
@@ -86,7 +86,7 @@ const _RANK_INFO: Array[Dictionary] = [
 ]
 
 # ---- H 档难度信息：只有 4H / 5H 两档，键直接是 rank（不是下标） ----
-# 字段与 _RANK_INFO 相同，另多一个 tier = "H"
+## 字段与 _RANK_INFO 相同，另多一个 tier = "H"
 const _RANK_H_INFO: Dictionary = {
 	4:
 	{
@@ -125,8 +125,8 @@ const _RANK_COLORS: Dictionary = {
 }
 
 # ---- 子节点引用（@onready：进场景树后才可用，节点都在 bank_page.tscn 里） ----
-# 六块面板：SizePanel 首页 / TierPanel 难度 / ListPanel 关卡列表 / LKPanel / LKStyleSizePanel / RegularSizePanel
-# 其中 ListPanel 被常规与 SP 共用，LKStyleSizePanel 被 LK 优化与 GC 共用
+## 六块面板：SizePanel 首页 / TierPanel 难度 / ListPanel 关卡列表 / LKPanel / LKStyleSizePanel / RegularSizePanel
+## 其中 ListPanel 被常规与 SP 共用，LKStyleSizePanel 被 LK 优化与 GC 共用
 @onready var _size_panel: Control = $SizePanel
 @onready var _size_vbox: VBoxContainer = $SizePanel/SizeScroll/VBox
 @onready var _tier_panel: Control = $TierPanel
@@ -163,7 +163,7 @@ var _lk_modified_mode: bool = false  # LK 页当前展示的是「改题库」�
 
 
 # ================= 生命周期与面板切换 =================
-# 进场景树：先按实际存在的题库拼首页卡片，再给六个滚动区挂上拖动滚动助手
+## 进场景树：先按实际存在的题库拼首页卡片，再给六个滚动区挂上拖动滚动助手
 func _ready() -> void:
 	_build_size_cards()  # 按 BankData 里实际存在的题库拼首页卡片
 	_show_size_panel()  # 打开时默认停在首页
@@ -176,7 +176,7 @@ func _ready() -> void:
 	ScrollDragHelper.attach($LKStyleSizePanel/LKSSScroll)
 
 
-# UIManager 显示本页时的回调：按参数直接跳到某个子面板，否则回首页
+## UIManager 显示本页时的回调：按参数直接跳到某个子面板，否则回首页
 func on_show(params: Dictionary = {}) -> void:
 	if params.get("go_lk_style", false):
 		_show_lk_style_tier_panel(params.get("sz", 7))
@@ -188,7 +188,7 @@ func on_show(params: Dictionary = {}) -> void:
 		_show_size_panel()
 
 
-# 一次藏掉六块面板；所有 _show_* 切换前都先调它
+## 一次藏掉六块面板；所有 _show_* 切换前都先调它
 func _hide_all_panels() -> void:
 	_size_panel.visible = false
 	_tier_panel.visible = false
@@ -198,7 +198,7 @@ func _hide_all_panels() -> void:
 	_regular_panel.visible = false
 
 
-# 回最外层「题库入口」页：顺手清掉常规 / GC / SP 模式标记
+## 回最外层「题库入口」页：顺手清掉常规 / GC / SP 模式标记
 func _show_size_panel() -> void:
 	_sp_mode = false  # 回总入口：三个子模式标记一起清掉
 	_regular_mode = false
@@ -207,7 +207,7 @@ func _show_size_panel() -> void:
 	_size_panel.visible = true
 
 
-# 显示常规题库某尺寸的难度页；进来先把各卡片的序号重置为 1
+## 显示常规题库某尺寸的难度页；进来先把各卡片的序号重置为 1
 func _show_tier_panel(sz: int) -> void:
 	_lk_style_mode = false
 	_regular_mode = true
@@ -221,7 +221,7 @@ func _show_tier_panel(sz: int) -> void:
 	_tier_scroll.scroll_vertical = 0
 
 
-# 直接跳到关卡列表页（标题按当前模式加 GC / LK优化 前缀）；目前仓库内没有调用方，属保留入口
+## 直接跳到关卡列表页（标题按当前模式加 GC / LK优化 前缀）；目前仓库内没有调用方，属保留入口
 func _show_list_panel(sz: int, rank: int, tier: String = "") -> void:
 	_selected_rank = rank
 	var prefix: String
@@ -241,7 +241,7 @@ func _show_list_panel(sz: int, rank: int, tier: String = "") -> void:
 	_list_scroll.scroll_vertical = 0
 
 
-# 显示 LK 原版题库页：整份存档平铺成一关一行
+## 显示 LK 原版题库页：整份存档平铺成一关一行
 func _show_lk_panel() -> void:
 	_lk_modified_mode = false
 	var levels: Array = BankData.get_lk_levels()
@@ -254,7 +254,7 @@ func _show_lk_panel() -> void:
 	_lk_scroll.scroll_vertical = 0
 
 
-# 显示 LK 改题库页（旋转/镜像变换版），与 LK 原版共用同一块面板
+## 显示 LK 改题库页（旋转/镜像变换版），与 LK 原版共用同一块面板
 func _show_lk_modified_panel() -> void:
 	_lk_modified_mode = true
 	var levels: Array = BankData.get_lk_modified_levels()
@@ -267,14 +267,14 @@ func _show_lk_modified_panel() -> void:
 	_lk_scroll.scroll_vertical = 0
 
 
-# 显示 LK 优化题库的尺寸选择页
+## 显示 LK 优化题库的尺寸选择页
 func _show_lk_style_size_panel() -> void:
 	_build_lkss_cards()
 	_hide_all_panels()
 	_lkss_panel.visible = true
 
 
-# 重建 LK 优化尺寸卡片：每张卡显示尺寸、总关数和出现过的难度
+## 重建 LK 优化尺寸卡片：每张卡显示尺寸、总关数和出现过的难度
 func _build_lkss_cards() -> void:
 	for child in _lkss_vbox.get_children():
 		child.queue_free()
@@ -288,7 +288,7 @@ func _build_lkss_cards() -> void:
 		btn.pressed.connect(func() -> void: _show_lk_style_tier_panel(sz))
 
 
-# 造一张 LK 优化尺寸卡片（紫色主题），返回按钮本身，点击逻辑由调用方接
+## 造一张 LK 优化尺寸卡片（紫色主题），返回按钮本身，点击逻辑由调用方接
 func _make_lkss_size_card(sz: int, count: int, ranks: Array[int]) -> Button:
 	# 本卡主题紫：_C 主色 / _CL 淡底 / _CB 描边，不走通用配色
 	const _C: Color = Color(0.38, 0.18, 0.72, 1.0)
@@ -363,7 +363,7 @@ func _make_lkss_size_card(sz: int, count: int, ranks: Array[int]) -> Button:
 	return btn
 
 
-# 显示 LK 优化题库某尺寸的难度页；卡片由 _build_tier_cards 按 _lk_style_mode 分派
+## 显示 LK 优化题库某尺寸的难度页；卡片由 _build_tier_cards 按 _lk_style_mode 分派
 func _show_lk_style_tier_panel(sz: int) -> void:
 	_lk_style_mode = true
 	_selected_size = sz
@@ -377,7 +377,7 @@ func _show_lk_style_tier_panel(sz: int) -> void:
 
 
 # ================= 首页入口卡片（六类题库） =================
-# 重建首页卡片：常规 / LK / LK改 / LK优化 / GC / SP，哪类题库一关都没有就不出那张卡
+## 重建首页卡片：常规 / LK / LK改 / LK优化 / GC / SP，哪类题库一关都没有就不出那张卡
 func _build_size_cards() -> void:
 	for child in _size_vbox.get_children():
 		child.queue_free()
@@ -450,7 +450,7 @@ func _build_size_cards() -> void:
 
 
 # ================= 常规题库：尺寸页 =================
-# 显示常规题库尺寸页并置 _regular_mode，返回时靠它判断回哪一层
+## 显示常规题库尺寸页并置 _regular_mode，返回时靠它判断回哪一层
 func _show_regular_size_panel() -> void:
 	_regular_mode = true
 	_build_regular_size_cards()
@@ -458,7 +458,7 @@ func _show_regular_size_panel() -> void:
 	_regular_panel.visible = true
 
 
-# 重建常规题库的尺寸卡片，每张统计该尺寸的总关数与难度列表
+## 重建常规题库的尺寸卡片，每张统计该尺寸的总关数与难度列表
 func _build_regular_size_cards() -> void:
 	for child in _regular_vbox.get_children():
 		child.queue_free()
@@ -472,7 +472,7 @@ func _build_regular_size_cards() -> void:
 		btn.pressed.connect(func() -> void: _show_tier_panel(sz))
 
 
-# 造首页「常规题库」总入口卡：显示尺寸范围与全部关卡数
+## 造首页「常规题库」总入口卡：显示尺寸范围与全部关卡数
 func _make_regular_card(count: int, sizes: Array[int]) -> Button:
 	# 本卡主题绿：主色 / 淡底 / 描边
 	const _C: Color = Color(0.18, 0.55, 0.28, 1.0)
@@ -543,13 +543,13 @@ func _make_regular_card(count: int, sizes: Array[int]) -> Button:
 	return btn
 
 
-# 常规尺寸页返回：清 _regular_mode 再回首页（由 RegBackBtn 的 pressed 触发）
+## 常规尺寸页返回：清 _regular_mode 再回首页（由 RegBackBtn 的 pressed 触发）
 func _on_regular_back_btn_pressed() -> void:
 	_regular_mode = false
 	_show_size_panel()
 
 
-# 造常规题库的尺寸卡片：尺寸大字 + 称号 + 关数 + 难度列表
+## 造常规题库的尺寸卡片：尺寸大字 + 称号 + 关数 + 难度列表
 func _make_size_card(sz: int, count: int, ranks: Array[int]) -> Button:
 	var sf_n := StyleBoxFlat.new()
 	sf_n.bg_color = _COLOR_CARD
@@ -636,7 +636,7 @@ func _make_size_card(sz: int, count: int, ranks: Array[int]) -> Button:
 	return btn
 
 
-# 造首页「LK 题库」卡：蓝色主题，副标题标明是 LinkedIn Queens 存档
+## 造首页「LK 题库」卡：蓝色主题，副标题标明是 LinkedIn Queens 存档
 func _make_lk_card(count: int) -> Button:
 	var sf_n := StyleBoxFlat.new()
 	sf_n.bg_color = _COLOR_CARD
@@ -714,7 +714,7 @@ func _make_lk_card(count: int) -> Button:
 	return btn
 
 
-# 造首页「LK 改题库」卡：青绿主题，副标题标明是旋转 / 镜像变换版
+## 造首页「LK 改题库」卡：青绿主题，副标题标明是旋转 / 镜像变换版
 func _make_lk_modified_card(count: int) -> Button:
 	# 本卡主题青绿：主色 / 淡底 / 描边
 	const _C: Color = Color(0.12, 0.58, 0.45, 1.0)
@@ -785,7 +785,7 @@ func _make_lk_modified_card(count: int) -> Button:
 	return btn
 
 
-# 造首页「LK 优化题库」卡：紫色主题，尺寸范围现问 BankData
+## 造首页「LK 优化题库」卡：紫色主题，尺寸范围现问 BankData
 func _make_lk_style_card(count: int, ranks: Array[int]) -> Button:
 	# 本卡主题紫：主色 / 淡底 / 描边
 	const _COLOR_STYLE := Color(0.38, 0.18, 0.72, 1.0)
@@ -882,7 +882,7 @@ func _make_lk_style_card(count: int, ranks: Array[int]) -> Button:
 	return btn
 
 
-# 造首页「GC 题库」卡：青绿主题，尺寸范围现问 BankData
+## 造首页「GC 题库」卡：青绿主题，尺寸范围现问 BankData
 func _make_gc_card(count: int, ranks: Array[int]) -> Button:
 	# 本卡主题青绿：主色 / 淡底 / 描边
 	const _C := Color(0.08, 0.6, 0.45, 1.0)
@@ -967,14 +967,14 @@ func _make_gc_card(count: int, ranks: Array[int]) -> Button:
 
 
 # ================= GC 题库 =================
-# 显示 GC 题库尺寸页：复用 LK 优化那块面板（_lkss_panel），只换标题和数据源
+## 显示 GC 题库尺寸页：复用 LK 优化那块面板（_lkss_panel），只换标题和数据源
 func _show_gc_size_panel() -> void:
 	_build_lkss_cards_gc()
 	_hide_all_panels()
 	_lkss_panel.visible = true
 
 
-# 用 GC 数据重建尺寸卡片（借用 LK 优化的卡片工厂），点击进 GC 难度页
+## 用 GC 数据重建尺寸卡片（借用 LK 优化的卡片工厂），点击进 GC 难度页
 func _build_lkss_cards_gc() -> void:
 	for child in _lkss_vbox.get_children():
 		child.queue_free()
@@ -989,7 +989,7 @@ func _build_lkss_cards_gc() -> void:
 		btn.pressed.connect(func() -> void: _show_gc_tier_panel(sz))
 
 
-# 显示 GC 某尺寸的难度页：置 _gc_mode，卡片由 _build_tier_cards 分派
+## 显示 GC 某尺寸的难度页：置 _gc_mode，卡片由 _build_tier_cards 分派
 func _show_gc_tier_panel(sz: int) -> void:
 	_lk_style_mode = false
 	_gc_mode = true
@@ -1004,7 +1004,7 @@ func _show_gc_tier_panel(sz: int) -> void:
 
 
 # ================= LK 题库页（一行一关） =================
-# 重建 LK 页顶部序号条：− / 数字 / + / GO，数字范围 1~总关数 count
+## 重建 LK 页顶部序号条：− / 数字 / + / GO，数字范围 1~总关数 count
 func _build_lk_selector(count: int) -> void:
 	for child in _lk_selector_container.get_children():
 		child.queue_free()
@@ -1093,7 +1093,7 @@ func _build_lk_selector(count: int) -> void:
 	go_btn.pressed.connect(_on_lk_go)
 
 
-# 重建 LK 关卡列表：一关一个按钮，关与关之间插 2px 分隔线
+## 重建 LK 关卡列表：一关一个按钮，关与关之间插 2px 分隔线
 func _build_lk_list(levels: Array) -> void:
 	for child in _lk_list.get_children():
 		child.queue_free()
@@ -1109,7 +1109,7 @@ func _build_lk_list(levels: Array) -> void:
 			_lk_list.add_child(sep)
 
 
-# 造 LK 列表一行：序号 + 尺寸 + 日期 + 难度标签，点击直接开局
+## 造 LK 列表一行：序号 + 尺寸 + 日期 + 难度标签，点击直接开局
 func _make_lk_item(entry: Dictionary, i: int) -> Button:
 	var max_r: int = entry.get("maxR", 1)
 	var rank_color: Color = _RANK_COLORS.get(max_r, _COLOR_GRAY)
@@ -1192,21 +1192,21 @@ func _make_lk_item(entry: Dictionary, i: int) -> Button:
 	return btn
 
 
-# LK 序号减一，下限 1
+## LK 序号减一，下限 1
 func _on_lk_minus(_count: int) -> void:
 	_lk_num = maxi(1, _lk_num - 1)
 	if _lk_num_label != null:
 		_lk_num_label.text = str(_lk_num)
 
 
-# LK 序号加一，上限是总关数 count
+## LK 序号加一，上限是总关数 count
 func _on_lk_plus(count: int) -> void:
 	_lk_num = mini(count, _lk_num + 1)
 	if _lk_num_label != null:
 		_lk_num_label.text = str(_lk_num)
 
 
-# GO：按序号条上的数字跳关（界面从 1 起算，传给 _play_lk_level 时减 1）
+## GO：按序号条上的数字跳关（界面从 1 起算，传给 _play_lk_level 时减 1）
 func _on_lk_go() -> void:
 	var levels: Array = (
 		BankData.get_lk_modified_levels() if _lk_modified_mode else BankData.get_lk_levels()
@@ -1214,7 +1214,7 @@ func _on_lk_go() -> void:
 	_play_lk_level(levels, _lk_num - 1, _lk_modified_mode)
 
 
-# 打开 LK 题库第 idx 关：把该关的 regionMap / solution 等预置数据交给 GamePage
+## 打开 LK 题库第 idx 关：把该关的 regionMap / solution 等预置数据交给 GamePage
 func _play_lk_level(levels: Array, idx: int, is_modified: bool = false) -> void:
 	if levels.is_empty() or idx < 0 or idx >= levels.size():
 		return
@@ -1241,7 +1241,7 @@ func _play_lk_level(levels: Array, idx: int, is_modified: bool = false) -> void:
 
 
 # ================= 难度页（R1~R5 与 4H/5H 卡片） =================
-# 重建难度卡片：先出 R1~R5，再按 _H_TIER_KEYS 补 H 档；关数为 0 的档位直接跳过
+## 重建难度卡片：先出 R1~R5，再按 _H_TIER_KEYS 补 H 档；关数为 0 的档位直接跳过
 func _build_tier_cards(sz: int) -> void:
 	for child in _tier_vbox.get_children():
 		child.queue_free()
@@ -1297,7 +1297,7 @@ func _build_tier_cards(sz: int) -> void:
 		_tier_vbox.add_child(h_card)
 
 
-# 造一张难度卡片：难度徽章 + 说明 + 关数 + 序号选择器 + GO
+## 造一张难度卡片：难度徽章 + 说明 + 关数 + 序号选择器 + GO
 func _make_tier_card(info: Dictionary, count: int, sz: int, tier: String = "") -> Control:
 	var rank: int = info["rank"]
 	var bg: Color = info["bg"]
@@ -1426,7 +1426,7 @@ func _make_tier_card(info: Dictionary, count: int, sz: int, tier: String = "") -
 	return panel
 
 
-# 造 ± 小圆角按钮：底色由传入的主色淡化而来
+## 造 ± 小圆角按钮：底色由传入的主色淡化而来
 func _make_small_btn(label: String, color: Color) -> Button:
 	var sf := StyleBoxFlat.new()
 	sf.bg_color = color.lightened(0.5)
@@ -1458,21 +1458,21 @@ func _make_small_btn(label: String, color: Color) -> Button:
 	return btn
 
 
-# 难度卡片序号减一，下限 1
+## 难度卡片序号减一，下限 1
 func _on_tier_minus(key: Variant, _count: int) -> void:
 	_tier_num[key] = maxi(1, _tier_num.get(key, 1) - 1)
 	if _tier_num_labels.has(key):
 		(_tier_num_labels[key] as Label).text = str(_tier_num[key])
 
 
-# 难度卡片序号加一，上限是该档关数 count
+## 难度卡片序号加一，上限是该档关数 count
 func _on_tier_plus(key: Variant, count: int) -> void:
 	_tier_num[key] = mini(count, _tier_num.get(key, 1) + 1)
 	if _tier_num_labels.has(key):
 		(_tier_num_labels[key] as Label).text = str(_tier_num[key])
 
 
-# 按当前题库模式 + tier 取关卡数组，跳到序号对应的那一关
+## 按当前题库模式 + tier 取关卡数组，跳到序号对应的那一关
 func _on_tier_go(sz: int, rank: int, tier: String = "") -> void:
 	# 取数分派：GC 一路，带档位的（H / N）一路，其余按普通难度取
 	var levels: Array
@@ -1531,7 +1531,7 @@ func _on_tier_go(sz: int, rank: int, tier: String = "") -> void:
 
 
 # ================= 关卡列表页 =================
-# 重建关卡列表：按当前模式与 tier 取数组，一行一关
+## 重建关卡列表：按当前模式与 tier 取数组，一行一关
 func _build_level_list(sz: int, rank: int, tier: String = "") -> void:
 	for child in _level_list.get_children():
 		child.queue_free()
@@ -1566,7 +1566,7 @@ func _build_level_list(sz: int, rank: int, tier: String = "") -> void:
 			_level_list.add_child(sep)
 
 
-# 造关卡列表一行：序号 + 步数 + 难度标签，点击把这一关的数据交给 GamePage
+## 造关卡列表一行：序号 + 步数 + 难度标签，点击把这一关的数据交给 GamePage
 func _make_level_item(
 	entry: Dictionary, sz: int, rank: int, i: int, levels: Array = [], tier: String = ""
 ) -> Button:
@@ -1675,13 +1675,13 @@ func _make_level_item(
 
 
 # ================= 返回按钮 =================
-# 顶栏返回：切回主页 UI 并隐藏题库页
+## 顶栏返回：切回主页 UI 并隐藏题库页
 func _on_back_btn_pressed() -> void:
 	UIManager.show_ui(UiName.HOME)
 	UIManager.hide_ui(UiName.BANK)
 
 
-# 难度页返回：按模式退回 LK 优化尺寸页 / 常规尺寸页 / 首页
+## 难度页返回：按模式退回 LK 优化尺寸页 / 常规尺寸页 / 首页
 func _on_tier_back_btn_pressed() -> void:
 	if _lk_style_mode:
 		_show_lk_style_size_panel()
@@ -1691,7 +1691,7 @@ func _on_tier_back_btn_pressed() -> void:
 		_show_size_panel()
 
 
-# 关卡列表返回：SP 回首页，其余回难度页（LK 优化回它自己的尺寸页）
+## 关卡列表返回：SP 回首页，其余回难度页（LK 优化回它自己的尺寸页）
 func _on_list_back_btn_pressed() -> void:
 	if _sp_mode:
 		_show_size_panel()
@@ -1701,18 +1701,18 @@ func _on_list_back_btn_pressed() -> void:
 		_show_tier_panel(_selected_size)
 
 
-# LK 页返回首页
+## LK 页返回首页
 func _on_lk_back_btn_pressed() -> void:
 	_show_size_panel()
 
 
-# LK 优化尺寸页返回首页
+## LK 优化尺寸页返回首页
 func _on_lkss_back_btn_pressed() -> void:
 	_show_size_panel()
 
 
 # ================= SP 特殊图案题库 =================
-# 显示 SP 列表：复用关卡列表面板，只换标题与数据源
+## 显示 SP 列表：复用关卡列表面板，只换标题与数据源
 func _show_sp_panel() -> void:
 	_sp_mode = true
 	_hide_all_panels()
@@ -1721,7 +1721,7 @@ func _show_sp_panel() -> void:
 	_list_panel.visible = true
 
 
-# 重建 SP 列表：一行一个图案关
+## 重建 SP 列表：一行一个图案关
 func _build_sp_list() -> void:
 	for child in _level_list.get_children():
 		child.queue_free()
@@ -1736,7 +1736,7 @@ func _build_sp_list() -> void:
 			_level_list.add_child(sep)
 
 
-# 造 SP 一行：图案名 + 尺寸/难度 + 难度徽章，点击时额外把 colorMap 传给 GamePage
+## 造 SP 一行：图案名 + 尺寸/难度 + 难度徽章，点击时额外把 colorMap 传给 GamePage
 func _make_sp_item(entry: Dictionary, i: int) -> Button:
 	var sz: int = entry.get("size", 9)
 	var rank: int = entry.get("r", 1)
@@ -1851,7 +1851,7 @@ func _make_sp_item(entry: Dictionary, i: int) -> Button:
 	return btn
 
 
-# 造首页「SP 特殊图案题库」卡：橙色主题，副标题写「数字图案 共 N 关」
+## 造首页「SP 特殊图案题库」卡：橙色主题，副标题写「数字图案 共 N 关」
 func _make_sp_card(count: int) -> Button:
 	var sf_n := StyleBoxFlat.new()
 	sf_n.bg_color = Color("#fff3e0")

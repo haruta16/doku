@@ -1,5 +1,5 @@
-# 题库文件读取：编辑器里读 assets/editor/levels 的明文 JSON，导出后读 assets/resources/levels 的密文
-# 密文 = 明文逐字节异或 _KEY（由 addons/level_bank_encryptor 生成），只防手改、不防逆向
+## 题库文件读取：编辑器里读 assets/editor/levels 的明文 JSON，导出后读 assets/resources/levels 的密文
+## 密文 = 明文逐字节异或 _KEY（由 addons/level_bank_encryptor 生成），只防手改、不防逆向
 class_name LevelBankIO
 extends RefCounted
 
@@ -9,7 +9,7 @@ const _EDITOR_DIR: String = "res://assets/editor/levels"  # 编辑器环境：�
 const _RUNTIME_DIR: String = "res://assets/resources/levels"  # 非编辑器（导出后）：加密题库目录
 
 
-# 读一个题库 JSON：编辑器外先异或解密再解析；文件缺失 / 打开失败 / 解析失败一律返回 null
+## 读一个题库 JSON：编辑器外先异或解密再解析；文件缺失 / 打开失败 / 解析失败一律返回 null
 static func load_json(filename: String) -> Variant:
 	var is_editor: bool = OS.has_feature("editor")  # 用引擎特性判断当前进程是不是编辑器
 	var path: String = (_EDITOR_DIR if is_editor else _RUNTIME_DIR) + "/" + filename  # 两个目录里的文件名完全一致，只换根目录
@@ -27,7 +27,7 @@ static func load_json(filename: String) -> Variant:
 	return JSON.parse_string(text)  # 解析失败会返回 null，由调用方判类型
 
 
-# 原地 XOR 解密：密钥按字节循环异或，加密与解密是同一套操作
+## 原地 XOR 解密：密钥按字节循环异或，加密与解密是同一套操作
 static func _xor_inplace(bytes: PackedByteArray) -> void:
 	var key_len: int = _KEY.length()
 	if key_len == 0 or bytes.is_empty():

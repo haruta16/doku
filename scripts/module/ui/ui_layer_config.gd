@@ -1,5 +1,5 @@
-# UI 层级表：ui_layer 的六个取值 + 同层 z_index 的步长/上限，数值越大越靠前
-# 具体页面落在哪层由场景里的 ui_layer 决定；当前仓库的页面都还是默认 0 层
+## UI 层级表：ui_layer 的六个取值 + 同层 z_index 的步长/上限，数值越大越靠前
+## 具体页面落在哪层由场景里的 ui_layer 决定；当前仓库的页面都还是默认 0 层
 class_name UILayerConfig
 extends RefCounted
 

@@ -1,5 +1,5 @@
-# 首页（HomePage）：开始游戏 / 每日挑战两个入口，负责转场动画与启动后的弹窗排队
-# 入口状态与红点：每日挑战由 DailyEntryState 判定解锁（关卡数 < 21 锁定）；设置按钮上的红点由 Helpshift 未读数驱动（RedDotCenter 的「helpshift_unread」）
+## 首页（HomePage）：开始游戏 / 每日挑战两个入口，负责转场动画与启动后的弹窗排队
+## 入口状态与红点：每日挑战由 DailyEntryState 判定解锁（关卡数 < 21 锁定）；设置按钮上的红点由 Helpshift 未读数驱动（RedDotCenter 的「helpshift_unread」）
 class_name HomePage
 extends UIFrameWindow
 
@@ -32,11 +32,11 @@ var _daily_sf_pressed: StyleBox  # Bg 的 pressed 原始样式
 @onready var _anim: AnimationPlayer = $AnimationPlayer  # 首页主界面动画 MainInterface
 
 # ---- 入口格子场景（daily_streak A/B 的新版首页布局用） ----
-# 每日挑战入口格子，在新版布局里替代原来的 DailyBtn
+## 每日挑战入口格子，在新版布局里替代原来的 DailyBtn
 const _DC_ENTRY_CELL: PackedScene = preload(
 	"res://scripts/module/daily/ui/daily_challenge_entry_cell.tscn"
 )
-# 连续打卡入口格子
+## 连续打卡入口格子
 const _STREAK_ENTRY_CELL: PackedScene = preload(
 	"res://scripts/module/daily_streak/ui/streak_entry_cell.tscn"
 )
@@ -84,7 +84,7 @@ var _new_page_node: Node = null  # 转场后打开的新页面节点
 
 
 # ================= 生命周期 =================
-# 初始化：备份原始坐标、绑按压缩放与按钮音效、按视口宽度摆放背景网格
+## 初始化：备份原始坐标、绑按压缩放与按钮音效、按视口宽度摆放背景网格
 func _ready() -> void:
 	# 记住开始按钮原始左右偏移，切回旧布局时还原
 	_start_btn_orig_off_l = _start_btn.offset_left
@@ -109,29 +109,29 @@ func _ready() -> void:
 		grid.scale = Vector2(s, s)
 
 
-# 把设置按钮的屏幕中心 Y 广播给 HomeSettingAnchor，供其它页面（FollowHomeSettingBtnY）对齐
+## 把设置按钮的屏幕中心 Y 广播给 HomeSettingAnchor，供其它页面（FollowHomeSettingBtnY）对齐
 func _write_setting_anchor() -> void:
 	var gb: Control = $Root/VBoxContainer/Header/SettingsBtn
 	HomeSettingAnchor.set_settingbtn_y(gb.global_position.y + gb.size.y * 0.5)
 
 
-# 语言切换通知：刷新随语言变化的文案与字号
+## 语言切换通知：刷新随语言变化的文案与字号
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
 		_refresh_dynamic_text()
 		_fit_daily_btn_font()
 
 
-# 刷新开始按钮文案：显示当前关卡号
+## 刷新开始按钮文案：显示当前关卡号
 func _refresh_dynamic_text() -> void:
 	_start_btn.btn_text = tr("GAME_LEVEL_TITLE") % GameState.get_current_level()
 
 
-# 每日按钮字号下限（像素）
+## 每日按钮字号下限（像素）
 const _DAILY_BTN_MIN_FONT_SIZE: int = 44
 
 
-# 每日按钮文案自适应：锁定态与可玩态的可用宽度不同，各自从上限逐步缩小到放得下
+## 每日按钮文案自适应：锁定态与可玩态的可用宽度不同，各自从上限逐步缩小到放得下
 func _fit_daily_btn_font() -> void:
 	# 两种形态显示的是同一个文案 key
 	var display_text: String = tr("HOME_DAILY_CHALLENGE")
@@ -166,7 +166,7 @@ func _fit_daily_btn_font() -> void:
 	_daily_unlock_label.add_theme_font_size_override("font_size", unlock_fs)
 
 
-# 每次被 UIManager 显示时调用：刷状态、摆布局，然后按顺序弹各种弹窗
+## 每次被 UIManager 显示时调用：刷状态、摆布局，然后按顺序弹各种弹窗
 func on_show(_params: Dictionary = {}) -> void:
 	# 诊断日志：确认首页被重新显示
 	print("[StreakSwitch] home.on_show 被调用")
@@ -242,7 +242,7 @@ func on_show(_params: Dictionary = {}) -> void:
 
 
 # ================= 启动后弹窗排队 =================
-# 返回本次该弹的跨组提示页号（0 表示不弹）；弹过就消费掉标记，只弹一次
+## 返回本次该弹的跨组提示页号（0 表示不弹）；弹过就消费掉标记，只弹一次
 func _maybe_show_streak_switch_popup() -> bool:
 	# StreakManager 内部有 eligible 标记：应用没重启时不会重复给出页号
 	var page: int = StreakManager.get_pending_switch_page()
@@ -278,7 +278,7 @@ func _maybe_show_streak_switch_popup() -> bool:
 	return true
 
 
-# 自动标记（auto mark）功能变更提示：每次启动最多判定一次
+## 自动标记（auto mark）功能变更提示：每次启动最多判定一次
 func _maybe_show_auto_mark_switch_popup() -> void:
 	# 本次启动已经判定过
 	if _auto_mark_switch_checked:
@@ -335,7 +335,7 @@ func _maybe_show_auto_mark_switch_popup() -> void:
 	GameState.set_saved_game_auto_mark(current)
 
 
-# 漏奖补发：把玩家当时没领到的广告奖励延后补发，有每日次数上限
+## 漏奖补发：把玩家当时没领到的广告奖励延后补发，有每日次数上限
 func _maybe_show_pending_rewards() -> void:
 	# 等首页入场动画播完再判定
 	await get_tree().create_timer(HOME_RESTORE_DELAY).timeout
@@ -423,7 +423,7 @@ func _maybe_show_pending_rewards() -> void:
 	UIManager.hide_ui(UiName.AD_REWARD_RESTORED)
 
 
-# 首页评分弹窗：A/B 指定「通关后回首页」且关卡 >= 8 时才可能弹
+## 首页评分弹窗：A/B 指定「通关后回首页」且关卡 >= 8 时才可能弹
 func _maybe_show_rate_us_on_home() -> void:
 	# 当前关卡号，下面用它做门槛判定
 	var lv: int = GameState.get_current_level()
@@ -460,19 +460,19 @@ func _maybe_show_rate_us_on_home() -> void:
 
 
 # ================= 显隐与刷新 =================
-# 每次被 UIManager 隐藏时调用：停倒计时并隐藏自己
+## 每次被 UIManager 隐藏时调用：停倒计时并隐藏自己
 func on_hide() -> void:
 	# 倒计时 Timer 是场景常驻节点，必须显式停
 	_countdown_timer.stop()
 	visible = false
 
 
-# 倒计时每秒超时一次 → 刷新每日按钮
+## 倒计时每秒超时一次 → 刷新每日按钮
 func _on_countdown_timer_timeout() -> void:
 	_update_countdown()
 
 
-# 刷新每日按钮状态与倒计时文案（跨天时会从已完成回到可玩）
+## 刷新每日按钮状态与倒计时文案（跨天时会从已完成回到可玩）
 func _update_countdown() -> void:
 	# 先推进历史最大日期，再算状态
 	DailyEntryState.ensure_max_daily_advanced()
@@ -482,7 +482,7 @@ func _update_countdown() -> void:
 
 
 # ================= 输入与入口按钮 =================
-# 返回键（Android 物理返回）→ 弹退出确认
+## 返回键（Android 物理返回）→ 弹退出确认
 func _on_back_request() -> void:
 	# 已经在转场中就不再处理
 	if _is_exiting:
@@ -490,7 +490,7 @@ func _on_back_request() -> void:
 	_request_quit_confirm()
 
 
-# 弹「确认退出」弹窗；设置页开着时不接管返回键
+## 弹「确认退出」弹窗；设置页开着时不接管返回键
 func _request_quit_confirm() -> void:
 	# 设置页可见时，返回键该由它自己处理
 	var setting: Node = UIManager.get_ui(UiName.SETTING)
@@ -500,19 +500,19 @@ func _request_quit_confirm() -> void:
 	UIManager.show_ui(UiName.CONFIRM, {"on_confirm": func(): get_tree().quit()})
 
 
-# 打开设置页（先埋点按钮点击）
+## 打开设置页（先埋点按钮点击）
 func _on_settings_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.SETTINGS, self)
 	UIManager.show_ui(UiName.SETTING)
 
 
-# 开始游戏：带当前关卡号进 game 页
+## 开始游戏：带当前关卡号进 game 页
 func _on_start_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.NORMAL_PLAY, self)
 	_exit_to_page("game", {"level_index": GameState.get_current_level()})
 
 
-# 每日挑战入口：点击交给 DailyEntryState 判定
+## 每日挑战入口：点击交给 DailyEntryState 判定
 func _on_daily_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.DAILY_PLAY, self)
 
@@ -521,7 +521,7 @@ func _on_daily_btn_pressed() -> void:
 
 
 # ================= 转场 =================
-# 转场退出：先播首页退场动画，动画走到标记点时才打开目标页
+## 转场退出：先播首页退场动画，动画走到标记点时才打开目标页
 func _exit_to_page(page_name: String, params: Dictionary) -> void:
 	# 防重入：一次只允许一次转场
 	if _is_exiting:
@@ -544,7 +544,7 @@ func _exit_to_page(page_name: String, params: Dictionary) -> void:
 	get_tree().create_timer(entry_delay).timeout.connect(_on_entry_reached)
 
 
-# 动画到点：打开目标页，并把首页抬到它上面，让退场动画盖住新页
+## 动画到点：打开目标页，并把首页抬到它上面，让退场动画盖住新页
 func _on_entry_reached() -> void:
 	# 已经开过或节点已出树就不重复处理
 	if _new_page_node != null or not is_inside_tree():
@@ -560,7 +560,7 @@ func _on_entry_reached() -> void:
 		z_index = (_new_page_node as CanvasItem).z_index + 1
 
 
-# 退场动画播完：先断开自己，再隐藏首页
+## 退场动画播完：先断开自己，再隐藏首页
 func _on_anim_finished(_anim_name: StringName) -> void:
 	if _anim.animation_finished.is_connected(_on_anim_finished):
 		_anim.animation_finished.disconnect(_on_anim_finished)
@@ -570,7 +570,7 @@ func _on_anim_finished(_anim_name: StringName) -> void:
 
 
 # ================= 每日挑战按钮 =================
-# 按 DailyEntryState 的三态刷新每日按钮外观
+## 按 DailyEntryState 的三态刷新每日按钮外观
 func _refresh_daily_btn_state() -> void:
 	# LOCKED 关卡不够 / DONE 今日已完成（或已过日期） / 其它为可玩
 	var s: int = DailyEntryState.compute_state()
@@ -637,7 +637,7 @@ func _refresh_daily_btn_state() -> void:
 				_daily_paw.texture = _daily_paw_tex_dim
 
 
-# 重新摆放右上角名次标签：宽度随文字自适应并保持右边对齐
+## 重新摆放右上角名次标签：宽度随文字自适应并保持右边对齐
 func _update_top_tag_layout() -> void:
 	# 设计稿里标签的默认位置与尺寸（像素）
 	const DEFAULT_TAG_X: float = 619.0
@@ -668,7 +668,7 @@ func _update_top_tag_layout() -> void:
 
 
 # ================= 首页布局（daily_streak A/B） =================
-# 应用首页布局：A/B 开启时切到带打卡入口的新版布局
+## 应用首页布局：A/B 开启时切到带打卡入口的新版布局
 func _apply_home_layout() -> void:
 	# daily_streak A/B：取值非 0 即启用新版布局
 	var use_l2: bool = ABTestManager.daily_streak.is_enabled()
@@ -704,7 +704,7 @@ func _apply_home_layout() -> void:
 	_apply_streak_dead_layout()
 
 
-# challenge_only 且每日挑战还锁着时，打卡入口没有意义：隐藏它并让每日入口居中
+## challenge_only 且每日挑战还锁着时，打卡入口没有意义：隐藏它并让每日入口居中
 func _apply_streak_dead_layout() -> void:
 	var streak_dead: bool = (
 		ABTestManager.daily_streak.is_challenge_only()
@@ -723,7 +723,7 @@ func _apply_streak_dead_layout() -> void:
 			(_dc_cell as Control).position.x = 0.0
 
 
-# 把格子从原父节点摘下、挂进槽位并归零位置
+## 把格子从原父节点摘下、挂进槽位并归零位置
 func _mount_into_slot(cell: Node, slot: Control) -> void:
 	var p: Node = cell.get_parent()
 	if p != null:
@@ -734,17 +734,17 @@ func _mount_into_slot(cell: Node, slot: Control) -> void:
 
 
 # ================= 埋点与诊断 =================
-# 首页的埋点页面名
+## 首页的埋点页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.HOMEPAGE
 
 
-# 空的 _input 覆写：首页不直接处理输入，全部交给控件信号
+## 空的 _input 覆写：首页不直接处理输入，全部交给控件信号
 func _input(event: InputEvent) -> void:
 	pass
 
 
-# 诊断函数：点击被别人拦截时 push_error 报出拦截者（当前没有调用点）
+## 诊断函数：点击被别人拦截时 push_error 报出拦截者（当前没有调用点）
 func _diag_tap(pos: Vector2) -> void:
 	# 取当前鼠标悬停的控件
 	var hovered: Control = get_viewport().gui_get_hovered_control()
@@ -769,7 +769,7 @@ func _diag_tap(pos: Vector2) -> void:
 	)
 
 
-# 判断悬停控件是否属于「允许盖在首页上的弹窗」或 cheat 面板
+## 判断悬停控件是否属于「允许盖在首页上的弹窗」或 cheat 面板
 func _is_normal_home_overlay(hovered: Control) -> bool:
 	if hovered == null:
 		return false

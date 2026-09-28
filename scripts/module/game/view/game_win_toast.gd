@@ -1,4 +1,4 @@
-# 胜利 Toast：显示结算文案并把其中的数字染色；入场/退场共用一段动画，靠 Mark 标记切分
+## 胜利 Toast：显示结算文案并把其中的数字染色；入场/退场共用一段动画，靠 Mark 标记切分
 class_name GameWinToast
 extends CanvasLayer
 
@@ -19,7 +19,7 @@ static var _NUMBER_RE: RegEx = RegEx.create_from_string("\\d+%?") # 匹配数字
 
 
 # ================= 对外接口 =================
-# 设置文案（自动给数字上色）
+## 设置文案（自动给数字上色）
 func set_message(text: String) -> void:
 	if _msg_txt == null:
 		return
@@ -27,7 +27,7 @@ func set_message(text: String) -> void:
 
 
 # ================= 数字染色 =================
-# 把文本里的数字/百分比包一层 color 标签；highlight_color 为白色时原样返回
+## 把文本里的数字/百分比包一层 color 标签；highlight_color 为白色时原样返回
 func _wrap_numbers_with_color(text: String) -> String:
 	if highlight_color == Color.WHITE or _NUMBER_RE == null:
 		return text
@@ -45,7 +45,7 @@ func _wrap_numbers_with_color(text: String) -> String:
 	return out
 
 
-# 显示 Toast；兄弟 Toast 还开着就先关掉它
+## 显示 Toast；兄弟 Toast 还开着就先关掉它
 func show_toast(_params: Dictionary = {}) -> void:
 	if sibling_toast != null and is_instance_valid(sibling_toast) and sibling_toast.visible:
 		if sibling_toast.has_method("hide_toast"):
@@ -55,7 +55,7 @@ func show_toast(_params: Dictionary = {}) -> void:
 		_anim.play_section_with_markers(_ANIM_NAME, &"", _MARK)
 
 
-# 隐藏 Toast（播到 Mark 标记为止）
+## 隐藏 Toast（播到 Mark 标记为止）
 func hide_toast() -> void:
 	if not visible:
 		return
@@ -63,6 +63,6 @@ func hide_toast() -> void:
 		_anim.play_section_with_markers(_ANIM_NAME, _MARK, &"")
 
 
-# 是否正在显示
+## 是否正在显示
 func is_showing() -> bool:
 	return visible

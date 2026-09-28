@@ -1,8 +1,8 @@
-# 胜利弹窗文案池：按档位随机挑一条翻译 key，再把 {N} 步数与 {CATS} 猫数替换进文本
+## 胜利弹窗文案池：按档位随机挑一条翻译 key，再把 {N} 步数与 {CATS} 猫数替换进文本
 extends RefCounted
 class_name WinToastMessages
 
-# 各档位的候选翻译 key 列表
+## 各档位的候选翻译 key 列表
 const _TIER_KEYS: Dictionary = {
 	WinToastTier.TIER_PERFECT:
 	[
@@ -49,7 +49,7 @@ const _TIER_KEYS: Dictionary = {
 }
 
 
-# 随机取一条该档位文案并填充步数/猫数；档位无效返回空串
+## 随机取一条该档位文案并填充步数/猫数；档位无效返回空串
 static func pick_random(tier: int, step_count: int, cat_count: int) -> String:
 	# 档位不在表里（含 TIER_NONE）
 	if not _TIER_KEYS.has(tier):

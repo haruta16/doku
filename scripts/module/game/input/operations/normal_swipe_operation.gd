@@ -1,9 +1,9 @@
-# 正常模式滑动：沿路打叉或擦叉，目标状态由起始格定下后整笔沿用
+## 正常模式滑动：沿路打叉或擦叉，目标状态由起始格定下后整笔沿用
 class_name NormalSwipeOperation
 extends BaseSwipeOperation
 
 
-# 滑动经过一格
+## 滑动经过一格
 func on_paint(r: int, c: int, stroke: BoardStrokeContext, is_current: bool) -> CellAction:
 	# 当前格状态
 	var state: int = board.get_cell_state(r, c)

@@ -1,5 +1,5 @@
-# 打卡页里的单个星期格子：三种静态形态（未打卡 / 已打卡 / 宝箱）+ 打卡动画
-# @tool 让它在编辑器里也能按 weekday 预览
+## 打卡页里的单个星期格子：三种静态形态（未打卡 / 已打卡 / 宝箱）+ 打卡动画
+## @tool 让它在编辑器里也能按 weekday 预览
 @tool
 extends Control
 
@@ -8,13 +8,13 @@ const COLOR_CHECKED := Color(0.94509804, 0.5764706, 0.1254902, 1) # 已打卡时
 const COLOR_INACTIVE := Color(0.5769231, 0.3522559, 0.3522559, 1) # 未打卡时的星期文字色
 
 # ---- 可调参数（Inspector 可改，改动会立刻刷新显示） ----
-# 星期文案 key（如 WEEKDAY_WED）
+## 星期文案 key（如 WEEKDAY_WED）
 @export var weekday: String = "WEEKDAY_WED":
 	set = set_weekday
-# 是否已打卡
+## 是否已打卡
 @export var checked: bool = false:
 	set = set_checked
-# 是不是第 7 天的宝箱格
+## 是不是第 7 天的宝箱格
 @export var is_chest: bool = false:
 	set = set_chest
 
@@ -32,7 +32,7 @@ var _applying: bool = false # 批量赋值期间置位，抑制 setter 里的重
 
 
 # ================= 生命周期 =================
-# 进场景树先按当前属性画一遍，并接上宝箱点击
+## 进场景树先按当前属性画一遍，并接上宝箱点击
 func _ready() -> void:
 	_show_static()
 
@@ -40,14 +40,14 @@ func _ready() -> void:
 		_click_area.pressed.connect(_on_chest_pressed)
 
 
-# 取宝箱里礼物格的动画播放器（可能不存在，返回 null）
+## 取宝箱里礼物格的动画播放器（可能不存在，返回 null）
 func _gift_anim() -> AnimationPlayer:
 	if _gift_cell == null:
 		return null
 	return _gift_cell.get_node_or_null("AnimationPlayer") as AnimationPlayer
 
 
-# 把礼物格的 Loop 设为线性循环并播放
+## 把礼物格的 Loop 设为线性循环并播放
 func _play_chest_loop() -> void:
 	var ap := _gift_anim()
 	if ap == null or not ap.has_animation(&"Loop"):
@@ -56,7 +56,7 @@ func _play_chest_loop() -> void:
 	ap.play(&"Loop")
 
 
-# 点宝箱：播一次 Click 再回到循环
+## 点宝箱：播一次 Click 再回到循环
 func _on_chest_pressed() -> void:
 	var ap := _gift_anim()
 	if ap == null or not ap.has_animation(&"Click"):
@@ -68,21 +68,21 @@ func _on_chest_pressed() -> void:
 
 
 # ================= 属性 setter（@export 与代码赋值都会走这里） =================
-# 星期变化：只重刷文字
+## 星期变化：只重刷文字
 func set_weekday(v: String) -> void:
 	weekday = v
 	if is_inside_tree():
 		_refresh_label()
 
 
-# 打卡状态变化：重画静态形态（批量赋值时不重画）
+## 打卡状态变化：重画静态形态（批量赋值时不重画）
 func set_checked(v: bool) -> void:
 	checked = v
 	if is_inside_tree() and not _applying:
 		_show_static()
 
 
-# 宝箱标记变化：重画静态形态（批量赋值时不重画）
+## 宝箱标记变化：重画静态形态（批量赋值时不重画）
 func set_chest(v: bool) -> void:
 	is_chest = v
 	if is_inside_tree() and not _applying:
@@ -90,7 +90,7 @@ func set_chest(v: bool) -> void:
 
 
 # ================= 对外接口（streak_page 调用） =================
-# 一次性设置两个状态再重画，避免 setter 连环刷新
+## 一次性设置两个状态再重画，避免 setter 连环刷新
 func apply_static(is_checked: bool, is_chest_slot: bool) -> void:
 	_applying = true
 	checked = is_checked
@@ -99,7 +99,7 @@ func apply_static(is_checked: bool, is_chest_slot: bool) -> void:
 	_show_static()
 
 
-# 播打卡动画并返回时长（秒）供调用方等待；只改状态不写存档
+## 播打卡动画并返回时长（秒）供调用方等待；只改状态不写存档
 func play_checkin(chest: bool) -> float:
 	_applying = true
 	is_chest = chest
@@ -126,13 +126,13 @@ func play_checkin(chest: bool) -> float:
 	return _anim.current_animation_length
 
 
-# 退回「未打卡」形态（开完宝箱后调用）
+## 退回「未打卡」形态（开完宝箱后调用）
 func show_unchecked_dot() -> void:
 	_set_dots(true, false, false)
 
 
 # ================= 内部显示 =================
-# 按 checked / is_chest 画成三种静态形态之一，并把动画定格到对应帧
+## 按 checked / is_chest 画成三种静态形态之一，并把动画定格到对应帧
 func _show_static() -> void:
 	_refresh_label()
 	if checked:
@@ -147,13 +147,13 @@ func _show_static() -> void:
 	_anim.seek(_anim.current_animation_length, true)
 
 
-# 隐藏宝箱（开完奖后不再显示）
+## 隐藏宝箱（开完奖后不再显示）
 func hide_chest() -> void:
 	if _chest:
 		_chest.visible = false
 
 
-# 三个点的显隐开关：未打卡点 / 已打卡点 / 宝箱；显示宝箱时顺带播循环
+## 三个点的显隐开关：未打卡点 / 已打卡点 / 宝箱；显示宝箱时顺带播循环
 func _set_dots(unchecked: bool, checked_dot: bool, chest: bool) -> void:
 	if _unchecked:
 		_unchecked.visible = unchecked
@@ -165,7 +165,7 @@ func _set_dots(unchecked: bool, checked_dot: bool, chest: bool) -> void:
 		_play_chest_loop()
 
 
-# 按当前星期 key 刷文字（走翻译）与文字颜色
+## 按当前星期 key 刷文字（走翻译）与文字颜色
 func _refresh_label() -> void:
 	if _label == null:
 		return

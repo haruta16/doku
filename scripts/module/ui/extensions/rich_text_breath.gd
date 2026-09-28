@@ -1,4 +1,4 @@
-# BBCode 自定义效果 breath（@tool）：用 sin(elapsed_time * freq) 缩放字形，做呼吸 / 脉动效果
+## BBCode 自定义效果 breath（@tool）：用 sin(elapsed_time * freq) 缩放字形，做呼吸 / 脉动效果
 @tool
 class_name RichTextBreath
 extends RichTextEffect
@@ -6,7 +6,7 @@ extends RichTextEffect
 var bbcode := "breath" # 效果名：正文里写 [breath ...]...[/breath] 触发
 
 
-# 对每个字形算瞬时缩放并写回 transform；group=true 时再补横向偏移，让缩放以整组中心为轴
+## 对每个字形算瞬时缩放并写回 transform；group=true 时再补横向偏移，让缩放以整组中心为轴
 func _process_custom_fx(char_fx: CharFXTransform) -> bool:
 	var amp: float = char_fx.env.get("amp", 0.2) # 缩放振幅（相对量）
 	var freq: float = char_fx.env.get("freq", 2.0) # 角频率（弧度/秒）

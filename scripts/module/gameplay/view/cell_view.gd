@@ -1,5 +1,5 @@
-# 单个格子的视图：一格的全部外观与动画（区域底色、猫/叉/草稿、提示闪烁、按压回弹）
-# 不持有棋盘逻辑：状态由 BoardView 经 change_state() 推下来，读回去用 get_state()
+## 单个格子的视图：一格的全部外观与动画（区域底色、猫/叉/草稿、提示闪烁、按压回弹）
+## 不持有棋盘逻辑：状态由 BoardView 经 change_state() 推下来，读回去用 get_state()
 @tool
 class_name CellView
 extends Control
@@ -56,7 +56,7 @@ var _demo_cat_no_idle: bool = false # 说明页演示模式：禁用自动 idle
 
 
 # ================= 生命周期 =================
-# 建样式、补偿圆角；编辑器里只做静态外观，运行时再建定时器、接信号、复位到空态
+## 建样式、补偿圆角；编辑器里只做静态外观，运行时再建定时器、接信号、复位到空态
 func _ready() -> void:
     _style = StyleBoxFlat.new() # 样式在 _ready 里创建，编辑器里也要有
 
@@ -81,8 +81,8 @@ func _ready() -> void:
     _reset_to_empty_baseline() # 复位到空态基线
 
 
-# 把格子强行拉回「空」基准态：杀 Tween、停动画、隐藏装饰、清追踪标记
-# BoardView.setup(recycle_reused=true) 复用旧格子时也会直接调用
+## 把格子强行拉回「空」基准态：杀 Tween、停动画、隐藏装饰、清追踪标记
+## BoardView.setup(recycle_reused=true) 复用旧格子时也会直接调用
 func _reset_to_empty_baseline() -> void:
     if _hint_tween != null and _hint_tween.is_valid():
         _hint_tween.kill()
@@ -130,7 +130,7 @@ func _reset_to_empty_baseline() -> void:
     _apply_eliminate_effect() # 按 AB 配置套用消除特效
 
 
-# 按 ABTest 的「消除特效」配置调整外观：叉与光晕可整体缩小，光晕也可直接隐藏
+## 按 ABTest 的「消除特效」配置调整外观：叉与光晕可整体缩小，光晕也可直接隐藏
 func _apply_eliminate_effect() -> void:
     if _is_eliminate_shrink_cross():
         $Crosses.scale = Vector2(0.865, 0.865)
@@ -139,7 +139,7 @@ func _apply_eliminate_effect() -> void:
         $Glows.visible = false
 
 
-# 递归把所有子 Control 设成不吃鼠标，点击统一由棋盘处理
+## 递归把所有子 Control 设成不吃鼠标，点击统一由棋盘处理
 func _set_children_mouse_ignore(node: Node) -> void:
     for child in node.get_children():
         if child is Control:
@@ -147,7 +147,7 @@ func _set_children_mouse_ignore(node: Node) -> void:
         _set_children_mouse_ignore(child)
 
 
-# 设置底块四角圆角半径（像素），写进 StyleBoxFlat 覆盖 Panel
+## 设置底块四角圆角半径（像素），写进 StyleBoxFlat 覆盖 Panel
 func set_corner_radius(rad: int) -> void:
     if _style == null:
         return
@@ -158,7 +158,7 @@ func set_corner_radius(rad: int) -> void:
     _bg.add_theme_stylebox_override("panel", _style)
 
 
-# 按容器缩放补偿圆角：视觉半径固定为 DESIGN_CORNER_VISUAL_PX，缩小放大都不变形
+## 按容器缩放补偿圆角：视觉半径固定为 DESIGN_CORNER_VISUAL_PX，缩小放大都不变形
 func set_corner_radius_compensated(container_scale: float) -> void:
     if _style == null:
         return
@@ -168,21 +168,21 @@ func set_corner_radius_compensated(container_scale: float) -> void:
     set_corner_radius(rad)
 
 
-# 设置本格区域底色；样式已就绪时立即重刷底块
+## 设置本格区域底色；样式已就绪时立即重刷底块
 func set_region_color(color: Color) -> void:
     _region_color = color
     if _style != null:
         _update_bg()
 
 
-# 读回当前区域底色
+## 读回当前区域底色
 func get_region_color() -> Color:
     return _region_color
 
 
 # ================= 状态切换（由 BoardView 推入） =================
-# 唯一的状态入口：params 支持 state / play_anim / show_cat_visual / appear_anim /
-# disappear_anim / lock_anim / split_press；动画与音效都在这里统一触发
+## 唯一的状态入口：params 支持 state / play_anim / show_cat_visual / appear_anim /
+## disappear_anim / lock_anim / split_press；动画与音效都在这里统一触发
 func change_state(params: Dictionary) -> void:
     var state: int = params.get("state", _state) # 目标状态；缺省沿用当前状态
     var is_play_anim: bool = params.get("play_anim", true) # false 时把动画快进到末帧（瞬间到位）
@@ -322,7 +322,7 @@ func change_state(params: Dictionary) -> void:
         _press_shrunk = true
 
 
-# 松手回弹：只有按下时缩小过才播 PressGrow（BoardView.play_mark_release 转发）
+## 松手回弹：只有按下时缩小过才播 PressGrow（BoardView.play_mark_release 转发）
 func play_mark_release() -> void:
     if not _press_shrunk:
         return
@@ -331,13 +331,13 @@ func play_mark_release() -> void:
     _scale_anim.play("PressGrow")
 
 
-# 读当前状态（BoardView.get_board() / get_cell_state() 都走这里）
+## 读当前状态（BoardView.get_board() / get_cell_state() 都走这里）
 func get_state() -> int:
     return _state
 
 
-# 自动打叉的「预置」：只置状态并记账，不播动画
-# 出场动画留给 play_pending_auto_cross_appear()（自动清屏流程分两步走）
+## 自动打叉的「预置」：只置状态并记账，不播动画
+## 出场动画留给 play_pending_auto_cross_appear()（自动清屏流程分两步走）
 func preset_mark_for_auto_cross() -> void:
     if _state != CellState.EMPTY:
         return
@@ -347,7 +347,7 @@ func preset_mark_for_auto_cross() -> void:
     _ever_marked_x = true
 
 
-# 补播自动打叉的出场动画（AutomaticAppear）；叉已可见则跳过
+## 补播自动打叉的出场动画（AutomaticAppear）；叉已可见则跳过
 func play_pending_auto_cross_appear() -> void:
     if _state != CellState.MARK:
         return
@@ -363,22 +363,22 @@ func play_pending_auto_cross_appear() -> void:
 var _auto_mark_locked: bool = false # true = 自动打叉流程中禁止玩家改动
 
 
-# 加锁 / 解锁本格输入（自动打叉流程中禁止玩家再改）
+## 加锁 / 解锁本格输入（自动打叉流程中禁止玩家再改）
 func set_auto_mark_locked(locked: bool) -> void:
     _auto_mark_locked = locked
 
 
-# 查询输入是否被锁（BoardView.is_cell_input_locked 转发）
+## 查询输入是否被锁（BoardView.is_cell_input_locked 转发）
 func is_auto_mark_locked() -> bool:
     return _auto_mark_locked
 
 
-# 是否草稿态：语义同 CellState.is_draft，本文件内的快捷判断
+## 是否草稿态：语义同 CellState.is_draft，本文件内的快捷判断
 func _is_draft_state(s: int) -> bool:
     return s == CellState.DRAFT_CROSS or s == CellState.DRAFT_CAT
 
 
-# 清空「打过叉 / 出过错」追踪（BoardView 建格与复用时调用）
+## 清空「打过叉 / 出过错」追踪（BoardView 建格与复用时调用）
 func reset_clap_tracking() -> void:
     _ever_marked_x = false
     _ever_errored = false
@@ -386,18 +386,18 @@ func reset_clap_tracking() -> void:
     _ever_marked_x_snapshot = false
 
 
-# 本局是否打过分叉（BoardView 按区域聚合后喂给 R4+ 鼓掌提示）
+## 本局是否打过分叉（BoardView 按区域聚合后喂给 R4+ 鼓掌提示）
 func has_ever_marked_x() -> bool:
     return _ever_marked_x
 
 
-# 本局是否出过错标（同上，按区域聚合）
+## 本局是否出过错标（同上，按区域聚合）
 func has_ever_errored() -> bool:
     return _ever_errored
 
 
 # ================= 音效与动画名 =================
-# 按目标状态配音；错标音效受 ABTest「错音量降低」影响
+## 按目标状态配音；错标音效受 ABTest「错音量降低」影响
 func _emit_state_sound(prev_state: int, state: int) -> void:
     if state == CellState.CAT:
         SoundManager.play(SoundManager.Kind.MARK_CAT)
@@ -412,7 +412,7 @@ func _emit_state_sound(prev_state: int, state: int) -> void:
         SoundManager.play(SoundManager.Kind.UNMARK_X)
 
 
-# 前后状态 → 默认动画名：只有 空→叉 / 叉→空 / 错标 三种有动画，其余返回空串
+## 前后状态 → 默认动画名：只有 空→叉 / 叉→空 / 错标 三种有动画，其余返回空串
 func _get_anim_name(prev: int, target: int) -> String:
     match target:
         CellState.EMPTY:
@@ -425,7 +425,7 @@ func _get_anim_name(prev: int, target: int) -> String:
             return ""
 
 
-# 错标出场动画共 6 种变体：「是否跳过红色填充」× 图标崩坏类型（心碎/不崩/鱼碎）
+## 错标出场动画共 6 种变体：「是否跳过红色填充」× 图标崩坏类型（心碎/不崩/鱼碎）
 func _resolve_error_appear_anim() -> String:
     var no_red: bool = ABTestManager.wrong_cat_effect.should_skip_red_fill()
     var crash_val: int = ABTestManager.icon_crash.value() as int
@@ -443,7 +443,7 @@ func _resolve_error_appear_anim() -> String:
         return "ErrorAppear"
 
 
-# 强制重播猫的出现动画（通关时 BoardView.replay_all_cat_appear 逐格调用）
+## 强制重播猫的出现动画（通关时 BoardView.replay_all_cat_appear 逐格调用）
 func force_play_appear(with_particles: bool = true) -> void:
     _set_particles_visible(with_particles)
     _idle_timer.stop()
@@ -451,7 +451,7 @@ func force_play_appear(with_particles: bool = true) -> void:
     _anim.play("CatIconAppear")
 
 
-# 开关猫出现时的粒子特效节点；节点不存在时静默跳过
+## 开关猫出现时的粒子特效节点；节点不存在时静默跳过
 func _set_particles_visible(show: bool) -> void:
     var fx: Control = get_node_or_null("EffectCatIconAppear2")
     if fx != null:
@@ -459,7 +459,7 @@ func _set_particles_visible(show: bool) -> void:
 
 
 # ================= 猫的表情动画 =================
-# 循环播放「猫哭」（猜错时全盘一起哭，由 revive_to_idle 收场）
+## 循环播放「猫哭」（猜错时全盘一起哭，由 revive_to_idle 收场）
 func play_cry_loop() -> void:
     if _state != CellState.CAT or _cat_cry_loop:
         return
@@ -471,7 +471,7 @@ func play_cry_loop() -> void:
     _anim.play("CatIconCry")
 
 
-# 播一次沮丧表情（动画名由 ABTest error_catface 决定）
+## 播一次沮丧表情（动画名由 ABTest error_catface 决定）
 func play_frustrated_once() -> void:
     if _state != CellState.CAT or _cat_cry_loop:
         return
@@ -481,7 +481,7 @@ func play_frustrated_once() -> void:
     _anim.play(_error_catface_anim())
 
 
-# 结束哭 / 沮丧回到 idle，并重启闲置定时器（只对猫生效）
+## 结束哭 / 沮丧回到 idle，并重启闲置定时器（只对猫生效）
 func revive_to_idle() -> void:
     if _state != CellState.CAT:
         return
@@ -492,7 +492,7 @@ func revive_to_idle() -> void:
     _idle_timer.start()
 
 
-# 动画播完的回调：哭循环续播；沮丧与出现结束后接 idle，idle 被禁用时定格末帧
+## 动画播完的回调：哭循环续播；沮丧与出现结束后接 idle，idle 被禁用时定格末帧
 func _on_anim_finished(anim_name: StringName) -> void:
     if _state != CellState.CAT:
         return
@@ -508,7 +508,7 @@ func _on_anim_finished(anim_name: StringName) -> void:
             _anim.advance(_anim.current_animation_length)
 
 
-# 闲置超时：重播 idle 让猫动一下（哭 / 沮丧中或 idle 被禁用时跳过）
+## 闲置超时：重播 idle 让猫动一下（哭 / 沮丧中或 idle 被禁用时跳过）
 func _on_idle_timer_timeout() -> void:
     if _state != CellState.CAT or _cat_cry_loop:
         return
@@ -520,7 +520,7 @@ func _on_idle_timer_timeout() -> void:
     _anim.play("CatIconIdle")
 
 
-# idle 循环是否启用：说明页演示一律关，否则读 ABTest
+## idle 循环是否启用：说明页演示一律关，否则读 ABTest
 func _is_idle_anim_enabled() -> bool:
     if _demo_cat_no_idle:
         return false
@@ -529,21 +529,21 @@ func _is_idle_anim_enabled() -> bool:
     return ABTestManager.play_anim.is_idle_anim_enabled()
 
 
-# 沮丧表情的动画名；ABTest 不可用时退回默认 CatIconFrustrated
+## 沮丧表情的动画名；ABTest 不可用时退回默认 CatIconFrustrated
 func _error_catface_anim() -> StringName:
     if ABTestManager == null or ABTestManager.error_catface == null:
         return &"CatIconFrustrated"
     return ABTestManager.error_catface.anim_for_error()
 
 
-# AB 配置：消除特效是否要缩小叉（ABTest 缺失时按 false）
+## AB 配置：消除特效是否要缩小叉（ABTest 缺失时按 false）
 func _is_eliminate_shrink_cross() -> bool:
     if ABTestManager == null or ABTestManager.eliminate_effect == null:
         return false
     return ABTestManager.eliminate_effect.is_shrink_cross()
 
 
-# AB 配置：消除特效是否要隐藏光晕
+## AB 配置：消除特效是否要隐藏光晕
 func _is_eliminate_remove_glow() -> bool:
     if ABTestManager == null or ABTestManager.eliminate_effect == null:
         return false
@@ -551,7 +551,7 @@ func _is_eliminate_remove_glow() -> bool:
 
 
 # ================= 提示与预览 =================
-# 提示高亮：HighLight 与 PromptFrame 同步无限呼吸闪烁（由 play_hide_hint 收尾）
+## 提示高亮：HighLight 与 PromptFrame 同步无限呼吸闪烁（由 play_hide_hint 收尾）
 func play_hint() -> void:
     if _hint_tween != null and _hint_tween.is_valid():
         _hint_tween.kill()
@@ -572,7 +572,7 @@ func play_hint() -> void:
     _frame_tween.tween_property(_prompt_frame, "modulate:a", _HINT_ALPHA_MIN, _HINT_HALF_CYCLE)
 
 
-# R2 提示预演：底块淡入后延迟播出 PromptCrossOut（delay 叠加在 0.317 秒之后）
+## R2 提示预演：底块淡入后延迟播出 PromptCrossOut（delay 叠加在 0.317 秒之后）
 func play_r2_preview(delay: float = 0.0) -> void:
     if _preview_tween != null and _preview_tween.is_valid():
         _preview_tween.kill()
@@ -586,7 +586,7 @@ func play_r2_preview(delay: float = 0.0) -> void:
     )
 
 
-# 提示猫剪影：延迟淡入 + 回弹放大，随后猫与边框各自呼吸闪烁
+## 提示猫剪影：延迟淡入 + 回弹放大，随后猫与边框各自呼吸闪烁
 func play_prompt_cat(delay: float = 0.0) -> void:
     var tw := create_tween() # 并行：底块淡入与延迟回调同时跑
     tw.set_parallel(true)
@@ -625,7 +625,7 @@ func play_prompt_cat(delay: float = 0.0) -> void:
     ).set_delay(delay)
 
 
-# 收起提示：杀 Tween、隐藏猫剪影与边框；非 叉/错标/猫 状态连叉一起复位
+## 收起提示：杀 Tween、隐藏猫剪影与边框；非 叉/错标/猫 状态连叉一起复位
 func play_hide_hint() -> void:
     if _hint_tween != null and _hint_tween.is_valid():
         _hint_tween.kill()
@@ -655,19 +655,19 @@ func play_hide_hint() -> void:
 signal undo_highlight_finished
 
 
-# 空实现：历史遗留接口，保留以免外部调用报错
+## 空实现：历史遗留接口，保留以免外部调用报错
 func play_undo_highlight(_duration: float) -> void:
     pass
 
 
-# 空实现：历史遗留接口
+## 空实现：历史遗留接口
 func stop_undo_highlight() -> void:
     pass
 
 
 # ================= 草稿渲染 =================
-# 草稿只换贴图不播动画：DRAFT_CROSS 亮草稿叉，DRAFT_CAT 亮猫剪影，其余全隐藏
-# 提示边框正在闪时不抢它的显示（靠 _prompt_frame.visible 判断）
+## 草稿只换贴图不播动画：DRAFT_CROSS 亮草稿叉，DRAFT_CAT 亮猫剪影，其余全隐藏
+## 提示边框正在闪时不抢它的显示（靠 _prompt_frame.visible 判断）
 func _apply_draft_visual(state: int) -> void:
     match state:
         CellState.DRAFT_CROSS:
@@ -689,7 +689,7 @@ func _apply_draft_visual(state: int) -> void:
                 _cat_prompt.visible = false
 
 
-# 草稿叉撤销：状态先回落 EMPTY，再播 PromptCrossOutDisappear 收场
+## 草稿叉撤销：状态先回落 EMPTY，再播 PromptCrossOutDisappear 收场
 func play_draft_cross_disappear() -> void:
     if _state != CellState.DRAFT_CROSS:
         return
@@ -700,7 +700,7 @@ func play_draft_cross_disappear() -> void:
     _anim.play("PromptCrossOutDisappear")
 
 
-# 草稿叉转正：状态改 MARK 并记账，草稿叉消失后补播正式叉 CrossOutAppear2
+## 草稿叉转正：状态改 MARK 并记账，草稿叉消失后补播正式叉 CrossOutAppear2
 func play_draft_cross_apply() -> void:
     if _state != CellState.DRAFT_CROSS:
         return
@@ -723,7 +723,7 @@ func play_draft_cross_apply() -> void:
 
 
 # ================= 说明页演示接口（HowToPlay 直接调用） =================
-# 直接播指定动画；CrossOut* 系列会自动把叉节点打开，instant=true 时快进到末帧
+## 直接播指定动画；CrossOut* 系列会自动把叉节点打开，instant=true 时快进到末帧
 func demo_play(anim_name: String, instant: bool = false) -> void:
     _idle_timer.stop()
     _anim.stop()
@@ -734,7 +734,7 @@ func demo_play(anim_name: String, instant: bool = false) -> void:
         _anim.advance(_anim.current_animation_length)
 
 
-# 演示用猫：绕过状态机直接置 CAT，并关掉 idle 自动重播
+## 演示用猫：绕过状态机直接置 CAT，并关掉 idle 自动重播
 func demo_cat(animate: bool) -> void:
     _idle_timer.stop()
     _cat_cry_loop = false
@@ -753,7 +753,7 @@ func demo_cat(animate: bool) -> void:
             _cat_icon.modulate = Color(1, 1, 1, 1)
 
 
-# 演示结束复位：回到 EMPTY 并播放 RESET
+## 演示结束复位：回到 EMPTY 并播放 RESET
 func demo_clear() -> void:
     _idle_timer.stop()
     _cat_cry_loop = false
@@ -765,12 +765,12 @@ func demo_clear() -> void:
     _cross.visible = false
 
 
-# 取动画时长（秒）供说明页排时间轴；动画不存在返回 0.0
+## 取动画时长（秒）供说明页排时间轴；动画不存在返回 0.0
 func demo_anim_length(anim_name: String) -> float:
     return _anim.get_animation(anim_name).length if _anim.has_animation(anim_name) else 0.0
 
 
 # ================= 内部工具 =================
-# 把区域色写进底块样式（唯一写 _style.bg_color 的地方）
+## 把区域色写进底块样式（唯一写 _style.bg_color 的地方）
 func _update_bg() -> void:
     _style.bg_color = _region_color

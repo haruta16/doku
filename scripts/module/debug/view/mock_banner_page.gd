@@ -1,5 +1,5 @@
-# 编辑器专用的假横幅广告条：按参数把一根 Control 贴到屏幕顶/底，不接任何广告 SDK
-# 只在编辑器里注册（UIRegistry._EDITOR_PAGES），由 UniKitManager._mock_show_banner 拉起
+## 编辑器专用的假横幅广告条：按参数把一根 Control 贴到屏幕顶/底，不接任何广告 SDK
+## 只在编辑器里注册（UIRegistry._EDITOR_PAGES），由 UniKitManager._mock_show_banner 拉起
 extends UIFrameWindow
 
 # ---- 子节点引用 ----
@@ -7,7 +7,7 @@ extends UIFrameWindow
 @onready var _info_label: Label = $Bar/InfoLabel # 显示 placement / position 的说明文字
 
 
-# 显示前按 params 重算横幅位置：anchor_bottom 为真贴底，否则贴顶
+## 显示前按 params 重算横幅位置：anchor_bottom 为真贴底，否则贴顶
 func on_show(params: Dictionary = {}) -> void:
 	visible = true
 	var placement_id: String = params.get("placement_id", "banner") # 广告位 id，默认 banner

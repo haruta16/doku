@@ -1,9 +1,9 @@
-# 跟随节点：让父 Control 的纵向位置对齐首页「设置按钮」的 Y，数据来自 HomeSettingAnchor 的广播
+## 跟随节点：让父 Control 的纵向位置对齐首页「设置按钮」的 Y，数据来自 HomeSettingAnchor 的广播
 class_name FollowHomeSettingBtnY
 extends Node
 
 
-# 进树：父节点必须是 Control；订阅自身可见性变化与锚点变化，并先对齐一次
+## 进树：父节点必须是 Control；订阅自身可见性变化与锚点变化，并先对齐一次
 func _ready() -> void:
 	var host := get_parent() as Control
 	if host == null:
@@ -14,12 +14,12 @@ func _ready() -> void:
 	_on_sync_requested()
 
 
-# 锚点变化回调：参数用不上，统一走同步流程
+## 锚点变化回调：参数用不上，统一走同步流程
 func _on_anchor_changed(_y: float) -> void:
 	_on_sync_requested()
 
 
-# 同步：不可见或还没有锚点时跳过；等一帧布局稳定后按中心点差值平移 offset_top / offset_bottom
+## 同步：不可见或还没有锚点时跳过；等一帧布局稳定后按中心点差值平移 offset_top / offset_bottom
 func _on_sync_requested() -> void:
 	var host := get_parent() as Control
 	if host == null or not host.is_visible_in_tree():

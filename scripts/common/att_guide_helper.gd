@@ -1,14 +1,14 @@
-# ATT（iOS 广告跟踪授权）引导流程：先播自定义引导页，再调系统 ATT 弹窗，并等它关闭
+## ATT（iOS 广告跟踪授权）引导流程：先播自定义引导页，再调系统 ATT 弹窗，并等它关闭
 class_name AttGuideHelper
 extends Object
 
 # ---- 常量 ----
-# 上报弹窗来源用的场景标识（启动闪屏）
+## 上报弹窗来源用的场景标识（启动闪屏）
 const _SOURCE: String = "splash_scr"
 
 
 # ================= 对外入口 =================
-# ATT 引导主流程：按 AB 分组决定要不要先播自定义引导页，最后调系统弹窗并等玩家关闭；协程，调用方必须 await
+## ATT 引导主流程：按 AB 分组决定要不要先播自定义引导页，最后调系统弹窗并等玩家关闭；协程，调用方必须 await
 static func try_show_and_wait_dialog_close() -> void:
 	# 编辑器强制测试开关：为 true 时本次不写存档，流程结束时自动复位
 	var is_test: bool = UniKitManager.debug_force_editor_test
@@ -65,7 +65,7 @@ static func try_show_and_wait_dialog_close() -> void:
 
 
 # ================= 内部工具 =================
-# 测试收尾：关掉编辑器强制测试开关，避免下次启动又被强制走一遍引导
+## 测试收尾：关掉编辑器强制测试开关，避免下次启动又被强制走一遍引导
 static func _reset_debug_flag_if_test(is_test: bool) -> void:
 	# 只在测试态动这个开关
 	if is_test:

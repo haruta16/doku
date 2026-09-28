@@ -1,10 +1,10 @@
-# 关卡数据总表：难度曲线（关卡号 → 边长/策略/rank/tier）、题源选择、题库轮询取题、题目查重 ID
+## 关卡数据总表：难度曲线（关卡号 → 边长/策略/rank/tier）、题源选择、题库轮询取题、题目查重 ID
 class_name LevelData
 extends RefCounted
 
 # ================= 难度曲线：边长表与难度判定 =================
 const LEVEL_COUNT: int = 0 # 未被任何地方使用的占位常量（值恒为 0）
-# 第 1~100 关的棋盘边长表，共 100 项，下标 = 关卡号 - 1
+## 第 1~100 关的棋盘边长表，共 100 项，下标 = 关卡号 - 1
 const SIZES: Array[int] = [
 	4,
 	4,
@@ -117,7 +117,7 @@ const _SIZES_GROUP_J_51_100: Array[int] = [6, 7, 8, 7, 9, 6, 7, 8, 10, 9] # 51~1
 const _SIZES_GROUP_J_101_PLUS: Array[int] = [7, 8, 7, 9, 10, 7, 8, 9, 10, 8] # 101 关以后，同样 10 关一循环
 
 
-# 关卡号 → 棋盘边长：前 100 关查表，之后按 10 关一循环；关卡号非法返回 0
+## 关卡号 → 棋盘边长：前 100 关查表，之后按 10 关一循环；关卡号非法返回 0
 static func get_size(level_num: int) -> int:
 	if level_num < 1: # 关卡号小于 1 视为无效
 		return 0
@@ -126,7 +126,7 @@ static func get_size(level_num: int) -> int:
 	return _SIZES_101_PLUS[(level_num - 101) % 10] # 101 关起每 10 关重复一轮
 
 
-# 同上，但用于规则组 J：分段边界是 21 / 51 / 101
+## 同上，但用于规则组 J：分段边界是 21 / 51 / 101
 static func get_size_group_j(level_num: int) -> int:
 	if level_num < 1:
 		return 0
@@ -139,22 +139,22 @@ static func get_size_group_j(level_num: int) -> int:
 	return _SIZES_GROUP_J_101_PLUS[(level_num - 101) % 10] # 101 关以后
 
 
-# 是否难关（Boss 关）：21 关起每逢 10 的倍数，即 30 / 40 / 50…（第 20 关不算）
+## 是否难关（Boss 关）：21 关起每逢 10 的倍数，即 30 / 40 / 50…（第 20 关不算）
 static func is_hard_level(level_num: int) -> bool:
 	return level_num >= 21 and level_num % 10 == 0
 
 
-# 组 J 的难关：29 关起每逢 9 结尾，即 29 / 39 / 49…
+## 组 J 的难关：29 关起每逢 9 结尾，即 29 / 39 / 49…
 static func is_hard_level_group_j(level_num: int) -> bool:
 	return level_num >= 29 and level_num % 10 == 9
 
 
-# 是否里程碑特殊关：题目写死在 _SPECIAL_LEVELS 里，不走题库轮询
+## 是否里程碑特殊关：题目写死在 _SPECIAL_LEVELS 里，不走题库轮询
 static func is_special_level(level_num: int) -> bool:
 	return _SPECIAL_LEVELS.has(level_num)
 
 
-# 策略号 → 题库 rank：5→4、6→5、7→5，其余原样（策略号是 rank 与 H 档的组合编码）
+## 策略号 → 题库 rank：5→4、6→5、7→5，其余原样（策略号是 rank 与 H 档的组合编码）
 static func strategy_to_rank(strategy: int) -> int:
 	match strategy:
 		5:
@@ -167,7 +167,7 @@ static func strategy_to_rank(strategy: int) -> int:
 			return strategy
 
 
-# 策略号 → 题库 tier：5 和 7 属于 H 档，其余是 N 档
+## 策略号 → 题库 tier：5 和 7 属于 H 档，其余是 N 档
 static func strategy_to_tier(strategy: int) -> String:
 	match strategy:
 		5:
@@ -178,7 +178,7 @@ static func strategy_to_tier(strategy: int) -> String:
 			return "N"
 
 
-# 取当前难度策略：前 5 关固定 1；51 关起保底 2，并把提升结果写回存档
+## 取当前难度策略：前 5 关固定 1；51 关起保底 2，并把提升结果写回存档
 static func get_strategy(level_num: int) -> int:
 	if level_num <= 5:
 		return 1
@@ -190,7 +190,7 @@ static func get_strategy(level_num: int) -> int:
 
 
 # ================= 题库进度推进（都会写存档） =================
-# 取完一题后推进游标：lk_mod 走自己的计数器，其他来源走主进度 idx / since_lk
+## 取完一题后推进游标：lk_mod 走自己的计数器，其他来源走主进度 idx / since_lk
 static func advance_for_entry(entry: Dictionary, sz: int) -> void:
 	var rank: int = int(entry.get("_bank_rank", 1)) # 题目里带的题库元信息，由 get_next_entry / get_next_entry_main 写入
 	var tier: String = entry.get("_bank_tier", "")
@@ -213,8 +213,8 @@ static func advance_for_entry(entry: Dictionary, sz: int) -> void:
 
 
 # ================= 取题：老入口（50 关及以前） =================
-# 把 regular / lkstyle / gc 三段拼成一个池，按存档序号取模轮询；tier 为空表示不限档
-# 返回题目字典（带 _bank_source/_bank_idx/_bank_tier/_bank_rank），池子空时返回 {}
+## 把 regular / lkstyle / gc 三段拼成一个池，按存档序号取模轮询；tier 为空表示不限档
+## 返回题目字典（带 _bank_source/_bank_idx/_bank_tier/_bank_rank），池子空时返回 {}
 static func get_next_entry(
 	sz: int, rank: int, tier: String = "", remaining_attempts: int = -1
 ) -> Dictionary:
@@ -323,8 +323,8 @@ static func get_next_entry(
 
 
 # ================= 开局送格（仅前 10 关） =================
-# 1~6 关送「所在区域不止一格」的答案格，7~10 关改送「独占一个小区域」的答案格
-# 返回 [行, 列]；不适用或找不到时返回 []（调用方按「不给提示」处理）
+## 1~6 关送「所在区域不止一格」的答案格，7~10 关改送「独占一个小区域」的答案格
+## 返回 [行, 列]；不适用或找不到时返回 []（调用方按「不给提示」处理）
 static func compute_prefill(level_num: int, region_map: Array, solution: Array, sz: int) -> Array:
 	if level_num < 1 or level_num > 10: # 只对第 1~10 关生效
 		return []
@@ -351,14 +351,14 @@ static func compute_prefill(level_num: int, region_map: Array, solution: Array, 
 
 
 # ================= 题目的对称变换与查重 ID =================
-# LK 改造题库里预留给特殊关的下标（1-based），常规轮询会跳过这几题
+## LK 改造题库里预留给特殊关的下标（1-based），常规轮询会跳过这几题
 const LK_MOD_RESERVED: Array[int] = [20, 30, 53, 71, 72, 75, 114, 141, 164]
 
 const TRANSFORM_COUNT: int = 8 # 一道题的对称变换总数：4 种旋转 × 是否左右镜像
 
 
-# 对题目做第 t 种对称变换，返回 [region_map, solution]；solution 是「每行猫所在列号」的一维数组
-# 题库轮换只用 t ∈ 0~7；cheat 面板允许 0~11，多出的 8~11 才会同时用上左右与上下镜像
+## 对题目做第 t 种对称变换，返回 [region_map, solution]；solution 是「每行猫所在列号」的一维数组
+## 题库轮换只用 t ∈ 0~7；cheat 面板允许 0~11，多出的 8~11 才会同时用上左右与上下镜像
 static func apply_transform(region_map: Array, solution: Array, sz: int, t: int) -> Array:
 	var rm: Array = region_map
 	var sol: Array = solution
@@ -401,7 +401,7 @@ static func apply_transform(region_map: Array, solution: Array, sz: int, t: int)
 	return [rm, sol] # 返回值固定是 [区域图, 答案列号数组] 两元组
 
 
-# 变换序号 → 题号后缀（第 0 种是规范形，不写后缀）
+## 变换序号 → 题号后缀（第 0 种是规范形，不写后缀）
 const _SUFFIX_NAMES: Array[String] = [
 	"",
 	"r90",
@@ -414,9 +414,9 @@ const _SUFFIX_NAMES: Array[String] = [
 ]
 
 
-# 题目的稳定查重 ID：8 种对称变换里字典序最小的形态当规范形，取规范形的 sha256 前 16 位
-# 返回 "边长_哈希"；当前朝向不是规范形时再补后缀（r90/h/hr270…）
-# 调用方拿它调 GameState.record_puzzle 判重，近期出现过的题会被换掉
+## 题目的稳定查重 ID：8 种对称变换里字典序最小的形态当规范形，取规范形的 sha256 前 16 位
+## 返回 "边长_哈希"；当前朝向不是规范形时再补后缀（r90/h/hr270…）
+## 调用方拿它调 GameState.record_puzzle 判重，近期出现过的题会被换掉
 static func compute_puzzle_id(sz: int, region_map: Array) -> String:
 	var input_norm_str: String = _serialize_region_map(_normalize_region_map(region_map, sz)) # 输入先归一化（重编区域号）再序列化，作为比较基准
 
@@ -444,7 +444,7 @@ static func compute_puzzle_id(sz: int, region_map: Array) -> String:
 	return "%d_%s_%s" % [sz, hash16, _SUFFIX_NAMES[suffix_t]]
 
 
-# 只变换区域图、不动 solution 的版本，compute_puzzle_id 算规范形时用
+## 只变换区域图、不动 solution 的版本，compute_puzzle_id 算规范形时用
 static func _apply_region_transform(region_map: Array, sz: int, t: int) -> Array:
 	var rm: Array = region_map
 	@warning_ignore("integer_division")
@@ -474,7 +474,7 @@ static func _apply_region_transform(region_map: Array, sz: int, t: int) -> Array
 	return rm
 
 
-# 按行优先首次出现的顺序把区域号重编成 0,1,2…，消除编号命名差异，便于两份区域图比较
+## 按行优先首次出现的顺序把区域号重编成 0,1,2…，消除编号命名差异，便于两份区域图比较
 static func _normalize_region_map(region_map: Array, sz: int) -> Array:
 	var remap: Dictionary = {}
 	var next_id: int = 0
@@ -491,7 +491,7 @@ static func _normalize_region_map(region_map: Array, sz: int) -> Array:
 	return result
 
 
-# 把二维区域图拍成逗号分隔字符串，用于比较与取哈希
+## 把二维区域图拍成逗号分隔字符串，用于比较与取哈希
 static func _serialize_region_map(region_map: Array) -> String:
 	var parts: PackedStringArray = PackedStringArray()
 	for row in region_map:
@@ -501,8 +501,8 @@ static func _serialize_region_map(region_map: Array) -> String:
 
 
 # ================= 取题：主线入口（51 关及以后） =================
-# 四段题源轮询：lk_mod 改造题 + regular + lkstyle + gc；每连取 4 道常规题插一道 LK 改造题
-# 一整池取完就换下一种对称变换重来；进度来自存档里的 idx / since_lk / transform
+## 四段题源轮询：lk_mod 改造题 + regular + lkstyle + gc；每连取 4 道常规题插一道 LK 改造题
+## 一整池取完就换下一种对称变换重来；进度来自存档里的 idx / since_lk / transform
 static func get_next_entry_main(
 	sz: int, rank: int, tier: String, remaining_attempts: int = -1, strict_rank: bool = false
 ) -> Dictionary:
@@ -707,8 +707,8 @@ static func get_next_entry_main(
 
 
 # ================= 特殊关表与取题总入口 =================
-# 里程碑关的固定题目：关号 → {题源 "sp"/"lk", 1-based 下标}；sp = bankDataSP，lk = bankDataLK
-# 这些关不参与题库轮询
+## 里程碑关的固定题目：关号 → {题源 "sp"/"lk", 1-based 下标}；sp = bankDataSP，lk = bankDataLK
+## 这些关不参与题库轮询
 const _SPECIAL_LEVELS: Dictionary = {
 	10: {"source": "sp", "index": 44},
 	20: {"source": "sp", "index": 45},
@@ -731,8 +731,8 @@ const _SPECIAL_LEVELS: Dictionary = {
 }
 
 
-# 关卡号 → 关卡数据 entry 的总入口：先查特殊关，再按 AB 规则算边长 / rank / tier，最后交给取题函数
-# override_sz > 0 时强制使用该边长；命中特殊关失败则继续走常规曲线
+## 关卡号 → 关卡数据 entry 的总入口：先查特殊关，再按 AB 规则算边长 / rank / tier，最后交给取题函数
+## override_sz > 0 时强制使用该边长；命中特殊关失败则继续走常规曲线
 static func get_level_entry(level_num: int, override_sz: int = 0) -> Dictionary:
 	var rnr: int = ABTestManager.rule_normal_rank.value() # AB 实验里的难度规则编号（1~11），决定曲线怎么裁剪
 
@@ -947,7 +947,7 @@ static func get_level_entry(level_num: int, override_sz: int = 0) -> Dictionary:
 	return _get_next_entry_with_filter(sz, rank, tier, level_num, is_hard) # 交给统一的过滤 + 取题函数
 
 
-# 取题收口：51 关起走四段轮询（get_next_entry_main），前 50 关走老的三段轮询，再叠一层 AB 严格过滤
+## 取题收口：51 关起走四段轮询（get_next_entry_main），前 50 关走老的三段轮询，再叠一层 AB 严格过滤
 static func _get_next_entry_with_filter(
 	sz: int, rank: int, tier: String, level_num: int, is_hard: bool, remaining: int = -1
 ) -> Dictionary:

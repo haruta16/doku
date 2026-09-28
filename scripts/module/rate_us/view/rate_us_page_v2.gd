@@ -1,17 +1,17 @@
-# 评星弹窗（新版 UI）：开场动画播到 30% 处才一次性点亮五星
+## 评星弹窗（新版 UI）：开场动画播到 30% 处才一次性点亮五星
 class_name RateUsPageV2
 extends RateUsPage
 
-# 开场动画进度到 30% 时点亮五星
+## 开场动画进度到 30% 时点亮五星
 const _STAR_FILL_AT: float = 0.3
 
 
-# 换用另一条动画 GenericPopupV2
+## 换用另一条动画 GenericPopupV2
 func _get_anim_name() -> StringName:
 	return &"GenericPopupV2"
 
 
-# 打开：先清零星星，等动画走到 30% 再点亮
+## 打开：先清零星星，等动画走到 30% 再点亮
 func on_show(_params: Dictionary = {}) -> void:
 	_closing = false
 	_select_stars(0)
@@ -22,6 +22,6 @@ func on_show(_params: Dictionary = {}) -> void:
 	_select_stars(5)
 
 
-# 埋点附加：新版星 UI 标识
+## 埋点附加：新版星 UI 标识
 func get_dlg_extra() -> Dictionary:
 	return {"dlg_star_ui": "dlg_star_ui_1"}

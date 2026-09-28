@@ -1,4 +1,4 @@
-# 连击反馈视图：在棋盘上飘 COMBO 气泡与得分，并按 AB 配置切换跟猫/固定位置、语音与分数板形态
+## 连击反馈视图：在棋盘上飘 COMBO 气泡与得分，并按 AB 配置切换跟猫/固定位置、语音与分数板形态
 extends Control
 class_name ComboFeedbackView
 
@@ -43,7 +43,7 @@ var _is_hard: bool = false # 本关是否困难
 
 
 # ================= 生命周期 =================
-# 进树：取兄弟节点引用，动态搭一个「困难」标记，并按 AB 决定分数板形态
+## 进树：取兄弟节点引用，动态搭一个「困难」标记，并按 AB 决定分数板形态
 func _ready() -> void:
 	# 压在棋盘之上
 	z_index = 10
@@ -119,7 +119,7 @@ func _ready() -> void:
 
 
 # ================= 对外展示接口 =================
-# 显示一次连击反馈：鼓励动画 + 语音 +（可选）分数飘字
+## 显示一次连击反馈：鼓励动画 + 语音 +（可选）分数飘字
 func show_combo(combo_count: int, cell_global_pos: Vector2, total_score: int, gain: int) -> void:
 	# 这次要不要显示分数
 	var has_score: bool = ABTestManager.combo_encourage.has_score_display()
@@ -143,7 +143,7 @@ func show_combo(combo_count: int, cell_global_pos: Vector2, total_score: int, ga
 		_show_score_bubble(cell_global_pos, gain)
 
 
-# 只显示连击文字与语音，不显示分数
+## 只显示连击文字与语音，不显示分数
 func show_combo_text_only(combo_count: int, cell_global_pos: Vector2) -> void:
 	if ABTestManager.combo_encourage.is_follow_cat():
 		# 位置策略与 show_combo 一致，只是不弹分数
@@ -156,7 +156,7 @@ func show_combo_text_only(combo_count: int, cell_global_pos: Vector2) -> void:
 	_play_combo_feedback_voice(combo_count)
 
 
-# 播连击语音：优先新的语音 AB，其次按鼓励配置
+## 播连击语音：优先新的语音 AB，其次按鼓励配置
 func _play_combo_feedback_voice(combo_count: int) -> void:
 	# 优先新的连击语音 AB
 	if ABTestManager.combo_voice.is_enabled():
@@ -169,13 +169,13 @@ func _play_combo_feedback_voice(combo_count: int) -> void:
 		SoundManager.play_combo_voice(combo_count, ABTestManager.combo_encourage.is_female_voice())
 
 
-# 只更新分数与飘字（不显示连击）
+## 只更新分数与飘字（不显示连击）
 func show_score_only(cell_global_pos: Vector2, gain: int, total_score: int) -> void:
 	_update_score_label(total_score)
 	_show_score_bubble(cell_global_pos, gain)
 
 
-# 复位：清掉鼓励实例并按当前分数制重设显示值
+## 复位：清掉鼓励实例并按当前分数制重设显示值
 func reset(initial_score: int = 0) -> void:
 	_combo_label.visible = false
 	# 清掉还在播的鼓励实例
@@ -192,7 +192,7 @@ func reset(initial_score: int = 0) -> void:
 
 
 # ================= 内部实现 =================
-# 固定位置的鼓励动画（屏幕中部）
+## 固定位置的鼓励动画（屏幕中部）
 func _show_encourage_fixed(combo_count: int) -> void:
 	# 同一时刻只留一个鼓励实例
 	_kill_encourage()
@@ -207,7 +207,7 @@ func _show_encourage_fixed(combo_count: int) -> void:
 	_play_encourage_anim(instance, combo_count, 1)
 
 
-# 跟随格子的鼓励动画（会做左右边界夹取）
+## 跟随格子的鼓励动画（会做左右边界夹取）
 func _show_encourage_at_position(combo_count: int, global_pos: Vector2, y_offset: float) -> void:
 	_kill_encourage()
 	var instance: Node2D = ENCOURAGE_SCENE.instantiate()
@@ -222,7 +222,7 @@ func _show_encourage_at_position(combo_count: int, global_pos: Vector2, y_offset
 	_play_encourage_anim(instance, combo_count, 2)
 
 
-# 播放鼓励动画：按连击数选动画名，播完自毁
+## 播放鼓励动画：按连击数选动画名，播完自毁
 func _play_encourage_anim(instance: Node2D, combo_count: int, anim_set: int) -> void:
 	_encourage_instance = instance
 	# 连击数映射到 1~6 级动画
@@ -240,7 +240,7 @@ func _play_encourage_anim(instance: Node2D, combo_count: int, anim_set: int) -> 
 	)
 
 
-# 杀掉当前鼓励实例
+## 杀掉当前鼓励实例
 func _kill_encourage() -> void:
 	if _encourage_instance != null:
 		_encourage_instance.queue_free()
@@ -248,13 +248,13 @@ func _kill_encourage() -> void:
 
 
 # ================= 分数与布局 =================
-# 分数气泡的垂直偏移：气泡高 + 间隙 + 猫顶偏移（含棋盘缩放）
+## 分数气泡的垂直偏移：气泡高 + 间隙 + 猫顶偏移（含棋盘缩放）
 func _score_bubble_y_offset() -> float:
 	var board_scale: float = _board_view.scale.x if _board_view != null else 1.0
 	return BUBBLE_HEIGHT + BUBBLE_GAP + CAT_TOP_UNSCALED * board_scale
 
 
-# 弹一个得分气泡（+N）
+## 弹一个得分气泡（+N）
 func _show_score_bubble(global_pos: Vector2, gain: int) -> void:
 	var bubble: LevelFlowScore = SCORE_BUBBLE_SCENE.instantiate()
 	add_child(bubble)
@@ -269,13 +269,13 @@ func _show_score_bubble(global_pos: Vector2, gain: int) -> void:
 	anim.animation_finished.connect(func(_name: StringName) -> void: bubble.queue_free())
 
 
-# 设置是否困难（影响分数板布局）
+## 设置是否困难（影响分数板布局）
 func set_hard(is_hard: bool) -> void:
 	_is_hard = is_hard
 	_update_display_visibility()
 
 
-# 按 AB 配置刷新分数板/IQ 板/关卡号的显隐与横向位置
+## 按 AB 配置刷新分数板/IQ 板/关卡号的显隐与横向位置
 func _update_display_visibility() -> void:
 	var has_score: bool = ABTestManager.combo_encourage.has_score_display()
 	var is_iq: bool = ABTestManager.combo_encourage.is_iq_mode()
@@ -301,13 +301,13 @@ func _update_display_visibility() -> void:
 		score_node.offset_right = -465.0 if three_cols else -302.0
 
 
-# 设置关卡号
+## 设置关卡号
 func set_level(level_num: int) -> void:
 	if _level_value_label != null:
 		_level_value_label.text = "%d" % level_num
 
 
-# 立即设置分数文本（不走滚动动画）
+## 立即设置分数文本（不走滚动动画）
 func _set_score_text_immediate(value: int) -> void:
 	# IQ 模式写 IQ 板，否则写分数板
 	if ABTestManager.combo_encourage.is_iq_mode():
@@ -318,7 +318,7 @@ func _set_score_text_immediate(value: int) -> void:
 			_score_value_label.text = "%d" % value
 
 
-# 更新分数：按模式换算目标值并滚动过去
+## 更新分数：按模式换算目标值并滚动过去
 func _update_score_label(total_score: int) -> void:
 	var target: int
 	# 目标值按模式换算（IQ 含基础分）

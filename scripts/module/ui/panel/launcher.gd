@@ -1,5 +1,5 @@
-# 启动器：主场景 launcher.tscn 的根脚本，掌管冷启动全过程
-# 顺序：日志/性能埋点 → 语言 → 作弊面板（非 release）→ 闪屏 → 隐私与推送 → AB 就绪 → 预热 → 进主页或引导
+## 启动器：主场景 launcher.tscn 的根脚本，掌管冷启动全过程
+## 顺序：日志/性能埋点 → 语言 → 作弊面板（非 release）→ 闪屏 → 隐私与推送 → AB 就绪 → 预热 → 进主页或引导
 extends Node
 
 # ---- 预加载资源 ----
@@ -23,7 +23,7 @@ var _perf_emitted: Dictionary = {} # 已上报的 step 去重表
 
 
 # ================= 启动性能埋点 =================
-# 上报一个启动阶段耗时；同一步只上报一次，重复调用直接忽略
+## 上报一个启动阶段耗时；同一步只上报一次，重复调用直接忽略
 func _emit_perf(step: String) -> void:
     # 已报过就不再发，避免超时兜底与事件竞态导致重复埋点
     if _perf_emitted.has(step):
@@ -36,7 +36,7 @@ func _emit_perf(step: String) -> void:
 
 
 # ================= 冷启动主流程 =================
-# 冷启动总流程：一路 await 到闪屏播完，最后决定进主页还是新手引导
+## 冷启动总流程：一路 await 到闪屏播完，最后决定进主页还是新手引导
 func _ready() -> void:
     # 日志先接上：之后的报错都会进 Crashlytics
     _crashlytics_logger = LogUtil.new()
@@ -169,7 +169,7 @@ func _ready() -> void:
     _startup_complete = true
 
 
-# 等 AB 配置里的音乐默认值就绪（最多 8 秒），再写进存档
+## 等 AB 配置里的音乐默认值就绪（最多 8 秒），再写进存档
 func _init_music_default_when_ab_loaded() -> void:
     var cfg: BgmTestConfig = ABTestManager.bgm_test
     # 配置没到就轮询等；超时直接放弃，宁可不写也不写错值
@@ -182,7 +182,7 @@ func _init_music_default_when_ab_loaded() -> void:
     GameState.init_music_default(cfg.default_music_on())
 
 
-# 预热对局页：后台加载场景、按当前关卡尺寸喂棋盘、顺手把题库排名预计算好
+## 预热对局页：后台加载场景、按当前关卡尺寸喂棋盘、顺手把题库排名预计算好
 func _prewarm_game() -> void:
     # 异步加载并实例化对局页（保持隐藏）
     await UIManager.warm_pool_async(UiName.GAME)
@@ -204,25 +204,25 @@ func _prewarm_game() -> void:
         BankData.get_gc_ranks(sz)
 
 
-# 回到前台且启动已完成：补一次快捷方式检查（启动那会儿可能还没收到）
+## 回到前台且启动已完成：补一次快捷方式检查（启动那会儿可能还没收到）
 func _notification(what: int) -> void:
     if what == NOTIFICATION_APPLICATION_FOCUS_IN and _startup_complete:
         _try_handle_shortcut.call_deferred()
 
 
-# 运行中收到快捷方式：启动没走完就先记着，走完再处理
+## 运行中收到快捷方式：启动没走完就先记着，走完再处理
 func _on_shortcut_received_pushed(_type: String) -> void:
     if not _startup_complete:
         return
     _try_handle_shortcut.call_deferred()
 
 
-# 会话 ID 变化只打日志
+## 会话 ID 变化只打日志
 func _on_session_changed(new_session_id: String) -> void:
     print("[Launcher] SessionId change to %s" % new_session_id)
 
 
-# 处理快捷方式入口；返回 true 表示已经跳转，调用方不用再走正常落地
+## 处理快捷方式入口；返回 true 表示已经跳转，调用方不用再走正常落地
 func _try_handle_shortcut() -> bool:
     # 当前待处理的快捷方式 key，空串表示没有
     var shortcut_key: String = ShortcutManager.get_shortcut_key()
@@ -240,7 +240,7 @@ func _try_handle_shortcut() -> bool:
     return false
 
 
-# 打开反馈页；等它关闭后补一个落地页，避免停在空白页
+## 打开反馈页；等它关闭后补一个落地页，避免停在空白页
 func _open_feedback_from_shortcut() -> void:
     # 等反馈页自己关（closed 信号），再收起它
     var page := UIManager.show_ui(UiName.FEEDBACK)
@@ -264,14 +264,14 @@ func _open_feedback_from_shortcut() -> void:
 
 
 # ================= 每日推送 =================
-# 清掉旧的每日推送注册（中午 / 晚上两条）
+## 清掉旧的每日推送注册（中午 / 晚上两条）
 func _clear_daily_pushes() -> void:
     print("[xxztest]clear register daily push new pool")
     UniKitManager.remove_push("daily_noon")
     UniKitManager.remove_push("daily_evening")
 
 
-# 按 AB 分组注册每日推送：新文案池从 100 条里抽 5 条，老池走固定文案
+## 按 AB 分组注册每日推送：新文案池从 100 条里抽 5 条，老池走固定文案
 func _register_daily_pushes() -> void:
     if ABTestManager.push_local_text.is_new_pool():
         print("[xxztest]register daily push new pool")
@@ -281,7 +281,7 @@ func _register_daily_pushes() -> void:
         _register_legacy_pushes()
 
 
-# 老文案池：中午 12 点、晚上 20 点各推一条，文案 4 选 1
+## 老文案池：中午 12 点、晚上 20 点各推一条，文案 4 选 1
 func _register_legacy_pushes() -> void:
     # 标题所有推送共用
     var title: String = tr("PUSH_TITLE")
@@ -297,7 +297,7 @@ func _register_legacy_pushes() -> void:
     UniKitManager.add_daily_push("daily_evening", 20, evening_contents)
 
 
-# 新文案池：各 100 条文案先打乱再取前 5 条，避免每次都是同样几条
+## 新文案池：各 100 条文案先打乱再取前 5 条，避免每次都是同样几条
 func _register_new_pushes() -> void:
     var noon_all: Array[Dictionary] = []
     for i: int in range(1, 101):
@@ -316,7 +316,7 @@ func _register_new_pushes() -> void:
 
 
 # ================= 平台桥接 =================
-# 通知原生层隐藏启动闪屏（iOS 走 UniKitPlugin，Android 走 SplashPlugin）
+## 通知原生层隐藏启动闪屏（iOS 走 UniKitPlugin，Android 走 SplashPlugin）
 func _hide_native_splash(fade_ms: int) -> void:
     if OS.has_feature("ios"):
         if Engine.has_singleton("UniKitPlugin"):
@@ -327,13 +327,13 @@ func _hide_native_splash(fade_ms: int) -> void:
 
 
 # ================= 合规弹窗 / 授权等待 =================
-# 把用户 ID 绑给 Crashlytics；非 release 一律用 debug，便于区分
+## 把用户 ID 绑给 Crashlytics；非 release 一律用 debug，便于区分
 func _bind_crashlytics_user_id() -> void:
     var user_id: String = UniKitManager.get_uuid() if OS.has_feature("rel") else "debug"
     UniKitManager.set_crashlytics_user_id(user_id)
 
 
-# 等 CMP 同意弹窗与 ATT 授权走完，最长 2 秒；超时就继续启动，不卡用户
+## 等 CMP 同意弹窗与 ATT 授权走完，最长 2 秒；超时就继续启动，不卡用户
 func _wait_cmp_then_att_max_2s() -> void:
     # Android 没有 ATT，CMP 只给个空回调占位
     var emptyCallback: Callable = func() -> void: pass
@@ -389,7 +389,7 @@ func _wait_cmp_then_att_max_2s() -> void:
 
 
 # ================= 闪屏收尾 =================
-# 等闪屏播完：入页不足 2 秒也至少补到 2 秒，再多留 0.5 秒，避免一闪而过
+## 等闪屏播完：入页不足 2 秒也至少补到 2 秒，再多留 0.5 秒，避免一闪而过
 func _wait_splash_complete() -> void:
     # 闪屏实例没了（被提前收掉）就不用等
     if _splash_page == null or not is_instance_valid(_splash_page):

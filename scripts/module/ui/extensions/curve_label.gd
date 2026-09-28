@@ -1,10 +1,10 @@
-# 曲线文字 Label（@tool）：不用内置排版，逐个字形绘制，按 Curve 采样决定每个字的 y 偏移，可选让字沿切线旋转
+## 曲线文字 Label（@tool）：不用内置排版，逐个字形绘制，按 Curve 采样决定每个字的 y 偏移，可选让字沿切线旋转
 @tool
 class_name CurveLabel
 extends Label
 
 # ---- Inspector 参数 ----
-# 起伏曲线：采样 x∈[0,1] → y∈[0,1]，0.5 是基线；置空会给一条默认拱形曲线
+## 起伏曲线：采样 x∈[0,1] → y∈[0,1]，0.5 是基线；置空会给一条默认拱形曲线
 @export var curve: Curve:
 	set(v):
 		if curve != null and curve.changed.is_connected(queue_redraw): # 换曲线时先把旧的 changed 连接摘掉
@@ -28,19 +28,19 @@ extends Label
 
 
 # ================= 生命周期 =================
-# 进树就把可见字数置 0：彻底关掉内置排版，画面全交给 _draw
+## 进树就把可见字数置 0：彻底关掉内置排版，画面全交给 _draw
 func _enter_tree() -> void:
 	visible_characters = 0
 
 
-# 保证 curve 不为空
+## 保证 curve 不为空
 func _ready() -> void:
 	if curve == null:
 		curve = _make_default_curve()
 
 
 # ================= 绘制 =================
-# 逐个字形绘制：先量总宽，超宽就整体缩字号再拉伸回满宽，然后按曲线算每个字的 y，可选按切线旋转
+## 逐个字形绘制：先量总宽，超宽就整体缩字号再拉伸回满宽，然后按曲线算每个字的 y，可选按切线旋转
 func _draw() -> void:
 	if visible_characters != 0: # 内置绘制已被禁用（visible_characters=0），这里只画自定义部分
 		visible_characters = 0
@@ -110,7 +110,7 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO)
 
 
-# 画单个字形：按 阴影 → 描边 → 字面 的顺序；样式优先取 label_settings，否则取主题
+## 画单个字形：按 阴影 → 描边 → 字面 的顺序；样式优先取 label_settings，否则取主题
 func _draw_glyph(g: Dictionary, pos: Vector2, font_size: int, ts: TextServer) -> void:
 	var font_color: Color
 	var outline_size: int
@@ -155,7 +155,7 @@ func _draw_glyph(g: Dictionary, pos: Vector2, font_size: int, ts: TextServer) ->
 	ts.font_draw_glyph(font_rid, canvas, font_size, pos, index, font_color)
 
 
-# 用中心差分估算曲线在 t 处的倾角（返回弧度）
+## 用中心差分估算曲线在 t 处的倾角（返回弧度）
 func _tangent_angle(t: float, x_scale: float) -> float:
 	const DT := 0.01
 	var t0 := clampf(t - DT, 0.0, 1.0)
@@ -166,21 +166,21 @@ func _tangent_angle(t: float, x_scale: float) -> float:
 	return tangent.angle()
 
 
-# 字体：优先 label_settings，其次主题
+## 字体：优先 label_settings，其次主题
 func _resolve_font() -> Font:
 	if label_settings != null and label_settings.font != null:
 		return label_settings.font
 	return get_theme_font(&"font")
 
 
-# 字号：同上
+## 字号：同上
 func _resolve_font_size() -> int:
 	if label_settings != null and label_settings.font_size > 0:
 		return label_settings.font_size
 	return get_theme_font_size(&"font_size")
 
 
-# 默认曲线：两端 0.5、中间 1.0 的拱形
+## 默认曲线：两端 0.5、中间 1.0 的拱形
 func _make_default_curve() -> Curve:
 	var c := Curve.new()
 	c.add_point(Vector2(0.0, 0.5), 0.0, 2.0)

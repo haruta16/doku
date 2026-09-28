@@ -1,4 +1,4 @@
-# @tool 道具按钮：图标/文字/角标随属性变化实时刷新，另带一段「获得」飞入动画
+## @tool 道具按钮：图标/文字/角标随属性变化实时刷新，另带一段「获得」飞入动画
 @tool
 class_name ToolButton
 extends Control
@@ -55,7 +55,7 @@ var _base_scale: Vector2 = Vector2.ONE # 初始缩放，按压与回弹以它为
 
 
 # ================= 生命周期 =================
-# 进树：把属性刷到子节点并接上按压缩放反馈
+## 进树：把属性刷到子节点并接上按压缩放反馈
 func _ready() -> void:
 	# 把 @export 的值应用到子节点
 	if icon_tex != null:
@@ -72,12 +72,12 @@ func _ready() -> void:
 	$Hit.button_up.connect(func() -> void: UIHelper.play_release_scale(self, _base_scale))
 
 
-# Hit 被按下时转发 pressed
+## Hit 被按下时转发 pressed
 func _on_hit_pressed() -> void:
 	pressed.emit()
 
 
-# 播「获得」动画：图标飞入，播完发 obtain_finished
+## 播「获得」动画：图标飞入，播完发 obtain_finished
 func play_obtain() -> void:
 	# 让获得态图标对齐常态图标的位置
 	$ControlObtain/ToolIcon.position = $Control/ToolIcon.position
@@ -89,7 +89,7 @@ func play_obtain() -> void:
 
 
 # ================= 角标刷新 =================
-# 按 state / badge_count / AB 配置刷新角标
+## 按 state / badge_count / AB 配置刷新角标
 func _refresh() -> void:
 	# 编辑器里不跑运行期逻辑
 	if Engine.is_editor_hint():
@@ -123,6 +123,6 @@ func _refresh() -> void:
 			green_badge.show_plus()
 
 
-# 设置已拥有数量（走属性 setter，自动刷新角标）
+## 设置已拥有数量（走属性 setter，自动刷新角标）
 func set_badge_count(count: int) -> void:
 	badge_count = count

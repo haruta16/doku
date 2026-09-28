@@ -1,4 +1,4 @@
-# 埋点门面（autoload）：事件名与参数取值在这里集中定义，业务只调 track_* ，最终由 UniKitManager 转给原生 SDK
+## 埋点门面（autoload）：事件名与参数取值在这里集中定义，业务只调 track_* ，最终由 UniKitManager 转给原生 SDK
 # ================= 事件名 =================
 extends Node
 
@@ -190,7 +190,7 @@ var _pending_ad_show_ids: Dictionary = {} # 广告位 → 展示 ID 的临时登
 var _main_game_stats: Dictionary = {} # 普通模式本局统计（内存缓存，落盘靠 GameState 的残局存档）
 var _daily_game_stats: Dictionary = {} # 每日挑战本局统计
 
-# 这些键属于「一局」，reset_round_stats 会清掉；不在此列的键（如 restart_count、gamedie_count）跨重开保留
+## 这些键属于「一局」，reset_round_stats 会清掉；不在此列的键（如 restart_count、gamedie_count）跨重开保留
 const _ROUND_STAT_KEYS: Array[String] = [
 	"hint_used",
 	"locate_used",
@@ -204,12 +204,12 @@ const _ROUND_STAT_KEYS: Array[String] = [
 
 
 # ================= 对局与统计 API（给业务读写，不发事件） =================
-# 取当前对局 ID（外部拼 game_end 参数时会用）
+## 取当前对局 ID（外部拼 game_end 参数时会用）
 func get_game_id() -> String:
 	return _current_game_id
 
 
-# 切到某一对局类型：沿用 GameState 里持久化的 game_id，内存统计为空时从残局存档补回
+## 切到某一对局类型：沿用 GameState 里持久化的 game_id，内存统计为空时从残局存档补回
 func set_active_game_type(game_type: String) -> void:
 	_active_game_type = game_type
 	_current_game_id = GameState.get_persisted_game_id(game_type)
@@ -222,7 +222,7 @@ func set_active_game_type(game_type: String) -> void:
 			d.merge(persisted)
 
 
-# 开一局新的：生成新 game_id、清空统计，并把新 ID 写进 GameState 存档
+## 开一局新的：生成新 game_id、清空统计，并把新 ID 写进 GameState 存档
 func new_game_id(game_type: String) -> String:
 	_active_game_type = game_type
 	_current_game_id = _gen_uuid()
@@ -236,19 +236,19 @@ func new_game_id(game_type: String) -> String:
 	return _current_game_id
 
 
-# 本局统计 +delta 并落盘（局内 UI 调用最频繁的一个）
+## 本局统计 +delta 并落盘（局内 UI 调用最频繁的一个）
 func inc_stat(key: String, delta: int = 1) -> void:
 	var d: Dictionary = _get_active_stats_dict()
 	d[key] = int(d.get(key, 0)) + delta
 	GameState.persist_game_round_stats(_active_game_type, d)
 
 
-# 读本局统计，缺省 0
+## 读本局统计，缺省 0
 func get_stat(key: String) -> int:
 	return int(_get_active_stats_dict().get(key, 0))
 
 
-# 清掉本局统计里的 _ROUND_STAT_KEYS 并落盘（重开一局时）
+## 清掉本局统计里的 _ROUND_STAT_KEYS 并落盘（重开一局时）
 func reset_round_stats() -> void:
 	var d: Dictionary = _get_active_stats_dict()
 	for key: String in _ROUND_STAT_KEYS:
@@ -256,25 +256,25 @@ func reset_round_stats() -> void:
 	GameState.persist_game_round_stats(_active_game_type, d)
 
 
-# 玩家点了重开：先清本局统计，再计一次 restart_count
+## 玩家点了重开：先清本局统计，再计一次 restart_count
 func on_restart() -> void:
 	reset_round_stats()
 	inc_stat("restart_count")
 
 
-# 按当前对局类型返回本局统计字典的引用（内部用）
+## 按当前对局类型返回本局统计字典的引用（内部用）
 func _get_active_stats_dict() -> Dictionary:
 	if _active_game_type == GameType.DAILY:
 		return _daily_game_stats
 	return _main_game_stats
 
 
-# 取来源栈顶；栈空返回空串
+## 取来源栈顶；栈空返回空串
 func get_current_source() -> String:
 	return _source_stack.back() if not _source_stack.is_empty() else "" # 空栈返回空串
 
 
-# 弹窗关闭：把该弹窗及其之上压入的来源一起出栈（UIManager 关弹窗时调用）
+## 弹窗关闭：把该弹窗及其之上压入的来源一起出栈（UIManager 关弹窗时调用）
 func notify_dlg_closed(dlg_name: String) -> void:
 	if dlg_name == "":
 		return
@@ -284,7 +284,7 @@ func notify_dlg_closed(dlg_name: String) -> void:
 
 
 # ================= 事件上报 API =================
-# 上报页面曝光：默认用来源栈顶当 source，然后把来源栈重置为这个页面
+## 上报页面曝光：默认用来源栈顶当 source，然后把来源栈重置为这个页面
 func track_scr_show(scr_name: String, source: String = "") -> void:
 	if scr_name == "":
 		return
@@ -300,7 +300,7 @@ func track_scr_show(scr_name: String, source: String = "") -> void:
 	_source_stack.append(scr_name)
 
 
-# 上报弹窗曝光：source 同上，extra 会并进参数，弹窗名压入来源栈
+## 上报弹窗曝光：source 同上，extra 会并进参数，弹窗名压入来源栈
 func track_dlg_show(dlg_name: String, source: String = "", extra: Dictionary = {}) -> void:
 	if dlg_name == "":
 		return
@@ -317,7 +317,7 @@ func track_dlg_show(dlg_name: String, source: String = "", extra: Dictionary = {
 	_source_stack.append(dlg_name)
 
 
-# 上报按钮点击：source 优先从按钮所在节点向上找，找不到才退回栈顶
+## 上报按钮点击：source 优先从按钮所在节点向上找，找不到才退回栈顶
 func track_btn_click(btn_name: String, source_node: Node = null, extra: Dictionary = {}) -> void:
 	if btn_name == "":
 		return
@@ -337,7 +337,7 @@ func track_btn_click(btn_name: String, source_node: Node = null, extra: Dictiona
 	_send(EVT_BTN_CLICK, params)
 
 
-# 从节点向上冒泡找所属弹窗/页面名（节点自己实现 get_dlg_name / get_scr_name）
+## 从节点向上冒泡找所属弹窗/页面名（节点自己实现 get_dlg_name / get_scr_name）
 func _resolve_source_from_node(node: Node) -> String:
 	var cur: Node = node
 	while cur != null and is_instance_valid(cur):
@@ -353,7 +353,7 @@ func _resolve_source_from_node(node: Node) -> String:
 	return ""
 
 
-# 上报开局：题号、旋转、状态、类型、难度、关卡、策略层、棋盘尺寸一次带齐
+## 上报开局：题号、旋转、状态、类型、难度、关卡、策略层、棋盘尺寸一次带齐
 func track_game_start(
 	qid: String,
 	qrotate: String,
@@ -377,12 +377,12 @@ func track_game_start(
 	_send(EVT_GAME_START, params)
 
 
-# 上报一局结束：参数由调用方（level_ops / 结算页）拼好传入
+## 上报一局结束：参数由调用方（level_ops / 结算页）拼好传入
 func track_game_end(extra: Dictionary) -> void:
 	_send(EVT_GAME_END, extra)
 
 
-# 上报道具获得：来源 + 本次数量 + 剩余数量
+## 上报道具获得：来源 + 本次数量 + 剩余数量
 func track_prop_get(prop_name: String, source: String, prop_num: int, prop_left: int) -> void:
 	var params: Dictionary = {
 		"prop_name": prop_name,
@@ -393,7 +393,7 @@ func track_prop_get(prop_name: String, source: String, prop_num: int, prop_left:
 	_send(EVT_PROP_GET, params)
 
 
-# 上报道具消耗：参数与 prop_get 相同
+## 上报道具消耗：参数与 prop_get 相同
 func track_prop_use(prop_name: String, source: String, prop_num: int, prop_left: int) -> void:
 	var params: Dictionary = {
 		"prop_name": prop_name,
@@ -404,17 +404,17 @@ func track_prop_use(prop_name: String, source: String, prop_num: int, prop_left:
 	_send(EVT_PROP_USE, params)
 
 
-# 生成一个广告展示 ID（UUID v4）
+## 生成一个广告展示 ID（UUID v4）
 func gen_ad_show_id() -> String:
 	return _gen_uuid()
 
 
-# 记住某广告位这次的展示 ID，供广告回调时取用（UniKitManager 调用）
+## 记住某广告位这次的展示 ID，供广告回调时取用（UniKitManager 调用）
 func remember_ad_show_id(placement_type: String, ad_show_id: String) -> void:
 	_pending_ad_show_ids[placement_type] = ad_show_id # 同一广告位后一次覆盖前一次
 
 
-# 取走并清掉某广告位的展示 ID；没有就返回空串
+## 取走并清掉某广告位的展示 ID；没有就返回空串
 func consume_ad_show_id(placement_type: String) -> String:
 	var id: String = _pending_ad_show_ids.get(placement_type, "")
 	if id != "":
@@ -422,7 +422,7 @@ func consume_ad_show_id(placement_type: String) -> String:
 	return id
 
 
-# 上报广告展示耗时（placement 是广告类型，position 是广告位）
+## 上报广告展示耗时（placement 是广告类型，position 是广告位）
 func track_ad_show_timing(
 	ad_show_id: String, placement: String, placement_type: String, position: String
 ) -> void:
@@ -435,7 +435,7 @@ func track_ad_show_timing(
 	_send(EVT_AD_SHOW_TIMING, params)
 
 
-# 上报插屏广告展示
+## 上报插屏广告展示
 func track_interstitial_ad_show(ad_show_id: String, level: int, position: String) -> void:
 	var params: Dictionary = {
 		"ad_show_id": ad_show_id,
@@ -445,7 +445,7 @@ func track_interstitial_ad_show(ad_show_id: String, level: int, position: String
 	_send(EVT_INTERSTITIAL_AD_SHOW, params)
 
 
-# 上报激励视频展示
+## 上报激励视频展示
 func track_rewarded_ad_show(ad_show_id: String, level: int, position: String) -> void:
 	var params: Dictionary = {
 		"ad_show_id": ad_show_id,
@@ -455,7 +455,7 @@ func track_rewarded_ad_show(ad_show_id: String, level: int, position: String) ->
 	_send(EVT_REWARDED_AD_SHOW, params)
 
 
-# 上报设置开关点击（state 由调用方按开 = 1 传）
+## 上报设置开关点击（state 由调用方按开 = 1 传）
 func track_sw_click(sw_name: String, state: int, source: String) -> void:
 	var params: Dictionary = {
 		"sw_name": sw_name,
@@ -465,22 +465,22 @@ func track_sw_click(sw_name: String, state: int, source: String) -> void:
 	_send(EVT_SW_CLICK, params)
 
 
-# 上报新手引导开始（带触发时的关卡）
+## 上报新手引导开始（带触发时的关卡）
 func track_new_guide_show(level: int) -> void:
 	_send(EVT_NEW_GUIDE_SHOW, {"level": level})
 
 
-# 上报新手引导结束（time 单位：秒）
+## 上报新手引导结束（time 单位：秒）
 func track_new_guide_end(level: int, time_sec: float) -> void:
 	_send(EVT_NEW_GUIDE_END, {"level": level, "time": time_sec}) # time 单位为秒
 
 
-# 上报新手引导走到第几步
+## 上报新手引导走到第几步
 func track_new_guide_step(step: int) -> void:
 	_send(EVT_NEW_GUIDE_STEP, {"step": step})
 
 
-# 上报启动阶段耗时：cost_time 本步耗时、total_time 累计（毫秒）
+## 上报启动阶段耗时：cost_time 本步耗时、total_time 累计（毫秒）
 func track_perf_monitor(type: String, step: String, cost_ms: int, total_ms: int) -> void:
 	var params: Dictionary = {
 		"type": type,
@@ -491,17 +491,17 @@ func track_perf_monitor(type: String, step: String, cost_ms: int, total_ms: int)
 	_send(EVT_PERF_MONITOR, params)
 
 
-# 上报「从桌面快捷方式冷启动」（Launcher 处理 shortcut 时调用）
+## 上报「从桌面快捷方式冷启动」（Launcher 处理 shortcut 时调用）
 func track_remove_app_start() -> void:
 	_send(EVT_REMOVE_APP_START, {})
 
 
-# 上报用户属性「界面语言」（走 setUserProperty，不是事件）
+## 上报用户属性「界面语言」（走 setUserProperty，不是事件）
 func track_user_property_ui_language(lang_code: String) -> void:
 	UniKitManager.set_user_property(UserProp.UI_LANGUAGE, lang_code) # 只同步属性，不发事件
 
 
-# 上报连胜进度：当前连胜与历史最佳（连胜模块调用）
+## 上报连胜进度：当前连胜与历史最佳（连胜模块调用）
 func track_spark_streak(current_streak: int, best_streak: int) -> void:
 	var params: Dictionary = {
 		"game_type": _active_game_type,
@@ -512,10 +512,10 @@ func track_spark_streak(current_streak: int, best_streak: int) -> void:
 
 
 # ================= GRT 实验埋点 =================
-# 按「留存天数 + 关卡/时长阈值」补报，同一事件只报一次（去重记录存在 GameState 的存档里）
+## 按「留存天数 + 关卡/时长阈值」补报，同一事件只报一次（去重记录存在 GameState 的存档里）
 const GRT_PLATFORMS: Array = ["facebook", "appsflyer", "learnings", "firebase"] # 这几个 GRT 事件只发给这 4 个平台
 
-# D90 档位：通关到这些等级时各报一次 grt_level{N}_d90
+## D90 档位：通关到这些等级时各报一次 grt_level{N}_d90
 const GRT_LEVEL_D90_LEVELS: Array[int] = [
 	2, 6, 10, 15, 20, 25, 30, 50, 80, 120, 200, 300, 500, 600, 700, 800
 ]
@@ -524,7 +524,7 @@ const GRT_LEVEL_D90_MAX_LIVING_DAYS: int = 89 # 超过 89 天的老玩家不再�
 
 const GRT_WINDOW_MAX_LIVING: Dictionary = {"d0": 0, "d2": 1, "d3": 2, "d7": 6} # 窗口 → 允许的最大留存天数，超过就跳过该窗口
 
-# 关卡窗口：窗口 → 触发关卡列表；当前关达到列表里的值就补报（已报过的跳过）
+## 关卡窗口：窗口 → 触发关卡列表；当前关达到列表里的值就补报（已报过的跳过）
 const GRT_LEVEL_WINDOW: Dictionary = {
 	"d0": [6, 7, 9, 12],
 	"d2": [7, 9, 11, 14],
@@ -532,7 +532,7 @@ const GRT_LEVEL_WINDOW: Dictionary = {
 	"d7": [8, 10, 14, 19],
 }
 
-# 时长窗口：窗口 → 累计活跃分钟阈值（分钟）
+## 时长窗口：窗口 → 累计活跃分钟阈值（分钟）
 const GRT_TIME_WINDOW_MIN: Dictionary = {
 	"d0": [5, 7, 10, 16],
 	"d2": [5, 10, 15, 22],
@@ -541,7 +541,7 @@ const GRT_TIME_WINDOW_MIN: Dictionary = {
 }
 
 
-# 通关后按 D90 档位补报 grt_level{N}_d90；报过的（记在 GameState）跳过
+## 通关后按 D90 档位补报 grt_level{N}_d90；报过的（记在 GameState）跳过
 func try_track_grt_level_pass(level_num: int) -> void:
 	var living_days: int = ABTestManager.living_days.days_since_first_open()
 	if living_days < 0 or living_days > GRT_LEVEL_D90_MAX_LIVING_DAYS:
@@ -562,7 +562,7 @@ func try_track_grt_level_pass(level_num: int) -> void:
 		GameState.mark_grt_level_d90_reported(lv)
 
 
-# 通关后按留存窗口补报 grt_level{N}_{d0|d2|d3|d7}，每个事件只报一次
+## 通关后按留存窗口补报 grt_level{N}_{d0|d2|d3|d7}，每个事件只报一次
 func try_track_grt_level_window(level_num: int) -> void:
 	var living_days: int = ABTestManager.living_days.days_since_first_open()
 	if living_days < 0:
@@ -586,7 +586,7 @@ func try_track_grt_level_window(level_num: int) -> void:
 			GameState.mark_grt_event_reported(event_name)
 
 
-# 累计活跃分钟到阈值时补报 grt_time{M}_{窗口}（SessionManager 结算前台时长后调用）
+## 累计活跃分钟到阈值时补报 grt_time{M}_{窗口}（SessionManager 结算前台时长后调用）
 func try_track_grt_time_window(total_active_sec: int) -> void:
 	var living_days: int = ABTestManager.living_days.days_since_first_open()
 	if living_days < 0:
@@ -614,7 +614,7 @@ func try_track_grt_time_window(total_active_sec: int) -> void:
 
 
 # ================= 工具函数 =================
-# 把题库的 transform 编号转成埋点用的 qrotate：旋转角度 + 可选的 V/H 翻转前缀
+## 把题库的 transform 编号转成埋点用的 qrotate：旋转角度 + 可选的 V/H 翻转前缀
 func transform_to_qrotate(transform: int) -> String:
 	var rot_part: String = str([0, 90, 180, 270][transform % 4]) # 低 2 位是旋转角度
 	if transform >= 8:
@@ -624,7 +624,7 @@ func transform_to_qrotate(transform: int) -> String:
 	return rot_part
 
 
-# 统一出口：补 game_id、打日志，再交给 UniKitManager 发事件
+## 统一出口：补 game_id、打日志，再交给 UniKitManager 发事件
 func _send(event_name: String, params: Dictionary) -> void:
 	if _current_game_id != "" and not params.has("game_id"):
 		params["game_id"] = _current_game_id # 调用方自己传了 game_id 就不覆盖
@@ -632,7 +632,7 @@ func _send(event_name: String, params: Dictionary) -> void:
 	UniKitManager.send_event(event_name, params) # 原生插件未就绪时这里会直接丢弃
 
 
-# 生成 UUID v4 格式字符串（随机 16 字节，取 hex 拼成 8-4-4-4-12）
+## 生成 UUID v4 格式字符串（随机 16 字节，取 hex 拼成 8-4-4-4-12）
 func _gen_uuid() -> String:
 	var bytes: PackedByteArray = Crypto.new().generate_random_bytes(16)
 	bytes[6] = (bytes[6] & 15) | 64

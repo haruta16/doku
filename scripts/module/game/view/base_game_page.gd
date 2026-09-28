@@ -1,5 +1,5 @@
-# 对局页面基类：普通关 GamePage 与每日关 DailyGamePage 的共同父类，掌管一整局的主流程
-# 棋盘真源是子节点 BoardView（_board_view），本类只做「读棋盘 → 改棋盘 → 刷新周边 UI」的调度
+## 对局页面基类：普通关 GamePage 与每日关 DailyGamePage 的共同父类，掌管一整局的主流程
+## 棋盘真源是子节点 BoardView（_board_view），本类只做「读棋盘 → 改棋盘 → 刷新周边 UI」的调度
 class_name BaseGamePage
 # 沿用窗口基类：on_show / on_hide 由 UIManager 在切页时调用
 extends UIFrameWindow
@@ -9,19 +9,19 @@ extends UIFrameWindow
 
 # ---- 预制体：格子、点赞手势、三种规则条 ----
 const _CELL_SCENE: PackedScene = preload("res://assets/prefab/cell.tscn") # 棋盘单格（提示高亮也会临时实例化它）
-# 点赞手势（比心 / 鼓掌 / 吹号…）
+## 点赞手势（比心 / 鼓掌 / 吹号…）
 const _LIKE_HAND_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/game_like_hand.tscn"
 )
-# 规则条 V0：三条纯文字
+## 规则条 V0：三条纯文字
 const _RULE_INFO_BAR_V0_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/rule_info_bar_v0.tscn"
 )
-# 规则条 V4：可折叠
+## 规则条 V4：可折叠
 const _RULE_INFO_BAR_V4_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/rule_info_bar_v4.tscn"
 )
-# 规则条 V7：单张滑动卡
+## 规则条 V7：单张滑动卡
 const _RULE_INFO_BAR_V7_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/rule_info_bar_v7.tscn"
 )
@@ -43,13 +43,13 @@ const _RULE_ICON_TEXT_LETTER_SPACING_3: int = 0 # 第 3 条字间距
 
 var _rule_icon_text_fonts: Dictionary = {} # 字间距 → 字体副本缓存，避免每次排版都 duplicate()
 
-# 开场动画里「目标强调」要开关的动画轨道路径
+## 开场动画里「目标强调」要开关的动画轨道路径
 const _GOAL_RULE_HIGHLIGHT_PATHS: PackedStringArray = [
 	"Root/VBoxContainer/RuleBar/Control/Glow:self_modulate",
 	"Root/VBoxContainer/RuleBar/Control:scale:x",
 	"Root/VBoxContainer/RuleBar/Control:scale:y",
 ]
-# 同上，对应猫数量目标那一行
+## 同上，对应猫数量目标那一行
 const _GOAL_CAT_HIGHLIGHT_PATHS: PackedStringArray = [
 	"Root/VBoxContainer/CatHeartRow/Target/Glow:self_modulate",
 	"Root/VBoxContainer/CatHeartRow/Target:scale:x",
@@ -76,10 +76,10 @@ const _GOAL_CAT_HIGHLIGHT_PATHS: PackedStringArray = [
 
 @onready var _rule_label3: Label = $Root/VBoxContainer/RuleBar/Control/RuleLabel3 # 第 3 条规则文字
 
-# 第 1 条规则文字（规则条会被整块替换，故用 get_node_or_null）
+## 第 1 条规则文字（规则条会被整块替换，故用 get_node_or_null）
 @onready var _rule_label1: Label = get_node_or_null("Root/VBoxContainer/RuleBar/Control/RuleLabel1")
 @onready var _rule_label2: Label = get_node_or_null("Root/VBoxContainer/RuleBar/Control/RuleLabel2") # 第 2 条规则文字
-# 三条规则的小示意图（换规则条后要重新抓引用）
+## 三条规则的小示意图（换规则条后要重新抓引用）
 @onready var _rule_diagram1: TextureRect = get_node_or_null(
 	"Root/VBoxContainer/RuleBar/Control/RuleDiagram1"
 )
@@ -93,7 +93,7 @@ const _GOAL_CAT_HIGHLIGHT_PATHS: PackedStringArray = [
 @onready var _tool_hint_btn: Control = $Root/VBoxContainer/BottomTools/HintBtn # 提示道具
 @onready var _tool_locate_btn: Control = $Root/VBoxContainer/BottomTools/RevealBtn # 定位道具（节点名是 RevealBtn）
 @onready var _tool_clear_btn: Control = $Root/VBoxContainer/FunctionArea/ClearBtn # 清除按钮
-# 撤销道具（关闭撤销 AB 时节点不存在）
+## 撤销道具（关闭撤销 AB 时节点不存在）
 @onready
 var _tool_undo_btn: Control = get_node_or_null("Root/VBoxContainer/BottomTools/UndoBtn") as Control # 撤销道具按钮
 @onready var _remaining_label: RichTextLabel = $Root/VBoxContainer/CatHeartRow/Target/CatCountLabel # 剩余猫数量文字
@@ -101,19 +101,19 @@ var _tool_undo_btn: Control = get_node_or_null("Root/VBoxContainer/BottomTools/U
 @onready var _progress_slot: Control = (
 	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot") as Control
 )
-# 轨道底
+## 轨道底
 @onready var _progress_track_bg: Panel = (
 	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot/TrackBg") as Panel
 )
-# 轨道填充
+## 轨道填充
 @onready var _progress_track_fill: Panel = (
 	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot/TrackFill") as Panel
 )
-# 进度数字
+## 进度数字
 @onready var _progress_count_label: RichTextLabel = (
 	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot/CountLabel") as RichTextLabel
 )
-# 数字模式下的目标节点（进度条模式下隐藏）
+## 数字模式下的目标节点（进度条模式下隐藏）
 @onready
 var _progress_target: Control = get_node_or_null("Root/VBoxContainer/CatHeartRow/Target") as Control # 猫数量目标节点
 
@@ -122,12 +122,12 @@ var _heart1: Control = null # 第 1 条命
 var _heart2: Control = null # 第 2 条命
 var _heart3: Control = null # 第 3 条命
 
-# 三种生命图标各自的槽位预制体
+## 三种生命图标各自的槽位预制体
 const HEART_SLOT_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/heart_slot.tscn"
 )
 const FISH_SLOT_SCENE: PackedScene = preload("res://scripts/module/game/ui/compont/fish_slot.tscn") # 鱼
-# 闪电
+## 闪电
 const LIGHTNING_SLOT_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/lightning_slot.tscn"
 )
@@ -140,38 +140,38 @@ const LIGHTNING_SLOT_SCENE: PackedScene = preload(
 @onready var _ad_banner: Control = $Root/VBoxContainer/AdBanner # banner 广告占位
 @onready var _ad_down_adapt: Control = $Root/VBoxContainer/AdDownAdaptHolder # 底部安全区占位（算 banner 高度用）
 
-# 策略分析按钮（只有非 release 包可见）
+## 策略分析按钮（只有非 release 包可见）
 @onready
 var _strategy_btn: Button = get_node_or_null("Root/VBoxContainer/Header/StrategyBtn") as Button # 策略分析入口
 
 # ---- 草稿按钮（铅笔） ----
 @onready
 var _draft_btn: Button = get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn") as Button # 草稿模式开关
-# 草稿按钮底图（进入草稿后换色）
+## 草稿按钮底图（进入草稿后换色）
 @onready var _draft_btn_bg: TextureRect = (
 	get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn/Bg") as TextureRect
 )
-# 草稿按钮上的铅笔图标
+## 草稿按钮上的铅笔图标
 @onready var _draft_btn_icon: TextureRect = (
 	get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn/IconRect") as TextureRect
 )
 
-# 草稿按钮上的角标文字
+## 草稿按钮上的角标文字
 @onready var _draft_btn_label: Label = (
 	get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn/QLabel") as Label
 )
 
 const _PENCIL_TEX_DEFAULT: Texture2D = preload("res://assets/sprites/game/icon_pencil.png") # 铅笔：未选中
-# 铅笔：草稿模式中
+## 铅笔：草稿模式中
 const _PENCIL_TEX_SELECTED: Texture2D = preload(
 	"res://assets/sprites/game/icon_pencil_selected.png"
 )
 
-# 草稿「应用」按钮（仅部分草稿变体存在）
+## 草稿「应用」按钮（仅部分草稿变体存在）
 @onready
 var _apply_btn: Button = get_node_or_null("Root/VBoxContainer/FunctionArea/ApplyBtn") as Button # 把草稿落成正式标记
 
-# 规则条上三块高亮（违规时闪哪条规则）
+## 规则条上三块高亮（违规时闪哪条规则）
 @onready var _rule_highlights: Array[TextureRect] = [
 	$Root/VBoxContainer/RuleBar/Control/RuleHighlight1,
 	$Root/VBoxContainer/RuleBar/Control/RuleHighlight2,
@@ -272,7 +272,7 @@ var _stat_start_ms: int = 0 # 埋点用：本局开始时刻（毫秒），子�
 var _goal_emphasis: int = 0 # 目标强调 AB 的取值（0 不强调 / 1 强调猫数量）
 
 # ---- 点赞手势的运行时状态（thumb_up） ----
-# 键：in_game_sec 局内秒数、triggered_count 已触发次数、wrong_cat_events 错落事件、missed_cat_* 漏猫候选
+## 键：in_game_sec 局内秒数、triggered_count 已触发次数、wrong_cat_events 错落事件、missed_cat_* 漏猫候选
 var _like_hand_state: Dictionary = {
 	"in_game_sec": 0.0,
 	"last_cat_sec": 0.0,
@@ -284,17 +284,17 @@ var _like_hand_state: Dictionary = {
 	"missed_cat_prev": {},
 }
 
-# 可触发 R4+ 反馈（吹号）的格子缓存
+## 可触发 R4+ 反馈（吹号）的格子缓存
 var _r4_plus_cells: Dictionary = {}
 
 
 # ================= 模式标识与规则条外观 =================
-# 本页面的玩法类型标识，子类覆写（基类按普通关算）
+## 本页面的玩法类型标识，子类覆写（基类按普通关算）
 func _game_type() -> String:
 	return Tracker.GameType.NORMAL
 
 
-# 按 AB 变体设置第 3 条规则（八邻接）的文案 key
+## 按 AB 变体设置第 3 条规则（八邻接）的文案 key
 func _apply_third_rule_text() -> void:
 	var variant: int = ABTestManager.third_rule_text.get_rule_text_variant()
 	var key: String
@@ -310,7 +310,7 @@ func _apply_third_rule_text() -> void:
 	_rule_label3.text = key
 
 
-# 按 AB 把规则条换成 V0 / V4 / V7 预制体之一（版本不符就整块重建）
+## 按 AB 把规则条换成 V0 / V4 / V7 预制体之一（版本不符就整块重建）
 func _apply_rule_info_bar(level: int = 0) -> void:
 	var rule_bar := get_node_or_null("Root/VBoxContainer/RuleBar")
 	if rule_bar == null:
@@ -354,7 +354,7 @@ func _apply_rule_info_bar(level: int = 0) -> void:
 	_refresh_rule_bar_node_refs(new_bar)
 
 
-# 规则条重建后重新抓取内部节点引用（含 3 块高亮）
+## 规则条重建后重新抓取内部节点引用（含 3 块高亮）
 func _refresh_rule_bar_node_refs(rule_bar: Node) -> void:
 	_rules_bg = rule_bar.get_node_or_null("Control/RulesBg") as Panel
 	_rule_label1 = rule_bar.get_node_or_null("Control/RuleLabel1") as Label
@@ -375,7 +375,7 @@ func _refresh_rule_bar_node_refs(rule_bar: Node) -> void:
 	)
 
 
-# 规则文案入口 AB：决定用信息按钮弹窗，还是直接隐藏规则条
+## 规则文案入口 AB：决定用信息按钮弹窗，还是直接隐藏规则条
 func _apply_rule_text_entry() -> void:
 	var info_btn: Button = get_node_or_null("Root/VBoxContainer/Header/InfoBtn") as Button
 	if info_btn == null:
@@ -393,11 +393,11 @@ func _apply_rule_text_entry() -> void:
 			rule_inner.visible = not should_hide_rule_bar
 
 
-# 标记「已绑定过按压特效」的 meta key，防止重复绑定
+## 标记「已绑定过按压特效」的 meta key，防止重复绑定
 const _PRESS_FX_BOUND_META: StringName = &"_press_fx_bound"
 
 
-# 给顶栏的信息 / 设置按钮绑上按下缩放特效（只绑一次）
+## 给顶栏的信息 / 设置按钮绑上按下缩放特效（只绑一次）
 func _bind_header_btn_press_fx() -> void:
 	for path: String in [
 		"Root/VBoxContainer/Header/InfoBtn", "Root/VBoxContainer/Header/SettingsBtn"
@@ -408,7 +408,7 @@ func _bind_header_btn_press_fx() -> void:
 			bind_press_release_scale(btn)
 
 
-# 按 AB 排布规则条：纯图 / 图标+文字 / 仅第 3 条配图 / 纯文字
+## 按 AB 排布规则条：纯图 / 图标+文字 / 仅第 3 条配图 / 纯文字
 func _apply_rule_bar_style(level: int = 0) -> void:
 	if _rule_diagram1 == null or _rule_diagram3 == null:
 		return
@@ -457,7 +457,7 @@ func _apply_rule_bar_style(level: int = 0) -> void:
 		_rule_diagram3.visible = false
 
 
-# 取（并缓存）指定字间距的字体副本
+## 取（并缓存）指定字间距的字体副本
 func _get_rule_icon_text_font(letter_spacing: int) -> FontVariation:
 	if not _rule_icon_text_fonts.has(letter_spacing):
 		var fv := _RULE_LABEL_MEDIUM_FONT.duplicate() as FontVariation
@@ -466,7 +466,7 @@ func _get_rule_icon_text_font(letter_spacing: int) -> FontVariation:
 	return _rule_icon_text_fonts[letter_spacing]
 
 
-# 统一「图标 + 文字」模式下的字号、行距与文字框位置
+## 统一「图标 + 文字」模式下的字号、行距与文字框位置
 func _apply_icon_text_label_style(label: Label, letter_spacing: int, line_spacing: int) -> void:
 	if label == null:
 		return
@@ -483,14 +483,14 @@ func _apply_icon_text_label_style(label: Label, letter_spacing: int, line_spacin
 		label.add_theme_font_size_override(&"font_size", _RULE_ICON_TEXT_FONT_SIZE)
 
 
-# 一次性设置三条规则文字的可见性
+## 一次性设置三条规则文字的可见性
 func _set_labels_visible(a: bool, b: bool, c: bool) -> void:
 	_rule_label1.visible = a
 	_rule_label2.visible = b
 	_rule_label3.visible = c
 
 
-# 只有第 3 条规则配图时的排布
+## 只有第 3 条规则配图时的排布
 func _layout_pills_third_img() -> void:
 	_set_labels_visible(true, true, true)
 	_set_h(_rule_label1, 56.0, 366.0)
@@ -502,20 +502,20 @@ func _layout_pills_third_img() -> void:
 	_set_rect(_rule_diagram3, 720.0, 812.0, 54.0, 146.0)
 
 
-# 把关卡号告诉 V7 规则条，决定它能不能折叠
+## 把关卡号告诉 V7 规则条，决定它能不能折叠
 func _apply_rule_swipe_collapse(level: int) -> void:
 	var bar := get_node_or_null("Root/VBoxContainer/RuleBar")
 	if bar is RuleInfoBarV7:
 		(bar as RuleInfoBarV7).apply_level(level)
 
 
-# 设置控件的左右偏移
+## 设置控件的左右偏移
 func _set_h(node: Control, left: float, right: float) -> void:
 	node.offset_left = left
 	node.offset_right = right
 
 
-# 设置控件的四边偏移
+## 设置控件的四边偏移
 func _set_rect(node: Control, left: float, right: float, top: float, bottom: float) -> void:
 	node.offset_left = left
 	node.offset_right = right
@@ -523,12 +523,12 @@ func _set_rect(node: Control, left: float, right: float, top: float, bottom: flo
 	node.offset_bottom = bottom
 
 
-# 打开「怎么玩」页面
+## 打开「怎么玩」页面
 func _on_info_btn_pressed() -> void:
 	UIManager.show_ui(UiName.HOW_TO_PLAY)
 
 
-# 按 AB 调整规则条与猫数量行的上下顺序（适配占位始终夹在中间）
+## 按 AB 调整规则条与猫数量行的上下顺序（适配占位始终夹在中间）
 func _apply_rules_ui_order() -> void:
 	var vbox: Node = $Root/VBoxContainer
 	var rule_bar: Node = vbox.get_node_or_null("RuleBar")
@@ -547,12 +547,12 @@ func _apply_rules_ui_order() -> void:
 	vbox.move_child(bottom, min_idx + 2)
 
 
-# 按规则条位置选开场动画名（Appear / Appear2）
+## 按规则条位置选开场动画名（Appear / Appear2）
 func _appear_anim_name() -> String:
 	return "Appear2" if ABTestManager.game_page_rules_ui.is_rule_bar_above() else "Appear"
 
 
-# 由 UIManager 在页面显示时调用：重置开场状态、挂生命/进度条、连信号、进开场动画
+## 由 UIManager 在页面显示时调用：重置开场状态、挂生命/进度条、连信号、进开场动画
 func on_show(params: Dictionary = {}) -> void:
 	_eval_interstitial_cache = null
 	super.on_show(params)
@@ -633,7 +633,7 @@ func on_show(params: Dictionary = {}) -> void:
 		connect_managed(GameState.tool_count_changed, _on_tool_count_changed)
 
 
-# 按 AB 与关卡号开关开场动画里的高亮轨道与光效（规则条 / 猫数量）
+## 按 AB 与关卡号开关开场动画里的高亮轨道与光效（规则条 / 猫数量）
 func _apply_goal_emphasis_tracks(level: int) -> void:
 	var rule_control: CanvasItem = (
 		get_node_or_null("Root/VBoxContainer/RuleBar/Control") as CanvasItem
@@ -678,7 +678,7 @@ func _apply_goal_emphasis_tracks(level: int) -> void:
 
 
 # ================= 道具：提示 / 定位 / 撤销 =================
-# 按道具名取按钮（locate / hint / undo）
+## 按道具名取按钮（locate / hint / undo）
 func _tool_btn_of(kind: String) -> ToolButton:
 	match kind:
 		"locate":
@@ -690,7 +690,7 @@ func _tool_btn_of(kind: String) -> ToolButton:
 	return null
 
 
-# GameState 道具数量变化时刷新按钮角标与状态
+## GameState 道具数量变化时刷新按钮角标与状态
 func _on_tool_count_changed(kind: String, count: int) -> void:
 	var tb := _tool_btn_of(kind)
 	if tb == null or tb.state == ToolButton.State.FREE:
@@ -703,7 +703,7 @@ func _on_tool_count_changed(kind: String, count: int) -> void:
 		tb.state = ToolButton.State.NO_TOOL
 
 
-# 按钮 → 埋点用的道具名
+## 按钮 → 埋点用的道具名
 func _btn_to_prop_name(btn: Control) -> String:
 	if btn == _tool_hint_btn:
 		return Tracker.Prop.HINT
@@ -714,7 +714,7 @@ func _btn_to_prop_name(btn: Control) -> String:
 	return ""
 
 
-# 把数量写回 GameState（会落存档）
+## 把数量写回 GameState（会落存档）
 func _save_tool_to_state(btn: Control, count: int) -> void:
 	if btn == _tool_locate_btn:
 		GameState.set_tool_count("locate", count)
@@ -724,7 +724,7 @@ func _save_tool_to_state(btn: Control, count: int) -> void:
 		GameState.set_tool_count("undo", count)
 
 
-# 消耗一个道具；FREE 直接放行，数量为 0 则转去请求激励广告并返回 false
+## 消耗一个道具；FREE 直接放行，数量为 0 则转去请求激励广告并返回 false
 func _consume_tool(btn: Control, vibrate: bool = true) -> bool:
 	var tb := btn as ToolButton
 	if tb == null:
@@ -751,7 +751,7 @@ func _consume_tool(btn: Control, vibrate: bool = true) -> bool:
 	return true
 
 
-# 用 GameState 的数量整体同步三个道具按钮（含免费区与调试强制免费）
+## 用 GameState 的数量整体同步三个道具按钮（含免费区与调试强制免费）
 func _sync_tools_from_state() -> void:
 	var tb_r := _tool_locate_btn as ToolButton
 	var tb_h := _tool_hint_btn as ToolButton
@@ -808,14 +808,14 @@ func _sync_tools_from_state() -> void:
 				tb_u.state = ToolButton.State.FREE
 
 
-# 当前关卡是否处于「道具全免费」区间
+## 当前关卡是否处于「道具全免费」区间
 func _is_free_tool_zone() -> bool:
 	return not ABTestManager.reward_unlock_level.is_reward_required_at(
 		GameState.get_current_level()
 	)
 
 
-# 从外部设置某道具数量（写回 GameState）
+## 从外部设置某道具数量（写回 GameState）
 func set_tool_count(tool_name: String, count: int) -> void:
 	var btn: Control
 	match tool_name:
@@ -834,7 +834,7 @@ func set_tool_count(tool_name: String, count: int) -> void:
 	_save_tool_to_state(btn, count)
 
 
-# 道具用尽时请求激励视频；看完才发道具，800ms 内重复点击忽略
+## 道具用尽时请求激励视频；看完才发道具，800ms 内重复点击忽略
 func _request_reward_for_tool(btn: Control) -> void:
 	if Time.get_ticks_msec() - _last_tool_deplete_ms < 800:
 		return
@@ -860,7 +860,7 @@ func _request_reward_for_tool(btn: Control) -> void:
 	UniKitManager.show_reward("reward", pos, show_id)
 
 
-# 看完广告后经 AwardManager 发 1 个对应道具，并按来源埋点
+## 看完广告后经 AwardManager 发 1 个对应道具，并按来源埋点
 func _grant_tool_reward(btn: Control) -> void:
 	var tb := btn as ToolButton
 	if tb == null:
@@ -881,11 +881,11 @@ func _grant_tool_reward(btn: Control) -> void:
 
 
 # ================= 开局广告（插屏 / banner） =================
-# 开局插屏判定结果缓存（同一次 on_show 内只算一次）
+## 开局插屏判定结果缓存（同一次 on_show 内只算一次）
 var _eval_interstitial_cache: Variant = null
 
 
-# 开局插屏判定入口：默认走缓存，dry_run 时只探测不落库
+## 开局插屏判定入口：默认走缓存，dry_run 时只探测不落库
 func _eval_start_interstitial(
 	params: Dictionary = {}, ad_position: String = "", dry_run: bool = false
 ) -> Dictionary:
@@ -897,7 +897,7 @@ func _eval_start_interstitial(
 	return result
 
 
-# 真正判开局插屏：概率组 → 解锁门槛 → 内存/额外保护 → 冷却 → 广告填充
+## 真正判开局插屏：概率组 → 解锁门槛 → 内存/额外保护 → 冷却 → 广告填充
 func _compute_start_interstitial(
 	params: Dictionary = {}, ad_position: String = "", dry_run: bool = false
 ) -> Dictionary:
@@ -1004,17 +1004,17 @@ func _compute_start_interstitial(
 	return {"eligible": true, "reason": "", "show_id": inter_show_id}
 
 
-# 最近一次开局插屏的结果描述，供调试面板查看
+## 最近一次开局插屏的结果描述，供调试面板查看
 static var last_interstitial_status: String = "尚未触发开局插屏"
 
-# 调试用：强制某道具免费（"" 关闭 / hint / locate / undo / all）
+## 调试用：强制某道具免费（"" 关闭 / hint / locate / undo / all）
 static var debug_force_free_tool: String = ""
 
-# 调试用：触发「生命 +1」所需的最短游戏时长（秒）
+## 调试用：触发「生命 +1」所需的最短游戏时长（秒）
 static var debug_life_plus_min_sec: float = 60.0
 
 
-# 真的去播开局插屏，并把结果显示到调试状态里
+## 真的去播开局插屏，并把结果显示到调试状态里
 func _try_show_start_interstitial(ad_position: String, elig: Dictionary) -> bool:
 	if not elig.get("eligible", false):
 		last_interstitial_status = elig.get("reason", "未知原因")
@@ -1026,7 +1026,7 @@ func _try_show_start_interstitial(ad_position: String, elig: Dictionary) -> bool
 	return shown
 
 
-# 判 banner 是否该展示（解锁门槛 / 额外保护 / 棋盘尺寸范围）
+## 判 banner 是否该展示（解锁门槛 / 额外保护 / 棋盘尺寸范围）
 func _eval_start_banner() -> Dictionary:
 	if not UniKitManager.is_debug_ad_enabled():
 		return {"eligible": false, "reason": "dev 广告总开关已关闭"}
@@ -1069,11 +1069,11 @@ func _eval_start_banner() -> Dictionary:
 	return {"eligible": true, "reason": ""}
 
 
-# 最近一次 banner 的结果描述，供调试面板查看
+## 最近一次 banner 的结果描述，供调试面板查看
 static var last_banner_status: String = "尚未触发 banner"
 
 
-# 判定通过就展示 banner，高度避开底部安全区
+## 判定通过就展示 banner，高度避开底部安全区
 func _show_banner_if_eligible(ad_position: String) -> void:
 	var elig: Dictionary = _eval_start_banner()
 	if not elig.get("eligible", false):
@@ -1085,18 +1085,18 @@ func _show_banner_if_eligible(ad_position: String) -> void:
 	last_banner_status = "已展示"
 
 
-# 销毁 banner 广告
+## 销毁 banner 广告
 func _destroy_banner() -> void:
 	UniKitManager.destroy_ad("banner")
 
 
-# banner 广告位名：每日关用 daily，其余用 game
+## banner 广告位名：每日关用 daily，其余用 game
 func _banner_ad_position() -> String:
 	return "daily" if _game_type() == Tracker.GameType.DAILY else "game"
 
 
 # ================= 生命周期与空闲引导 =================
-# 前后台切换通知：回前台重置空闲计时，并按需重播自动完成按钮
+## 前后台切换通知：回前台重置空闲计时，并按需重播自动完成按钮
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		_idle_time = 0.0
@@ -1109,27 +1109,27 @@ func _notification(what: int) -> void:
 		_on_application_focus_out()
 
 
-# 回到前台的钩子，子类覆写
+## 回到前台的钩子，子类覆写
 func _on_application_focus_in() -> void:
 	pass
 
 
-# 切到后台的钩子，子类覆写（每日关用它停表）
+## 切到后台的钩子，子类覆写（每日关用它停表）
 func _on_application_focus_out() -> void:
 	pass
 
 
-# 齿轮按钮回调，子类覆写
+## 齿轮按钮回调，子类覆写
 func _on_gear_btn_pressed() -> void:
 	pass
 
 
-# 系统返回键回调，子类覆写
+## 系统返回键回调，子类覆写
 func _on_back_request() -> void:
 	pass
 
 
-# 每帧：推进点赞手势时钟并清理过期事件；空闲够久就闪道具按钮
+## 每帧：推进点赞手势时钟并清理过期事件；空闲够久就闪道具按钮
 func _process(delta: float) -> void:
 	if not _like_hand_state["clock_paused"]:
 		_like_hand_state["in_game_sec"] += delta
@@ -1148,13 +1148,13 @@ func _process(delta: float) -> void:
 		_play_idle_tool_hint()
 
 
-# 有任何操作就清零空闲计时并停掉提示动画
+## 有任何操作就清零空闲计时并停掉提示动画
 func _reset_idle_hint() -> void:
 	_idle_time = 0.0
 	_stop_idle_tool_hint()
 
 
-# 按 AB 选要闪哪个道具按钮（可指定 locate/hint，也可随机或按持有量挑）
+## 按 AB 选要闪哪个道具按钮（可指定 locate/hint，也可随机或按持有量挑）
 func _select_idle_tool_btn() -> ToolButton:
 	match ABTestManager.prop_highlight.target_prop():
 		"locate":
@@ -1178,7 +1178,7 @@ func _select_idle_tool_btn() -> ToolButton:
 			return _tool_locate_btn as ToolButton
 
 
-# 让选中的道具按钮循环播提示动画，并记一次「已展示」
+## 让选中的道具按钮循环播提示动画，并记一次「已展示」
 func _play_idle_tool_hint() -> void:
 	var tb: ToolButton = _select_idle_tool_btn()
 	if tb == null:
@@ -1194,7 +1194,7 @@ func _play_idle_tool_hint() -> void:
 	GameState.mark_prop_highlight_shown()
 
 
-# 停止空闲提示动画并复位按钮
+## 停止空闲提示动画并复位按钮
 func _stop_idle_tool_hint() -> void:
 	if not _hint_anim_active:
 		return
@@ -1210,7 +1210,7 @@ func _stop_idle_tool_hint() -> void:
 
 
 # ================= 页面按钮与通用回调 =================
-# 坐标按钮：切换棋盘坐标显示，并计一次埋点
+## 坐标按钮：切换棋盘坐标显示，并计一次埋点
 func _on_coord_btn_pressed() -> void:
 	if _entry_anim_playing:
 		return
@@ -1220,7 +1220,7 @@ func _on_coord_btn_pressed() -> void:
 	_board_view.toggle_coords()
 
 
-# 设置按钮：暂停手势时钟后打开设置页，关闭时恢复时钟
+## 设置按钮：暂停手势时钟后打开设置页，关闭时恢复时钟
 func _on_settings_btn_pressed() -> void:
 	if _is_complete:
 		return
@@ -1240,7 +1240,7 @@ func _on_settings_btn_pressed() -> void:
 	)
 
 
-# 玩家关掉提示：清理高亮，然后尝试展示 banner
+## 玩家关掉提示：清理高亮，然后尝试展示 banner
 func _on_hint_dismissed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.HINT_STOP, self)
 	Tracker.inc_stat("hint_stop_used")
@@ -1249,7 +1249,7 @@ func _on_hint_dismissed() -> void:
 	_show_banner_if_eligible(_banner_ad_position())
 
 
-# 清空提示数据与所有临时高亮
+## 清空提示数据与所有临时高亮
 func _cleanup_hint() -> void:
 	_close_chain_detail()
 	_clear_hint_highlights()
@@ -1257,7 +1257,7 @@ func _cleanup_hint() -> void:
 	_hint_data = {}
 
 
-# 关掉连锁详情层并恢复提示浮层
+## 关掉连锁详情层并恢复提示浮层
 func _close_chain_detail() -> void:
 	_chain_detail_active = false
 	if _chain_detail_layer != null:
@@ -1268,7 +1268,7 @@ func _close_chain_detail() -> void:
 	_hint_overlay._overlay.visible = true
 
 
-# 棋盘左右抖一下（错误落子反馈）
+## 棋盘左右抖一下（错误落子反馈）
 func _play_screen_shake() -> void:
 	var orig := _board_view.position
 	var tw := create_tween()
@@ -1279,13 +1279,13 @@ func _play_screen_shake() -> void:
 	tw.tween_property(_board_view, "position:x", orig.x, 0.03)
 
 
-# 作弊指令：直接通关
+## 作弊指令：直接通关
 func _cmd_win(_args: Array[String]) -> void:
 	if not _is_complete:
 		_on_game_complete()
 
 
-# 此刻能否弹空闲提示（页面可见、无弹层、AB 条件满足等）
+## 此刻能否弹空闲提示（页面可见、无弹层、AB 条件满足等）
 func _can_show_idle_hint() -> bool:
 	var base_ok: bool = (
 		visible and not _is_complete and not _wrong_guess_pending and not _hint_overlay.visible
@@ -1305,7 +1305,7 @@ func _can_show_idle_hint() -> bool:
 	return true
 
 
-# 销毁提示高亮层
+## 销毁提示高亮层
 func _clear_hint_highlights() -> void:
 	if _hint_highlight_layer != null:
 		if _hint_highlight_layer.is_inside_tree():
@@ -1314,22 +1314,22 @@ func _clear_hint_highlights() -> void:
 		_hint_highlight_layer = null
 
 
-# 通关回调，子类覆写（进结算页 / 走连胜流程）
+## 通关回调，子类覆写（进结算页 / 走连胜流程）
 func _on_game_complete() -> void:
 	pass
 
 
-# 设置页点「重开」的回调，子类覆写
+## 设置页点「重开」的回调，子类覆写
 func _on_restart_requested() -> void:
 	pass
 
 
-# 通关要跳转的 UI 名，子类覆写
+## 通关要跳转的 UI 名，子类覆写
 func _win_ui_name() -> StringName:
 	return &""
 
 
-# 道具对应的激励广告位名
+## 道具对应的激励广告位名
 func _reward_pos_for(btn: Control) -> String:
 	if btn == _tool_locate_btn:
 		return Tracker.AdPos.PROPS_NORMAL_LOCATE
@@ -1338,7 +1338,7 @@ func _reward_pos_for(btn: Control) -> String:
 	return Tracker.AdPos.PROPS_NORMAL_HINT
 
 
-# 展示通关 toast 并等它消失（返回是否真的展示了）
+## 展示通关 toast 并等它消失（返回是否真的展示了）
 func _play_win_toast_and_wait() -> bool:
 	var toast: CanvasLayer = _maybe_show_win_toast()
 	if toast == null:
@@ -1353,7 +1353,7 @@ func _play_win_toast_and_wait() -> bool:
 	return true
 
 
-# 按步数算档位、看 AB 覆盖范围，决定是否播通关 toast 并挑一句文案
+## 按步数算档位、看 AB 覆盖范围，决定是否播通关 toast 并挑一句文案
 func _maybe_show_win_toast() -> CanvasLayer:
 	var scale: int = _level_config.get("size", 0)
 	var step: int = Tracker.get_stat("step_used")
@@ -1397,7 +1397,7 @@ func _maybe_show_win_toast() -> CanvasLayer:
 	return toast
 
 
-# 按档位取对应的 toast 节点
+## 按档位取对应的 toast 节点
 func _resolve_win_toast_node(tier: int) -> CanvasLayer:
 	match tier:
 		WinToastTier.TIER_PERFECT:
@@ -1411,16 +1411,16 @@ func _resolve_win_toast_node(tier: int) -> CanvasLayer:
 	return null
 
 
-# 棋盘容器尺寸变化 → 下一帧重排棋盘
+## 棋盘容器尺寸变化 → 下一帧重排棋盘
 func _on_board_container_resized() -> void:
 	_relayout_board.call_deferred()
 
 
-# 棋盘固定显示宽度（像素），缩放的基准
+## 棋盘固定显示宽度（像素），缩放的基准
 const FIXED_BOARD_WIDTH: float = 1008.0
 
 
-# 把棋盘按容器宽度等比缩放并居中，再补偿圆角与自动打叉按钮的反向缩放
+## 把棋盘按容器宽度等比缩放并居中，再补偿圆角与自动打叉按钮的反向缩放
 func _relayout_board() -> void:
 	if _level_config.is_empty() or not _level_config.has("size"):
 		return
@@ -1441,13 +1441,13 @@ func _relayout_board() -> void:
 	_board_view.apply_inverse_scale_to_auto_mark_btns()
 
 
-# 清除按钮距棋盘底边的间距（像素）
+## 清除按钮距棋盘底边的间距（像素）
 const _CLEAR_BTN_GAP_BELOW_BOARD: float = 30.0
 
 # ================= 点赞手势反馈（AB: thumb_up） =================
 # 6 种手势动画：比心 / 鼓掌 / 吹号 / 双拇指 / 纠正欢呼 / 鹰眼
 enum LikeHandAnim { LIKE, CLAP, BLOW_TRUMPET, DOUBLE_THUMBS, CORRECTION_CHEER, HAWK_EYE }
-# 枚举 → 动画名
+## 枚举 → 动画名
 const _LIKE_HAND_ANIM_NAMES: Dictionary = {
 	LikeHandAnim.LIKE: "Like",
 	LikeHandAnim.CLAP: "Clap",
@@ -1461,7 +1461,7 @@ const _LIKE_HAND_POOL_MAX: int = 5 # 手势节点对象池上限，超出直接 
 var _like_hand_pool: Array[Node2D] = [] # 闲置的手势节点池
 
 
-# 在屏幕坐标处播一个手势动画（自动取用对象池，播完归还）
+## 在屏幕坐标处播一个手势动画（自动取用对象池，播完归还）
 func play_like_hand(global_pos: Vector2, anim: LikeHandAnim) -> void:
 	var like_hand: Node2D = _acquire_like_hand()
 	like_hand.global_position = global_pos
@@ -1482,7 +1482,7 @@ func play_like_hand(global_pos: Vector2, anim: LikeHandAnim) -> void:
 		SoundManager.play(SoundManager.Kind.BLOW_TRUMPET)
 
 
-# 取一个手势节点：优先复用池里的，否则新实例化
+## 取一个手势节点：优先复用池里的，否则新实例化
 func _acquire_like_hand() -> Node2D:
 	if not _like_hand_pool.is_empty():
 		var node: Node2D = _like_hand_pool.pop_back()
@@ -1497,7 +1497,7 @@ func _acquire_like_hand() -> Node2D:
 	return fresh
 
 
-# 归还手势节点：池满就直接释放
+## 归还手势节点：池满就直接释放
 func _release_like_hand(node: Node2D) -> void:
 	if not is_instance_valid(node):
 		return
@@ -1509,11 +1509,11 @@ func _release_like_hand(node: Node2D) -> void:
 	_like_hand_pool.append(node)
 
 
-# 手势相对格心的默认 Y 偏移（像素，负数向上）
+## 手势相对格心的默认 Y 偏移（像素，负数向上）
 const _LIKE_HAND_Y_OFFSET: float = -80.0
 
 
-# 在指定格子上方播手势，并按连击飘字与动画类型调整高度和左右边界
+## 在指定格子上方播手势，并按连击飘字与动画类型调整高度和左右边界
 func _play_like_hand_on_cell(r: int, c: int, anim: LikeHandAnim) -> void:
 	var cell_view: CellView = _board_view.get_cell_view(r, c)
 	if cell_view == null:
@@ -1558,7 +1558,7 @@ func _play_like_hand_on_cell(r: int, c: int, anim: LikeHandAnim) -> void:
 # 触发点赞手势的三种来源：玩家双击 / 定位道具 / 应用 R1 提示
 enum LikeHandTrigger { PLAYER_DOUBLE_TAP, LOCATE, HINT_R1_APPLY }
 
-# 各棋盘尺寸下「点赞」的最小间隔（秒）与最多触发次数
+## 各棋盘尺寸下「点赞」的最小间隔（秒）与最多触发次数
 const _LIKE_HAND_CONFIG_BY_SIZE: Dictionary = {
 	6: {"min_interval": 30.0, "max_triggers": 2},
 	7: {"min_interval": 30.0, "max_triggers": 2},
@@ -1570,7 +1570,7 @@ const _LIKE_HAND_CONFIG_BY_SIZE: Dictionary = {
 }
 
 
-# 判断这次放对要不要播「点赞」：仅双击来源，且受间隔与次数限制
+## 判断这次放对要不要播「点赞」：仅双击来源，且受间隔与次数限制
 func _decide_like_hand_for_correct_cat(trigger: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.LIKE}
 	if trigger != LikeHandTrigger.PLAYER_DOUBLE_TAP:
@@ -1594,7 +1594,7 @@ func _decide_like_hand_for_correct_cat(trigger: int) -> Dictionary:
 	return {"should_play": true, "anim": LikeHandAnim.LIKE}
 
 
-# 记录一次放对：刷新时间戳、标记见过第一只猫、按需累加触发次数
+## 记录一次放对：刷新时间戳、标记见过第一只猫、按需累加触发次数
 func _record_correct_cat(decision: Dictionary) -> void:
 	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
 	_like_hand_state["has_seen_first_cat"] = true
@@ -1602,7 +1602,7 @@ func _record_correct_cat(decision: Dictionary) -> void:
 		_like_hand_state["triggered_count"] += 1
 
 
-# 续局时盘上已有猫，把「见过第一只猫」补上
+## 续局时盘上已有猫，把「见过第一只猫」补上
 func _seed_like_hand_first_cat_from_board() -> void:
 	if _like_hand_state["has_seen_first_cat"]:
 		return
@@ -1614,7 +1614,7 @@ func _seed_like_hand_first_cat_from_board() -> void:
 				return
 
 
-# 数盘上正式猫的数量
+## 数盘上正式猫的数量
 func _count_placed_cats(sz: int) -> int:
 	var n: int = 0
 	for r in range(sz):
@@ -1624,17 +1624,17 @@ func _count_placed_cats(sz: int) -> int:
 	return n
 
 
-# 暂停手势时钟（打开设置页 / 插屏时调用）
+## 暂停手势时钟（打开设置页 / 插屏时调用）
 func pause_like_hand_clock() -> void:
 	_like_hand_state["clock_paused"] = true
 
 
-# 恢复手势时钟
+## 恢复手势时钟
 func resume_like_hand_clock() -> void:
 	_like_hand_state["clock_paused"] = false
 
 
-# 判断要不要「鼓掌」：大棋盘、所在区域至少 3 格且从没被打过叉或出过错
+## 判断要不要「鼓掌」：大棋盘、所在区域至少 3 格且从没被打过叉或出过错
 func _decide_clap_for_correct_cat(r: int, c: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.CLAP}
 
@@ -1653,19 +1653,19 @@ func _decide_clap_for_correct_cat(r: int, c: int) -> Dictionary:
 	return {"should_play": true, "anim": LikeHandAnim.CLAP}
 
 
-# 记录鼓掌已播（刷新手势时间戳）
+## 记录鼓掌已播（刷新手势时间戳）
 func _record_clap_played() -> void:
 	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
 
 
-# 棋盘变化时刷新 R4+ 缓存，并重算「漏猫」候选
+## 棋盘变化时刷新 R4+ 缓存，并重算「漏猫」候选
 func _on_board_cell_state_changed_for_r4(_r: int, _c: int, state: int, _source: int = 0) -> void:
 	if state == CellState.CAT:
 		call_deferred("_refresh_r4_plus_cache")
 	call_deferred("_update_missed_cat_candidates")
 
 
-# 用当前棋盘重算可吹号（R4+）的格子集合
+## 用当前棋盘重算可吹号（R4+）的格子集合
 func _refresh_r4_plus_cache() -> void:
 	_r4_plus_cells.clear()
 	if _puzzle.is_empty():
@@ -1681,7 +1681,7 @@ func _refresh_r4_plus_cache() -> void:
 
 
 # ================= 连击（AB: combo_encourage） =================
-# 放下一只猫就累加连击与分数，并按需弹连击 / 分数飘字
+## 放下一只猫就累加连击与分数，并按需弹连击 / 分数飘字
 func _on_board_cell_state_changed_for_combo(r: int, c: int, state: int, _source: int = 0) -> void:
 	if state != CellState.CAT:
 		return
@@ -1711,7 +1711,7 @@ func _on_board_cell_state_changed_for_combo(r: int, c: int, state: int, _source:
 		_combo_feedback_view.show_score_only(cell_global_pos, gain, _combo_score)
 
 
-# 按连击数与 AB 档位算本次得分（有上限）
+## 按连击数与 AB 档位算本次得分（有上限）
 func _calc_combo_point_gain(ab_val: int) -> int:
 	var base: int
 	var step: int
@@ -1727,7 +1727,7 @@ func _calc_combo_point_gain(ab_val: int) -> int:
 	return mini(base + maxi(0, _combo_count - 1) * step, cap)
 
 
-# 判断要不要「吹号」：该格属于 R4+ 集合且还没放满
+## 判断要不要「吹号」：该格属于 R4+ 集合且还没放满
 func _decide_blow_trumpet_for_correct_cat(r: int, c: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.BLOW_TRUMPET}
 	var sz: int = _level_config.get("size", 4)
@@ -1739,16 +1739,16 @@ func _decide_blow_trumpet_for_correct_cat(r: int, c: int) -> Dictionary:
 	return {"should_play": true, "anim": LikeHandAnim.BLOW_TRUMPET}
 
 
-# 记录吹号已播
+## 记录吹号已播
 func _record_blow_trumpet_played() -> void:
 	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
 
 
-# 错后纠错的观察窗口（秒）
+## 错后纠错的观察窗口（秒）
 const _CORRECTION_CHEER_WINDOW_SEC: float = 5.0
 
 
-# 记一次错落事件（区域 + 时刻），用于纠错欢呼判定
+## 记一次错落事件（区域 + 时刻），用于纠错欢呼判定
 func _record_wrong_cat_event(r: int, c: int) -> void:
 	if not ABTestManager.thumb_up.is_feedback_enabled(ThumbUpConfig.Feedback.CORRECTION_CHEER):
 		return
@@ -1763,7 +1763,7 @@ func _record_wrong_cat_event(r: int, c: int) -> void:
 	events.append({"region_id": region_id, "time": _like_hand_state["in_game_sec"]})
 
 
-# 5 秒内在同区域错过的，这次放对就播「纠正欢呼」
+## 5 秒内在同区域错过的，这次放对就播「纠正欢呼」
 func _decide_correction_cheer_for_correct_cat(r: int, c: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.CORRECTION_CHEER}
 	var sz: int = _level_config.get("size", 4)
@@ -1786,7 +1786,7 @@ func _decide_correction_cheer_for_correct_cat(r: int, c: int) -> Dictionary:
 	return none
 
 
-# 丢掉超出观察窗口的错落事件
+## 丢掉超出观察窗口的错落事件
 func _prune_wrong_cat_events() -> void:
 	var now: float = _like_hand_state["in_game_sec"]
 	var events: Array = _like_hand_state["wrong_cat_events"]
@@ -1794,11 +1794,11 @@ func _prune_wrong_cat_events() -> void:
 		events.pop_front()
 
 
-# 漏猫提示需要等待的时长（秒）
+## 漏猫提示需要等待的时长（秒）
 const _MISSED_CAT_DELAY_SEC: float = 5.0
 
 
-# 扫区域 / 行 / 列，维护「只剩一格且答案就在这」的候选格与首次出现时刻
+## 扫区域 / 行 / 列，维护「只剩一格且答案就在这」的候选格与首次出现时刻
 func _update_missed_cat_candidates() -> void:
 	if not ABTestManager.thumb_up.is_feedback_enabled(ThumbUpConfig.Feedback.MISSED_CAT):
 		return
@@ -1878,7 +1878,7 @@ func _update_missed_cat_candidates() -> void:
 			candidates[k] = now
 
 
-# 该格在候选里挂了 5 秒以上仍没被填 → 播「漏猫」提示
+## 该格在候选里挂了 5 秒以上仍没被填 → 播「漏猫」提示
 func _decide_missed_cat_for_correct_cat(r: int, c: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.LIKE}
 	var sz: int = _level_config.get("size", 4)
@@ -1901,7 +1901,7 @@ func _decide_missed_cat_for_correct_cat(r: int, c: int) -> Dictionary:
 	return {"should_play": true, "anim": anim_id as LikeHandAnim}
 
 
-# 按 AB 给的优先级逐个试，选出唯一要播的手势反馈
+## 按 AB 给的优先级逐个试，选出唯一要播的手势反馈
 func _arbitrate_feedback_for_correct_cat(r: int, c: int) -> Dictionary:
 	var none: Dictionary = {
 		"should_play": false, "anim": LikeHandAnim.LIKE, "feedback": -1, "pos": "cell"
@@ -1922,7 +1922,7 @@ func _arbitrate_feedback_for_correct_cat(r: int, c: int) -> Dictionary:
 	return none
 
 
-# 分派到各反馈自己的判定函数
+## 分派到各反馈自己的判定函数
 func _evaluate_single_feedback(feedback: int, r: int, c: int) -> Dictionary:
 	var result: Dictionary
 	match feedback:
@@ -1944,11 +1944,11 @@ func _evaluate_single_feedback(feedback: int, r: int, c: int) -> Dictionary:
 	return {"should_play": false, "anim": LikeHandAnim.LIKE}
 
 
-# 固定位置反馈在「规则条底 ~ 棋盘顶」之间的高度比例
+## 固定位置反馈在「规则条底 ~ 棋盘顶」之间的高度比例
 const _HAWK_EYE_Y_RATIO: float = 0.57
 
 
-# 在棋盘上方固定位置播手势（不贴格子的那种反馈）
+## 在棋盘上方固定位置播手势（不贴格子的那种反馈）
 func _play_feedback_at_fixed_pos(anim: LikeHandAnim) -> void:
 	var board_top: float = _board_view.global_position.y
 	var rules_bottom: float = _rules_bg.global_position.y + _rules_bg.size.y
@@ -1958,7 +1958,7 @@ func _play_feedback_at_fixed_pos(anim: LikeHandAnim) -> void:
 	play_like_hand(Vector2(center_x, center_y), anim)
 
 
-# 某种反馈播完后刷新手势时间戳
+## 某种反馈播完后刷新手势时间戳
 func _on_feedback_played(feedback: int) -> void:
 	match feedback:
 		ThumbUpConfig.Feedback.BLOW_TRUMPET:
@@ -1972,7 +1972,7 @@ func _on_feedback_played(feedback: int) -> void:
 
 
 # ================= 通关校验与剩余数量 =================
-# 核心判定：棋盘放满且无冲突就通关；否则按 AB 检查草稿是否已全对可自动提交
+## 核心判定：棋盘放满且无冲突就通关；否则按 AB 检查草稿是否已全对可自动提交
 func _validate_board() -> void:
 	if _is_complete or _puzzle.is_empty() or not _puzzle.has("regions"):
 		return
@@ -2004,7 +2004,7 @@ func _validate_board() -> void:
 	)
 
 
-# 刷新剩余猫数量（数字或进度条模式），并按需播正确提示动画
+## 刷新剩余猫数量（数字或进度条模式），并按需播正确提示动画
 func _update_remaining() -> void:
 	var sz: int = _level_config.get("size", 4)
 	var placed: int = 0
@@ -2056,7 +2056,7 @@ func _update_remaining() -> void:
 	_last_placed_count = placed
 
 
-# 判定刚落下的猫违反了哪条规则，命中就回调 _on_rule_violated
+## 判定刚落下的猫违反了哪条规则，命中就回调 _on_rule_violated
 func _try_emit_rule_violation(r: int, c: int) -> void:
 	if _puzzle.is_empty() or not _puzzle.has("regions"):
 		return
@@ -2073,12 +2073,12 @@ func _try_emit_rule_violation(r: int, c: int) -> void:
 		_on_rule_violated(rule)
 
 
-# 规则违规回调，子类覆写（例如每日关弹提示）
+## 规则违规回调，子类覆写（例如每日关弹提示）
 func _on_rule_violated(_rule: int) -> void:
 	pass
 
 
-# 让对应那条规则的高亮块呼吸闪两下
+## 让对应那条规则的高亮块呼吸闪两下
 func _play_rule_highlight(rule_index: int) -> void:
 	var idx: int = rule_index - 1
 	if idx < 0 or idx >= _rule_highlights.size():
@@ -2103,7 +2103,7 @@ func _play_rule_highlight(rule_index: int) -> void:
 	_rule_tween.finished.connect(_stop_rule_highlight)
 
 
-# 停掉规则高亮并复位透明度
+## 停掉规则高亮并复位透明度
 func _stop_rule_highlight() -> void:
 	if _rule_tween != null and _rule_tween.is_valid():
 		_rule_tween.kill()
@@ -2114,7 +2114,7 @@ func _stop_rule_highlight() -> void:
 		_rule_active_highlight = null
 
 
-# 放错猫：扣一条命、清零连击、播错误反馈；命尽则稍后进失败流程
+## 放错猫：扣一条命、清零连击、播错误反馈；命尽则稍后进失败流程
 func _on_wrong_guess(r: int, c: int) -> void:
 	_record_wrong_cat_event(r, c)
 	_mistake_count += 1
@@ -2155,7 +2155,7 @@ func _on_wrong_guess(r: int, c: int) -> void:
 		)
 
 
-# 按 AB 决定哪些猫表现沮丧（全部 / 只让与之冲突的猫）
+## 按 AB 决定哪些猫表现沮丧（全部 / 只让与之冲突的猫）
 func _play_wrong_guess_cat_feedback(r: int, c: int) -> void:
 	if ABTestManager.error_feedback.no_cats_react():
 		return
@@ -2179,7 +2179,7 @@ func _play_wrong_guess_cat_feedback(r: int, c: int) -> void:
 		_board_view.play_cat_frustrated_at(bad)
 
 
-# 满足条件时送一条命（每局一次、非每日关、只剩 1 命、处在二选一区域等）
+## 满足条件时送一条命（每局一次、非每日关、只剩 1 命、处在二选一区域等）
 func _maybe_trigger_life_plus(r: int, c: int) -> void:
 	if _life_plus_used_this_game:
 		return
@@ -2202,7 +2202,7 @@ func _maybe_trigger_life_plus(r: int, c: int) -> void:
 	_apply_life_plus(first)
 
 
-# 该格所在区域是否只剩两个没打叉的格子（二选一困境）
+## 该格所在区域是否只剩两个没打叉的格子（二选一困境）
 func _was_two_choice_in_region(r: int, c: int) -> bool:
 	var regions: Array = _puzzle.get("regions", [])
 	if regions.is_empty():
@@ -2218,7 +2218,7 @@ func _was_two_choice_in_region(r: int, c: int) -> bool:
 	return non_mark == 2
 
 
-# 加一条命并播「生命 +1」表现，首次触发时记下引导已看
+## 加一条命并播「生命 +1」表现，首次触发时记下引导已看
 func _apply_life_plus(show_guide: bool) -> void:
 	_lives = mini(_lives + 1, 3)
 	_life_plus_used_this_game = true
@@ -2230,7 +2230,7 @@ func _apply_life_plus(show_guide: bool) -> void:
 		GameState.mark_life_plus_first_done()
 
 
-# 把新获得那颗心的初始状态摆好（先藏实心、露出遮罩）
+## 把新获得那颗心的初始状态摆好（先藏实心、露出遮罩）
 func _pose_gained_heart_for_life_plus() -> void:
 	var gained: Node = _gained_heart_slot()
 	if gained == null:
@@ -2249,7 +2249,7 @@ func _pose_gained_heart_for_life_plus() -> void:
 			return
 
 
-# 播生命 +1 动画：页面级动画优先，其次心槽动画，都没有就飘字兜底
+## 播生命 +1 动画：页面级动画优先，其次心槽动画，都没有就飘字兜底
 func _play_life_plus_fx(show_guide: bool) -> void:
 	var anim_name: String = "Appear1" if show_guide else "Appear2"
 	var played: bool = false
@@ -2278,7 +2278,7 @@ func _play_life_plus_fx(show_guide: bool) -> void:
 		_spawn_life_plus_float()
 
 
-# 取刚获得的那颗心（索引 = 生命数 - 1）
+## 取刚获得的那颗心（索引 = 生命数 - 1）
 func _gained_heart_slot() -> Node:
 	var hearts: Array = [_heart1, _heart2, _heart3]
 	var idx: int = _lives - 1
@@ -2287,7 +2287,7 @@ func _gained_heart_slot() -> Node:
 	return hearts[idx]
 
 
-# 兜底表现：在生命槽旁飘一个 +1
+## 兜底表现：在生命槽旁飘一个 +1
 func _spawn_life_plus_float() -> void:
 	var anchor: Control = _heart3 if _heart3 != null else _heart1
 	if anchor == null:
@@ -2305,18 +2305,18 @@ func _spawn_life_plus_float() -> void:
 	tw.finished.connect(label.queue_free)
 
 
-# 失败回调，子类覆写（弹复活 / 跳失败页）
+## 失败回调，子类覆写（弹复活 / 跳失败页）
 func _on_game_over() -> void:
 	pass
 
 
-# 作弊指令回调，子类覆写
+## 作弊指令回调，子类覆写
 func _on_cheat_command(_cmd_name: String, _args: Array[String]) -> void:
 	pass
 
 
 # ================= 定位道具与提示高亮 =================
-# 定位道具：花一个道具，在候选里挑「区域最小」的答案格直接落猫
+## 定位道具：花一个道具，在候选里挑「区域最小」的答案格直接落猫
 func _on_locate_btn_pressed() -> void:
 	if _entry_anim_playing:
 		return
@@ -2377,7 +2377,7 @@ func _on_locate_btn_pressed() -> void:
 	_validate_board()
 
 
-# 按提示策略在棋盘上叠一层临时格子，演示这一手该怎么走
+## 按提示策略在棋盘上叠一层临时格子，演示这一手该怎么走
 func _build_hint_highlights(hint: Dictionary) -> void:
 	_clear_hint_highlights()
 	var s: float = _board_view.scale.x
@@ -2486,12 +2486,12 @@ func _build_hint_highlights(hint: Dictionary) -> void:
 			mark_idx += 1
 
 
-# 在提示高亮层里造一个临时格子
+## 在提示高亮层里造一个临时格子
 func _spawn_temp_cell(cv: Vector2i, s: float, bpos: Vector2) -> CellView:
 	return _spawn_temp_cell_in(_hint_highlight_layer, cv, s, bpos)
 
 
-# 在指定 CanvasLayer 里造临时格子，并复制源格的区域色与非空状态
+## 在指定 CanvasLayer 里造临时格子，并复制源格的区域色与非空状态
 func _spawn_temp_cell_in(layer: CanvasLayer, cv: Vector2i, s: float, bpos: Vector2) -> CellView:
 	var local_rect: Rect2 = _board_view.cell_to_local_rect(cv.x, cv.y)
 	var top_left: Vector2 = bpos + local_rect.position * s
@@ -2516,7 +2516,7 @@ func _spawn_temp_cell_in(layer: CanvasLayer, cv: Vector2i, s: float, bpos: Vecto
 	return temp
 
 
-# 算 R2 提示要打叉的格子（按行 / 列 / 区域四种模式）
+## 算 R2 提示要打叉的格子（按行 / 列 / 区域四种模式）
 func _compute_r2_mark_cells(hint: Dictionary) -> Array[Vector2i]:
 	var result: Array[Vector2i] = []
 	var sz: int = _level_config.get("size", 4)
@@ -2554,7 +2554,7 @@ func _compute_r2_mark_cells(hint: Dictionary) -> Array[Vector2i]:
 	return result
 
 
-# 应用 R3/R4 提示：把锁定的行、列上（非相关区域的）空格全部打叉
+## 应用 R3/R4 提示：把锁定的行、列上（非相关区域的）空格全部打叉
 func _apply_r3_r4_hint() -> void:
 	var sz: int = _level_config.get("size", 4)
 	var regs: Array = _puzzle["regions"]
@@ -2584,7 +2584,7 @@ func _apply_r3_r4_hint() -> void:
 
 
 # ================= 棋盘输入（拖动 / 手势） =================
-# 按上棋盘：初始化输入系统后交给手势识别器
+## 按上棋盘：初始化输入系统后交给手势识别器
 func _on_board_cell_drag_start(pos: Vector2) -> void:
 	_ensure_input_system()
 	_reset_idle_hint()
@@ -2602,7 +2602,7 @@ func _on_board_cell_drag_start(pos: Vector2) -> void:
 	_consume_board_actions(_gesture_recognizer.on_drag_start(pos))
 
 
-# 拖动经过：先处理长按分裂的中断，再交给手势识别器
+## 拖动经过：先处理长按分裂的中断，再交给手势识别器
 func _on_board_cell_drag_over(pos: Vector2) -> void:
 	if _is_complete or _wrong_guess_pending:
 		return
@@ -2617,7 +2617,7 @@ func _on_board_cell_drag_over(pos: Vector2) -> void:
 	_consume_board_actions(_gesture_recognizer.on_drag_over(pos))
 
 
-# 抬手：结束手势、提交这一步并计一次步数
+## 抬手：结束手势、提交这一步并计一次步数
 func _on_board_cell_drag_end() -> void:
 	if _gesture_recognizer == null:
 		return
@@ -2634,14 +2634,14 @@ func _on_board_cell_drag_end() -> void:
 		_count_board_step()
 
 
-# 结束长按分裂状态，让正按着的格子做抬起表现
+## 结束长按分裂状态，让正按着的格子做抬起表现
 func _release_split_pressed() -> void:
 	if _split_pressed_cell.x >= 0:
 		_board_view.play_mark_release(_split_pressed_cell.x, _split_pressed_cell.y)
 		_split_pressed_cell = Vector2i(-1, -1)
 
 
-# 懒建输入方案；按 AB 决定用普通识别器还是防误触识别器
+## 懒建输入方案；按 AB 决定用普通识别器还是防误触识别器
 func _ensure_input_system() -> void:
 	if _normal_scheme == null:
 		_normal_scheme = BoardInputScheme.create_normal(_board_view)
@@ -2661,7 +2661,7 @@ func _ensure_input_system() -> void:
 	_gesture_recognizer.active_scheme = keep_scheme
 
 
-# 执行手势识别器产出的动作：双击 / 草稿 / 正式打叉擦除，统一经 BoardView 落地
+## 执行手势识别器产出的动作：双击 / 草稿 / 正式打叉擦除，统一经 BoardView 落地
 func _consume_board_actions(actions: Array[CellAction]) -> void:
 	if actions.is_empty():
 		return
@@ -2704,7 +2704,7 @@ func _consume_board_actions(actions: Array[CellAction]) -> void:
 		_update_remaining()
 
 
-# 双击：答案格放猫，非答案格记为放错，并提交一步
+## 双击：答案格放猫，非答案格记为放错，并提交一步
 func _consume_double_tap(r: int, c: int) -> void:
 	var cur: int = _board_view.get_cell_state(r, c)
 	if cur == CellState.CAT:
@@ -2719,7 +2719,7 @@ func _consume_double_tap(r: int, c: int) -> void:
 	_count_board_step()
 
 
-# 双击会盖掉上一次单击，这里把上一步并回来，保证撤销能回到最初状态
+## 双击会盖掉上一次单击，这里把上一步并回来，保证撤销能回到最初状态
 func consume_prior_tap_before(r: int, c: int, fallback: int) -> int:
 	var original_before: int = fallback
 	var prev_step: StepHistory.StepRecord = _step_history.peek_last()
@@ -2731,7 +2731,7 @@ func consume_prior_tap_before(r: int, c: int, fallback: int) -> int:
 	return original_before
 
 
-# 在格子上放猫：记录变更、尝试送命、按优先级选手势反馈
+## 在格子上放猫：记录变更、尝试送命、按优先级选手势反馈
 func do_place_cat(r: int, c: int, original_before: int) -> void:
 	_record_cell_change(r, c, original_before, CellState.CAT)
 	_board_view.set_cell_state(r, c, CellState.CAT)
@@ -2760,20 +2760,20 @@ func do_place_cat(r: int, c: int, original_before: int) -> void:
 
 
 # ================= 自动打叉（auto mark）与锁叉 =================
-# 等猫落下动画播完才开始打叉（秒）
+## 等猫落下动画播完才开始打叉（秒）
 const _AUTO_MARK_CAT_APPEAR_DELAY_SEC: float = 0.733
-# 逐圈扩散时每圈的间隔（秒）
+## 逐圈扩散时每圈的间隔（秒）
 const _AUTO_MARK_RING_STEP_SEC: float = 3.0 / 60.0
-# 自动打叉令牌，自增可作废进行中的异步扩散
+## 自动打叉令牌，自增可作废进行中的异步扩散
 var _auto_mark_token: int = 0
 
 
-# 当前关卡号（转发 GameState）
+## 当前关卡号（转发 GameState）
 func _current_level() -> int:
 	return GameState.get_current_level()
 
 
-# 预生成格子节点避免进场卡顿；期间临时关掉容器入场动画
+## 预生成格子节点避免进场卡顿；期间临时关掉容器入场动画
 func prewarm_board(size: int) -> void:
 	if _board_view == null:
 		return
@@ -2785,7 +2785,7 @@ func prewarm_board(size: int) -> void:
 		board_intro.set_auto_trigger(true)
 
 
-# 放下猫后自动把同行 / 同列 / 邻接 / 同色区域打叉（AB: game_auto_mark）
+## 放下猫后自动把同行 / 同列 / 邻接 / 同色区域打叉（AB: game_auto_mark）
 func _on_cell_changed_for_auto_mark(_r: int, _c: int, state: int, source: int) -> void:
 	if state != CellState.CAT:
 		return
@@ -2808,15 +2808,15 @@ func _on_cell_changed_for_auto_mark(_r: int, _c: int, state: int, source: int) -
 	_spread_auto_cross(cat, _AUTO_MARK_CAT_APPEAR_DELAY_SEC, excluded_cells)
 
 
-# 等打叉动画播一会儿再开始锁叉（秒）
+## 等打叉动画播一会儿再开始锁叉（秒）
 const _LOCK_X_AFTER_MARK_DELAY_SEC: float = 29.0 / 60.0
-# 逐个锁叉的间隔（秒）
+## 逐个锁叉的间隔（秒）
 const _LOCK_X_STEP_SEC: float = 0.1
-# 锁叉令牌，自增可作废进行中的异步锁叉
+## 锁叉令牌，自增可作废进行中的异步锁叉
 var _lock_x_token: int = 0
 
 
-# 某条约束上的格子全打上叉后，把这些叉锁成不可改（AB: lock_x）
+## 某条约束上的格子全打上叉后，把这些叉锁成不可改（AB: lock_x）
 func _on_cell_changed_for_lock_x(r: int, c: int, state: int, source: int) -> void:
 	if source == BoardView.ChangeSource.RESTORE or source == BoardView.ChangeSource.PREFILL:
 		return
@@ -2880,7 +2880,7 @@ func _on_cell_changed_for_lock_x(r: int, c: int, state: int, source: int) -> voi
 			_spread_status_lock_ordered(ordered)
 
 
-# 以猫为中心按曼哈顿距离逐圈锁叉
+## 以猫为中心按曼哈顿距离逐圈锁叉
 func _spread_status_lock_from_cat(cat: Vector2i, marks: Array[Vector2i]) -> void:
 	if marks.is_empty():
 		return
@@ -2907,7 +2907,7 @@ func _spread_status_lock_from_cat(cat: Vector2i, marks: Array[Vector2i]) -> void
 			return
 
 
-# 按给定顺序逐个锁叉
+## 按给定顺序逐个锁叉
 func _spread_status_lock_ordered(ordered: Array[Vector2i]) -> void:
 	if ordered.is_empty():
 		return
@@ -2925,7 +2925,7 @@ func _spread_status_lock_ordered(ordered: Array[Vector2i]) -> void:
 			return
 
 
-# 按约束类型排序待锁的叉：行从下往上 / 列从左往右 / 八邻接顺时针 / 同色按对角线
+## 按约束类型排序待锁的叉：行从下往上 / 列从左往右 / 八邻接顺时针 / 同色按对角线
 func _sort_marks_for_set(set_type: int, cat: Vector2i, marks: Array[Vector2i]) -> Array[Vector2i]:
 	var sorted: Array[Vector2i] = marks.duplicate()
 	match set_type:
@@ -2945,7 +2945,7 @@ func _sort_marks_for_set(set_type: int, cat: Vector2i, marks: Array[Vector2i]) -
 	return sorted
 
 
-# 八邻接格相对猫的顺时针序号（0~7），非邻接返回 999
+## 八邻接格相对猫的顺时针序号（0~7），非邻接返回 999
 func _neighbor_clockwise_rank(cell: Vector2i, cat: Vector2i) -> int:
 	var dx: int = cell.x - cat.x
 	var dy: int = cell.y - cat.y
@@ -2968,7 +2968,7 @@ func _neighbor_clockwise_rank(cell: Vector2i, cat: Vector2i) -> int:
 	return 999
 
 
-# 自动打叉动画：先锁输入并预置，再按距离逐圈显现，最后解锁输入
+## 自动打叉动画：先锁输入并预置，再按距离逐圈显现，最后解锁输入
 func _spread_auto_cross(
 	cat: Vector2i, initial_delay: float, excluded_cells: Array[Vector2i]
 ) -> void:
@@ -3013,12 +3013,12 @@ func _spread_auto_cross(
 		_board_view.set_cell_input_locked(cell.x, cell.y, false)
 
 
-# 打叉预置完成的钩子，子类覆写（新手引导用）
+## 打叉预置完成的钩子，子类覆写（新手引导用）
 func _on_auto_mark_preset_done() -> void:
 	pass
 
 
-# 续局恢复时，把已有猫本该打的叉一次性补齐
+## 续局恢复时，把已有猫本该打的叉一次性补齐
 func complete_auto_mark_for_restore() -> void:
 	if ABTestManager == null or ABTestManager.game_auto_mark == null:
 		return
@@ -3041,19 +3041,19 @@ func complete_auto_mark_for_restore() -> void:
 					)
 
 
-# 轴自动打叉的逐格间隔（秒）
+## 轴自动打叉的逐格间隔（秒）
 const _AUTO_MARK_AXIS_STEP_SEC: float = 4.0 / 60.0
 
-# 正在播动画的轴（键 "轴:序号"），避免重复触发
+## 正在播动画的轴（键 "轴:序号"），避免重复触发
 var _axis_busy_set: Dictionary = {}
 
 
-# 轴的字典键：轴类型 + 序号
+## 轴的字典键：轴类型 + 序号
 func _axis_key(axis: int, idx: int) -> String:
 	return "%d:%d" % [axis, idx]
 
 
-# 点行 / 列外侧圆点：整条轴打叉或取消（AB: dot_toggle）
+## 点行 / 列外侧圆点：整条轴打叉或取消（AB: dot_toggle）
 func _on_axis_auto_mark_pressed(axis: int, idx: int, is_marked_before: bool) -> void:
 	if ABTestManager == null or ABTestManager.game_auto_mark == null:
 		return
@@ -3082,7 +3082,7 @@ func _on_axis_auto_mark_pressed(axis: int, idx: int, is_marked_before: bool) -> 
 		_spread_axis_cross(axis, idx, targets)
 
 
-# 整条轴逐格打叉的动画
+## 整条轴逐格打叉的动画
 func _spread_axis_cross(axis: int, idx: int, targets: Array[Vector2i]) -> void:
 	var token: int = _auto_mark_token
 	var key: String = _axis_key(axis, idx)
@@ -3112,7 +3112,7 @@ func _spread_axis_cross(axis: int, idx: int, targets: Array[Vector2i]) -> void:
 	_axis_busy_set.erase(key)
 
 
-# 整条轴逐格取消叉的动画
+## 整条轴逐格取消叉的动画
 func _spread_axis_uncross(axis: int, idx: int) -> void:
 	var token: int = _auto_mark_token
 	var key: String = _axis_key(axis, idx)
@@ -3155,7 +3155,7 @@ func _spread_axis_uncross(axis: int, idx: int) -> void:
 	_axis_busy_set.erase(key)
 
 
-# 棋盘变化后刷新该行 / 列圆点状态（还有空格=未打叉，没空格=已打叉）
+## 棋盘变化后刷新该行 / 列圆点状态（还有空格=未打叉，没空格=已打叉）
 func _on_cell_changed_refresh_axis_btn(r: int, c: int, _state: int, _source: int) -> void:
 	if ABTestManager == null or ABTestManager.game_auto_mark == null:
 		return
@@ -3190,7 +3190,7 @@ func _on_cell_changed_refresh_axis_btn(r: int, c: int, _state: int, _source: int
 
 
 # ================= 步历史与撤销 =================
-# 把格子标成错误叉，并走进错误反馈流程
+## 把格子标成错误叉，并走进错误反馈流程
 func do_wrong_guess_mark(r: int, c: int, original_before: int) -> void:
 	_record_cell_change(r, c, original_before, CellState.MARK)
 	_board_view.set_cell_state(r, c, CellState.MARK)
@@ -3199,12 +3199,12 @@ func do_wrong_guess_mark(r: int, c: int, original_before: int) -> void:
 	_on_wrong_guess(r, c)
 
 
-# 把一次格子变更累积进「当前这一步」
+## 把一次格子变更累积进「当前这一步」
 func _record_cell_change(r: int, c: int, before: int, after: int) -> void:
 	_current_step_cells.append({"pos": Vector2i(r, c), "before": before, "after": after})
 
 
-# 结束当前步：写进步历史、清空累积、复位撤销游标
+## 结束当前步：写进步历史、清空累积、复位撤销游标
 func _commit_current_step(is_cat: bool = false, is_wrong_guess: bool = false) -> void:
 	if _current_step_cells.is_empty():
 		return
@@ -3218,18 +3218,18 @@ func _commit_current_step(is_cat: bool = false, is_wrong_guess: bool = false) ->
 	_refresh_undo_btn_state()
 
 
-# 计一次步数（本局统计 + 累计统计）
+## 计一次步数（本局统计 + 累计统计）
 func _count_board_step() -> void:
 	Tracker.inc_stat("step_used")
 	GameState.inc_game_total_stat(_game_type(), "step_total")
 
 
-# 刷新撤销按钮状态，子类覆写
+## 刷新撤销按钮状态，子类覆写
 func _refresh_undo_btn_state() -> void:
 	pass
 
 
-# 初始化撤销系统：恢复步历史、接按钮信号、按 AB 决定显示与底部排版
+## 初始化撤销系统：恢复步历史、接按钮信号、按 AB 决定显示与底部排版
 func _setup_undo_system(restore_data: Array = []) -> void:
 	_undo_executor.cancel()
 	_step_history.clear()
@@ -3249,7 +3249,7 @@ func _setup_undo_system(restore_data: Array = []) -> void:
 	_refresh_undo_btn_state()
 
 
-# 底部道具排版：两个（无撤销）或三个（有撤销）
+## 底部道具排版：两个（无撤销）或三个（有撤销）
 func _layout_bottom_tools(three_tools: bool) -> void:
 	if three_tools:
 		if _tool_locate_btn != null:
@@ -3270,7 +3270,7 @@ func _layout_bottom_tools(three_tools: bool) -> void:
 			_tool_hint_btn.offset_right = 830.0
 
 
-# 撤销按钮：真撤销（回退步历史）或只高亮回顾，两种模式都要花道具
+## 撤销按钮：真撤销（回退步历史）或只高亮回顾，两种模式都要花道具
 func _on_undo_btn_pressed() -> void:
 	if _entry_anim_playing or _hint_cooldown:
 		return
@@ -3389,7 +3389,7 @@ func _on_undo_btn_pressed() -> void:
 			_undo_executor.execution_finished.connect(_on_undo_execution_finished, CONNECT_ONE_SHOT)
 
 
-# 撤销高亮播完：重新校验棋盘并刷新界面
+## 撤销高亮播完：重新校验棋盘并刷新界面
 func _on_undo_execution_finished() -> void:
 	_validate_board()
 	_update_remaining()
@@ -3397,21 +3397,21 @@ func _on_undo_execution_finished() -> void:
 
 
 # ================= 草稿模式（AB: draft_mode） =================
-# 取草稿模式 AB 变体（0 表示没开启）
+## 取草稿模式 AB 变体（0 表示没开启）
 func _get_draft_variant() -> int:
 	if ABTestManager == null or ABTestManager.draft_mode == null:
 		return 0
 	return ABTestManager.draft_mode.value()
 
 
-# 草稿是否已解锁：变体非 0 且关卡号 ≥ 21
+## 草稿是否已解锁：变体非 0 且关卡号 ≥ 21
 func _is_draft_unlocked() -> bool:
 	if _get_draft_variant() == 0:
 		return false
 	return GameState.get_current_level() >= 21
 
 
-# 草稿按钮：在进入 / 退出草稿模式之间切换
+## 草稿按钮：在进入 / 退出草稿模式之间切换
 func _on_draft_btn_pressed() -> void:
 	if _entry_anim_playing:
 		return
@@ -3427,7 +3427,7 @@ func _on_draft_btn_pressed() -> void:
 		_enter_draft_mode()
 
 
-# 草稿「应用」按钮：把草稿落成正式标记
+## 草稿「应用」按钮：把草稿落成正式标记
 func _on_apply_btn_pressed() -> void:
 	if _entry_anim_playing or _is_complete or _wrong_guess_pending:
 		return
@@ -3436,7 +3436,7 @@ func _on_apply_btn_pressed() -> void:
 	_apply_draft_commit()
 
 
-# 退出草稿时上报：停留时长与草稿正确 / 错误数量
+## 退出草稿时上报：停留时长与草稿正确 / 错误数量
 func _record_draft_exit_stats() -> void:
 	var gt: String = _game_type()
 	if _draft_enter_ms > 0:
@@ -3466,7 +3466,7 @@ func _record_draft_exit_stats() -> void:
 		GameState.inc_game_total_stat(gt, "draft_correct_total", correct_count)
 
 
-# 进入草稿模式：切输入方案、快照正式标记、换铅笔图标、按需露出应用按钮
+## 进入草稿模式：切输入方案、快照正式标记、换铅笔图标、按需露出应用按钮
 func _enter_draft_mode() -> void:
 	_draft_mode = true
 
@@ -3497,7 +3497,7 @@ func _enter_draft_mode() -> void:
 	_refresh_draft_terminal_state()
 
 
-# 动画显示「应用」按钮
+## 动画显示「应用」按钮
 func _show_apply_btn_animated() -> void:
 	if _apply_btn == null:
 		return
@@ -3509,7 +3509,7 @@ func _show_apply_btn_animated() -> void:
 		_apply_btn.modulate = Color.WHITE
 
 
-# 动画隐藏「应用」按钮
+## 动画隐藏「应用」按钮
 func _hide_apply_btn_animated() -> void:
 	if _apply_btn == null:
 		return
@@ -3525,7 +3525,7 @@ func _hide_apply_btn_animated() -> void:
 		_apply_btn.visible = false
 
 
-# 退出草稿模式：切回普通输入、还原按钮外观，必要时清掉草稿标记（会落存档）
+## 退出草稿模式：切回普通输入、还原按钮外观，必要时清掉草稿标记（会落存档）
 func _exit_draft_mode_and_clear(keep_marks: bool = false, skip_cell_clear: bool = false) -> void:
 	var was_in_draft: bool = _draft_mode
 	_draft_mode = false
@@ -3577,7 +3577,7 @@ func _exit_draft_mode_and_clear(keep_marks: bool = false, skip_cell_clear: bool 
 	_on_draft_changed_for_persist(true)
 
 
-# 设置单格草稿，维护草稿起点，并调度终局检查与持久化
+## 设置单格草稿，维护草稿起点，并调度终局检查与持久化
 func _set_cell_draft(r: int, c: int, mark: int) -> void:
 	var key := Vector2i(r, c)
 	var cell_view: CellView = _board_view.get_cell_view(r, c) if _board_view != null else null
@@ -3595,7 +3595,7 @@ func _set_cell_draft(r: int, c: int, mark: int) -> void:
 	_on_draft_changed_for_persist()
 
 
-# 收集全盘草稿格 → {Vector2i: 状态}
+## 收集全盘草稿格 → {Vector2i: 状态}
 func _collect_draft_marks() -> Dictionary:
 	var out: Dictionary = {}
 	if _board_view == null:
@@ -3609,7 +3609,7 @@ func _collect_draft_marks() -> Dictionary:
 	return out
 
 
-# 盘上是否还有草稿
+## 盘上是否还有草稿
 func _has_draft_marks() -> bool:
 	if _board_view == null:
 		return false
@@ -3621,16 +3621,16 @@ func _has_draft_marks() -> bool:
 	return false
 
 
-# 草稿变化的持久化钩子，子类覆写（写快照）
+## 草稿变化的持久化钩子，子类覆写（写快照）
 func _on_draft_changed_for_persist(_immediate: bool = false) -> void:
 	pass
 
 
-# 草稿改动后延迟多久做终局检查（秒）
+## 草稿改动后延迟多久做终局检查（秒）
 const _DRAFT_TERMINAL_CHECK_DELAY: float = 0.6
 
 
-# 延迟做一次草稿终局检查（带令牌，连续改动只算最后一次）
+## 延迟做一次草稿终局检查（带令牌，连续改动只算最后一次）
 func _schedule_draft_terminal_check() -> void:
 	if not _draft_mode:
 		return
@@ -3646,7 +3646,7 @@ func _schedule_draft_terminal_check() -> void:
 	)
 
 
-# 刷新草稿结局：全对时按变体露出应用按钮或直接自动应用
+## 刷新草稿结局：全对时按变体露出应用按钮或直接自动应用
 func _refresh_draft_terminal_state() -> void:
 	if not _draft_mode or _board_view == null or _puzzle.is_empty():
 		return
@@ -3672,11 +3672,11 @@ func _refresh_draft_terminal_state() -> void:
 				_draft_bubble.visible = false
 
 
-# 草稿叉转成正式叉的动画时长（秒）
+## 草稿叉转成正式叉的动画时长（秒）
 const _DRAFT_APPLY_TO_MARK_SEC: float = 0.77
 
 
-# 草稿通关表现：等标记转正 → 放烟花 → 庆祝动画 → 再校验通关
+## 草稿通关表现：等标记转正 → 放烟花 → 庆祝动画 → 再校验通关
 func _run_draft_win_with_fireworks(has_mark_transition: bool = true) -> void:
 	var flreworks_len: float = _fireworks_anim.get_animation("Flreworks").length
 	var pre_delay: float = (_DRAFT_APPLY_TO_MARK_SEC + 0.5) if has_mark_transition else 0.0
@@ -3696,20 +3696,20 @@ func _run_draft_win_with_fireworks(has_mark_transition: bool = true) -> void:
 	_validate_board()
 
 
-# 播一次庆祝动画
+## 播一次庆祝动画
 func _play_celebrate_effect() -> void:
 	if _anim_correct != null and _anim_correct.has_animation("Appear"):
 		_anim_correct.stop()
 		_anim_correct.play("Appear")
 
 
-# 快照里草稿叉的编码
+## 快照里草稿叉的编码
 const _DRAFT_PERSIST_CROSS: int = 1
-# 快照里草稿猫的编码
+## 快照里草稿猫的编码
 const _DRAFT_PERSIST_CAT: int = 2
 
 
-# 草稿标记序列化成 [[r, c, 编码], ...]，供子类写进快照
+## 草稿标记序列化成 [[r, c, 编码], ...]，供子类写进快照
 func _serialize_draft_marks() -> Array:
 	var out: Array = []
 	var draft_marks: Dictionary = _collect_draft_marks()
@@ -3722,7 +3722,7 @@ func _serialize_draft_marks() -> Array:
 	return out
 
 
-# 从快照恢复草稿标记（仅 AUTO_WIN_PERSIST 变体；非空格跳过）
+## 从快照恢复草稿标记（仅 AUTO_WIN_PERSIST 变体；非空格跳过）
 func _restore_draft_marks_from_snapshot(data: Array) -> void:
 	if _board_view == null or data.is_empty():
 		return
@@ -3742,7 +3742,7 @@ func _restore_draft_marks_from_snapshot(data: Array) -> void:
 		_set_cell_draft(r, c, mark)
 
 
-# 快照当前正式标记：猫 / 叉 / 错误叉 / 锁定叉
+## 快照当前正式标记：猫 / 叉 / 错误叉 / 锁定叉
 func _snapshot_real_marks() -> Dictionary:
 	if _board_view == null:
 		return {}
@@ -3772,7 +3772,7 @@ func _snapshot_real_marks() -> Dictionary:
 	}
 
 
-# 答案格是否已经全部放上正式猫
+## 答案格是否已经全部放上正式猫
 func _is_solution_fully_placed() -> bool:
 	var sz: int = _level_config.get("size", 0)
 	if sz <= 0:
@@ -3789,14 +3789,14 @@ func _is_solution_fully_placed() -> bool:
 	return total > 0 and filled == total
 
 
-# 清空草稿死锁相关状态
+## 清空草稿死锁相关状态
 func _clear_draft_deadlock_state() -> void:
 	_draft_pre_enter_real_marks = {}
 	_draft_deadlock_pending = false
 	_draft_deadlock_real_marks = {}
 
 
-# 草稿是否自相矛盾：并进棋盘后有冲突，或某行 / 列 / 区域被填满却没有猫
+## 草稿是否自相矛盾：并进棋盘后有冲突，或某行 / 列 / 区域被填满却没有猫
 func _detect_draft_contradiction() -> bool:
 	var sz: int = _level_config.get("size", 4)
 	if sz <= 0:
@@ -3870,7 +3870,7 @@ func _detect_draft_contradiction() -> bool:
 	return false
 
 
-# 草稿是否已全对：正式猫 + 草稿猫正好铺满答案格，且草稿猫都落在答案上
+## 草稿是否已全对：正式猫 + 草稿猫正好铺满答案格，且草稿猫都落在答案上
 func _detect_draft_all_correct() -> bool:
 	var sz: int = _level_config.get("size", 4)
 	if sz <= 0:
@@ -3895,7 +3895,7 @@ func _detect_draft_all_correct() -> bool:
 	return (real_cat_n + draft_cat_n) == sz and draft_cat_n > 0
 
 
-# 提交草稿：草稿猫转正式猫、草稿叉转叉；错的扣命，全对则放烟花通关
+## 提交草稿：草稿猫转正式猫、草稿叉转叉；错的扣命，全对则放烟花通关
 func _apply_draft_commit() -> void:
 	var was_all_correct: bool = _draft_terminal_state == DraftTerminal.ALL_CORRECT
 	var to_apply: Array = []
@@ -4045,7 +4045,7 @@ func _apply_draft_commit() -> void:
 		_validate_board()
 
 
-# 该格是否答案格（越界返回 false）
+## 该格是否答案格（越界返回 false）
 func _is_solution_cell(r: int, c: int) -> bool:
 	var sol: Array = _puzzle.get("solution", [])
 	if r < 0 or r >= sol.size():
@@ -4056,12 +4056,12 @@ func _is_solution_cell(r: int, c: int) -> bool:
 	return bool(row[c])
 
 
-# 清空草稿（退出草稿模式并擦掉草稿标记）
+## 清空草稿（退出草稿模式并擦掉草稿标记）
 func _apply_draft_clear() -> void:
 	_exit_draft_mode_and_clear()
 
 
-# 改草稿按钮上的角标文字与字号
+## 改草稿按钮上的角标文字与字号
 func _set_draft_btn_text(text: String, font_size: int) -> void:
 	if _draft_btn == null:
 		return
@@ -4072,7 +4072,7 @@ func _set_draft_btn_text(text: String, font_size: int) -> void:
 	qlabel.add_theme_font_size_override("font_size", font_size)
 
 
-# 在草稿按钮上方显示一个提示气泡（懒创建）
+## 在草稿按钮上方显示一个提示气泡（懒创建）
 func _show_draft_bubble(text: String, bg_color: Color) -> void:
 	if _draft_btn == null:
 		return
@@ -4113,14 +4113,14 @@ func _show_draft_bubble(text: String, bg_color: Color) -> void:
 
 
 # ================= 开场动画收尾 =================
-# 开场动画结束：放开棋盘操作、恢复规则条交互
+## 开场动画结束：放开棋盘操作、恢复规则条交互
 func _on_appear_animation_finished() -> void:
 	_entry_anim_playing = false
 	_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
 	_set_rule_info_bar_v4_interactive(true)
 
 
-# 开关 V4 规则条的交互
+## 开关 V4 规则条的交互
 func _set_rule_info_bar_v4_interactive(enabled: bool) -> void:
 	var rule_bar := get_node_or_null("Root/VBoxContainer/RuleBar")
 	if rule_bar is RuleInfoBarV4:
@@ -4128,28 +4128,28 @@ func _set_rule_info_bar_v4_interactive(enabled: bool) -> void:
 
 
 # ================= 自动完成（AB: auto_complete） =================
-# 自动完成时每条对角线之间的间隔（秒）
+## 自动完成时每条对角线之间的间隔（秒）
 const AUTO_MARK_DIAG_INTERVAL_SEC: float = 0.06
-# 打叉完到开始放猫的间隔（秒）
+## 打叉完到开始放猫的间隔（秒）
 const AUTO_MARK_TO_CAT_GAP_SEC: float = 0.2
-# 逐只放猫的间隔（秒）
+## 逐只放猫的间隔（秒）
 const AUTO_CAT_STEP_SEC: float = 0.12
-# 自动完成进行中，屏蔽输入
+## 自动完成进行中，屏蔽输入
 var _auto_completing: bool = false
 
-# 自动完成令牌，自增即可中断进行中的流程
+## 自动完成令牌，自增即可中断进行中的流程
 var _auto_complete_token: int = 0
 
-# 自动完成按钮当前是否已弹出
+## 自动完成按钮当前是否已弹出
 var _ac_shown: bool = false
-# 本局出现过错误落子 → 不再提供自动完成
+## 本局出现过错误落子 → 不再提供自动完成
 var _ac_had_wrong_cat: bool = false
 
-# 草稿提交中，期间不弹自动完成按钮
+## 草稿提交中，期间不弹自动完成按钮
 var _applying_draft_commit: bool = false
 
 
-# 棋盘变化：出现错误叉就收起自动完成按钮，否则尝试弹出
+## 棋盘变化：出现错误叉就收起自动完成按钮，否则尝试弹出
 func _on_board_changed_for_auto_complete(_r: int, _c: int, state: int, source: int) -> void:
 	if state == CellState.ERROR:
 		_ac_had_wrong_cat = true
@@ -4159,7 +4159,7 @@ func _on_board_changed_for_auto_complete(_r: int, _c: int, state: int, source: i
 	_refresh_auto_complete_btn()
 
 
-# 满足条件就弹一次自动完成按钮（只弹一次）
+## 满足条件就弹一次自动完成按钮（只弹一次）
 func _refresh_auto_complete_btn() -> void:
 	if _ac_anim == null or _ac_shown:
 		return
@@ -4168,7 +4168,7 @@ func _refresh_auto_complete_btn() -> void:
 		_ac_anim.play("appear")
 
 
-# 收起自动完成按钮
+## 收起自动完成按钮
 func _hide_auto_complete_btn() -> void:
 	if _ac_anim == null:
 		return
@@ -4177,7 +4177,7 @@ func _hide_auto_complete_btn() -> void:
 		_ac_anim.play("disappear")
 
 
-# 是否该提供自动完成：AB 开启、大棋盘、没出过错、且只差最后一只猫
+## 是否该提供自动完成：AB 开启、大棋盘、没出过错、且只差最后一只猫
 func _should_offer_auto_complete() -> bool:
 	if _applying_draft_commit:
 		return false
@@ -4193,7 +4193,7 @@ func _should_offer_auto_complete() -> bool:
 	return _board_view.count_cat_cells() == sz - 1
 
 
-# 自动完成按钮：遮罩期间自动补齐剩下的猫与叉
+## 自动完成按钮：遮罩期间自动补齐剩下的猫与叉
 func _on_auto_complete_btn_pressed() -> void:
 	if _entry_anim_playing or _is_complete or _wrong_guess_pending or _auto_completing:
 		return
@@ -4215,7 +4215,7 @@ func _on_auto_complete_btn_pressed() -> void:
 	_auto_completing = false
 
 
-# 自动完成流程：按对角线分批打叉、再逐只放猫，最后校验通关
+## 自动完成流程：按对角线分批打叉、再逐只放猫，最后校验通关
 func _run_auto_complete(token: int) -> void:
 	var sz: int = _level_config.get("size", 0)
 	if sz <= 0:
@@ -4293,19 +4293,19 @@ func _run_auto_complete(token: int) -> void:
 
 
 # ================= 信号连接与页面隐藏 =================
-# 接上棋盘的格子变化信号（连击统计用）
+## 接上棋盘的格子变化信号（连击统计用）
 func _connect_combo_signal() -> void:
 	if not _board_view.cell_state_changed.is_connected(_on_board_cell_state_changed_for_combo):
 		_board_view.cell_state_changed.connect(_on_board_cell_state_changed_for_combo)
 
 
-# 断开连击信号
+## 断开连击信号
 func _disconnect_combo_signal() -> void:
 	if _board_view.cell_state_changed.is_connected(_on_board_cell_state_changed_for_combo):
 		_board_view.cell_state_changed.disconnect(_on_board_cell_state_changed_for_combo)
 
 
-# 由 UIManager 在页面隐藏时调用：停表、断信号、收浮层、销毁 banner 并隐藏自己
+## 由 UIManager 在页面隐藏时调用：停表、断信号、收浮层、销毁 banner 并隐藏自己
 func on_hide() -> void:
 	_disconnect_combo_signal()
 	_clock_timer.stop()
@@ -4329,12 +4329,12 @@ func on_hide() -> void:
 
 
 # ================= 生命条与进度条 =================
-# 取生命图标 AB 档位（心 / 鱼 / 闪电）
+## 取生命图标 AB 档位（心 / 鱼 / 闪电）
 func _life_bar_style() -> int:
 	return int(ABTestManager.life_icon.value())
 
 
-# 档位对应的生命槽预制体
+## 档位对应的生命槽预制体
 func _life_bar_scene_for(style: int) -> PackedScene:
 	match style:
 		LifeIconConfig.VALUE_FISH:
@@ -4344,7 +4344,7 @@ func _life_bar_scene_for(style: int) -> PackedScene:
 	return HEART_SLOT_SCENE
 
 
-# 按档位挂载 / 替换 3 个生命槽，并缓存引用与 +1 图标
+## 按档位挂载 / 替换 3 个生命槽，并缓存引用与 +1 图标
 func _mount_life_bar() -> void:
 	var bar: Node = get_node_or_null("Root/VBoxContainer/CatHeartRow/HeartBg")
 	if bar == null:
@@ -4379,7 +4379,7 @@ func _mount_life_bar() -> void:
 	_apply_life_plus_icon(style)
 
 
-# 按档位换「生命 +1」飘字里的图标
+## 按档位换「生命 +1」飘字里的图标
 func _apply_life_plus_icon(style: int) -> void:
 	var icon := (
 		get_node_or_null("Root/VBoxContainer/CatHeartRow/LifePlus/PlusFloat/HeartIcon")
@@ -4399,7 +4399,7 @@ func _apply_life_plus_icon(style: int) -> void:
 		icon.texture = tex
 
 
-# 按 AB 在「数字」与「进度条」两种剩余量显示之间切换
+## 按 AB 在「数字」与「进度条」两种剩余量显示之间切换
 func _mount_progress_bar() -> void:
 	_progress_bar_mode = ABTestManager.progress_emphasis.is_progress_bar()
 	if _progress_slot != null:
@@ -4414,12 +4414,12 @@ func _mount_progress_bar() -> void:
 		_layout_for_progress_bar()
 
 
-# 进度条模式下微调生命背景位置（所调接口在本仓已缺失）
+## 进度条模式下微调生命背景位置（所调接口在本仓已缺失）
 func _apply_heart_bg_position_for_progress() -> void:
 	is_force_pass_scroll_events()
 
 
-# 把猫数量行的光效对齐到当前显示目标（数字或进度条）
+## 把猫数量行的光效对齐到当前显示目标（数字或进度条）
 func _align_glow_to_progress() -> void:
 	var glow_control: Control = (
 		get_node_or_null("Root/VBoxContainer/CatHeartRow/Control") as Control
@@ -4447,7 +4447,7 @@ func _align_glow_to_progress() -> void:
 		sprite.position.y = (ref.offset_top + ref.offset_bottom) * 0.5
 
 
-# 设置进度条轨道宽度，并把数字挪到轨道右侧
+## 设置进度条轨道宽度，并把数字挪到轨道右侧
 func _apply_progress_track_width(_sz: int) -> void:
 	_progress_track_width = _PROGRESS_TRACK_WIDTH_NORMAL
 	if _progress_track_bg != null:
@@ -4459,7 +4459,7 @@ func _apply_progress_track_width(_sz: int) -> void:
 	)
 
 
-# 数字太长时按宽度等比缩小字号
+## 数字太长时按宽度等比缩小字号
 func _fit_progress_count_font(count_text: String) -> void:
 	if _progress_count_label == null:
 		return
@@ -4476,7 +4476,7 @@ func _fit_progress_count_font(count_text: String) -> void:
 	_progress_count_label.add_theme_font_size_override("normal_font_size", fit)
 
 
-# 进度条模式下的生命背景位置微调
+## 进度条模式下的生命背景位置微调
 func _layout_for_progress_bar() -> void:
 	var timer_bg: Control = (
 		get_node_or_null("Root/VBoxContainer/CatHeartRow/TimeContainer") as Control
@@ -4491,7 +4491,7 @@ func _layout_for_progress_bar() -> void:
 	heart_bg.offset_right = -225.0
 
 
-# 按当前生命数刷新三颗心的生死表现
+## 按当前生命数刷新三颗心的生死表现
 func _refresh_hearts() -> void:
 	var hearts: Array[Control] = [_heart1, _heart2, _heart3]
 	for i in range(3):
@@ -4504,7 +4504,7 @@ func _refresh_hearts() -> void:
 			slot.show_lost(false)
 
 
-# 播第 index 颗心的失去动画
+## 播第 index 颗心的失去动画
 func _animate_heart_lost(index: int) -> void:
 	var hearts: Array[Control] = [_heart1, _heart2, _heart3]
 	if index < 0 or index >= hearts.size():
@@ -4514,7 +4514,7 @@ func _animate_heart_lost(index: int) -> void:
 		slot.show_lost(true)
 
 
-# 断开自己接在广告激励 / 关闭信号上的回调，避免页面隐藏后仍被回调
+## 断开自己接在广告激励 / 关闭信号上的回调，避免页面隐藏后仍被回调
 func _disconnect_self_reward_callbacks() -> void:
 	for c: Dictionary in UniKitManager.ad_rewarded.get_connections():
 		var cb: Callable = c.callable
@@ -4527,7 +4527,7 @@ func _disconnect_self_reward_callbacks() -> void:
 
 
 # ================= 区域颜色与提示文案 =================
-# 按调色板 AB 返回 12 个区域色的本地化名称
+## 按调色板 AB 返回 12 个区域色的本地化名称
 func _resolve_region_color_names() -> Array[String]:
 	if ABTestManager.region_color.is_custom_palette():
 		return [
@@ -4624,7 +4624,7 @@ func _resolve_region_color_names() -> Array[String]:
 	]
 
 
-# 同上，返回 12 个区域色的十六进制值（给提示文案上色用）
+## 同上，返回 12 个区域色的十六进制值（给提示文案上色用）
 func _resolve_region_color_hex_codes() -> Array[String]:
 	if (
 		ABTestManager.region_color.is_custom_palette()
@@ -4707,7 +4707,7 @@ func _resolve_region_color_hex_codes() -> Array[String]:
 	]
 
 
-# 给区域色生成 BBCode 染色文字：控制组查表，其余组按最接近的颜色名
+## 给区域色生成 BBCode 染色文字：控制组查表，其余组按最接近的颜色名
 func _color_name_bbcode(region_idx: int) -> String:
 	var cell_color: Color = _board_view.get_region_color(region_idx)
 	var hex: String
@@ -4727,7 +4727,7 @@ func _color_name_bbcode(region_idx: int) -> String:
 	return "[color=%s]%s[/color]" % [hex, name]
 
 
-# 在一张已知色表里找欧氏距离最近的颜色名
+## 在一张已知色表里找欧氏距离最近的颜色名
 func _nearest_color_name(color: Color) -> String:
 	var known: Array = [
 		[Color("#CBCB24"), tr("COLOR_OLIVE_YELLOW")],
@@ -4799,7 +4799,7 @@ func _nearest_color_name(color: Color) -> String:
 	return best_name
 
 
-# 按策略给提示补上本地化描述文案
+## 按策略给提示补上本地化描述文案
 func _enrich_hint_description(hint: Dictionary) -> void:
 	var strategy: String = hint.get("strategy", "")
 	var reg: int = hint.get("region", -1)
@@ -4842,7 +4842,7 @@ func _enrich_hint_description(hint: Dictionary) -> void:
 
 
 # ================= 连锁提示详情 =================
-# 在连锁详情层上画一个带序号的圆点标记
+## 在连锁详情层上画一个带序号的圆点标记
 func _add_chain_marker(
 	layer: CanvasLayer, cell: Vector2i, label_text: String, color: Color
 ) -> void:
@@ -4884,7 +4884,7 @@ func _add_chain_marker(
 	)
 
 
-# 玩家点「查看详情」：把连锁的反证单元写进说明并展开详情层
+## 玩家点「查看详情」：把连锁的反证单元写进说明并展开详情层
 func _on_chain_detail_requested() -> void:
 	var chain: Dictionary = _hint_data.get("chain", {})
 	if chain.is_empty():
@@ -4909,7 +4909,7 @@ func _on_chain_detail_requested() -> void:
 	_show_chain_detail(chain)
 
 
-# 展开连锁详情：标出假设格、推理步与被排除格，按序逐个显现
+## 展开连锁详情：标出假设格、推理步与被排除格，按序逐个显现
 func _show_chain_detail(chain: Dictionary) -> void:
 	var sz: int = _level_config.get("size", 4)
 	var regs: Array = _puzzle["regions"]
@@ -4981,7 +4981,7 @@ func _show_chain_detail(chain: Dictionary) -> void:
 
 
 # ================= 作弊指令 =================
-# 作弊指令：设置生命数（设成 0 直接判失败）
+## 作弊指令：设置生命数（设成 0 直接判失败）
 func _cmd_lives(args: Array[String]) -> void:
 	var val: int = int(args[0]) if args.size() > 0 else 3
 	_lives = clampi(val, 0, 3)
@@ -4991,7 +4991,7 @@ func _cmd_lives(args: Array[String]) -> void:
 
 
 # ================= 提示主流程（HintEngine） =================
-# 提示按钮主流程：依次降级找一条可用提示，展示说明并高亮
+## 提示按钮主流程：依次降级找一条可用提示，展示说明并高亮
 func _on_hint_btn_pressed() -> void:
 	if _entry_anim_playing or _hint_cooldown:
 		return
@@ -5139,7 +5139,7 @@ func _on_hint_btn_pressed() -> void:
 	_build_hint_highlights(hint)
 
 
-# 清除按钮：擦掉全盘所有的叉（草稿 V4 变体下只擦草稿）
+## 清除按钮：擦掉全盘所有的叉（草稿 V4 变体下只擦草稿）
 func _on_clear_btn_pressed() -> void:
 	if _entry_anim_playing:
 		return
@@ -5179,7 +5179,7 @@ func _on_clear_btn_pressed() -> void:
 	_update_remaining()
 
 
-# 应用 R2 提示：按四种模式在相应行 / 列 / 区域打叉
+## 应用 R2 提示：按四种模式在相应行 / 列 / 区域打叉
 func _apply_r2_hint() -> void:
 	var sz: int = _level_config.get("size", 4)
 	var regs: Array = _puzzle["regions"]
@@ -5229,7 +5229,7 @@ func _apply_r2_hint() -> void:
 	_update_remaining()
 
 
-# 玩家点「应用提示」：按策略把提示落成实际标记 / 猫，并进入短暂冷却
+## 玩家点「应用提示」：按策略把提示落成实际标记 / 猫，并进入短暂冷却
 func _on_hint_applied() -> void:
 	Tracker.track_btn_click(Tracker.Btn.HINT_APPLY, self)
 	Tracker.inc_stat("hint_apply_used")
@@ -5299,7 +5299,7 @@ func _on_hint_applied() -> void:
 
 
 # ================= 埋点信息与策略分析面板 =================
-# 拼埋点用的题目 ID：尺寸_题库_策略_序号_变换
+## 拼埋点用的题目 ID：尺寸_题库_策略_序号_变换
 func _build_qid() -> String:
 	var sz: int = _level_config.get("size", 0)
 	var src: String = _level_config.get("bank_source", "regular")
@@ -5322,7 +5322,7 @@ func _build_qid() -> String:
 	return "%d_%s_%d_%d_%d" % [sz, src, strategy, idx, t]
 
 
-# 埋点用难度位：是否困难关（按 AB 有两种判定方式）
+## 埋点用难度位：是否困难关（按 AB 有两种判定方式）
 func _get_diffi() -> int:
 	var lv: int = GameState.get_current_level()
 	var is_hard: bool = (
@@ -5333,7 +5333,7 @@ func _get_diffi() -> int:
 	return 1 if is_hard else 0
 
 
-# 策略面板的 5 行静态配置：徽标、名称 key、描述 key、配色
+## 策略面板的 5 行静态配置：徽标、名称 key、描述 key、配色
 const _RANK_STRATEGY_INFO: Array[Dictionary] = [
 	{
 		rank = 1,
@@ -5373,7 +5373,7 @@ const _RANK_STRATEGY_INFO: Array[Dictionary] = [
 ]
 
 
-# 取中文翻译；取不到就退回 tr()
+## 取中文翻译；取不到就退回 tr()
 func _tr_zh(key: String) -> String:
 	var t: Translation = TranslationServer.get_translation_object("zh_CN")
 	if t != null:
@@ -5383,7 +5383,7 @@ func _tr_zh(key: String) -> String:
 	return tr(key)
 
 
-# 懒构建策略分析浮层（标题 + 关闭按钮 + 行容器）
+## 懒构建策略分析浮层（标题 + 关闭按钮 + 行容器）
 func _build_strategy_overlay() -> void:
 	if _strategy_overlay != null:
 		return
@@ -5463,7 +5463,7 @@ func _build_strategy_overlay() -> void:
 	outer_vbox.add_child(_strategy_vbox)
 
 
-# 打开策略分析浮层并填充内容
+## 打开策略分析浮层并填充内容
 func _on_strategy_btn_pressed() -> void:
 	if _strategy_overlay == null:
 		return
@@ -5473,14 +5473,14 @@ func _on_strategy_btn_pressed() -> void:
 	_strategy_overlay.visible = true
 
 
-# 关闭策略分析浮层
+## 关闭策略分析浮层
 func _on_strategy_close() -> void:
 	if _strategy_bg != null:
 		_strategy_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_strategy_overlay.visible = false
 
 
-# 填充策略面板：5 行策略 + 当前档位 + 题库信息
+## 填充策略面板：5 行策略 + 当前档位 + 题库信息
 func _populate_strategy_vbox() -> void:
 	for child in _strategy_vbox.get_children():
 		child.queue_free()
@@ -5530,7 +5530,7 @@ func _populate_strategy_vbox() -> void:
 		_strategy_vbox.add_child(src_lbl)
 
 
-# 造一行策略：徽标、名称、说明与该策略用到的步数
+## 造一行策略：徽标、名称、说明与该策略用到的步数
 func _make_strategy_row(info: Dictionary, steps: int) -> Control:
 	var color: Color = info["color"]
 	var used: bool = steps > 0
@@ -5604,7 +5604,7 @@ func _make_strategy_row(info: Dictionary, steps: int) -> Control:
 
 
 # ================= 对外查询（调试接口） =================
-# 返回所有答案猫的屏幕坐标，供调试 HTTP 接口截图定位
+## 返回所有答案猫的屏幕坐标，供调试 HTTP 接口截图定位
 func get_solution_cat_positions() -> Array:
 	var result: Array = []
 	if _puzzle.is_empty() or not _puzzle.has("solution"):

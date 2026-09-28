@@ -1,4 +1,4 @@
-# UI 名册：UiName.XXX 既是 UIManager 的路由 key，也是 UIRegistry 各张表的键
+## UI 名册：UiName.XXX 既是 UIManager 的路由 key，也是 UIRegistry 各张表的键
 class_name UiName
 extends RefCounted
 

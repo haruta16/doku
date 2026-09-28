@@ -1,9 +1,9 @@
-# V1（击败百分比版）：用通关用时算「击败了 X% 玩家」，只出正文，标题仍走默认池
+## V1（击败百分比版）：用通关用时算「击败了 X% 玩家」，只出正文，标题仍走默认池
 class_name PassTextStrategyV1
 extends PassTextStrategy
 
 
-# 每日关或尺寸非法时不出文案；否则算百分比 → 保留 1 位小数 → 套模板
+## 每日关或尺寸非法时不出文案；否则算百分比 → 保留 1 位小数 → 套模板
 func get_win_text(level_config: Dictionary) -> Dictionary:
 	# 统一的空结果
 	var default_result: Dictionary = {"title": "", "body": "", "shown_percent": -1.0}

@@ -1,9 +1,9 @@
-# 启动页（Splash）：按 min_wait_seconds 平滑推进假进度条 + 每天换一句标语
-# 进度是否算「加载完」不由自己决定，外部（launcher / cheat 面板）调 force_complete() 才收尾并发 loading_complete
+## 启动页（Splash）：按 min_wait_seconds 平滑推进假进度条 + 每天换一句标语
+## 进度是否算「加载完」不由自己决定，外部（launcher / cheat 面板）调 force_complete() 才收尾并发 loading_complete
 class_name SplashPage
 extends UIFrameWindow
 
-# 进度跑满并收尾完成时发出；launcher 等这个信号之后才进首页或教程
+## 进度跑满并收尾完成时发出；launcher 等这个信号之后才进首页或教程
 signal loading_complete
 
 # ---- 进度条几何（像素，相对屏幕下边中点的偏移） ----
@@ -35,7 +35,7 @@ var _finish_tween: Tween = null  # 收尾补间（null 表示还没建）
 
 
 # ================= 生命周期 =================
-# 每次被 UIManager 显示时调用：复位进度、抽今日标语、打开逐帧推进
+## 每次被 UIManager 显示时调用：复位进度、抽今日标语、打开逐帧推进
 func on_show(_params: Dictionary = {}) -> void:
 	# 先定标语，再决定进度从 0 开始跑
 	_setup_quote_for_today()
@@ -51,7 +51,7 @@ func on_show(_params: Dictionary = {}) -> void:
 	set_process(true)
 
 
-# 挑选今天的标语：先记下「今天已展示过」，再按 A/B 分组取猫标语或普通名言
+## 挑选今天的标语：先记下「今天已展示过」，再按 A/B 分组取猫标语或普通名言
 func _setup_quote_for_today() -> void:
 	# 系统当天日期字符串
 	var today_str: String = Time.get_date_string_from_system()
@@ -94,8 +94,8 @@ func _setup_quote_for_today() -> void:
 			_author_label.text = "- " + tr("%s%d" % [_AUTHOR_KEY_PREFIX, idx])
 
 
-# 每次被隐藏时调用：停止推进，并杀掉可能还在跑的收尾补间
-# （补间不会因为隐藏而自动停，不 kill 会继续改 UI）
+## 每次被隐藏时调用：停止推进，并杀掉可能还在跑的收尾补间
+## （补间不会因为隐藏而自动停，不 kill 会继续改 UI）
 func on_hide() -> void:
 	# 置 false 后 _process 直接返回
 	_running = false
@@ -132,7 +132,7 @@ func _process(delta: float) -> void:
 		_start_finish_tween()
 
 
-# 外部请求收尾（launcher 等 2 秒后、cheat 面板 3 秒后调用），重复调用无副作用
+## 外部请求收尾（launcher 等 2 秒后、cheat 面板 3 秒后调用），重复调用无副作用
 func force_complete() -> void:
 	# 已经收尾或已经请求过就直接忽略
 	if _completed or _force_complete_requested:
@@ -144,7 +144,7 @@ func force_complete() -> void:
 		_finalize()
 
 
-# 把进度补到 1.0，播完即最终化
+## 把进度补到 1.0，播完即最终化
 func _start_finish_tween() -> void:
 	_finish_tween = create_tween()
 	# 每帧调 _apply_progress 做插值
@@ -152,7 +152,7 @@ func _start_finish_tween() -> void:
 	_finish_tween.finished.connect(_finalize)
 
 
-# 把 0~1 的进度换算成进度条与猫脸的位置（猫脸 86 像素宽，所以左右各 43）
+## 把 0~1 的进度换算成进度条与猫脸的位置（猫脸 86 像素宽，所以左右各 43）
 func _apply_progress(value: float) -> void:
 	_current_progress = value
 	if _progress_fill != null:
@@ -165,7 +165,7 @@ func _apply_progress(value: float) -> void:
 		_cat_face.offset_right = cat_center_x + 43.0
 
 
-# 收尾：停在满格、停止推进、通知外部（可重复调用）
+## 收尾：停在满格、停止推进、通知外部（可重复调用）
 func _finalize() -> void:
 	# 已经收尾过就直接返回，保证信号只发一次
 	if _completed:
@@ -179,6 +179,6 @@ func _finalize() -> void:
 
 
 # ================= 埋点 =================
-# 启动页的埋点页面名
+## 启动页的埋点页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.SPLASH

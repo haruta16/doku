@@ -1,7 +1,7 @@
-# Playtest 模拟器页：不真玩，按概率伪造「定位 / 提示 / 失败 / 通关」的走关序列，
-# 用真实的 GameState / LevelData 连跑 N 局，专门复现「同一个 puzzle_id 反复出现」的重复题问题，
-# 结束后把统计与明细写成 res://docs/level-bank/playtest-simulation-*.md 报告。
-# 只在非 rel 的构建里注册（UIRegistry._DEV_PAGES）；由作弊面板的 playtest 命令打开
+## Playtest 模拟器页：不真玩，按概率伪造「定位 / 提示 / 失败 / 通关」的走关序列，
+## 用真实的 GameState / LevelData 连跑 N 局，专门复现「同一个 puzzle_id 反复出现」的重复题问题，
+## 结束后把统计与明细写成 res://docs/level-bank/playtest-simulation-*.md 报告。
+## 只在非 rel 的构建里注册（UIRegistry._DEV_PAGES）；由作弊面板的 playtest 命令打开
 extends UIFrameWindow
 
 # ---- 子节点引用 ----
@@ -40,7 +40,7 @@ const _SIZE_CYCLE_F_51_PLUS: Array[int] = [8, 10, 11, 9, 10, 11, 9, 10, 11, 10]
 
 
 # ================= size_cycle 查表 =================
-# 按 size_cycle 分组算第 level_num 关该用多大棋盘：sc 3~8 对应 A~F 组，其余走对照组
+## 按 size_cycle 分组算第 level_num 关该用多大棋盘：sc 3~8 对应 A~F 组，其余走对照组
 func _compute_ab_size(level_num: int, sc: int) -> int:
 	match sc:
 		3:
@@ -94,7 +94,7 @@ func _compute_ab_size(level_num: int, sc: int) -> int:
 
 
 # ================= 界面生命周期与入口 =================
-# 每次打开都清提示、把局数恢复成 100 并启用开始按钮
+## 每次打开都清提示、把局数恢复成 100 并启用开始按钮
 func on_show(_params: Dictionary = {}) -> void:
 	_error_label.text = ""
 	_error_label.visible = false
@@ -106,12 +106,12 @@ func on_show(_params: Dictionary = {}) -> void:
 	_start_btn.disabled = false
 
 
-# CloseBtn：关掉本页
+## CloseBtn：关掉本页
 func _on_close_pressed() -> void:
 	UIManager.hide_ui(UiName.PLAYTEST_SIMULATOR)
 
 
-# StartBtn：校验局数 1~100000 → 让界面重绘一帧 → 跑模拟 → 显示摘要
+## StartBtn：校验局数 1~100000 → 让界面重绘一帧 → 跑模拟 → 显示摘要
 func _on_start_pressed() -> void:
 	var raw: String = _count_input.text.strip_edges()
 	if not raw.is_valid_int():
@@ -149,25 +149,25 @@ func _on_start_pressed() -> void:
 	_start_btn.disabled = false
 
 
-# 预设 100 局：填好数字直接开跑
+## 预设 100 局：填好数字直接开跑
 func _on_preset_100_pressed() -> void:
 	_count_input.text = "100"
 	_on_start_pressed()
 
 
-# 预设 1000 局
+## 预设 1000 局
 func _on_preset_1000_pressed() -> void:
 	_count_input.text = "1000"
 	_on_start_pressed()
 
 
-# 预设 10000 局
+## 预设 10000 局
 func _on_preset_10000_pressed() -> void:
 	_count_input.text = "10000"
 	_on_start_pressed()
 
 
-# 同时把错误写到界面和 warning 日志
+## 同时把错误写到界面和 warning 日志
 func _show_error(msg: String) -> void:
 	_error_label.text = msg
 	_error_label.visible = true
@@ -175,7 +175,7 @@ func _show_error(msg: String) -> void:
 
 
 # ================= 记录元数据 =================
-# 把 regionMap 按行优先拼成字符串后取 sha256 前 16 位，用来肉眼比对两张图是否同形
+## 把 regionMap 按行优先拼成字符串后取 sha256 前 16 位，用来肉眼比对两张图是否同形
 static func _rm_sha256(rm: Array) -> String:
 	var parts: PackedStringArray = PackedStringArray()
 	for row in rm:
@@ -184,7 +184,7 @@ static func _rm_sha256(rm: Array) -> String:
 	return ",".join(parts).sha256_text().substr(0, 16)
 
 
-# 把一个时刻的上下文打包成一条记录：关卡、pid、题库来源、AB 参数、随机动作，写报告时直接用
+## 把一个时刻的上下文打包成一条记录：关卡、pid、题库来源、AB 参数、随机动作，写报告时直接用
 func _build_record_meta(
 	iter_idx: int,
 	lv: int,
@@ -220,7 +220,7 @@ const POOL_SMALL_THRESHOLD: int = 30
 
 
 # ================= 题库桶大小（判定池小噪声） =================
-# 从记录里取 prev_ / curr_ 侧的尺寸、rank、tier、来源，算出属于哪个题库桶并返回该桶题数；算不出返回 -1
+## 从记录里取 prev_ / curr_ 侧的尺寸、rank、tier、来源，算出属于哪个题库桶并返回该桶题数；算不出返回 -1
 static func _bucket_pool_size(side: String, r: Dictionary, pool_sizes: Dictionary) -> int:
 	var sz: int = int(r.get("%s_sz" % side, 0))
 	var rank: int = int(r.get("%s_rank" % side, 0))
@@ -236,7 +236,7 @@ static func _bucket_pool_size(side: String, r: Dictionary, pool_sizes: Dictionar
 	return int(pool_sizes.get(key, -1))
 
 
-# 判定这条 dedup 是否属已知的「池小噪声」：前后同桶且该桶题数不超过阈值
+## 判定这条 dedup 是否属已知的「池小噪声」：前后同桶且该桶题数不超过阈值
 static func _is_known_pool_small_dup(r: Dictionary, pool_sizes: Dictionary) -> bool:
 	if int(r.get("prev_sz", 0)) != int(r.get("curr_sz", 0)):
 		return false
@@ -250,7 +250,7 @@ static func _is_known_pool_small_dup(r: Dictionary, pool_sizes: Dictionary) -> b
 	return pool > 0 and pool <= POOL_SMALL_THRESHOLD
 
 
-# 扫一遍题库统计每个桶的题数（main_ 尺寸_rank_tier 与 lkmod_ 尺寸_maxR），供池小判定用
+## 扫一遍题库统计每个桶的题数（main_ 尺寸_rank_tier 与 lkmod_ 尺寸_maxR），供池小判定用
 static func _compute_pool_sizes() -> Dictionary:
 	var sizes: Dictionary = {}
 
@@ -283,8 +283,8 @@ static func _compute_pool_sizes() -> Dictionary:
 
 
 # ================= 模拟主流程 =================
-# 模拟主循环：重置存档 → 逐局取题并登记撞重 → 随机判胜负 → 汇总统计并写报告 → 还原原关卡
-# 注意：会真的改存档（reset_all / record_puzzle / 胜负推进都会落盘），也会写报告文件
+## 模拟主循环：重置存档 → 逐局取题并登记撞重 → 随机判胜负 → 汇总统计并写报告 → 还原原关卡
+## 注意：会真的改存档（reset_all / record_puzzle / 胜负推进都会落盘），也会写报告文件
 func _run_simulation(count: int) -> Dictionary:
 	# 先把玩家当前关卡记下来，跑完要还原
 	var orig_lv: int = GameState.get_current_level()
@@ -592,7 +592,7 @@ func _run_simulation(count: int) -> Dictionary:
 
 
 # ================= 报告生成 =================
-# 往报告里追加一条 dedup 的 PREV / CURR 对照表
+## 往报告里追加一条 dedup 的 PREV / CURR 对照表
 static func _append_dedup_detail(out: PackedStringArray, r: Dictionary) -> void:
 	out.append(
 		(
@@ -632,13 +632,13 @@ static func _append_dedup_detail(out: PackedStringArray, r: Dictionary) -> void:
 	out.append("")
 
 
-# 去掉 puzzle_id 末尾的 transform 后缀，只留「形状前缀」，用于归等价类
+## 去掉 puzzle_id 末尾的 transform 后缀，只留「形状前缀」，用于归等价类
 func _strip_suffix(full_id: String) -> String:
 	var parts: PackedStringArray = full_id.split("_", false, 2)
 	return parts[0] + "_" + parts[1] if parts.size() >= 2 else full_id # pid 形如 前缀_后缀，只取前两段
 
 
-# 把统计、dedup 明细、重复组和全量日志写成 Markdown 报告，返回文件路径
+## 把统计、dedup 明细、重复组和全量日志写成 Markdown 报告，返回文件路径
 func _write_report(
 	count: int,
 	log_lines: Array,

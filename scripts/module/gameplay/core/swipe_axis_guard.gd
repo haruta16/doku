@@ -1,4 +1,4 @@
-# 滑动轴判定：指针像素 → 格子坐标，并在同轴连滑够格数后锁死该轴，防止手指抖动串到别的行/列
+## 滑动轴判定：指针像素 → 格子坐标，并在同轴连滑够格数后锁死该轴，防止手指抖动串到别的行/列
 class_name SwipeAxisGuard
 extends RefCounted
 
@@ -28,7 +28,7 @@ var _last_cell: Vector2i = Vector2i(-1, -1) # 上一帧所在格；盘外为 (-1
 
 
 # ================= 对外接口（由 SwipeGuardRecognizer 调用） =================
-# 开始一次拖拽：记录棋盘几何并清空锁定/连滑状态
+## 开始一次拖拽：记录棋盘几何并清空锁定/连滑状态
 func begin(
 	puzzle_size: int, slot_px: int, padding: int, cell_px: int, start_cell: Vector2i
 ) -> void:
@@ -46,19 +46,19 @@ func begin(
 	_active = false # 是否启用锁定由 configure 决定，这里先关掉
 
 
-# 写入配置：是否启用轴锁定、连滑阈值、像素容差
+## 写入配置：是否启用轴锁定、连滑阈值、像素容差
 func configure(active: bool, threshold: int, tolerance_px: float) -> void:
 	_active = active
 	_threshold = maxi(2, threshold) # 阈值下限 2，避免一格抖动就上锁
 	_tol_px = tolerance_px # 容差像素 = 配置里的百分比 × 格宽，由调用方算好传进来
 
 
-# 拖拽中途只改启用标志（玩家在草稿/已有标记上空滑时会被关掉）
+## 拖拽中途只改启用标志（玩家在草稿/已有标记上空滑时会被关掉）
 func set_active(active: bool) -> void:
 	_active = active
 
 
-# 拖拽结束：清空锁定与连滑窗口，等下次 begin 重新开始
+## 拖拽结束：清空锁定与连滑窗口，等下次 begin 重新开始
 func end() -> void:
 	_axis = Axis.NONE
 	_lock_value = -1
@@ -67,14 +67,14 @@ func end() -> void:
 	_last_cell = Vector2i(-1, -1)
 
 
-# 给调试浮层用的锁定快照 {axis, value, tol}；未锁定时返回空字典
+## 给调试浮层用的锁定快照 {axis, value, tol}；未锁定时返回空字典
 func get_debug_lock() -> Dictionary:
 	if _axis == Axis.NONE:
 		return {}
 	return {"axis": _axis, "value": _lock_value, "tol": _tol_px}
 
 
-# 主入口：返回指针所在格子；已锁定走 _process_locked，否则按真实格推进连滑，够阈值就上锁
+## 主入口：返回指针所在格子；已锁定走 _process_locked，否则按真实格推进连滑，够阈值就上锁
 func process(px: float, py: float) -> Vector2i:
 	if _axis != Axis.NONE: # 已锁定：只认锁定轴上的移动
 		return _process_locked(px, py)
@@ -91,7 +91,7 @@ func process(px: float, py: float) -> Vector2i:
 
 
 # ================= 内部实现 =================
-# 像素 → 格子坐标 (列, 行)；盘外或尚未 begin 时返回 (-1,-1)
+## 像素 → 格子坐标 (列, 行)；盘外或尚未 begin 时返回 (-1,-1)
 func _raw_cell(px: float, py: float) -> Vector2i:
 	if _n == 0: # 还没 begin，几何未知
 		return Vector2i(-1, -1)
@@ -102,7 +102,7 @@ func _raw_cell(px: float, py: float) -> Vector2i:
 	return Vector2i(col, row)
 
 
-# 用新格子和上一格比较，更新连滑方向、所在行/列与覆盖区间
+## 用新格子和上一格比较，更新连滑方向、所在行/列与覆盖区间
 func _advance_run(nc: Vector2i) -> void:
 	var last := _last_cell
 	if last.x < 0: # 上一格在盘外（刚滑进盘），重新起一段连滑
@@ -140,7 +140,7 @@ func _advance_run(nc: Vector2i) -> void:
 		_run_count = _run_max - _run_min + 1
 
 
-# 锁定态：只允许沿锁定轴移动；垂直方向越界超过容差就解锁
+## 锁定态：只允许沿锁定轴移动；垂直方向越界超过容差就解锁
 func _process_locked(px: float, py: float) -> Vector2i:
 	if _axis == Axis.ROW: # 锁在某行：查纵向越界，横向列号夹在盘内
 		if _overshoot_1d(py, _lock_value) > _tol_px:
@@ -154,7 +154,7 @@ func _process_locked(px: float, py: float) -> Vector2i:
 		return Vector2i(_lock_value, row)
 
 
-# 一维越界量：返回值超出该格 [起点, 终点] 区间的像素，落在区间内为 0.0
+## 一维越界量：返回值超出该格 [起点, 终点] 区间的像素，落在区间内为 0.0
 func _overshoot_1d(v: float, idx: int) -> float:
 	var lo: float = _padding + idx * _slot
 	var hi: float = _padding + (idx + 1) * _slot
@@ -165,7 +165,7 @@ func _overshoot_1d(v: float, idx: int) -> float:
 	return 0.0
 
 
-# 解锁：按当前真实格子重开连滑，并把连滑方向翻到另一轴——刚才垂直越界的那段算作新轴上的进度
+## 解锁：按当前真实格子重开连滑，并把连滑方向翻到另一轴——刚才垂直越界的那段算作新轴上的进度
 func _release(px: float, py: float) -> Vector2i:
 	var prev_axis: int = _axis # 先记下解锁前的锁定轴与锁定行/列
 	var prev_lock: int = _lock_value

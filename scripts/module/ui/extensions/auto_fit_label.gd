@@ -1,4 +1,4 @@
-# 自适应字号 Label（@tool）：用二分查找在 [最小字号, 基准字号] 里找「塞得进自身矩形」的最大字号
+## 自适应字号 Label（@tool）：用二分查找在 [最小字号, 基准字号] 里找「塞得进自身矩形」的最大字号
 @tool
 class_name AutoFitLabel
 extends Label
@@ -23,19 +23,19 @@ var _refit_queued: bool = false # 已排队标记：把同一帧的多次请求�
 
 
 # ================= 生命周期 =================
-# 进树：尺寸变化与首次排版都触发一次自适应
+## 进树：尺寸变化与首次排版都触发一次自适应
 func _ready() -> void:
 	resized.connect(_queue_refit)
 	_queue_refit()
 
 
-# 语言切换后文案变了，重新自适应
+## 语言切换后文案变了，重新自适应
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED:
 		_queue_refit()
 
 
-# 拦截 text 赋值：改了文案就重新自适应（返回 false，不接管赋值）
+## 拦截 text 赋值：改了文案就重新自适应（返回 false，不接管赋值）
 func _set(property: StringName, value: Variant) -> bool:
 	if property == &"text":
 		_queue_refit()
@@ -43,13 +43,13 @@ func _set(property: StringName, value: Variant) -> bool:
 
 
 # ================= 自适应入口 =================
-# 立即重算一次（不排队）；外部改完文本可以手动调
+## 立即重算一次（不排队）；外部改完文本可以手动调
 func refit() -> void:
 	_refit_queued = false
 	_apply_fit()
 
 
-# 合并式排队：同一帧内多次请求只延迟执行一次
+## 合并式排队：同一帧内多次请求只延迟执行一次
 func _queue_refit() -> void:
 	if _refit_queued:
 		return
@@ -58,7 +58,7 @@ func _queue_refit() -> void:
 	call_deferred("_deferred_refit")
 
 
-# 延迟执行入口：确认请求还有效再算
+## 延迟执行入口：确认请求还有效再算
 func _deferred_refit() -> void:
 	if not _refit_queued:
 		return
@@ -67,7 +67,7 @@ func _deferred_refit() -> void:
 
 
 # ================= 核心算法 =================
-# 核心：先定可用矩形与基准字号，再二分找能塞下的最大字号并写进主题覆盖
+## 核心：先定可用矩形与基准字号，再二分找能塞下的最大字号并写进主题覆盖
 func _apply_fit() -> void:
 	if _fitting or not is_inside_tree(): # 重入中、或还没进树：直接跳过
 		return
@@ -104,12 +104,12 @@ func _apply_fit() -> void:
 	_fitting = false
 
 
-# 取真正要测量的文案（走翻译）；子类可覆写
+## 取真正要测量的文案（走翻译）；子类可覆写
 func _resolve_display_text() -> String:
 	return atr(text)
 
 
-# 用锚点 + 偏移自己算可用矩形，不依赖 size（布局可能还没跑）
+## 用锚点 + 偏移自己算可用矩形，不依赖 size（布局可能还没跑）
 func _layout_box() -> Vector2:
 	var parent_size: Vector2 = Vector2.ZERO
 	var pc := get_parent() as Control
@@ -120,7 +120,7 @@ func _layout_box() -> Vector2:
 	return Vector2(w, h)
 
 
-# 判断某字号塞不塞得下：换行时用隐藏探针量高度，不换行时直接量文本尺寸
+## 判断某字号塞不塞得下：换行时用隐藏探针量高度，不换行时直接量文本尺寸
 func _text_fits(font: Font, txt: String, box: Vector2, fs: int, wrap: bool) -> bool:
 	if wrap:
 		var probe: Label = _ensure_probe()
@@ -147,7 +147,7 @@ func _text_fits(font: Font, txt: String, box: Vector2, fs: int, wrap: bool) -> b
 var _probe: Label = null # 隐藏探针 Label：挂在自身下、扔到屏幕外，只用来量文本
 
 
-# 惰性创建 / 复用探针
+## 惰性创建 / 复用探针
 func _ensure_probe() -> Label:
 	if _probe != null and is_instance_valid(_probe) and _probe.get_parent() == self:
 		return _probe
@@ -160,7 +160,7 @@ func _ensure_probe() -> Label:
 	return _probe
 
 
-# 出树时释放探针
+## 出树时释放探针
 func _exit_tree() -> void:
 	if _probe != null and is_instance_valid(_probe):
 		_probe.queue_free()

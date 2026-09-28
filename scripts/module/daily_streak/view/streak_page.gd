@@ -1,10 +1,10 @@
-# 连续打卡页：三种展示态（常规 / 首次点亮 / 打卡结算），7 天格子 + 第 7 天开宝箱
+## 连续打卡页：三种展示态（常规 / 首次点亮 / 打卡结算），7 天格子 + 第 7 天开宝箱
 class_name StreakPage
 extends UIFrameWindow
 
 enum DisplayState { MAIN, LIT, SETTLE } # 展示状态：MAIN 常规 / LIT 首次点亮 / SETTLE 打卡结算
 
-# 星期文案 key，下标 0 = 周日 … 6 = 周六（与 Time.weekday 对齐）
+## 星期文案 key，下标 0 = 周日 … 6 = 周六（与 Time.weekday 对齐）
 const _WEEKDAY_LABELS: Array[String] = [
 	"WEEKDAY_SUN",
 	"WEEKDAY_MON",
@@ -20,17 +20,17 @@ const _LIT_SLOT_DELAY: float = 62.0 / 60.0 # 从点亮态切结算态时，等�
 
 
 # ================= 打开入口 =================
-# 以常规态打开（主页入口点击）
+## 以常规态打开（主页入口点击）
 static func open_main() -> StreakPage:
 	return UIManager.show_ui(UiName.STREAK, {_PARAM_STATE: DisplayState.MAIN}) as StreakPage
 
 
-# 以首次点亮态打开（连续第 1 天打卡后）
+## 以首次点亮态打开（连续第 1 天打卡后）
 static func open_lit() -> StreakPage:
 	return UIManager.show_ui(UiName.STREAK, {_PARAM_STATE: DisplayState.LIT}) as StreakPage
 
 
-# 以结算态打开（打卡成功的结算）
+## 以结算态打开（打卡成功的结算）
 static func open_settle() -> StreakPage:
 	return UIManager.show_ui(UiName.STREAK, {_PARAM_STATE: DisplayState.SETTLE}) as StreakPage
 
@@ -60,13 +60,13 @@ var _lit_enter_done: bool = false # 入场动画是否播完（播完之前的�
 
 
 # ================= 生命周期 =================
-# 给继续/返回按钮接上按下抬起缩放
+## 给继续/返回按钮接上按下抬起缩放
 func on_create() -> void:
 	bind_press_release_scale(_claim_btn)
 	bind_press_release_scale(_back_btn)
 
 
-# 进页面：按参数切状态、播对应入场动画；结算态另外跑一遍结算流程
+## 进页面：按参数切状态、播对应入场动画；结算态另外跑一遍结算流程
 func on_show(params: Dictionary = {}) -> void:
 	var requested: int = params.get(_PARAM_STATE, DisplayState.MAIN) # 默认常规态
 	_lit_consumed = false
@@ -78,7 +78,7 @@ func on_show(params: Dictionary = {}) -> void:
 		_run_settle_flow()
 
 
-# 返回键：只有常规态才自己处理，其余状态交回给系统
+## 返回键：只有常规态才自己处理，其余状态交回给系统
 func on_escape() -> bool:
 	if _state != DisplayState.MAIN:
 		return false
@@ -86,7 +86,7 @@ func on_escape() -> bool:
 	return true
 
 
-# 埋点页面名：常规态算打卡页，结算态算游戏内打卡
+## 埋点页面名：常规态算打卡页，结算态算游戏内打卡
 func get_scr_name() -> String:
 	match _state:
 		DisplayState.MAIN:
@@ -98,7 +98,7 @@ func get_scr_name() -> String:
 
 
 # ================= 展示状态切换 =================
-# 播入场动画：点亮态 Appear、结算态 Appear3、常规态看今天还能不能打卡选 Appear2/3
+## 播入场动画：点亮态 Appear、结算态 Appear3、常规态看今天还能不能打卡选 Appear2/3
 func _play_enter_anim(s: int) -> void:
 	var anim_name: StringName
 	match s:
@@ -120,25 +120,25 @@ func _play_enter_anim(s: int) -> void:
 			connect_managed_once(_anim.animation_finished, _on_lit_enter_anim_finished)
 
 
-# 入场动画播完，点亮态开始接受点击
+## 入场动画播完，点亮态开始接受点击
 func _on_lit_enter_anim_finished(_finished_anim: StringName) -> void:
 	_lit_enter_done = true
 
 
-# 切状态并整页刷新
+## 切状态并整页刷新
 func _apply_state(s: int) -> void:
 	_state = s
 	_refresh()
 
 
 # ================= 数据刷新 =================
-# 刷新可见性与数据
+## 刷新可见性与数据
 func _refresh() -> void:
 	_refresh_visibility()
 	_refresh_data()
 
 
-# 按状态决定返回键 / 最佳记录 / 继续按钮 / 太阳按钮的显隐
+## 按状态决定返回键 / 最佳记录 / 继续按钮 / 太阳按钮的显隐
 func _refresh_visibility() -> void:
 	var is_main: bool = _state == DisplayState.MAIN
 	var is_settle: bool = _state == DisplayState.SETTLE
@@ -151,7 +151,7 @@ func _refresh_visibility() -> void:
 	_sun_btn.visible = _state == DisplayState.LIT
 
 
-# 填连续天数、最佳记录，并刷 7 个格子
+## 填连续天数、最佳记录，并刷 7 个格子
 func _refresh_data() -> void:
 	var data: StreakData = StreakManager.get_data()
 	_streak_num.text = str(data.current_streak)
@@ -159,7 +159,7 @@ func _refresh_data() -> void:
 	_refresh_slots()
 
 
-# 按打卡数据刷 7 个格子的星期与点亮状态；结算态把「今天这格」留给动画
+## 按打卡数据刷 7 个格子的星期与点亮状态；结算态把「今天这格」留给动画
 func _refresh_slots() -> void:
 	var show_chest: bool = StreakManager.has_reward()
 	var slots: Array[Dictionary] = StreakManager.get_week_slots()
@@ -178,7 +178,7 @@ func _refresh_slots() -> void:
 			slot.apply_static(bool(s.checked), slot_is_chest)
 
 
-# 找出这一轮里最后一个已点亮的格子下标（没有则 -1），就是今天刚打的那格
+## 找出这一轮里最后一个已点亮的格子下标（没有则 -1），就是今天刚打的那格
 func _new_checkin_index() -> int:
 	var slots: Array[Dictionary] = StreakManager.get_week_slots()
 	var idx: int = -1
@@ -189,7 +189,7 @@ func _new_checkin_index() -> int:
 
 
 # ================= 结算流程 =================
-# 结算：先锁住继续按钮，等一小段后播打卡动画；有宝箱就开奖并等奖励页关掉
+## 结算：先锁住继续按钮，等一小段后播打卡动画；有宝箱就开奖并等奖励页关掉
 func _run_settle_flow(slot_delay: float = _SETTLE_SLOT_DELAY) -> void:
 	var idx: int = _new_checkin_index()
 	if idx < 0:
@@ -227,21 +227,21 @@ func _run_settle_flow(slot_delay: float = _SETTLE_SLOT_DELAY) -> void:
 	_set_continue_enabled(true)
 
 
-# 等奖励页（UiName.AWARD）关掉再继续
+## 等奖励页（UiName.AWARD）关掉再继续
 func _await_reward_closed() -> void:
 	var reward := UIManager.get_ui(UiName.AWARD)
 	while is_instance_valid(reward) and reward.visible:
 		await reward.visibility_changed
 
 
-# 结算过程中锁住继续按钮，防止提前退出
+## 结算过程中锁住继续按钮，防止提前退出
 func _set_continue_enabled(enabled: bool) -> void:
 	if _claim_btn:
 		_claim_btn.disabled = not enabled
 
 
 # ================= 输入与按钮 =================
-# 点亮态下点屏幕任意位置都进结算，并吞掉这次点击
+## 点亮态下点屏幕任意位置都进结算，并吞掉这次点击
 func _input(event: InputEvent) -> void:
 	if not is_showing() or _state != DisplayState.LIT or _lit_consumed or not _lit_enter_done:
 		return
@@ -256,7 +256,7 @@ func _input(event: InputEvent) -> void:
 	_light_up_to_settle()
 
 
-# 太阳按钮：与点屏幕等价（同样防重复、要求入场动画已播完）
+## 太阳按钮：与点屏幕等价（同样防重复、要求入场动画已播完）
 func _on_sun_pressed() -> void:
 	if _state != DisplayState.LIT or _lit_consumed or not _lit_enter_done:
 		return
@@ -264,7 +264,7 @@ func _on_sun_pressed() -> void:
 	_light_up_to_settle()
 
 
-# 点亮 → 结算：播 LightUp、切状态、跑结算流程，并补一次页面埋点
+## 点亮 → 结算：播 LightUp、切状态、跑结算流程，并补一次页面埋点
 func _light_up_to_settle() -> void:
 	if _anim.has_animation(&"LightUp"):
 		_anim.play(&"LightUp")
@@ -274,13 +274,13 @@ func _light_up_to_settle() -> void:
 	Tracker.track_scr_show(Tracker.Scr.GAME_STREAK)
 
 
-# 返回：埋点后关掉打卡页
+## 返回：埋点后关掉打卡页
 func _on_back_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.BACK, self)
 	UIManager.hide_ui(UiName.STREAK)
 
 
-# 继续：埋点 + 震动后关掉打卡页
+## 继续：埋点 + 震动后关掉打卡页
 func _on_continue_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.CONTINUE, self)
 	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)

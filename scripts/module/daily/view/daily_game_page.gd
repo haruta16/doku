@@ -1,4 +1,4 @@
-# 每日挑战游戏页：每天按日期从题库里固定挑一道题，复用主线棋盘与道具，带 3 条命、计时和复活
+## 每日挑战游戏页：每天按日期从题库里固定挑一道题，复用主线棋盘与道具，带 3 条命、计时和复活
 class_name DailyGamePage
 extends BaseGamePage
 
@@ -7,7 +7,7 @@ const SettingScene: PackedScene = preload("res://scripts/module/setting/ui/setti
 # ---- 子节点引用（@onready：进场景树后才可用） ----
 @onready var _date_label: Label = $Root/VBoxContainer/Header/DateLabel # 头部日期文案（部分实验档会隐藏）
 @onready var _level_display_value: Label = $Root/VBoxContainer/Header/LevelDisplay/Value # 头部「月/日」数字显示
-# 计时文字（@onready 与变量声明分两行写的那个）
+## 计时文字（@onready 与变量声明分两行写的那个）
 @onready
 var _timer_label: Label = $Root/VBoxContainer/CatHeartRow/TimeContainer/HBoxContainer/TimerCtrl/TimerLabel
 
@@ -18,7 +18,7 @@ var _ad_show_unix: float = 0.0 # 广告开始播放的时刻，> 0 表示有一�
 
 var _pending_show_auto_mark_popup: bool = false # 是否等棋盘出场动画播完再弹自动标叉弹窗
 
-# 出场动画期间要锁住的头部按钮
+## 出场动画期间要锁住的头部按钮
 @onready var _entry_locked_buttons: Array[Button] = [
 	$Root/VBoxContainer/Header/SettingsBtn,
 	$Root/VBoxContainer/Header/GearBtn,
@@ -30,12 +30,12 @@ static var debug_day_override: int = -1 # 调试开关：强制把「今天」�
 
 
 # ================= 生命周期 =================
-# 埋点用的游戏类型：每日挑战
+## 埋点用的游戏类型：每日挑战
 func _game_type() -> String:
 	return Tracker.GameType.DAILY
 
 
-# 绑棋盘信号、建提示与策略浮层，并监听广告开关
+## 绑棋盘信号、建提示与策略浮层，并监听广告开关
 func _ready() -> void:
 	_refresh_hearts()
 	_board_view.cell_drag_start.connect(_on_board_cell_drag_start)
@@ -58,7 +58,7 @@ func _ready() -> void:
 	claim_button_sound($Root/VBoxContainer/Header/SettingsBtn)
 
 
-# 每次进页面：挑今天的题、铺棋盘、起计时，并处理开屏广告与自动标叉弹窗
+## 每次进页面：挑今天的题、铺棋盘、起计时，并处理开屏广告与自动标叉弹窗
 func on_show(params: Dictionary = {}) -> void:
 	Tracker.set_active_game_type(Tracker.GameType.DAILY)
 
@@ -388,7 +388,7 @@ func on_show(params: Dictionary = {}) -> void:
 	_show_banner_if_eligible("daily")
 
 
-# 要不要弹自动标叉弹窗：道具广告模式 + 今天还没开 + 有免费额度或广告可看
+## 要不要弹自动标叉弹窗：道具广告模式 + 今天还没开 + 有免费额度或广告可看
 func _should_show_auto_mark_popup() -> bool:
 	# 不是「道具+广告」模式就不弹
 	if not ABTestManager.game_auto_mark.is_prop_ad_mode():
@@ -404,22 +404,22 @@ func _should_show_auto_mark_popup() -> bool:
 
 
 # ================= 计时 =================
-# 本局已用秒数（不含之后要补偿掉的广告时长）
+## 本局已用秒数（不含之后要补偿掉的广告时长）
 func _get_elapsed_sec() -> int:
 	return int(Time.get_unix_time_from_system() - _start_unix)
 
 
-# 计时器心跳：只刷新文字
+## 计时器心跳：只刷新文字
 func _on_clock_timer_timeout() -> void:
 	_refresh_timer_label()
 
 
-# 按当前已用秒数刷新计时文字
+## 按当前已用秒数刷新计时文字
 func _refresh_timer_label() -> void:
 	_apply_elapsed_to_label(_get_elapsed_sec())
 
 
-# 把秒数写成 mm:ss；超过 1 小时改成 hh:mm:ss 并把字号调小
+## 把秒数写成 mm:ss；超过 1 小时改成 hh:mm:ss 并把字号调小
 func _apply_elapsed_to_label(sec: int) -> void:
 	if sec >= 3600:
 		var h: int = sec / 3600
@@ -434,24 +434,24 @@ func _apply_elapsed_to_label(sec: int) -> void:
 		_timer_label.add_theme_font_size_override("font_size", 50)
 
 
-# 切到后台：故意留空，广告时长在回前台时统一补
+## 切到后台：故意留空，广告时长在回前台时统一补
 func _on_application_focus_out() -> void:
 	pass
 
 
-# 回前台：先补掉广告占用的时长，再刷计时
+## 回前台：先补掉广告占用的时长，再刷计时
 func _on_application_focus_in() -> void:
 	_compensate_ad_time()
 	_refresh_timer_label()
 
 
-# 记住激励视频开始播放的时刻，用来算要补多少秒
+## 记住激励视频开始播放的时刻，用来算要补多少秒
 func _on_ad_shown_for_timer(placement_id: String) -> void:
 	if placement_id == "reward":
 		_ad_show_unix = Time.get_unix_time_from_system()
 
 
-# 把广告占用的时长从计时起点往后推，让看广告不算进通关时间；补完清零
+## 把广告占用的时长从计时起点往后推，让看广告不算进通关时间；补完清零
 func _compensate_ad_time() -> void:
 	if _ad_show_unix <= 0.0:
 		return
@@ -461,14 +461,14 @@ func _compensate_ad_time() -> void:
 	_ad_show_unix = 0.0
 
 
-# 广告关闭后同样补一次时间
+## 广告关闭后同样补一次时间
 func _on_ad_closed(_placement_id: String) -> void:
 	_compensate_ad_time()
 	_refresh_timer_label()
 
 
 # ================= 按钮与动画回调 =================
-# 齿轮按钮 = 退出本局回主页（已结算就不再响应）
+## 齿轮按钮 = 退出本局回主页（已结算就不再响应）
 func _on_gear_btn_pressed() -> void:
 	if _is_complete:
 		return
@@ -478,7 +478,7 @@ func _on_gear_btn_pressed() -> void:
 	UIManager.hide_ui(UiName.DAILY_GAME)
 
 
-# 棋盘出场动画结束：放开入口按钮，需要的话弹自动标叉弹窗
+## 棋盘出场动画结束：放开入口按钮，需要的话弹自动标叉弹窗
 func _on_appear_animation_finished() -> void:
 	super._on_appear_animation_finished()
 	_unlock_entry_buttons()
@@ -487,7 +487,7 @@ func _on_appear_animation_finished() -> void:
 		UIManager.show_ui(UiName.DAILY_AUTO_MARK_POPUP)
 
 
-# 把头部按钮设为不接收点击（出场动画期间防误触）
+## 把头部按钮设为不接收点击（出场动画期间防误触）
 func _lock_entry_buttons() -> void:
 	_entry_btn_lock_seq += 1
 	for b in _entry_locked_buttons:
@@ -495,7 +495,7 @@ func _lock_entry_buttons() -> void:
 			b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-# 恢复头部按钮的点击
+## 恢复头部按钮的点击
 func _unlock_entry_buttons() -> void:
 	for b in _entry_locked_buttons:
 		if is_instance_valid(b):
@@ -503,7 +503,7 @@ func _unlock_entry_buttons() -> void:
 
 
 # ================= 局内回调 / 重开 =================
-# 重开本局：清连击与草稿、销掉横幅，先按「主动退出」结算再以 RESTART 重进
+## 重开本局：清连击与草稿、销掉横幅，先按「主动退出」结算再以 RESTART 重进
 func _on_restart_requested() -> void:
 	_combo_count = 0
 	_combo_score = 0
@@ -517,14 +517,14 @@ func _on_restart_requested() -> void:
 	on_show({"_tracker_status": Tracker.GameStatus.RESTART})
 
 
-# 规则高亮只在「全关卡」实验档下播
+## 规则高亮只在「全关卡」实验档下播
 func _on_rule_violated(rule: int) -> void:
 	if not ABTestManager.rule_highlight.is_all_levels():
 		return
 	_play_rule_highlight(rule)
 
 
-# 给三个道具按钮各配一个广告位（撤销没有专用位，用字符串兜底）
+## 给三个道具按钮各配一个广告位（撤销没有专用位，用字符串兜底）
 func _reward_pos_for(btn: Control) -> String:
 	if btn == _tool_locate_btn:
 		return Tracker.AdPos.PROPS_DAILY_LOCATE
@@ -534,7 +534,7 @@ func _reward_pos_for(btn: Control) -> String:
 
 
 # ================= 失败 / 复活 =================
-# 失败：停表清场、上报失败埋点，算出还差几只猫并弹失败页，接好复活回调
+## 失败：停表清场、上报失败埋点，算出还差几只猫并弹失败页，接好复活回调
 func _on_game_over() -> void:
 	_hide_auto_complete_btn()
 	if not _is_complete:
@@ -576,12 +576,12 @@ func _on_game_over() -> void:
 		fail.revive_ad_started.connect(_on_revive_ad_started)
 
 
-# 广告开始播：先把棋盘上的猫全部退回待机，广告结束后再复原
+## 广告开始播：先把棋盘上的猫全部退回待机，广告结束后再复原
 func _on_revive_ad_started() -> void:
 	_board_view.revive_all_cat_to_idle()
 
 
-# 复活成功：遮掉失败页、加统计、恢复生命与计时，让本局继续
+## 复活成功：遮掉失败页、加统计、恢复生命与计时，让本局继续
 func _on_revive_requested() -> void:
 	UIManager.hide_ui(UiName.DAILY_FAIL)
 	_is_complete = false
@@ -605,7 +605,7 @@ func _on_revive_requested() -> void:
 
 
 # ================= 通关 =================
-# 通关：停表、按耗时折算超越百分比（开过自动标叉再加 5%），写存档并弹通关页
+## 通关：停表、按耗时折算超越百分比（开过自动标叉再加 5%），写存档并弹通关页
 func _on_game_complete() -> void:
 	_hide_auto_complete_btn()
 	if not _is_complete:
@@ -655,12 +655,12 @@ func _on_game_complete() -> void:
 	UIManager.show_ui(_win_ui_name(), {"level_config": _level_config, "board_view": _board_view})
 
 
-# 本页对应的通关页 UI 名（每日挑战固定）
+## 本页对应的通关页 UI 名（每日挑战固定）
 func _win_ui_name() -> StringName:
 	return UiName.DAILY_WIN
 
 
-# 打卡流程：先登记胜利，有待展示的奖励就打开打卡页并等它关闭；返回是否占用了出现延迟
+## 打卡流程：先登记胜利，有待展示的奖励就打开打卡页并等它关闭；返回是否占用了出现延迟
 func _try_run_streak_flow_after_win(source: StringName, skip_cat_appear: bool = false) -> bool:
 	StreakManager.notify_win(source)
 	if not StreakManager.has_pending_show():
@@ -681,7 +681,7 @@ func _try_run_streak_flow_after_win(source: StringName, skip_cat_appear: bool = 
 
 
 # ================= 调试与埋点 =================
-# 响应 CheatBus 的 win / lives 两条调试命令
+## 响应 CheatBus 的 win / lives 两条调试命令
 func _on_cheat_command(cmd_name: String, args: Array[String]) -> void:
 	match cmd_name:
 		"win":
@@ -690,7 +690,7 @@ func _on_cheat_command(cmd_name: String, args: Array[String]) -> void:
 			_cmd_lives(args)
 
 
-# 本局题目来自哪个题库（埋点用）：实验组看 use_gc_bank，控制组按等级分 regular / lkstyle
+## 本局题目来自哪个题库（埋点用）：实验组看 use_gc_bank，控制组按等级分 regular / lkstyle
 func _get_dc_bank_source(current_lv: int, day_offset: int) -> String:
 	if ABTestManager.dc_level.is_override_enabled():
 		var sz: int = ABTestManager.dc_level.get_pool_size(current_lv, day_offset)
@@ -700,7 +700,7 @@ func _get_dc_bank_source(current_lv: int, day_offset: int) -> String:
 	return "lkstyle" if current_lv > 200 else "regular"
 
 
-# 公历日期 → 儒略日序号，用来算两个日期差几天
+## 公历日期 → 儒略日序号，用来算两个日期差几天
 static func _local_date_to_jdn(year: int, month: int, day: int) -> int:
 	var a: int = (14 - month) / 12
 	var y: int = year + 4800 - a
@@ -708,12 +708,12 @@ static func _local_date_to_jdn(year: int, month: int, day: int) -> int:
 	return day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045
 
 
-# 埋点页面名
+## 埋点页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.DAILY_GAME
 
 
-# 拼埋点用的结算参数（耗时、道具用量、错标数、复活次数等）
+## 拼埋点用的结算参数（耗时、道具用量、错标数、复活次数等）
 func _build_game_end_params(result: String) -> Dictionary:
 	# 取通关耗时；拿不到就用墙上时钟兜底，避免上报 0
 	var time_sec: int = _level_config.get("elapsed_sec", 0)

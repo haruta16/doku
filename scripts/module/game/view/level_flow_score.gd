@@ -1,4 +1,4 @@
-# 得分飘字：用图片字体拼出「+1234」，只有 4 个数字位，位数不够的槽位隐藏
+## 得分飘字：用图片字体拼出「+1234」，只有 4 个数字位，位数不够的槽位隐藏
 extends Control
 class_name LevelFlowScore
 
@@ -25,7 +25,7 @@ const PLUS_TEXTURE: String = "res://assets/sprites/game/score_font/ui_mao_sz_pic
 @onready var _digit4: TextureRect = $HBox/Digit4 # 第 4 位
 
 
-# 设置要显示的分数（按十进制逐位贴图）
+## 设置要显示的分数（按十进制逐位贴图）
 func set_score(gain: int) -> void:
 	var digits: String = str(gain)
 	var slots: Array[TextureRect] = [_digit1, _digit2, _digit3, _digit4]
@@ -45,7 +45,7 @@ func set_score(gain: int) -> void:
 	_update_pivot()
 
 
-# 等布局完成后按 HBox 实际尺寸居中（缩放动画以中心为轴）
+## 等布局完成后按 HBox 实际尺寸居中（缩放动画以中心为轴）
 func _update_pivot() -> void:
 	await get_tree().process_frame # 等一帧让 HBox 完成布局
 	size = $HBox.size

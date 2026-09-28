@@ -1,4 +1,4 @@
-# 每日挑战通关页：展示本局耗时与「超越百分比」，继续按钮回主线接着闯关
+## 每日挑战通关页：展示本局耗时与「超越百分比」，继续按钮回主线接着闯关
 class_name DailyWinPage
 extends UIFrameWindow
 
@@ -9,26 +9,26 @@ extends UIFrameWindow
 @onready var _anim: AnimationPlayer = $AnimationPlayer # 页面出现动画
 @onready var _anim_loop: AnimationPlayer = $AnimationPlayer2 # 继续按钮的循环动画
 
-# 通关动画的等待时长（秒）；主页 Toast 已经占掉这段时间时跳过
+## 通关动画的等待时长（秒）；主页 Toast 已经占掉这段时间时跳过
 const APPEAR_DELAY: float = 0.8
 
-# 游戏页传进来的本局配置（elapsed_sec / beat_percent 等）
+## 游戏页传进来的本局配置（elapsed_sec / beat_percent 等）
 var _level_config: Dictionary = {}
 
 
 # ================= 生命周期 =================
-# 给继续按钮接上按下/抬起缩放
+## 给继续按钮接上按下/抬起缩放
 func _ready() -> void:
 	bind_press_release_scale($Root/Ctrl/ContinueBtn)
 
 
-# 进页面先挡 2 秒输入防误触，再演通关结算
+## 进页面先挡 2 秒输入防误触，再演通关结算
 func on_show(params: Dictionary = {}) -> void:
 	UIManager.block_input_briefly(self, 2.0)
 	show_win(params.get("level_config", {}), params.get("board_view") as BoardView)
 
 
-# 填耗时与百分比文案，然后播猫的胜利动画
+## 填耗时与百分比文案，然后播猫的胜利动画
 func show_win(level_config: Dictionary, board_view: BoardView) -> void:
 	_level_config = level_config
 	visible = true
@@ -91,12 +91,12 @@ func show_win(level_config: Dictionary, board_view: BoardView) -> void:
 
 
 # ================= 猫 Spine 控制 =================
-# 离开页面把猫复位，免得下次进来停在半路
+## 离开页面把猫复位，免得下次进来停在半路
 func on_hide() -> void:
 	_reset_cat_spine()
 
 
-# 把猫停在 appear 第 0 帧并隐藏，作为「还没开始」的状态
+## 把猫停在 appear 第 0 帧并隐藏，作为「还没开始」的状态
 func _reset_cat_spine() -> void:
 	if _cat == null:
 		return
@@ -109,7 +109,7 @@ func _reset_cat_spine() -> void:
 	_cat.visible = false
 
 
-# 恢复猫的时间缩放，让它真正动起来
+## 恢复猫的时间缩放，让它真正动起来
 func _resume_cat_spine() -> void:
 	if _cat == null:
 		return
@@ -119,7 +119,7 @@ func _resume_cat_spine() -> void:
 
 
 # ================= 按钮 =================
-# 继续：带 CONTINUE 埋点状态回主线下一关，并关掉每日两个页面
+## 继续：带 CONTINUE 埋点状态回主线下一关，并关掉每日两个页面
 func _on_continue_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.CONTINUE, self)
 	(
@@ -136,6 +136,6 @@ func _on_continue_btn_pressed() -> void:
 	UIManager.hide_ui(UiName.DAILY_GAME)
 
 
-# 埋点页面名
+## 埋点页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.DAILY_GAME_SUCCESS

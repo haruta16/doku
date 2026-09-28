@@ -1,4 +1,4 @@
-# 连击语音包实验：0=关闭 1~2=AI 猫叫/AI 女声 3~5=真人女声三套 6~8=真人男声三套，每包含连击 3~8 六段音频
+## 连击语音包实验：0=关闭 1~2=AI 猫叫/AI 女声 3~5=真人女声三套 6~8=真人男声三套，每包含连击 3~8 六段音频
 extends AbConfigBase
 class_name ComboVoiceConfig
 
@@ -13,7 +13,7 @@ const VALUE_REAL_MALE_1: int = 6 # 真人男声 第 1 套
 const VALUE_REAL_MALE_2: int = 7 # 真人男声 第 2 套
 const VALUE_REAL_MALE_3: int = 8 # 真人男声 第 3 套
 
-# 语音包 → {连击数 3~8: 音频路径}；键即素材的 s1~s8 后缀，档位 0 无表项
+## 语音包 → {连击数 3~8: 音频路径}；键即素材的 s1~s8 后缀，档位 0 无表项
 const _VOICE_SET_PATHS: Dictionary = {
 	VALUE_AI_CAT:
 	{
@@ -90,19 +90,19 @@ const _VOICE_SET_PATHS: Dictionary = {
 }
 
 
-# 初始化：登记实验 key、默认档与染色时机
+## 初始化：登记实验 key、默认档与染色时机
 func _init() -> void:
 	key = "combo_voice"
 	default_value = VALUE_DISABLED # 默认档：关闭
 	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
 
 
-# 是否启用连击语音
+## 是否启用连击语音
 func is_enabled() -> bool:
 	return value() != VALUE_DISABLED
 
 
-# 取该连击数对应的语音路径；连击数会钳到 3~8，未命中返回空串
+## 取该连击数对应的语音路径；连击数会钳到 3~8，未命中返回空串
 func get_combo_voice(combo_count: int) -> String:
 	var voice_set: int = value()
 	if voice_set <= 0:

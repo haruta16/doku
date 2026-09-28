@@ -1,4 +1,4 @@
-# 全局飘字提示：同一时刻只留一条（新的顶掉旧的），按文本量自适应宽度，再淡入 → 停留 → 淡出并上浮
+## 全局飘字提示：同一时刻只留一条（新的顶掉旧的），按文本量自适应宽度，再淡入 → 停留 → 淡出并上浮
 class_name Toast
 extends CanvasLayer
 
@@ -12,7 +12,7 @@ const _FLOAT_DIST: float = 50.0 # 停留期间向上浮动的距离（像素）
 static var _current: Toast = null # 当前存活的 Toast；新的一条会先把旧的 queue_free
 
 
-# 全局入口：先干掉上一条，再从 prefab 实例化一条挂到根节点上并播
+## 全局入口：先干掉上一条，再从 prefab 实例化一条挂到根节点上并播
 static func popup(msg: String, node: Node) -> void:
 	if _current != null and is_instance_valid(_current):
 		_current.queue_free()
@@ -23,7 +23,7 @@ static func popup(msg: String, node: Node) -> void:
 	toast._play(msg)
 
 
-# 真正播一条：先等一帧量文本，再算面板宽高，最后淡入 / 停留 / 淡出并上浮
+## 真正播一条：先等一帧量文本，再算面板宽高，最后淡入 / 停留 / 淡出并上浮
 func _play(msg: String) -> void:
 	_label.text = tr(msg) # 文案走翻译表
 	_panel.size.x = _MAX_PANEL_W # 先占一个最大宽度，等下一帧排版稳定后再收窄

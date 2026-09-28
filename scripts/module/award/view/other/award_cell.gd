@@ -1,10 +1,10 @@
-# 奖励格子：按 kind 换图标并显示数量，供奖励页摆 1~2 个
+## 奖励格子：按 kind 换图标并显示数量，供奖励页摆 1~2 个
 extends UIChildWindow
 
-# 图标纵向基准偏移（像素）：格子以它为锚点摆图标
+## 图标纵向基准偏移（像素）：格子以它为锚点摆图标
 const _ICON_Y_BIAS: float = -63.21
 
-# kind → [图标贴图, 图标尺寸(像素)]；键与奖励道具的 kind 对应
+## kind → [图标贴图, 图标尺寸(像素)]；键与奖励道具的 kind 对应
 const _ICON_BY_KIND: Dictionary = {
 	"locate": [preload("res://assets/sprites/game/tool_cat_item.png"), Vector2(106, 106)],
 	"hint": [preload("res://assets/sprites/game/icon_hint_lamp.png"), Vector2(67, 106)],
@@ -16,12 +16,12 @@ const _ICON_BY_KIND: Dictionary = {
 @onready var _count_txt: Label = $CountTxt # 数量文字
 
 
-# on_show：从 params 取 kind / count 后交给 set_award
+## on_show：从 params 取 kind / count 后交给 set_award
 func on_show(params: Dictionary = {}) -> void:
 	set_award(str(params.get("kind", "")), int(params.get("count", 0)))
 
 
-# 设置格子外观：未知 kind 会告警并清空图标
+## 设置格子外观：未知 kind 会告警并清空图标
 func set_award(kind: String, count: int) -> void:
 	# 先写数量（图标查不到也要显示数量）
 	if _count_txt != null:

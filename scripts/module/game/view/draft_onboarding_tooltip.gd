@@ -1,4 +1,4 @@
-# 草稿功能新手引导：全屏遮罩 + 假按钮 + 气泡说明，点假按钮算命中，点别处算关闭
+## 草稿功能新手引导：全屏遮罩 + 假按钮 + 气泡说明，点假按钮算命中，点别处算关闭
 extends CanvasLayer
 class_name DraftOnboardingTooltip
 
@@ -36,7 +36,7 @@ var _closing: bool = false # 是否正在关闭
 
 
 # ================= 生命周期 =================
-# 进树：记录防误触截止时间，并给遮罩和气泡接上点击
+## 进树：记录防误触截止时间，并给遮罩和气泡接上点击
 func _ready() -> void:
 	_block_until_ms = Time.get_ticks_msec() + int(_BLOCK_DURATION_SEC * 1000)
 	_mask.gui_input.connect(_on_mask_input)
@@ -44,7 +44,7 @@ func _ready() -> void:
 
 
 # ================= 显示与布局 =================
-# 按草稿按钮的位置摆好假按钮与气泡，然后播入场动画
+## 按草稿按钮的位置摆好假按钮与气泡，然后播入场动画
 func show_at(draft_btn_global_rect: Rect2) -> void:
 	_draft_btn_rect = draft_btn_global_rect
 	var btn_pos: Vector2 = draft_btn_global_rect.position
@@ -72,7 +72,7 @@ func show_at(draft_btn_global_rect: Rect2) -> void:
 	_anim.play_section_with_markers(_ANIM_NAME, &"", _DISAPPEAR_MARKER)
 
 
-# 按文案实际大小重排气泡，并算出箭头与气泡的相对位置
+## 按文案实际大小重排气泡，并算出箭头与气泡的相对位置
 func _layout_bubble() -> void:
 	var txt_size: Vector2 = _bubble_label.get_minimum_size()
 	var panel_size: Vector2 = Vector2(
@@ -107,7 +107,7 @@ func _layout_bubble() -> void:
 
 
 # ================= 输入与关闭 =================
-# 遮罩/气泡被点击：判断点是否落在草稿按钮上
+## 遮罩/气泡被点击：判断点是否落在草稿按钮上
 func _on_mask_input(event: InputEvent) -> void:
 	if _closing:
 		return
@@ -129,7 +129,7 @@ func _on_mask_input(event: InputEvent) -> void:
 	_close()
 
 
-# 关闭：标记引导已看过，播退场动画后自毁
+## 关闭：标记引导已看过，播退场动画后自毁
 func _close() -> void:
 	if _closing:
 		return

@@ -1,4 +1,4 @@
-# 对局记录器：静态数组按开局顺序记下 puzzle_id，供作弊面板「题库」页查重（同 id 出现两次就标红）
+## 对局记录器：静态数组按开局顺序记下 puzzle_id，供作弊面板「题库」页查重（同 id 出现两次就标红）
 class_name PuzzleSessionTracker
 extends RefCounted
 
@@ -7,13 +7,13 @@ static var _entries: Array[Dictionary] = [] # 记录 [{level, puzzle_id}]，追�
 static var _label: RichTextLabel = null # 作弊面板里的富文本框；面板没打开时为 null
 
 
-# 记一局：由 game_page / daily_game_page 开局时调用；level=0 表示每日关
+## 记一局：由 game_page / daily_game_page 开局时调用；level=0 表示每日关
 static func record(puzzle_id: String, level: int = 0) -> void:
 	_entries.append({"level": level, "puzzle_id": puzzle_id})
 	_refresh()
 
 
-# 构建作弊面板的「题库」页：建一个富文本框，挂上拖动滚动后立即刷新
+## 构建作弊面板的「题库」页：建一个富文本框，挂上拖动滚动后立即刷新
 static func build_cheat_tab(content: ScrollContainer) -> void:
 	ScrollDragHelper.attach(content) # 挂上拖动滚动（面板里没有滚动条）
 	var vbox := VBoxContainer.new()
@@ -30,7 +30,7 @@ static func build_cheat_tab(content: ScrollContainer) -> void:
 	_refresh()
 
 
-# 按当前记录重刷文本；同一 puzzle_id 出现多次的行整行标红
+## 按当前记录重刷文本；同一 puzzle_id 出现多次的行整行标红
 static func _refresh() -> void:
 	if _label == null or not is_instance_valid(_label):
 		return

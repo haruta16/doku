@@ -1,11 +1,11 @@
-# 数字滚动：把 Label 的文本从 from 插值到 to（整数递增），格式化交给调用方给的 fmt
+## 数字滚动：把 Label 的文本从 from 插值到 to（整数递增），格式化交给调用方给的 fmt
 class_name RollingNumber
 extends RefCounted
 
 const _META_KEY: StringName = &"_rolling_tween" # 存在 Label 元数据里的补间句柄，用来打断上一次没播完的滚动
 
 
-# 让 label 从 from 滚到 to（时长单位：秒，默认 0.35）；from 等于 to 就直接写值并返回 null
+## 让 label 从 from 滚到 to（时长单位：秒，默认 0.35）；from 等于 to 就直接写值并返回 null
 static func roll(
 	label: Label,
 	from: int,
@@ -48,7 +48,7 @@ static func roll(
 	return tw
 
 
-# 杀掉该 Label 上没播完的滚动并清掉元数据
+## 杀掉该 Label 上没播完的滚动并清掉元数据
 static func _kill_existing(label: Label) -> void:
 	if not label.has_meta(_META_KEY):
 		return

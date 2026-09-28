@@ -1,4 +1,4 @@
-# 通关弹窗：标题 + 胜利猫动画 + 策略产出的通关文案，并在这里安排「评星弹窗」
+## 通关弹窗：标题 + 胜利猫动画 + 策略产出的通关文案，并在这里安排「评星弹窗」
 @tool
 class_name GameWinPage
 extends UIFrameWindow
@@ -20,7 +20,7 @@ const APPEAR_DELAY: float = 1.2 # 出现前的等待：先让棋盘把自己的�
 
 const APPEAR_DURATION: float = 2.467 # Appear 动画时长，用于算遮输入时长与评星延迟
 
-# 普通关标题候选池：随机取，且避开上一次用过的那条
+## 普通关标题候选池：随机取，且避开上一次用过的那条
 const WIN_TITLES_NORMAL: Array[StringName] = [
 	&"WIN_TITLE", &"WIN_TITLE_1", &"WIN_TITLE_2", &"WIN_TITLE_3", &"WIN_TITLE_4"
 ]
@@ -52,7 +52,7 @@ func _ready() -> void:
 	bind_press_release_scale($Root/Ctrl/BankBtn)
 
 
-# 打开：建策略、判定评星资格（决定遮输入多久），再进 show_win
+## 打开：建策略、判定评星资格（决定遮输入多久），再进 show_win
 func on_show(params: Dictionary = {}) -> void:
 	# 每次打开都重建策略，AB 分组可能已经变了
 	_pass_text_strategy = PassTextStrategy.create()
@@ -77,7 +77,7 @@ func on_show(params: Dictionary = {}) -> void:
 		show_win(lc, bv)
 
 
-# 关闭：让挂起的异步流程失效 → 播消失动画 → 复位猫
+## 关闭：让挂起的异步流程失效 → 播消失动画 → 复位猫
 func on_hide() -> void:
 	# 已经隐藏过就别重播动画
 	if not visible:
@@ -95,7 +95,7 @@ func on_hide() -> void:
 	visible = false
 
 
-# 展示通关界面：出文案 → 摆标题/按钮/统计 → 排评星 → 播出现动画
+## 展示通关界面：出文案 → 摆标题/按钮/统计 → 排评星 → 播出现动画
 func show_win(level_config: Dictionary, board_view: BoardView) -> void:
 	# 记下参数，后面几个 _setup_ 都读它
 	_level_config = level_config
@@ -157,7 +157,7 @@ func show_win(level_config: Dictionary, board_view: BoardView) -> void:
 	_anim_loop.play("ContinueLoop")
 
 
-# 把猫复位到 appear 第 0 帧并暂停；期间短暂显示以强制刷新骨骼，最后再隐藏
+## 把猫复位到 appear 第 0 帧并暂停；期间短暂显示以强制刷新骨骼，最后再隐藏
 func _reset_cat_spine() -> void:
 	# 节点缺失时直接跳过（编辑器预览 / 换皮场景）
 	if _cat == null:
@@ -173,7 +173,7 @@ func _reset_cat_spine() -> void:
 	_cat.visible = false
 
 
-# 恢复猫的骨骼播放（时间缩放回到 1）
+## 恢复猫的骨骼播放（时间缩放回到 1）
 func _resume_cat_spine() -> void:
 	if _cat == null:
 		return
@@ -182,7 +182,7 @@ func _resume_cat_spine() -> void:
 		st.set_time_scale(1.0)
 
 
-# 延迟弹评星：条件满足就先把「下一关」藏起来，走完流程再淡回来
+## 延迟弹评星：条件满足就先把「下一关」藏起来，走完流程再淡回来
 func _delayed_maybe_show_rate_us(seq: int) -> void:
 	var lv: int = _level_config.get("level", 0)
 	# 资格判定：AB 分组 + 本次会话连胜数，且全局只弹一次
@@ -214,7 +214,7 @@ func _delayed_maybe_show_rate_us(seq: int) -> void:
 	_restore_next_btn()
 
 
-# 评星流程：按 AB 选新版 / 旧版评星页，等它关闭后决定下一步
+## 评星流程：按 AB 选新版 / 旧版评星页，等它关闭后决定下一步
 func _run_rate_us_flow() -> void:
 	# 页面 key 由 AB 分组决定
 	var page_key: StringName = (
@@ -234,13 +234,13 @@ func _run_rate_us_flow() -> void:
 		UIManager.hide_ui(UiName.FEEDBACK)
 
 
-# 「下一关」按钮淡回来（评星流程结束后）
+## 「下一关」按钮淡回来（评星流程结束后）
 func _restore_next_btn() -> void:
 	var tw := create_tween()
 	tw.tween_property(_next_btn, "modulate:a", 1.0, 0.25)
 
 
-# 定标题：策略给的标题优先，否则用默认池（困难关走固定横幅）
+## 定标题：策略给的标题优先，否则用默认池（困难关走固定横幅）
 func _setup_win_title() -> void:
 	# 策略产出的标题非空就覆盖默认
 	var override_title: String = _win_text.get("title", "")
@@ -267,7 +267,7 @@ func _setup_win_title() -> void:
 	_title.text = tr(key)
 
 
-# 摆「下一关」按钮：每日关用继续按钮，主线显示第 n+1 关，题库关按题库算
+## 摆「下一关」按钮：每日关用继续按钮，主线显示第 n+1 关，题库关按题库算
 func _setup_next_btn() -> void:
 	# 每日关显示「继续」
 	_continue_btn.visible = _level_config.get("is_daily", false)
@@ -305,7 +305,7 @@ func _setup_next_btn() -> void:
 			_next_btn.visible = false
 
 
-# 本局带 beat_percent 时，额外加一行「耗时 · Top x%」统计
+## 本局带 beat_percent 时，额外加一行「耗时 · Top x%」统计
 func _maybe_show_stats_label() -> void:
 	# 没有 beat_percent（<0）就不显示
 	var beat: float = _level_config.get("beat_percent", -1.0)
@@ -320,7 +320,7 @@ func _maybe_show_stats_label() -> void:
 	_show_stats_label("⏱ %02d:%02d  ·  Top %s" % [m, s, I18nFormat.percent(top, 1)])
 
 
-# 通关文案正文：非空才显示 BeatPercentLabel
+## 通关文案正文：非空才显示 BeatPercentLabel
 func _maybe_show_beat_percent_tip() -> void:
 	if _beat_percent_label == null:
 		return
@@ -331,7 +331,7 @@ func _maybe_show_beat_percent_tip() -> void:
 		_beat_percent_label.text = text
 
 
-# 运行时造一个 Label 当统计条：延时 0.6 秒后淡入并上浮 10 像素
+## 运行时造一个 Label 当统计条：延时 0.6 秒后淡入并上浮 10 像素
 func _show_stats_label(text: String) -> void:
 	# 直接 new 一个 Label，不依赖场景
 	var lbl := Label.new()
@@ -354,7 +354,7 @@ func _show_stats_label(text: String) -> void:
 	tw.tween_property(lbl, "position:y", start_y - 10.0, 0.4).set_ease(Tween.EASE_OUT)
 
 
-# 点「下一关」：每日关回当前关，主线进 lv+1，题库关按题库参数开下一关
+## 点「下一关」：每日关回当前关，主线进 lv+1，题库关按题库参数开下一关
 func _on_next_btn_pressed() -> void:
 	# 埋点：这一下算「开始关卡」
 	Tracker.track_btn_click(Tracker.Btn.LEVEL_PLAY, self)
@@ -378,7 +378,7 @@ func _on_next_btn_pressed() -> void:
 	_play_bank_level(bp, next_idx, total)
 
 
-# 题库下一关的按钮文案：不同题库取不同字段拼「尺寸 / R / 序号」
+## 题库下一关的按钮文案：不同题库取不同字段拼「尺寸 / R / 序号」
 func _bank_next_label(bp: Dictionary, next_idx: int) -> String:
 	# SP 题库：尺寸要从关卡表里取
 	if bp.get("bank_sp", false):
@@ -415,7 +415,7 @@ func _bank_next_label(bp: Dictionary, next_idx: int) -> String:
 	return "#%d" % next_idx
 
 
-# 打开题库里的下一关：按题库取表，带上预制区域与解法后打开游戏页
+## 打开题库里的下一关：按题库取表，带上预制区域与解法后打开游戏页
 func _play_bank_level(bp: Dictionary, next_idx: int, total: int) -> void:
 	# SP 题库
 	if bp.get("bank_sp", false):
@@ -588,6 +588,6 @@ func _play_bank_level(bp: Dictionary, next_idx: int, total: int) -> void:
 		)
 
 
-# 埋点用页面名
+## 埋点用页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.NORMAL_GAME_SUCCESS

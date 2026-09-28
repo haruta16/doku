@@ -1,5 +1,5 @@
-# 编辑器专用的假广告窗：只画一个框模拟激励视频/插屏，让广告流程在不接 SDK 时也能跑通
-# 只在编辑器里注册（UIRegistry._EDITOR_PAGES），由 UniKitManager._mock_show_ad 拉起
+## 编辑器专用的假广告窗：只画一个框模拟激励视频/插屏，让广告流程在不接 SDK 时也能跑通
+## 只在编辑器里注册（UIRegistry._EDITOR_PAGES），由 UniKitManager._mock_show_ad 拉起
 extends UIFrameWindow
 
 # ---- 子节点引用 ----
@@ -13,7 +13,7 @@ var _on_close: Callable = Callable() # 关闭广告时的回调（通知上层�
 var _on_reward_close: Callable = Callable() # 点发奖按钮时的回调（通知上层「已发奖 + 已关闭」）
 
 
-# 显示时从 params 取参数换文案与按钮显隐；UIManager.show_ui 会调到这里
+## 显示时从 params 取参数换文案与按钮显隐；UIManager.show_ui 会调到这里
 func on_show(params: Dictionary = {}) -> void:
 	visible = true
 	_on_close = params.get("on_close", Callable())
@@ -26,17 +26,17 @@ func on_show(params: Dictionary = {}) -> void:
 	_reward_button.visible = placement_id == "reward" # 插屏没有发奖按钮
 
 
-# CloseTextButton 按下：只关广告，不发奖
+## CloseTextButton 按下：只关广告，不发奖
 func _on_close_pressed() -> void:
 	_fire(_on_close)
 
 
-# RewardButton 按下：发奖后再关
+## RewardButton 按下：发奖后再关
 func _on_reward_close_pressed() -> void:
 	_fire(_on_reward_close)
 
 
-# 先清空两个回调再调用，避免重复触发或回调里重入
+## 先清空两个回调再调用，避免重复触发或回调里重入
 func _fire(cb: Callable) -> void:
 	_on_close = Callable() # 先让两个回调失效，防止重入
 	_on_reward_close = Callable()

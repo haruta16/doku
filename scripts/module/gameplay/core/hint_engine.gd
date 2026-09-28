@@ -1,12 +1,12 @@
-# 提示引擎：不查答案、真的在解题；R1 唯一候选 → R2 占位排除 → R3/R4 集合锁定 → R4/R5 反证法，逐级兜底
-# 全部是 static 纯函数：输入 board/size/regions，输出统一的 hint 字典，found=false 表示这层推不出来
+## 提示引擎：不查答案、真的在解题；R1 唯一候选 → R2 占位排除 → R3/R4 集合锁定 → R4/R5 反证法，逐级兜底
+## 全部是 static 纯函数：输入 board/size/regions，输出统一的 hint 字典，found=false 表示这层推不出来
 class_name HintEngine
 extends RefCounted
 
 
 # ================= R1：唯一候选直接落子 =================
-# 找「某行 / 某列 / 某色只剩一个能放猫的格子」直接给答案
-# 返回 {found, cell:Vector2i, unit_type:"full_line"/"row"/"col"/"region", unit_index, unit_cells:Array[Vector2i]}
+## 找「某行 / 某列 / 某色只剩一个能放猫的格子」直接给答案
+## 返回 {found, cell:Vector2i, unit_type:"full_line"/"row"/"col"/"region", unit_index, unit_cells:Array[Vector2i]}
 static func find_r1_hint(board: Array, size: int, regions: Array) -> Dictionary:
 	var row_piece: Array[bool] = [] # 已经放了猫的行 / 列 / 色，用来判断哪个单元还缺猫
 	row_piece.resize(size)
@@ -113,8 +113,8 @@ static func find_r1_hint(board: Array, size: int, regions: Array) -> Dictionary:
 	return {"found": false} # 三种情形都没有，这层推不出来
 
 
-# R1 的配套动作：拿盘上第一只已确定的猫，列出它禁掉的空格，提示玩家「这些都能画叉」
-# 返回 {found, strategy:"R1_mark", cell(第一个待画叉格), cat_cell(那只猫), unit_cells(全部待画叉格)}；参数 _regions 未使用
+## R1 的配套动作：拿盘上第一只已确定的猫，列出它禁掉的空格，提示玩家「这些都能画叉」
+## 返回 {found, strategy:"R1_mark", cell(第一个待画叉格), cat_cell(那只猫), unit_cells(全部待画叉格)}；参数 _regions 未使用
 static func find_mark_hint(board: Array, size: int, _regions: Array) -> Dictionary:
 	for r in range(size): # 找到第一只猫就返回，一次只教一步
 		for c in range(size):
@@ -154,7 +154,7 @@ static func find_mark_hint(board: Array, size: int, _regions: Array) -> Dictiona
 
 
 # ================= 公共判定与小工具 =================
-# 判断 (r,c) 现在能不能落猫：必须空格，且本行/本列/本区域无猫、八邻接无猫
+## 判断 (r,c) 现在能不能落猫：必须空格，且本行/本列/本区域无猫、八邻接无猫
 static func _can_place(
 	r: int,
 	c: int,
@@ -181,7 +181,7 @@ static func _can_place(
 	return true
 
 
-# 生成整行的格子列表，供 hint 的 unit_cells 用
+## 生成整行的格子列表，供 hint 的 unit_cells 用
 static func _row_cells(r: int, size: int) -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
 	for c in range(size):
@@ -189,7 +189,7 @@ static func _row_cells(r: int, size: int) -> Array[Vector2i]:
 	return cells
 
 
-# 生成整列的格子列表
+## 生成整列的格子列表
 static func _col_cells(c: int, size: int) -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
 	for r in range(size):
@@ -198,8 +198,8 @@ static func _col_cells(c: int, size: int) -> Array[Vector2i]:
 
 
 # ================= R3/R4：k 个色只占 k 行（列） =================
-# 若 k 个未放色的候选行去重后正好 k 条，这 k 条行就被这 k 只猫占满，行内不属于这 k 个色的格子都能排除
-# k<=3 命名 R3、k>=4 命名 R4（判定完全相同）；返回 {found, strategy, description, regions, highlight_cells, locked_rows, locked_cols}
+## 若 k 个未放色的候选行去重后正好 k 条，这 k 条行就被这 k 只猫占满，行内不属于这 k 个色的格子都能排除
+## k<=3 命名 R3、k>=4 命名 R4（判定完全相同）；返回 {found, strategy, description, regions, highlight_cells, locked_rows, locked_cols}
 static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictionary:
 	var row_piece: Array[bool] = [] # 同 R1：先统计哪些行 / 列 / 色已经有猫
 	row_piece.resize(size)
@@ -335,14 +335,14 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 
 
 # ================= 组合枚举 =================
-# 返回 arr 里所有大小为 k 的组合（数组的数组）
+## 返回 arr 里所有大小为 k 的组合（数组的数组）
 static func _gen_subsets(arr: Array[int], k: int) -> Array:
 	var result: Array = []
 	_gen_sub_helper(arr, k, 0, [], result)
 	return result
 
 
-# 回溯递归：cur 是当前组合，凑满 k 个就复制一份存进 result
+## 回溯递归：cur 是当前组合，凑满 k 个就复制一份存进 result
 static func _gen_sub_helper(arr: Array[int], k: int, start: int, cur: Array, result: Array) -> void:
 	if cur.size() == k:
 		result.append(cur.duplicate())
@@ -354,9 +354,9 @@ static func _gen_sub_helper(arr: Array[int], k: int, start: int, cur: Array, res
 
 
 # ================= R2：占位排除（不落子，只画叉） =================
-# r2a：某色的候选全挤在一行/列 → 该行/列其他色可排除；r2b：某行/列的候选全是同一个色 → 该色在其他行/列可排除
-# 返回 {found, strategy:"R2", mode:"r2a_row"/"r2a_col"/"r2b_row"/"r2b_col", description, region, row, col, highlight_cells}
-# description 直接拼中文串（R3 那层用的是翻译键）；row / col 里用不上的那个填 -1
+## r2a：某色的候选全挤在一行/列 → 该行/列其他色可排除；r2b：某行/列的候选全是同一个色 → 该色在其他行/列可排除
+## 返回 {found, strategy:"R2", mode:"r2a_row"/"r2a_col"/"r2b_row"/"r2b_col", description, region, row, col, highlight_cells}
+## description 直接拼中文串（R3 那层用的是翻译键）；row / col 里用不上的那个填 -1
 static func find_r2_hint(board: Array, size: int, regions: Array) -> Dictionary:
 	var row_piece: Array[bool] = [] # 同前：先统计已有猫的行 / 列 / 色
 	row_piece.resize(size)
@@ -524,9 +524,9 @@ static func find_r2_hint(board: Array, size: int, regions: Array) -> Dictionary:
 
 
 # ================= R4/R5：反证法（假设落子 → 推到矛盾） =================
-# 假设某格放猫，再用唯一候选法往下推；若推出某行/列/色无解，就说明这格不能放猫
-# 取「推到矛盾所需额外步数最少」的格子：步数<=2 记 R4_chain，更多记 R5_chain
-# 返回 {found, strategy, description, cell, unit_cells:[cell], chain:{depth, steps, contra_type, contra_index}}
+## 假设某格放猫，再用唯一候选法往下推；若推出某行/列/色无解，就说明这格不能放猫
+## 取「推到矛盾所需额外步数最少」的格子：步数<=2 记 R4_chain，更多记 R5_chain
+## 返回 {found, strategy, description, cell, unit_cells:[cell], chain:{depth, steps, contra_type, contra_index}}
 static func find_chain_hint(board: Array, size: int, regions: Array) -> Dictionary:
 	var base: Dictionary = _chain_build_state(board, size, regions) # 由当前盘面推出初始候选状态
 	var best_depth: int = 999999 # 逐个候选格试反证，挑步数最少的
@@ -570,8 +570,8 @@ static func find_chain_hint(board: Array, size: int, regions: Array) -> Dictiona
 	return {"found": false} # 没有任何一格能反证出来
 
 
-# 与 _chain_try_contradiction 相同的推演，但返回细节：矛盾类型/位置 + 中途被迫落子的序列
-# 返回 {depth, steps:Array[Vector2i], contra_type:"row"/"col"/"region", contra_index}；推不到矛盾时返回 {}
+## 与 _chain_try_contradiction 相同的推演，但返回细节：矛盾类型/位置 + 中途被迫落子的序列
+## 返回 {depth, steps:Array[Vector2i], contra_type:"row"/"col"/"region", contra_index}；推不到矛盾时返回 {}
 static func _chain_try_contradiction_detail(
 	r0: int, c0: int, size: int, regions: Array, base: Dictionary
 ) -> Dictionary:
@@ -683,8 +683,8 @@ static func _chain_try_contradiction_detail(
 	return {} # 推到底也没有矛盾，说明这个假设成立（返回空字典）
 
 
-# 从盘面构造推演初始状态：候选全开，再按已有的猫逐只排除，最后把玩家打的叉直接判死
-# 返回 {cands:Array[Array[bool]], placed:Array[int], col_placed:Array[bool], reg_placed:Array[bool]}
+## 从盘面构造推演初始状态：候选全开，再按已有的猫逐只排除，最后把玩家打的叉直接判死
+## 返回 {cands:Array[Array[bool]], placed:Array[int], col_placed:Array[bool], reg_placed:Array[bool]}
 static func _chain_build_state(board: Array, size: int, regions: Array) -> Dictionary:
 	var cands: Array = [] # cands[r][c] 表示这一格还可能是猫
 	for _r in range(size):
@@ -715,7 +715,7 @@ static func _chain_build_state(board: Array, size: int, regions: Array) -> Dicti
 	return state
 
 
-# 在推演状态里落一只猫：标记行/列/色已占用，并清掉同行、同列、八邻接、同色的候选
+## 在推演状态里落一只猫：标记行/列/色已占用，并清掉同行、同列、八邻接、同色的候选
 static func _chain_place(r: int, c: int, size: int, regions: Array, state: Dictionary) -> void:
 	var cands: Array = state["cands"]
 	var placed: Array = state["placed"]
@@ -745,7 +745,7 @@ static func _chain_place(r: int, c: int, size: int, regions: Array, state: Dicti
 				cands[rr][cc] = false
 
 
-# 反证核心：假设 (r0,c0) 放猫后反复用唯一候选推进，返回推到矛盾所需的额外步数；推不出矛盾返回 -1
+## 反证核心：假设 (r0,c0) 放猫后反复用唯一候选推进，返回推到矛盾所需的额外步数；推不出矛盾返回 -1
 static func _chain_try_contradiction(
 	r0: int, c0: int, size: int, regions: Array, base: Dictionary
 ) -> int:
@@ -852,8 +852,8 @@ static func _chain_try_contradiction(
 
 
 # ================= 自动解题循环 / 难度标注 =================
-# 拿棋盘反复套用「画叉 + R1 + R2 + R3」把能白送的格子推完，推不动的那些答案格就是 R4 及以上难度
-# 参数 solution 是二维 bool 棋盘；返回 {Vector2i: true}，只含答案里是猫、但简单策略推不出来的位置
+## 拿棋盘反复套用「画叉 + R1 + R2 + R3」把能白送的格子推完，推不动的那些答案格就是 R4 及以上难度
+## 参数 solution 是二维 bool 棋盘；返回 {Vector2i: true}，只含答案里是猫、但简单策略推不出来的位置
 static func compute_r4_plus_cells(
 	board: Array, size: int, regions: Array, solution: Array
 ) -> Dictionary:
@@ -900,7 +900,7 @@ static func compute_r4_plus_cells(
 	return r4_plus
 
 
-# 把 R2 提示里该排除的格子按 mode 批量标成叉，供 compute_r4_plus_cells 内部推演用
+## 把 R2 提示里该排除的格子按 mode 批量标成叉，供 compute_r4_plus_cells 内部推演用
 static func _apply_r2_marks(work_board: Array, hint: Dictionary, size: int, regions: Array) -> void:
 	var mode: String = hint.get("mode", "") # r2a 排除该行/列的其他色，r2b 排除该色在其他行/列的格子
 	var reg: int = int(hint.get("region", -1))
@@ -927,7 +927,7 @@ static func _apply_r2_marks(work_board: Array, hint: Dictionary, size: int, regi
 						work_board[r][c] = CellState.MARK
 
 
-# 把 R3 锁定的行/列上、不属于这 k 个色的空格标成叉
+## 把 R3 锁定的行/列上、不属于这 k 个色的空格标成叉
 static func _apply_r3_marks(work_board: Array, hint: Dictionary, size: int, regions: Array) -> void:
 	var reg_set: Dictionary = {} # 参与锁定的色集合
 	for reg in hint.get("regions", []) as Array:

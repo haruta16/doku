@@ -1,4 +1,4 @@
-# 手势识别器：把拖拽坐标翻译成格子坐标，交给当前方案的 Operation，产出 CellAction 列表
+## 手势识别器：把拖拽坐标翻译成格子坐标，交给当前方案的 Operation，产出 CellAction 列表
 class_name BoardGestureRecognizer
 extends RefCounted
 
@@ -9,13 +9,13 @@ var _stroke := BoardStrokeContext.new() # 这一笔的共享状态
 var _last_tap_cell: Vector2i = Vector2i(-1, -1) # 上一次点击的格子，(-1,-1) 表示窗口已关闭
 
 
-# 绑定棋盘视图
+## 绑定棋盘视图
 func _init(p_board: BoardView) -> void:
 	board = p_board
 
 
 # ================= 拖拽入口（页面调用） =================
-# 按下：同一格短时间内再次按下算双击，否则按点击处理
+## 按下：同一格短时间内再次按下算双击，否则按点击处理
 func on_drag_start(pos: Vector2) -> Array[CellAction]:
 	var cell: Vector2i = _resolve_cell(pos)
 	var r: int = cell.y
@@ -39,7 +39,7 @@ func on_drag_start(pos: Vector2) -> Array[CellAction]:
 	return actions
 
 
-# 拖动中：补齐经过的格子并交给滑动操作逐格产出动作
+## 拖动中：补齐经过的格子并交给滑动操作逐格产出动作
 func on_drag_over(pos: Vector2) -> Array[CellAction]:
 	var out: Array[CellAction] = []
 	# 没有起点（没在拖动）直接返回
@@ -75,25 +75,25 @@ func on_drag_over(pos: Vector2) -> Array[CellAction]:
 	return out
 
 
-# 抬手：把结束时机交给滑动操作，然后清空手势状态
+## 抬手：把结束时机交给滑动操作，然后清空手势状态
 func on_drag_end() -> void:
 	active_scheme.swipe_op.on_end(_stroke)
 	_stroke.reset()
 
 
-# 切换 normal/draft 方案时调用：清掉未完成的手势与双击窗口
+## 切换 normal/draft 方案时调用：清掉未完成的手势与双击窗口
 func reset_for_scheme_switch() -> void:
 	_last_tap_cell = Vector2i(-1, -1)
 	_stroke.reset()
 
 
 # ================= 内部工具 =================
-# 屏幕坐标 → 格子坐标；子类 SwipeGuardRecognizer 覆写它做轴向锁定
+## 屏幕坐标 → 格子坐标；子类 SwipeGuardRecognizer 覆写它做轴向锁定
 func _resolve_cell(pos: Vector2) -> Vector2i:
 	return board.pointer_to_cell(pos.x, pos.y)
 
 
-# 开启 0.35 秒双击窗口；超时没等到第二次按下就自动失效
+## 开启 0.35 秒双击窗口；超时没等到第二次按下就自动失效
 func _open_double_tap_window(r: int, c: int) -> void:
 	_last_tap_cell = Vector2i(r, c)
 	board.get_tree().create_timer(0.35).timeout.connect(

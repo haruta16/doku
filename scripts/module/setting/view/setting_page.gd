@@ -1,5 +1,5 @@
-# 设置页（SettingPage）：音乐 / 音效 / 震动 / 人声四个开关 + 语言、反馈、重开、玩法入口
-# 同一个场景被游戏内当作「选项」弹窗复用：on_show 的 params.is_game_mode 同时决定显隐和埋点名
+## 设置页（SettingPage）：音乐 / 音效 / 震动 / 人声四个开关 + 语言、反馈、重开、玩法入口
+## 同一个场景被游戏内当作「选项」弹窗复用：on_show 的 params.is_game_mode 同时决定显隐和埋点名
 class_name SettingPage
 extends UIFrameWindow
 
@@ -95,7 +95,7 @@ var _suppress_next_close_cb: bool = false  # 跳到玩法页时不触发 _on_clo
 
 
 # ================= 生命周期 =================
-# 初始化：记住占位高度、按存档刷四个开关、刷版本号、绑按压缩放与按钮音效
+## 初始化：记住占位高度、按存档刷四个开关、刷版本号、绑按压缩放与按钮音效
 func _ready() -> void:
 	# 记住 sp3 的原始最小高度，切回非游戏内模式时还原
 	_sp3_static_miny = _vb_sp3.custom_minimum_size.y
@@ -126,7 +126,7 @@ func _ready() -> void:
 		b.resized.connect(_queue_unify_terms_row_font_size)
 
 
-# 每次被 UIManager 显示时调用；params.is_game_mode 决定是不是游戏内选项模式
+## 每次被 UIManager 显示时调用；params.is_game_mode 决定是不是游戏内选项模式
 func on_show(params: Dictionary = {}) -> void:
 	# 游戏内模式：显示重开与玩法，隐藏条款、隐私偏好和版本号
 	is_game_mode = params.get("is_game_mode", false)
@@ -196,7 +196,7 @@ func on_show(params: Dictionary = {}) -> void:
 
 
 # ================= 显隐与布局 =================
-# 面板垂直居中：按内容最小高度算上下 offset
+## 面板垂直居中：按内容最小高度算上下 offset
 func _center_panel_vertically() -> void:
 	if not is_instance_valid(_panel_container):
 		return
@@ -207,7 +207,7 @@ func _center_panel_vertically() -> void:
 	_panel_container.offset_bottom = h / 2.0
 
 
-# 每次被隐藏时调用；默认播完关闭动画后再回调 on_close
+## 每次被隐藏时调用；默认播完关闭动画后再回调 on_close
 func on_hide() -> void:
 	# 防重复（关闭动画期间可能被再调一次）
 	if _closing:
@@ -233,7 +233,7 @@ func on_hide() -> void:
 		_on_close_cb.call()
 
 
-# 语言切换时刷新版本号并重算链接字号
+## 语言切换时刷新版本号并重算链接字号
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
 		_refresh_dynamic_text()
@@ -241,11 +241,11 @@ func _notification(what: int) -> void:
 		_queue_unify_terms_row_font_size()
 
 
-# 同帧去重标记：为 true 表示已经排了一次重算
+## 同帧去重标记：为 true 表示已经排了一次重算
 var _unify_queued: bool = false
 
 
-# 请求一次条款字号统一（同帧去重）
+## 请求一次条款字号统一（同帧去重）
 func _queue_unify_terms_row_font_size() -> void:
 	if _unify_queued:
 		return
@@ -253,7 +253,7 @@ func _queue_unify_terms_row_font_size() -> void:
 	call_deferred("_unify_terms_row_font_size")
 
 
-# 取三个可见链接里「能放下的最小字号」作为统一上限，避免一行三个大小不一
+## 取三个可见链接里「能放下的最小字号」作为统一上限，避免一行三个大小不一
 func _unify_terms_row_font_size() -> void:
 	_unify_queued = false
 	# 整行隐藏时不用算
@@ -280,7 +280,7 @@ func _unify_terms_row_font_size() -> void:
 		b.set_font_size_cap(min_fs)
 
 
-# 按字典显隐 7 行（公开方法，外部也可调）
+## 按字典显隐 7 行（公开方法，外部也可调）
 func apply_vbox_layout(config: Dictionary) -> void:
 	_vb_how_to_play.visible = config.get("show_how_to_play", false)
 	_vb_restart.visible = config.get("show_restart", false)
@@ -291,7 +291,7 @@ func apply_vbox_layout(config: Dictionary) -> void:
 	_vb_version_row.visible = config.get("show_version", false)
 
 
-# 按可见开关数量调整网格间距与按钮缩放
+## 按可见开关数量调整网格间距与按钮缩放
 func _apply_toggle_grid_layout() -> void:
 	var pairs: Array = [
 		[_music_ctrl, _music_btn],
@@ -330,19 +330,19 @@ func _apply_toggle_grid_layout() -> void:
 		ctrl.custom_minimum_size = btn.custom_minimum_size * btn_scale
 
 
-# 设置节点的最小高度（像素）
+## 设置节点的最小高度（像素）
 func _set_miny(node: Control, miny: float) -> void:
 	node.custom_minimum_size.y = miny
 
 
-# 刷新版本号文案（SETTING_VERSION 带 %s 占位）
+## 刷新版本号文案（SETTING_VERSION 带 %s 占位）
 func _refresh_dynamic_text() -> void:
 	# 版本名优先取原生插件（带构建号），编辑器下退回 project.godot
 	var version: String = UniKitManager.get_version_name()
 	_version_label.text = tr("SETTING_VERSION") % version
 
 
-# 链接只认「按下」：鼠标左键按下或手指按下
+## 链接只认「按下」：鼠标左键按下或手指按下
 func _is_link_press(event: InputEvent) -> bool:
 	if event is InputEventMouseButton:
 		return event.pressed and event.button_index == MOUSE_BUTTON_LEFT
@@ -359,7 +359,7 @@ func _is_link_press(event: InputEvent) -> bool:
 var _icon_on_textures: Dictionary = {}
 
 
-# 按布尔值切换某个开关的 on / off 面板与图标贴图
+## 按布尔值切换某个开关的 on / off 面板与图标贴图
 func _update_toggle(on_panel: Panel, off_panel: Panel, icon: TextureRect, is_on: bool) -> void:
 	# 显隐 on / off 两个面板
 	on_panel.visible = is_on
@@ -374,7 +374,7 @@ func _update_toggle(on_panel: Panel, off_panel: Panel, icon: TextureRect, is_on:
 		icon.texture = _icon_on_textures[icon] if is_on else off_tex
 
 
-# 按图标节点找对应的「关态」贴图（四选一，找不到返回 null）
+## 按图标节点找对应的「关态」贴图（四选一，找不到返回 null）
 func _get_off_texture(icon: TextureRect) -> Texture2D:
 	if icon == _icon_music:
 		return _tex_music_off
@@ -388,13 +388,13 @@ func _get_off_texture(icon: TextureRect) -> Texture2D:
 
 
 # ================= 按钮回调 =================
-# 关闭设置页：先埋点再交给 UIManager
+## 关闭设置页：先埋点再交给 UIManager
 func _on_close_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.CLOSE, self)
 	UIManager.hide_ui(UiName.SETTING)
 
 
-# 音乐开关：取反写存档，并立刻换 BGM
+## 音乐开关：取反写存档，并立刻换 BGM
 func _on_music_btn_pressed() -> void:
 	# 取反当前值并写存档
 	var new_value: bool = not GameState.is_music_on()
@@ -412,7 +412,7 @@ func _on_music_btn_pressed() -> void:
 	)
 
 
-# 音效开关：取反写存档
+## 音效开关：取反写存档
 func _on_sound_btn_pressed() -> void:
 	var new_value: bool = not GameState.is_sound_on()
 	GameState.set_sound_on(new_value)
@@ -429,7 +429,7 @@ func _on_sound_btn_pressed() -> void:
 	)
 
 
-# 震动开关：取反写存档
+## 震动开关：取反写存档
 func _on_vibration_btn_pressed() -> void:
 	var new_value: bool = not GameState.is_vibration_on()
 	GameState.set_vibration_on(new_value)
@@ -445,7 +445,7 @@ func _on_vibration_btn_pressed() -> void:
 	)
 
 
-# 人声开关：只影响连击语音，没有即时反馈
+## 人声开关：只影响连击语音，没有即时反馈
 func _on_people_btn_pressed() -> void:
 	var new_value: bool = not GameState.is_people_on()
 	GameState.set_people_on(new_value)
@@ -453,7 +453,7 @@ func _on_people_btn_pressed() -> void:
 	Toast.popup("SETTING_PEOPLE_ON" if new_value else "SETTING_PEOPLE_OFF", self)
 
 
-# 重新开始：本次显示内只允许点一次
+## 重新开始：本次显示内只允许点一次
 func _on_restart_btn_pressed() -> void:
 	# 已经点过就忽略，防止连点重开两次
 	if _restart_consumed:
@@ -469,7 +469,7 @@ func _on_restart_btn_pressed() -> void:
 	UIManager.hide_ui(UiName.SETTING)
 
 
-# 打开用户协议：地址先按语言本地化
+## 打开用户协议：地址先按语言本地化
 func _on_terms_btn_pressed(event: InputEvent = null) -> void:
 	# 只响应按下事件，避免悬停 / 抬起也触发
 	if event != null and not _is_link_press(event):
@@ -480,7 +480,7 @@ func _on_terms_btn_pressed(event: InputEvent = null) -> void:
 	OS.shell_open(url)
 
 
-# 打开隐私政策（流程同上）
+## 打开隐私政策（流程同上）
 func _on_privacy_btn_pressed(event: InputEvent = null) -> void:
 	if event != null and not _is_link_press(event):
 		return
@@ -489,7 +489,7 @@ func _on_privacy_btn_pressed(event: InputEvent = null) -> void:
 	OS.shell_open(url)
 
 
-# 打开 CMP 隐私偏好界面（原生 SDK）
+## 打开 CMP 隐私偏好界面（原生 SDK）
 func _on_privacy_preference_btn_pressed(event: InputEvent = null) -> void:
 	if event != null and not _is_link_press(event):
 		return
@@ -498,12 +498,12 @@ func _on_privacy_preference_btn_pressed(event: InputEvent = null) -> void:
 
 
 # ================= 埋点信息与入口跳转 =================
-# 埋点用的弹窗名：游戏内叫「选项」，首页叫「设置」
+## 埋点用的弹窗名：游戏内叫「选项」，首页叫「设置」
 func get_dlg_name() -> String:
 	return Tracker.Dlg.OPTIONS if is_game_mode else Tracker.Dlg.SETTINGS
 
 
-# 埋点附加属性：带上 settings_language 的 A/B 值
+## 埋点附加属性：带上 settings_language 的 A/B 值
 func get_dlg_extra() -> Dictionary:
 	if is_game_mode:
 		return {}
@@ -513,7 +513,7 @@ func get_dlg_extra() -> Dictionary:
 	return {"settings_language": ABTestManager.settings_language.value()}
 
 
-# 玩法说明：打开分页版玩法页，并把自己让出去
+## 玩法说明：打开分页版玩法页，并把自己让出去
 func _on_how_to_play_btn_pressed() -> void:
 	# show_ui 返回的节点用于等它关闭
 	var htp := UIManager.show_ui(UiName.HOW_TO_PLAY_PAGED)
@@ -528,13 +528,13 @@ func _on_how_to_play_btn_pressed() -> void:
 		_on_close_cb.call()
 
 
-# 打开语言选择弹窗
+## 打开语言选择弹窗
 func _on_language_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.LANGUAGE, self)
 	UIManager.show_ui(UiName.LANGUAGE)
 
 
-# 反馈入口：离线先提示，在线才打开 Helpshift FAQ
+## 反馈入口：离线先提示，在线才打开 Helpshift FAQ
 func _on_feedback_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.FEEDBACK, self)
 
@@ -547,6 +547,6 @@ func _on_feedback_btn_pressed() -> void:
 	HelpshiftManager.open_faq()
 
 
-# 人声开关仅在 combo_voice A/B 开启时可见
+## 人声开关仅在 combo_voice A/B 开启时可见
 func _is_people_toggle_visible() -> bool:
 	return ABTestManager.combo_voice.is_enabled()

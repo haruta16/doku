@@ -1,4 +1,4 @@
-# 棋盘格子的状态表：7 个状态常量 + 3 个判断函数，纯数据、无实例
+## 棋盘格子的状态表：7 个状态常量 + 3 个判断函数，纯数据、无实例
 class_name CellState
 extends Object
 
@@ -8,16 +8,16 @@ extends Object
 enum { EMPTY, CAT, MARK, ERROR, DRAFT_CROSS, DRAFT_CAT, LOCKED_MARK }
 
 
-# 是否草稿：草稿只是玩家的临时推演，不算正式落子
+## 是否草稿：草稿只是玩家的临时推演，不算正式落子
 static func is_draft(s: int) -> bool:
 	return s == DRAFT_CROSS or s == DRAFT_CAT
 
 
-# 是否空白：空着，或者只画了草稿
+## 是否空白：空着，或者只画了草稿
 static func is_blank(s: int) -> bool:
 	return s == EMPTY or s == DRAFT_CROSS or s == DRAFT_CAT
 
 
-# 是否叉类标记：含义都是「这里不能放猫」
+## 是否叉类标记：含义都是「这里不能放猫」
 static func is_cross(s: int) -> bool:
 	return s == MARK or s == ERROR or s == LOCKED_MARK

@@ -1,9 +1,9 @@
-# 草稿模式点击：空格画草稿叉，已有草稿清空，正式标记不响应
+## 草稿模式点击：空格画草稿叉，已有草稿清空，正式标记不响应
 class_name DraftTapOperation
 extends BaseTapOperation
 
 
-# 单击一格，返回最多一个改草稿动作
+## 单击一格，返回最多一个改草稿动作
 func on_tap(r: int, c: int, stroke: BoardStrokeContext) -> Array[CellAction]:
 	var out: Array[CellAction] = []
 	# 只处理空白格（含草稿），猫与正式叉不响应

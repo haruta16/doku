@@ -1,13 +1,13 @@
-# 棋盘视图：格子节点矩阵 + 坐标换算 + 对外查询接口，是棋盘状态的唯一真源
-# 上层（base_game_page / game_page）只能通过 set_cell_state() 改格子、get_board() 读全盘，
-# 每次真实改动都会发 cell_state_changed，各功能模块据此记账与联动
+## 棋盘视图：格子节点矩阵 + 坐标换算 + 对外查询接口，是棋盘状态的唯一真源
+## 上层（base_game_page / game_page）只能通过 set_cell_state() 改格子、get_board() 读全盘，
+## 每次真实改动都会发 cell_state_changed，各功能模块据此记账与联动
 @tool
 class_name BoardView
 extends Control
 
 # ---- 布局常量（像素） ----
 const _CELL_SCENE: PackedScene = preload("res://assets/prefab/cell.tscn") # 单个格子场景（cell.tscn，内含 CellView）
-# 自动打叉按钮场景（编辑器预览与实战共用）
+## 自动打叉按钮场景（编辑器预览与实战共用）
 const _AUTO_MARK_BTN_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/auto_mark_btn.tscn"
 )
@@ -31,7 +31,7 @@ enum ChangeSource {
 }
 
 
-# 静态算棋盘理论尺寸（像素）；布局与编辑器预览用它算居中偏移
+## 静态算棋盘理论尺寸（像素）；布局与编辑器预览用它算居中偏移
 static func intrinsic_size_for(sz: int) -> Vector2:
 	var n: int = SLOT_PX * sz + BOARD_PADDING * 2
 	return Vector2(n, n)
@@ -93,7 +93,7 @@ signal axis_auto_mark_pressed(axis: int, idx: int, is_marked_before: bool) # 行
 
 
 # ================= 生命周期 =================
-# 建棋盘底色样式；编辑器里按需铺预览，运行时读一次坐标显示设置
+## 建棋盘底色样式；编辑器里按需铺预览，运行时读一次坐标显示设置
 func _ready() -> void:
 	_board_bg_style = StyleBoxFlat.new() # 白色底，圆角在 _draw 里按缩放补偿
 	_board_bg_style.bg_color = Color(1, 1, 1, 1)
@@ -106,7 +106,7 @@ func _ready() -> void:
 
 
 # ================= 调色板 =================
-# 解析区域调色板：默认取 cell.tscn 里 CellView.region_colors，命中 AB 时换实验色板
+## 解析区域调色板：默认取 cell.tscn 里 CellView.region_colors，命中 AB 时换实验色板
 static func resolve_region_palette() -> PackedColorArray:
 	var temp_cell: CellView = _CELL_SCENE.instantiate() as CellView # 临时实例只为读导出属性，读完立即 free
 	var pal: PackedColorArray = temp_cell.region_colors
@@ -169,7 +169,7 @@ static func resolve_region_palette() -> PackedColorArray:
 
 
 # ================= 初始化与布局 =================
-# 铺满 size×size 格子：复用场景里已有的 Cell_r_c、注入区域色、重建坐标与打叉按钮
+## 铺满 size×size 格子：复用场景里已有的 Cell_r_c、注入区域色、重建坐标与打叉按钮
 func setup(
 	puzzle_size: int,
 	regions: Array,
@@ -443,7 +443,7 @@ func setup(
 const _PREWARM_CELLS_PER_FRAME: int = 4 # 每帧最多实例化 4 个格子
 
 
-# 分帧预建 size×size 个空格子；base_game_page 在正式 setup 前 await 它
+## 分帧预建 size×size 个空格子；base_game_page 在正式 setup 前 await 它
 func prewarm_cells(size: int) -> void:
 	if size <= 0 or not _cells.is_empty(): # 尺寸非法或已有格子时不做
 		return
@@ -468,17 +468,17 @@ func prewarm_cells(size: int) -> void:
 
 
 # ================= 坐标换算 =================
-# 对外查询：格子边长、格子矩形、格子中心，以及本地坐标 → 格子
+## 对外查询：格子边长、格子矩形、格子中心，以及本地坐标 → 格子
 func get_cell_size() -> int:
 	return CELL_PX
 
 
-# 缩放后的可见边长（像素）；当前全仓未被调用
+## 缩放后的可见边长（像素）；当前全仓未被调用
 func get_visible_cell_size() -> float:
 	return CELL_PX * scale.x
 
 
-# (行,列) → 棋盘本地矩形（未含缩放）
+## (行,列) → 棋盘本地矩形（未含缩放）
 func cell_to_local_rect(r: int, c: int) -> Rect2:
 	return Rect2(
 		BOARD_PADDING + c * SLOT_PX + CELL_GAP,
@@ -488,14 +488,14 @@ func cell_to_local_rect(r: int, c: int) -> Rect2:
 	)
 
 
-# (行,列) → 全局中心点（引导手势 / 粒子定位用）
+## (行,列) → 全局中心点（引导手势 / 粒子定位用）
 func get_cell_global_center(r: int, c: int) -> Vector2:
 	var local_rect: Rect2 = cell_to_local_rect(r, c)
 	return global_position + local_rect.get_center() * scale
 
 
 # ================= 绘制 =================
-# 画棋盘底色：圆角按缩放补偿，编辑器里按理论尺寸居中
+## 画棋盘底色：圆角按缩放补偿，编辑器里按理论尺寸居中
 func _draw() -> void:
 	if _board_bg_style != null:
 		var s: float = scale.x if scale.x > 0.0 else 1.0 # 缩放非法时按 1.0 处理
@@ -515,7 +515,7 @@ func _draw() -> void:
 
 
 # ================= 状态写入（上层唯一入口） =================
-# 改单格状态：越界/未初始化忽略，猫与锁定叉不可被覆盖，只有真变化才发信号
+## 改单格状态：越界/未初始化忽略，猫与锁定叉不可被覆盖，只有真变化才发信号
 func set_cell_state(
 	r: int,
 	c: int,
@@ -553,14 +553,14 @@ func set_cell_state(
 
 
 # ================= 自动打叉与锁定 =================
-# 转发「松手回弹」（分屏按压用）
+## 转发「松手回弹」（分屏按压用）
 func play_mark_release(r: int, c: int) -> void:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return
 	(_cells[r][c] as CellView).play_mark_release()
 
 
-# 自动打叉：只允许把空格变成叉，播 AutomaticAppear 出场动画
+## 自动打叉：只允许把空格变成叉，播 AutomaticAppear 出场动画
 func play_auto_cross(r: int, c: int) -> void:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return
@@ -572,7 +572,7 @@ func play_auto_cross(r: int, c: int) -> void:
 	cell_state_changed.emit(r, c, CellState.MARK, ChangeSource.AUTOMARK)
 
 
-# 预置自动打叉（只改状态不播动画），成功返回 true
+## 预置自动打叉（只改状态不播动画），成功返回 true
 func preset_auto_cross(r: int, c: int) -> bool:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return false
@@ -584,14 +584,14 @@ func preset_auto_cross(r: int, c: int) -> bool:
 	return true
 
 
-# 补播预置叉的出场动画
+## 补播预置叉的出场动画
 func play_pending_auto_cross_appear(r: int, c: int) -> void:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return
 	(_cells[r][c] as CellView).play_pending_auto_cross_appear()
 
 
-# 自动撤叉：只把普通叉改回空格，播 AutomaticDisappear
+## 自动撤叉：只把普通叉改回空格，播 AutomaticDisappear
 func play_auto_uncross(r: int, c: int) -> void:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return
@@ -604,7 +604,7 @@ func play_auto_uncross(r: int, c: int) -> void:
 	cell_state_changed.emit(r, c, CellState.EMPTY, ChangeSource.AUTOMARK)
 
 
-# 把叉升级成锁定叉（不可再改），可指定锁定动画
+## 把叉升级成锁定叉（不可再改），可指定锁定动画
 func lock_mark(
 	r: int,
 	c: int,
@@ -623,14 +623,14 @@ func lock_mark(
 	cell_state_changed.emit(r, c, CellState.LOCKED_MARK, source)
 
 
-# 锁 / 解锁单格输入（自动流程中禁止玩家改）
+## 锁 / 解锁单格输入（自动流程中禁止玩家改）
 func set_cell_input_locked(r: int, c: int, locked: bool) -> void:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return
 	(_cells[r][c] as CellView).set_auto_mark_locked(locked)
 
 
-# 查询单格输入是否被锁
+## 查询单格输入是否被锁
 func is_cell_input_locked(r: int, c: int) -> bool:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return false
@@ -642,7 +642,7 @@ func get_puzzle_size() -> int:
 	return _puzzle_size
 
 
-# 取某行 / 某列的自动打叉按钮；axis 0=行 1=列，越界返回 null
+## 取某行 / 某列的自动打叉按钮；axis 0=行 1=列，越界返回 null
 func get_axis_auto_mark_btn(axis: int, idx: int) -> Control:
 	var arr: Array = _row_auto_mark_btns if axis == 0 else _col_auto_mark_btns
 	if idx < 0 or idx >= arr.size():
@@ -650,7 +650,7 @@ func get_axis_auto_mark_btn(axis: int, idx: int) -> Control:
 	return arr[idx] as Control
 
 
-# 取按钮的全局矩形（引导层用来画光圈）
+## 取按钮的全局矩形（引导层用来画光圈）
 func get_axis_auto_mark_btn_global_rect(axis: int, idx: int) -> Rect2:
 	var btn: Control = get_axis_auto_mark_btn(axis, idx)
 	if btn == null:
@@ -658,7 +658,7 @@ func get_axis_auto_mark_btn_global_rect(axis: int, idx: int) -> Rect2:
 	return btn.get_global_transform() * Rect2(Vector2.ZERO, btn.size)
 
 
-# 出场光环特效通过 call() 取的额外节点：每项 {node, ring}，先列按钮、后行按钮
+## 出场光环特效通过 call() 取的额外节点：每项 {node, ring}，先列按钮、后行按钮
 func get_intro_extra_nodes(n: int) -> Array:
 	var out: Array = []
 	if n <= 0:
@@ -674,14 +674,14 @@ func get_intro_extra_nodes(n: int) -> Array:
 	return out
 
 
-# 读单格状态；越界或未初始化返回 EMPTY
+## 读单格状态；越界或未初始化返回 EMPTY
 func get_cell_state(r: int, c: int) -> int:
 	if r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size or _cells.is_empty():
 		return CellState.EMPTY
 	return (_cells[r][c] as CellView).get_state()
 
 
-# 把格子标成错标（不播动画）；已经是错标则不重复发信号
+## 把格子标成错标（不播动画）；已经是错标则不重复发信号
 func mark_cell_error(r: int, c: int, source: int = ChangeSource.USER_ACTION) -> void:
 	if _cells.is_empty() or r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size:
 		return
@@ -694,7 +694,7 @@ func mark_cell_error(r: int, c: int, source: int = ChangeSource.USER_ACTION) -> 
 		cell_state_changed.emit(r, c, CellState.ERROR, source)
 
 
-# 错标反馈（会播动画）
+## 错标反馈（会播动画）
 func play_error_feedback(r: int, c: int, source: int = ChangeSource.USER_ACTION) -> void:
 	if _cells.is_empty() or r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size:
 		return
@@ -707,7 +707,7 @@ func play_error_feedback(r: int, c: int, source: int = ChangeSource.USER_ACTION)
 
 
 # ================= 整盘猫动画 =================
-# 通关回放：全盘猫重播出现动画，最后落下的那只带粒子
+## 通关回放：全盘猫重播出现动画，最后落下的那只带粒子
 func replay_all_cat_appear() -> void:
 	if _cells.is_empty():
 		return
@@ -719,7 +719,7 @@ func replay_all_cat_appear() -> void:
 				cell.force_play_appear(Vector2i(r, c) == _last_cat_cell) # 只有最后落下的猫开粒子
 
 
-# 全盘猫进入「哭」循环（猜错时）
+## 全盘猫进入「哭」循环（猜错时）
 func play_cat_cry_loop_all() -> void:
 	if _cells.is_empty():
 		return
@@ -730,7 +730,7 @@ func play_cat_cry_loop_all() -> void:
 				cell.play_cry_loop()
 
 
-# 全盘猫播一次沮丧表情
+## 全盘猫播一次沮丧表情
 func play_cat_frustrated_all() -> void:
 	if _cells.is_empty():
 		return
@@ -741,7 +741,7 @@ func play_cat_frustrated_all() -> void:
 				cell.play_frustrated_once()
 
 
-# 指定格子播一次沮丧表情（只对猫生效）
+## 指定格子播一次沮丧表情（只对猫生效）
 func play_cat_frustrated_at(cells: Array) -> void:
 	if _cells.is_empty():
 		return
@@ -751,7 +751,7 @@ func play_cat_frustrated_at(cells: Array) -> void:
 			cell.play_frustrated_once()
 
 
-# 全盘猫恢复 idle
+## 全盘猫恢复 idle
 func revive_all_cat_to_idle() -> void:
 	if _cells.is_empty():
 		return
@@ -763,7 +763,7 @@ func revive_all_cat_to_idle() -> void:
 
 
 # ================= 棋盘导出 =================
-# 导出完整状态棋盘（草稿 / 错标 / 锁定叉都是原值），交给规则引擎判定
+## 导出完整状态棋盘（草稿 / 错标 / 锁定叉都是原值），交给规则引擎判定
 func get_board() -> Array:
 	var board: Array = []
 	for r in range(_puzzle_size):
@@ -775,7 +775,7 @@ func get_board() -> Array:
 	return board
 
 
-# 导出「折叠」棋盘：草稿算空、错标与锁定叉算叉，供提示引擎解题
+## 导出「折叠」棋盘：草稿算空、错标与锁定叉算叉，供提示引擎解题
 func get_cell_state_folded_board() -> Array:
 	var board: Array = []
 	for r in range(_puzzle_size):
@@ -794,24 +794,24 @@ func get_cell_state_folded_board() -> Array:
 
 
 # ================= 统计与查询 =================
-# 单格是否错标
+## 单格是否错标
 func is_cell_error(r: int, c: int) -> bool:
 	if _cells.is_empty() or r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size:
 		return false
 	return (_cells[r][c] as CellView).get_state() == CellState.ERROR
 
 
-# 错标格数量
+## 错标格数量
 func count_error_cells() -> int:
 	return _count_cells_in_state(CellState.ERROR)
 
 
-# 叉数量（普通叉 + 锁定叉）
+## 叉数量（普通叉 + 锁定叉）
 func count_mark_cells() -> int:
 	return _count_cells_in_state(CellState.MARK) + _count_cells_in_state(CellState.LOCKED_MARK)
 
 
-# 空格数量（空 + 草稿，与 CellState.is_blank 一致）
+## 空格数量（空 + 草稿，与 CellState.is_blank 一致）
 func count_empty_cells() -> int:
 	if _cells.is_empty():
 		return 0
@@ -823,12 +823,12 @@ func count_empty_cells() -> int:
 	return n
 
 
-# 猫数量
+## 猫数量
 func count_cat_cells() -> int:
 	return _count_cells_in_state(CellState.CAT)
 
 
-# 按状态统计格子数（未初始化返回 0）
+## 按状态统计格子数（未初始化返回 0）
 func _count_cells_in_state(state: int) -> int:
 	if _cells.is_empty():
 		return 0
@@ -840,7 +840,7 @@ func _count_cells_in_state(state: int) -> int:
 	return n
 
 
-# 取单格区域底色（区域表为空或越界返回白色）
+## 取单格区域底色（区域表为空或越界返回白色）
 func get_cell_region_color(r: int, c: int) -> Color:
 	if _regions.is_empty() or r < 0 or c < 0 or r >= _puzzle_size or c >= _puzzle_size:
 		return Color.WHITE
@@ -854,15 +854,15 @@ func get_cell_region_color(r: int, c: int) -> Color:
 	return _region_colors[ci]
 
 
-# 取单格 CellView 节点；越界或未初始化返回 null
+## 取单格 CellView 节点；越界或未初始化返回 null
 func get_cell_view(r: int, c: int) -> CellView:
 	if _cells.is_empty() or r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size:
 		return null
 	return _cells[r][c] as CellView
 
 
-# 本地坐标 → 格子；返回 (列, 行)——注意 x 是列、y 是行，与 _cells[行][列] 相反
-# 落在棋盘外返回 (-1,-1)
+## 本地坐标 → 格子；返回 (列, 行)——注意 x 是列、y 是行，与 _cells[行][列] 相反
+## 落在棋盘外返回 (-1,-1)
 func pointer_to_cell(px: float, py: float) -> Vector2i:
 	if _puzzle_size == 0:
 		return Vector2i(-1, -1)
@@ -873,13 +873,13 @@ func pointer_to_cell(px: float, py: float) -> Vector2i:
 	return Vector2i(col, row)
 
 
-# 更新保护区可视化数据（SwipeGuardRecognizer 每次手势都推过来）
+## 更新保护区可视化数据（SwipeGuardRecognizer 每次手势都推过来）
 func update_swipe_protection_zone(lock: Dictionary) -> void:
 	if _zone_viz != null and is_instance_valid(_zone_viz):
 		_zone_viz.set_zone(lock)
 
 
-# 切换保护区可视化显隐，返回切换后的状态（cheat 命令用）
+## 切换保护区可视化显隐，返回切换后的状态（cheat 命令用）
 func toggle_swipe_zone_viz() -> bool:
 	_swipe_viz_on = not _swipe_viz_on
 	if _zone_viz != null and is_instance_valid(_zone_viz):
@@ -887,7 +887,7 @@ func toggle_swipe_zone_viz() -> bool:
 	return _swipe_viz_on
 
 
-# 确保可视化节点存在并同步尺寸 / 开关（仅非 release 构建调用）
+## 确保可视化节点存在并同步尺寸 / 开关（仅非 release 构建调用）
 func _ensure_zone_viz() -> void:
 	if _zone_viz == null or not is_instance_valid(_zone_viz) or not _zone_viz.is_inside_tree():
 		_zone_viz = SwipeZoneDebugOverlay.new()
@@ -898,7 +898,7 @@ func _ensure_zone_viz() -> void:
 
 
 # ================= 提示高亮 =================
-# 设置提示高亮：与上一批求差集，新增的闪起来、移除的收起来
+## 设置提示高亮：与上一批求差集，新增的闪起来、移除的收起来
 func set_hint_cells(unit_cells: Array[Vector2i], key_cell: Vector2i) -> void:
 	for old in _hint_unit_cells:
 		if not unit_cells.has(old):
@@ -911,7 +911,7 @@ func set_hint_cells(unit_cells: Array[Vector2i], key_cell: Vector2i) -> void:
 	queue_redraw()
 
 
-# 清掉全部提示高亮
+## 清掉全部提示高亮
 func clear_hint_cells() -> void:
 	for cell in _hint_unit_cells:
 		(_cells[cell.x][cell.y] as CellView).play_hide_hint()
@@ -921,14 +921,14 @@ func clear_hint_cells() -> void:
 
 
 # ================= 区域色查询 =================
-# 区域号 → 调色板下标（越界时取模）
+## 区域号 → 调色板下标（越界时取模）
 func get_region_color_index(region_idx: int) -> int:
 	if region_idx < _color_map.size():
 		return _color_map[region_idx] % _region_colors.size()
 	return region_idx % _region_colors.size()
 
 
-# 区域号 → 颜色（下标越界返回白色）
+## 区域号 → 颜色（下标越界返回白色）
 func get_region_color(region_idx: int) -> Color:
 	var ci: int = get_region_color_index(region_idx)
 	if ci < _region_colors.size():
@@ -936,7 +936,7 @@ func get_region_color(region_idx: int) -> Color:
 	return Color.WHITE
 
 
-# 该格所属区域共有几格
+## 该格所属区域共有几格
 func get_region_cell_count(r: int, c: int) -> int:
 	if _regions.is_empty() or r < 0 or r >= _puzzle_size or c < 0 or c >= _puzzle_size:
 		return 0
@@ -949,7 +949,7 @@ func get_region_cell_count(r: int, c: int) -> int:
 	return n
 
 
-# 该格所属区域里是否出现过叉（R4+ 鼓掌提示的前置条件）
+## 该格所属区域里是否出现过叉（R4+ 鼓掌提示的前置条件）
 func is_region_ever_marked_x(r: int, c: int) -> bool:
 	if (
 		_regions.is_empty()
@@ -970,7 +970,7 @@ func is_region_ever_marked_x(r: int, c: int) -> bool:
 	return false
 
 
-# 该格所属区域里是否出现过错标
+## 该格所属区域里是否出现过错标
 func is_region_ever_errored(r: int, c: int) -> bool:
 	if (
 		_regions.is_empty()
@@ -992,20 +992,20 @@ func is_region_ever_errored(r: int, c: int) -> bool:
 
 
 # ================= 提示预演 =================
-# 指定格播 R2 预览动画
+## 指定格播 R2 预览动画
 func play_r2_preview_cell(r: int, c: int) -> void:
 	if r >= 0 and r < _cells.size() and c >= 0 and c < (_cells[r] as Array).size():
 		(_cells[r][c] as CellView).play_r2_preview()
 
 
-# 同上，可延迟若干秒（多格排队预览）
+## 同上，可延迟若干秒（多格排队预览）
 func play_r2_preview_cell_delayed(r: int, c: int, delay: float) -> void:
 	if r >= 0 and r < _cells.size() and c >= 0 and c < (_cells[r] as Array).size():
 		(_cells[r][c] as CellView).play_r2_preview(delay)
 
 
 # ================= 坐标数字 =================
-# 切换行列坐标数字；状态写回 GameState 以便跨局保留
+## 切换行列坐标数字；状态写回 GameState 以便跨局保留
 func toggle_coords() -> void:
 	_coord_visible = not _coord_visible
 	GameState.coords_visible = _coord_visible
@@ -1013,7 +1013,7 @@ func toggle_coords() -> void:
 		lbl.visible = _coord_visible
 
 
-# 重建坐标数字：列号在棋盘上方、行号在左侧，都从 1 开始
+## 重建坐标数字：列号在棋盘上方、行号在左侧，都从 1 开始
 func _rebuild_coord_labels() -> void:
 	for lbl in _coord_labels:
 		lbl.queue_free()
@@ -1051,7 +1051,7 @@ func _rebuild_coord_labels() -> void:
 
 
 # ================= 自动打叉按钮 =================
-# 重建行列按钮：编辑器预览不受 AB 限制，运行时需 AB 开关命中当前关卡
+## 重建行列按钮：编辑器预览不受 AB 限制，运行时需 AB 开关命中当前关卡
 func _rebuild_auto_mark_btns() -> void:
 	for btn in _row_auto_mark_btns:
 		if is_instance_valid(btn):
@@ -1110,7 +1110,7 @@ func _rebuild_auto_mark_btns() -> void:
 	apply_inverse_scale_to_auto_mark_btns() # 按钮反向缩放，保持视觉大小
 
 
-# 按当前缩放补偿所有格子的圆角
+## 按当前缩放补偿所有格子的圆角
 func apply_compensated_cell_corner_radius() -> void:
 	if scale.x <= 0.0:
 		return
@@ -1122,7 +1122,7 @@ func apply_compensated_cell_corner_radius() -> void:
 				(cell as CellView).set_corner_radius_compensated(scale.x)
 
 
-# 把自动打叉按钮按 1/scale 反向缩放，并摆到棋盘外缘
+## 把自动打叉按钮按 1/scale 反向缩放，并摆到棋盘外缘
 func apply_inverse_scale_to_auto_mark_btns() -> void:
 	if scale.x <= 0.0:
 		return
@@ -1168,7 +1168,7 @@ func apply_inverse_scale_to_auto_mark_btns() -> void:
 		)
 
 
-# 编辑器预览时把按钮切成「未标记」的默认外观
+## 编辑器预览时把按钮切成「未标记」的默认外观
 func _apply_editor_btn_default_visual(btn: Node, is_editor: bool) -> void:
 	if not is_editor:
 		return
@@ -1180,7 +1180,7 @@ func _apply_editor_btn_default_visual(btn: Node, is_editor: bool) -> void:
 		sprite_unmark.visible = false
 
 
-# 刷新某个行列按钮的标记态（上层按盘面算完再回写）
+## 刷新某个行列按钮的标记态（上层按盘面算完再回写）
 func refresh_axis_auto_mark_state(axis: int, idx: int, is_marked: bool) -> void:
 	var arr: Array = _row_auto_mark_btns if axis == 0 else _col_auto_mark_btns
 	if idx < 0 or idx >= arr.size():
@@ -1191,7 +1191,7 @@ func refresh_axis_auto_mark_state(axis: int, idx: int, is_marked: bool) -> void:
 	btn.set_marked(is_marked)
 
 
-# 查询某个行列按钮当前是否已标记
+## 查询某个行列按钮当前是否已标记
 func is_axis_auto_mark_marked(axis: int, idx: int) -> bool:
 	var arr: Array = _row_auto_mark_btns if axis == 0 else _col_auto_mark_btns
 	if idx < 0 or idx >= arr.size():
@@ -1203,7 +1203,7 @@ func is_axis_auto_mark_marked(axis: int, idx: int) -> bool:
 
 
 # ================= 输入 =================
-# 棋盘只把鼠标事件翻译成拖拽信号，格子状态由上层决定
+## 棋盘只把鼠标事件翻译成拖拽信号，格子状态由上层决定
 func _gui_input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
 		return
@@ -1221,7 +1221,7 @@ func _gui_input(event: InputEvent) -> void:
 				cell_drag_end.emit() # 抬手：结束本笔
 
 
-# 全局鼠标移动：拖拽中才算「经过」，坐标要转成棋盘本地坐标
+## 全局鼠标移动：拖拽中才算「经过」，坐标要转成棋盘本地坐标
 func _input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
 		return
@@ -1236,7 +1236,7 @@ func _input(event: InputEvent) -> void:
 
 
 # ================= 编辑器预览 =================
-# 用题库第一关（9x9 rank1）铺静态预览，方便在编辑器里调外观
+## 用题库第一关（9x9 rank1）铺静态预览，方便在编辑器里调外观
 func _render_editor_preview() -> void:
 	var levels: Array = BankData.get_levels(9, 1) # 只取 9x9 题库第 1 关
 	if levels.is_empty():
@@ -1263,7 +1263,7 @@ func _render_editor_preview() -> void:
 	_relayout_editor_preview_cells()
 
 
-# 尺寸变化时把格子重新居中
+## 尺寸变化时把格子重新居中
 func _relayout_editor_preview_cells() -> void:
 	if _puzzle_size == 0 or _cells.is_empty():
 		return
@@ -1285,7 +1285,7 @@ func _relayout_editor_preview_cells() -> void:
 	queue_redraw()
 
 
-# 关掉预览：断信号、清所有子节点、复位尺寸
+## 关掉预览：断信号、清所有子节点、复位尺寸
 func _clear_editor_preview() -> void:
 	if resized.is_connected(_relayout_editor_preview_cells):
 		resized.disconnect(_relayout_editor_preview_cells)

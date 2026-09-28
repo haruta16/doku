@@ -1,9 +1,9 @@
-# 草稿模式双击：在空白格上切换草稿猫，正式标记不响应
+## 草稿模式双击：在空白格上切换草稿猫，正式标记不响应
 class_name DraftDoubleTapOperation
 extends BaseDoubleTapOperation
 
 
-# 双击一格
+## 双击一格
 func on_double_tap(r: int, c: int) -> Array[CellAction]:
 	var out: Array[CellAction] = []
 	# 只处理空白格（含草稿）
