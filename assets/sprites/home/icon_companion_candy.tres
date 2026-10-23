@@ -1,0 +1,8 @@
+[gd_resource type="AtlasTexture" format=3]
+
+[ext_resource type="Texture2D" uid="uid://c8hvuu1txmlxm" path="res://assets/sprites/home_companion/icon_companion_food_candy.png" id="1"]
+
+[resource]
+atlas = ExtResource("1")
+region = Rect2(0, 0, 141, 118)
+filter_clip = true

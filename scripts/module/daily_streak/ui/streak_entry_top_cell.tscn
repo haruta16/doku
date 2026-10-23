@@ -1,0 +1,81 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://b571ytsjhb7d0" path="res://scripts/module/daily_streak/view/streak_entry_top_cell.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://ba4vc00t88vwl" path="res://assets/sprites/daily_streak/top_bg.png" id="2"]
+[ext_resource type="PackedScene" uid="uid://vt1w5py3gjog" path="res://scripts/module/daily_streak/ui/other/streak_day_icon.tscn" id="3"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="4"]
+
+[node name="StreakEntryTopCell" type="Control" unique_id=671808893]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 300.0
+offset_bottom = 100.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1")
+
+[node name="Root" type="Control" parent="." unique_id=386789346]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Bg" type="NinePatchRect" parent="Root" unique_id=211216304]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -22.0
+offset_top = -13.0
+offset_right = 23.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2")
+patch_margin_left = 71
+patch_margin_top = 60
+patch_margin_right = 71
+patch_margin_bottom = 76
+
+[node name="Content" type="HBoxContainer" parent="Root" unique_id=1220475752]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="IconSlot" type="Control" parent="Root/Content" unique_id=850346510]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="DayIcon" parent="Root/Content/IconSlot" unique_id=699869236 instance=ExtResource("3")]
+layout_mode = 0
+scale = Vector2(0.13671875, 0.13671875)
+
+[node name="CountTxt" type="Label" parent="Root/Content" unique_id=1896426691]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6745098, 0.3882353, 0, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 60
+text = "98"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClickBtn" type="Button" parent="." unique_id=595848040]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
+
+[connection signal="pressed" from="ClickBtn" to="." method="_on_click_pressed"]

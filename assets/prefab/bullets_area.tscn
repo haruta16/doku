@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cmhdod2b1idwy"]
+
+[ext_resource type="Script" uid="uid://chb86s3wang4x" path="res://scripts/module/game/view/bullets_area.gd" id="1"]
+
+[node name="BulletsArea" type="Control" unique_id=2027971974]
+z_index = 40
+clip_contents = true
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 103.0
+offset_bottom = 491.0
+grow_horizontal = 2
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="Pos1" type="Control" parent="." unique_id=11849506]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+
+[node name="Pos2" type="Control" parent="." unique_id=1628945713]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+
+[node name="Pos3" type="Control" parent="." unique_id=761841332]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0

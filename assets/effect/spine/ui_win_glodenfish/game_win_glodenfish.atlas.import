@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://b5pybye0idsym"
+path="res://.godot/imported/game_win_glodenfish.atlas-5c830705389aa2e7999feda15b12bf72.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/ui_win_glodenfish/game_win_glodenfish.atlas"
+dest_files=["res://.godot/imported/game_win_glodenfish.atlas-5c830705389aa2e7999feda15b12bf72.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

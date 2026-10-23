@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "audited_on": "2026-10-24",
+  "scope": "Comment-migration safety and preservation of five known multiline lambda layouts; no Godot run or export was performed during this audit.",
+  "tools": {
+    "tools/migrate_learning_comments.py": "6b3318dc28fa9d2fd9c2bf1cc4622587ea808436b01fdb56b4b8eba200443170",
+    "tools/test_migrate_learning_comments.py": "727edfc4332cf43c72bf079edb669be0556261a8051b23ba1d98b4ef9805b979",
+    "tools/format_recovered_gdscript.py": "1e09dd76af0043c2c24538c0b96f050d3e109dbf86b1e3d866b277a23b010790"
+  },
+  "comment_migration": {
+    "fixed_risks": [
+      {
+        "risk": "Token-only comparison lost control-flow indentation within multiline anonymous functions inside call parentheses.",
+        "fix": "Multiline statements containing anonymous functions additionally compare physical code-line contents and relative indentation; harmless rewrapping can therefore be conservatively rejected."
+      },
+      {
+        "risk": "Nested functions could inherit comments after their enclosing class changed its base.",
+        "fix": "Every enclosing class declaration and direct class-body extends statement participates in the nested declaration context."
+      }
+    ],
+    "regression_command": "python3 -m unittest discover -s tools -p 'test_migrate_learning_comments.py'",
+    "regression_tests_passed": 10,
+    "regressions_cover": [
+      "lambda suite control-flow changes",
+      "unchanged multiline lambdas",
+      "conservative rejection of lambda rewrapping",
+      "unaffected helper in a changed file",
+      "inline and class-body extends changes",
+      "outer ancestor base changes",
+      "unchanged sibling methods",
+      "ordinary declaration reflow",
+      "literal hashes, escapes, CRLF and missing final newline"
+    ],
+    "historical_report": "originals/upgrades/1.22.0/comment_migration_full.json",
+    "historical_report_sha256": "f2823859f6df5f9af9b5d9b6236ede5dc612e6e54709feb176094b26e040765b",
+    "historical_tool_sha256": "bb84c13e43069803e723be74cd34c1cc5303e7645c47bef7781ccab2fb958bce",
+    "reconstruction_method": "All 164 changed sources were confirmed comment-free in raw recovery. Remove inserted full-line comments from the saved prepared output and exactly one appended space before each inserted inline comment. Require each reconstructed source to match the original report source_sha256; replay the pre-fix algorithm and require the exact saved result_sha256. Compare the repaired algorithm output byte-for-byte against that same result.",
+    "files_reconstructed_by_exact_source_sha256": 164,
+    "files_replayed_to_exact_result_sha256": 164,
+    "original_migrated_lines": 3114,
+    "fixed_migrated_lines": 3114,
+    "conservatively_rejected_lines": 0,
+    "affected_files": 0,
+    "semantic_mismatches": [],
+    "business_sources_or_comments_modified_by_followup": 0,
+    "local_detailed_evidence": "originals/upgrades/1.22.0/tool_validation/comment_context_fix_audit_full.json"
+  },
+  "format_lambda_layout": {
+    "formatter": "gdtoolkit 4.5.0",
+    "method": "Copy each of the five files from both current learning sources and untouched raw recovery into separate ignored sample trees. Run format_recovered_gdscript.py twice in each tree. Compare each protected function block with its input, allowing only the documented four-space-to-Tab normalization.",
+    "passes": {
+      "current_pass1": {
+        "formatted": 2,
+        "unchanged": 3,
+        "failures": 0
+      },
+      "current_pass2": {
+        "formatted": 0,
+        "unchanged": 5,
+        "failures": 0
+      },
+      "raw_pass1": {
+        "formatted": 5,
+        "unchanged": 0,
+        "failures": 0
+      },
+      "raw_pass2": {
+        "formatted": 0,
+        "unchanged": 5,
+        "failures": 0
+      }
+    },
+    "functions": [
+      {
+        "path": "scripts/module/debug/view/generator_page.gd",
+        "function": "_build_ui",
+        "reason": "gdformat nested lambda indentation; preserve original call structure",
+        "current_block_preserved": true,
+        "current_preserved_block_sha256": "60fc755f55a88e47fe3df3f82bd06952623bb85fce035539b4450f5c92b6a499",
+        "raw_block_preserved": true,
+        "raw_preserved_block_sha256": "46df1cd883e7918c3c34d56e179c4586df016fba3e7510379ce6c4a485323e69"
+      },
+      {
+        "path": "scripts/module/purchase/view/purchase_page.gd",
+        "function": "_play_entry_anim",
+        "reason": "gdformat nested lambda indentation; preserve original call structure",
+        "current_block_preserved": true,
+        "current_preserved_block_sha256": "68c1a951148d7d62ff244c20a5935508b62db601475ac056a2d39643f9f3befe",
+        "raw_block_preserved": true,
+        "raw_preserved_block_sha256": "58a60523de15ed5f84932549710875872ceae06de3d83f02522a9135e62fad6a"
+      },
+      {
+        "path": "scripts/module/rank_activity/view/other/rank_streak_bar.gd",
+        "function": "play_tier_up",
+        "reason": "gdformat nested lambda indentation; preserve original call structure",
+        "current_block_preserved": true,
+        "current_preserved_block_sha256": "f25586a89303d95caa95f8d09c99433f5de3d82f46a163060a9aed2017e28036",
+        "raw_block_preserved": true,
+        "raw_preserved_block_sha256": "8ba03764b5c94837a95b9c09346928f7061a6a819d575a8408b70dc2f4a9a01c"
+      },
+      {
+        "path": "scripts/module/rank_activity/view/rank_activity_page.gd",
+        "function": "_play_intro",
+        "reason": "gdformat nested lambda indentation; preserve original call structure",
+        "current_block_preserved": true,
+        "current_preserved_block_sha256": "6a77015081cf2c856233f9bd5e320111f34b7e3bc207a69847d3b3db4d09f3e2",
+        "raw_block_preserved": true,
+        "raw_preserved_block_sha256": "86d35ae33d877cce116dd3b9c6951ebdcf38bdbd9542ae0575ff117bfcc8e622"
+      },
+      {
+        "path": "scripts/module/gameplay/view/cell_view.gd",
+        "function": "play_prompt_cat",
+        "reason": "same nested lambda layout correction",
+        "current_block_preserved": true,
+        "current_preserved_block_sha256": "ca8a62494bd813ab6285782b07f8d49b25cdc245d2bfa622ab24b34cc44b9428",
+        "raw_block_preserved": true,
+        "raw_preserved_block_sha256": "a15d681d3cfe6971fbd1c134f22a82e1721586236a5d368dca8e47a626dbbbd1"
+      }
+    ],
+    "conclusion": "All five protected blocks survive in both source sets; AST/comment safety checks pass and the second pass changes zero files.",
+    "local_evidence_directory": "originals/upgrades/1.22.0/tool_validation/"
+  }
+}

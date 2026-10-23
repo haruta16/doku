@@ -1,0 +1,45 @@
+{
+  "source_document": "https://learnings.feishu.cn/docx/FXM5dac0JoeR2fxSsRucz0HQnke",
+  "kind": "provided_spine_export",
+  "source_export": "Downloads/halloween/home_companioin_cat.skel + home_companioin_cat.atlas + home_companioin_cat.png",
+  "skeleton_format": "binary",
+  "texture_size": [2048, 1024],
+  "premultiplied_alpha": false,
+  "spine_version": "4.2.43",
+  "naming_status": "animation and skin names match the supplied Spine export",
+  "resource_name": "home_companion_cat",
+  "skins": {
+    "default": "基础陪伴猫",
+    "halloween": "万圣节帽子与披风陪伴猫"
+  },
+  "animations": {
+    "appear": {
+      "meaning": "入场打招呼",
+      "duration": 3.6667,
+      "loop": false
+    },
+    "idle": {
+      "meaning": "普通待机",
+      "duration": 4.0,
+      "loop": true
+    },
+    "idle_hungry": {
+      "meaning": "饥饿待机",
+      "duration": 4.5333,
+      "loop": true
+    },
+    "touch": {
+      "meaning": "点击炸毛反馈",
+      "duration": 1.8,
+      "loop": false
+    },
+    "feed": {
+      "meaning": "吃东西",
+      "duration": 3.3333,
+      "loop": false
+    }
+  },
+  "implementation_boundary": "Spine stores animation only. Caller selects idle, gates taps, queues return to idle and controls acceleration; no AB or game state code included.",
+  "preview": "res://scripts/module/debug/test/home_companion_spine_preview.tscn",
+  "formal_art": "Supplied Spine 4.2.43 binary export; skeleton is stored as .skel. Straight-alpha atlas uses the default Spine material and alpha-border fixing on texture import."
+}

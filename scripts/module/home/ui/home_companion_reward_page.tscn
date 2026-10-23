@@ -1,0 +1,366 @@
+[gd_scene format=3 uid="uid://cwcpa4nt42usq"]
+
+[ext_resource type="Script" uid="uid://vk7qykvawy8n" path="res://scripts/module/home/view/home_companion_reward_page.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://e2g4w151ug3y" path="res://assets/sprites/home_companion/halloween_reward_cat_head.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bi0vtno7gg42o" path="res://assets/sprites/home_companion/halloween_reward_tag_trial.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ojxok2og3e13" path="res://assets/sprites/home_companion/halloween_reward_tag.png" id="4"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="5"]
+[ext_resource type="Texture2D" uid="uid://c7tribrfvy1qj" path="res://assets/sprites/home_companion/halloween_reward_glow.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://kv5mu1mumvs1" path="res://assets/effect/texture/glow/et_glow_002.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cdms11nf5gg7v" path="res://assets/effect/texture/shine/et_shine_003.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://cu4siyoskvj7n" path="res://assets/effect/texture/glow/et_glow_fish.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="10"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="11"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="12"]
+[ext_resource type="Texture2D" uid="uid://d33a2k6oi03iw" path="res://assets/sprites/game/icon_timer.png" id="13"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="14"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="15"]
+[ext_resource type="PackedScene" uid="uid://bqdkj22f2scbi" path="res://scripts/module/profile/ui/avatar_cell.tscn" id="16"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="17"]
+
+[sub_resource type="AnimationLibrary" id="AnimLib"]
+_data = {
+&"GenericPopup": ExtResource("5")
+}
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_obtain"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_obtain_accel"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, -0.0061519146), 0.0, -2.3211966, 0, 0, Vector2(0.027072757, 1), 0.0, 0.0, 0, 0, Vector2(0.13874789, 1), -1.9224572, -1.9224572, 0, 0, Vector2(0.20232174, 0.03011465), 0.0, 0.0, 0, 0, Vector2(0.6434495, 0.086723685), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="Curve" id="Curve_obtain_scale"]
+_data = [Vector2(0.16751269, 1), 0.8117804, -0.22606552, 0, 0, Vector2(0.83913773, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_obtain"]
+offsets = PackedFloat32Array(0.679646, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="HomeCompanionRewardPage" type="Control" unique_id=698696590]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+halloween_cat_head = ExtResource("2")
+tag_bg_trial = ExtResource("3")
+tag_bg_permanent = ExtResource("4")
+show_mask = true
+mask_opacity = 0.85
+play_open_sound = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1958233907]
+libraries/ = SubResource("AnimLib")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=936769845]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="ChestLayer" type="Control" parent="." unique_id=667404871]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Content" type="Control" parent="." unique_id=525927430]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Decor" type="TextureRect" parent="Content" unique_id=1214538012]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -639.5
+offset_top = -889.5
+offset_right = 640.5
+offset_bottom = 390.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(640, 640)
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="ItemState" type="Control" parent="Content" unique_id=21318483]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -99.0
+offset_top = -520.0
+offset_right = 97.0
+offset_bottom = -198.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EffectObtainLoop" type="Control" parent="Content/ItemState" unique_id=407034820]
+anchors_preset = 0
+offset_left = 97.0
+offset_top = 96.0
+offset_right = 137.0
+offset_bottom = 136.0
+mouse_filter = 2
+
+[node name="GlowAddLoop" type="CPUParticles2D" parent="Content/ItemState/EffectObtainLoop" unique_id=944930188]
+material = SubResource("CanvasItemMaterial_obtain")
+amount = 2
+texture = ExtResource("7")
+preprocess = 10.0
+explosiveness = 1.0
+fixed_fps = 60
+local_coords = true
+gravity = Vector2(0, 0)
+scale_amount_min = 1.2
+scale_amount_max = 1.2
+color = Color(1, 0.56078434, 0.24313726, 1)
+
+[node name="GlowAddLoop2" type="CPUParticles2D" parent="Content/ItemState/EffectObtainLoop" unique_id=287726749]
+material = SubResource("CanvasItemMaterial_obtain")
+position = Vector2(1, 1)
+amount = 1
+texture = ExtResource("8")
+lifetime = 18.0
+fixed_fps = 60
+local_coords = true
+gravity = Vector2(0, 0)
+angular_velocity_min = -20.0
+angular_velocity_max = -20.0
+scale_amount_min = 1.35
+scale_amount_max = 1.35
+color = Color(1, 0.74509805, 0.41960785, 1)
+
+[node name="StarAddLoop" type="CPUParticles2D" parent="Content/ItemState/EffectObtainLoop" unique_id=1748068891]
+material = SubResource("CanvasItemMaterial_obtain")
+position = Vector2(4, 5)
+scale = Vector2(0.75, 0.75)
+amount = 18
+texture = ExtResource("9")
+lifetime = 3.5
+preprocess = 10.0
+use_fixed_seed = true
+seed = 3630
+lifetime_randomness = 0.15
+fixed_fps = 60
+local_coords = true
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 85.56
+initial_velocity_max = 85.56
+linear_accel_curve = SubResource("Curve_obtain_accel")
+damping_min = 18.045
+damping_max = 18.045
+scale_amount_min = 0.85
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_obtain_scale")
+color = Color(1, 0.7779517, 0.5964556, 1)
+color_ramp = SubResource("Gradient_obtain")
+
+[node name="StarAddLoop2" type="CPUParticles2D" parent="Content/ItemState/EffectObtainLoop" unique_id=1362514135]
+material = SubResource("CanvasItemMaterial_obtain")
+position = Vector2(4, 5)
+scale = Vector2(0.75, 0.75)
+amount = 10
+texture = ExtResource("10")
+lifetime = 3.5
+preprocess = 10.0
+use_fixed_seed = true
+seed = 3946
+lifetime_randomness = 0.15
+fixed_fps = 60
+local_coords = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 85.56
+initial_velocity_max = 85.56
+linear_accel_curve = SubResource("Curve_obtain_accel")
+damping_min = 18.045
+damping_max = 18.045
+scale_amount_min = 0.3
+scale_amount_max = 0.6
+scale_amount_curve = SubResource("Curve_obtain_scale")
+color = Color(1, 0.7779517, 0.5964556, 1)
+color_ramp = SubResource("Gradient_obtain")
+
+[node name="SkinState" type="Control" parent="Content" unique_id=8510222]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -208.0
+offset_top = -488.0
+offset_right = 208.0
+offset_bottom = 117.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CatHead" type="TextureRect" parent="Content/SkinState" unique_id=573825967]
+layout_mode = 0
+offset_left = 13.05
+offset_top = -9.79
+offset_right = 405.4
+offset_bottom = 398.05
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Info" type="Control" parent="Content/SkinState" unique_id=1586060982]
+anchors_preset = 0
+offset_left = 48.2
+offset_top = 401.14
+offset_right = 367.5
+offset_bottom = 604.92
+mouse_filter = 2
+
+[node name="Tag" type="Control" parent="Content/SkinState/Info" unique_id=1393873976]
+anchors_preset = 0
+offset_right = 319.3
+offset_bottom = 121.78
+mouse_filter = 2
+
+[node name="TagBg" type="TextureRect" parent="Content/SkinState/Info/Tag" unique_id=903573830]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="TagLabel" type="Label" parent="Content/SkinState/Info/Tag" unique_id=251675635]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -130.0
+offset_top = 35.86
+offset_right = 130.0
+offset_bottom = 83.86
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -38
+theme_override_fonts/font = ExtResource("11")
+theme_override_font_sizes/font_size = 64
+text = "Trial"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("12")
+max_font_size = 64
+min_font_size = 34
+fit_height_single_line = false
+
+[node name="TimeRow" type="Control" parent="Content/SkinState/Info" unique_id=1758392264]
+anchors_preset = 0
+offset_left = 5.65
+offset_top = 121.78
+offset_right = 313.65
+offset_bottom = 203.78
+mouse_filter = 2
+
+[node name="ClockIcon" type="TextureRect" parent="Content/SkinState/Info/TimeRow" unique_id=640964197]
+layout_mode = 0
+offset_left = 14.4
+offset_top = 3.2
+offset_right = 76.5
+offset_bottom = 73.4
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TimeLabel" type="Label" parent="Content/SkinState/Info/TimeRow" unique_id=1255307506]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 1.0
+offset_right = 308.0
+offset_bottom = 81.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9453846, 0.72692287, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("14")
+theme_override_font_sizes/font_size = 80
+text = "24:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("15")
+min_font_size = 40
+
+[node name="AvatarState" type="Control" parent="Content" unique_id=1295701191]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -457.5
+offset_right = 200.0
+offset_bottom = -57.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AvatarCell" parent="Content/AvatarState" unique_id=1415542266 instance=ExtResource("16")]
+layout_mode = 0
+
+[node name="CollectBtn" parent="Content" unique_id=1333267719 instance=ExtResource("17")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -394.0
+offset_top = -668.0
+offset_right = 390.0
+offset_bottom = -410.0
+btn_text = "Collect"
+show_difficult = false
+show_shadow = false
+
+[connection signal="tag_pressed" from="Content/CollectBtn" to="." method="_on_collect_pressed"]

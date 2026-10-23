@@ -1,5 +1,4 @@
-## 语言选择弹窗：列表 = 系统语言置顶 + 9 个常用语言（系统语言不在其中时共 10 项）；按「确定」立刻切 locale 并写入存档
-## 不需要重启：LanguageManager.set_locale 直接改 TranslationServer，各页面收到翻译变化通知后自行刷新
+## 语言选择页：生成支持语言选项，保存确认结果并刷新当前翻译与字体。
 class_name LanguagePage
 extends UIFrameWindow
 
@@ -85,21 +84,21 @@ const _NATIVE_NAMES: Dictionary = {
 }
 
 # ---- 子节点引用（@onready：进场景树后才可用） ----
-@onready var _scroll: ScrollContainer = $Root/Content/ScrollContainer  # 可滚动的列表容器
-@onready var _options_list: VBoxContainer = $Root/Content/ScrollContainer/OptionsList  # 选项按钮的父节点（运行时动态增删）
-@onready var _yes_btn: Button = $Root/Content/YesBtn/Bg  # 「确定」按钮
+@onready var _scroll: ScrollContainer = $Root/Content/ScrollContainer # 可滚动的列表容器
+@onready var _options_list: VBoxContainer = $Root/Content/ScrollContainer/OptionsList # 选项按钮的父节点（运行时动态增删）
+@onready var _yes_btn: Button = $Root/Content/YesBtn/Bg # 「确定」按钮
 
-@onready var _anim: AnimationPlayer = $Root/AnimationPlayer  # 弹窗动画（GenericPopup：Mark 之前为开场段，之后为关闭段）
+@onready var _anim: AnimationPlayer = $Root/AnimationPlayer # 弹窗动画（GenericPopup：Mark 之前为开场段，之后为关闭段）
 
 # ---- 运行时状态 ----
-var _display: Array[Dictionary] = []  # 本次实际显示的选项列表
-var _option_nodes: Array[LanguageOption] = []  # 已实例化的选项节点
-var _selected_index: int = -1  # 当前选中的下标，-1 表示没有
+var _display: Array[Dictionary] = [] # 本次实际显示的选项列表
+var _option_nodes: Array[LanguageOption] = [] # 已实例化的选项节点
+var _selected_index: int = -1 # 当前选中的下标，-1 表示没有
 
-var _press_scroll_v: int = 0  # 按下选项时的滚动位置
-const _SCROLL_TAP_TOLERANCE: int = 6  # 滚动位移容差（像素），超过就当成滑动
+var _press_scroll_v: int = 0 # 按下选项时的滚动位置
+const _SCROLL_TAP_TOLERANCE: int = 6 # 滚动位移容差（像素），超过就当成滑动
 
-var _confirmed: bool = false  # 是否已按过确定
+var _confirmed: bool = false # 是否已按过确定
 
 
 # ================= 生命周期 =================
@@ -162,44 +161,46 @@ func get_dlg_name() -> String:
 	return Tracker.Dlg.LANGUAGE_PICKER
 
 
-# ================= 列表构建 =================
-## 拼出要显示的语言列表：系统语言置顶，其余按 _OPTIONS 原顺序
+static func _is_traditional_chinese(locale: String) -> bool:
+	return (
+		locale.begins_with("zh_TW")
+		or locale.begins_with("zh_HK")
+		or locale.begins_with("zh_MO")
+		or locale.contains("Hant")
+	)
+
+
 func _build_display() -> Array[Dictionary]:
-	# 系统语言的解析结果（不支持的语言会回落成 en）
 	var sys: String = LanguageManager.resolve_system_locale()
-	# 只取主语言码，用于模糊匹配
 	var sys_main: String = sys.split("_")[0]
-	# -1 表示没在 _OPTIONS 里命中
 	var matched: int = -1
-	# 先按完整 locale 精确匹配
 	for i in range(_OPTIONS.size()):
 		if _OPTIONS[i]["locale"] == sys:
 			matched = i
 			break
-	# 没命中再按主语言码匹配（如 en_US 命中 en）
 	if matched == -1:
 		for i in range(_OPTIONS.size()):
 			if String(_OPTIONS[i]["locale"]).split("_")[0] == sys_main:
 				matched = i
 				break
-	# 命中时：命中项排第一，其余保持原顺序
 	var list: Array[Dictionary] = []
 	if matched != -1:
 		list.append(_OPTIONS[matched])
 		for i in range(_OPTIONS.size()):
 			if i != matched:
 				list.append(_OPTIONS[i])
-	# 中文特殊处理：_OPTIONS 里没有 zh，临时补一个 zh_CN 项放最前
 	elif sys_main == "zh":
-		list.append({"locale": "zh_CN", "native": _NATIVE_NAMES["zh"], "key": "LANG_NAME_ZH_CN"})
+		if _is_traditional_chinese(sys):
+			list.append({"locale": "zh_TW", "native": "繁體中文", "key": "LANG_NAME_ZH_TW"})
+		else:
+			list.append(
+				{"locale": "zh_CN", "native": _NATIVE_NAMES["zh"], "key": "LANG_NAME_ZH_CN"}
+			)
 		for opt: Dictionary in _OPTIONS:
 			list.append(opt)
-	# 其它未收录语言：临时补一项，本族语名查表、查不到就用 locale 原文
 	else:
-		# _NATIVE_NAMES 里没有就退回系统 locale 原文
 		var native: String = _NATIVE_NAMES.get(sys_main, sys)
 		var name_key: String = "LANG_NAME_" + sys_main.to_upper()
-		# 翻译 key 按主语言码拼（如 LANG_NAME_CS）
 		list.append({"locale": sys, "native": native, "key": name_key})
 		for opt: Dictionary in _OPTIONS:
 			list.append(opt)

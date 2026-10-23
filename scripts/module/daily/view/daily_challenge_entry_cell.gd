@@ -1,4 +1,4 @@
-## 主页上的每日挑战入口格：一秒一跳，按 DailyEntryState 的三态切换三套子节点
+## 每日挑战首页入口：刷新可玩状态、倒计时和参与人数，并处理点击分流。
 extends UIChildWindow
 
 # ---- 子节点引用（@onready：进场景树后才可用） ----
@@ -13,41 +13,59 @@ extends UIChildWindow
 @onready var _unlock_label: Label = $DcEntryImg/StateLocked/LockGroup/UnlockAtLv21Txt # 未解锁态：解锁条件文案
 @onready var _click_btn: Button = $ClickBtn # 整格点击按钮
 
+@onready var _players_row: DcPlayersJoinedRow = $PlayersJoinedRow
 
-## 注册 1 秒心跳刷新，并给点击按钮接上按下/抬起缩放反馈
+
 func on_create() -> void:
-	create_tick(1.0, _refresh)
-
 	_click_btn.button_down.connect(func() -> void: play_press_scale(self))
 	_click_btn.button_up.connect(func() -> void: play_release_scale(self))
 
 
-## 每次显示先刷一遍三态
 func on_show(_params: Dictionary = {}) -> void:
+	connect_managed(ClockTicker.second_tick, _refresh)
+	roll_players_avatars()
+
 	_refresh()
 
 
-## 按当前状态只显示对应那一套，并填好该状态的文案
 func _refresh() -> void:
 	var s: int = DailyEntryState.compute_state()
 	_state_normal.visible = s == DailyEntryState.State.NORMAL
 	_state_locked.visible = s == DailyEntryState.State.LOCKED
-	_state_done.visible = s == DailyEntryState.State.DONE
+
+	_state_done.visible = DailyEntryState.is_done_like(s)
 	match s:
 		DailyEntryState.State.NORMAL:
 			_normal_date.text = DailyEntryState.today_date_text()
 			_normal_time.text = DailyEntryState.countdown_text()
 		DailyEntryState.State.LOCKED:
 			_unlock_label.text = tr("DAILY_CHALLENGE_UNLOCK_AT") % DailyEntryState.UNLOCK_LEVEL
-		DailyEntryState.State.DONE:
+		DailyEntryState.State.DONE, DailyEntryState.State.REPLAY:
 			_done_date.text = DailyEntryState.today_date_text()
 			_done_time.text = DailyEntryState.done_time_text()
 			_done_rank.text = DailyEntryState.done_rank_text()
 
+	_players_row.refresh(s)
 
-## 点击：埋点 + 震动后交给 DailyEntryState 决定是弹 Toast 还是进游戏
+
+func roll_players_avatars() -> void:
+	_players_row.roll_avatars()
+
+
 func _on_click_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.DAILY_PLAY, self)
-	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+	VibrateManager.play_at(VibrateManager.Pos.DAILY_ENTRY_CLICK)
 
-	DailyEntryState.handle_click(self)
+	DailyEntryState.handle_click(
+		self,
+		func() -> void:
+			UIManager.show_ui(UiName.DAILY_GAME, {})
+			UIManager.hide_ui(UiName.HOME),
+		func() -> void:
+			DcReplayFlow.open_confirm(
+				self,
+				func() -> void:
+					UIManager.show_ui(UiName.DAILY_GAME, DcReplayFlow.enter_params())
+					UIManager.hide_ui(UiName.HOME)
+			)
+	)

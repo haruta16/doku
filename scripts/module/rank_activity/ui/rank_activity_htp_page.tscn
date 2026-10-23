@@ -1,0 +1,1559 @@
+[gd_scene format=3 uid="uid://dpc4llq8r00uq"]
+
+[ext_resource type="Script" uid="uid://dj47mduthjvio" path="res://scripts/module/rank_activity/view/rank_activity_htp_page.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://bib6ttrynbmho" path="res://assets/fonts/Roboto-bold-title-spaced.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://clnisb1cqcdxj" path="res://assets/sprites/rank_activity/htp_rect1.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dko62jemjnbgs" path="res://assets/sprites/rank_activity/htp_layer2.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c3tsldev5w6xv" path="res://assets/sprites/rank_activity/htp_layer3_copy.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://8ooxnbyejmsb" path="res://assets/sprites/rank_activity/htp_layer3_copy_2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://bcuut64vi4y4p" path="res://assets/sprites/rank_activity/htp_layer3_copy4.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://d8yffxswt03v" path="res://assets/sprites/rank_activity/htp_layer3_copy4_2.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://07r1bty5dtpt" path="res://assets/sprites/rank_activity/htp_rank_list.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bph86ne75f88y" path="res://assets/sprites/rank_activity/htp_arrow.png" id="10"]
+[ext_resource type="Shader" uid="uid://b2c6inthrgwha" path="res://assets/shaders/text_drop_shadow.gdshader" id="11"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="12"]
+[ext_resource type="Texture2D" uid="uid://l2ot4tklcs8s" path="res://assets/sprites/rank_activity/htp_layer344_copy.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://dnohdvoiksf6u" path="res://assets/sprites/rank_activity/htp_layer344.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://cu3o47f6o6vwy" path="res://assets/effect/texture/glow/et_glow_007.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://dr4gcq3l1s76q" path="res://assets/sprites/rank_activity/htp_layer524_copy.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://44fc1e6iu8hh" path="res://assets/sprites/rank_activity/htp_fish.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://cqcpn6oahgcxw" path="res://assets/effect/texture/ui/et_RewardFull_02.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://dbteswm0jy62p" path="res://assets/sprites/rank_activity/htp_tier3_box.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://c22e0gj0bcsdx" path="res://assets/sprites/rank_activity/htp_avatar.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://bmkj4rnef1164" path="res://assets/sprites/rank_activity/htp_first_place_frame.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://b81ktniwu44e3" path="res://assets/sprites/rank_activity/htp_union.png" id="23"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j7dnp"]
+bg_color = Color(1, 1, 0.992157, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s47co"]
+bg_color = Color(0.7607727, 0.40393066, 0.545105, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pvax0"]
+bg_color = Color(0.4196167, 0.7411804, 0.894104, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e47d2"]
+bg_color = Color(0.7607727, 0.40393066, 0.545105, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m81tw"]
+bg_color = Color(0.89019775, 0.7333374, 0.27450562, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vqd8n"]
+bg_color = Color(0.4196167, 0.7411804, 0.894104, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i3xil"]
+bg_color = Color(0.89019775, 0.7333374, 0.27450562, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0yl6i"]
+bg_color = Color(0.7607727, 0.40393066, 0.545105, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ytoy"]
+bg_color = Color(0.89019775, 0.7333374, 0.27450562, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sg6ry"]
+bg_color = Color(0.7607727, 0.40393066, 0.545105, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ipg0w"]
+shader = ExtResource("11")
+shader_parameter/shadow_color = Color(0, 0, 0, 0.4)
+shader_parameter/shadow_offset = Vector2(0, 4)
+shader_parameter/blur_px = 10.0
+shader_parameter/spread_px = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oho2w"]
+shader = ExtResource("11")
+shader_parameter/shadow_color = Color(0, 0, 0, 0.4)
+shader_parameter/shadow_offset = Vector2(0, 4)
+shader_parameter/blur_px = 10.0
+shader_parameter/spread_px = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q5lnd"]
+shader = ExtResource("11")
+shader_parameter/shadow_color = Color(0, 0, 0, 0.4)
+shader_parameter/shadow_offset = Vector2(0, 4)
+shader_parameter/blur_px = 10.0
+shader_parameter/spread_px = 0.0
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_goglw"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_vux2i"]
+_data = [Vector2(0, 0.42210764), 0.0, 2.7051253, 0, 0, Vector2(0.1641286, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.3034333), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_1opv7"]
+offsets = PackedFloat32Array(0.21699819, 0.6238698, 0.9909584)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_ai3ah"]
+colors = PackedColorArray(1, 0.9176667, 0.62, 1, 1, 0.634, 0.39, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_vux2i"]
+blend_mode = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k77hy"]
+shader = ExtResource("11")
+shader_parameter/shadow_color = Color(0, 0, 0, 0.4)
+shader_parameter/shadow_offset = Vector2(0, 4)
+shader_parameter/blur_px = 10.0
+shader_parameter/spread_px = 0.0
+
+[sub_resource type="Animation" id="Animation_dstb0"]
+resource_name = "Appear2"
+length = 1.6166667
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Content/Leaderboard:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Content/Step:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.6019026, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0, 0.15, 0.28333333)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Content/Step:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.5952055, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0, 0.15, 0.28333333)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Content/ClearMainLevels:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.15, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Root/Content/Step:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.083333336),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Root/Content/Arrow/Arrow:scale:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.11666666, 0, 1, -0.11666666, 0, 0, 0),
+"times": PackedFloat32Array(0.083333336, 0.31666663)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Root/Content/Arrow/Arrow:scale:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.11666666, 0, 1, -0.11666666, 0, 0, 0),
+"times": PackedFloat32Array(0.083333336, 0.31666663)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Root/Content/Arrow/Arrow:rotation")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.3, 0, 0, 0.050000012, 0, 0, -0.050000012, 0, 0, 0),
+"times": PackedFloat32Array(0.083333336, 0.3166667)
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Root/Content/CollectVisual/IconFish:scale:x")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.6019026, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.23333333, 0.38333333, 0.51666665)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Root/Content/CollectVisual/IconFish:scale:y")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.5952055, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.23333333, 0.38333333, 0.51666665)
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Root/Content/CollectVisual/IconFish:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0.23333333, 0.31666666),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Root/Content/CollectVisual/Glow:modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.26666665, 0.48333335),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("Root/Content/CollectTextFish:modulate")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/13/type = "bezier"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("Root/Content/Arrow/ArrowItem3:scale:x")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.11666666, 0, 1, -0.11666666, 0, 0, 0),
+"times": PackedFloat32Array(0.31666666, 0.54999995)
+}
+tracks/14/type = "bezier"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("Root/Content/Arrow/ArrowItem3:scale:y")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.11666666, 0, 1, -0.11666666, 0, 0, 0),
+"times": PackedFloat32Array(0.31666666, 0.54999995)
+}
+tracks/15/type = "bezier"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("Root/Content/Arrow/ArrowItem3:rotation")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.3, 0, 0, 0.050000012, 0, 0, -0.050000012, 0, 0, 0),
+"times": PackedFloat32Array(0.31666666, 0.55)
+}
+tracks/16/type = "bezier"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("Root/Content/RankList:scale:x")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.6019026, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.46666667, 0.6166667, 0.75)
+}
+tracks/17/type = "bezier"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("Root/Content/RankList:scale:y")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.5952055, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.46666667, 0.6166667, 0.75)
+}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("Root/Content/RankList:modulate")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {
+"times": PackedFloat32Array(0.46666667, 0.54999995),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/19/type = "value"
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/path = NodePath("Root/Content/TopTheLeaderboard:modulate")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/keys = {
+"times": PackedFloat32Array(0.6166667, 0.66666675),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/20/type = "bezier"
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/path = NodePath("Root/Content/Arrow/ArrowItem2:scale:x")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.11666666, 0, 1, -0.11666666, 0, 0, 0),
+"times": PackedFloat32Array(0.54999995, 0.7833333)
+}
+tracks/21/type = "bezier"
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/path = NodePath("Root/Content/Arrow/ArrowItem2:scale:y")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.11666666, 0, 1, -0.11666666, 0, 0, 0),
+"times": PackedFloat32Array(0.54999995, 0.7833333)
+}
+tracks/22/type = "bezier"
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/path = NodePath("Root/Content/Arrow/ArrowItem2:rotation")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(-0.3, 0, 0, 0.050000012, 0, 0, -0.050000012, 0, 0, 0),
+"times": PackedFloat32Array(0.54999995, 0.7833333)
+}
+tracks/23/type = "value"
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/path = NodePath("Root/Content/RewardFull/RewardTextFull:modulate")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/keys = {
+"times": PackedFloat32Array(0.88333327, 0.9333336),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/24/type = "value"
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/path = NodePath("Root/Content/RewardFull:modulate")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/25/type = "value"
+tracks/25/imported = false
+tracks/25/enabled = true
+tracks/25/path = NodePath("Root/Content/RewardFull/AvatarGroup:modulate")
+tracks/25/interp = 1
+tracks/25/loop_wrap = true
+tracks/25/keys = {
+"times": PackedFloat32Array(0.7333334, 0.81666666),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/26/type = "bezier"
+tracks/26/imported = false
+tracks/26/enabled = true
+tracks/26/path = NodePath("Root/Content/RewardFull/AvatarGroup:scale:y")
+tracks/26/interp = 1
+tracks/26/loop_wrap = true
+tracks/26/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.5952055, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.7333334, 0.8833335, 1.0166669)
+}
+tracks/27/type = "bezier"
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/path = NodePath("Root/Content/RewardFull/AvatarGroup:scale:x")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.6019026, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.7333334, 0.8833335, 1.0166669)
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Root/Content/RewardFull/TreasureBox:modulate")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
+"times": PackedFloat32Array(0.7, 0.78333324),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/29/type = "bezier"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Root/Content/RewardFull/TreasureBox:scale:y")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.5952055, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.7, 0.84999996, 0.9833335)
+}
+tracks/30/type = "bezier"
+tracks/30/imported = false
+tracks/30/enabled = true
+tracks/30/path = NodePath("Root/Content/RewardFull/TreasureBox:scale:x")
+tracks/30/interp = 1
+tracks/30/loop_wrap = true
+tracks/30/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.6019026, 1.05, -0.050000004, 0, 0.04444444, 0, 1, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.7, 0.84999996, 0.9833335)
+}
+tracks/31/type = "value"
+tracks/31/imported = false
+tracks/31/enabled = true
+tracks/31/path = NodePath("Root/Content/TapToContinue:modulate")
+tracks/31/interp = 1
+tracks/31/loop_wrap = true
+tracks/31/keys = {
+"times": PackedFloat32Array(0.8666667, 0.9833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/32/type = "value"
+tracks/32/imported = false
+tracks/32/enabled = true
+tracks/32/path = NodePath("Root/Content/RewardFull/Effect_glow/TextureRect2:self_modulate")
+tracks/32/interp = 1
+tracks/32/loop_wrap = true
+tracks/32/keys = {
+"times": PackedFloat32Array(0.8, 0.8833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/33/type = "value"
+tracks/33/imported = false
+tracks/33/enabled = true
+tracks/33/path = NodePath("Root/Content/RewardFull/Effect_glow:modulate")
+tracks/33/interp = 1
+tracks/33/loop_wrap = true
+tracks/33/keys = {
+"times": PackedFloat32Array(0.8000001, 0.8833334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/34/type = "bezier"
+tracks/34/imported = false
+tracks/34/enabled = true
+tracks/34/path = NodePath("Root/Content/CollectVisual/IconFish2:scale:x")
+tracks/34/interp = 1
+tracks/34/loop_wrap = true
+tracks/34/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.6019026, 0.55, -0.050000004, 0, 0.04444444, 0, 0.5, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.26666668, 0.4166667, 0.55)
+}
+tracks/35/type = "bezier"
+tracks/35/imported = false
+tracks/35/enabled = true
+tracks/35/path = NodePath("Root/Content/CollectVisual/IconFish2:scale:y")
+tracks/35/interp = 1
+tracks/35/loop_wrap = true
+tracks/35/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.5952055, 0.55, -0.050000004, 0, 0.04444444, 0, 0.5, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.26666668, 0.4166667, 0.55)
+}
+tracks/36/type = "value"
+tracks/36/imported = false
+tracks/36/enabled = true
+tracks/36/path = NodePath("Root/Content/CollectVisual/IconFish2:modulate")
+tracks/36/interp = 1
+tracks/36/loop_wrap = true
+tracks/36/keys = {
+"times": PackedFloat32Array(0.26666668, 0.35000002),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/37/type = "bezier"
+tracks/37/imported = false
+tracks/37/enabled = true
+tracks/37/path = NodePath("Root/Content/CollectVisual/IconFish3:scale:x")
+tracks/37/interp = 1
+tracks/37/loop_wrap = true
+tracks/37/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.6019026, 0.75, -0.050000004, 0, 0.04444444, 0, 0.7, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.3, 0.45000002, 0.5833334)
+}
+tracks/38/type = "bezier"
+tracks/38/imported = false
+tracks/38/enabled = true
+tracks/38/path = NodePath("Root/Content/CollectVisual/IconFish3:scale:y")
+tracks/38/interp = 1
+tracks/38/loop_wrap = true
+tracks/38/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0, 0.5952055, 0.75, -0.050000004, 0, 0.04444444, 0, 0.7, -0.050000004, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0.3, 0.45000002, 0.5833334)
+}
+tracks/39/type = "value"
+tracks/39/imported = false
+tracks/39/enabled = true
+tracks/39/path = NodePath("Root/Content/CollectVisual/IconFish3:modulate")
+tracks/39/interp = 1
+tracks/39/loop_wrap = true
+tracks/39/keys = {
+"times": PackedFloat32Array(0.3, 0.38333336),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_iu8mo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Content/Leaderboard:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Content/CollectVisual/IconFish:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Content/CollectVisual/Glow:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Root/Content/CollectTextFish:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Root/Content/TopTheLeaderboard:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Root/Content/RewardFull/RewardTextFull:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Root/Content/TapToContinue:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Root/Content/CollectVisual/IconFish3:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Root/Content/RewardFull:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Root/Content/CollectVisual/IconFish2:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Root/Content/RewardFull/Effect_glow/TextureRect2:self_modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("Root/Content/RewardFull/Effect_glow:modulate")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_o5n0b"]
+_data = {
+&"Appear2": SubResource("Animation_dstb0"),
+&"RESET": SubResource("Animation_iu8mo")
+}
+
+[node name="RankActivityHtpPage" type="Control" unique_id=1504480480]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+
+[node name="Root" type="Control" parent="." unique_id=1532018636]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Content" type="Control" parent="Root" unique_id=1762712592]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -1200.0
+offset_right = 540.0
+offset_bottom = 1200.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Leaderboard" type="Label" parent="Root/Content" unique_id=765393183]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 264.0
+offset_top = 280.0
+offset_right = 816.0
+offset_bottom = 336.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.9958334, 0.9499993, 1)
+theme_override_colors/font_outline_color = Color(0.7808298, 0.3643872, 0, 1)
+theme_override_constants/line_spacing = -75
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 90
+text = "RANK_TITLE"
+horizontal_alignment = 1
+
+[node name="Step" type="Control" parent="Root/Content" unique_id=1416772457]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 153.0
+offset_top = 486.0
+offset_right = 454.0
+offset_bottom = 787.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Rect1" type="Control" parent="Root/Content/Step" unique_id=1105782144]
+anchors_preset = 0
+offset_right = 301.0
+offset_bottom = 301.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Shadow" type="NinePatchRect" parent="Root/Content/Step/Rect1" unique_id=1524803884]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_top = -4.0
+offset_right = 14.0
+offset_bottom = 24.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("3")
+patch_margin_left = 27
+patch_margin_top = 17
+patch_margin_right = 27
+patch_margin_bottom = 37
+
+[node name="Bg" type="Panel" parent="Root/Content/Step/Rect1" unique_id=705365943]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_j7dnp")
+
+[node name="RoundRect1" type="Panel" parent="Root/Content/Step" unique_id=440687061]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 201.24414
+offset_right = 100.38785
+offset_bottom = 293.00024
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_s47co")
+
+[node name="RoundRect1Copy" type="Panel" parent="Root/Content/Step" unique_id=1094998937]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 104.62109
+offset_right = 100.38785
+offset_bottom = 197.07233
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_pvax0")
+
+[node name="RoundRect1Copy2" type="Panel" parent="Root/Content/Step" unique_id=1673947419]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 100.38785
+offset_bottom = 100.45123
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_e47d2")
+
+[node name="RoundRect1Copy3" type="Panel" parent="Root/Content/Step" unique_id=414895396]
+layout_mode = 0
+offset_left = 105.25
+offset_top = 201.24414
+offset_right = 197.63785
+offset_bottom = 293.00024
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_m81tw")
+
+[node name="RoundRect1Copy5" type="Panel" parent="Root/Content/Step" unique_id=1429283588]
+layout_mode = 0
+offset_left = 105.25
+offset_top = 104.62109
+offset_right = 197.63785
+offset_bottom = 197.07233
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_vqd8n")
+
+[node name="RoundRect1Copy6" type="Panel" parent="Root/Content/Step" unique_id=196614345]
+layout_mode = 0
+offset_left = 105.25
+offset_top = 8.0
+offset_right = 197.63785
+offset_bottom = 100.45123
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_i3xil")
+
+[node name="RoundRect1Copy4" type="Panel" parent="Root/Content/Step" unique_id=481474115]
+layout_mode = 0
+offset_left = 202.6543
+offset_top = 201.31445
+offset_right = 293.34555
+offset_bottom = 293.0005
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_0yl6i")
+
+[node name="RoundRect1Copy7" type="Panel" parent="Root/Content/Step" unique_id=1148771601]
+layout_mode = 0
+offset_left = 202.50098
+offset_top = 104.62109
+offset_right = 294.19418
+offset_bottom = 197.07233
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_3ytoy")
+
+[node name="RoundRect1Copy8" type="Panel" parent="Root/Content/Step" unique_id=483322136]
+layout_mode = 0
+offset_left = 202.50098
+offset_top = 8.0
+offset_right = 294.19418
+offset_bottom = 100.45123
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_sg6ry")
+
+[node name="Layer2" type="TextureRect" parent="Root/Content/Step" unique_id=913598819]
+layout_mode = 0
+offset_left = 201.80566
+offset_top = 110.18359
+offset_right = 292.80423
+offset_bottom = 192.20798
+pivot_offset = Vector2(45.499283, 41.01219)
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="Layer4" type="TextureRect" parent="Root/Content/Step" unique_id=616767916]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 14.357422
+offset_right = 98.99856
+offset_bottom = 96.38181
+pivot_offset = Vector2(45.49928, 41.012196)
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="Layer3Copy" type="TextureRect" parent="Root/Content/Step" unique_id=643787703]
+layout_mode = 0
+offset_left = 226.0
+offset_top = 31.0
+offset_right = 271.0
+offset_bottom = 76.0
+pivot_offset = Vector2(22.5, 22.5)
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="Layer3Copy5" type="TextureRect" parent="Root/Content/Step" unique_id=2057854546]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 32.0
+offset_right = 174.0
+offset_bottom = 77.0
+pivot_offset = Vector2(22.5, 22.5)
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="Layer3Copy6" type="TextureRect" parent="Root/Content/Step" unique_id=755676826]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 225.0
+offset_right = 174.0
+offset_bottom = 271.0
+pivot_offset = Vector2(22.5, 23)
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="Layer3Copy7" type="TextureRect" parent="Root/Content/Step" unique_id=322543179]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 224.0
+offset_right = 76.0
+offset_bottom = 270.0
+pivot_offset = Vector2(22.5, 23)
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="Layer3Copy8" type="TextureRect" parent="Root/Content/Step" unique_id=1774908744]
+layout_mode = 0
+offset_left = 226.0
+offset_top = 224.0
+offset_right = 271.0
+offset_bottom = 270.0
+pivot_offset = Vector2(22.5, 23)
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="Layer3Copy4" type="TextureRect" parent="Root/Content/Step" unique_id=741773569]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 129.0
+offset_right = 77.0
+offset_bottom = 173.0
+pivot_offset = Vector2(22.5, 22)
+texture = ExtResource("7")
+expand_mode = 1
+
+[node name="Layer3Copy9" type="TextureRect" parent="Root/Content/Step" unique_id=199714492]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 129.0
+offset_right = 173.0
+offset_bottom = 173.0
+pivot_offset = Vector2(22, 22)
+texture = ExtResource("8")
+expand_mode = 1
+
+[node name="RankList" type="Control" parent="Root/Content" unique_id=1942098238]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 140.0
+offset_top = 1192.0
+offset_right = 480.0
+offset_bottom = 1508.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="RankList1" type="TextureRect" parent="Root/Content/RankList" unique_id=1352139499]
+layout_mode = 0
+offset_right = 340.0
+offset_bottom = 316.0
+pivot_offset = Vector2(170, 158)
+texture = ExtResource("9")
+expand_mode = 1
+
+[node name="Arrow" type="Control" parent="Root/Content" unique_id=2010781414]
+anchors_preset = 0
+offset_left = 363.0
+offset_top = 635.0
+offset_right = 718.0
+offset_bottom = 1429.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Arrow" type="Control" parent="Root/Content/Arrow" unique_id=1374444896]
+anchors_preset = 0
+offset_left = 194.0
+offset_right = 355.0
+offset_bottom = 95.0
+rotation = -0.3
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Arrow" type="TextureRect" parent="Root/Content/Arrow/Arrow" unique_id=1259438758]
+layout_mode = 0
+offset_right = 161.0
+offset_bottom = 95.0
+pivot_offset = Vector2(80.5, 47.5)
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="ArrowItem2" type="Control" parent="Root/Content/Arrow" unique_id=2091136331]
+anchors_preset = 0
+offset_left = 194.0
+offset_top = 699.0
+offset_right = 355.0
+offset_bottom = 794.0
+rotation = -0.3
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Arrow" type="TextureRect" parent="Root/Content/Arrow/ArrowItem2" unique_id=1281641482]
+layout_mode = 0
+offset_right = 161.0
+offset_bottom = 95.0
+pivot_offset = Vector2(80.5, 47.5)
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="ArrowItem3" type="Control" parent="Root/Content/Arrow" unique_id=1193611098]
+anchors_preset = 0
+offset_top = 364.0
+offset_right = 161.0
+offset_bottom = 459.0
+rotation = 0.3
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(1, 0)
+
+[node name="Arrow" type="TextureRect" parent="Root/Content/Arrow/ArrowItem3" unique_id=1207697594]
+layout_mode = 0
+offset_right = 161.0
+offset_bottom = 95.0
+pivot_offset = Vector2(80.5, 47.5)
+texture = ExtResource("10")
+expand_mode = 1
+flip_h = true
+
+[node name="ClearMainLevels" type="Control" parent="Root/Content" unique_id=37962061]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 60.0
+offset_top = 807.0
+offset_right = 540.0
+offset_bottom = 867.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="ShadowGroup" type="CanvasGroup" parent="Root/Content/ClearMainLevels" unique_id=476113502]
+material = SubResource("ShaderMaterial_ipg0w")
+fit_margin = 18.0
+clear_margin = 18.0
+
+[node name="Text" type="Label" parent="Root/Content/ClearMainLevels/ShadowGroup" unique_id=1082979761]
+offset_right = 480.0
+offset_bottom = 60.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.9453846, 0.72692287, 1)
+theme_override_constants/line_spacing = -13
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 50
+text = "RANK_HTP_STEP_CLEAR"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TopTheLeaderboard" type="Control" parent="Root/Content" unique_id=1412161728]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 60.0
+offset_top = 1518.0
+offset_right = 540.0
+offset_bottom = 1578.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="ShadowGroup" type="CanvasGroup" parent="Root/Content/TopTheLeaderboard" unique_id=1799391647]
+material = SubResource("ShaderMaterial_oho2w")
+fit_margin = 18.0
+clear_margin = 18.0
+
+[node name="Text" type="Label" parent="Root/Content/TopTheLeaderboard/ShadowGroup" unique_id=159633063]
+offset_right = 480.0
+offset_bottom = 60.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.9453846, 0.72692287, 1)
+theme_override_constants/line_spacing = -13
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 50
+text = "RANK_HTP_STEP_TOP"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TapToContinue" type="Control" parent="Root/Content" unique_id=825604512]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 343.0
+offset_top = 2100.0
+offset_right = 738.0
+offset_bottom = 2140.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="ShadowGroup" type="CanvasGroup" parent="Root/Content/TapToContinue" unique_id=853180622]
+material = SubResource("ShaderMaterial_q5lnd")
+fit_margin = 18.0
+clear_margin = 18.0
+
+[node name="Text" type="Label" parent="Root/Content/TapToContinue/ShadowGroup" unique_id=856575811]
+offset_right = 395.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.8915384, 0.4576921, 1)
+theme_override_constants/line_spacing = -42
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 56
+text = "RANK_TAP_CONTINUE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollectVisual" type="Control" parent="Root/Content" unique_id=800722483]
+anchors_preset = 0
+offset_left = 190.0
+offset_top = 431.0
+offset_right = 1398.0
+offset_bottom = 1636.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Glow" type="Control" parent="Root/Content/CollectVisual" unique_id=1917136468]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_right = 1208.0
+offset_bottom = 1205.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Layer344Copy" type="TextureRect" parent="Root/Content/CollectVisual/Glow" unique_id=597865537]
+layout_mode = 0
+offset_left = 305.0
+offset_top = 207.0
+offset_right = 844.0
+offset_bottom = 796.0
+pivot_offset = Vector2(269.5, 294.5)
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="Layer344" type="TextureRect" parent="Root/Content/CollectVisual/Glow" unique_id=19331336]
+layout_mode = 0
+offset_left = 318.0
+offset_top = 225.0
+offset_right = 877.0
+offset_bottom = 799.0
+pivot_offset = Vector2(279.5, 287)
+texture = ExtResource("14")
+expand_mode = 1
+
+[node name="Star" type="CPUParticles2D" parent="Root/Content/CollectVisual/Glow" unique_id=2101186130]
+material = SubResource("CanvasItemMaterial_goglw")
+position = Vector2(611, 524)
+amount = 10
+texture = ExtResource("15")
+lifetime = 2.0
+preprocess = 10.0
+randomness = 1.0
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.15
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_vux2i")
+color_ramp = SubResource("Gradient_1opv7")
+color_initial_ramp = SubResource("Gradient_ai3ah")
+
+[node name="Star2" type="CPUParticles2D" parent="Root/Content/CollectVisual/Glow" unique_id=1404960581]
+material = SubResource("CanvasItemMaterial_goglw")
+position = Vector2(611, 524)
+amount = 15
+texture = ExtResource("16")
+lifetime = 2.0
+preprocess = 10.0
+randomness = 1.0
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_vux2i")
+color_ramp = SubResource("Gradient_1opv7")
+color_initial_ramp = SubResource("Gradient_ai3ah")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Root/Content/CollectVisual/Glow" unique_id=1357452763]
+position = Vector2(592, 511)
+amount = 1
+texture = ExtResource("17")
+lifetime = 600.0
+direction = Vector2(0, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+angular_velocity_min = -10.0
+angular_velocity_max = -10.0
+
+[node name="IconFish2" type="Control" parent="Root/Content/CollectVisual" unique_id=1829544037]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 437.0
+offset_top = 473.99994
+offset_right = 707.0
+offset_bottom = 743.99994
+rotation = -0.6143559
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Fish" type="TextureRect" parent="Root/Content/CollectVisual/IconFish2" unique_id=245195118]
+layout_mode = 0
+offset_right = 270.0
+offset_bottom = 270.0
+pivot_offset = Vector2(135, 135)
+texture = ExtResource("18")
+expand_mode = 1
+
+[node name="IconFish3" type="Control" parent="Root/Content/CollectVisual" unique_id=571663437]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 570.00006
+offset_top = 317.00006
+offset_right = 840.00006
+offset_bottom = 587.00006
+rotation = 0.81681406
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Fish" type="TextureRect" parent="Root/Content/CollectVisual/IconFish3" unique_id=1227258380]
+layout_mode = 0
+offset_right = 270.0
+offset_bottom = 270.0
+pivot_offset = Vector2(135, 135)
+texture = ExtResource("18")
+expand_mode = 1
+
+[node name="IconFish" type="Control" parent="Root/Content/CollectVisual" unique_id=405254439]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 457.0
+offset_top = 360.0
+offset_right = 727.0
+offset_bottom = 630.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Fish" type="TextureRect" parent="Root/Content/CollectVisual/IconFish" unique_id=942944415]
+layout_mode = 0
+offset_right = 270.0
+offset_bottom = 270.0
+pivot_offset = Vector2(135, 135)
+texture = ExtResource("18")
+expand_mode = 1
+
+[node name="CollectTextFish" type="Control" parent="Root/Content" unique_id=1181764199]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 540.0
+offset_top = 1088.0
+offset_right = 1020.0
+offset_bottom = 1208.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="ShadowGroup" type="CanvasGroup" parent="Root/Content/CollectTextFish" unique_id=10500525]
+material = SubResource("ShaderMaterial_q5lnd")
+fit_margin = 18.0
+clear_margin = 18.0
+
+[node name="Text" type="Label" parent="Root/Content/CollectTextFish/ShadowGroup" unique_id=19991725]
+offset_right = 480.0
+offset_bottom = 120.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.9453846, 0.72692287, 1)
+theme_override_constants/line_spacing = -13
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 50
+text = "RANK_HTP_COLLECT_FISH"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="RewardFull" type="Control" parent="Root/Content" unique_id=1349178094]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 0
+offset_right = 1080.0
+offset_bottom = 2400.0
+mouse_filter = 2
+
+[node name="Effect_glow" type="Control" parent="Root/Content/RewardFull" unique_id=1278941528]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureRect2" type="TextureRect" parent="Root/Content/RewardFull/Effect_glow" unique_id=23880868]
+modulate = Color(1, 0.776, 0.36, 0.88235295)
+self_modulate = Color(1, 1, 1, 0)
+material = SubResource("CanvasItemMaterial_vux2i")
+layout_mode = 0
+offset_left = 499.275
+offset_top = 1368.005
+offset_right = 1086.2753
+offset_bottom = 1878.005
+scale = Vector2(0.73, 0.73)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("19")
+
+[node name="Star3" type="CPUParticles2D" parent="Root/Content/RewardFull/Effect_glow" unique_id=1916507]
+material = SubResource("CanvasItemMaterial_goglw")
+position = Vector2(801, 1635)
+amount = 10
+texture = ExtResource("15")
+lifetime = 2.0
+preprocess = 10.0
+randomness = 1.0
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.15
+scale_amount_max = 0.25
+scale_amount_curve = SubResource("Curve_vux2i")
+color_ramp = SubResource("Gradient_1opv7")
+color_initial_ramp = SubResource("Gradient_ai3ah")
+
+[node name="Star4" type="CPUParticles2D" parent="Root/Content/RewardFull/Effect_glow" unique_id=71812658]
+material = SubResource("CanvasItemMaterial_goglw")
+position = Vector2(801, 1635)
+amount = 15
+texture = ExtResource("16")
+lifetime = 2.0
+preprocess = 10.0
+randomness = 1.0
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_vux2i")
+color_ramp = SubResource("Gradient_1opv7")
+color_initial_ramp = SubResource("Gradient_ai3ah")
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="Root/Content/RewardFull/Effect_glow" unique_id=31974389]
+position = Vector2(807, 1625)
+amount = 1
+texture = ExtResource("17")
+lifetime = 600.0
+direction = Vector2(0, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+angular_velocity_min = -10.0
+angular_velocity_max = -10.0
+
+[node name="TreasureBox" type="Control" parent="Root/Content/RewardFull" unique_id=1309632061]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 609.0
+offset_top = 1478.0
+offset_right = 869.0
+offset_bottom = 1738.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="DefaultBox" type="Control" parent="Root/Content/RewardFull/TreasureBox" unique_id=612756941]
+anchors_preset = 0
+offset_left = 11.818182
+offset_top = -2.9041324
+offset_right = 248.18181
+offset_bottom = 262.9041
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Tier3Box" type="TextureRect" parent="Root/Content/RewardFull/TreasureBox/DefaultBox" unique_id=944813695]
+layout_mode = 0
+offset_right = 236.36363
+offset_bottom = 265.80826
+pivot_offset = Vector2(118.181816, 132.90413)
+texture = ExtResource("20")
+expand_mode = 1
+
+[node name="AvatarGroup" type="Control" parent="Root/Content/RewardFull" unique_id=1972982156]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 790.0
+offset_top = 1586.0
+offset_right = 975.0
+offset_bottom = 1771.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="AvatarFrame" type="Control" parent="Root/Content/RewardFull/AvatarGroup" unique_id=915484614]
+anchors_preset = 0
+offset_right = 185.0
+offset_bottom = 185.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Avatar" type="TextureRect" parent="Root/Content/RewardFull/AvatarGroup/AvatarFrame" unique_id=90607512]
+clip_children = 2
+layout_mode = 0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 170.0
+offset_bottom = 170.0
+pivot_offset = Vector2(77.5, 77.5)
+texture = ExtResource("21")
+expand_mode = 1
+
+[node name="FirstPlaceFrame" type="TextureRect" parent="Root/Content/RewardFull/AvatarGroup/AvatarFrame" unique_id=1854201817]
+layout_mode = 0
+offset_right = 185.0
+offset_bottom = 185.0
+pivot_offset = Vector2(92.5, 92.5)
+texture = ExtResource("22")
+expand_mode = 1
+
+[node name="Union" type="TextureRect" parent="Root/Content/RewardFull/AvatarGroup/AvatarFrame" unique_id=1568947285]
+layout_mode = 0
+offset_left = 9.541016
+offset_top = 29.585938
+offset_right = 30.205078
+offset_bottom = 44.08789
+pivot_offset = Vector2(10.332031, 7.2509766)
+texture = ExtResource("23")
+expand_mode = 1
+
+[node name="RewardTextFull" type="Control" parent="Root/Content/RewardFull" unique_id=1545530299]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_left = 540.0
+offset_top = 1795.0
+offset_right = 1020.0
+offset_bottom = 1915.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="ShadowGroup" type="CanvasGroup" parent="Root/Content/RewardFull/RewardTextFull" unique_id=1968279798]
+material = SubResource("ShaderMaterial_k77hy")
+fit_margin = 18.0
+clear_margin = 18.0
+
+[node name="Text" type="Label" parent="Root/Content/RewardFull/RewardTextFull/ShadowGroup" unique_id=987387293]
+offset_right = 480.0
+offset_bottom = 120.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.9453846, 0.72692287, 1)
+theme_override_constants/line_spacing = -13
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 50
+text = "RANK_HTP_WIN_FRAMES_REWARDS"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1706405703]
+libraries/ = SubResource("AnimationLibrary_o5n0b")

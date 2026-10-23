@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://2bfn25vry36d"
-path.s3tc="res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.s3tc.ctex"
-path.etc2="res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.etc2.ctex"
+path.bptc="res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.bptc.ctex"
+path.astc="res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/effect/texture/ui/et_broken_heart_glow.png"
-dest_files=["res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.s3tc.ctex", "res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.etc2.ctex"]
+dest_files=["res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.bptc.ctex", "res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

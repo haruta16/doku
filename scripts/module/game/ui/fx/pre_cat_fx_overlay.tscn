@@ -1,0 +1,4 @@
+[gd_scene format=3]
+
+[node name="PreCatFxOverlay" type="CanvasLayer" unique_id=219232002]
+layer = 13

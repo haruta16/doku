@@ -1,0 +1,243 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://yajklh4ijxvv" path="res://scripts/module/daily/view/dc_costume_unlock_page.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://ip24eti55sf2" path="res://assets/sprites/daily/dc_costume_glow.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://d4k3vay21lc4c" path="res://assets/sprites/daily/dc_costume_trial_tag.png" id="5"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="6"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="7"]
+[ext_resource type="Texture2D" uid="uid://d33a2k6oi03iw" path="res://assets/sprites/game/icon_timer.png" id="8"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="9"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="10"]
+
+[sub_resource type="AnimationLibrary" id="AnimLib"]
+_data = {
+&"GenericPopup": ExtResource("2")
+}
+
+[node name="DcCostumeUnlockPage" type="Control" unique_id=8683012]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+mask_opacity = 0.85
+play_open_sound = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=170015364]
+libraries/ = SubResource("AnimLib")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=2137507514]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="." unique_id=833855922]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="HeadlineLabel" type="RichTextLabel" parent="Content" unique_id=702579182]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -450.0
+offset_top = 266.0
+offset_right = 450.0
+offset_bottom = 420.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 0.8915384, 0.4576921, 1)
+theme_override_constants/line_separation = 9
+theme_override_fonts/normal_font = ExtResource("3")
+theme_override_font_sizes/normal_font_size = 60
+bbcode_enabled = true
+text = "New trial skin unlocked! Beat 50% of players!"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="CatGroup" type="Control" parent="Content" unique_id=404622372]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -343.0
+offset_top = -393.0
+offset_right = 344.0
+offset_bottom = 316.9231
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Decor" type="TextureRect" parent="Content/CatGroup" unique_id=1769109296]
+layout_mode = 0
+offset_left = -297.0
+offset_top = -297.0
+offset_right = 983.0
+offset_bottom = 983.0
+pivot_offset = Vector2(640, 640)
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="Cat" type="Control" parent="Content/CatGroup" unique_id=81190158]
+anchors_preset = 0
+offset_left = 141.0
+offset_top = 126.0
+offset_right = 545.0
+offset_bottom = 709.9231
+mouse_filter = 2
+
+[node name="CatIcon" type="TextureRect" parent="Content/CatGroup/Cat" unique_id=1198647830]
+visible = false
+layout_mode = 0
+offset_left = 0.63
+offset_top = -7.95
+offset_right = 405.37
+offset_bottom = 396.79
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CatAnchor" type="Node2D" parent="Content/CatGroup/Cat" unique_id=460181028]
+position = Vector2(140.07, 306.58)
+scale = Vector2(0.93, 0.93)
+
+[node name="Info" type="Control" parent="Content/CatGroup/Cat" unique_id=1578083154]
+anchors_preset = 0
+offset_left = 41.96875
+offset_top = 380.14063
+offset_right = 361.26566
+offset_bottom = 583.9231
+mouse_filter = 2
+
+[node name="TrialTag" type="Control" parent="Content/CatGroup/Cat/Info" unique_id=1730026717]
+anchors_preset = 0
+offset_right = 319.29593
+offset_bottom = 121.78247
+mouse_filter = 2
+
+[node name="TagBg" type="TextureRect" parent="Content/CatGroup/Cat/Info/TrialTag" unique_id=1755262624]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="TagLabel" type="Label" parent="Content/CatGroup/Cat/Info/TrialTag" unique_id=416112048]
+layout_mode = 0
+offset_left = 29.03854
+offset_top = 35.86084
+offset_right = 289.03854
+offset_bottom = 83.86084
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -38
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 64
+text = "Trial"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("7")
+max_font_size = 64
+min_font_size = 34
+fit_height_single_line = false
+
+[node name="TimeRow" type="Control" parent="Content/CatGroup/Cat/Info" unique_id=1805271636]
+anchors_preset = 0
+offset_left = 5.6484528
+offset_top = 121.78247
+offset_right = 313.64844
+offset_bottom = 203.78247
+mouse_filter = 2
+
+[node name="ClockIcon" type="TextureRect" parent="Content/CatGroup/Cat/Info/TimeRow" unique_id=951345519]
+layout_mode = 0
+offset_left = 14.4
+offset_top = 3.2
+offset_right = 76.5
+offset_bottom = 73.4
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TimeLabel" type="Label" parent="Content/CatGroup/Cat/Info/TimeRow" unique_id=869403008]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 1.0
+offset_right = 308.0
+offset_bottom = 81.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9453846, 0.72692287, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 80
+text = "24:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("9")
+min_font_size = 40
+
+[node name="LaterBtn" parent="Content" unique_id=1506800811 instance=ExtResource("10")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -394.0
+offset_top = -468.0
+offset_right = 390.0
+offset_bottom = -210.0
+bg_color = Color(1, 0.8132034, 0.5846757, 1)
+btn_text = "DC_COSTUME_LATER_BTN"
+text_color = Color(0.7538461, 0.4546269, 0.25514755, 1)
+show_difficult = false
+show_shadow = false
+
+[node name="EquipBtn" parent="Content" unique_id=493092093 instance=ExtResource("10")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -394.0
+offset_top = -668.0
+offset_right = 390.0
+offset_bottom = -410.0
+btn_text = "DC_COSTUME_EQUIP_BTN"
+show_difficult = false
+show_shadow = false
+
+[connection signal="tag_pressed" from="Content/LaterBtn" to="." method="_on_later_pressed"]
+[connection signal="tag_pressed" from="Content/EquipBtn" to="." method="_on_equip_pressed"]

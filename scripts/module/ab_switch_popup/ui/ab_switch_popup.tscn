@@ -6,12 +6,17 @@
 [ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="4"]
 [ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="5"]
 [ext_resource type="Texture2D" uid="uid://dupq3l7hgqwc7" path="res://assets/sprites/common/shape_81.png" id="6"]
-[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="7"]
-[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="8"]
-[ext_resource type="Texture2D" uid="uid://c13c13ngw57wp" path="res://assets/sprites/common/small_star.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://bo2s741omuaag" path="res://assets/sprites/common/big_star.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://dfgojvl84jec2" path="res://assets/sprites/common/love_heart.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="12"]
+[ext_resource type="PackedScene" uid="uid://d1hbgjbf4dovx" path="res://assets/prefab/tool_button.tscn" id="7"]
+[ext_resource type="Texture2D" uid="uid://blcq54buvrrv5" path="res://assets/sprites/game/tool_cat_item.png" id="8"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="9"]
+[ext_resource type="Texture2D" uid="uid://ibovplgqc6eg" path="res://assets/sprites/game/icon_hint_lamp.png" id="10"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="11"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="12"]
+[ext_resource type="PackedScene" uid="uid://d2h6kbwign1k0" path="res://assets/prefab/red_dot.tscn" id="13"]
+[ext_resource type="Texture2D" uid="uid://c13c13ngw57wp" path="res://assets/sprites/common/small_star.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://bo2s741omuaag" path="res://assets/sprites/common/big_star.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://dfgojvl84jec2" path="res://assets/sprites/common/love_heart.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="17"]
 
 [sub_resource type="Animation" id="Animation_8p4ry"]
 resource_name = "RESET"
@@ -53,6 +58,21 @@ corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ner4f"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.753, 0.455, 0.255, 1)
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5y25v"]
+bg_color = Color(0, 0, 0, 0)
 
 [node name="AbSwitchPopup" type="Control" unique_id=36596976]
 layout_mode = 3
@@ -168,6 +188,46 @@ mouse_filter = 2
 texture = ExtResource("6")
 expand_mode = 1
 
+[node name="ToolGroup" type="HBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1356467793]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 38
+alignment = 1
+
+[node name="RevealBtn" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/ToolGroup" unique_id=2034969391 instance=ExtResource("7")]
+custom_minimum_size = Vector2(210, 250)
+layout_mode = 2
+icon_tex = ExtResource("8")
+label_text = "x1"
+state = 2
+badge_count = 3
+show_badge = false
+
+[node name="ToolLabel" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/ToolGroup/RevealBtn" index="1" unique_id=1873770658]
+offset_left = 2.0000029
+offset_top = 186.0
+offset_right = 212.0
+offset_bottom = 289.0
+theme_override_fonts/font = ExtResource("9")
+theme_override_font_sizes/font_size = 70
+
+[node name="HintBtn" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/ToolGroup" unique_id=1349480134 instance=ExtResource("7")]
+custom_minimum_size = Vector2(210, 250)
+layout_mode = 2
+icon_tex = ExtResource("10")
+label_text = "x1"
+state = 2
+badge_count = 3
+show_badge = false
+
+[node name="ToolLabel" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/ToolGroup/HintBtn" index="1" unique_id=1873770658]
+offset_left = 1.0
+offset_top = 187.0
+offset_right = 211.0
+offset_bottom = 290.0
+theme_override_fonts/font = ExtResource("9")
+theme_override_font_sizes/font_size = 70
+
 [node name="TextAdapt" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=2083288092]
 custom_minimum_size = Vector2(900, 70)
 layout_mode = 2
@@ -187,18 +247,41 @@ layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
 theme_override_constants/line_spacing = -3
-theme_override_fonts/font = ExtResource("7")
+theme_override_fonts/font = ExtResource("9")
 theme_override_font_sizes/font_size = 70
 text = "DAILY_STREAK_SWITCH3_DESC"
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Btn" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1387139512 instance=ExtResource("8")]
+[node name="Btn" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1387139512 instance=ExtResource("11")]
 custom_minimum_size = Vector2(784, 258)
 layout_mode = 2
 size_flags_horizontal = 4
 btn_text = "DAILY_STREAK_GET_IT"
 show_difficult = false
+
+[node name="FeedbackBtn" type="Button" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1072634473]
+custom_minimum_size = Vector2(750, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.753, 0.455, 0.255, 1)
+theme_override_colors/font_focus_color = Color(0.753, 0.455, 0.255, 1)
+theme_override_colors/font_pressed_color = Color(0.753, 0.455, 0.255, 1)
+theme_override_colors/font_hover_color = Color(0.753, 0.455, 0.255, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.753, 0.455, 0.255, 1)
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxFlat_ner4f")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ner4f")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ner4f")
+theme_override_styles/focus = SubResource("StyleBoxFlat_5y25v")
+text = "FEEDBACK_TITLE"
+
+[node name="Node2D" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/FeedbackBtn" unique_id=1130428591 instance=ExtResource("13")]
+position = Vector2(699.94464, 3.0165753)
+scale = Vector2(1.35, 1.35)
+dot_ids = ["helpshift_unread"]
 
 [node name="BtnAdapt" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1915810241]
 custom_minimum_size = Vector2(900, 53)
@@ -207,9 +290,9 @@ layout_mode = 2
 [node name="CatDialog" type="Control" parent="Content" unique_id=166949339]
 anchors_preset = 0
 offset_left = 247.0
-offset_top = 310.0
+offset_top = 105.0
 offset_right = 832.0
-offset_bottom = 717.0
+offset_bottom = 512.0
 mouse_filter = 2
 
 [node name="SmallStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=497272828]
@@ -218,7 +301,7 @@ offset_left = 45.0
 offset_top = 280.0
 offset_right = 81.0
 offset_bottom = 325.0
-texture = ExtResource("9")
+texture = ExtResource("14")
 expand_mode = 1
 
 [node name="BigStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=430351163]
@@ -226,7 +309,7 @@ layout_mode = 0
 offset_left = 453.0
 offset_right = 497.0
 offset_bottom = 53.0
-texture = ExtResource("10")
+texture = ExtResource("15")
 expand_mode = 1
 
 [node name="LoveHeartImg" type="TextureRect" parent="Content/CatDialog" unique_id=1712990591]
@@ -234,16 +317,21 @@ layout_mode = 0
 offset_top = 152.0
 offset_right = 74.0
 offset_bottom = 224.0
-texture = ExtResource("11")
+texture = ExtResource("16")
 expand_mode = 1
 
 [node name="CatImg" type="TextureRect" parent="Content/CatDialog" unique_id=1825800482]
 layout_mode = 0
 offset_left = 98.0
+offset_top = 4.0
 offset_right = 585.0
-offset_bottom = 407.0
-texture = ExtResource("12")
+offset_bottom = 411.0
+texture = ExtResource("17")
 expand_mode = 1
 
 [connection signal="pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title/CloseBtn" to="." method="_on_close_pressed"]
 [connection signal="tag_pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Btn" to="." method="_on_action_pressed"]
+[connection signal="pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/FeedbackBtn" to="." method="_on_feedback_pressed"]
+
+[editable path="Content/CenterContainer/BgSizeBox/Bg/BgVBox/ToolGroup/RevealBtn"]
+[editable path="Content/CenterContainer/BgSizeBox/Bg/BgVBox/ToolGroup/HintBtn"]

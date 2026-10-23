@@ -1,0 +1,8 @@
+[gd_resource type="SpineSkeletonDataResource" format=3 uid="uid://ckk50jbs66an3"]
+
+[ext_resource type="SpineAtlasResource" uid="uid://b5gwgd3q3mp8r" path="res://assets/effect/spine/peekaboo_cat/cat_bag/cat_bag.atlas" id="1"]
+[ext_resource type="SpineSkeletonFileResource" uid="uid://brt4e0jelvl0m" path="res://assets/effect/spine/peekaboo_cat/cat_bag/cat_bag.skel" id="2"]
+
+[resource]
+atlas_res = ExtResource("1")
+skeleton_file_res = ExtResource("2")

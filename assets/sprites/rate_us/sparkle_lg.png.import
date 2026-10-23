@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bob8epj8wllj0"
-path.s3tc="res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.s3tc.ctex"
-path.etc2="res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.etc2.ctex"
+path.bptc="res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.bptc.ctex"
+path.astc="res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/rate_us/sparkle_lg.png"
-dest_files=["res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.s3tc.ctex", "res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.etc2.ctex"]
+dest_files=["res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.bptc.ctex", "res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

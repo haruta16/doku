@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdedi8w8xox62"
-path.s3tc="res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.s3tc.ctex"
-path.etc2="res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.etc2.ctex"
+path.bptc="res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.bptc.ctex"
+path.astc="res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/common/vector_sound.png"
-dest_files=["res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.s3tc.ctex", "res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.etc2.ctex"]
+dest_files=["res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.bptc.ctex", "res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

@@ -1,4 +1,4 @@
-## 提示浮层：展示策略文案与操作按钮，按 AB 流程切换按钮组合，并贴着棋盘上下摆放
+## 提示说明叠层：对齐棋盘，显示提示描述并转发应用、关闭与详情操作。
 class_name HintOverlay
 extends CanvasLayer
 
@@ -14,9 +14,6 @@ const SPACING_TO_BOARD: float = 15.0 # 横幅/按钮组与棋盘之间的间距�
 @onready var _detail_btn: Button = $Banner/DetailBtn # 详情按钮
 @onready var _dismiss_btn: Control = $BtnGroup/DismissBtn # 忽略按钮
 @onready var _apply_btn: Control = $BtnGroup/ApplyBtn # 应用按钮
-@onready var _cancel_btn: Control = $BtnGroup/CancelBtn # 取消按钮
-@onready var _next_btn: Control = $BtnGroup/NextBtn # 下一步按钮
-@onready var _close_btn: TextureButton = $Banner/CloseBtn # 关闭按钮
 
 # ---- 对外信号（由页面连接） ----
 signal hint_applied # 应用：让页面执行提示
@@ -25,8 +22,7 @@ signal hint_detail_requested # 请求更多说明
 
 # ---- 运行时状态 ----
 var _hint: Dictionary = {} # 当前提示数据
-
-var _next_step_revealed: bool = false # 是否已点过「下一步」
+var _board_override: Control = null
 
 
 # ================= 生命周期 =================
@@ -35,14 +31,14 @@ func _ready() -> void:
 	UIHelper.bind_press_release_scale(_detail_btn)
 
 
-# ================= 显示流程 =================
-## 显示提示：先按 strategy 定文案，再按 AB 流程定按钮组合
+func set_board(board: Control) -> void:
+	_board_override = board
+
+
 func show_hint(hint: Dictionary) -> void:
-	# 记下这份数据，按钮回调与调试都要用
 	_hint = hint
 	var strategy: String = hint.get("strategy", "")
 	match strategy:
-		# R1~R5 各有一套固定文案，description 可覆盖
 		"R1_mark":
 			_strategy_label.text = "R1"
 			_desc_label.clear()
@@ -59,6 +55,14 @@ func show_hint(hint: Dictionary) -> void:
 			_strategy_label.text = "R4"
 			_desc_label.clear()
 			_desc_label.append_text(hint.get("description", tr("HINT_LARGE_SET_LOCKING")))
+		"R3b":
+			_strategy_label.text = "R3b"
+			_desc_label.clear()
+			_desc_label.append_text(hint.get("description", tr("HINT_SET_LOCKING")))
+		"R4b":
+			_strategy_label.text = "R4b"
+			_desc_label.clear()
+			_desc_label.append_text(hint.get("description", tr("HINT_LARGE_SET_LOCKING")))
 		"R4_chain":
 			_strategy_label.text = "R4"
 			_desc_label.clear()
@@ -68,20 +72,16 @@ func show_hint(hint: Dictionary) -> void:
 			_desc_label.clear()
 			_desc_label.append_text(hint.get("description", tr("HINT_CONTRADICTION")))
 		_:
-			# 未知策略：按单位类型拼「这个单位只剩一格」的文案
 			_strategy_label.text = "R1"
-			# 页面给了 description 就优先用
 			var unit_type: String = hint.get("unit_type", "")
 			var desc_override: String = hint.get("description", "")
 			if desc_override != "":
 				_desc_label.clear()
 				_desc_label.append_text(desc_override)
-			# 整行类型：提示交叉格
 			elif unit_type == "full_line":
 				_desc_label.clear()
 				_desc_label.append_text(tr("HINT_INTERSECTION"))
 			else:
-				# 否则先取单位名称
 				var unit_name: String
 				match unit_type:
 					"row":
@@ -95,48 +95,17 @@ func show_hint(hint: Dictionary) -> void:
 				_desc_label.clear()
 				_desc_label.append_text(tr("HINT_ONLY_ONE_CELL") % unit_name)
 
-	# 只有链式策略才有后续步骤
 	var _chain_d: Dictionary = hint.get("chain", {})
 	var has_steps := (
 		(strategy == "R4_chain" or strategy == "R5_chain")
 		and not _chain_d.is_empty()
 		and (_chain_d.get("steps", []) as Array).size() > 0
 	)
-	# 每次显示都重置「已展开后续步骤」
-	_next_step_revealed = false
-	# V1：新版提示流程；V2：带关闭按钮的流程
-	var _is_v1: bool = ABTestManager.hint_ue.is_new_hint_flow()
-	var _is_v2: bool = ABTestManager.hint_ue.is_close_btn_flow()
-	if _is_v1 or _is_v2:
-		# 新流程一律先隐藏老按钮
-		_detail_btn.visible = false
-		_dismiss_btn.visible = false
-		_cancel_btn.visible = false
-		_close_btn.visible = false
-		# 有后续步骤 → 只给「下一步」
-		if has_steps:
-			_apply_btn.visible = false
-			_next_btn.visible = true
-			_close_btn.visible = _is_v2
-		else:
-			# 没有后续步骤 → 直接可应用
-			_apply_btn.visible = true
-			_next_btn.visible = false
-			# V2 用关闭按钮，否则用取消按钮
-			if _is_v2:
-				_close_btn.visible = true
-			else:
-				_cancel_btn.visible = true
-	# 老流程：应用按钮常驻，链式步骤才给详情
-	else:
-		_apply_btn.visible = true
-		_detail_btn.visible = has_steps
-		_dismiss_btn.visible = false
-		_cancel_btn.visible = false
-		_next_btn.visible = false
-		_close_btn.visible = false
 
-	# 调试模式显示策略名，文案区域随之让位
+	_apply_btn.visible = true
+	_detail_btn.visible = has_steps
+	_dismiss_btn.visible = false
+
 	var _debug: bool = GameState.is_debug_mode()
 	_strategy_label.visible = _debug
 	var _left: float = 210.0 if _debug else 50.0
@@ -147,15 +116,12 @@ func show_hint(hint: Dictionary) -> void:
 	_desc_label.offset_top = 0.0
 	_desc_label.offset_bottom = 190.0
 
-	# 文案垂直居中（等 RichTextLabel 量完高度）
 	call_deferred("_center_desc_label")
 	visible = true
-	# 遮罩从全透明淡入
 	_overlay.color.a = 0.0
 	var tw := create_tween()
 	tw.tween_property(_overlay, "color:a", 0.75, 0.3)
 
-	# 贴到棋盘上（等布局完成）
 	call_deferred("_align_to_board")
 
 
@@ -170,36 +136,6 @@ func _on_apply_btn_pressed() -> void:
 func _on_dismiss_btn_pressed() -> void:
 	visible = false
 	hint_dismissed.emit()
-
-
-## 取消按钮：同忽略
-func _on_cancel_btn_pressed() -> void:
-	visible = false
-	hint_dismissed.emit()
-
-
-## 关闭按钮：同忽略
-func _on_close_btn_pressed() -> void:
-	visible = false
-	hint_dismissed.emit()
-
-
-## 下一步按钮：展开后续步骤并请求页面补充文案
-func _on_next_btn_pressed() -> void:
-	# 标记已展开，按钮位换成应用
-	_next_step_revealed = true
-	_next_btn.visible = false
-	_apply_btn.visible = true
-	# V2 流程用关闭按钮，否则用取消
-	if ABTestManager.hint_ue.is_close_btn_flow():
-		_close_btn.visible = true
-	else:
-		_cancel_btn.visible = true
-
-	hint_detail_requested.emit()
-
-	# 文案变了，重新贴一次位置
-	call_deferred("_align_to_board")
 
 
 ## 详情按钮：拉宽文案区并请求完整说明
@@ -226,13 +162,8 @@ func update_desc(text: String) -> void:
 	_desc_label.append_text(text)
 
 
-## 显示忽略按钮（老流程才有）
 func show_dismiss_btn() -> void:
-	if ABTestManager.hint_ue.is_any_new_flow():
-		# 新流程不提供忽略按钮
-		pass
-	else:
-		_dismiss_btn.visible = true
+	_dismiss_btn.visible = true
 
 
 ## 把横幅贴到棋盘上方、按钮组贴到棋盘下方
@@ -255,8 +186,9 @@ func _align_to_board() -> void:
 	_btn_group.offset_bottom = _btn_group.offset_top + btn_h
 
 
-## 找到棋盘节点（页面结构固定）
 func _find_board() -> Control:
+	if is_instance_valid(_board_override):
+		return _board_override
 	var page_root := get_parent()
 	if page_root == null:
 		return null

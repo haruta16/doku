@@ -3,26 +3,24 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cyg3rpfn13ban"
-path.s3tc="res://.godot/imported/union_86.png-5d1c96c71b22c8900d1f9b6b76f004ec.s3tc.ctex"
-path.etc2="res://.godot/imported/union_86.png-5d1c96c71b22c8900d1f9b6b76f004ec.etc2.ctex"
+path="res://.godot/imported/union_86.png-5d1c96c71b22c8900d1f9b6b76f004ec.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/sprites/game/game_win_toast01/union_86.png"
-dest_files=["res://.godot/imported/union_86.png-5d1c96c71b22c8900d1f9b6b76f004ec.s3tc.ctex", "res://.godot/imported/union_86.png-5d1c96c71b22c8900d1f9b6b76f004ec.etc2.ctex"]
+dest_files=["res://.godot/imported/union_86.png-5d1c96c71b22c8900d1f9b6b76f004ec.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=1.0
-compress/uastc_level=2
-compress/rdo_quality_loss=0
-compress/hdr_compression=0
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

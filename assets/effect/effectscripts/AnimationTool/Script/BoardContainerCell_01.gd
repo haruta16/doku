@@ -80,12 +80,26 @@ const _PRESET_DIR := "res://assets/effect/effectscripts/AnimationTool/Script/Boa
 
 var _cells: Array = []
 var _rings: Array = []
+var _special_flags: Array = []
 var _elapsed: float = 0.0
 var _origin_pos: Vector2 = Vector2.ZERO
 var _param_hash: int = -1
 var _play_scheduled: bool = false
 
+var _last_cell_count: int = -1
+
 var _animation_finished_emitted: bool = false
+
+var _g2_soft_scale_curve: Curve = null
+
+var _g1_no_bounce_scale_curve: Curve = null
+
+var _special_region_map: Array = []
+var _special_region_ids: Dictionary = {}
+var _pattern_first_active: bool = false
+var _pattern_first_regular_ring_origin: int = 0
+var _pattern_first_phase_duration: float = 0.0
+const _PATTERN_FIRST_ADVANCE_SEC: float = 0.5
 
 
 func _ready() -> void:
@@ -116,7 +130,7 @@ func _process(delta: float) -> void:
 		var cell: CanvasItem = _cells[i]
 		if not is_instance_valid(cell):
 			continue
-		var t_start: float = g3_list_delay + _rings[i] * g3_diag_interval
+		var t_start: float = _cell_start_time(i)
 
 		if _elapsed < t_start + g3_cell_fade_duration:
 			fade_done = false
@@ -127,11 +141,31 @@ func _process(delta: float) -> void:
 			if _elapsed < t_start + g3_cell_scale_duration:
 				cell_scale_done = false
 			var sp := clampf((_elapsed - t_start) / maxf(g3_cell_scale_duration, 0.001), 0.0, 1.0)
-			var s := lerpf(
-				g3_cell_scale_from,
-				1.0,
-				_ease_t(sp, g3_cell_scale_curve, g3_cell_scale_custom_curve)
+
+			var _ab_ready: bool = (
+				(not Engine.is_editor_hint())
+				and ABTestManager != null
+				and ABTestManager.game_grid_ui != null
 			)
+			var s: float
+			if _ab_ready and ABTestManager.game_grid_ui.is_single_line():
+				s = lerpf(
+					g3_cell_scale_from,
+					1.0,
+					_ease_t(sp, AutoAnimCurve.EaseType.CUSTOM, _get_g1_no_bounce_scale_curve())
+				)
+			elif _ab_ready and ABTestManager.game_grid_ui.is_reduce_spacing():
+				s = lerpf(
+					g3_cell_scale_from,
+					1.0,
+					_ease_t(sp, AutoAnimCurve.EaseType.CUSTOM, _get_g2_soft_scale_curve())
+				)
+			else:
+				s = lerpf(
+					g3_cell_scale_from,
+					1.0,
+					_ease_t(sp, g3_cell_scale_curve, g3_cell_scale_custom_curve)
+				)
 			_set_scale(cell, Vector2(s, s))
 
 	var container_fade_done := true
@@ -191,9 +225,24 @@ func set_auto_trigger(enabled: bool) -> void:
 	if Engine.is_editor_hint():
 		return
 	if enabled:
+		_last_cell_count = _count_cells()
 		_connect_board_signals()
 	else:
 		_disconnect_board_signals()
+
+
+func configure_special_regions(region_map: Array, special_region_ids: Array) -> void:
+	_special_region_map = region_map
+	_special_region_ids.clear()
+	for raw_id: Variant in special_region_ids:
+		_special_region_ids[int(raw_id)] = true
+
+
+func get_cell_fade_complete_time() -> float:
+	var latest: float = 0.0
+	for i: int in _cells.size():
+		latest = maxf(latest, _cell_start_time(i) + g3_cell_fade_duration)
+	return latest
 
 
 func play() -> void:
@@ -208,6 +257,22 @@ func play() -> void:
 		_animation_finished_emitted = true
 		animation_finished.emit()
 		return
+	_prepare_pattern_first_timing()
+	if not OS.has_feature("rel"):
+		var special_count: int = _special_flags.count(true)
+		print(
+			(
+				"[BoardIntro] value=%s special_ids=%d special_cells=%d total_nodes=%d pattern_first=%s phase=%.2fs"
+				% [
+					str(ABTestManager.board_intro.value()),
+					_special_region_ids.size(),
+					special_count,
+					_cells.size(),
+					str(_pattern_first_active),
+					_pattern_first_phase_duration,
+				]
+			)
+		)
 	_param_hash = _get_param_hash()
 	if board_view and is_instance_valid(board_view):
 		_origin_pos = _get_position(board_view)
@@ -399,7 +464,12 @@ func _disconnect_board_signals() -> void:
 		_disconnect_one(child)
 
 
+const _CAT_BATCH_LAYER_NAME: StringName = &"CatBatchLayer"
+
+
 func _connect_one(node: Node) -> void:
+	if node and node.name == _CAT_BATCH_LAYER_NAME:
+		return
 	if (
 		node
 		and is_instance_valid(node)
@@ -418,6 +488,10 @@ func _disconnect_one(node: Node) -> void:
 
 
 func _on_board_changed() -> void:
+	var n: int = _count_cells()
+	if n == _last_cell_count:
+		return
+	_last_cell_count = n
 	if not Engine.is_editor_hint() and auto_play and active_group != ActiveGroup.NONE:
 		_pre_hide_board()
 	if _play_scheduled:
@@ -444,6 +518,7 @@ func _count_cells() -> int:
 func _build_cells() -> void:
 	_cells.clear()
 	_rings.clear()
+	_special_flags.clear()
 	if not board_view or not is_instance_valid(board_view):
 		return
 	var cell_list: Array = []
@@ -471,6 +546,13 @@ func _build_cells() -> void:
 		var r: int = i / n
 		var c: int = i % n
 		_rings.append(c + (n - 1 - r))
+		var is_special: bool = (
+			r < _special_region_map.size()
+			and _special_region_map[r] is Array
+			and c < (_special_region_map[r] as Array).size()
+			and _special_region_ids.has(int((_special_region_map[r] as Array)[c]))
+		)
+		_special_flags.append(is_special)
 
 	var extras_provider: Node = _find_extras_provider(board_view)
 	if extras_provider != null:
@@ -480,6 +562,50 @@ func _build_cells() -> void:
 			if node != null and is_instance_valid(node):
 				_cells.append(node)
 				_rings.append(int(entry.get("ring", 0)))
+				_special_flags.append(false)
+
+
+func _prepare_pattern_first_timing() -> void:
+	_pattern_first_active = false
+	_pattern_first_regular_ring_origin = 0
+	_pattern_first_phase_duration = 0.0
+	if Engine.is_editor_hint() or ABTestManager == null or ABTestManager.board_intro == null:
+		return
+	if not ABTestManager.board_intro.is_pattern_first_intro():
+		return
+	var has_special: bool = false
+	var has_regular: bool = false
+	var regular_ring_min: int = 2147483647
+	for i in _cells.size():
+		if bool(_special_flags[i]):
+			has_special = true
+		else:
+			has_regular = true
+			regular_ring_min = mini(regular_ring_min, int(_rings[i]))
+	if not has_special:
+		return
+	_pattern_first_active = true
+	_pattern_first_regular_ring_origin = regular_ring_min
+	_pattern_first_phase_duration = g3_cell_fade_duration
+	if g3_cell_scale_enabled:
+		_pattern_first_phase_duration = maxf(_pattern_first_phase_duration, g3_cell_scale_duration)
+
+	_pattern_first_phase_duration = maxf(
+		g3_cell_fade_duration,
+		_pattern_first_phase_duration - _PATTERN_FIRST_ADVANCE_SEC,
+	)
+
+
+func _cell_start_time(index: int) -> float:
+	if not _pattern_first_active:
+		return g3_list_delay + _rings[index] * g3_diag_interval
+	if bool(_special_flags[index]):
+		return g3_list_delay
+	return (
+		g3_list_delay
+		+ _pattern_first_phase_duration
+		+ (int(_rings[index]) - _pattern_first_regular_ring_origin) * g3_diag_interval
+	)
 
 
 func _find_extras_provider(node: Node) -> Node:
@@ -594,6 +720,8 @@ func _cfg_save_curve(
 
 
 func _cfg_load_curve(cfg: ConfigFile, section: String, key: String, default: Curve) -> Curve:
+	if not Engine.is_editor_hint():
+		return default
 	var path: String = cfg.get_value(section, key + "_path", "")
 	if path.is_empty():
 		return default
@@ -601,6 +729,34 @@ func _cfg_load_curve(cfg: ConfigFile, section: String, key: String, default: Cur
 		return load(path) as Curve
 	push_warning("BoardContainerCell_01: Curve 文件不存在：%s" % path)
 	return default
+
+
+func _get_g2_soft_scale_curve() -> Curve:
+	if _g2_soft_scale_curve != null:
+		return _g2_soft_scale_curve
+	var c := Curve.new()
+	c.min_value = 0.0
+	c.max_value = 1.1
+	c.add_point(Vector2(0.0, 0.0), 0.0, 0.0)
+	c.add_point(Vector2(0.2929746, 1.0), -0.19996443, -0.19996443)
+	c.add_point(Vector2(0.44992524, 0.95), -0.0105118025, -0.0105118025)
+	c.add_point(Vector2(0.5665171, 0.9985645), 0.047450423, 0.0)
+	c.add_point(Vector2(1.0, 1.0), 0.0, 0.0)
+	_g2_soft_scale_curve = c
+	return _g2_soft_scale_curve
+
+
+func _get_g1_no_bounce_scale_curve() -> Curve:
+	if _g1_no_bounce_scale_curve != null:
+		return _g1_no_bounce_scale_curve
+	var c := Curve.new()
+	c.min_value = 0.0
+	c.max_value = 1.0
+	c.add_point(Vector2(0.0, 0.0), 3.6, 3.6)
+	c.add_point(Vector2(0.32, 1.0), 0.0, 0.0)
+	c.add_point(Vector2(1.0, 1.0), 0.0, 0.0)
+	_g1_no_bounce_scale_curve = c
+	return _g1_no_bounce_scale_curve
 
 
 func _ease_t(t: float, ease_type: AutoAnimCurve.EaseType, custom_curve: Curve) -> float:

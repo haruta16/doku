@@ -8,7 +8,13 @@
 [ext_resource type="Texture2D" uid="uid://cu4siyoskvj7n" path="res://assets/effect/texture/glow/et_glow_fish.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://g18a0pr6p3jc" path="res://assets/effect/texture/ring/et_ring_001.png" id="8"]
-[ext_resource type="PackedScene" uid="uid://u45xy5mheroa" path="res://scripts/module/daily_streak/ui/streak_gift_cell.tscn" id="9"]
+[ext_resource type="Texture2D" uid="uid://dxwhm5wfdiucl" path="res://assets/sprites/win/ray_light.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b4172kbem80d8" path="res://assets/effect/texture/glow/et_glow_001.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://dl6ni33dwnx13" path="res://assets/effect/texture/glow/et_glow_001_2.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://cu3o47f6o6vwy" path="res://assets/effect/texture/glow/et_glow_007.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://bmvipmngkvdor" path="res://assets/effect/texture/star/et_star_2.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://2qb2vueasbpc" path="res://assets/effect/texture/obj/et_ribbon_001.png" id="15"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gdg80"]
 blend_mode = 1
@@ -126,6 +132,568 @@ colors = PackedColorArray(1, 0.64983445, 0.39477575, 1, 1, 0.7262051, 0.43423486
 _data = [Vector2(0, 1), 0.8117804, -0.22606552, 0, 0, Vector2(1, 0), -1.3461181, -1.3461181, 0, 0]
 point_count = 2
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_m0jkr"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_k5xks"]
+_data = [Vector2(0, 0.42210764), 0.0, 2.7051253, 0, 0, Vector2(0.1641286, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.3034333), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_sqsj8"]
+offsets = PackedFloat32Array(0.21699819, 0.6238698, 0.9909584)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_6j0yw"]
+colors = PackedColorArray(1, 0.8837067, 0.4517722, 1, 1, 0.39937484, 0, 1)
+
+[sub_resource type="Animation" id="Animation_ojt3r"]
+resource_name = "Appear"
+length = 0.56666666
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("EffectRayLight:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.10000038, 0.21666668),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("EffectRayLight:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(3, 3),
+"points": PackedFloat32Array(0.5, -0.029166576, 0, 0.029166576, 0, 1, -0.029166576, 0, 0.029166576, 0),
+"times": PackedFloat32Array(0.10000038, 0.21666668)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("EffectRayLight:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(3, 3),
+"points": PackedFloat32Array(0.5, -0.029166576, 0, 0.029166576, 0, 1, -0.029166576, 0, 0.029166576, 0),
+"times": PackedFloat32Array(0.10000038, 0.21666668)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AvatarCell:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0, -0.033333417, 0, 0.033333417, 0, 0.17453292, -0.033333186, 0, 0.033333186, 0, -0.08726646, -0.033333186, 0, 0.033333186, 0, 0.05235988, -0.037500024, 0, 0.037500024, 0, 0, -0.03750004, 0, 0.03750004, 0),
+"times": PackedFloat32Array(0, 0.13333367, 0.2666664, 0.4166665, 0.56666666)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AvatarCell:scale:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.6, -0.033333335, 0, 0.033333335, 0, 2.5, -0.033333335, 0, 0.033333335, 0, 2.1621623, -0.05, 0, 0.05, 0),
+"times": PackedFloat32Array(0, 0.13333334, 0.33333334)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("AvatarCell:scale:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0.6, -0.033333335, 0, 0.033333335, 0, 2.5, -0.033333335, 0, 0.033333335, 0, 2.1621623, -0.05, 0, 0.05, 0),
+"times": PackedFloat32Array(0, 0.13333334, 0.33333334)
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("AvatarCell:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.16666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("EffectRayLight/Shine:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("EffectRayLight/Star:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("EffectRayLight/Glow:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_kp5dt"]
+resource_name = "Disappear"
+length = 0.33333334
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("EffectRayLight:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.06666732, 0.18333316),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("EffectRayLight:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("EffectRayLight:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AvatarCell:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AvatarCell:scale:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(2.1621623, -0.03333333, 0, 0.03333333, 0, 2.5, -0.03333333, 0, 0.03333333, 0, 0.3, -0.050000012, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0, 0.13333333, 0.33333337)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("AvatarCell:scale:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(2.1621623, -0.03333333, 0, 0.03333333, 0, 2.5, -0.03333333, 0, 0.03333333, 0, 0.3, -0.050000012, 0, 0.050000012, 0),
+"times": PackedFloat32Array(0, 0.13333333, 0.33333337)
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("AvatarCell:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.20000005, 0.33333337),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_gyt5n"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AvatarCell:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("EffectRayLight/Shine:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("EffectRayLight/Star:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("EffectRayLight/Glow:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_sqsj8"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("EffectRayLight:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.06666667, 0.4, 0.5166663),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("EffectRayLight:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(1, -0.029166576, 0, 0.029166576, 0, 1, -0.029166576, 0, 0.029166576, 0, 0.5, -0.029166576, 0, 0.029166576, 0, 1, -0.029166576, 0, 0.029166576, 0),
+"times": PackedFloat32Array(0, 0.11666629, 0.4, 0.5166663)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("EffectRayLight:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(1, -0.029166576, 0, 0.029166576, 0, 1, -0.029166576, 0, 0.029166576, 0, 0.5, -0.029166576, 0, 0.029166576, 0, 1, -0.029166576, 0, 0.029166576, 0),
+"times": PackedFloat32Array(0, 0.11666629, 0.4, 0.5166663)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("EffectRayLight/Shine:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("EffectRayLight/Star:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("EffectRayLight/Glow:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("AvatarCell:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0, -0.033333417, 0, 0.033333417, 0, 0.17453292, -0.033333186, 0, 0.033333186, 0, -0.08726646, -0.033333186, 0, 0.033333186, 0, 0.05235988, -0.037500024, 0, 0.037500024, 0, 0, -0.03750004, 0, 0.03750004, 0),
+"times": PackedFloat32Array(0.3, 0.43333334, 0.5666669, 0.7166664, 0.8666666)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("AvatarCell:scale:y")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(2.1621623, -0.03333333, 0, 0.03333333, 0, 2.5, -0.03333333, 0, 0.03333333, 0, 0.6, -0.033333335, 0, 0.033333335, 0, 2.5, -0.033333335, 0, 0.033333335, 0, 2.1621623, -0.05, 0, 0.05, 0),
+"times": PackedFloat32Array(0, 0.13333333, 0.3, 0.43333334, 0.63333327)
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("AvatarCell:scale:x")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(2.1621623, -0.03333333, 0, 0.03333333, 0, 2.5, -0.03333333, 0, 0.03333333, 0, 0.6, -0.033333335, 0, 0.033333335, 0, 2.5, -0.033333335, 0, 0.033333335, 0, 2.1621623, -0.05, 0, 0.05, 0),
+"times": PackedFloat32Array(0, 0.13333333, 0.3, 0.43333334, 0.63333327)
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("AvatarCell:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0.20000005, 0.3, 0.46666664),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("EffectRayLight:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0.06666732, 0.18333316, 0.40000004, 0.46666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("EffectErupt/GlowAlp:emitting")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.33333334),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("EffectErupt/StarAlp:emitting")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0.33333334),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("EffectErupt/StarAdd:emitting")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0.33333334),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("EffectErupt/StarAlp2:emitting")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0.33333334),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("EffectErupt/StarAdd2:emitting")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0.33333334),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("EffectErupt/GlowAdd:emitting")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(0.33333334),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("EffectErupt/StarAlp3:emitting")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"times": PackedFloat32Array(0.33333334),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gh6p0"]
+_data = {
+&"Appear": SubResource("Animation_ojt3r"),
+&"Disappear": SubResource("Animation_kp5dt"),
+&"RESET": SubResource("Animation_gyt5n"),
+&"Up": SubResource("Animation_sqsj8")
+}
+
+[sub_resource type="Curve" id="Curve_odhtf"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.14759536, 0.69691086), 0.688986, 0.688986, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_t1cw5"]
+offsets = PackedFloat32Array(0, 0.13628319, 0.5097345, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.97471267, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_85hu5"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, -2.3211966, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.19900498, -0.8336896), 0.0, 0.0, 0, 0, Vector2(0.556701, -0.5681666), 0.09669888, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_2ngmp"]
+_limits = [-200.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0.013745703, 200), 0.0, 0.0, 0, 0, Vector2(0.35967925, -187.06609), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_di5ir"]
+_data = [Vector2(0, 0), 0.0, 13.864465, 0, 0, Vector2(0.16751269, 1), 0.8117804, -0.22606552, 0, 0, Vector2(0.8747885, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_ah543"]
+offsets = PackedFloat32Array(0.47131148, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.41085273, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_jjkpe"]
+offsets = PackedFloat32Array(0.3079646)
+colors = PackedColorArray(1, 0.7351074, 0.453125, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_sxxde"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_p2ojy"]
+offsets = PackedFloat32Array(0.47131148, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.41085273, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_4lugj"]
+offsets = PackedFloat32Array(0.19281437, 0.6802395)
+colors = PackedColorArray(1, 0.7262051, 0.43423486, 1, 1, 0.5751953, 0.3203125, 1)
+
+[sub_resource type="Curve" id="Curve_djfbq"]
+_data = [Vector2(0, 0), 0.0, 7.584467, 0, 0, Vector2(0.25085908, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_ctydr"]
+offsets = PackedFloat32Array(0.3079646)
+colors = PackedColorArray(1, 0.8547363, 0.453125, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_l8as3"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gyt5n"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_mjpp1"]
+offsets = PackedFloat32Array(0.47131148, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.41085273, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_ikgum"]
+offsets = PackedFloat32Array(0.3079646, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_l5fah"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_wxep6"]
+offsets = PackedFloat32Array(0, 0.13628319, 0.5097345, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.97471267, 1, 1, 1, 0)
+
 [sub_resource type="Animation" id="Animation_gdg80"]
 resource_name = "Appear"
 length = 3.0
@@ -133,7 +701,7 @@ step = 0.016666668
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("GiftCenter/GiftOpenContent:scale:x")
+tracks/0/path = NodePath("GiftCellLayer/StreakGiftCell:scale:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -144,7 +712,7 @@ tracks/0/keys = {
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("GiftCenter/GiftOpenContent:scale:y")
+tracks/1/path = NodePath("GiftCellLayer/StreakGiftCell:scale:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -155,7 +723,7 @@ tracks/1/keys = {
 tracks/2/type = "bezier"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("GiftCenter/GiftOpenContent:position:x")
+tracks/2/path = NodePath("GiftCellLayer/StreakGiftCell:position:x")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -166,7 +734,7 @@ tracks/2/keys = {
 tracks/3/type = "bezier"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("GiftCenter/GiftOpenContent:position:y")
+tracks/3/path = NodePath("GiftCellLayer/StreakGiftCell:position:y")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -235,19 +803,19 @@ tracks/8/keys = {
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("GiftCenter/GiftOpenContent:modulate")
+tracks/9/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/GlowAdd:emitting")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
-"times": PackedFloat32Array(2, 2.3),
+"times": PackedFloat32Array(1.6833333, 1.7333332),
 "transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"update": 1,
+"values": [false, true]
 }
 tracks/10/type = "value"
 tracks/10/imported = false
 tracks/10/enabled = true
-tracks/10/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/GlowAdd:emitting")
+tracks/10/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/RingAdd:emitting")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
@@ -259,7 +827,7 @@ tracks/10/keys = {
 tracks/11/type = "value"
 tracks/11/imported = false
 tracks/11/enabled = true
-tracks/11/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/RingAdd:emitting")
+tracks/11/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/StarAdd2:emitting")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
@@ -271,7 +839,7 @@ tracks/11/keys = {
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/StarAdd2:emitting")
+tracks/12/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/StarAdd3:emitting")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
@@ -283,7 +851,7 @@ tracks/12/keys = {
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2/StarAdd3:emitting")
+tracks/13/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/GlowAdd:emitting")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
@@ -295,7 +863,7 @@ tracks/13/keys = {
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/GlowAdd:emitting")
+tracks/14/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/RingAdd:emitting")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
@@ -307,7 +875,7 @@ tracks/14/keys = {
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/RingAdd:emitting")
+tracks/15/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/StarAdd2:emitting")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
@@ -319,7 +887,7 @@ tracks/15/keys = {
 tracks/16/type = "value"
 tracks/16/imported = false
 tracks/16/enabled = true
-tracks/16/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/StarAdd2:emitting")
+tracks/16/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/StarAdd3:emitting")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
@@ -331,19 +899,19 @@ tracks/16/keys = {
 tracks/17/type = "value"
 tracks/17/imported = false
 tracks/17/enabled = true
-tracks/17/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3/StarAdd3:emitting")
+tracks/17/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtainLoop:modulate")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
-"times": PackedFloat32Array(1.6833333, 1.7333332),
+"times": PackedFloat32Array(1.7833332, 2.033333),
 "transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 tracks/18/type = "value"
 tracks/18/imported = false
 tracks/18/enabled = true
-tracks/18/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtainLoop:modulate")
+tracks/18/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtainLoop2:modulate")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/keys = {
@@ -355,19 +923,19 @@ tracks/18/keys = {
 tracks/19/type = "value"
 tracks/19/imported = false
 tracks/19/enabled = true
-tracks/19/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtainLoop2:modulate")
+tracks/19/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtainLoop:visible")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
-"times": PackedFloat32Array(1.7833332, 2.033333),
+"times": PackedFloat32Array(0, 0.050000004),
 "transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"update": 1,
+"values": [false, true]
 }
 tracks/20/type = "value"
 tracks/20/imported = false
 tracks/20/enabled = true
-tracks/20/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtainLoop:visible")
+tracks/20/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2:visible")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
@@ -379,7 +947,7 @@ tracks/20/keys = {
 tracks/21/type = "value"
 tracks/21/imported = false
 tracks/21/enabled = true
-tracks/21/path = NodePath("AwardPanel/AwardContent/CellSlot1/EffectObtain2:visible")
+tracks/21/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtainLoop2:visible")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
@@ -391,7 +959,7 @@ tracks/21/keys = {
 tracks/22/type = "value"
 tracks/22/imported = false
 tracks/22/enabled = true
-tracks/22/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtainLoop2:visible")
+tracks/22/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3:visible")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
@@ -403,14 +971,98 @@ tracks/22/keys = {
 tracks/23/type = "value"
 tracks/23/imported = false
 tracks/23/enabled = true
-tracks/23/path = NodePath("AwardPanel/AwardContent/CellSlot2/EffectObtain3:visible")
+tracks/23/path = NodePath("AwardPanel/AwardContent/CellSlot3/EffectObtain4/GlowAdd:emitting")
 tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = {
+"times": PackedFloat32Array(1.6833333, 1.7333332),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/24/type = "value"
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/path = NodePath("AwardPanel/AwardContent/CellSlot3/EffectObtain4/RingAdd:emitting")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/keys = {
+"times": PackedFloat32Array(1.6833333, 1.7333332),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/25/type = "value"
+tracks/25/imported = false
+tracks/25/enabled = true
+tracks/25/path = NodePath("AwardPanel/AwardContent/CellSlot3/EffectObtain4/StarAdd2:emitting")
+tracks/25/interp = 1
+tracks/25/loop_wrap = true
+tracks/25/keys = {
+"times": PackedFloat32Array(1.6833333, 1.7333332),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/26/type = "value"
+tracks/26/imported = false
+tracks/26/enabled = true
+tracks/26/path = NodePath("AwardPanel/AwardContent/CellSlot3/EffectObtain4/StarAdd3:emitting")
+tracks/26/interp = 1
+tracks/26/loop_wrap = true
+tracks/26/keys = {
+"times": PackedFloat32Array(1.6833333, 1.7333332),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/27/type = "value"
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/path = NodePath("AwardPanel/AwardContent/CellSlot3/EffectObtainLoop3:modulate")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/keys = {
+"times": PackedFloat32Array(1.7833332, 2.033333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("AwardPanel/AwardContent/CellSlot3/EffectObtainLoop3:visible")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
 "times": PackedFloat32Array(0, 0.050000004),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [false, true]
+}
+tracks/29/type = "value"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("AwardPanel/AwardContent/CellSlot3/EffectObtain4:visible")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"times": PackedFloat32Array(0, 0.050000004),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/30/type = "value"
+tracks/30/imported = false
+tracks/30/enabled = true
+tracks/30/path = NodePath("GiftCellLayer/StreakGiftCell:modulate")
+tracks/30/interp = 1
+tracks/30/loop_wrap = true
+tracks/30/keys = {
+"times": PackedFloat32Array(2, 2.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_w7mb4"]
@@ -428,24 +1080,41 @@ grow_vertical = 2
 script = ExtResource("1")
 show_mask = true
 
-[node name="AwardPanel" type="Control" parent="." unique_id=726106053]
-anchors_preset = 0
+[node name="GiftCellLayer" type="Control" parent="." unique_id=900000300]
+layout_mode = 1
+anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
+anchor_bottom = 1.0
 offset_left = -540.0
 offset_right = 540.0
-offset_bottom = 2400.0
 grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AwardPanel" type="Control" parent="." unique_id=726106053]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="DoubleBtnGroup" type="Control" parent="AwardPanel" unique_id=99643098]
-anchors_preset = 0
-offset_left = 165.0
-offset_top = 1700.0
-offset_right = 915.0
-offset_bottom = 2060.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -375.0
+offset_top = 500.0
+offset_right = 375.0
+offset_bottom = 860.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="DoubleCollectBtn" parent="AwardPanel/DoubleBtnGroup" unique_id=256697999 instance=ExtResource("2")]
-modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = -19.0
 offset_top = -68.0
@@ -460,10 +1129,8 @@ offset_left = 713.06
 offset_top = 40.0
 offset_right = 786.06
 offset_bottom = 94.000046
-scale = Vector2(1, 1)
 
 [node name="CollectBtn" parent="AwardPanel/DoubleBtnGroup" unique_id=1021311312 instance=ExtResource("2")]
-modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = -19.0
 offset_top = 132.0
@@ -474,24 +1141,31 @@ btn_text = "AD_REWARD_RESTORED_COLLECT"
 text_color = Color(0.7538461, 0.4546269, 0.25514755, 1)
 show_difficult = false
 
-[node name="AwardContent" type="HBoxContainer" parent="AwardPanel" unique_id=2110003315]
+[node name="AwardContent" type="Control" parent="AwardPanel" unique_id=2110003315]
 modulate = Color(1, 1, 1, 0)
-layout_mode = 0
-offset_top = 665.0
-offset_right = 1080.0
-offset_bottom = 987.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -535.0
+offset_right = 540.0
+offset_bottom = -213.0
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(520, 700)
-theme_override_constants/separation = 200
-alignment = 1
 
 [node name="CellSlot1" type="Control" parent="AwardPanel/AwardContent" unique_id=1292737693]
 custom_minimum_size = Vector2(196, 322)
-layout_mode = 2
+anchors_preset = 0
+offset_left = 244.0
+offset_right = 440.0
+offset_bottom = 322.0
 
 [node name="EffectObtainLoop" type="Control" parent="AwardPanel/AwardContent/CellSlot1" unique_id=254886808]
-visible = false
-modulate = Color(1, 1, 1, 0)
 anchors_preset = 0
 offset_left = 97.0
 offset_top = 96.0
@@ -582,7 +1256,6 @@ color = Color(1, 0.7779517, 0.5964556, 1)
 color_ramp = SubResource("Gradient_k8aet")
 
 [node name="EffectObtain2" type="Control" parent="AwardPanel/AwardContent/CellSlot1" unique_id=255305337]
-visible = false
 anchors_preset = 0
 offset_left = 96.0
 offset_top = 97.0
@@ -629,7 +1302,6 @@ color_ramp = SubResource("Gradient_6rtbg")
 visible = false
 material = SubResource("CanvasItemMaterial_tqtct")
 scale = Vector2(0.75, 0.75)
-emitting = false
 amount = 18
 texture = ExtResource("6")
 lifetime = 1.02
@@ -688,11 +1360,12 @@ color_initial_ramp = SubResource("Gradient_tfjyy")
 
 [node name="CellSlot2" type="Control" parent="AwardPanel/AwardContent" unique_id=1732552142]
 custom_minimum_size = Vector2(196, 322)
-layout_mode = 2
+anchors_preset = 0
+offset_left = 640.0
+offset_right = 836.0
+offset_bottom = 322.0
 
 [node name="EffectObtainLoop2" type="Control" parent="AwardPanel/AwardContent/CellSlot2" unique_id=1463683437]
-visible = false
-modulate = Color(1, 1, 1, 0)
 anchors_preset = 0
 offset_left = 96.0
 offset_top = 95.0
@@ -783,7 +1456,6 @@ color = Color(1, 0.7779517, 0.5964556, 1)
 color_ramp = SubResource("Gradient_oj7y3")
 
 [node name="EffectObtain3" type="Control" parent="AwardPanel/AwardContent/CellSlot2" unique_id=1410610395]
-visible = false
 anchors_preset = 0
 offset_left = 95.0
 offset_top = 96.0
@@ -830,7 +1502,6 @@ color_ramp = SubResource("Gradient_p5f71")
 visible = false
 material = SubResource("CanvasItemMaterial_d1r2o")
 scale = Vector2(0.75, 0.75)
-emitting = false
 amount = 18
 texture = ExtResource("6")
 lifetime = 1.02
@@ -887,28 +1558,544 @@ scale_amount_curve = SubResource("Curve_giiw3")
 color_ramp = SubResource("Gradient_oj7y3")
 color_initial_ramp = SubResource("Gradient_ygw0k")
 
-[node name="GiftCenter" type="Control" parent="." unique_id=904112025]
+[node name="CellSlot3" type="Control" parent="AwardPanel/AwardContent" unique_id=900000001]
+custom_minimum_size = Vector2(196, 322)
 anchors_preset = 0
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -540.0
-offset_right = 540.0
-offset_bottom = 2400.0
+offset_left = 442.0
+offset_top = -343.0
+offset_right = 638.0
+offset_bottom = -21.0
+
+[node name="EffectObtainLoop3" type="Control" parent="AwardPanel/AwardContent/CellSlot3" unique_id=900000002]
+anchors_preset = 0
+offset_left = 97.0
+offset_top = 96.0
+offset_right = 137.0
+offset_bottom = 136.0
+
+[node name="GlowAddLoop" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtainLoop3" unique_id=900000003]
+material = SubResource("CanvasItemMaterial_gdg80")
+amount = 2
+texture = ExtResource("4")
+preprocess = 10.0
+explosiveness = 1.0
+fixed_fps = 60
+local_coords = true
+gravity = Vector2(0, 0)
+scale_amount_min = 1.2
+scale_amount_max = 1.2
+color = Color(1, 0.56078434, 0.24313726, 1)
+
+[node name="GlowAddLoop2" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtainLoop3" unique_id=900000004]
+material = SubResource("CanvasItemMaterial_w7mb4")
+position = Vector2(1, 1)
+amount = 1
+texture = ExtResource("5")
+lifetime = 18.0
+fixed_fps = 60
+local_coords = true
+gravity = Vector2(0, 0)
+angular_velocity_min = -20.0
+angular_velocity_max = -20.0
+scale_amount_min = 1.35
+scale_amount_max = 1.35
+color = Color(1, 0.74509805, 0.41960785, 1)
+
+[node name="StarAddLoop" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtainLoop3" unique_id=900000005]
+material = SubResource("CanvasItemMaterial_tqtct")
+position = Vector2(4, 5)
+scale = Vector2(0.75, 0.75)
+amount = 18
+texture = ExtResource("6")
+lifetime = 3.5
+preprocess = 10.0
+use_fixed_seed = true
+seed = 3630
+lifetime_randomness = 0.15
+fixed_fps = 60
+local_coords = true
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 85.56
+initial_velocity_max = 85.56
+linear_accel_curve = SubResource("Curve_no80f")
+damping_min = 18.045
+damping_max = 18.045
+scale_amount_min = 0.85
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_tjbni")
+color = Color(1, 0.7779517, 0.5964556, 1)
+color_ramp = SubResource("Gradient_k8aet")
+
+[node name="StarAddLoop2" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtainLoop3" unique_id=900000006]
+material = SubResource("CanvasItemMaterial_tqtct")
+position = Vector2(4, 5)
+scale = Vector2(0.75, 0.75)
+amount = 10
+texture = ExtResource("7")
+lifetime = 3.5
+preprocess = 10.0
+use_fixed_seed = true
+seed = 3946
+lifetime_randomness = 0.15
+fixed_fps = 60
+local_coords = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 85.56
+initial_velocity_max = 85.56
+linear_accel_curve = SubResource("Curve_no80f")
+damping_min = 18.045
+damping_max = 18.045
+scale_amount_min = 0.3
+scale_amount_max = 0.6
+scale_amount_curve = SubResource("Curve_qaide")
+color = Color(1, 0.7779517, 0.5964556, 1)
+color_ramp = SubResource("Gradient_k8aet")
+
+[node name="EffectObtain4" type="Control" parent="AwardPanel/AwardContent/CellSlot3" unique_id=900000007]
+anchors_preset = 0
+offset_left = 96.0
+offset_top = 97.0
+offset_right = 136.0
+offset_bottom = 137.0
+
+[node name="GlowAdd" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtain4" unique_id=900000008]
+material = SubResource("CanvasItemMaterial_gdg80")
+emitting = false
+amount = 2
+texture = ExtResource("4")
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+local_coords = true
+gravity = Vector2(0, 0)
+scale_amount_min = 1.2
+scale_amount_max = 1.2
+scale_amount_curve = SubResource("Curve_vk4ky")
+color = Color(1, 0.4392157, 0.12156863, 0.47058824)
+color_ramp = SubResource("Gradient_c1efx")
+
+[node name="RingAdd" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtain4" unique_id=900000009]
+material = SubResource("CanvasItemMaterial_7gos0")
+emitting = false
+amount = 1
+texture = ExtResource("8")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+local_coords = true
+gravity = Vector2(0, 0)
+angle_min = 0.8
+angle_max = 0.8
+scale_amount_min = 1.2
+scale_amount_max = 1.2
+scale_amount_curve = SubResource("Curve_fyslf")
+color = Color(1, 0.6769494, 0.38600707, 0.6901961)
+color_ramp = SubResource("Gradient_6rtbg")
+
+[node name="StarAdd2" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtain4" unique_id=900000010]
+visible = false
+material = SubResource("CanvasItemMaterial_tqtct")
+scale = Vector2(0.75, 0.75)
+amount = 18
+texture = ExtResource("6")
+lifetime = 1.02
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 3630
+lifetime_randomness = 0.15
+fixed_fps = 60
+local_coords = true
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 1050.0
+initial_velocity_max = 1150.0
+linear_accel_min = -6624.0
+linear_accel_max = -6120.58
+linear_accel_curve = SubResource("Curve_e183n")
+scale_amount_min = 0.5
+scale_amount_curve = SubResource("Curve_tjbni")
+color_ramp = SubResource("Gradient_k8aet")
+color_initial_ramp = SubResource("Gradient_tfjyy")
+
+[node name="StarAdd3" type="CPUParticles2D" parent="AwardPanel/AwardContent/CellSlot3/EffectObtain4" unique_id=900000011]
+material = SubResource("CanvasItemMaterial_tqtct")
+scale = Vector2(0.75, 0.75)
+emitting = false
+texture = ExtResource("7")
+lifetime = 0.75
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 10659
+lifetime_randomness = 0.58
+fixed_fps = 60
+local_coords = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 1130.59
+initial_velocity_max = 1130.59
+angular_velocity_min = -120.79
+angular_velocity_max = 137.03
+linear_accel_min = -5630.4
+linear_accel_max = -5000.0
+linear_accel_curve = SubResource("Curve_e183n")
+damping_min = 1000.0
+damping_max = 1200.0
+angle_max = 360.0
+scale_amount_min = 0.3
+scale_amount_max = 0.5
+scale_amount_curve = SubResource("Curve_blvrg")
+color_ramp = SubResource("Gradient_k8aet")
+color_initial_ramp = SubResource("Gradient_tfjyy")
+
+[node name="FrameAddEffect" type="Control" parent="." unique_id=900000200]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
-[node name="GiftOpenContent" type="Control" parent="GiftCenter" unique_id=35240734]
+[node name="EffectRayLight" type="Control" parent="FrameAddEffect" unique_id=957087083]
+modulate = Color(2, 2, 2, -0.70000005)
+clip_contents = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -1200.0
+offset_right = 540.0
+offset_bottom = 1200.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.6683438, 0.6683438)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Shine" type="CPUParticles2D" parent="FrameAddEffect/EffectRayLight" unique_id=756479308]
+position = Vector2(540, 1200)
+amount = 1
+texture = ExtResource("9")
+lifetime = 12.0
+preprocess = 10.0
+gravity = Vector2(0, 0)
+angular_velocity_min = 30.0
+angular_velocity_max = 30.0
+scale_amount_min = 0.6
+scale_amount_max = 0.6
+
+[node name="Star" type="CPUParticles2D" parent="FrameAddEffect/EffectRayLight" unique_id=630176660]
+material = SubResource("CanvasItemMaterial_m0jkr")
+position = Vector2(540, 1200)
+amount = 10
+texture = ExtResource("7")
+lifetime = 3.0
+preprocess = 10.0
+randomness = 1.0
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+scale_amount_curve = SubResource("Curve_k5xks")
+color_ramp = SubResource("Gradient_sqsj8")
+color_initial_ramp = SubResource("Gradient_6j0yw")
+
+[node name="Glow" type="CPUParticles2D" parent="FrameAddEffect/EffectRayLight" unique_id=827410824]
+material = SubResource("CanvasItemMaterial_m0jkr")
+position = Vector2(540, 1200)
+amount = 10
+texture = ExtResource("10")
+lifetime = 3.0
+preprocess = 10.0
+randomness = 1.0
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+scale_amount_curve = SubResource("Curve_k5xks")
+color_ramp = SubResource("Gradient_sqsj8")
+color_initial_ramp = SubResource("Gradient_6j0yw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="FrameAddEffect" unique_id=1087845189]
+libraries/ = SubResource("AnimationLibrary_gh6p0")
+
+[node name="TierGroup" type="Control" parent="FrameAddEffect" unique_id=822502194]
+visible = false
 anchors_preset = 0
-offset_left = 435.00006
-offset_top = 493.00006
-offset_right = 1515.0
-offset_bottom = 2893.0
-scale = Vector2(0.18, 0.18)
-pivot_offset = Vector2(520, 1200)
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
-[node name="StreakGiftCell" parent="GiftCenter/GiftOpenContent" unique_id=231075136 instance=ExtResource("9")]
+[node name="TierTitle" type="RichTextLabel" parent="FrameAddEffect/TierGroup" unique_id=357157314]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -934.0
+offset_right = 450.0
+offset_bottom = -694.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 0.8915384, 0.4576921, 1)
+theme_override_constants/line_separation = 9
+theme_override_font_sizes/normal_font_size = 60
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="TierBtnGroup" type="Control" parent="FrameAddEffect/TierGroup" unique_id=900000303]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -375.0
+offset_top = -600.0
+offset_right = 375.0
+offset_bottom = -240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EquipBtn" parent="FrameAddEffect/TierGroup/TierBtnGroup" unique_id=900000301 instance=ExtResource("2")]
 layout_mode = 0
+offset_left = -19.0
+offset_top = -68.0
+offset_right = 765.0
+offset_bottom = 190.0
+btn_text = "RANK_TIER_EQUIP"
+show_difficult = false
+
+[node name="TierCollectBtn" parent="FrameAddEffect/TierGroup/TierBtnGroup" unique_id=900000302 instance=ExtResource("2")]
+layout_mode = 0
+offset_left = -19.0
+offset_top = 132.0
+offset_right = 765.0
+offset_bottom = 390.0
+bg_color = Color(1, 0.8118, 0.5843, 1)
+btn_text = "RANK_TIER_COLLECT"
+text_color = Color(0.7538461, 0.4546269, 0.25514755, 1)
+show_difficult = false
+
+[node name="EffectErupt" type="Control" parent="FrameAddEffect" unique_id=132963499]
+layout_mode = 1
+anchor_top = -0.067
+anchor_bottom = -0.067
+offset_left = 539.0
+offset_top = 1360.8
+offset_right = 579.0
+offset_bottom = 1400.8
+
+[node name="GlowAlp" type="CPUParticles2D" parent="FrameAddEffect/EffectErupt" unique_id=1236838842]
+emitting = false
+amount = 2
+texture = ExtResource("4")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_min = 4.0
+scale_amount_max = 4.0
+scale_amount_curve = SubResource("Curve_odhtf")
+color = Color(1, 0.8627451, 0.12156862, 0.11764706)
+color_ramp = SubResource("Gradient_t1cw5")
+
+[node name="StarAlp" type="CPUParticles2D" parent="FrameAddEffect/EffectErupt" unique_id=841259814]
+scale = Vector2(0.75, 0.75)
+emitting = false
+texture = ExtResource("11")
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 12104
+lifetime_randomness = 0.13
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 400.0
+initial_velocity_max = 1000.0
+linear_accel_min = 500.0
+linear_accel_max = 2000.0
+linear_accel_curve = SubResource("Curve_85hu5")
+tangential_accel_curve = SubResource("Curve_2ngmp")
+damping_max = 800.0
+scale_amount_min = 0.5
+scale_amount_curve = SubResource("Curve_di5ir")
+color_ramp = SubResource("Gradient_ah543")
+color_initial_ramp = SubResource("Gradient_jjkpe")
+
+[node name="StarAdd" type="CPUParticles2D" parent="FrameAddEffect/EffectErupt" unique_id=1943061246]
+material = SubResource("CanvasItemMaterial_sxxde")
+scale = Vector2(0.75, 0.75)
+emitting = false
+texture = ExtResource("12")
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 12104
+lifetime_randomness = 0.13
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 400.0
+initial_velocity_max = 1000.0
+linear_accel_min = 500.0
+linear_accel_max = 2000.0
+linear_accel_curve = SubResource("Curve_85hu5")
+tangential_accel_curve = SubResource("Curve_2ngmp")
+damping_max = 800.0
+scale_amount_min = 0.3
+scale_amount_max = 0.5
+scale_amount_curve = SubResource("Curve_di5ir")
+color_ramp = SubResource("Gradient_p2ojy")
+color_initial_ramp = SubResource("Gradient_4lugj")
+
+[node name="StarAlp2" type="CPUParticles2D" parent="FrameAddEffect/EffectErupt" unique_id=93024828]
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 5
+texture = ExtResource("13")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 12985
+lifetime_randomness = 0.13
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 400.0
+initial_velocity_max = 800.0
+linear_accel_curve = SubResource("Curve_85hu5")
+damping_min = 200.0
+damping_max = 500.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_djfbq")
+color = Color(1, 0.5803922, 0.1882353, 1)
+color_ramp = SubResource("Gradient_ah543")
+color_initial_ramp = SubResource("Gradient_ctydr")
+
+[node name="StarAdd2" type="CPUParticles2D" parent="FrameAddEffect/EffectErupt" unique_id=1152106491]
+material = SubResource("CanvasItemMaterial_l8as3")
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 5
+texture = ExtResource("14")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 12985
+lifetime_randomness = 0.15
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 400.0
+initial_velocity_max = 800.0
+linear_accel_curve = SubResource("Curve_85hu5")
+damping_min = 200.0
+damping_max = 500.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_djfbq")
+color_ramp = SubResource("Gradient_ah543")
+color_initial_ramp = SubResource("Gradient_ctydr")
+
+[node name="StarAlp3" type="CPUParticles2D" parent="FrameAddEffect/EffectErupt" unique_id=474995623]
+material = SubResource("CanvasItemMaterial_gyt5n")
+scale = Vector2(0.75, 0.75)
+emitting = false
+texture = ExtResource("15")
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 22027
+lifetime_randomness = 0.5
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 500)
+initial_velocity_min = 400.0
+initial_velocity_max = 1500.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_curve = SubResource("Curve_85hu5")
+damping_min = 500.0
+damping_max = 1500.0
+scale_amount_min = 1.2
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_djfbq")
+color_ramp = SubResource("Gradient_mjpp1")
+color_initial_ramp = SubResource("Gradient_ikgum")
+anim_offset_max = 1.0
+
+[node name="GlowAdd" type="CPUParticles2D" parent="FrameAddEffect/EffectErupt" unique_id=819237305]
+modulate = Color(1, 1, 1, 0.39215687)
+material = SubResource("CanvasItemMaterial_l5fah")
+emitting = false
+amount = 2
+texture = ExtResource("4")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_min = 3.5
+scale_amount_max = 3.5
+scale_amount_curve = SubResource("Curve_odhtf")
+color = Color(1, 0.4392157, 0.12156863, 0.54901963)
+color_ramp = SubResource("Gradient_wxep6")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2109171013]
 libraries/ = SubResource("AnimationLibrary_w7mb4")

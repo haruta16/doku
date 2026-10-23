@@ -1,0 +1,554 @@
+[gd_scene format=3 uid="uid://cufvlnlplh01m"]
+
+[ext_resource type="Script" uid="uid://sa6tqi2qfp3s" path="res://scripts/module/purchase/view/purchase_success_page.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://duvmfocojow85" path="res://assets/sprites/purchase/popup_bg_gradient.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://78mdve0kohrm" path="res://assets/sprites/purchase/background.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://7k1ihqkvm1u1" path="res://assets/sprites/purchase/ui_mao_glc_tx02_copy_3.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bweyu2reawn1e" path="res://assets/sprites/purchase/ui_mao_glc_tx_01.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://h1ryw83sq5ng" path="res://assets/sprites/purchase/white_fish.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://dqy2sr0qa004o" path="res://assets/sprites/purchase/white_fish_2.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://coybuxgwnjmwq" path="res://assets/sprites/purchase/white_fish_3.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bka6ts1a4qfjb" path="res://assets/sprites/purchase/layer50.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="11"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="12"]
+[ext_resource type="Texture2D" uid="uid://u83eusdjpkpo" path="res://assets/sprites/common/success_check_mark.png" id="13"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="14"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="15"]
+
+[sub_resource type="AnimationLibrary" id="AnimLib_pop"]
+_data = {
+&"GenericPopup": ExtResource("2")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_01vel"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dbbjj"]
+bg_color = Color(0.94509804, 0.5764706, 0.1254902, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[node name="PurchaseSuccessPage" type="Control" unique_id=379948137]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1")
+show_mask = true
+metadata/a2g_semantic_id = "169:14839"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=910233001]
+libraries/ = SubResource("AnimLib_pop")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=910233002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="." unique_id=759633743]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -1200.0
+offset_right = 540.0
+offset_bottom = 1200.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14205"
+
+[node name="CommonPopup" type="Control" parent="Content" unique_id=1870905941]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -623.0
+offset_right = 450.0
+offset_bottom = 623.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14208"
+
+[node name="PopupFrame" type="Control" parent="Content/CommonPopup" unique_id=789895034]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+metadata/a2g_semantic_id = "169:14209"
+
+[node name="Bg" type="TextureRect" parent="Content/CommonPopup/PopupFrame" unique_id=2047760281]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.67
+offset_top = -10.21
+offset_right = 14.67
+offset_bottom = 19.49
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14209::shadow_split_bg"
+
+[node name="Background" type="Control" parent="Content/CommonPopup" unique_id=1697221857]
+anchors_preset = 0
+offset_left = 79.0
+offset_right = 809.0
+offset_bottom = 557.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14210"
+
+[node name="BackgroundImg" type="TextureRect" parent="Content/CommonPopup/Background" unique_id=1547121426]
+layout_mode = 0
+offset_left = 6.0
+offset_right = 720.0
+offset_bottom = 567.0
+pivot_offset = Vector2(357, 283.5)
+texture = ExtResource("4")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14211"
+
+[node name="ADS" type="Control" parent="Content/CommonPopup/Background" unique_id=2102669960]
+anchors_preset = 0
+offset_top = 56.0
+offset_right = 730.0
+offset_bottom = 440.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14215"
+
+[node name="Decoration" type="Control" parent="Content/CommonPopup/Background/ADS" unique_id=1456837346]
+anchors_preset = 0
+offset_right = 730.0
+offset_bottom = 384.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14221"
+
+[node name="DecorSpark1" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=716578343]
+self_modulate = Color(1, 1, 1, 0.577)
+layout_mode = 0
+offset_left = 507.0
+offset_top = 281.0
+offset_right = 529.0
+offset_bottom = 309.0
+pivot_offset = Vector2(11, 14)
+texture = ExtResource("5")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14222"
+
+[node name="DecorSpark2" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=844011638]
+self_modulate = Color(1, 1, 1, 0.577)
+layout_mode = 0
+offset_left = 183.0
+offset_top = 195.0
+offset_right = 200.0
+offset_bottom = 217.0
+pivot_offset = Vector2(8.5, 11)
+texture = ExtResource("5")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14223"
+
+[node name="DecorSpark3" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=1707651733]
+layout_mode = 0
+offset_left = 529.0
+offset_top = -17.0
+offset_right = 555.0
+offset_bottom = 16.0
+pivot_offset = Vector2(13, 16.5)
+texture = ExtResource("5")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14224"
+
+[node name="DecorSpark4" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=435459905]
+layout_mode = 0
+offset_left = 222.0
+offset_right = 243.0
+offset_bottom = 27.0
+pivot_offset = Vector2(10.5, 13.5)
+texture = ExtResource("5")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14225"
+
+[node name="DecorGlow1" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=1511633059]
+layout_mode = 0
+offset_left = 677.0
+offset_top = 84.0
+offset_right = 694.0
+offset_bottom = 105.0
+pivot_offset = Vector2(8.5, 10.5)
+texture = ExtResource("6")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14226"
+
+[node name="DecorGlow2" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=227967397]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 181.0
+offset_right = 62.0
+offset_bottom = 202.0
+pivot_offset = Vector2(8.5, 10.5)
+texture = ExtResource("6")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14227"
+
+[node name="Fish1" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=1573213017]
+layout_mode = 0
+offset_left = 26.0
+offset_top = -5.0
+offset_right = 94.0
+offset_bottom = 59.0
+pivot_offset = Vector2(34, 32)
+texture = ExtResource("7")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14228"
+
+[node name="Fish2" type="Control" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=18496011]
+anchors_preset = 0
+offset_left = 612.00073
+offset_top = 185.00258
+offset_right = 704.41406
+offset_bottom = 278.05823
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14229"
+
+[node name="Visual" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration/Fish2" unique_id=910541870]
+layout_mode = 0
+offset_left = 15.309772
+offset_top = 18.668083
+offset_right = 84.23164
+offset_bottom = 72.70983
+pivot_offset = Vector2(34.460938, 27.020874)
+texture = ExtResource("8")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14229::visual"
+
+[node name="Fish3" type="Control" parent="Content/CommonPopup/Background/ADS/Decoration" unique_id=1346025285]
+anchors_preset = 0
+offset_left = 78.02734
+offset_top = 221.47542
+offset_right = 167.09372
+offset_bottom = 312.0772
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14230"
+
+[node name="Visual" type="TextureRect" parent="Content/CommonPopup/Background/ADS/Decoration/Fish3" unique_id=1254278823]
+layout_mode = 0
+offset_left = 7.456497
+offset_top = 14.894948
+offset_right = 76.735504
+offset_bottom = 73.23211
+pivot_offset = Vector2(34.639503, 29.168581)
+texture = ExtResource("9")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14230::visual"
+
+[node name="AdsIcon" type="TextureRect" parent="Content/CommonPopup/Background/ADS" unique_id=1002784624]
+layout_mode = 0
+offset_left = 240.0
+offset_top = 18.0
+offset_right = 502.0
+offset_bottom = 280.0
+pivot_offset = Vector2(131, 131)
+texture = ExtResource("10")
+expand_mode = 1
+metadata/a2g_semantic_id = "169:14232"
+
+[node name="InfoBoard" type="Panel" parent="Content/CommonPopup" unique_id=1030229720]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 546.0
+offset_right = 850.0
+offset_bottom = 936.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_01vel")
+metadata/a2g_semantic_id = "169:14233"
+
+[node name="CloseBtn" type="Button" parent="Content/CommonPopup" unique_id=435289448]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+flat = true
+metadata/a2g_semantic_id = "169:14234"
+
+[node name="CloseIcon" type="TextureRect" parent="Content/CommonPopup/CloseBtn" unique_id=172656684]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("11")
+expand_mode = 1
+stretch_mode = 5
+metadata/a2g_semantic_id = "I169:14234;966:5012::visual"
+
+[node name="EnjoyBtn" parent="Content/CommonPopup" unique_id=990468303 instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 927.0
+offset_right = 840.0
+offset_bottom = 1185.0
+btn_text = "PURCHASE_SUCCESS_BTN"
+show_difficult = false
+
+[node name="Info" type="Control" parent="Content/CommonPopup" unique_id=648728734]
+anchors_preset = 0
+offset_left = 73.0
+offset_top = 569.0
+offset_right = 825.0
+offset_bottom = 914.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "169:14236"
+
+[node name="Row1" type="Control" parent="Content/CommonPopup/Info" unique_id=2032833962]
+anchors_preset = 0
+offset_right = 752.0
+offset_bottom = 68.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Dot" type="Panel" parent="Content/CommonPopup/Info/Row1" unique_id=1597372292]
+layout_mode = 0
+offset_top = 12.0
+offset_right = 44.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dbbjj")
+
+[node name="Mark" type="TextureRect" parent="Content/CommonPopup/Info/Row1" unique_id=36897855]
+layout_mode = 0
+offset_left = 8.8
+offset_top = 25.566668
+offset_right = 36.616535
+offset_bottom = 44.994934
+pivot_offset = Vector2(13.908268, 9.714134)
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="Txt" type="Label" parent="Content/CommonPopup/Info/Row1" unique_id=2181952]
+layout_mode = 0
+offset_left = 55.0
+offset_right = 752.0
+offset_bottom = 68.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("14")
+theme_override_font_sizes/font_size = 46
+autowrap_mode = 3
+
+[node name="Row2" type="Control" parent="Content/CommonPopup/Info" unique_id=1865416180]
+anchors_preset = 0
+offset_top = 69.0
+offset_right = 752.0
+offset_bottom = 137.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Dot" type="Panel" parent="Content/CommonPopup/Info/Row2" unique_id=858781982]
+layout_mode = 0
+offset_top = 12.0
+offset_right = 44.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dbbjj")
+
+[node name="Mark" type="TextureRect" parent="Content/CommonPopup/Info/Row2" unique_id=1164587567]
+layout_mode = 0
+offset_left = 8.8
+offset_top = 25.566668
+offset_right = 36.616535
+offset_bottom = 44.994934
+pivot_offset = Vector2(13.908268, 9.714134)
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="Txt" type="Label" parent="Content/CommonPopup/Info/Row2" unique_id=82059256]
+layout_mode = 0
+offset_left = 55.0
+offset_right = 752.0
+offset_bottom = 68.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("14")
+theme_override_font_sizes/font_size = 46
+autowrap_mode = 3
+
+[node name="Row3" type="Control" parent="Content/CommonPopup/Info" unique_id=745613677]
+anchors_preset = 0
+offset_top = 138.0
+offset_right = 752.0
+offset_bottom = 206.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Dot" type="Panel" parent="Content/CommonPopup/Info/Row3" unique_id=134555392]
+layout_mode = 0
+offset_top = 12.0
+offset_right = 44.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dbbjj")
+
+[node name="Mark" type="TextureRect" parent="Content/CommonPopup/Info/Row3" unique_id=1096181624]
+layout_mode = 0
+offset_left = 8.8
+offset_top = 25.566668
+offset_right = 36.616535
+offset_bottom = 44.994934
+pivot_offset = Vector2(13.908268, 9.714134)
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="Txt" type="Label" parent="Content/CommonPopup/Info/Row3" unique_id=1832972680]
+layout_mode = 0
+offset_left = 55.0
+offset_right = 752.0
+offset_bottom = 68.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("14")
+theme_override_font_sizes/font_size = 46
+autowrap_mode = 3
+
+[node name="Row4" type="Control" parent="Content/CommonPopup/Info" unique_id=328056993]
+anchors_preset = 0
+offset_top = 207.0
+offset_right = 752.0
+offset_bottom = 275.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Dot" type="Panel" parent="Content/CommonPopup/Info/Row4" unique_id=1140716256]
+layout_mode = 0
+offset_top = 12.0
+offset_right = 44.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dbbjj")
+
+[node name="Mark" type="TextureRect" parent="Content/CommonPopup/Info/Row4" unique_id=1478987445]
+layout_mode = 0
+offset_left = 8.8
+offset_top = 25.566668
+offset_right = 36.616535
+offset_bottom = 44.994934
+pivot_offset = Vector2(13.908268, 9.714134)
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="Txt" type="Label" parent="Content/CommonPopup/Info/Row4" unique_id=269149706]
+layout_mode = 0
+offset_left = 55.0
+offset_right = 752.0
+offset_bottom = 68.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("14")
+theme_override_font_sizes/font_size = 46
+autowrap_mode = 3
+
+[node name="Row5" type="Control" parent="Content/CommonPopup/Info" unique_id=1595502413]
+anchors_preset = 0
+offset_top = 276.0
+offset_right = 752.0
+offset_bottom = 344.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Dot" type="Panel" parent="Content/CommonPopup/Info/Row5" unique_id=1178411972]
+layout_mode = 0
+offset_top = 12.0
+offset_right = 44.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dbbjj")
+
+[node name="Mark" type="TextureRect" parent="Content/CommonPopup/Info/Row5" unique_id=746295787]
+layout_mode = 0
+offset_left = 8.8
+offset_top = 25.566668
+offset_right = 36.616535
+offset_bottom = 44.994934
+pivot_offset = Vector2(13.908268, 9.714134)
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="Txt" type="Label" parent="Content/CommonPopup/Info/Row5" unique_id=833287223]
+layout_mode = 0
+offset_left = 55.0
+offset_right = 752.0
+offset_bottom = 68.0
+grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("14")
+theme_override_font_sizes/font_size = 46
+autowrap_mode = 3
+
+[node name="TitleTxt" type="Label" parent="Content/CommonPopup" unique_id=597936451]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 375.0
+offset_right = 857.0
+offset_bottom = 535.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -5
+theme_override_fonts/font = ExtResource("14")
+theme_override_font_sizes/font_size = 62
+text = "PURCHASE_SUCCESS_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("15")
+max_font_size = 65
+min_font_size = 40
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+metadata/a2g_semantic_id = "169:14244"
+
+[connection signal="tag_pressed" from="Content/CommonPopup/EnjoyBtn" to="." method="_on_enjoy_pressed"]

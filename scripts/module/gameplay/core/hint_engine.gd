@@ -1,5 +1,5 @@
-## 提示引擎：不查答案、真的在解题；R1 唯一候选 → R2 占位排除 → R3/R4 集合锁定 → R4/R5 反证法，逐级兜底
-## 全部是 static 纯函数：输入 board/size/regions，输出统一的 hint 字典，found=false 表示这层推不出来
+## 逻辑提示引擎：从当前棋盘推导落猫和排除候选，逐层使用唯一候选、区域约束、集合锁定与链式推理。
+## 提示查询返回位置和高亮信息；难度分析在棋盘副本上回放步骤，答案仅用于核验与层级记录。
 class_name HintEngine
 extends RefCounted
 
@@ -113,25 +113,26 @@ static func find_r1_hint(board: Array, size: int, regions: Array) -> Dictionary:
 	return {"found": false} # 三种情形都没有，这层推不出来
 
 
-## R1 的配套动作：拿盘上第一只已确定的猫，列出它禁掉的空格，提示玩家「这些都能画叉」
-## 返回 {found, strategy:"R1_mark", cell(第一个待画叉格), cat_cell(那只猫), unit_cells(全部待画叉格)}；参数 _regions 未使用
-static func find_mark_hint(board: Array, size: int, _regions: Array) -> Dictionary:
-	for r in range(size): # 找到第一只猫就返回，一次只教一步
+## 从已放猫找同行、同列及相邻空格的排除提示，可选合并同区域空格；不直接修改棋盘。
+static func find_mark_hint(
+	board: Array, size: int, regions: Array, include_region: bool = false
+) -> Dictionary:
+	for r in range(size):
 		for c in range(size):
 			if board[r][c] != CellState.CAT:
 				continue
 
 			var to_mark: Array[Vector2i] = []
 
-			for cc in range(size): # 同行空格
+			for cc in range(size):
 				if cc != c and board[r][cc] == CellState.EMPTY:
 					to_mark.append(Vector2i(r, cc))
 
-			for rr in range(size): # 同列空格
+			for rr in range(size):
 				if rr != r and board[rr][c] == CellState.EMPTY:
 					to_mark.append(Vector2i(rr, c))
 
-			for dr in range(-1, 2): # 八邻接空格（用 has 去重，避免与行列重叠的格子重复出现）
+			for dr in range(-1, 2):
 				for dc in range(-1, 2):
 					if dr == 0 and dc == 0:
 						continue
@@ -142,13 +143,49 @@ static func find_mark_hint(board: Array, size: int, _regions: Array) -> Dictiona
 							var pos := Vector2i(nr, nc)
 							if not to_mark.has(pos):
 								to_mark.append(pos)
-			if to_mark.size() > 0: # 有可画叉的格子才算找到
+
+			if include_region:
+				var reg: int = regions[r][c]
+				for rr in range(size):
+					for cc in range(size):
+						if regions[rr][cc] == reg and board[rr][cc] == CellState.EMPTY:
+							var rpos := Vector2i(rr, cc)
+							if not to_mark.has(rpos):
+								to_mark.append(rpos)
+			if to_mark.size() > 0:
+				var hint: Dictionary = {
+					"found": true,
+					"strategy": "R1_mark",
+					"cell": to_mark[0],
+					"cat_cell": Vector2i(r, c),
+					"unit_cells": to_mark,
+				}
+				if include_region:
+					hint["description"] = TranslationServer.translate("HINT_R1_MARK_COMBINE")
+				return hint
+	return {"found": false}
+
+
+## 只按已有猫的同区域约束给出待标叉格子与对应文案。
+static func find_region_mark_hint(board: Array, size: int, regions: Array) -> Dictionary:
+	for r in range(size):
+		for c in range(size):
+			if board[r][c] != CellState.CAT:
+				continue
+			var reg: int = regions[r][c]
+			var to_mark: Array[Vector2i] = []
+			for rr in range(size):
+				for cc in range(size):
+					if regions[rr][cc] == reg and board[rr][cc] == CellState.EMPTY:
+						to_mark.append(Vector2i(rr, cc))
+			if to_mark.size() > 0:
 				return {
 					"found": true,
 					"strategy": "R1_mark",
 					"cell": to_mark[0],
 					"cat_cell": Vector2i(r, c),
 					"unit_cells": to_mark,
+					"description": TranslationServer.translate("HINT_COLOR_EXCLUDE"),
 				}
 	return {"found": false}
 
@@ -197,11 +234,11 @@ static func _col_cells(c: int, size: int) -> Array[Vector2i]:
 	return cells
 
 
-# ================= R3/R4：k 个色只占 k 行（列） =================
-## 若 k 个未放色的候选行去重后正好 k 条，这 k 条行就被这 k 只猫占满，行内不属于这 k 个色的格子都能排除
-## k<=3 命名 R3、k>=4 命名 R4（判定完全相同）；返回 {found, strategy, description, regions, highlight_cells, locked_rows, locked_cols}
-static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictionary:
-	var row_piece: Array[bool] = [] # 同 R1：先统计哪些行 / 列 / 色已经有猫
+## 寻找 K 个区域锁定 K 行或列的排除关系；可选反向寻找 K 行列锁定 K 区域。
+static func find_r3_r4_hint(
+	board: Array, size: int, regions: Array, enable_reverse: bool = false
+) -> Dictionary:
+	var row_piece: Array[bool] = []
 	row_piece.resize(size)
 	row_piece.fill(false)
 	var col_piece: Array[bool] = []
@@ -217,15 +254,15 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 				col_piece[c] = true
 				reg_piece[regions[r][c]] = true
 
-	var unplaced: Array[int] = [] # 对每个还没放猫的色，算出它的候选格分布在哪些行 / 哪些列
+	var unplaced: Array[int] = []
 	var reg_rows: Dictionary = {}
 	var reg_cols: Dictionary = {}
 	for reg in range(size):
 		if reg_piece[reg]:
 			continue
 		unplaced.append(reg)
-		var rows: Dictionary = {} # 该色的候选行集合
-		var cols: Dictionary = {} # 该色的候选列集合
+		var rows: Dictionary = {}
+		var cols: Dictionary = {}
 		for r in range(size):
 			for c in range(size):
 				if (
@@ -237,15 +274,27 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 		reg_rows[reg] = rows
 		reg_cols[reg] = cols
 
-	var max_k: int = mini(unplaced.size() - 1, 6) # k 从 2 枚举起（k=1 属于 R1）；上限 6 是为了压住组合数
+	var row_colors_by_row: Array[Dictionary] = []
+	var col_colors_by_col: Array[Dictionary] = []
+	if enable_reverse:
+		for i in range(size):
+			row_colors_by_row.append({})
+			col_colors_by_col.append({})
+		for r in range(size):
+			for c in range(size):
+				if _can_place(r, c, board, size, regions, row_piece, col_piece, reg_piece):
+					row_colors_by_row[r][regions[r][c]] = true
+					col_colors_by_col[c][regions[r][c]] = true
+
+	var max_k: int = mini(unplaced.size() - 1, 6)
 	for k in range(2, max_k + 1):
-		var subsets: Array = _gen_subsets(unplaced, k) # 枚举所有 k 个色的组合
+		var subsets: Array = _gen_subsets(unplaced, k)
 		for subset in subsets:
 			var reg_set: Dictionary = {}
 			for reg in subset:
 				reg_set[reg] = true
 
-			var all_rows: Dictionary = {} # 行方向：每个色的候选行都不超过 k 条，且并起来正好 k 条
+			var all_rows: Dictionary = {}
 			var valid_r := true
 			for reg in subset:
 				var rws: Dictionary = reg_rows[reg]
@@ -254,7 +303,7 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 					break
 				for row in rws:
 					all_rows[row] = true
-			if valid_r and all_rows.size() == k: # 这 k 条行里得真有不属于这 k 个色的空格，提示才有意义
+			if valid_r and all_rows.size() == k:
 				var has_new := false
 				for row in all_rows:
 					if row_piece[row]:
@@ -266,7 +315,7 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 					if has_new:
 						break
 				if has_new:
-					var hl_cells: Array[Vector2i] = [] # highlight_cells：这 k 个色的全部候选格，给 UI 高亮
+					var hl_cells: Array[Vector2i] = []
 					for reg in subset:
 						for r in range(size):
 							for c in range(size):
@@ -277,7 +326,7 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 									)
 								):
 									hl_cells.append(Vector2i(r, c))
-					var strat := "R3" if k <= 3 else "R4" # 同一套判定，只按 k 的大小改难度命名
+					var strat := "R3" if k <= 3 else "R4"
 					return {
 						"found": true,
 						"strategy": strat,
@@ -288,7 +337,7 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 						"locked_cols": []
 					}
 
-			var all_cols: Dictionary = {} # 列方向：与上面完全对称的判定
+			var all_cols: Dictionary = {}
 			var valid_c := true
 			for reg in subset:
 				var cls: Dictionary = reg_cols[reg]
@@ -297,7 +346,7 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 					break
 				for col in cls:
 					all_cols[col] = true
-			if valid_c and all_cols.size() == k: # 同样要求有可排除的新格子
+			if valid_c and all_cols.size() == k:
 				var has_new := false
 				for col in all_cols:
 					if col_piece[col]:
@@ -309,7 +358,7 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 					if has_new:
 						break
 				if has_new:
-					var hl_cells: Array[Vector2i] = [] # 列方向的 highlight_cells
+					var hl_cells: Array[Vector2i] = []
 					for reg in subset:
 						for r in range(size):
 							for c in range(size):
@@ -320,7 +369,7 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 									)
 								):
 									hl_cells.append(Vector2i(r, c))
-					var strat := "R3" if k <= 3 else "R4" # 列方向的难度命名
+					var strat := "R3" if k <= 3 else "R4"
 					return {
 						"found": true,
 						"strategy": strat,
@@ -331,7 +380,114 @@ static func find_r3_r4_hint(board: Array, size: int, regions: Array) -> Dictiona
 						"locked_cols": all_cols.keys()
 					}
 
-	return {"found": false} # k 到上限都没找到
+		if not enable_reverse:
+			continue
+
+		var free_rows: Array[int] = _units_without_piece(row_piece, size)
+		for rsub in _gen_subsets(free_rows, k):
+			var color_set: Dictionary = {}
+			var valid_rev_r: bool = true
+			for row in rsub:
+				var row_colors: Dictionary = row_colors_by_row[row]
+				if row_colors.is_empty() or row_colors.size() > k:
+					valid_rev_r = false
+					break
+				for reg in row_colors:
+					color_set[reg] = true
+			if not valid_rev_r or color_set.size() != k:
+				continue
+			var row_in: Dictionary = {}
+			for row in rsub:
+				row_in[row] = true
+			var has_new_rev_r: bool = false
+			for r in range(size):
+				if row_in.has(r) or row_piece[r]:
+					continue
+				for c in range(size):
+					if color_set.has(regions[r][c]) and board[r][c] == CellState.EMPTY:
+						has_new_rev_r = true
+						break
+				if has_new_rev_r:
+					break
+			if not has_new_rev_r:
+				continue
+			var hl_rev_r: Array[Vector2i] = []
+			for row in rsub:
+				for c in range(size):
+					if _can_place(row, c, board, size, regions, row_piece, col_piece, reg_piece):
+						hl_rev_r.append(Vector2i(row, c))
+			var regs_rev_r: Array = color_set.keys()
+			regs_rev_r.sort()
+			return {
+				"found": true,
+				"strategy": _reverse_strategy_name(k),
+				"description": TranslationServer.translate("HINT_ROWS_EXCLUDE").format([k]),
+				"regions": regs_rev_r,
+				"highlight_cells": hl_rev_r,
+				"locked_rows": rsub.duplicate(),
+				"locked_cols": []
+			}
+
+		var free_cols: Array[int] = _units_without_piece(col_piece, size)
+		for csub in _gen_subsets(free_cols, k):
+			var color_set_c: Dictionary = {}
+			var valid_rev_c: bool = true
+			for col in csub:
+				var col_colors: Dictionary = col_colors_by_col[col]
+				if col_colors.is_empty() or col_colors.size() > k:
+					valid_rev_c = false
+					break
+				for reg in col_colors:
+					color_set_c[reg] = true
+			if not valid_rev_c or color_set_c.size() != k:
+				continue
+			var col_in: Dictionary = {}
+			for col in csub:
+				col_in[col] = true
+			var has_new_rev_c: bool = false
+			for c in range(size):
+				if col_in.has(c) or col_piece[c]:
+					continue
+				for r in range(size):
+					if color_set_c.has(regions[r][c]) and board[r][c] == CellState.EMPTY:
+						has_new_rev_c = true
+						break
+				if has_new_rev_c:
+					break
+			if not has_new_rev_c:
+				continue
+			var hl_rev_c: Array[Vector2i] = []
+			for col in csub:
+				for r in range(size):
+					if _can_place(r, col, board, size, regions, row_piece, col_piece, reg_piece):
+						hl_rev_c.append(Vector2i(r, col))
+			var regs_rev_c: Array = color_set_c.keys()
+			regs_rev_c.sort()
+			return {
+				"found": true,
+				"strategy": _reverse_strategy_name(k),
+				"description": TranslationServer.translate("HINT_COLS_EXCLUDE").format([k]),
+				"regions": regs_rev_c,
+				"highlight_cells": hl_rev_c,
+				"locked_rows": [],
+				"locked_cols": csub.duplicate()
+			}
+
+	return {"found": false}
+
+
+## 反向锁定按集合规模区分 R3b 与 R4b，四个及以上归入 R4b。
+static func _reverse_strategy_name(k: int) -> String:
+	return "R3b" if k < 4 else "R4b"
+
+
+## 列出尚未放猫的行或列编号，供反向锁定枚举组合。
+static func _units_without_piece(piece: Array[bool], size: int) -> Array[int]:
+	var out: Array[int] = []
+	for i in range(size):
+		if not piece[i]:
+			out.append(i)
+	return out
 
 
 # ================= 组合枚举 =================
@@ -523,6 +679,155 @@ static func find_r2_hint(board: Array, size: int, regions: Array) -> Dictionary:
 	return {"found": false} # 四种模式都没命中
 
 
+## 排除已有单格区域的题，检查空盘能否经整行约束得到唯一候选。
+static func compute_is_hidden_single_l1(size: int, regions: Array) -> bool:
+	if _has_single_cell_region(regions, size):
+		return false
+	var empty_board: Array = _empty_board_for_hidden_single(size)
+
+	if _full_line_found(empty_board, size, regions):
+		return true
+
+	for r: int in range(size):
+		var row_reg: int = _row_uniform_region(regions, size, r)
+		if row_reg < 0:
+			continue
+		var after: Array = _exclude_region_outside_row(empty_board, size, regions, row_reg, r)
+		if _naked_single_found(after, size, regions):
+			return true
+
+	for reg: int in range(size):
+		var row: int = _region_confined_to_row(regions, size, reg)
+		if row < 0:
+			continue
+		var after2: Array = _exclude_other_regions_in_row(empty_board, size, regions, reg, row)
+		if _naked_single_found(after2, size, regions):
+			return true
+	return false
+
+
+## 统计区域面积，任一区域只有一格就返回 true。
+static func _has_single_cell_region(regions: Array, size: int) -> bool:
+	var cnt: Dictionary = {}
+	for r: int in range(size):
+		for c: int in range(size):
+			var rid: int = int((regions[r] as Array)[c])
+			cnt[rid] = cnt.get(rid, 0) + 1
+	for v: int in cnt.values():
+		if v == 1:
+			return true
+	return false
+
+
+## 查找同一区域占据完整一行和完整一列时的空交点。
+static func _full_line_found(board: Array, size: int, regions: Array) -> bool:
+	for r: int in range(size):
+		var row_reg: int = _row_uniform_region(regions, size, r)
+		if row_reg < 0:
+			continue
+		for c: int in range(size):
+			if int((board[r] as Array)[c]) != CellState.EMPTY:
+				continue
+			var col_uniform: bool = true
+			for rr: int in range(size):
+				if int((regions[rr] as Array)[c]) != row_reg:
+					col_uniform = false
+					break
+			if col_uniform:
+				return true
+	return false
+
+
+## 判断某行、列或区域是否只剩一个空格，不执行完整落子合法性检查。
+static func _naked_single_found(board: Array, size: int, regions: Array) -> bool:
+	for r: int in range(size):
+		var cnt: int = 0
+		for c: int in range(size):
+			if int((board[r] as Array)[c]) == CellState.EMPTY:
+				cnt += 1
+		if cnt == 1:
+			return true
+	for c: int in range(size):
+		var cnt2: int = 0
+		for r: int in range(size):
+			if int((board[r] as Array)[c]) == CellState.EMPTY:
+				cnt2 += 1
+		if cnt2 == 1:
+			return true
+	var reg_empty: Dictionary = {}
+	for r: int in range(size):
+		for c: int in range(size):
+			if int((board[r] as Array)[c]) == CellState.EMPTY:
+				var rid: int = int((regions[r] as Array)[c])
+				reg_empty[rid] = reg_empty.get(rid, 0) + 1
+	for v: int in reg_empty.values():
+		if v == 1:
+			return true
+	return false
+
+
+## 构建全空棋盘供隐藏唯一候选分析，避免改动实际局面。
+static func _empty_board_for_hidden_single(size: int) -> Array:
+	var board: Array = []
+	for r: int in range(size):
+		var row: Array = []
+		row.resize(size)
+		row.fill(CellState.EMPTY)
+		board.append(row)
+	return board
+
+
+## 整行属于同一区域时返回区域号，否则返回 -1。
+static func _row_uniform_region(regions: Array, size: int, r: int) -> int:
+	var reg: int = int((regions[r] as Array)[0])
+	for c: int in range(1, size):
+		if int((regions[r] as Array)[c]) != reg:
+			return -1
+	return reg
+
+
+## 要求区域完全局限于一行且格数小于边长，满足时返回该行号。
+static func _region_confined_to_row(regions: Array, size: int, reg: int) -> int:
+	var row: int = -1
+	var count: int = 0
+	for r: int in range(size):
+		for c: int in range(size):
+			if int((regions[r] as Array)[c]) == reg:
+				count += 1
+				if row < 0:
+					row = r
+				elif row != r:
+					return -1
+	if row < 0 or count >= size:
+		return -1
+	return row
+
+
+## 复制棋盘后，把指定区域在目标行之外的格子标叉。
+static func _exclude_region_outside_row(
+	board: Array, size: int, regions: Array, row_reg: int, row: int
+) -> Array:
+	var after: Array = board.duplicate(true)
+	for r: int in range(size):
+		if r == row:
+			continue
+		for c: int in range(size):
+			if int((regions[r] as Array)[c]) == row_reg:
+				(after[r] as Array)[c] = CellState.MARK
+	return after
+
+
+## 复制棋盘后，排除目标行中不属于指定区域的格子。
+static func _exclude_other_regions_in_row(
+	board: Array, size: int, regions: Array, reg: int, row: int
+) -> Array:
+	var after: Array = board.duplicate(true)
+	for c: int in range(size):
+		if int((regions[row] as Array)[c]) != reg:
+			(after[row] as Array)[c] = CellState.MARK
+	return after
+
+
 # ================= R4/R5：反证法（假设落子 → 推到矛盾） =================
 ## 假设某格放猫，再用唯一候选法往下推；若推出某行/列/色无解，就说明这格不能放猫
 ## 取「推到矛盾所需额外步数最少」的格子：步数<=2 记 R4_chain，更多记 R5_chain
@@ -578,7 +883,7 @@ static func _chain_try_contradiction_detail(
 	var cands: Array = [] # 深拷一份候选表，避免污染 base
 	for row_arr in base["cands"] as Array:
 		cands.append((row_arr as Array).duplicate())
-	var state: Dictionary = { # 工作状态：候选表 + 每行已放猫的列号 + 已占用的列/色
+	var state: Dictionary = {
 		"cands": cands,
 		"placed": (base["placed"] as Array).duplicate(),
 		"col_placed": (base["col_placed"] as Array).duplicate(),
@@ -851,6 +1156,227 @@ static func _chain_try_contradiction(
 	return -1 # 一路推完都没矛盾
 
 
+## 在副本上反复推导 R1～R3，为答案猫记录本次落子前所需最高层级，剩余答案格用回退层级。
+static func compute_cell_ranks(
+	board: Array, size: int, regions: Array, solution: Array, fallback_strategy: int = 4
+) -> Dictionary:
+	var work: Array = []
+	for r in range(size):
+		var row: Array = []
+		row.resize(size)
+		for c in range(size):
+			row[c] = board[r][c]
+		work.append(row)
+	var ranks: Dictionary = {}
+	for r in range(size):
+		for c in range(size):
+			if work[r][c] == CellState.CAT and bool(solution[r][c]):
+				ranks[Vector2i(r, c)] = 1
+
+	var current_max: int = 1
+	while true:
+		var mark_h: Dictionary = find_mark_hint(work, size, regions)
+		if mark_h.get("found", false):
+			for cell_v in mark_h.get("unit_cells", []) as Array:
+				var cell: Vector2i = cell_v
+				if work[cell.x][cell.y] == CellState.EMPTY:
+					work[cell.x][cell.y] = CellState.MARK
+			continue
+		var r1_h: Dictionary = find_r1_hint(work, size, regions)
+		if r1_h.get("found", false):
+			var c1: Vector2i = r1_h["cell"]
+			work[c1.x][c1.y] = CellState.CAT
+			if bool(solution[c1.x][c1.y]):
+				ranks[c1] = current_max
+			current_max = 1
+			continue
+		var r2_h: Dictionary = find_r2_hint(work, size, regions)
+		if r2_h.get("found", false):
+			_apply_r2_marks(work, r2_h, size, regions)
+			current_max = maxi(current_max, 2)
+			continue
+		var r3_h: Dictionary = find_r3_r4_hint(work, size, regions)
+		if r3_h.get("found", false) and r3_h.get("strategy", "") == "R3":
+			_apply_r3_marks(work, r3_h, size, regions)
+			current_max = maxi(current_max, 3)
+			continue
+		break
+
+	for r in range(size):
+		for c in range(size):
+			if bool(solution[r][c]) and not ranks.has(Vector2i(r, c)):
+				ranks[Vector2i(r, c)] = fallback_strategy
+	return ranks
+
+
+## 在副本上回放 R1～R3，按正确落猫顺序记录所需层级；推不动时结束。
+static func compute_strategy_sequence(
+	board: Array, size: int, regions: Array, solution: Array
+) -> Array[int]:
+	var work: Array = []
+	for r in range(size):
+		var row: Array = []
+		row.resize(size)
+		for c in range(size):
+			row[c] = board[r][c]
+		work.append(row)
+	var seq: Array[int] = []
+	var current_max: int = 1
+	while true:
+		var mark_h: Dictionary = find_mark_hint(work, size, regions)
+		if mark_h.get("found", false):
+			for cell_v in mark_h.get("unit_cells", []) as Array:
+				var cell: Vector2i = cell_v
+				if work[cell.x][cell.y] == CellState.EMPTY:
+					work[cell.x][cell.y] = CellState.MARK
+			continue
+		var r1_h: Dictionary = find_r1_hint(work, size, regions)
+		if r1_h.get("found", false):
+			var c1: Vector2i = r1_h["cell"]
+			work[c1.x][c1.y] = CellState.CAT
+			if bool(solution[c1.x][c1.y]):
+				seq.append(current_max)
+			current_max = 1
+			continue
+		var r2_h: Dictionary = find_r2_hint(work, size, regions)
+		if r2_h.get("found", false):
+			_apply_r2_marks(work, r2_h, size, regions)
+			current_max = maxi(current_max, 2)
+			continue
+		var r3_h: Dictionary = find_r3_r4_hint(work, size, regions)
+		if r3_h.get("found", false) and r3_h.get("strategy", "") == "R3":
+			_apply_r3_marks(work, r3_h, size, regions)
+			current_max = maxi(current_max, 3)
+			continue
+		break
+	return seq
+
+
+## 从空盘回放逻辑提示并返回步骤标签；此入口保留 solution 参数，但回放过程不使用它。
+static func replay_hint_steps(
+	size: int, regions: Array, solution: Array, include_region: bool = false, max_steps: int = 0
+) -> Array[String]:
+	var replay: Dictionary = _replay_hint_result(size, regions, include_region, max_steps)
+	var steps: Array[String] = replay["steps"]
+	return steps
+
+
+## 校验矩阵后回放提示，要求完整解与传入答案一致，再汇总最高层级和各层步骤数。
+static func compute_puzzle_difficulty(size: int, regions: Array, solution: Array) -> Dictionary:
+	if size <= 0 or regions.size() != size or solution.size() != size:
+		return {"ok": false, "reason": "bad_shape"}
+	var int_regions: Array = []
+	for row_index in range(size):
+		if not (regions[row_index] is Array) or not (solution[row_index] is Array):
+			return {"ok": false, "reason": "bad_shape"}
+		var region_row: Array = regions[row_index]
+		var solution_row: Array = solution[row_index]
+		if region_row.size() != size or solution_row.size() != size:
+			return {"ok": false, "reason": "bad_shape"}
+		var int_row: Array[int] = []
+		for region_value: Variant in region_row:
+			if not (region_value is int or region_value is float):
+				return {"ok": false, "reason": "bad_region"}
+			var region_id: int = int(region_value)
+			if region_id < 0 or region_id >= size or float(region_value) != float(region_id):
+				return {"ok": false, "reason": "bad_region"}
+			int_row.append(region_id)
+		int_regions.append(int_row)
+
+	var replay: Dictionary = _replay_hint_result(size, int_regions, false, 0)
+	var steps: Array[String] = replay["steps"]
+	var work: Array = replay["board"]
+	var rank_steps: Array[int] = [0, 0, 0, 0, 0]
+	for step in steps:
+		match step:
+			"1", "2", "3", "4":
+				rank_steps[int(step) - 1] += 1
+			"4c":
+				rank_steps[3] += 1
+			"5c":
+				rank_steps[4] += 1
+			"X":
+				return {"ok": false, "reason": "unclassifiable"}
+	if rank_steps[0] != size:
+		return {"ok": false, "reason": "unclassifiable"}
+	for row_index in range(size):
+		for column_index in range(size):
+			if (
+				(work[row_index][column_index] == CellState.CAT)
+				!= bool(solution[row_index][column_index])
+			):
+				return {"ok": false, "reason": "solution_mismatch"}
+	var max_rank: int = 1
+	var total_steps: int = 0
+	for rank_index in range(rank_steps.size()):
+		total_steps += rank_steps[rank_index]
+		if rank_steps[rank_index] > 0:
+			max_rank = rank_index + 1
+	return {
+		"ok": true,
+		"r": max_rank,
+		"steps": total_steps,
+		"r1": rank_steps[0],
+		"r2": rank_steps[1],
+		"r3": rank_steps[2],
+		"r4": rank_steps[3],
+		"r5": rank_steps[4],
+	}
+
+
+## 按标叉、R1、R2、集合锁定、链式推理的顺序自动推进；无招可用记 X，步数上限防止循环。
+static func _replay_hint_result(
+	size: int, regions: Array, include_region: bool, max_steps: int
+) -> Dictionary:
+	var work: Array = []
+	for r in range(size):
+		var row: Array = []
+		row.resize(size)
+		row.fill(CellState.EMPTY)
+		work.append(row)
+	var steps: Array[String] = []
+	var cats: int = 0
+	var guard: int = max_steps if max_steps > 0 else size * size * 20
+	for _i in range(guard):
+		var mark_h: Dictionary = find_mark_hint(work, size, regions, include_region)
+		if mark_h.get("found", false):
+			for cell_v in mark_h.get("unit_cells", []) as Array:
+				var cell: Vector2i = cell_v
+				if work[cell.x][cell.y] == CellState.EMPTY:
+					work[cell.x][cell.y] = CellState.MARK
+			steps.append("M")
+			continue
+		var r1_h: Dictionary = find_r1_hint(work, size, regions)
+		if r1_h.get("found", false):
+			var cat_cell: Vector2i = r1_h["cell"]
+			work[cat_cell.x][cat_cell.y] = CellState.CAT
+			steps.append("1")
+			cats += 1
+			if cats >= size:
+				return {"steps": steps, "board": work}
+			continue
+		var r2_h: Dictionary = find_r2_hint(work, size, regions)
+		if r2_h.get("found", false):
+			_apply_r2_marks(work, r2_h, size, regions)
+			steps.append("2")
+			continue
+		var r34_h: Dictionary = find_r3_r4_hint(work, size, regions)
+		if r34_h.get("found", false):
+			_apply_r3_marks(work, r34_h, size, regions)
+			steps.append("3" if str(r34_h.get("strategy", "")) == "R3" else "4")
+			continue
+		var chain_h: Dictionary = find_chain_hint(work, size, regions)
+		if chain_h.get("found", false):
+			var excluded_cell: Vector2i = chain_h["cell"]
+			if work[excluded_cell.x][excluded_cell.y] == CellState.EMPTY:
+				work[excluded_cell.x][excluded_cell.y] = CellState.MARK
+			steps.append("4c" if str(chain_h.get("strategy", "")) == "R4_chain" else "5c")
+			continue
+		steps.append("X")
+		return {"steps": steps, "board": work}
+	return {"steps": steps, "board": work}
+
+
 # ================= 自动解题循环 / 难度标注 =================
 ## 拿棋盘反复套用「画叉 + R1 + R2 + R3」把能白送的格子推完，推不动的那些答案格就是 R4 及以上难度
 ## 参数 solution 是二维 bool 棋盘；返回 {Vector2i: true}，只含答案里是猫、但简单策略推不出来的位置
@@ -927,19 +1453,23 @@ static func _apply_r2_marks(work_board: Array, hint: Dictionary, size: int, regi
 						work_board[r][c] = CellState.MARK
 
 
-## 把 R3 锁定的行/列上、不属于这 k 个色的空格标成叉
+## 只处理正向区域锁定，原地标叉锁定行列中的其他区域；反向策略会报错并退出。
 static func _apply_r3_marks(work_board: Array, hint: Dictionary, size: int, regions: Array) -> void:
-	var reg_set: Dictionary = {} # 参与锁定的色集合
+	var strategy: String = str(hint.get("strategy", ""))
+	if strategy.ends_with("b"):
+		push_error("_apply_r3_marks 不支持反向策略 %s（同名键语义反转）" % strategy)
+		return
+	var reg_set: Dictionary = {}
 	for reg in hint.get("regions", []) as Array:
 		reg_set[int(reg)] = true
-	for row_v in hint.get("locked_rows", []) as Array: # 锁定的行：行内非这些色的空格全部画叉
+	for row_v in hint.get("locked_rows", []) as Array:
 		var row: int = int(row_v)
 		for c in range(size):
 			if reg_set.has(int(regions[row][c])):
 				continue
 			if work_board[row][c] == CellState.EMPTY:
 				work_board[row][c] = CellState.MARK
-	for col_v in hint.get("locked_cols", []) as Array: # 锁定的列：同上
+	for col_v in hint.get("locked_cols", []) as Array:
 		var col: int = int(col_v)
 		for r in range(size):
 			if reg_set.has(int(regions[r][col])):

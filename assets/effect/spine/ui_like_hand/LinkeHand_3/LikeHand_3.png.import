@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bopry71i5m2p"
-path.s3tc="res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.s3tc.ctex"
-path.etc2="res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.etc2.ctex"
+path.bptc="res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.bptc.ctex"
+path.astc="res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/effect/spine/ui_like_hand/LinkeHand_3/LikeHand_3.png"
-dest_files=["res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.s3tc.ctex", "res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.etc2.ctex"]
+dest_files=["res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.bptc.ctex", "res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

@@ -11,38 +11,51 @@ config_version=5
 [application]
 
 config/name="Meowdoku"
-config/version="0.0.1"
-run/main_scene="uid://b7eqvkjrlbffh"
+config/version="1.22.0"
+run/main_scene="res://launcher.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="Meowdoku-Recovered-1.22.0"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.6", "Mobile")
 boot_splash/bg_color=Color(0.969, 0.949, 0.933, 1)
 boot_splash/image="res://assets/icons/ios_launch_3x.png"
-config/icon="uid://b26ajkmkt5kpb"
+config/icon="res://icon.png"
 run/disable_stdout.rel=true
-config/mcp_port=6800
 
 [autoload]
 
+NativeUtilManager="*res://scripts/common/native_util_manager.gd"
+EventBus="*res://scripts/module/event_bus/event_bus.gd"
 GameState="*res://scripts/module/game_state/game_state.gd"
 SoundManager="*res://scripts/module/sound/sound_manager.gd"
 UIManager="*res://scripts/module/ui/ui_manager.gd"
-CheatBus="*res://addons/cheat_manager/cheat_bus.gd"
+CheatBus="*res://scripts/module/cheat/cheat_bus.gd"
+UniKit="*res://addons/unikit/scripts/unikit.gd"
 UniKitManager="*res://scripts/common/unikit_manager.gd"
+PurchaseManager="*res://scripts/module/purchase/purchase_manager.gd"
 SessionManager="*res://scripts/module/session/session_manager.gd"
 Tracker="*res://scripts/module/tracker/tracker.gd"
-DebugApiServerManager="*res://scripts/module/debug/debug_api_server_manager.gd"
 ABTestManager="*res://scripts/module/abtest/abtest_manager.gd"
 StreakManager="*res://scripts/module/daily_streak/core/feature_daily_streak.gd"
 LanguageManager="*res://scripts/module/language/language_manager.gd"
-ScreenshotHotkey="*uid://ivaigcrt7kjq"
-MCPScreenshot="*res://addons/godot_mcp/mcp_screenshot_service.gd"
-MCPInputService="*res://addons/godot_mcp/mcp_input_service.gd"
-MCPGameInspector="*res://addons/godot_mcp/mcp_game_inspector_service.gd"
 ScreenManager="*res://scripts/module/common/screen_manager.gd"
+SpineIdleGuard="*res://scripts/module/common/spine_idle_guard.gd"
+PowerSaver="*res://scripts/module/common/power_saver.gd"
 AwardManager="*res://scripts/module/award/award_manager.gd"
 HomeSettingAnchor="*res://scripts/module/ui/home_setting_anchor.gd"
 HelpshiftManager="*res://scripts/common/helpshift_manager.gd"
-RedDotCenter="*res://scripts/module/ui/red_dot_center.gd"
+RedDotCenter="*res://scripts/module/ui/red_dot/red_dot_center.gd"
+RobotService="*res://scripts/module/robot/robot_service.gd"
+ProfileService="*res://scripts/module/profile/profile_service.gd"
+RankActivityManager="*res://scripts/module/rank_activity/rank_activity_manager.gd"
+ClockTicker="*res://scripts/module/ui/clock_ticker.gd"
+LXAuth="*res://addons/lxlogin/scripts/lx_auth.gd"
+AuthManager="*res://scripts/common/auth_manager.gd"
+DataSyncManager="*res://scripts/module/data_sync/data_sync_manager.gd"
+AccountManager="*res://scripts/module/account/account_manager.gd"
+LevelRecManager="*res://scripts/module/level_rec/level_rec_manager.gd"
+PeekabooManager="*res://scripts/module/peekaboo/peekaboo_manager.gd"
+DcProbe="*res://scripts/module/debug/dc_probe.gd"
 
 [debug]
 
@@ -69,11 +82,18 @@ text_editor/behavior/indent/type=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/helpshift_plugin/plugin.cfg", "res://addons/in_app_review_plugin/plugin.cfg", "res://addons/level_bank_encryptor/plugin.cfg", "res://addons/resolution_picker/plugin.cfg", "res://addons/screenshot_tool/plugin.cfg", "res://addons/shortcut_plugin/plugin.cfg", "res://addons/ui_code_generator/plugin.cfg", "res://addons/unikit_ios_exporter/plugin.cfg", "res://addons/vibrate_plugin/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_mcp/plugin.cfg", "res://addons/helpshift_plugin/plugin.cfg", "res://addons/in_app_review_plugin/plugin.cfg", "res://addons/level_bank_encryptor/plugin.cfg", "res://addons/recovery_android_export/plugin.cfg", "res://addons/vibrate_plugin/plugin.cfg")
 
 [gui]
 
-theme/custom_font="uid://bvxeo4fq0ps17"
+theme/custom_font="res://assets/fonts/Roboto.ttf"
+
+[importer_defaults]
+
+texture={
+&"compress/high_quality": true,
+&"compress/mode": 2
+}
 
 [internationalization]
 

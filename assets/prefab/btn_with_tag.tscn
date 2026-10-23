@@ -1,38 +1,403 @@
 [gd_scene format=3 uid="uid://b3a61adynhyav"]
 
 [ext_resource type="Script" uid="uid://cnjnfskmc5rq7" path="res://scripts/module/ui/widget/btn_with_tag.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://dxescyjtr3vte" path="res://assets/sprites/common/btn_shadow.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://dwt8fu7nbqc4j" path="res://assets/effect/texture/mask/et_mask_005.png" id="3"]
-[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="4"]
-[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="5"]
-[ext_resource type="Texture2D" uid="uid://3lv15vxdtk2k" path="res://assets/sprites/home/difficulty_banner.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dyed68oiachwn" path="res://assets/effect/texture/glow/et_glow_006.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dytekklejyfay" path="res://assets/effect/texture/glow/et_glow_005.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dxescyjtr3vte" path="res://assets/sprites/common/btn_shadow.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dyrbo2k7wo750" path="res://assets/effect/texture/shine/et_shine_005.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://c40pixs6fnwcr" path="res://assets/effect/texture/ui/et_fire_point.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dwt8fu7nbqc4j" path="res://assets/effect/texture/mask/et_mask_005.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://b74n22finryx4" path="res://assets/effect/texture/ui/et_btn_fire.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://3lv15vxdtk2k" path="res://assets/sprites/home/difficulty_banner.png" id="11"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="12"]
+[ext_resource type="Texture2D" uid="uid://jyvsgmhocgj2" path="res://assets/sprites/home/difficult_btn.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://cu4siyoskvj7n" path="res://assets/effect/texture/glow/et_glow_fish.png" id="14"]
+[ext_resource type="Shader" uid="uid://b1v1svt743jg2" path="res://assets/effect/shader/combined_simplified_fire.gdshader" id="15"]
+[ext_resource type="Texture2D" uid="uid://cemh7edw1e2r6" path="res://assets/sprites/home/hard_rectangle.png" id="16"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="17"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="18"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ykt2p"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5ioq7"]
+
+[sub_resource type="Curve" id="Curve_g0h2o"]
+_data = [Vector2(0, 0), 0.0, 3.8677683, 0, 1, Vector2(0.25854704, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.49399322), -0.682453, 0.0, 1, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_s262i"]
+offsets = PackedFloat32Array(0.65478843, 0.8808463)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_p8rnu"]
+offsets = PackedFloat32Array(0.41870824)
+colors = PackedColorArray(1, 0.8666667, 0.28627452, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_k8qto"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_1opb4"]
+offsets = PackedFloat32Array(0.41870824)
+colors = PackedColorArray(1, 0.9166667, 0.5, 1)
+
+[sub_resource type="Gradient" id="Gradient_6n4cv"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(0.8509804, 0.62352943, 0.16862746, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_728el"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_v1fmh"]
+offsets = PackedFloat32Array(0.41870824)
+colors = PackedColorArray(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="Gradient" id="Gradient_pxi1w"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 0.91764706, 0.5019608, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s262i"]
 bg_color = Color(0.945, 0.576, 0.125, 1)
+border_color = Color(0, 0, 0, 0)
 corner_radius_top_left = 200
 corner_radius_top_right = 200
 corner_radius_bottom_right = 200
 corner_radius_bottom_left = 200
 corner_detail = 12
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2nkcl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p8rnu"]
 bg_color = Color(0.945, 0.576, 0.125, 1)
+border_color = Color(0, 0, 0, 0)
 corner_radius_top_left = 200
 corner_radius_top_right = 200
 corner_radius_bottom_right = 200
 corner_radius_bottom_left = 200
 corner_detail = 12
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1li63"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k8qto"]
 bg_color = Color(0.945, 0.576, 0.125, 1)
+border_color = Color(0, 0, 0, 0)
 corner_radius_top_left = 200
 corner_radius_top_right = 200
 corner_radius_bottom_right = 200
 corner_radius_bottom_left = 200
 corner_detail = 12
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_qbs1s"]
+
+[sub_resource type="Curve" id="Curve_k8qto"]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 1.3934184), 0.0, -2.2231147, 0, 1]
+point_count = 1
+
+[sub_resource type="Curve" id="Curve_1opb4"]
+_data = [Vector2(0, 0.68713164), 0.0, -0.9590692, 0, 1, Vector2(0.33653843, 0.36436802), 0.0, 0.0, 0, 0, Vector2(0.67735046, 0.7541748), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.3374429, 0.0, 1, 0]
+point_count = 4
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_lj45t"]
 blend_mode = 1
+
+[sub_resource type="Shader" id="Shader_yosfi"]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+// 火焰继续简化：将当前 3 外焰 + 3 内焰固化到一次 Shader 绘制。
+
+/** 外焰颜色。 */
+uniform vec4 outer_color : source_color = vec4(0.9647059, 0.44313726, 0.30980393, 1.0);
+
+/** 内焰颜色。 */
+uniform vec4 inner_color : source_color = vec4(1.0, 0.54999995, 0.39999998, 1.0);
+
+/** 六份火焰的整体速度倍率。 */
+uniform float global_speed : hint_range(0.0, 3.0, 0.05) = 1.0;
+
+/** 三团外焰交界处的圆角融合宽度。0 为原始硬并集。 */
+uniform float outer_join_melt : hint_range(0.0, 0.3, 0.005) = 0.06;
+
+/** 三团内焰交界处的圆角融合宽度。 */
+uniform float inner_join_melt : hint_range(0.0, 0.3, 0.005) = 0.04;
+
+/** 最终轮廓抗锯齿宽度。 */
+uniform float edge_softness : hint_range(0.0005, 0.05, 0.0005) = 0.004;
+
+const float GROUP_ASPECT = 2.40000003576287;
+const int FIRE_COUNT = 6;
+const int MAX_PARTICLES = 32;
+const float REFERENCE_BASE_WIDTH = 0.38;
+
+
+float hash_seeded(float value, float seed_value) {
+	float seeded_value = value + seed_value * 19.19;
+	return fract(sin(seeded_value * 127.1 + 311.7) * 43758.5453);
+}
+
+
+float smooth_min_field(float first, float second, float radius) {
+	if (radius <= 0.0001) {
+		return min(first, second);
+	}
+	float factor = clamp(
+		0.5 + 0.5 * (second - first) / radius,
+		0.0,
+		1.0
+	);
+	return (
+		mix(second, first, factor)
+		- radius * factor * (1.0 - factor)
+	);
+}
+
+
+float ellipse_field(vec2 position, vec2 center, vec2 radius) {
+	vec2 safe_radius = max(radius, vec2(0.0001));
+	return (
+		(length((position - center) / safe_radius) - 1.0)
+		* min(safe_radius.x, safe_radius.y)
+	);
+}
+
+
+// center.x, center.y, size.x, size.y
+vec4 base_data(int index) {
+	if (index == 0) return vec4(-0.84, -0.145, 0.405, 0.55);
+	if (index == 1) return vec4(0.0, -0.04, 0.9, 0.49);
+	if (index == 2) return vec4(0.87, 0.07, 0.35, 0.305);
+	if (index == 3) return vec4(0.855, 0.0, 0.32, 0.155);
+	if (index == 4) return vec4(-0.03, -0.06, 0.675, 0.39);
+	return vec4(-0.84, -0.08, 0.265, 0.32);
+}
+
+
+// speed, seed, breathe, particle_count
+vec4 timing_data(int index) {
+	if (index == 0) return vec4(0.5, 529.0, 0.085, 14.0);
+	if (index == 1) return vec4(0.5, 0.0, 0.035, 18.0);
+	if (index == 2) return vec4(0.5, 278.0, 0.035, 18.0);
+	if (index == 3) return vec4(1.0, 160.0, 0.035, 18.0);
+	if (index == 4) return vec4(0.5, 160.0, 0.035, 18.0);
+	return vec4(1.0, 160.0, 0.11, 18.0);
+}
+
+
+// particle_size, travel_height, shrink_power, edge_taper
+vec4 particle_data(int index) {
+	if (index == 0) return vec4(0.095, 0.91, 0.8, 0.7);
+	if (index == 1) return vec4(0.16, 0.88, 0.9, 0.9);
+	if (index == 2) return vec4(0.135, 0.57, 0.7, 1.1);
+	if (index == 3) return vec4(0.10, 0.35, 0.8, 0.9);
+	if (index == 4) return vec4(0.09, 0.66, 1.1, 0.8);
+	return vec4(0.135, 0.55, 1.7, 0.9);
+}
+
+
+// sway, branch, wobble, melt
+vec4 motion_data(int index) {
+	if (index == 0) return vec4(0.06, 0.035, 0.025, 0.12);
+	if (index == 1) return vec4(0.06, 0.02, 0.015, 0.105);
+	if (index == 2) return vec4(0.02, 0.085, 0.025, 0.11);
+	if (index == 3) return vec4(0.06, 0.035, 0.025, 0.125);
+	if (index == 4) return vec4(0.06, 0.035, 0.025, 0.10);
+	return vec4(0.105, 0.0, 0.01, 0.105);
+}
+
+
+float single_fire_field(vec2 position, int fire_index, float time_value) {
+	vec4 base = base_data(fire_index);
+	vec4 timing = timing_data(fire_index);
+	vec4 particle = particle_data(fire_index);
+	vec4 motion = motion_data(fire_index);
+	float animation_time = time_value * timing.x;
+	float seed_value = timing.y;
+
+	float breathe = 1.0 + sin(
+		animation_time * 0.72 + seed_value * 0.37
+	) * timing.z;
+	vec2 base_size = base.zw;
+	vec2 animated_base_size = base_size * vec2(
+		1.0 + (breathe - 1.0) * 0.55,
+		breathe
+	);
+	float flame_field = ellipse_field(
+		position,
+		base.xy,
+		animated_base_size
+	);
+
+	float horizontal_scale = max(
+		base_size.x / REFERENCE_BASE_WIDTH,
+		0.25
+	);
+	float size_and_count_scale = sqrt(horizontal_scale);
+	float effective_particle_count = clamp(
+		ceil(timing.w * size_and_count_scale),
+		4.0,
+		float(MAX_PARTICLES)
+	);
+
+	for (int particle_index_int = 0; particle_index_int < MAX_PARTICLES; particle_index_int++) {
+		if (float(particle_index_int) >= effective_particle_count) {
+			continue;
+		}
+		float particle_index = float(particle_index_int);
+		float random_a = hash_seeded(particle_index + 3.1, seed_value);
+		float random_b = hash_seeded(particle_index + 17.7, seed_value);
+		float random_c = hash_seeded(particle_index + 31.9, seed_value);
+		float phase = fract(
+			animation_time
+			* mix(0.82, 1.18, random_a)
+			+ particle_index / effective_particle_count
+			+ random_b * 0.25
+		);
+
+		float side = random_c < 0.5 ? -1.0 : 1.0;
+		float start_width = (
+			base_size.x * mix(0.05, 0.95, random_a)
+		);
+		float guide_width = (
+			start_width
+			* pow(max(1.0 - phase, 0.0), particle.w)
+		);
+		float sway_envelope = smoothstep(0.15, 1.0, phase);
+		float whole_sway = (
+			sin(
+				animation_time * mix(0.55, 0.9, random_b)
+				+ random_a * TAU
+			)
+			* motion.x
+			* horizontal_scale
+			* sway_envelope
+		);
+		float branch = (
+			(random_b * 2.0 - 1.0)
+			* motion.y
+			* horizontal_scale
+			* smoothstep(0.55, 1.0, phase)
+		);
+		float local_wobble = (
+			sin(phase * TAU * 1.5 + random_c * TAU)
+			* motion.z
+			* horizontal_scale
+			* sin(phase * PI)
+		);
+		vec2 center = vec2(
+			base.x
+			+ side * guide_width
+			+ whole_sway
+			+ branch
+			+ local_wobble,
+			base.y
+			- base_size.y * 0.48
+			+ phase * particle.y
+		);
+		float life_scale = pow(
+			max(1.0 - phase, 0.0),
+			particle.z
+		);
+		float radius = (
+			particle.x
+			* size_and_count_scale
+			* mix(0.68, 1.32, random_c)
+			* life_scale
+		);
+		float ball_field = length(position - center) - radius;
+		flame_field = smooth_min_field(
+			flame_field,
+			ball_field,
+			motion.w * size_and_count_scale
+		);
+	}
+	return flame_field;
+}
+
+
+void fragment() {
+	vec2 position = vec2(
+		(UV.x - 0.5) * GROUP_ASPECT,
+		1.0 - UV.y
+	);
+	float time_value = TIME * global_speed;
+
+	float outer_field = 1000.0;
+	for (int index = 0; index < 3; index++) {
+		outer_field = smooth_min_field(
+			outer_field,
+			single_fire_field(position, index, time_value),
+			outer_join_melt
+		);
+	}
+
+	float inner_field = 1000.0;
+	for (int index = 3; index < FIRE_COUNT; index++) {
+		inner_field = smooth_min_field(
+			inner_field,
+			single_fire_field(position, index, time_value),
+			inner_join_melt
+		);
+	}
+
+	float outer_mask = 1.0 - smoothstep(
+		-edge_softness,
+		edge_softness,
+		outer_field
+	);
+	float inner_mask = 1.0 - smoothstep(
+		-edge_softness,
+		edge_softness,
+		inner_field
+	);
+	float final_alpha = max(outer_mask, inner_mask);
+	vec3 final_color = mix(
+		outer_color.rgb,
+		inner_color.rgb,
+		inner_mask
+	);
+
+	vec4 canvas_color = COLOR;
+	COLOR = vec4(
+		final_color,
+		max(outer_color.a * outer_mask, inner_color.a * inner_mask)
+		* canvas_color.a
+	);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ce8d5"]
+shader = SubResource("Shader_yosfi")
+shader_parameter/outer_color = Color(1, 0.51, 0.16000003, 1)
+shader_parameter/inner_color = Color(1, 0.66499996, 0.32999998, 1)
+shader_parameter/global_speed = 1.0
+shader_parameter/outer_join_melt = 0.06
+shader_parameter/inner_join_melt = 0.04
+shader_parameter/edge_softness = 0.004
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ce8d5"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_jl2oi"]
+_data = [Vector2(0, 0), 0.0, 3.5454543, 0, 1, Vector2(0.2820513, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.2210216), -1.0850058, 0.0, 1, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_kcako"]
+offsets = PackedFloat32Array(0.6202673, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_6n4cv"]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 1.3934184), 0.0, -2.2231147, 0, 1]
+point_count = 1
+
+[sub_resource type="Curve" id="Curve_728el"]
+_data = [Vector2(0, 0.68713164), 0.0, -0.9590692, 0, 1, Vector2(0.33653843, 0.36436802), 0.0, 0.0, 0, 0, Vector2(0.67735046, 0.7541748), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.3374429, 0.0, 1, 0]
+point_count = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p8rnu"]
+shader = ExtResource("15")
+shader_parameter/outer_color = Color(0.9647059, 0.44313726, 0.30980393, 1)
+shader_parameter/inner_color = Color(1, 0.54999995, 0.39999998, 1)
+shader_parameter/global_speed = 1.0
+shader_parameter/outer_join_melt = 0.06
+shader_parameter/inner_join_melt = 0.04
+shader_parameter/edge_softness = 0.004
 
 [sub_resource type="Animation" id="Animation_gnyf0"]
 resource_name = "GenericButton"
@@ -77,28 +442,6 @@ tracks/2/keys = {
 "points": PackedFloat32Array(1, 0, 0, 0.020447163, -0.054602563, 0.9, -0.02234859, 0, 0.06109036, 0, 1.03, -0.06109036, 0, 0.039198957, 0, 1, -0.039198957, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.06666667, 0.1996647, 0.3666667)
 }
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Root:position:x")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.18525673, 0, 0.18525673, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/4/type = "bezier"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Root:position:y")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"handle_modes": PackedInt32Array(0, 2, 2, 0),
-"points": PackedFloat32Array(0, 0, 0, 0.022740303, 4.5379257, 12, -0.022222225, 0, 0.044332676, 0, -2, -0.044332676, 0, 0.055813774, 0, 0, -0.055813774, 0, 0, 0),
-"times": PackedFloat32Array(0, 0.06666667, 0.1996647, 0.3666667)
-}
 
 [sub_resource type="Animation" id="Animation_qdiwi"]
 length = 0.001
@@ -126,11 +469,103 @@ tracks/1/keys = {
 "update": 1,
 "values": [false]
 }
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Bg/Glow:position:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1000, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Diffcult2/Red1/Bg/Glow3:position:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1000, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Root:scale:x")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, 0, 0, 0.020447163, -0.054602563),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Root:scale:y")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, 0, 0, 0.020447163, -0.054602563),
+"times": PackedFloat32Array(0)
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Root:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_tsj82"]
+resource_name = "SweepLight"
+length = 4.0
+loop_mode = 1
+step = 0.016666668
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Bg/Glow:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 2, 0),
+"points": PackedFloat32Array(-150, -0.8, 0, 0.8, 0, 1000, -0.8, 0, 0.8, 0, 1000, -0.8, 0, 0.8, 0),
+"times": PackedFloat32Array(0, 2, 4)
+}
+
+[sub_resource type="Animation" id="Animation_jl2oi"]
+resource_name = "SweepLight2"
+length = 4.0
+loop_mode = 1
+step = 0.016666668
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Diffcult2/Red1/Bg/Glow3:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(3, 2, 0),
+"points": PackedFloat32Array(-600, -0.8, 0, 0.8, 0, 600, -0.8, 0, 0.8, 0, 600, -0.8, 0, 0.8, 0),
+"times": PackedFloat32Array(0, 2, 4)
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xeuch"]
 _data = {
 &"GenericButton": SubResource("Animation_gnyf0"),
-&"RESET": SubResource("Animation_qdiwi")
+&"RESET": SubResource("Animation_qdiwi"),
+&"SweepLight1": SubResource("Animation_tsj82"),
+&"SweepLight2": SubResource("Animation_jl2oi")
 }
 
 [node name="BtnWithTag" type="Button" unique_id=256697999]
@@ -139,6 +574,8 @@ offset_right = 784.0
 offset_bottom = 258.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 script = ExtResource("1")
+hard_text_shift_up = 18.0
+metadata/_edit_vertical_guides_ = [23.0, 393.0]
 
 [node name="Root" type="Control" parent="." unique_id=664616521]
 custom_minimum_size = Vector2(784, 258)
@@ -146,6 +583,192 @@ anchors_preset = 0
 offset_right = 784.0
 offset_bottom = 258.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="EffectStars1" type="Control" parent="Root" unique_id=303963832]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PointsAlp" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=1244646655]
+material = SubResource("CanvasItemMaterial_5ioq7")
+position = Vector2(162, 59)
+amount = 1
+texture = ExtResource("2")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 4129986039
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_g0h2o")
+color = Color(1, 1, 1, 0.60784316)
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_p8rnu")
+
+[node name="PointsAdd" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=1580847815]
+material = SubResource("CanvasItemMaterial_k8qto")
+position = Vector2(162, 59)
+amount = 1
+texture = ExtResource("3")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 4129986039
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+scale_amount_min = 0.2
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_g0h2o")
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_1opb4")
+
+[node name="StarsAlp" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=2140448063]
+position = Vector2(163, 59)
+amount = 2
+texture = ExtResource("4")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 3324579219
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+angular_velocity_min = -80.0
+angular_velocity_max = 80.0
+scale_amount_min = 0.25
+scale_amount_max = 0.39
+scale_amount_curve = SubResource("Curve_g0h2o")
+color = Color(1, 1, 1, 0.78431374)
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_6n4cv")
+
+[node name="StarsAdd" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=1470512030]
+material = SubResource("CanvasItemMaterial_728el")
+position = Vector2(163, 59)
+amount = 2
+texture = ExtResource("5")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 3324579219
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+angular_velocity_min = -80.0
+angular_velocity_max = 80.0
+scale_amount_min = 0.24
+scale_amount_max = 0.38
+scale_amount_curve = SubResource("Curve_g0h2o")
+color = Color(1, 1, 1, 0.7058824)
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_v1fmh")
+
+[node name="Points2Alp2" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=1184811843]
+material = SubResource("CanvasItemMaterial_5ioq7")
+position = Vector2(629, 59)
+amount = 1
+texture = ExtResource("2")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 4129986039
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_g0h2o")
+color = Color(1, 1, 1, 0.60784316)
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_p8rnu")
+
+[node name="Points2Add2" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=1087932781]
+material = SubResource("CanvasItemMaterial_k8qto")
+position = Vector2(629, 59)
+amount = 1
+texture = ExtResource("3")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 4129986039
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+scale_amount_min = 0.2
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_g0h2o")
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_pxi1w")
+
+[node name="StarsAlp2" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=1782026900]
+position = Vector2(630, 59)
+amount = 2
+texture = ExtResource("4")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 3324579219
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+angular_velocity_min = -80.0
+angular_velocity_max = 80.0
+scale_amount_min = 0.25
+scale_amount_max = 0.39
+scale_amount_curve = SubResource("Curve_g0h2o")
+color = Color(1, 1, 1, 0.78431374)
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_6n4cv")
+
+[node name="StarsAdd2" type="CPUParticles2D" parent="Root/EffectStars1" unique_id=1686246674]
+material = SubResource("CanvasItemMaterial_728el")
+position = Vector2(630, 59)
+amount = 2
+texture = ExtResource("5")
+lifetime = 1.5
+use_fixed_seed = true
+seed = 3324579219
+emission_shape = 3
+emission_rect_extents = Vector2(80, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 30.0
+initial_velocity_max = 50.0
+angular_velocity_min = -80.0
+angular_velocity_max = 80.0
+scale_amount_min = 0.24
+scale_amount_max = 0.38
+scale_amount_curve = SubResource("Curve_g0h2o")
+color = Color(1, 1, 1, 0.7058824)
+color_ramp = SubResource("Gradient_s262i")
+color_initial_ramp = SubResource("Gradient_v1fmh")
 
 [node name="Shadow" type="NinePatchRect" parent="Root" unique_id=1769435650]
 self_modulate = Color(0.945, 0.576, 0.125, 0.7)
@@ -158,11 +781,12 @@ offset_top = 29.0
 offset_right = 19.0
 offset_bottom = 267.0
 grow_horizontal = 0
-texture = ExtResource("2")
+texture = ExtResource("6")
 patch_margin_left = 150
 patch_margin_right = 150
 
 [node name="Bg" type="Button" parent="Root" unique_id=184150677]
+clip_children = 2
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -176,9 +800,36 @@ offset_bottom = 99.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
-theme_override_styles/normal = SubResource("StyleBoxFlat_ykt2p")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_2nkcl")
-theme_override_styles/hover = SubResource("StyleBoxFlat_1li63")
+theme_override_styles/normal = SubResource("StyleBoxFlat_s262i")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_p8rnu")
+theme_override_styles/hover = SubResource("StyleBoxFlat_k8qto")
+
+[node name="Glow" type="Sprite2D" parent="Root/Bg" unique_id=878414796]
+modulate = Color(1, 0.8745098, 0.050980393, 0.3764706)
+material = SubResource("CanvasItemMaterial_qbs1s")
+position = Vector2(1000, 0)
+rotation = 0.43633232
+scale = Vector2(6, 6)
+texture = ExtResource("7")
+
+[node name="FlirePointYellow" type="CPUParticles2D" parent="Root/Bg" unique_id=1659016351]
+visible = false
+position = Vector2(354, 159)
+amount = 3
+texture = ExtResource("8")
+lifetime = 0.5
+emission_shape = 3
+emission_rect_extents = Vector2(380, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 500.0
+scale_amount_min = 0.5
+split_scale = true
+scale_curve_x = SubResource("Curve_k8qto")
+scale_curve_y = SubResource("Curve_1opb4")
+color = Color(1, 0.67058825, 0.32941177, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="Root" unique_id=1954628621]
 visible = false
@@ -186,22 +837,13 @@ modulate = Color(1, 1, 1, 0.11764706)
 material = SubResource("CanvasItemMaterial_lj45t")
 position = Vector2(393, 141)
 scale = Vector2(2.015, 1.93)
-texture = ExtResource("3")
+texture = ExtResource("9")
 
-[node name="Text" type="Label" parent="Root" unique_id=1874240776]
-layout_mode = 0
-offset_left = 53.0
-offset_top = 68.752075
-offset_right = 739.0
-offset_bottom = 227.04341
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("4")
-theme_override_font_sizes/font_size = 80
-horizontal_alignment = 1
-vertical_alignment = 1
-script = ExtResource("5")
-max_font_size = 80
-metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+[node name="CombinedFireYellow" type="Sprite2D" parent="Root" unique_id=844952004]
+visible = false
+material = SubResource("ShaderMaterial_ce8d5")
+position = Vector2(394, 158)
+texture = ExtResource("10")
 
 [node name="Diffcult" type="Node2D" parent="Root" unique_id=194685547]
 position = Vector2(19, 68)
@@ -209,7 +851,7 @@ position = Vector2(19, 68)
 [node name="Box" type="Sprite2D" parent="Root/Diffcult" unique_id=697010717]
 position = Vector2(375, 52)
 scale = Vector2(0.99, 0.99)
-texture = ExtResource("6")
+texture = ExtResource("11")
 
 [node name="Label" type="Label" parent="Root/Diffcult" unique_id=199842230]
 offset_left = 231.0
@@ -220,9 +862,141 @@ theme_override_font_sizes/font_size = 48
 text = "GAME_HARD_TAG"
 horizontal_alignment = 1
 vertical_alignment = 1
-script = ExtResource("5")
+script = ExtResource("12")
 max_font_size = 48
 metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="Diffcult2" type="Node2D" parent="Root" unique_id=1192490350]
+visible = false
+
+[node name="Red1" type="Node2D" parent="Root/Diffcult2" unique_id=3638369]
+visible = false
+
+[node name="Bg" type="Sprite2D" parent="Root/Diffcult2/Red1" unique_id=1901612077]
+clip_children = 2
+position = Vector2(394, 145)
+texture = ExtResource("13")
+
+[node name="Glow3" type="Sprite2D" parent="Root/Diffcult2/Red1/Bg" unique_id=1126096890]
+modulate = Color(1, 0.100000024, 0.100000024, 0.19607843)
+material = SubResource("CanvasItemMaterial_ce8d5")
+position = Vector2(1000, 0)
+rotation = 0.43633232
+scale = Vector2(6, 6)
+texture = ExtResource("7")
+
+[node name="EffectStars3" type="Control" parent="Root/Diffcult2/Red1" unique_id=964125775]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Points" type="CPUParticles2D" parent="Root/Diffcult2/Red1/EffectStars3" unique_id=1520283658]
+position = Vector2(394, 225)
+amount = 5
+texture = ExtResource("14")
+lifetime = 1.4
+emission_shape = 3
+emission_rect_extents = Vector2(310, 1)
+direction = Vector2(0, -1)
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 50.0
+scale_amount_min = 0.35
+scale_amount_max = 0.5
+scale_amount_curve = SubResource("Curve_jl2oi")
+color = Color(1, 0.7, 0.7, 1)
+color_ramp = SubResource("Gradient_kcako")
+
+[node name="Red2" type="Node2D" parent="Root/Diffcult2" unique_id=827817018]
+visible = false
+
+[node name="Bg" type="Sprite2D" parent="Root/Diffcult2/Red2" unique_id=1041978071]
+clip_children = 2
+position = Vector2(394, 145)
+texture = ExtResource("13")
+
+[node name="FirePointRed" type="CPUParticles2D" parent="Root/Diffcult2/Red2/Bg" unique_id=984914165]
+visible = false
+position = Vector2(-6, 75)
+amount = 3
+texture = ExtResource("8")
+lifetime = 0.5
+emission_shape = 3
+emission_rect_extents = Vector2(380, 1)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 500.0
+scale_amount_min = 0.5
+split_scale = true
+scale_curve_x = SubResource("Curve_6n4cv")
+scale_curve_y = SubResource("Curve_728el")
+color = Color(0.9647059, 0.4509804, 0.30980393, 1)
+
+[node name="CombinedFireRed" type="Sprite2D" parent="Root/Diffcult2/Red2" unique_id=1231019312]
+material = SubResource("ShaderMaterial_p8rnu")
+position = Vector2(394, 144.6)
+texture = ExtResource("13")
+
+[node name="HardBg" type="Sprite2D" parent="Root/Diffcult2" unique_id=1927748599]
+position = Vector2(393, 205)
+texture = ExtResource("16")
+
+[node name="Label" type="Label" parent="Root/Diffcult2" unique_id=1072887812]
+offset_left = 253.0
+offset_top = 173.0
+offset_right = 533.0
+offset_bottom = 243.0
+theme_override_fonts/font = ExtResource("17")
+theme_override_font_sizes/font_size = 48
+text = "GAME_HARD_TAG"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("12")
+max_font_size = 48
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="Text" type="Label" parent="Root" unique_id=1874240776]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 68.752075
+offset_right = 739.0
+offset_bottom = 227.04341
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("12")
+max_font_size = 80
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="SubText" type="Label" parent="Root" unique_id=1874240777]
+visible = false
+layout_mode = 0
+offset_left = 134.0
+offset_top = 163.0
+offset_right = 654.0
+offset_bottom = 225.0
+theme_override_colors/font_color = Color(1, 0.962596, 0.81298, 1)
+theme_override_fonts/font = ExtResource("17")
+theme_override_font_sizes/font_size = 42
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("12")
+max_font_size = 42
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="Icon" type="TextureRect" parent="Root" unique_id=1155072292]
+visible = false
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 70.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1155072291]
 libraries/ = SubResource("AnimationLibrary_xeuch")

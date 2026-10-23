@@ -1,95 +1,149 @@
-## 广告/免费角标：按 AB 合规配置在 AD 文字、AD 图标、+ 号之间切换，并提供 Free 态
+## 道具按钮的广告角标：在广告、免费、开启和无网络状态间切换动画与宽度。
 class_name GameAdBadge
 extends Control
 
-# ---- 子节点引用 ----
-@onready var _ad_icon: TextureRect = $GreenRoot/HBoxContainer/ADIcon # AD 图标 1
-@onready var _ad_icon2: TextureRect = $GreenRoot/HBoxContainer/ADIcon2 # AD 图标 2（图标 + 文字组合）
-@onready var _ad_icon3: TextureRect = $GreenRoot/HBoxContainer/ADIcon3 # 第三个图标位，用作 + 号
-@onready var _ad_tag: RichTextLabel = $GreenRoot/HBoxContainer/ADTag # AD 文字
+@onready var _ad_icon: TextureRect = $GreenRoot/Wrap/HBoxContainer/ADIcon
+@onready var _ad_icon2: TextureRect = $GreenRoot/Wrap/HBoxContainer/ADIcon2
+@onready var _ad_icon3: TextureRect = $GreenRoot/Wrap/HBoxContainer/ADIcon3
+@onready var _no_net_icon: TextureRect = $GreenRoot/Wrap/HBoxContainer/NoNetIcon
+@onready var _ad_tag: RichTextLabel = $GreenRoot/Wrap/HBoxContainer/ADTag
+@onready var _root: PanelContainer = $GreenRoot
+@onready var _anim: AnimationPlayer = $AnimationPlayer
+
+const _NO_NET_BG_COLOR: Color = Color(0.4392157, 0.4392157, 0.4392157, 1)
+
+const _ANIM_TO_NO_NET: StringName = &"NetworkChange1"
+const _ANIM_TO_AD: StringName = &"NetworkChange2"
+
+enum State { NONE, AD, ICON_WITH_AD, FREE, ON, NO_NETWORK }
+var _state: int = State.NONE
+
+var _style: StyleBoxFlat = null
+
+var _bg_color_normal: Color = Color.WHITE
 
 
-## 进树默认按合规配置显示
 func _ready() -> void:
+	_style = _root.get_theme_stylebox("panel") as StyleBoxFlat
+	if _style != null:
+		_bg_color_normal = _style.bg_color
+	_assert_gray_matches_animation()
 	show_ad()
 
 
-## 需要显示 AD 文字的地区（语言代码里的地区后缀）
-const _AD_TEXT_REGIONS: Array[String] = ["US", "CA", "GB", "IE", "AU", "NZ"] # 命中这些地区的语言才显示 AD 文字
+func _assert_gray_matches_animation() -> void:
+	if OS.has_feature("rel") or _anim == null:
+		return
+	if not _anim.has_animation(_ANIM_TO_NO_NET):
+		push_error("GameAdBadge: 缺少动画 %s" % _ANIM_TO_NO_NET)
+		return
+	var anim: Animation = _anim.get_animation(_ANIM_TO_NO_NET)
+	for track_idx in anim.get_track_count():
+		if str(anim.track_get_path(track_idx)) != "GreenRoot:theme_override_styles/panel:bg_color":
+			continue
+		var key_count: int = anim.track_get_key_count(track_idx)
+		if key_count == 0:
+			continue
+		var last_color: Color = anim.track_get_key_value(track_idx, key_count - 1)
+		if not last_color.is_equal_approx(_NO_NET_BG_COLOR):
+			push_error(
+				(
+					"GameAdBadge: 灰底两处不一致 —— 常量=%s 动画末帧=%s(改一处必改另一处)"
+					% [str(_NO_NET_BG_COLOR), str(last_color)]
+				)
+			)
+		return
 
 
-# ================= 角标形态 =================
-## 按 AB 合规配置决定 AD 的呈现方式
-func show_ad() -> void:
-	# 先全部收起、文字留空
-	_ad_tag.visible = true
+func _reset_all() -> void:
+	if _anim != null and _anim.is_playing():
+		_anim.stop()
 	_ad_icon.visible = false
 	_ad_icon2.visible = false
 	_ad_icon3.visible = false
-	var v: int = ABTestManager.ad_compliance_ui.value()
-	match v:
-		# 纯文字 AD
-		AdComplianceUiConfig.VALUE_SHOW:
-			_ad_tag.text = "AD"
-		# 纯图标
-		AdComplianceUiConfig.VALUE_SHOW_ICON:
-			_ad_icon.visible = true
-			_ad_tag.visible = false
-		# 图标 + AD 文字
-		AdComplianceUiConfig.VALUE_SHOW_ICON_TEXT:
-			_ad_icon2.visible = true
-			_ad_tag.text = "AD"
-		# 分地区：AD 文字地区用文字，否则用图标
-		AdComplianceUiConfig.VALUE_REGION_SPLIT:
-			if _is_ad_text_region():
-				_ad_tag.text = "AD"
-			else:
-				_ad_icon.visible = true
-				_ad_tag.visible = false
-		# 兜底：文字 AD
-		_:
-			_ad_tag.text = "AD"
+	_no_net_icon.visible = false
+	_ad_tag.visible = false
+	_root.scale = Vector2.ONE
+	_root.modulate = Color.WHITE
+	if _style != null:
+		_style.bg_color = _bg_color_normal
 
 
-## 图标 + AD 文字（供外部按需调用）
+func _pin_pill_width() -> void:
+	if _root == null:
+		return
+	_root.custom_minimum_size.x = 0.0
+	_root.custom_minimum_size.x = _root.get_combined_minimum_size().x
+
+
+func _release_pill_width() -> void:
+	if _root == null:
+		return
+	_root.custom_minimum_size.x = 0.0
+
+
+func show_ad(animated: bool = false) -> void:
+	if _state == State.AD:
+		return
+	var from_no_net: bool = _state == State.NO_NETWORK
+	_state = State.AD
+
+	call_deferred("_release_pill_width")
+	if animated and from_no_net and _play_switch(_ANIM_TO_AD):
+		return
+	_reset_all()
+	_ad_icon.visible = true
+
+
 func show_icon_with_ad() -> void:
-	_ad_icon.visible = false
+	if _state == State.ICON_WITH_AD:
+		return
+	_state = State.ICON_WITH_AD
+	_reset_all()
 	_ad_icon2.visible = true
-	_ad_icon3.visible = false
 	_ad_tag.text = "AD"
 	_ad_tag.visible = true
 
-
-# ================= 地区判断 =================
-## 当前语言是否属于「必须显示 AD 文字」的地区
-static func _is_ad_text_region() -> bool:
-	var locale: String = LanguageManager.get_locale()
-	var parts: PackedStringArray = locale.split("_")
-	# 游戏内语言优先：xx_YY 取地区后缀
-	if parts.size() >= 2:
-		return parts[parts.size() - 1].to_upper() in _AD_TEXT_REGIONS
-	if locale == "en":
-		return true
-	# 纯 en 也算需要 AD 文字
-	var sys_parts: PackedStringArray = OS.get_locale().split("_")
-	if sys_parts.size() >= 2:
-		return sys_parts[sys_parts.size() - 1].to_upper() in _AD_TEXT_REGIONS
-	# 再看系统语言兜底
-	return false
+	call_deferred("_pin_pill_width")
 
 
-## 显示 Free 角标
 func show_free() -> void:
-	_ad_icon.visible = false
-	_ad_icon2.visible = false
-	_ad_icon3.visible = false
+	if _state == State.FREE:
+		return
+	_state = State.FREE
+	_reset_all()
 	_ad_tag.visible = true
 	_ad_tag.text = "Free"
+	call_deferred("_pin_pill_width")
 
 
-## 显示 + 号（引导去获取道具）
-func show_plus() -> void:
-	_ad_icon.visible = false
-	_ad_icon2.visible = false
-	_ad_icon3.visible = true
-	_ad_tag.visible = false
+func show_on() -> void:
+	if _state == State.ON:
+		return
+	_state = State.ON
+	_reset_all()
+	_ad_tag.visible = true
+	_ad_tag.text = "ON"
+	call_deferred("_pin_pill_width")
+
+
+func show_no_network(animated: bool = false) -> void:
+	if _state == State.NO_NETWORK:
+		return
+	var from_ad: bool = _state == State.AD
+	_state = State.NO_NETWORK
+
+	call_deferred("_release_pill_width")
+	if animated and from_ad and _play_switch(_ANIM_TO_NO_NET):
+		return
+	_reset_all()
+	_no_net_icon.visible = true
+	if _style != null:
+		_style.bg_color = _NO_NET_BG_COLOR
+
+
+func _play_switch(anim_name: StringName) -> bool:
+	if _anim == null or not _anim.has_animation(anim_name):
+		return false
+	_anim.play(anim_name)
+	return true

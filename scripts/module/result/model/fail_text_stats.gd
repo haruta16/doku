@@ -1,4 +1,4 @@
-## 失败弹窗文案工具：按完成度挑鼓励语、按关卡难度定「复活能提升到」的百分比区间
+## 失败鼓励文案工具：按完成度抽取文本，按关卡类型生成复活提示的展示百分比。
 class_name FailTextStats
 extends RefCounted
 
@@ -39,15 +39,13 @@ static func pick_encourage_text(found_ratio: float) -> String:
 	return "[center]%s[/center]" % TranslationServer.translate(keys[randi() % keys.size()])
 
 
-## 抽一个「复活后能达到」的百分比 x（%）：每日关与困难关区间最高，其余按盘面尺寸递增
+## 按每日挑战、难度和尺寸选取展示区间，避开边界及整数百分比；这是客户端文案数值。
 static func pick_revive_promote_x(level: int, sz: int, is_daily: bool) -> float:
 	var lo: float
 	var hi: float
-	# 困难关判定与通关文案同一套：先看 AB 是否走 group_j 规则
+
 	var _is_hard: bool = (
-		LevelData.is_hard_level_group_j(level)
-		if ABTestManager.rule_normal_rank.is_group_j()
-		else LevelData.is_hard_level(level)
+		LevelSelector.is_hard_level(level) or LevelSelector.is_super_hard_level(level)
 	)
 	if is_daily or _is_hard:
 		lo = 72.0
@@ -65,7 +63,6 @@ static func pick_revive_promote_x(level: int, sz: int, is_daily: bool) -> float:
 		lo = 62.0
 		hi = 77.0
 
-	# 最多试 20 次，避开区间端点与整数值（看起来才像真实浮动数据）
 	for _i in range(20):
 		var raw: float = randf_range(lo, hi)
 		var x: float = snappedf(raw, 0.1)
@@ -75,7 +72,6 @@ static func pick_revive_promote_x(level: int, sz: int, is_daily: bool) -> float:
 			continue
 		return x
 
-	# 兜底：给一个刚过下限的值
 	return snappedf(lo + 0.1, 0.1)
 
 

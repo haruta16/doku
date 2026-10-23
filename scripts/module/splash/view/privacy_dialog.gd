@@ -1,4 +1,4 @@
-## 首启隐私弹窗：正文里嵌协议/政策链接，点「同意」发 accepted
+## 隐私确认页：显示协议、适配正文高度，处理接受操作与外部链接。
 extends UIFrameWindow
 
 ## 点同意、关闭动画播完后发出；launcher await 它之后才 agree_privacy() 并继续启动
@@ -12,27 +12,50 @@ signal accepted
 ## 关闭流程进行中，防止连点同意触发两次
 var _closing: bool = false
 
+const _BASE_FONT_SIZE: int = 70
+const _FIT_MIN_LINE_SPACING: int = -20
+const _FIT_MIN_FONT_SIZE: int = 60
 
-## 初始化正文：把本地化后的协议/政策地址填进带两个占位符的文案
+
 func _ready() -> void:
-	# 用户协议地址：按当前语言做本地化（不同地区可能指向不同页面）
 	var terms_url: String = UniKitManager.get_localized_privacy_url(
 		"https://oakevergames.com/tos.html"
 	)
-	# 隐私政策地址：同上
 	var policy_url: String = UniKitManager.get_localized_privacy_url(
 		"https://oakevergames.com/pp.html"
 	)
-	# PRIVACY_DIALOG_DESC_RICH 里有两个 %s，依次填协议、政策地址
 	_content_label.text = tr("PRIVACY_DIALOG_DESC_RICH") % [terms_url, policy_url]
-	# RichTextLabel 的链接点击回调（bbcode 里的 [url]）
 	_content_label.meta_clicked.connect(_on_link_clicked)
+	_fit_content_label()
 
 
-## 每次被显示时调用：复位关闭标记并播开场动画
 func on_show(_params: Dictionary = {}) -> void:
 	_closing = false
 	_anim.play_section_with_markers("GenericPopup", &"", &"Mark")
+
+	_fit_content_label()
+
+
+func _fit_content_label() -> void:
+	await get_tree().process_frame
+	_content_label.add_theme_constant_override("line_separation", 0)
+	_content_label.add_theme_font_size_override("normal_font_size", _BASE_FONT_SIZE)
+	await get_tree().process_frame
+	var box_height: float = _content_label.size.y
+	var line_count: int = _content_label.get_line_count()
+	var content_height: float = _content_label.get_content_height()
+	if line_count >= 2 and content_height > box_height:
+		var spacing: int = -int(ceil((content_height - box_height) / float(line_count - 1)))
+		_content_label.add_theme_constant_override(
+			"line_separation", maxi(spacing, _FIT_MIN_LINE_SPACING)
+		)
+		await get_tree().process_frame
+
+	var font_size: int = _BASE_FONT_SIZE
+	while _content_label.get_content_height() > box_height and font_size > _FIT_MIN_FONT_SIZE:
+		font_size -= 2
+		_content_label.add_theme_font_size_override("normal_font_size", font_size)
+		await get_tree().process_frame
 
 
 ## 同意按钮：防连点、埋点、播关闭动画，播完才发信号

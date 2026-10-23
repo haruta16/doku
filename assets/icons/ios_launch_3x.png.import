@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bbxnr2x5jjyry"
-path.s3tc="res://.godot/imported/ios_launch_3x.png-bc498a0cf79abee710432aeed4a1dbaf.s3tc.ctex"
-path.etc2="res://.godot/imported/ios_launch_3x.png-bc498a0cf79abee710432aeed4a1dbaf.etc2.ctex"
+path="res://.godot/imported/ios_launch_3x.png-bc498a0cf79abee710432aeed4a1dbaf.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/icons/ios_launch_3x.png"
-dest_files=["res://.godot/imported/ios_launch_3x.png-bc498a0cf79abee710432aeed4a1dbaf.s3tc.ctex", "res://.godot/imported/ios_launch_3x.png-bc498a0cf79abee710432aeed4a1dbaf.etc2.ctex"]
+dest_files=["res://.godot/imported/ios_launch_3x.png-bc498a0cf79abee710432aeed4a1dbaf.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=1.0
 compress/uastc_level=2
@@ -39,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

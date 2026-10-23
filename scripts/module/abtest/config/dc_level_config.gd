@@ -1,4 +1,4 @@
-## 每日挑战题池实验：按关卡进度决定题池尺寸与难度档；0=对照组（原规则） 1=10/12 分档 2=12 格偏易 3=12 格偏难 4=按日期奇偶随机
+## 实验配置 dc_level：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name DcLevelConfig
 
@@ -10,11 +10,10 @@ const VALUE_TIERED_12_HARD: int = 3 # 全程 12 格，难度整体偏难
 const VALUE_RANDOM: int = 4 # 按当天日期的奇偶在 10/12 格之间随机
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "dc_level"
-	default_value = VALUE_CONTROL # 默认档：对照组
-	timing = ABTestManager.TIMING_GAME_START_DC # 染色时机：每日挑战开局时
+	default_value = VALUE_CONTROL
 
 
 ## 是否启用了实验题池（对照组返回 false，走原规则）

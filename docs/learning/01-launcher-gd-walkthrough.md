@@ -1,5 +1,7 @@
 # launcher.gd 精读 — 应用启动全流程
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 的实际入口、题库格式和新增系统请先看 [新版导读](08-version-1.22.0.md)，再对照当前源码；旧代码片段不是新版逐行镜像。
+
 > 文件：[scripts/module/ui/panel/launcher.gd](../../scripts/module/ui/panel/launcher.gd)
 >
 > 这是整个 Meowdoku 应用的**大脑**。`_ready()` 是唯一入口，所有初始化逻辑从这里开始。

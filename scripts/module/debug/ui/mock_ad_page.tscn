@@ -86,5 +86,14 @@ theme_override_font_sizes/font_size = 40
 text = "关闭并发奖
 (ad_rewarded + ad_close)"
 
+[node name="ClosedFirstButton" type="Button" parent="Root/ButtonRow" unique_id=1040373201]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 40
+text = "先关闭后发奖
+(ad_close → ad_rewarded)"
+
 [connection signal="pressed" from="Root/ButtonRow/CloseTextButton" to="." method="_on_close_pressed"]
 [connection signal="pressed" from="Root/ButtonRow/RewardButton" to="." method="_on_reward_close_pressed"]
+[connection signal="pressed" from="Root/ButtonRow/ClosedFirstButton" to="." method="_on_closed_first_pressed"]

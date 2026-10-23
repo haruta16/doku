@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://h23wiw0agype"]
+
+[ext_resource type="Texture2D" uid="uid://d2f4id8rx2tu4" path="res://assets/sprites/rank_activity/rank_activity_offline_page/no_wifi_white.png" id="1"]
+
+[node name="RankOfflineOverlay" type="Control" unique_id=1818619670]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="WifiIcon" type="TextureRect" parent="." unique_id=780212256]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1")
+expand_mode = 1

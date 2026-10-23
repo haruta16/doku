@@ -1,5 +1,7 @@
 # Game Page 精读 — 三大系统的汇聚点
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 的实际入口、题库格式和新增系统请先看 [新版导读](08-version-1.22.0.md)，再对照当前源码；旧代码片段不是新版逐行镜像。
+
 > 文件：
 > - [scripts/module/game/view/game_page.gd](../../scripts/module/game/view/game_page.gd) — 正式关卡的 Game Page
 > - [scripts/module/game/view/base_game_page.gd](../../scripts/module/game/view/base_game_page.gd) — 所有游戏页面的公共基类

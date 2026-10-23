@@ -1,4 +1,4 @@
-## 普通第 10 关特殊题实验：0=用 sp 第 44 题 1=换成 sp 第 57 题
+## 实验配置 normal_level_10：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name NormalLevel10Config
 
@@ -7,13 +7,7 @@ const VALUE_SP44: int = 0 # 第 10 关用 sp44
 const VALUE_SP57: int = 1 # 第 10 关换成 sp57
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "normal_level_10"
-	default_value = VALUE_SP44 # 默认档：sp44
-	timing = ABTestManager.TIMING_GAME_START_NORMAL # 染色时机：普通模式开局时
-
-
-## 第 10 关是否换成 sp57
-func is_sp57_at_level10() -> bool:
-	return value() == VALUE_SP57
+	default_value = VALUE_SP44

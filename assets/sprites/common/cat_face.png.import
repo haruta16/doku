@@ -3,26 +3,24 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://btynpayispkmj"
-path.s3tc="res://.godot/imported/cat_face.png-eb7227206ff17dd15c884b0f3a8d2264.s3tc.ctex"
-path.etc2="res://.godot/imported/cat_face.png-eb7227206ff17dd15c884b0f3a8d2264.etc2.ctex"
+path="res://.godot/imported/cat_face.png-eb7227206ff17dd15c884b0f3a8d2264.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/sprites/common/cat_face.png"
-dest_files=["res://.godot/imported/cat_face.png-eb7227206ff17dd15c884b0f3a8d2264.s3tc.ctex", "res://.godot/imported/cat_face.png-eb7227206ff17dd15c884b0f3a8d2264.etc2.ctex"]
+dest_files=["res://.godot/imported/cat_face.png-eb7227206ff17dd15c884b0f3a8d2264.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=1.0
-compress/uastc_level=2
-compress/rdo_quality_loss=0
-compress/hdr_compression=0
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

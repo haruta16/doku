@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://dqgrhksludqip"
+path="res://.godot/imported/pass_anim_cat3.atlas-f7a7aa6a6438caabdf3b5d9909db4dec.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/pass_anim_cat3/pass_anim_cat3.atlas"
+dest_files=["res://.godot/imported/pass_anim_cat3.atlas-f7a7aa6a6438caabdf3b5d9909db4dec.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

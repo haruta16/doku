@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://o0tlpeqisp53"
+path="res://.godot/imported/cat_plant.atlas-1d19d504726308c0bfb34b0ffbb99f32.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/peekaboo_cat/cat_plant/cat_plant.atlas"
+dest_files=["res://.godot/imported/cat_plant.atlas-1d19d504726308c0bfb34b0ffbb99f32.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

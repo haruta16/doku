@@ -1,4 +1,4 @@
-## 宝箱奖励格的视觉件：播一次出现动画后转循环，本身不含业务逻辑
+## 打卡宝箱提示单元：先播放出现动画，再循环提示可领取奖励。
 extends UIChildWindow
 
 # ---- 子节点引用（@onready：进场景树后才可用） ----
@@ -17,12 +17,14 @@ func on_show(_params: Dictionary = {}) -> void:
 	_play_appear_then_loop()
 
 
-## 先播 Appear；没有这个动画就直接接循环
 func _play_appear_then_loop() -> void:
 	if _anim == null:
 		return
 	if _anim.has_animation(&"Appear"):
 		_anim.play(&"Appear")
+		get_tree().create_timer(1.67).timeout.connect(
+			func() -> void: VibrateManager.play_at(VibrateManager.Pos.STREAK_GIFT)
+		)
 		await _anim.animation_finished
 		if not is_instance_valid(_anim):
 			return

@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://bc0ut1xlba13s"]
+
+[ext_resource type="Script" uid="uid://but8ta5teupj6" path="res://scripts/module/daily/view/dc_players_joined_row.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b202hnwhkn2fl" path="res://assets/sprites/profile/avatars/head_0001.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c2eagvoh43f48" path="res://assets/sprites/profile/avatars/head_0002.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cjr2urwfqy5tp" path="res://assets/sprites/profile/avatars/head_0003.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bqeowg4qyhbgx" path="res://assets/sprites/profile/avatars/head_0004.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cj34v44f4be8g" path="res://assets/sprites/profile/avatars/head_0005.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://txuq7fkpvwqv" path="res://assets/sprites/profile/avatars/head_0006.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cdxw8d1d6l0dq" path="res://assets/sprites/profile/avatars/head_0007.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dlr165klsb86h" path="res://assets/sprites/profile/avatars/head_0008.png" id="9"]
+[ext_resource type="Shader" uid="uid://cofjp2u3mfkht" path="res://assets/shaders/avatar_round_corner.gdshader" id="10"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="11"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="12"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avatar_ring"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_avatar_round"]
+shader = ExtResource("10")
+shader_parameter/size_px = Vector2(38, 38)
+shader_parameter/radius_px = 19.0
+
+[node name="DcPlayersJoinedRow" type="HBoxContainer" unique_id=1409049380]
+visible = false
+offset_right = 750.0
+offset_bottom = 80.0
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+script = ExtResource("1")
+avatar_textures = [ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9")]
+
+[node name="AvatarStack" type="Control" parent="." unique_id=80874287]
+visible = false
+custom_minimum_size = Vector2(146, 44)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Ring0" type="Panel" parent="AvatarStack" unique_id=1900001]
+layout_mode = 0
+offset_right = 44.0
+offset_bottom = 44.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_avatar_ring")
+
+[node name="Avatar0" type="TextureRect" parent="AvatarStack" unique_id=768669104]
+material = SubResource("ShaderMaterial_avatar_round")
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 41.0
+offset_bottom = 41.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Ring1" type="Panel" parent="AvatarStack" unique_id=1900002]
+layout_mode = 0
+offset_left = 34.0
+offset_right = 78.0
+offset_bottom = 44.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_avatar_ring")
+
+[node name="Avatar1" type="TextureRect" parent="AvatarStack" unique_id=416476994]
+material = SubResource("ShaderMaterial_avatar_round")
+layout_mode = 0
+offset_left = 37.0
+offset_top = 3.0
+offset_right = 75.0
+offset_bottom = 41.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Ring2" type="Panel" parent="AvatarStack" unique_id=1900003]
+layout_mode = 0
+offset_left = 68.0
+offset_right = 112.0
+offset_bottom = 44.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_avatar_ring")
+
+[node name="Avatar2" type="TextureRect" parent="AvatarStack" unique_id=350347857]
+material = SubResource("ShaderMaterial_avatar_round")
+layout_mode = 0
+offset_left = 71.0
+offset_top = 3.0
+offset_right = 109.0
+offset_bottom = 41.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Ring3" type="Panel" parent="AvatarStack" unique_id=1900004]
+layout_mode = 0
+offset_left = 102.0
+offset_right = 146.0
+offset_bottom = 44.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_avatar_ring")
+
+[node name="Avatar3" type="TextureRect" parent="AvatarStack" unique_id=2042744797]
+material = SubResource("ShaderMaterial_avatar_round")
+layout_mode = 0
+offset_left = 105.0
+offset_top = 3.0
+offset_right = 143.0
+offset_bottom = 41.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CountLabel" type="RichTextLabel" parent="." unique_id=37116288]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.33544412, 0.42681712, 0.78749996, 1)
+theme_override_fonts/normal_font = ExtResource("11")
+theme_override_fonts/bold_font = ExtResource("12")
+theme_override_font_sizes/normal_font_size = 40
+theme_override_font_sizes/bold_font_size = 40
+bbcode_enabled = true
+text = "[color=#93A6F1][b][color=#566DC9]253.308K[/color][/b] players joined today[/color]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1

@@ -1,4 +1,4 @@
-## 曲线文字 Label（@tool）：不用内置排版，逐个字形绘制，按 Curve 采样决定每个字的 y 偏移，可选让字沿切线旋转
+## 曲线文字控件：沿曲线位置与切线逐字绘制，并解析当前字体和字号。
 @tool
 class_name CurveLabel
 extends Label
@@ -39,12 +39,10 @@ func _ready() -> void:
 		curve = _make_default_curve()
 
 
-# ================= 绘制 =================
-## 逐个字形绘制：先量总宽，超宽就整体缩字号再拉伸回满宽，然后按曲线算每个字的 y，可选按切线旋转
 func _draw() -> void:
-	if visible_characters != 0: # 内置绘制已被禁用（visible_characters=0），这里只画自定义部分
+	if visible_characters != 0:
 		visible_characters = 0
-	var display_text: String = atr(text) # 文案走翻译
+	var display_text: String = atr(text)
 	if display_text.is_empty() or curve == null:
 		return
 
@@ -53,7 +51,7 @@ func _draw() -> void:
 		return
 	var font_size: int = _resolve_font_size()
 
-	var ts: TextServer = TextServerManager.get_primary_interface() # 直接找 TextServer 拿字形表，才拿得到每个字的 advance 与 offset
+	var ts: TextServer = TextServerManager.get_primary_interface()
 	var line := TextLine.new()
 	line.add_string(display_text, font, font_size)
 	var glyphs: Array = ts.shaped_text_get_glyphs(line.get_rid())
@@ -65,7 +63,7 @@ func _draw() -> void:
 		return
 
 	var effective_font_size := font_size
-	if size.x > 0.0 and total_advance > size.x: # 文本比控件宽：按比例缩小字号，然后重新取一遍字形
+	if size.x > 0.0 and total_advance > size.x:
 		effective_font_size = maxi(1, int(float(font_size) * size.x / total_advance))
 		line = TextLine.new()
 		line.add_string(display_text, font, effective_font_size)
@@ -76,9 +74,17 @@ func _draw() -> void:
 		if total_advance <= 0.0:
 			return
 
-	var x_scale: float = size.x if size.x > 0.0 else total_advance # 归一化用的总宽；size.x 无效时退回文本自身宽度
+	var v_align_offset := 0.0
+	if vertical_alignment == VERTICAL_ALIGNMENT_CENTER:
+		v_align_offset = (
+			(font.get_ascent(effective_font_size) - font.get_descent(effective_font_size)) * 0.5
+		)
+	elif vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM:
+		v_align_offset = -font.get_descent(effective_font_size)
 
-	var fill_scale := 1.0 # 缩过字号的情况：把字距按比例拉回控件宽度（等比填充）
+	var x_scale: float = size.x if size.x > 0.0 else total_advance
+
+	var fill_scale := 1.0
 	var offset_x := 0.0
 	if effective_font_size < font_size and size.x > 0.0 and total_advance > 0.0:
 		fill_scale = size.x / total_advance
@@ -94,19 +100,19 @@ func _draw() -> void:
 		var adv: float = g["advance"]
 		var glyph_w: float = adv * fill_scale
 		var x := offset_x + cumulative * fill_scale
-		var t := clampf((x + glyph_w * 0.5) / x_scale, 0.0, 1.0) # t = 字形中心在整段文字里的比例，用来采样曲线
-		var y := size.y * 0.5 - (curve.sample(t) - 0.5) * amplitude * 2.0 # 曲线 0.5 处为基线，偏离量乘 amplitude*2 换成像素
+		var t := clampf((x + glyph_w * 0.5) / x_scale, 0.0, 1.0)
+		var y := size.y * 0.5 - (curve.sample(t) - 0.5) * amplitude * 2.0 + v_align_offset
 		var glyph_offset: Vector2 = g["offset"]
-		if align_to_tangent: # 沿切线对齐：以字形中心为轴旋转，再以中心为原点绘制
+		if align_to_tangent:
 			var pivot := Vector2(x + glyph_w * 0.5, y) + glyph_offset
 			draw_set_transform(pivot, _tangent_angle(t, x_scale))
-			_draw_glyph(g, Vector2(-glyph_w * 0.5, 0.0), effective_font_size, ts) # 左移半个字宽，让旋转轴落在字形中心
+			_draw_glyph(g, Vector2(-glyph_w * 0.5, 0.0), effective_font_size, ts)
 		else:
 			var pos := Vector2(x, y) + glyph_offset
 			_draw_glyph(g, pos, effective_font_size, ts)
 		cumulative += adv
 
-	if align_to_tangent: # 收尾：清掉画布变换，免得影响后续绘制
+	if align_to_tangent:
 		draw_set_transform(Vector2.ZERO)
 
 

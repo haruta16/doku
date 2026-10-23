@@ -1,4 +1,4 @@
-## 每日挑战失败页：显示还差几只猫，给「免费/看广告复活」和「重开一局」两条路
+## 每日挑战失败页：展示剩余猫与鼓励文案，协调复活广告和重新挑战请求。
 class_name DailyFailPage
 extends UIFrameWindow
 
@@ -9,27 +9,63 @@ signal revive_ad_started # 广告即将播放，先让棋盘上的猫回位
 
 # ---- 子节点引用（@onready：进场景树后才可用） ----
 @onready var _root: Control = $Root # 整页根节点，用于复位整体透明度
-@onready var _count_num: Label = $Root/BottomGroup/CatCountRow/CountNum # 还差几只猫的数字
 
-@onready var _encourage_label: RichTextLabel = $Root/BottomGroup/VBoxContainer/EncourageLabel # 底部鼓励 / 复活推广文案
-@onready var _revive_btn: Control = $Root/BottomGroup/VBoxContainer/ReviveBtn # 复活按钮
-@onready var _try_again_btn: Control = $Root/BottomGroup/VBoxContainer/TryAgainBtn # 重开按钮
+@onready
+var _count_text: RichTextLabel = $Root/VBoxContainer/CenterContainer/Control/CatCountRow/CountText
+
+@onready var _count_row: Control = $Root/VBoxContainer/CenterContainer/Control/CatCountRow
+
+@onready
+var _cat_progress: CatProgressBar = $Root/VBoxContainer/CenterContainer/Control/CatProgressBar
+
+var _cat_progress_fade_tween: Tween = null
+
+@onready var _encourage_slot: Control = $Root/VBoxContainer/VBoxContainer/EncourageSlot
+@onready
+var _encourage_label: RichTextLabel = $Root/VBoxContainer/VBoxContainer/EncourageSlot/EncourageLabel
+@onready var _revive_btn: Control = $Root/VBoxContainer/VBoxContainer/ReviveCtrl/ReviveBtn
+@onready var _try_again_btn: Control = $Root/VBoxContainer/VBoxContainer/TryAgainCtrl/TryAgainBtn
 @onready var _anim: AnimationPlayer = $AnimationPlayer # 页面进出场动画
-## 复活按钮上的广告图标
+@onready var _title_under: SingleLineGlyphLabel = $Root/VBoxContainer/Title/TitleLabelUnder
+@onready var _title_up: SingleLineGlyphLabel = $Root/VBoxContainer/Title/TitleLabelUp
 @onready
-var _revive_ad_icon: TextureRect = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/TextIconRow/Icon
-@onready var _revive_badge: GameAdBadge = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/Badge # 复活按钮上的角标（免费 / AD）
+var _revive_ad_icon: TextureRect = $Root/VBoxContainer/VBoxContainer/ReviveCtrl/ReviveBtn/Root/TextIconRow/Icon
+@onready
+var _revive_badge: GameAdBadge = $Root/VBoxContainer/VBoxContainer/ReviveCtrl/ReviveBtn/Root/Badge
 
-## 图标+文字行；两行文案时整行上移
 @onready
-var _revive_text_icon_row: HBoxContainer = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/TextIconRow
-## 复活按钮主文案
+var _revive_main_label: Label = $Root/VBoxContainer/VBoxContainer/ReviveCtrl/ReviveBtn/Root/TextIconRow/Label
 @onready
-var _revive_main_label: Label = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/TextIconRow/Label
-@onready var _revive_subtitle: Label = $Root/BottomGroup/VBoxContainer/ReviveBtn/Root/SubtitleLabel # 复活按钮副标题（两行样式才显示）
+var _revive_subtitle: Label = $Root/VBoxContainer/VBoxContainer/ReviveCtrl/ReviveBtn/Root/SubtitleLabel
 
-# ---- 布局常量（像素 / 字号），用于按钮文案自适应 ----
-const _REVIVE_TWO_LINE_OFFSET: float = -20.0 # 两行文案时整行上移的像素（负值 = 往上）
+@onready var _cat_face: TextureRect = $Root/VBoxContainer/CenterContainer/Control/CatCountRow/CatFace
+
+@onready
+var _costume_slot: Control = $Root/VBoxContainer/CenterContainer/Control/CatCountRow/CostumeCatSlot
+
+@onready
+var _costume_cat: SpineSprite = $Root/VBoxContainer/CenterContainer/Control/CatCountRow/CostumeCatSlot/CostumeCat
+
+const _COSTUME_IDLE_ANIM: String = "idle"
+
+const _LEGACY_TITLE_STYLE: Dictionary = {
+	"outline_thickness": 16,
+	"outline_color": Color(0.16078432, 0.44705883, 0.7764706, 1),
+}
+
+var _title_style_cache: Dictionary = {}
+
+const _COUNT_NUM_COLOR: String = "#d94848"
+
+const _CAT_PROGRESS_MAX_BAR_WIDTH: float = 760.0
+
+const _CAT_PROGRESS_BAND_CENTER_Y: float = 460.0
+
+const _CAT_COUNT_ROW_DESIGN_HEIGHT: float = 120.0
+
+const _CAT_PROGRESS_G2_GAP_BELOW_ROW: float = 20.0
+
+const _CAT_PROGRESS_FADE_FALLBACK: Vector2 = Vector2(0.6333333, 0.2666667)
 
 const _REVIVE_ROW_MAX_WIDTH: float = 705.0 # 图标行可用最大宽度
 const _REVIVE_ROW_ICON_WIDTH: float = 100.0 # 广告图标占用的宽度
@@ -37,18 +73,18 @@ const _REVIVE_ROW_SEPARATION: float = 24.0 # 图标与文字之间的间距
 const _REVIVE_MAIN_FONT_SIZE_BASE: int = 88 # 主文案基准字号
 const _REVIVE_MAIN_FONT_SIZE_MIN: int = 40 # 缩放后允许的最小字号
 
-# ---- 运行时状态 ----
-var _revive_row_init_top: float = 0.0 # 图标行在场景里的初始上边距
-var _revive_row_init_bottom: float = 0.0 # 图标行在场景里的初始下边距
-
 var _encourage_fade_tween: Tween = null # 鼓励文案淡入用的 Tween
 
+var _show_seq_id: int = 0
 
-# ================= 生命周期 =================
-## 记下图标行的初始位置，并刷一遍随语言变化的排版
+var _revive_ad_show_id: String = ""
+
+var _revive_ad_check_pending: bool = false
+
+var _cat_progress_added: bool = false
+
+
 func _ready() -> void:
-	_revive_row_init_top = _revive_text_icon_row.offset_top
-	_revive_row_init_bottom = _revive_text_icon_row.offset_bottom
 	_refresh_dynamic_text()
 
 
@@ -58,22 +94,10 @@ func _notification(what: int) -> void:
 		_refresh_dynamic_text()
 
 
-# ================= 文案与自适应 =================
-## 按 AB 实验决定按钮文案（普通 / 3 条命）与是否两行，然后重排
 func _refresh_dynamic_text() -> void:
-	var main_key: String = (
-		"FAIL_REVIVE_3FISH" if ABTestManager.revive_life.is_alt_button_text() else "FAIL_REVIVE"
-	)
-	_revive_main_label.text = tr(main_key)
-	var two_line: bool = ABTestManager.revive_life.is_two_line_button()
-	_revive_subtitle.visible = two_line
-	if two_line:
-		_revive_text_icon_row.offset_top = _revive_row_init_top + _REVIVE_TWO_LINE_OFFSET
-		_revive_text_icon_row.offset_bottom = _revive_row_init_bottom + _REVIVE_TWO_LINE_OFFSET
-		_revive_subtitle.text = tr("FAIL_REVIVE_SUBTITLE_3FISH")
-	else:
-		_revive_text_icon_row.offset_top = _revive_row_init_top
-		_revive_text_icon_row.offset_bottom = _revive_row_init_bottom
+	_revive_main_label.text = tr("FAIL_REVIVE_3FISH")
+
+	_revive_subtitle.visible = false
 	_fit_main_label_width()
 
 
@@ -105,90 +129,263 @@ func _fit_main_label_width() -> void:
 	_revive_main_label.add_theme_font_size_override("font_size", new_size)
 
 
-# ================= 失败展示 =================
-## 暂停 BGM，从参数里取关卡配置与剩余猫数
 func on_show(params: Dictionary = {}) -> void:
-	SoundManager.set_bgm_paused(true)
+	SoundManager.set_bgm_paused(true, BgmPauseReason.DAILY_FAIL)
 	var lc: Dictionary = params.get("level_config", {})
 	var rc: int = params.get("remaining_cats", 0)
-	show_fail(lc, rc)
+
+	var cp: Dictionary = params.get("cat_progress", {})
+
+	EndTitleArtStyle.apply(_title_under, _title_up, _title_style_cache, _LEGACY_TITLE_STYLE)
+	show_fail(lc, rc, cp)
 
 
-## 显示失败：填剩余猫数、决定复活按钮能否用、刷文案并播动画
-func show_fail(level_config: Dictionary, remaining_cats: int = 0) -> void:
+func _refresh_revive_btn_stock_async() -> void:
+	var seq: int = _show_seq_id
+	var show_id: String = _revive_ad_show_id
+	var ad_ready: bool = await UniKitManager.is_reward_ready(
+		AdPlacement.REWARD, Tracker.AdPos.DAILY_GAME_FAIL, show_id
+	)
+	if seq != _show_seq_id or not is_showing():
+		return
+	_revive_btn.visible = ad_ready
+
+
+func show_fail(
+	level_config: Dictionary, remaining_cats: int = 0, cat_progress: Dictionary = {}
+) -> void:
+	_show_seq_id += 1
+	_revive_ad_show_id = ""
+	_revive_ad_check_pending = false
 	visible = true
 	_root.modulate = Color(1, 1, 1, 1)
-	_count_num.text = str(remaining_cats)
+	_layout_title_for_height()
+	_layout_buttons_for_height()
+	_count_text.text = (
+		"%s[b][color=%s]%d[/color][/b]"
+		% [tr("FAIL_REMAINING_CAT"), _COUNT_NUM_COLOR, remaining_cats]
+	)
+
+	_companion_override_snapshot = int(level_config.get("companion_costume_override", -1))
+	_refresh_costume_cat()
+	_apply_cat_progress(cat_progress)
 
 	_refresh_dynamic_text()
 
-	# 免费复活直接给按钮；否则要广告就绪才显示
 	var free: bool = _is_free_revive()
-	_revive_btn.visible = (
-		true if free else UniKitManager.is_reward_valid("reward", Tracker.AdPos.DAILY_GAME_FAIL)
-	)
-	# 合规要求挂 AD 角标时用角标，否则免费标与广告图标二选一
-	var ad_tag: bool = ABTestManager.ad_compliance_ui.should_show_ad_tag()
-	if ad_tag:
-		_revive_ad_icon.visible = false
-		_revive_badge.visible = not free
-		_revive_badge.show_icon_with_ad()
-		_revive_badge.scale = Vector2.ONE
-	else:
-		_revive_ad_icon.visible = not free
-		_revive_badge.visible = free
-		_revive_badge.show_free()
-		_revive_badge.scale = Vector2.ONE * 1.4
+
+	_revive_btn.visible = free
+	if not free:
+		_revive_ad_show_id = UniKitManager.stats_ad_show_timing(
+			AdPlacement.REWARD, Tracker.AdPos.DAILY_GAME_FAIL
+		)
+		_refresh_revive_btn_stock_async()
+
+	_revive_ad_icon.visible = false
+	_revive_badge.visible = not free
+	_revive_badge.show_icon_with_ad()
+	_revive_badge.scale = Vector2.ONE
 
 	_fit_main_label_width()
 	_refresh_encourage_label(level_config, remaining_cats)
-	# 失败音效按实验分档（低音量 / 普通）
-	if ABTestManager.wrong_cat_effect.should_lower_fail_volume():
-		SoundManager.play(SoundManager.Kind.LEVEL_FAIL_LOW)
-	else:
-		SoundManager.play(SoundManager.Kind.LEVEL_FAIL)
+	SoundManager.play(SoundManager.Kind.LEVEL_FAIL)
 
-	# 两套出场动画按生命图标样式选（鱼形生命条走 group1）
-	var group1: bool = ABTestManager.life_icon.is_fish_life_bar()
 	_anim.stop()
 
-	# 先 RESET 再播出现，保证每次都从同一帧开始
 	_anim.play("RESET")
 	_anim.advance(0.0)
 
-	# Spine 猫先复位到 in 第 0 帧，再恢复时间缩放正式播
 	_reset_fail_cat_spines()
 	_resume_fail_cat_spines()
-	_anim.play("appear_group1" if group1 else "appear")
+	_anim.play("appear_group1")
 
-	# 出现播完接 idle 循环
 	_anim.advance(0.0)
-	_anim.queue("idle_group1" if group1 else "idle")
+	AnimUtil.commit_nested(_anim)
+	_anim.queue("idle_group1")
+
+	_play_cat_progress_fade_in("appear_group1")
 
 
-# ================= 猫 Spine 控制 =================
-## 把两只失败猫停在 in 第 0 帧并隐藏，作为「还没出场」状态
+func _layout_buttons_for_height(height_override: float = -1.0) -> void:
+	var h: float = (
+		height_override if height_override > 0.0 else get_viewport().get_visible_rect().size.y
+	)
+	var t: float = clampf((h - 1920.0) / 480.0, 0.0, 1.0)
+	_encourage_slot.custom_minimum_size.y = lerpf(365.0, 210.0, t)
+
+
+func _layout_title_for_height(height_override: float = -1.0) -> void:
+	var h: float = (
+		height_override if height_override > 0.0 else get_viewport().get_visible_rect().size.y
+	)
+	var t: float = clampf((h - 1920.0) / 480.0, 0.0, 1.0)
+	_title_under.position.y = lerpf(55.0, 295.0, t)
+	_title_up.position.y = lerpf(53.0, 293.0, t)
+
+
 func _reset_fail_cat_spines() -> void:
-	for sp: SpineSprite in [$Root/SpineSprite, $Root/SpineSprite2]:
+	for sp: SpineSprite in [
+		$Root/VBoxContainer/CenterContainer/Control/SpineSprite,
+		$Root/VBoxContainer/CenterContainer/Control/SpineSprite2
+	]:
 		if sp == null:
 			continue
-		sp.visible = true
 		var st := sp.get_animation_state()
 		if st != null:
 			st.set_animation("in", false, 0)
 			st.set_time_scale(0.0)
-		sp.update_skeleton(0.0)
-		sp.visible = false
 
 
-## 恢复两只猫的时间缩放，让动画真正跑起来
 func _resume_fail_cat_spines() -> void:
-	for sp: SpineSprite in [$Root/SpineSprite, $Root/SpineSprite2]:
+	for sp: SpineSprite in [
+		$Root/VBoxContainer/CenterContainer/Control/SpineSprite,
+		$Root/VBoxContainer/CenterContainer/Control/SpineSprite2
+	]:
 		if sp == null:
 			continue
 		var st := sp.get_animation_state()
 		if st != null:
 			st.set_time_scale(1.0)
+
+
+func _refresh_costume_cat() -> void:
+	var use_costume: bool = ABTestManager.dc_costume.has_costume() or _companion_override() != 0
+	_cat_face.visible = not use_costume
+	_costume_slot.visible = use_costume
+	if not use_costume:
+		return
+
+	if _costume_cat.skeleton_data_res != CostumeSkin.SKELETON_RES:
+		_costume_cat.skeleton_data_res = CostumeSkin.SKELETON_RES
+	CostumeSkin.apply(_costume_cat, _dc_costume_id())
+	_freeze_costume_cat_idle()
+
+
+func _dc_costume_id() -> int:
+	var override_id: int = _companion_override()
+	if override_id != 0:
+		return override_id
+	return ProfileService.get_today_costume()
+
+
+func _companion_override() -> int:
+	if _companion_override_snapshot >= 0:
+		return _companion_override_snapshot
+	return _COMPANION_SERVICE.new().in_game_costume_override()
+
+
+var _companion_override_snapshot: int = -1
+const _COMPANION_SERVICE: GDScript = preload("res://scripts/module/home/home_companion_service.gd")
+
+
+func _freeze_costume_cat_idle() -> void:
+	var data: SpineSkeletonDataResource = _costume_cat.get_skeleton_data_res()
+	if data == null or data.find_animation(_COSTUME_IDLE_ANIM) == null:
+		return
+	var st := _costume_cat.get_animation_state()
+	if st == null:
+		return
+	st.set_animation(_COSTUME_IDLE_ANIM, false, 0)
+	st.set_time_scale(0.0)
+
+
+func _apply_cat_progress(snapshot: Dictionary) -> void:
+	var shows_bar: bool = ABTestManager.fail_ui.shows_progress_bar()
+	var hides_count: bool = ABTestManager.fail_ui.hides_count_text()
+	var wants_replace: bool = shows_bar and hides_count
+	var wants_add: bool = shows_bar and not hides_count
+	var plan: Dictionary = FailCatProgressPlan.resolve(wants_replace, wants_add, snapshot)
+	_cat_progress_added = bool(plan["bar_added"])
+	_count_row.visible = bool(plan["show_count"])
+	_cat_progress.visible = bool(plan["show_bar"])
+
+	_cat_progress.modulate.a = 1.0
+	if not bool(plan["show_bar"]):
+		return
+	var total: int = int(plan["total"])
+	var metrics: Dictionary = CatProgressBar.solve_metrics(total, _CAT_PROGRESS_MAX_BAR_WIDTH)
+	if snapshot.has("compact_order") and bool(plan["colored"]):
+		_cat_progress.setup_compact(
+			total,
+			metrics["slot"],
+			metrics["pitch"],
+			metrics["padding"],
+			snapshot.get("tints", PackedColorArray())
+		)
+		_cat_progress.restore_compact(plan["revealed"], snapshot["compact_order"])
+	else:
+		_cat_progress.setup(total, metrics["slot"], metrics["pitch"], metrics["padding"])
+
+	_cat_progress.use_soft_shadow()
+	_cat_progress.set_colored_mode(bool(plan["colored"]))
+	_cat_progress.set_tints(snapshot.get("tints", PackedColorArray()))
+	_cat_progress.set_revealed(plan["revealed"])
+
+	_cat_progress.set_cat_costume(
+		_dc_costume_id(), ABTestManager.dc_costume.has_costume() or _companion_override() != 0
+	)
+	_layout_cat_progress()
+
+
+func _play_cat_progress_fade_in(anim_name: String) -> void:
+	if _cat_progress == null or not _cat_progress.visible:
+		return
+	var window: Vector2 = _count_row_fade_window(anim_name)
+	if _cat_progress_fade_tween != null and _cat_progress_fade_tween.is_valid():
+		_cat_progress_fade_tween.kill()
+	_cat_progress.modulate.a = 0.0
+	_cat_progress_fade_tween = create_tween()
+	_cat_progress_fade_tween.tween_interval(window.x)
+	_cat_progress_fade_tween.tween_property(_cat_progress, "modulate:a", 1.0, window.y)
+
+
+func _count_row_fade_window(anim_name: String) -> Vector2:
+	if _anim == null or not _anim.has_animation(anim_name):
+		return _CAT_PROGRESS_FADE_FALLBACK
+	var anim: Animation = _anim.get_animation(anim_name)
+	if anim == null:
+		return _CAT_PROGRESS_FADE_FALLBACK
+	var want: NodePath = _track_path_of(_count_row, "modulate")
+	for t: int in anim.get_track_count():
+		if anim.track_get_path(t) != want:
+			continue
+		for k: int in anim.track_get_key_count(t):
+			var value: Variant = anim.track_get_key_value(t, k)
+			if not (value is Color) or (value as Color).a <= 0.0:
+				continue
+			var fade_end: float = anim.track_get_key_time(t, k)
+			var fade_start: float = 0.0 if k == 0 else anim.track_get_key_time(t, k - 1)
+			var duration: float = maxf(fade_end - fade_start, 0.0)
+			if duration <= 0.0:
+				return _CAT_PROGRESS_FADE_FALLBACK
+			return Vector2(fade_start, duration)
+		break
+	return _CAT_PROGRESS_FADE_FALLBACK
+
+
+func _track_path_of(node: Node, property: String) -> NodePath:
+	if _anim == null or node == null:
+		return NodePath()
+	var base: Node = _anim.get_node_or_null(_anim.root_node)
+	if base == null:
+		base = self
+	return NodePath("%s:%s" % [str(base.get_path_to(node)), property])
+
+
+func _layout_cat_progress() -> void:
+	if _cat_progress == null or not _cat_progress.visible:
+		return
+	var half_w: float = _cat_progress.size.x * 0.5
+	var bar_h: float = _cat_progress.size.y
+	_cat_progress.offset_left = -half_w
+	_cat_progress.offset_right = half_w
+	if _cat_progress_added:
+		var row_bottom: float = _CAT_PROGRESS_BAND_CENTER_Y + _CAT_COUNT_ROW_DESIGN_HEIGHT * 0.5
+		_cat_progress.offset_top = row_bottom + _CAT_PROGRESS_G2_GAP_BELOW_ROW
+		_cat_progress.offset_bottom = _cat_progress.offset_top + bar_h
+		return
+	_cat_progress.offset_top = _CAT_PROGRESS_BAND_CENTER_Y - bar_h * 0.5
+	_cat_progress.offset_bottom = _CAT_PROGRESS_BAND_CENTER_Y + bar_h * 0.5
 
 
 # ================= 鼓励文案 =================
@@ -229,10 +426,13 @@ func _refresh_encourage_label(level_config: Dictionary, remaining_cats: int) -> 
 	_encourage_fade_tween.tween_property(_encourage_label, "modulate:a", 1.0, fade_dur)
 
 
-# ================= 离场 =================
-## 恢复 BGM、断开广告回调，播完退场动画再隐藏
 func on_hide() -> void:
-	SoundManager.set_bgm_paused(false)
+	_show_seq_id += 1
+	var seq: int = _show_seq_id
+	_revive_ad_show_id = ""
+	_revive_ad_check_pending = false
+
+	SoundManager.set_bgm_paused(false, BgmPauseReason.DAILY_FAIL)
 	_disconnect_self_reward_callbacks()
 	if _encourage_fade_tween != null and _encourage_fade_tween.is_valid():
 		_encourage_fade_tween.kill()
@@ -240,55 +440,56 @@ func on_hide() -> void:
 	_anim.stop()
 	_anim.play("disappear")
 	await _anim.animation_finished
+	if seq != _show_seq_id:
+		return
 
 	_reset_fail_cat_spines()
 	visible = false
 
 
-# ================= 复活与重开 =================
-## 是否免费复活：调试强制 / 等级还没到要看广告 / 实验判定免费
 func _is_free_revive() -> bool:
 	if BaseGamePage.debug_force_free_tool == "all":
 		return true
-	if not ABTestManager.reward_unlock_level.is_reward_required_at(GameState.get_current_level()):
-		return true
-	return ABTestManager.revive_free_logic.should_free_revive()
+	return not ABTestManager.reward_unlock_level.is_reward_required_at(
+		GameState.get_current_level()
+	)
 
 
-## 复活按钮：免费直接复原；否则校验广告就绪后拉激励视频，看完才发 revive_requested
 func _on_revive_btn_pressed() -> void:
+	if _revive_ad_check_pending or not is_showing() or not _revive_btn.visible:
+		return
 	Tracker.track_btn_click(Tracker.Btn.REVIVE, self)
 
 	if _is_free_revive():
-		ABTestManager.revive_free_logic.consume_if_needed()
 		revive_ad_started.emit()
 		revive_requested.emit()
 		return
-	# 广告位固定为「每日挑战失败页」
 	var pos: String = Tracker.AdPos.DAILY_GAME_FAIL
-
-	var show_id := UniKitManager.gen_show_id()
-	if not UniKitManager.is_reward_ready("reward", pos, show_id):
+	var seq: int = _show_seq_id
+	var show_id: String = _revive_ad_show_id
+	_revive_ad_check_pending = true
+	var ad_ready: bool = await UniKitManager.is_reward_ready(AdPlacement.REWARD, pos, show_id)
+	if seq != _show_seq_id or not is_showing():
+		return
+	_revive_ad_check_pending = false
+	if not ad_ready:
 		Toast.popup("AD_TOAST_NOT_READY", self)
 		return
 
-	# 只有看完广告才算复活：发信号让游戏页恢复棋盘
 	var on_rewarded := func(placement_id: String) -> void:
-		if placement_id != "reward":
+		if placement_id != AdPlacement.REWARD:
 			return
 		revive_requested.emit()
-	# 广告中途关闭不发奖励，什么都不做
 	var on_closed := func(placement_id: String) -> void:
-		if placement_id != "reward":
+		if placement_id != AdPlacement.REWARD:
 			return
 
-	# 先清掉自己上次挂上的回调，避免重复触发
 	_disconnect_self_reward_callbacks()
 	UniKitManager.ad_rewarded.connect(on_rewarded, CONNECT_ONE_SHOT)
 	UniKitManager.ad_closed.connect(on_closed, CONNECT_ONE_SHOT)
 
 	revive_ad_started.emit()
-	UniKitManager.show_reward("reward", pos, show_id)
+	UniKitManager.show_reward(AdPlacement.REWARD, pos, show_id)
 
 
 ## 遍历两个广告信号，只断开 callable 属于本节点的连接

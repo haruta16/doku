@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b0gtsclkl27gx"
-path.s3tc="res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.s3tc.ctex"
-path.etc2="res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.etc2.ctex"
+path.bptc="res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.bptc.ctex"
+path.astc="res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/effect/texture/line/et_line_001.png"
-dest_files=["res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.s3tc.ctex", "res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.etc2.ctex"]
+dest_files=["res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.bptc.ctex", "res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

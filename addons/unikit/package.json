@@ -1,0 +1,14 @@
+{
+  "name": "com.learnings.godot.unikit",
+  "version": "2.6.1-v2",
+  "displayName": "unikit",
+  "description": "A uni-kit package for godot",
+  "godot": "4.6",
+  "dependencies": {},
+  "keywords": [],
+  "author": {
+    "name": "Learnings",
+    "email": "",
+    "url": ""
+  }
+}

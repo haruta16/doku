@@ -1,4 +1,4 @@
-## 失败页文案实验：0=对照组（原文案） 1=换成进度鼓励文案 2=鼓励文案并突出复活入口
+## 实验配置 fail_text：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name FailTextConfig
 
@@ -8,11 +8,10 @@ const VALUE_PROGRESS_TEXT: int = 1 # 换成进度鼓励文案
 const VALUE_REVIVE_PROMOTE: int = 2 # 鼓励文案 + 突出复活按钮
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "fail_text"
-	default_value = VALUE_CONTROL # 默认档：原文案
-	timing = ABTestManager.TIMING_GAME_END # 染色时机：本局失败结算时
+	default_value = VALUE_CONTROL
 
 
 ## 是否显示鼓励文案（档位 >=1）

@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://cmv3h0q0xu1vn"]
+
+[ext_resource type="Script" uid="uid://21gddc1cyiwh" path="res://scripts/module/daily_streak/view/other/streak_calendar_cell.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://dbkcrdwkid7oq" path="res://assets/sprites/daily_streak/home/day_cell.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g6wgj"]
+bg_color = Color(0.7607843, 0.54901963, 0.43529412, 0.2)
+corner_radius_top_left = 71
+corner_radius_top_right = 71
+corner_radius_bottom_right = 71
+corner_radius_bottom_left = 71
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dreh0"]
+bg_color = Color(0.9764706, 0.73333335, 0.24705882, 1)
+corner_radius_top_left = 71
+corner_radius_top_right = 71
+corner_radius_bottom_right = 71
+corner_radius_bottom_left = 71
+
+[node name="StreakCalendarCell" type="Control" unique_id=1845000075 node_paths=PackedStringArray("unchecked_visual", "checked_visual", "unchecked_label", "checked_label", "checked_background", "checked_shadow")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 100.0
+mouse_filter = 2
+script = ExtResource("1")
+unchecked_visual = NodePath("Unchecked")
+checked_visual = NodePath("Checked")
+unchecked_label = NodePath("Unchecked/DayLabel")
+checked_label = NodePath("Checked/DayLabel")
+checked_background = NodePath("Checked/Background")
+checked_shadow = NodePath("Checked/Shadow")
+
+[node name="Unchecked" type="Panel" parent="." unique_id=1300220927]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_g6wgj")
+
+[node name="DayLabel" type="Label" parent="Unchecked" unique_id=2041112682]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 46
+text = "31"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Checked" type="Control" parent="." unique_id=636395038]
+visible = false
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 100.0
+mouse_filter = 2
+
+[node name="Shadow" type="NinePatchRect" parent="Checked" unique_id=2069173949]
+layout_mode = 0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 114.0
+offset_bottom = 118.0
+texture = ExtResource("3")
+patch_margin_left = 64
+patch_margin_top = 60
+patch_margin_right = 64
+patch_margin_bottom = 68
+
+[node name="Background" type="Panel" parent="Checked" unique_id=1388144809]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dreh0")
+
+[node name="DayLabel" type="Label" parent="Checked" unique_id=1350729873]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 54
+text = "31"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true

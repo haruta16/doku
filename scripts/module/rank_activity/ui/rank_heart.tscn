@@ -1,0 +1,408 @@
+[gd_scene format=3 uid="uid://shq0gbtyp51q"]
+
+[ext_resource type="Script" uid="uid://uk2auv4g18bu" path="res://scripts/module/rank_activity/view/rank_heart.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b7x7easy4fbas" path="res://assets/sprites/rank_activity/icon_heart_full.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="3"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="4"]
+[ext_resource type="Texture2D" uid="uid://2bfn25vry36d" path="res://assets/effect/texture/ui/et_broken_heart_glow.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dyed68oiachwn" path="res://assets/effect/texture/glow/et_glow_006.png" id="6"]
+
+[sub_resource type="Curve" id="Curve_265it"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15578465, 1), -0.00832124, -0.00832124, 0, 0, Vector2(0.50286365, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Animation" id="Animation_mm5hh"]
+resource_name = "Cancel"
+length = 0.5
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark=",
+"time": 0.1
+}]
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:scale:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2, 2, 2),
+"points": PackedFloat32Array(1, 0, 0, 0.033333335, 0, 0.5, -0.033333335, 0, 0.033333335, 0, 1.2, -0.033333335, 0, 0.04444445, 0, 0.9, -0.04444445, 0, 0.055555634, 0, 1, -0.055555634, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.33333334, 0.50000024)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2, 2, 2),
+"points": PackedFloat32Array(1, 0, 0, 0.033333335, 0, 0.5, -0.033333335, 0, 0.033333335, 0, 1.2, -0.033333335, 0, 0.04444445, 0, 0.9, -0.04444445, 0, 0.055555634, 0, 1, -0.055555634, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.33333334, 0.50000024)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Control/HeartEmpty:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.13333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Control/HeartFull:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.13333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_nldpo"]
+resource_name = "dianzan"
+length = 0.7
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark",
+"time": 0.1
+}]
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:scale:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2, 2, 2),
+"points": PackedFloat32Array(1, 0, 0, 0.033333335, 0, 0.5, -0.033333335, 0, 0.033333335, 0, 1.2, -0.033333335, 0, 0.04444445, 0, 0.9, -0.04444445, 0, 0.055555634, 0, 1, -0.055555634, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.33333334, 0.50000024)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 2, 2, 2, 2),
+"points": PackedFloat32Array(1, 0, 0, 0.033333335, 0, 0.5, -0.033333335, 0, 0.033333335, 0, 1.2, -0.033333335, 0, 0.04444445, 0, 0.9, -0.04444445, 0, 0.055555634, 0, 1, -0.055555634, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.33333334, 0.50000024)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Control/HeartEmpty:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.13333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Control/HeartFull:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.10000001, 0.13333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [false, false, true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Particle:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.13333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("HeartFullGlow1:scale:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.8, 0, 0, 0.06666666, 0.74909407, 2, -0.16666667, 0, 0, 0),
+"times": PackedFloat32Array(0.13333334, 0.7)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HeartFullGlow1:scale:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.8, 0, 0, 0.06666666, 0.74909407, 2, -0.16666667, 0, 0, 0),
+"times": PackedFloat32Array(0.13333334, 0.7)
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("HeartFullGlow1:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.13333334, 0.20000002, 0.3, 0.6666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0.5882353), Color(1, 1, 1, 0)]
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("HeartFullGlow2:scale:x")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(0.2, 0, 0, 0.18888889, 0, 0.8, -0.18888889, 0, 0, 0),
+"times": PackedFloat32Array(0.13333334, 0.7)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("HeartFullGlow2:scale:y")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(0.2, 0, 0, 0.18888889, 0, 0.8, -0.18888889, 0, 0, 0),
+"times": PackedFloat32Array(0.13333334, 0.7)
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("HeartFullGlow2:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0.13333334, 0.20000002, 0.4, 0.6666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.3137255), Color(1, 1, 1, 0.11764706), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_6rl3a"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control/HeartEmpty:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/HeartFull:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HeartFullGlow1:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HeartFullGlow2:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Particle:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6rl3a"]
+_data = {
+&"Cancel": SubResource("Animation_mm5hh"),
+&"Like": SubResource("Animation_nldpo"),
+&"RESET": SubResource("Animation_6rl3a")
+}
+
+[node name="Heart" type="Control" unique_id=1923011350]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 741.0
+offset_top = 23.0
+offset_right = 818.0
+offset_bottom = 91.0
+script = ExtResource("1")
+
+[node name="Control" type="Control" parent="." unique_id=1200235844]
+anchors_preset = 0
+offset_right = 77.0
+offset_bottom = 68.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="HeartEmpty" type="TextureRect" parent="Control" unique_id=1062404732]
+self_modulate = Color(1, 1, 1, 0.3)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="HeartFull" type="TextureRect" parent="Control" unique_id=260815611]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="HeartNum" type="Label" parent="." unique_id=1921986032]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -37.5
+offset_top = -5.0
+offset_right = 37.5
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.5764706, 0.3529412, 0.3529412, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 44
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HeartNum2" type="Label" parent="." unique_id=1015242473]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -34.5
+offset_top = -35.0
+offset_right = 34.5
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 44
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HeartFullGlow1" type="TextureRect" parent="." unique_id=1512845713]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+offset_left = 1.0
+offset_right = 76.0
+offset_bottom = 67.0
+scale = Vector2(2, 2)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("5")
+
+[node name="HeartFullGlow2" type="TextureRect" parent="." unique_id=1454103832]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 0.5651041, 0.5651041, 1)
+layout_mode = 1
+offset_left = -216.99998
+offset_top = -229.0
+offset_right = 295.0
+offset_bottom = 283.0
+scale = Vector2(0.8, 0.8)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("6")
+
+[node name="Particle" type="CPUParticles2D" parent="." unique_id=1616032741]
+position = Vector2(39, 30)
+emitting = false
+amount = 4
+texture = ExtResource("2")
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 48866
+lifetime_randomness = 0.5
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, -50)
+initial_velocity_min = 80.0
+initial_velocity_max = 150.0
+scale_amount_min = 0.2
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_265it")
+
+[node name="HeartBtn" type="Button" parent="." unique_id=1256036172]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -29.0
+offset_top = -12.0
+offset_right = 31.0
+offset_bottom = 53.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1724644818]
+libraries/ = SubResource("AnimationLibrary_6rl3a")

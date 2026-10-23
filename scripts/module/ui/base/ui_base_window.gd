@@ -1,10 +1,17 @@
-## UI 窗口基类：一个 6 态状态机 + 4 个生命周期钩子，并统一托管信号连接、定时器、每帧回调与子窗口
+## 窗口生命周期基类：约束创建、显示、隐藏和销毁状态，集中管理信号连接与清理。
 class_name UIBaseWindow
 extends Control
 
 enum WindowState { INVALID, CREATING, SHOWING, HIDDEN, CLOSING, DESTROYED } # 窗口状态：INVALID 未创建 / CREATING 创建中 / SHOWING 显示中 / HIDDEN 已创建未显示 / CLOSING 关闭动画中 / DESTROYED 已销毁
 
 var _window_state: int = WindowState.INVALID # 当前状态；只由 UIManager 和本类的 _do_* 改写，外部用下面三个查询函数读
+
+var _show_version: int = 0
+
+signal _destroy_finished
+
+var _destroy_started: bool = false
+var _destroy_completed: bool = false
 
 
 ## 读原始状态值（需要区分 CLOSING 这类中间态时用）
@@ -22,20 +29,19 @@ func is_hidden() -> bool:
 	return _window_state == WindowState.HIDDEN
 
 
-## 创建流程（UIManager 首次取窗口时调）：先进 CREATING，给整棵子树的按钮挂点击音效，转 HIDDEN 再回调 on_create
 func _do_create() -> void:
 	_window_state = WindowState.CREATING
-	_attach_button_sounds(self) # 递归给所有 BaseButton 挂 BTN_CLICK，已挂过的会跳过
+	initialize_dynamic_widget(self)
 	_window_state = WindowState.HIDDEN
 	on_create()
 
 
-## 显示流程：置 SHOWING、显示节点、恢复被隐藏时暂停的定时器，有监听者才开 _process，最后回调 on_show
 func _do_show(params: Dictionary = {}) -> void:
+	_show_version += 1
 	_window_state = WindowState.SHOWING
 	visible = true
-	_resume_all_timers() # 把 _do_hide 里暂停的托管定时器续跑起来
-	if not _update_listeners.is_empty() or not _per_second_listeners.is_empty(): # 没有任何监听者就不开 _process，省掉每帧空转
+	_resume_all_timers()
+	if not _update_listeners.is_empty() or not _per_second_listeners.is_empty():
 		set_process(true)
 	on_show(params)
 
@@ -55,14 +61,32 @@ func _do_hide() -> void:
 	visible = false
 
 
-## 销毁流程：先拆掉所有子窗口，置 DESTROYED，回调 on_destroy，再清连接 / 定时器 / 监听
 func _do_destroy() -> void:
-	destroy_all_children()
+	if _destroy_started:
+		if not _destroy_completed:
+			await _destroy_finished
+		return
+	_destroy_started = true
+
+	if _window_state == WindowState.SHOWING:
+		_window_state = WindowState.CLOSING
+		await _do_hide()
 	_window_state = WindowState.DESTROYED
-	on_destroy()
+
+	var children: Array = _managed_children.duplicate()
+	for entry in children:
+		if not is_instance_valid(entry):
+			continue
+		var child: UIChildWindow = entry as UIChildWindow
+		await destroy_child(child)
+
+	@warning_ignore("redundant_await")
+	await on_destroy()
 	_disconnect_all_managed()
 	_destroy_all_timers()
 	_clear_all_listeners()
+	_destroy_completed = true
+	_destroy_finished.emit()
 
 
 ## 生命周期钩子①：节点已进树、还没显示；子类在这里取子节点、连信号
@@ -70,7 +94,7 @@ func on_create() -> void:
 	pass
 
 
-## 生命周期钩子②：每次显示都会调；对已显示的窗口重复 show，UIManager 只调它不走 _do_show
+@warning_ignore("unused_parameter")
 func on_show(params: Dictionary = {}) -> void:
 	pass
 
@@ -89,14 +113,16 @@ func on_destroy() -> void:
 var _managed_connections: Array[Dictionary] = [] # 连接登记表：窗口隐藏 / 销毁时统一断开，避免野连接
 
 
-## 连一个信号并登记，断开时机交给窗口生命周期
 func connect_managed(sig: Signal, callable: Callable, flags: int = 0) -> void:
+	if sig.is_connected(callable):
+		return
 	sig.connect(callable, flags)
 	_managed_connections.append({"signal": sig, "callable": callable})
 
 
-## 同上，但只触发一次（CONNECT_ONE_SHOT）
 func connect_managed_once(sig: Signal, callable: Callable) -> void:
+	if sig.is_connected(callable):
+		return
 	sig.connect(callable, CONNECT_ONE_SHOT)
 	_managed_connections.append({"signal": sig, "callable": callable, "one_shot": true})
 
@@ -261,17 +287,14 @@ func create_child(scene: PackedScene, params: Dictionary = {}) -> UIChildWindow:
 	return child
 
 
-## 拆掉一个子窗口：正在显示就先 await 隐藏，再销毁、出表、queue_free
 func destroy_child(child: UIChildWindow) -> void:
 	if not is_instance_valid(child):
 		return
 
-	if child._window_state == WindowState.SHOWING: # 只有正在显示的才需要先走隐藏流程
-		await child._do_hide()
+	await child._do_destroy()
 
-		if not is_instance_valid(child):
-			return
-	child._do_destroy()
+	if not is_instance_valid(child):
+		return
 	_managed_children.erase(child)
 	child.queue_free()
 
@@ -294,14 +317,23 @@ func get_child_window(child_name: String) -> UIChildWindow:
 const _BTN_SOUND_BOUND_META: StringName = &"_btn_click_sound_bound" # 元数据键：标记按钮已挂过点击音效，避免重复连接同一实例
 
 
-## 递归整棵子树，给每个 BaseButton 的按下动作接一声 BTN_CLICK
+func initialize_dynamic_widget(root: Control) -> void:
+	if not is_instance_valid(root):
+		return
+	_attach_button_sounds(root)
+	_attach_button_press_guard(root)
+
+
 func _attach_button_sounds(node: Node) -> void:
 	if node is BaseButton:
-		var b := node as BaseButton
-		if not b.has_meta(_BTN_SOUND_BOUND_META):
-			b.set_meta(_BTN_SOUND_BOUND_META, true)
-			b.button_down.connect(func() -> void: SoundManager.play(SoundManager.Kind.BTN_CLICK))
-	for child in node.get_children():
+		var button := node as BaseButton
+		if not button.has_meta(_BTN_SOUND_BOUND_META):
+			button.set_meta(_BTN_SOUND_BOUND_META, true)
+			button.button_down.connect(
+				func() -> void: SoundManager.play(SoundManager.Kind.BTN_CLICK)
+			)
+	var children: Array[Node] = node.get_children()
+	for child in children:
 		_attach_button_sounds(child)
 
 
@@ -309,6 +341,21 @@ func _attach_button_sounds(node: Node) -> void:
 func claim_button_sound(button: BaseButton) -> void:
 	if is_instance_valid(button):
 		button.set_meta(_BTN_SOUND_BOUND_META, true)
+
+
+const _BTN_PRESS_GUARD_BOUND_META: StringName = &"_btn_press_guard_bound"
+
+
+func _attach_button_press_guard(node: Node) -> void:
+	if node is BaseButton:
+		var button := node as BaseButton
+		if not button.has_meta(_BTN_PRESS_GUARD_BOUND_META):
+			button.set_meta(_BTN_PRESS_GUARD_BOUND_META, true)
+			button.button_down.connect(func() -> void: UIManager._guard_held(button))
+			button.button_up.connect(func() -> void: UIManager._guard_released(button))
+	var children: Array[Node] = node.get_children()
+	for child in children:
+		_attach_button_press_guard(child)
 
 
 # ---- 缩放反馈 / 节点查找 ----

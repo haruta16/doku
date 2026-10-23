@@ -1,4 +1,4 @@
-## 插屏启动次数门槛：第几次启动 App 之后才展示插屏
+## 实验配置 inter_unlock_session：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name InterUnlockSessionConfig
 
@@ -6,11 +6,10 @@ class_name InterUnlockSessionConfig
 const DEFAULT_UNLOCK_SESSION: int = 2 # 默认门槛：第 2 次启动
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "inter_unlock_session"
-	default_value = DEFAULT_UNLOCK_SESSION # 默认档：第 2 次启动解锁
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = DEFAULT_UNLOCK_SESSION
 
 
 ## 当前启动次数是否已达门槛

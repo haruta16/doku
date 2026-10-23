@@ -1,0 +1,168 @@
+[gd_scene format=3 uid="uid://d1xm75am45gxg"]
+
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="1"]
+[ext_resource type="Texture2D" uid="uid://cs8naxhx01e1h" path="res://assets/sprites/setting/pattern_mode_switch/border.png" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ys837"]
+bg_color = Color(0.2784314, 0.7019608, 0.3419608, 1)
+corner_radius_top_left = 43
+corner_radius_top_right = 43
+corner_radius_bottom_right = 43
+corner_radius_bottom_left = 43
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gdsck"]
+bg_color = Color(1, 0.98039216, 0.96862745, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rc48l"]
+bg_color = Color(0.80784315, 0.7294118, 0.63529414, 1)
+corner_radius_top_left = 43
+corner_radius_top_right = 43
+corner_radius_bottom_right = 43
+corner_radius_bottom_left = 43
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uqtc2"]
+bg_color = Color(1, 0.98039216, 0.96862745, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[node name="PatternModeSwitch" type="Control" unique_id=1146363181]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 804.0
+offset_bottom = 120.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Content" type="Control" parent="." unique_id=898608040]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -40.0
+offset_right = 450.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="PatternModeTxt" type="Label" parent="Content" unique_id=216866623]
+layout_mode = 0
+offset_left = 88.0
+offset_top = -36.5
+offset_right = 688.0
+offset_bottom = 116.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 7
+theme_override_fonts/font = ExtResource("1")
+theme_override_font_sizes/font_size = 50
+text = "GAME_SETTING_PATTERN_MODE"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Switch" type="Control" parent="Content" unique_id=642154855]
+anchors_preset = 0
+offset_left = 686.664
+offset_top = 12.1
+offset_right = 831.0
+offset_bottom = 67.9
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="On" type="Panel" parent="Content/Switch" unique_id=991098472]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ys837")
+
+[node name="ONTxt" type="Label" parent="Content/Switch/On" unique_id=226830861]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 17.0
+offset_right = 70.0
+offset_bottom = 43.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.98039216, 0.96862745, 1)
+theme_override_constants/line_spacing = 47
+theme_override_font_sizes/font_size = 36
+text = "ON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ellipse1" type="Panel" parent="Content/Switch/On" unique_id=480991997]
+layout_mode = 0
+offset_left = 92.78351
+offset_top = 5.2266665
+offset_right = 138.06186
+offset_bottom = 50.77333
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gdsck")
+
+[node name="Off" type="Panel" parent="Content/Switch" unique_id=1728776005]
+layout_mode = 0
+offset_right = 144.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rc48l")
+
+[node name="Ellipse2" type="Panel" parent="Content/Switch/Off" unique_id=1309505233]
+layout_mode = 0
+offset_left = 5.938144
+offset_top = 5.2266665
+offset_right = 51.216496
+offset_bottom = 50.77333
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uqtc2")
+
+[node name="OFFTxt" type="Label" parent="Content/Switch/Off" unique_id=228233088]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 17.0
+offset_right = 125.0
+offset_bottom = 43.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(1, 0.98039216, 0.96862745, 1)
+theme_override_constants/line_spacing = 47
+theme_override_font_sizes/font_size = 36
+text = "OFF"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BorderImg" type="TextureRect" parent="." unique_id=810377852]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -402.0
+offset_top = -60.0
+offset_right = 402.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(402, 60)
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1

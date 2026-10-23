@@ -1,4 +1,4 @@
-## 开屏 banner 的关卡门槛：普通关打到第几关才开始展示 banner
+## 实验配置 banner_unlock_level：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name BannerUnlockLevelConfig
 
@@ -6,11 +6,10 @@ class_name BannerUnlockLevelConfig
 const DEFAULT_UNLOCK_LEVEL: int = 11 # 默认门槛：第 11 关
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "banner_unlock_level"
-	default_value = DEFAULT_UNLOCK_LEVEL # 默认档：第 11 关解锁
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = DEFAULT_UNLOCK_LEVEL
 
 
 ## 给定关卡是否已达门槛

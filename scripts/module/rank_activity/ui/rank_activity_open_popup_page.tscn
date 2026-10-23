@@ -1,0 +1,212 @@
+[gd_scene format=3 uid="uid://clhfgf3tmlba3"]
+
+[ext_resource type="Script" uid="uid://biquxv6ab1icd" path="res://scripts/module/rank_activity/view/rank_activity_open_popup_page.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="3"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cy5jtmfmlprlm" path="res://assets/sprites/rank_activity/layer553.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://d33a2k6oi03iw" path="res://assets/sprites/game/icon_timer.png" id="7"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="8"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="9"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="10"]
+[ext_resource type="Script" uid="uid://b7l8oc0h3r11u" path="res://scripts/module/ui/extensions/auto_fit_rich_text_label.gd" id="11"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="12"]
+
+[sub_resource type="AnimationLibrary" id="anim_lib"]
+_data = {
+&"GenericPopup": ExtResource("2")
+}
+
+[sub_resource type="StyleBoxFlat" id="sf_dialog_bg"]
+bg_color = Color(1, 0.984, 0.969, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="sf_title"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_countdown"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+
+[node name="RankActivityOpenPopupPage" type="Control" unique_id=1158228125]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=646449614]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="Control" parent="Root" unique_id=1277591332]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root/Content" unique_id=1359552589]
+root_node = NodePath("../..")
+libraries/ = SubResource("anim_lib")
+
+[node name="DialogRoot" type="Control" parent="Root/Content" unique_id=103587041]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -590.0
+offset_right = 450.0
+offset_bottom = 590.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogBg" type="Panel" parent="Root/Content/DialogRoot" unique_id=2013451070]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_dialog_bg")
+
+[node name="TitleBgPanel" type="Panel" parent="Root/Content/DialogRoot" unique_id=944728009]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title")
+
+[node name="TitleLabel" type="Label" parent="Root/Content/DialogRoot" unique_id=557857090]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.427, 0.325, 0.345, 1)
+theme_override_constants/line_spacing = -26
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 86
+text = "RANK_OPEN_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4")
+max_font_size = 86
+min_font_size = 40
+
+[node name="CloseBtn" type="TextureButton" parent="Root/Content/DialogRoot" unique_id=189063226]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+texture_normal = ExtResource("5")
+ignore_texture_size = true
+stretch_mode = 1
+
+[node name="Banner" type="Control" parent="Root/Content/DialogRoot" unique_id=648035586]
+anchors_preset = 0
+offset_left = 50.0
+offset_top = 180.0
+offset_right = 850.0
+offset_bottom = 605.0
+
+[node name="BannerImg" type="TextureRect" parent="Root/Content/DialogRoot/Banner" unique_id=1364987895]
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 426.0
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="CountdownBg" type="Panel" parent="Root/Content/DialogRoot/Banner" unique_id=97224732]
+modulate = Color(1, 1, 1, 0.5)
+layout_mode = 0
+offset_left = 269.0
+offset_right = 531.0
+offset_bottom = 64.0
+theme_override_styles/panel = SubResource("sf_countdown")
+
+[node name="CountdownIcon" type="TextureRect" parent="Root/Content/DialogRoot/Banner" unique_id=1546368064]
+layout_mode = 0
+offset_left = 293.6
+offset_top = 5.8
+offset_right = 335.0
+offset_bottom = 52.6
+texture = ExtResource("7")
+expand_mode = 1
+
+[node name="CountdownLabel" type="Label" parent="Root/Content/DialogRoot/Banner" unique_id=400997043]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 1.0
+offset_right = 509.0
+offset_bottom = 63.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.965, 0.965, 0.976, 1)
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 40
+text = "21:29:33"
+horizontal_alignment = 2
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("9")
+
+[node name="BodyText" type="RichTextLabel" parent="Root/Content/DialogRoot" unique_id=1769376420]
+layout_mode = 0
+offset_left = 46.0
+offset_top = 768.0
+offset_right = 854.0
+offset_bottom = 768.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.577, 0.353, 0.353, 1)
+theme_override_constants/line_separation = -2
+theme_override_fonts/normal_font = ExtResource("10")
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+text = "RANK_OPEN_DESC"
+fit_content = true
+scroll_active = false
+script = ExtResource("11")
+max_font_size = 54
+min_font_size = 30
+max_content_height = 300.0
+
+[node name="ActionButton" parent="Root/Content/DialogRoot" unique_id=1308361225 instance=ExtResource("12")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 861.0
+offset_right = 840.0
+offset_bottom = 1119.0
+btn_text = "RANK_OPEN_CONFIRM"
+show_difficult = false
+
+[connection signal="pressed" from="Root/Content/DialogRoot/CloseBtn" to="." method="_on_close_btn_pressed"]
+[connection signal="tag_pressed" from="Root/Content/DialogRoot/ActionButton" to="." method="_on_action_btn_pressed"]

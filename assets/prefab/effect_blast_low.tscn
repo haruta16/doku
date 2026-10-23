@@ -1,0 +1,225 @@
+[gd_scene format=3 uid="uid://ba0y2th7vidnh"]
+
+[ext_resource type="Texture2D" uid="uid://cdms11nf5gg7v" path="res://assets/effect/texture/shine/et_shine_003.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bivtkyr4dbl78" path="res://assets/effect/texture/obj/et_broken_001.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cu3o47f6o6vwy" path="res://assets/effect/texture/glow/et_glow_007.png" id="3"]
+
+[sub_resource type="CanvasItemMaterial" id="Mat_add"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_ismhn"]
+_data = [Vector2(0, 0), 0.0, 3.408255, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Grad_flash"]
+offsets = PackedFloat32Array(0, 0.44673124, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.84313726, 0.92156863, 1, 0.19607843, 0.7, 0.85, 1, 0)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_j5ttx"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_2jy2u"]
+_limits = [-200.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0, 200), 0.0, 0.0, 0, 0, Vector2(0.06823529, -1.0854645), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_53n6o"]
+_data = [Vector2(0, 0), 0.0, 13.687301, 0, 0, Vector2(0.19328704, 1), 0.03329887, 0.03329887, 0, 0, Vector2(0.49999997, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_b0ucv"]
+offsets = PackedFloat32Array(0, 0.6280788, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_gbkud"]
+_data = [Vector2(0, 0), 0.0, 13.687301, 0, 0, Vector2(0.19328704, 1), 0.03329887, 0.03329887, 0, 0, Vector2(0.7453703, 0.9982657), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="Gradient" id="Gradient_s2xhe"]
+offsets = PackedFloat32Array(0, 0.6585956, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_scale_spark"]
+_data = [Vector2(0, 0.2), 0.0, 6.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Grad_spark"]
+offsets = PackedFloat32Array(0, 0.5883777, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.7, 0.9, 1, 0)
+
+[node name="BrokenLow" type="Control" unique_id=1641442569]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 100.0
+pivot_offset = Vector2(50, 50)
+
+[node name="Root" type="Control" parent="." unique_id=190937619]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Flash" type="CPUParticles2D" parent="Root" unique_id=353956111]
+material = SubResource("Mat_add")
+position = Vector2(591, 954)
+emitting = false
+amount = 1
+texture = ExtResource("1")
+lifetime = 0.35000000000000003
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+scale_amount_min = 1.5
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_ismhn")
+color_ramp = SubResource("Grad_flash")
+
+[node name="WhiteShards1b" type="CPUParticles2D" parent="Root" unique_id=7191495]
+modulate = Color(0.8235294, 0.8235294, 0.8235294, 1)
+material = SubResource("CanvasItemMaterial_j5ttx")
+position = Vector2(1182, 1908)
+emitting = false
+amount = 3
+texture = ExtResource("2")
+one_shot = true
+explosiveness = 1.0
+randomness = 0.1
+lifetime_randomness = 0.7
+local_coords = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 4000)
+initial_velocity_min = 200.0
+initial_velocity_max = 700.0
+angular_velocity_min = -550.0
+angular_velocity_max = 550.0
+radial_accel_curve = SubResource("Curve_2jy2u")
+damping_min = 1000.0
+damping_max = 2000.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.28
+scale_amount_max = 0.55
+scale_amount_curve = SubResource("Curve_53n6o")
+color_ramp = SubResource("Gradient_b0ucv")
+anim_offset_max = 1.0
+
+[node name="WhiteShards1a" type="CPUParticles2D" parent="Root" unique_id=1116825295]
+material = SubResource("CanvasItemMaterial_j5ttx")
+position = Vector2(1182, 1908)
+emitting = false
+amount = 7
+texture = ExtResource("2")
+one_shot = true
+explosiveness = 1.0
+randomness = 0.1
+lifetime_randomness = 0.7
+local_coords = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 4000)
+initial_velocity_min = 200.0
+initial_velocity_max = 700.0
+angular_velocity_min = -550.0
+angular_velocity_max = 550.0
+radial_accel_curve = SubResource("Curve_2jy2u")
+damping_min = 1000.0
+damping_max = 2000.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.28
+scale_amount_max = 0.55
+scale_amount_curve = SubResource("Curve_53n6o")
+color_ramp = SubResource("Gradient_b0ucv")
+anim_offset_max = 1.0
+
+[node name="WhiteShards2b" type="CPUParticles2D" parent="Root" unique_id=962649370]
+modulate = Color(0.8235294, 0.8235294, 0.8235294, 1)
+material = SubResource("CanvasItemMaterial_j5ttx")
+position = Vector2(1182, 1908)
+emitting = false
+amount = 2
+texture = ExtResource("2")
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+randomness = 0.15
+lifetime_randomness = 0.8
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(28, 20)
+direction = Vector2(0, -5)
+spread = 180.0
+gravity = Vector2(0, 800)
+initial_velocity_min = 100.0
+initial_velocity_max = 600.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+damping_min = 20.0
+damping_max = 200.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.28
+scale_amount_max = 0.55
+scale_amount_curve = SubResource("Curve_gbkud")
+color_ramp = SubResource("Gradient_s2xhe")
+anim_offset_max = 1.0
+
+[node name="WhiteShards2a" type="CPUParticles2D" parent="Root" unique_id=455991924]
+material = SubResource("CanvasItemMaterial_j5ttx")
+position = Vector2(1182, 1908)
+emitting = false
+amount = 3
+texture = ExtResource("2")
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+randomness = 0.15
+lifetime_randomness = 0.8
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(28, 20)
+direction = Vector2(0, -5)
+spread = 180.0
+gravity = Vector2(0, 800)
+initial_velocity_min = 100.0
+initial_velocity_max = 600.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+damping_min = 20.0
+damping_max = 200.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.28
+scale_amount_max = 0.55
+scale_amount_curve = SubResource("Curve_gbkud")
+color_ramp = SubResource("Gradient_s2xhe")
+anim_offset_max = 1.0
+
+[node name="Sparkles" type="CPUParticles2D" parent="Root" unique_id=1052003004]
+material = SubResource("Mat_add")
+position = Vector2(591, 954)
+emitting = false
+amount = 6
+texture = ExtResource("3")
+lifetime = 0.7
+one_shot = true
+explosiveness = 0.9
+randomness = 0.3
+lifetime_randomness = 0.3
+emission_shape = 3
+emission_rect_extents = Vector2(24, 16)
+direction = Vector2(0, -1)
+spread = 120.0
+gravity = Vector2(0, 300)
+initial_velocity_min = 120.0
+initial_velocity_max = 380.0
+scale_amount_min = 0.15
+scale_amount_max = 0.32
+scale_amount_curve = SubResource("Curve_scale_spark")
+color_ramp = SubResource("Grad_spark")

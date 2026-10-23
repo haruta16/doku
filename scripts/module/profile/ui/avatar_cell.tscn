@@ -1,0 +1,275 @@
+[gd_scene format=3 uid="uid://bqdkj22f2scbi"]
+
+[ext_resource type="Script" uid="uid://bk7l5p1sulfbd" path="res://scripts/module/profile/view/avatar_cell.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b202hnwhkn2fl" path="res://assets/sprites/profile/avatars/head_0001.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c2eagvoh43f48" path="res://assets/sprites/profile/avatars/head_0002.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cjr2urwfqy5tp" path="res://assets/sprites/profile/avatars/head_0003.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bqeowg4qyhbgx" path="res://assets/sprites/profile/avatars/head_0004.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cj34v44f4be8g" path="res://assets/sprites/profile/avatars/head_0005.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://txuq7fkpvwqv" path="res://assets/sprites/profile/avatars/head_0006.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://cdxw8d1d6l0dq" path="res://assets/sprites/profile/avatars/head_0007.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dlr165klsb86h" path="res://assets/sprites/profile/avatars/head_0008.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://dkin8a0m6lpqs" path="res://assets/sprites/profile/avatars/head_0101.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://crjayocqk6c3i" path="res://assets/sprites/profile/frames/frame_0001.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://c3pxqs8tp3jvl" path="res://assets/sprites/profile/frames/frame_0002.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://78qibkwqrks2" path="res://assets/sprites/profile/frames/frame_0003.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://dokkvi73pxis7" path="res://assets/sprites/profile/frames/frame_0004.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://b3k81g2vyn50t" path="res://assets/sprites/profile/frames/frame_0005.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://btg1q0todfnit" path="res://assets/sprites/profile/frames/frame_0006.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://dyyq64wsh4oi5" path="res://assets/sprites/profile/frames/frame_0007.png" id="17"]
+[ext_resource type="Texture2D" uid="uid://bvpsqkvap28xs" path="res://assets/sprites/profile/frames/frame_0008.png" id="18"]
+[ext_resource type="Texture2D" uid="uid://cenpt4ifhssjb" path="res://assets/sprites/profile/frames/frame_0100.png" id="19"]
+[ext_resource type="Texture2D" uid="uid://dajaxucnm81f5" path="res://assets/sprites/profile/frames/frame_0100_1.png" id="20"]
+[ext_resource type="Texture2D" uid="uid://dhvxa7nj177gj" path="res://assets/sprites/profile/frames/frame_0100_2.png" id="21"]
+[ext_resource type="Texture2D" uid="uid://bhkf8col616n5" path="res://assets/sprites/profile/frames/frame_0100_3.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://cxi36unspa87c" path="res://assets/sprites/profile/frames/frame_0100_4.png" id="23"]
+[ext_resource type="Texture2D" uid="uid://cr527be1e0qcq" path="res://assets/sprites/profile/frames/frame_0100_5.png" id="24"]
+[ext_resource type="Texture2D" uid="uid://bct6vxtqfqk0l" path="res://assets/sprites/profile/frames/frame_0100_6.png" id="25"]
+[ext_resource type="Texture2D" uid="uid://baq0qowxchf1h" path="res://assets/sprites/profile/frames/frame_0100_7.png" id="26"]
+[ext_resource type="Texture2D" uid="uid://blivu4hdjrkd7" path="res://assets/sprites/profile/frames/frame_0100_8.png" id="27"]
+[ext_resource type="Texture2D" uid="uid://co3gq4yr2ksr6" path="res://assets/sprites/profile/frames/frame_0100_9.png" id="28"]
+[ext_resource type="Texture2D" uid="uid://b86bqv3nmjnnj" path="res://assets/sprites/profile/frames/frame_0100_10.png" id="29"]
+[ext_resource type="Texture2D" uid="uid://cc58y21inpmss" path="res://assets/sprites/profile/frames/frame_0200.png" id="30"]
+[ext_resource type="Shader" uid="uid://cofjp2u3mfkht" path="res://assets/shaders/avatar_round_corner.gdshader" id="31"]
+[ext_resource type="Texture2D" uid="uid://cghp5yq6uv2m6" path="res://assets/sprites/profile/avatars/head_0000.png" id="32"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="33"]
+[ext_resource type="Texture2D" uid="uid://dbyhf4f18qfq6" path="res://assets/sprites/common/red_dot.png" id="34"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_round"]
+shader = ExtResource("31")
+shader_parameter/size_px = Vector2(155, 155)
+shader_parameter/radius_px = 20.0
+
+[sub_resource type="Animation" id="Animation_rxs2d"]
+resource_name = "Add"
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Frame/Clip/CountBadge:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(3, 0),
+"points": PackedFloat32Array(4, -0.1, 0, 0.1, 0, 4, -0.025, 0, 0.025, 0),
+"times": PackedFloat32Array(0, 0.4)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Frame/Clip/CountBadge:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(3, 0),
+"points": PackedFloat32Array(-5, -0.1, 0, 0.1, 0, -40, -0.025, 0, 0.025, 0),
+"times": PackedFloat32Array(0, 0.4)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Frame/Clip/CountBadgeNew:position:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(3, 0),
+"points": PackedFloat32Array(4, -0.1, 0, 0.1, 0, 4, -0.025, 0, 0.025, 0),
+"times": PackedFloat32Array(0, 0.4)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Frame/Clip/CountBadgeNew:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(3, 0),
+"points": PackedFloat32Array(30, -0.1, 0, 0.1, 0, -5, -0.025, 0, 0.025, 0),
+"times": PackedFloat32Array(0, 0.4)
+}
+
+[sub_resource type="Animation" id="Animation_qcndj"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Frame/Clip/CountBadge:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(4, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Frame/Clip/CountBadge:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-5, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Frame/Clip/CountBadgeNew:position:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(4, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Frame/Clip/CountBadgeNew:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(15, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".:scale:x")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:scale:y")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_kv42i"]
+resource_name = "Shake"
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 2, 0),
+"points": PackedFloat32Array(1, 0, 0, 0.033, 0, 1.15, -0.033, 0, 0.033, 0, 1, -0.033, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.06666667, 0.20000002)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 3, 2),
+"points": PackedFloat32Array(1, 0, 0, 0.033, 0, 1.15, -0.033, 0, 0.033, 0, 1, -0.033, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.06666667, 0.20000002)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kv42i"]
+_data = {
+&"Increase": SubResource("Animation_rxs2d"),
+&"RESET": SubResource("Animation_qcndj"),
+&"Shake": SubResource("Animation_kv42i")
+}
+
+[node name="AvatarCell" type="Control" unique_id=1510423780]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 185.0
+offset_bottom = 185.0
+script = ExtResource("1")
+avatar_textures = [ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10")]
+frame_textures = [ExtResource("11"), ExtResource("12"), ExtResource("13"), ExtResource("14"), ExtResource("15"), ExtResource("16"), ExtResource("17"), ExtResource("18"), ExtResource("19"), ExtResource("20"), ExtResource("21"), ExtResource("22"), ExtResource("23"), ExtResource("24"), ExtResource("25"), ExtResource("26"), ExtResource("27"), ExtResource("28"), ExtResource("29"), ExtResource("30")]
+
+[node name="Base" type="TextureRect" parent="." unique_id=448173138]
+material = SubResource("ShaderMaterial_round")
+layout_mode = 0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 170.0
+offset_bottom = 170.0
+mouse_filter = 2
+texture = ExtResource("32")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Avatar" type="TextureRect" parent="Base" unique_id=2042394938]
+material = SubResource("ShaderMaterial_round")
+layout_mode = 0
+offset_right = 155.0
+offset_bottom = 155.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Frame" type="TextureRect" parent="." unique_id=993621899]
+layout_mode = 0
+offset_right = 185.0
+offset_bottom = 185.0
+mouse_filter = 2
+expand_mode = 1
+
+[node name="Clip" type="Control" parent="Frame" unique_id=417197151]
+clip_contents = true
+anchors_preset = 0
+offset_top = 29.0
+offset_right = 40.0
+offset_bottom = 49.0
+
+[node name="CountBadge" type="Label" parent="Frame/Clip" unique_id=1299225032]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -5.0
+offset_right = 36.0
+offset_bottom = 25.0
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("33")
+theme_override_font_sizes/font_size = 20
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CountBadgeNew" type="Label" parent="Frame/Clip" unique_id=498681918]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 15.0
+offset_right = 36.0
+offset_bottom = 45.000053
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("33")
+theme_override_font_sizes/font_size = 20
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RedDot" type="TextureRect" parent="." unique_id=1772730154]
+visible = false
+layout_mode = 0
+offset_left = 149.0
+offset_top = 4.0
+offset_right = 191.0
+offset_bottom = 46.0
+mouse_filter = 2
+texture = ExtResource("34")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=698885233]
+libraries/ = SubResource("AnimationLibrary_kv42i")

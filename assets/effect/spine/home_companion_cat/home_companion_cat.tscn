@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="SpineSkeletonDataResource" uid="uid://gjylw4ijrn04" path="res://assets/effect/spine/home_companion_cat/home_companion_cat.tres" id="1"]
+
+[node name="HomeCompanionCat" type="SpineSprite" unique_id=1856623686]
+skeleton_data_res = ExtResource("1")
+preview_skin = "Default"
+preview_animation = "-- Empty --"
+preview_frame = false
+preview_time = 0.0

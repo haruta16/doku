@@ -1,0 +1,143 @@
+[gd_scene format=3 uid="uid://d3se1cxikfi0f"]
+
+[ext_resource type="Script" uid="uid://c5ro68muxnsj7" path="res://scripts/module/rank_activity/view/other/top3_podium_award.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bdui2pt8hpy25" path="res://assets/sprites/rank_activity/award_podium_silver.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://dx44s3kw4byi7" path="res://assets/sprites/rank_activity/award_podium_gold.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bk5onskdr8j8s" path="res://assets/sprites/rank_activity/award_podium_bronze.png" id="5"]
+
+[node name="Top3PodiumAward" type="Control" unique_id=1790767413]
+custom_minimum_size = Vector2(1080, 347)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1080.0
+offset_bottom = 347.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="SilverSofa" type="Control" parent="." unique_id=47003363]
+anchors_preset = 0
+offset_left = 10.0
+offset_right = 386.0
+offset_bottom = 347.0
+mouse_filter = 2
+
+[node name="Base" type="TextureRect" parent="SilverSofa" unique_id=760216713]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 185.0
+offset_right = 325.0
+offset_bottom = 321.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="AvatarSlot" type="Control" parent="SilverSofa" unique_id=1907871538]
+anchors_preset = 0
+offset_left = 96.0
+offset_top = 24.0
+offset_right = 281.0
+offset_bottom = 209.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RankNum" type="Label" parent="SilverSofa" unique_id=1937073185]
+layout_mode = 0
+offset_left = 170.0
+offset_top = 252.0
+offset_right = 199.0
+offset_bottom = 302.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -23
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 50
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GoldSofa" type="Control" parent="." unique_id=967446271]
+anchors_preset = 0
+offset_left = 352.0
+offset_right = 728.0
+offset_bottom = 347.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Base" type="TextureRect" parent="GoldSofa" unique_id=785774936]
+layout_mode = 0
+offset_top = 158.0
+offset_right = 376.0
+offset_bottom = 347.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="AvatarSlot" type="Control" parent="GoldSofa" unique_id=556706212]
+anchors_preset = 0
+offset_left = 83.0
+offset_top = -21.0
+offset_right = 293.0
+offset_bottom = 189.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RankNum" type="Label" parent="GoldSofa" unique_id=1347595814]
+layout_mode = 0
+offset_left = 167.0
+offset_top = 256.0
+offset_right = 206.0
+offset_bottom = 314.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -38
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 66
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BronzeSofa" type="Control" parent="." unique_id=1729860194]
+anchors_preset = 0
+offset_left = 694.0
+offset_right = 1070.0
+offset_bottom = 347.0
+mouse_filter = 2
+
+[node name="Base" type="TextureRect" parent="BronzeSofa" unique_id=1427347360]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 197.0
+offset_right = 319.0
+offset_bottom = 321.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="AvatarSlot" type="Control" parent="BronzeSofa" unique_id=1282577947]
+anchors_preset = 0
+offset_left = 96.0
+offset_top = 36.0
+offset_right = 281.0
+offset_bottom = 221.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="RankNum" type="Label" parent="BronzeSofa" unique_id=1622780208]
+layout_mode = 0
+offset_left = 177.0
+offset_top = 256.0
+offset_right = 206.0
+offset_bottom = 306.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -23
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 50
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1

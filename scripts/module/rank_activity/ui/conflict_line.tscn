@@ -1,0 +1,323 @@
+[gd_scene format=3 uid="uid://dod7hqm2puf67"]
+
+[ext_resource type="Script" uid="uid://c2y5blss8ar1w" path="res://scripts/module/game/view/line_cross_connector.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://d0hg4hid426vy" path="res://assets/effect/texture/line/et_line_002.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ccvurx652br4e" path="res://assets/effect/texture/glow/et_glow_008.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://b6752v2kmgxhe" path="res://assets/sprites/game/icon_mark_white_2.png" id="4"]
+
+[sub_resource type="Animation" id="Animation_ppa5y"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:line_display_height")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(2),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MidpointSlot/RedCross:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MidpointSlot/Glow:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MidpointSlot/Glow:scale:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1e-05, -0.0005, 0, 0.0005, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MidpointSlot/Glow:scale:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1e-05, -0.0005, 0, 0.0005, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("MidpointSlot/RedCross:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_tlkgc"]
+resource_name = "appear"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MidpointSlot/RedCross:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.16258126, 0.16666669),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, false, true]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MidpointSlot/RedCross:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, -0.008598568, 0, 0.008598568, 0, 1.05, -0.008598568, 0, 0.008598568, 0, 1, -0.054358006, 0.066037655, 0, 0, 1, 0, 0, 0.025454015, -0.275, 0.3, -0.008598568, 0, 0.008598568, 0),
+"times": PackedFloat32Array(0.16469187, 0.24865645, 0.4529093, 0.8000001, 1)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MidpointSlot/RedCross:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, -0.008598568, 0, 0.008598568, 0, 1.05, -0.008598568, 0, 0.008598568, 0, 1, -0.05818057, 0.06691015, 0, 0, 1, 0, 0, 0.026096463, -0.14692008, 0.3, -0.008598568, 0, 0.008598568, 0),
+"times": PackedFloat32Array(0.16469187, 0.24865645, 0.4529093, 0.8000001, 1)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MidpointSlot/RedCross/NinePatchRect2:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.24491638, 0.25284988),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, false, true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MidpointSlot/RedCross/NinePatchRect:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.16258126, 0.16666669),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, false, true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("MidpointSlot/RedCross/NinePatchRect:size:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(30, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0.16634232)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("MidpointSlot/RedCross/NinePatchRect:size:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(25, 0, 0, 0.029377937, 0, 168, -0.029377937, 0, 0, 0),
+"times": PackedFloat32Array(0.16648692, 0.25462073)
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("MidpointSlot/Crosses/RedCross/NinePatchRect2:size:x")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(30, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0.25499254)
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("MidpointSlot/RedCross/NinePatchRect2:size:y")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(25, -0.025024049, 0, 0.018124104, 4.8131905, 168, -0.078129336, 0, 0, 0),
+"times": PackedFloat32Array(0.25513726, 0.48952526)
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath(".:line_display_height")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(3, 3, 1, 3),
+"points": PackedFloat32Array(0, 0, -40, 0, 40, 65, -0.041666668, 0, 0.041666668, 0, 65, 0, 0, 0, 0, 0, -0.2, 0, 0.2, 0),
+"times": PackedFloat32Array(0, 0.16666667, 0.8000001, 1)
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("MidpointSlot/RedCross:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0.8000001, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("MidpointSlot/Glow:modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.16666667, 0.26666668, 0.8000001, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/12/type = "bezier"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("MidpointSlot/Glow:scale:x")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/13/type = "bezier"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("MidpointSlot/Glow:scale:y")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.9, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fj3jf"]
+_data = {
+&"RESET": SubResource("Animation_ppa5y"),
+&"appear": SubResource("Animation_tlkgc")
+}
+
+[node name="ConflictLine" type="Control" unique_id=1618480080]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+line_texture = ExtResource("2")
+line_display_height = 0.0
+midpoint_animation_name = &"appear"
+
+[node name="A" type="Marker2D" parent="." unique_id=1130482241]
+position = Vector2(300, 960)
+
+[node name="B" type="Marker2D" parent="." unique_id=1609382716]
+position = Vector2(780, 960)
+
+[node name="Line" type="Sprite2D" parent="." unique_id=671900258]
+z_index = 2
+position = Vector2(540, 960)
+scale = Vector2(1.875, 0.5078125)
+texture = ExtResource("2")
+
+[node name="MidpointSlot" type="Node2D" parent="." unique_id=830070056]
+z_index = 10
+position = Vector2(540, 960)
+
+[node name="Glow" type="Sprite2D" parent="MidpointSlot" unique_id=1714572737]
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("3")
+
+[node name="RedCross" type="Control" parent="MidpointSlot" unique_id=609595560]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+scale = Vector2(0.99999994, 0.99999994)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MidpointSlot/RedCross" unique_id=1602689379]
+modulate = Color(1, 0.2, 0.2, 1)
+layout_mode = 0
+offset_left = 14.0
+offset_top = 25.0
+offset_right = 44.0
+offset_bottom = 193.0
+rotation = -0.7853982
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4")
+region_rect = Rect2(0, 0, 32.003304, 168.2062)
+patch_margin_top = 9
+patch_margin_bottom = 10
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="MidpointSlot/RedCross" unique_id=1813847292]
+modulate = Color(1, 0.2, 0.2, 1)
+layout_mode = 0
+offset_left = 73.0
+offset_top = 15.0
+offset_right = 103.0
+offset_bottom = 183.0
+rotation = 0.7853982
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4")
+region_rect = Rect2(0, 0, 32.003304, 168.2062)
+patch_margin_top = 9
+patch_margin_bottom = 10
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2071319130]
+libraries/ = SubResource("AnimationLibrary_fj3jf")

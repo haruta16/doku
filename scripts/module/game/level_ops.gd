@@ -1,16 +1,17 @@
-## 关卡收尾入口：把 GameState 与 Tracker 的多步调用收在一处，供失败页/重开按钮复用
+## 关卡失败与重开入口：区分普通关和每日关，并把残局、推荐历史交回相应状态流程。
 class_name LevelOps
 extends RefCounted
 
 
-## 主线关卡失败确认：清结算快照 → 记一局结束 → 上报埋点，关卡号有效才记失败
-static func confirm_level_failed_main(end_params: Dictionary, lv: int) -> void:
-	GameState.clear_endgame_snapshot() # 清掉未完成的结算快照
-	GameState.on_game_finished() # 计入局数并落盘
-	Tracker.track_game_end(end_params) # 上报对局结束埋点
-	# 关卡号 > 0 才算真实失败（0 表示没有关卡上下文）
+static func confirm_level_failed_main(
+	end_params: Dictionary, lv: int, kind: int = LevelKind.MAIN
+) -> void:
+	GameState.clear_endgame_snapshot()
+	GameState.on_game_finished()
+	Tracker.track_game_end(end_params)
+
 	if lv > 0:
-		GameState.on_level_failed(lv)
+		GameState.on_level_failed(lv, kind)
 
 
 ## 每日关失败确认：不记失败进度，只结束对局并上报
@@ -22,3 +23,43 @@ static func confirm_level_failed_daily(end_params: Dictionary) -> void:
 ## 重开按钮：重置本局统计并累加重开次数
 static func on_restart_click() -> void:
 	Tracker.on_restart() # 重置回合统计 + restart_count 加一
+
+
+class RecProgress:
+	const FINISH: String = "finish"
+
+	const SKIP: String = "skip"
+
+
+static func _extract_rec_history(
+	end_params: Dictionary, progress_state: String = "", pre_cat_positions: Array = []
+) -> Dictionary:
+	var game_type: String = str(end_params.get("game_type", ""))
+	if game_type != Tracker.GameType.NORMAL and game_type != Tracker.GameType.GOLDEN_FISH:
+		print("[AlgoLevel] rec_history: skip record, game_type=%s" % game_type)
+		return {}
+	var recorded_pre_cat_positions: Array = []
+	for position: Array in pre_cat_positions:
+		recorded_pre_cat_positions.append([int(position[0]), int(position[1])])
+	var now: int = int(Time.get_unix_time_from_system())
+
+	var record: Dictionary = {
+		"exact_qid": str(end_params.get("qid", "")),
+		"level": int(end_params.get("level", 0)),
+		"end_ts_s": now,
+		"game_type": game_type,
+		"result": str(end_params.get("result", "")),
+		"duration_seconds": float(end_params.get("time_total", 0)),
+		"fail_times": int(end_params.get("gamedie_count", 0)),
+		"restart_times": int(end_params.get("restart_count", 0)),
+		"hint_used_total": int(end_params.get("hint_used_total", 0)),
+		"locate_used_total": int(end_params.get("locate_used_total", 0)),
+		"draft_used_total": int(end_params.get("draft_used_total", 0)),
+		"mouse_used_total": int(end_params.get("mouse_used_total", 0)),
+		"pre_cat_positions": recorded_pre_cat_positions,
+	}
+
+	if not progress_state.is_empty():
+		record["progress_state"] = progress_state
+	print("[AlgoLevel] rec_history: %s" % JSON.stringify(record))
+	return record

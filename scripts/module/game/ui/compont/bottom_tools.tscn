@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://wmaygbsul7ho"]
+
+[ext_resource type="Script" uid="uid://cy75opdv2jhsu" path="res://scripts/module/game/view/bottom_tools.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://d1hbgjbf4dovx" path="res://assets/prefab/tool_button.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://blcq54buvrrv5" path="res://assets/sprites/game/tool_cat_item.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ibovplgqc6eg" path="res://assets/sprites/game/icon_hint_lamp.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://pubkn7aov11u" path="res://assets/sprites/game/icon_mouse.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cn61loanbcw8c" path="res://assets/sprites/game/icon_draft_pencil.png" id="6"]
+
+[node name="BottomTools" type="HBoxContainer" unique_id=315239902]
+custom_minimum_size = Vector2(0, 200)
+offset_right = 1080.0
+offset_bottom = 200.0
+size_flags_stretch_ratio = 0.0
+mouse_filter = 2
+theme_override_constants/separation = 72
+alignment = 1
+script = ExtResource("1")
+metadata/_edit_horizontal_guides_ = [40.0]
+
+[node name="RevealCtrl" type="Control" parent="." unique_id=1975344775]
+custom_minimum_size = Vector2(205, 200)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="RevealBtn" parent="RevealCtrl" unique_id=2034969391 instance=ExtResource("2")]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -102.5
+offset_top = -84.0
+offset_right = 97.5
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+icon_tex = ExtResource("3")
+badge_count = 3
+
+[node name="HintCtrl" type="Control" parent="." unique_id=1235098272]
+custom_minimum_size = Vector2(205, 200)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HintBtn" parent="HintCtrl" unique_id=1263242903 instance=ExtResource("2")]
+custom_minimum_size = Vector2(210, 200)
+layout_mode = 0
+offset_top = 16.0
+offset_right = 210.0
+offset_bottom = 216.0
+icon_tex = ExtResource("4")
+badge_count = 3
+
+[node name="MouseCtrl" type="Control" parent="." unique_id=1962405256]
+visible = false
+custom_minimum_size = Vector2(205, 200)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MouseBtn" parent="MouseCtrl" unique_id=119042222 instance=ExtResource("2")]
+custom_minimum_size = Vector2(210, 200)
+layout_mode = 0
+offset_top = 16.0
+offset_right = 210.0
+offset_bottom = 216.0
+icon_tex = ExtResource("5")
+state = 1
+badge_count = 99
+
+[node name="DraftCtrl" type="Control" parent="." unique_id=811006600]
+visible = false
+custom_minimum_size = Vector2(205, 200)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DraftBtn" parent="DraftCtrl" unique_id=811001100 instance=ExtResource("2")]
+custom_minimum_size = Vector2(210, 200)
+layout_mode = 0
+offset_top = 16.0
+offset_right = 210.0
+offset_bottom = 216.0
+icon_tex = ExtResource("6")
+state = 1
+badge_count = 5
+
+[connection signal="pressed" from="RevealCtrl/RevealBtn" to="." method="_on_reveal_btn_pressed"]
+[connection signal="pressed" from="HintCtrl/HintBtn" to="." method="_on_hint_btn_pressed"]
+[connection signal="pressed" from="MouseCtrl/MouseBtn" to="." method="_on_mouse_btn_pressed"]
+[connection signal="pressed" from="DraftCtrl/DraftBtn" to="." method="_on_draft_btn_pressed"]

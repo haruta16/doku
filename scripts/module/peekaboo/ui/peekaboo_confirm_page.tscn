@@ -1,0 +1,419 @@
+[gd_scene format=3 uid="uid://ct10oq2apr5pb"]
+
+[ext_resource type="Script" uid="uid://dod8tes0hf0hv" path="res://scripts/module/peekaboo/view/peekaboo_confirm_page.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://ds45vgwsy0fmx" path="res://assets/sprites/common/dialog_frame_9patch.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="4"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://dupq3l7hgqwc7" path="res://assets/sprites/common/shape_81.png" id="6"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="7"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="8"]
+[ext_resource type="Texture2D" uid="uid://bmmnejyh5kp8k" path="res://assets/sprites/peekaboo/fish_btn_icon.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://dlk6bi13gchlq" path="res://assets/sprites/game/ad_play_icon.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://c13c13ngw57wp" path="res://assets/sprites/common/small_star.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://bo2s741omuaag" path="res://assets/sprites/common/big_star.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://dfgojvl84jec2" path="res://assets/sprites/common/love_heart.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="14"]
+
+[sub_resource type="Animation" id="Animation_reset"]
+resource_name = "RESET"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lib"]
+_data = {
+&"GenericPopup": ExtResource("2"),
+&"RESET": SubResource("Animation_reset")
+}
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_card"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("3")
+texture_margin_left = 83.0
+texture_margin_top = 97.0
+texture_margin_right = 83.0
+texture_margin_bottom = 88.0
+expand_margin_left = 13.0
+expand_margin_top = 9.0
+expand_margin_right = 13.0
+expand_margin_bottom = 18.0
+region_rect = Rect2(0, 0, 200, 200)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_titlebg"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bodybg"]
+content_margin_left = 29.0
+content_margin_top = 32.0
+content_margin_right = 29.0
+content_margin_bottom = 32.0
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_top = 20.0
+expand_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_adbtn"]
+bg_color = Color(0.945098, 0.5764706, 0.1254902, 1)
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+shadow_color = Color(0, 0, 0, 0.05882353)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_focus"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_adbadge"]
+bg_color = Color(0.007843138, 0.74509805, 0.32156864, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_plainbtn"]
+bg_color = Color(1, 0.8117647, 0.58431375, 1)
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+shadow_color = Color(0, 0, 0, 0.05882353)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
+
+[node name="PeekabooConfirmPage" type="Control" unique_id=1123715111]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=970795033]
+libraries/ = SubResource("AnimationLibrary_lib")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=23790275]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="." unique_id=1892721243]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -1200.0
+offset_right = 540.0
+offset_bottom = 1200.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CenterContainer" type="CenterContainer" parent="Content" unique_id=1979504901]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 347.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BgSizeBox" type="VBoxContainer" parent="Content/CenterContainer" unique_id=842238428]
+layout_mode = 2
+
+[node name="Bg" type="PanelContainer" parent="Content/CenterContainer/BgSizeBox" unique_id=1561990294]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_card")
+
+[node name="BgVBox" type="VBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg" unique_id=1762359921]
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=110460426]
+custom_minimum_size = Vector2(0, 131.58)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Bg" type="Panel" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title" unique_id=891269706]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_titlebg")
+
+[node name="Text" type="Label" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title" unique_id=1953322042]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 1.0
+offset_right = 775.0
+offset_bottom = 131.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -25
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 86
+text = "CAT_HIDE_AND_SEEK_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("5")
+max_font_size = 86
+min_font_size = 50
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="CloseBtn" type="Button" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title" unique_id=406272029]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+flat = true
+
+[node name="Shape" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title/CloseBtn" unique_id=1705925221]
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 27.0
+offset_right = 73.666664
+offset_bottom = 73.66667
+mouse_filter = 2
+
+[node name="Visual" type="TextureRect" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title/CloseBtn/Shape" unique_id=1478852394]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 51.666504
+offset_bottom = 51.666748
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="TextAdapt" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=576885777]
+custom_minimum_size = Vector2(900, 90)
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=2000269227]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Content" unique_id=2016564710]
+custom_minimum_size = Vector2(800, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_bodybg")
+
+[node name="PopUpText" type="Label" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Content/Panel" unique_id=1958523744]
+custom_minimum_size = Vector2(742, 100)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -8
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 60
+text = "CAT_HIDE_AND_SEEK_BODY"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="BtnGap" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=1701843444]
+custom_minimum_size = Vector2(900, 90)
+layout_mode = 2
+
+[node name="BtnGroup" type="VBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=768045467]
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="AdBtn" type="Button" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup" unique_id=1440428049]
+custom_minimum_size = Vector2(750, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_adbtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_adbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_adbtn")
+theme_override_styles/focus = SubResource("StyleBoxFlat_focus")
+
+[node name="Row" type="HBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/AdBtn" unique_id=34842041]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Label" type="Label" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/AdBtn/Row" unique_id=1685420853]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 80
+text = "CAT_HIDE_AND_SEEK_BTN"
+vertical_alignment = 1
+script = ExtResource("5")
+max_font_size = 80
+min_font_size = 80
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="FishIcon" type="TextureRect" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/AdBtn/Row" unique_id=928217837]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CountLabel" type="Label" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/AdBtn/Row" unique_id=1838737655]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 80
+text = "x3"
+vertical_alignment = 1
+
+[node name="AdBadge" type="Panel" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/AdBtn" unique_id=761053642]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -81.5
+offset_top = -27.0
+offset_right = 8.5
+offset_bottom = 27.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_adbadge")
+
+[node name="PlayIcon" type="TextureRect" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/AdBtn/AdBadge" unique_id=792899139]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlainBtn" type="Button" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup" unique_id=1949050019]
+custom_minimum_size = Vector2(750, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_plainbtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_plainbtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_plainbtn")
+theme_override_styles/focus = SubResource("StyleBoxFlat_focus")
+
+[node name="Row" type="HBoxContainer" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/PlainBtn" unique_id=1142673898]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Label" type="Label" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/PlainBtn/Row" unique_id=582990014]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.7538461, 0.4546269, 0.2551476, 1)
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 80
+text = "CAT_HIDE_AND_SEEK_BTN"
+vertical_alignment = 1
+script = ExtResource("5")
+max_font_size = 80
+min_font_size = 80
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="FishIcon" type="TextureRect" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/PlainBtn/Row" unique_id=1491506753]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BtnAdapt" type="Control" parent="Content/CenterContainer/BgSizeBox/Bg/BgVBox" unique_id=264896717]
+custom_minimum_size = Vector2(900, 87)
+layout_mode = 2
+
+[node name="CatDialog" type="Control" parent="Content" unique_id=775891541]
+anchors_preset = 0
+offset_left = 247.0
+offset_top = 475.0
+offset_right = 832.0
+offset_bottom = 882.0
+mouse_filter = 2
+
+[node name="SmallStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=1799108706]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 280.0
+offset_right = 81.0
+offset_bottom = 325.0
+texture = ExtResource("11")
+expand_mode = 1
+
+[node name="BigStarImg" type="TextureRect" parent="Content/CatDialog" unique_id=1060692287]
+layout_mode = 0
+offset_left = 453.0
+offset_right = 497.0
+offset_bottom = 53.0
+texture = ExtResource("12")
+expand_mode = 1
+
+[node name="LoveHeartImg" type="TextureRect" parent="Content/CatDialog" unique_id=453938414]
+layout_mode = 0
+offset_top = 152.0
+offset_right = 74.0
+offset_bottom = 224.0
+texture = ExtResource("13")
+expand_mode = 1
+
+[node name="CatImg" type="TextureRect" parent="Content/CatDialog" unique_id=140748779]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 16.0
+offset_right = 585.0
+offset_bottom = 423.0
+texture = ExtResource("14")
+expand_mode = 1
+
+[connection signal="pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/Title/CloseBtn" to="." method="_on_close_btn_pressed"]
+[connection signal="pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/AdBtn" to="." method="_on_ad_btn_pressed"]
+[connection signal="pressed" from="Content/CenterContainer/BgSizeBox/Bg/BgVBox/BtnGroup/PlainBtn" to="." method="_on_plain_btn_pressed"]

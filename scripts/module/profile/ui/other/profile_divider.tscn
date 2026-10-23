@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://bajbg86k8vwle" path="res://assets/sprites/profile/divider_line_left.png" id="1"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="2"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://q5lkkbflqm81" path="res://assets/sprites/profile/divider_line_right.png" id="4"]
+
+[node name="ProfileDivider" type="Control" unique_id=1355887165]
+custom_minimum_size = Vector2(758, 56)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 758.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="LeftLine" type="TextureRect" parent="." unique_id=1595412271]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 27.0
+offset_right = 213.0
+offset_bottom = 29.0
+mouse_filter = 2
+texture = ExtResource("1")
+expand_mode = 1
+
+[node name="Title" type="Label" parent="." unique_id=725288296]
+layout_mode = 0
+offset_left = 215.0
+offset_right = 543.0
+offset_bottom = 56.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.7372549, 0.60784316, 0.5411765, 1)
+theme_override_constants/line_spacing = -18
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 40
+text = "Leaderboard"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3")
+max_font_size = 40
+min_font_size = 24
+
+[node name="RightLine" type="TextureRect" parent="." unique_id=1451138941]
+layout_mode = 0
+offset_left = 545.0
+offset_top = 27.0
+offset_right = 738.0
+offset_bottom = 29.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1

@@ -1,0 +1,8 @@
+[gd_resource type="SpineSkeletonDataResource" format=3 uid="uid://dhv2ydhw1h5bd"]
+
+[ext_resource type="SpineAtlasResource" uid="uid://b5pybye0idsym" path="res://assets/effect/spine/ui_win_glodenfish/game_win_glodenfish.atlas" id="1"]
+[ext_resource type="SpineSkeletonFileResource" uid="uid://bof6cxuj2xxj8" path="res://assets/effect/spine/ui_win_glodenfish/game_win_glodenfish.skel" id="2"]
+
+[resource]
+atlas_res = ExtResource("1")
+skeleton_file_res = ExtResource("2")

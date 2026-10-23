@@ -1,0 +1,270 @@
+[gd_scene format=3 uid="uid://hlb30yup70uh"]
+
+[ext_resource type="Script" uid="uid://dljbqp011h4tj" path="res://scripts/module/rank_activity/view/rank_activity_offline_page.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://blgb3th64rois" path="res://assets/sprites/rank_activity/rank_activity_offline_page/bg.png" id="2"]
+[ext_resource type="PackedScene" uid="uid://ca1ukj7hn0fny" path="res://scripts/module/game/ui/compont/header_adapt_holder.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://b3mqb2vk2p3ta" path="res://assets/prefab/back_and_setting_header.tscn" id="4"]
+[ext_resource type="Texture2D" uid="uid://b70s8g4fhm0t1" path="res://assets/sprites/common/icon_info.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dqbvu4opyhhyh" path="res://assets/sprites/rank_activity/rankpage_list_bg2.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://bshj1tnptgbrn" path="res://assets/sprites/rank_activity/rankpage_countdown.png" id="7"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="8"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="9"]
+[ext_resource type="Texture2D" uid="uid://db3l7g5aq3kyb" path="res://assets/sprites/rank_activity/rankpage_title_base.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://jvhgxr35dxre" path="res://assets/sprites/rank_activity/rankpage_white_fish.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://pgse4w1pspsu" path="res://assets/sprites/rank_activity/rankpage_white_fish2.png" id="12"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="13"]
+[ext_resource type="Texture2D" uid="uid://drs4fqua8cd38" path="res://assets/sprites/rank_activity/rank_activity_offline_page/no_wifi.png" id="14"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="15"]
+
+[node name="RankActivityOfflinePage" type="Control" unique_id=373604378]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+is_fullscreen = true
+
+[node name="Background" type="TextureRect" parent="." unique_id=1453394352]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MainVBox" type="VBoxContainer" parent="." unique_id=1554628990 groups=["_safe_top"]]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -540.0
+offset_right = 540.0
+grow_horizontal = 2
+theme_override_constants/separation = 0
+
+[node name="HeaderAdaptHolder" parent="MainVBox" unique_id=1155756121 instance=ExtResource("3")]
+layout_mode = 2
+
+[node name="TopBar" type="Control" parent="MainVBox" unique_id=1434069200]
+z_index = 4
+custom_minimum_size = Vector2(0, 184)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Header" parent="MainVBox/TopBar" unique_id=1415086326 instance=ExtResource("4")]
+layout_mode = 0
+offset_right = 1080.0
+offset_bottom = 120.0
+
+[node name="SettingsBtn" parent="MainVBox/TopBar/Header" index="1" unique_id=1431234521]
+icon_texture = ExtResource("5")
+
+[node name="Icon" parent="MainVBox/TopBar/Header/SettingsBtn" index="1" unique_id=1792029279]
+texture = ExtResource("5")
+
+[node name="Countdown" type="Control" parent="MainVBox/TopBar" unique_id=1103218456]
+anchors_preset = 0
+offset_left = 410.0
+offset_top = 117.0
+offset_right = 671.0
+offset_bottom = 184.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Bg" type="TextureRect" parent="MainVBox/TopBar/Countdown" unique_id=1103218457]
+layout_mode = 0
+offset_left = -5.0
+offset_right = 269.0
+offset_bottom = 66.0
+pivot_offset = Vector2(137, 33)
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="Countdown" type="Control" parent="MainVBox/TopBar/Countdown" unique_id=1103218458]
+anchors_preset = 0
+offset_left = 13.0
+offset_top = 2.0
+offset_right = 245.0
+offset_bottom = 62.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CountdownIcon" type="Control" parent="MainVBox/TopBar/Countdown/Countdown" unique_id=1103218459]
+anchors_preset = 0
+offset_right = 60.0
+offset_bottom = 60.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Countdown" type="TextureRect" parent="MainVBox/TopBar/Countdown/Countdown/CountdownIcon" unique_id=1103218460]
+layout_mode = 0
+offset_left = 9.6
+offset_top = 4.8
+offset_right = 51.0
+offset_bottom = 51.6
+pivot_offset = Vector2(20.7, 23.4)
+texture = ExtResource("7")
+expand_mode = 1
+
+[node name="CountdownText" type="Label" parent="MainVBox/TopBar/Countdown/Countdown" unique_id=1103218461]
+layout_mode = 0
+offset_left = 58.0
+offset_top = 13.0
+offset_right = 232.0
+offset_bottom = 49.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.57254905, 0.34117648, 0.34117648, 1)
+theme_override_constants/line_spacing = -2
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 40
+text = "22:55:44"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("9")
+
+[node name="Title" type="Control" parent="MainVBox/TopBar" unique_id=142266949]
+anchors_preset = 0
+offset_left = 233.0
+offset_top = 9.0
+offset_right = 848.0
+offset_bottom = 137.0
+
+[node name="Bg" type="Control" parent="MainVBox/TopBar/Title" unique_id=298547720]
+anchors_preset = 0
+offset_right = 615.0
+offset_bottom = 128.0
+
+[node name="Base" type="TextureRect" parent="MainVBox/TopBar/Title/Bg" unique_id=709583653]
+layout_mode = 0
+offset_right = 615.0
+offset_bottom = 128.0
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="SmallFish" type="Control" parent="MainVBox/TopBar/Title/Bg" unique_id=1562389539]
+anchors_preset = 0
+offset_left = 56.0
+offset_top = 19.0
+offset_right = 559.0
+offset_bottom = 89.25526
+
+[node name="WhiteFish" type="Control" parent="MainVBox/TopBar/Title/Bg/SmallFish" unique_id=1531148742]
+anchors_preset = 0
+offset_left = 3.3597794
+offset_right = 74.09426
+offset_bottom = 70.25526
+
+[node name="Visual" type="TextureRect" parent="MainVBox/TopBar/Title/Bg/SmallFish/WhiteFish" unique_id=697616092]
+layout_mode = 0
+offset_left = 13.979721
+offset_top = 17.076118
+offset_right = 64.654526
+offset_bottom = 53.678604
+texture = ExtResource("11")
+expand_mode = 1
+
+[node name="FishB" type="Control" parent="MainVBox/TopBar/Title/Bg/SmallFish" unique_id=479071464]
+anchors_preset = 0
+offset_left = 429.09427
+offset_top = 0.15375671
+offset_right = 499.64023
+offset_bottom = 70.101494
+
+[node name="Visual" type="TextureRect" parent="MainVBox/TopBar/Title/Bg/SmallFish/FishB" unique_id=388017287]
+layout_mode = 0
+offset_left = 5.9924927
+offset_top = 16.182266
+offset_right = 56.87537
+offset_bottom = 52.79505
+texture = ExtResource("12")
+expand_mode = 1
+
+[node name="Level" type="Label" parent="MainVBox/TopBar/Title" unique_id=1656590943]
+layout_mode = 0
+offset_left = 131.0
+offset_top = 11.5
+offset_right = 485.0
+offset_bottom = 96.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -27
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 58
+text = "RANK_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("13")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="Spacer1" type="Control" parent="MainVBox" unique_id=1422541436]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="OfflineDone" type="Control" parent="MainVBox" unique_id=103758315]
+custom_minimum_size = Vector2(0, 500)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NoWifi" type="TextureRect" parent="MainVBox/OfflineDone" unique_id=31318549]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_right = 150.0
+offset_bottom = 300.0
+grow_horizontal = 2
+texture = ExtResource("14")
+expand_mode = 1
+
+[node name="ErrorText" type="Label" parent="MainVBox/OfflineDone" unique_id=2088284466]
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 340.0
+offset_bottom = 500.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = -8
+theme_override_fonts/font = ExtResource("15")
+theme_override_font_sizes/font_size = 60
+text = "LEADERBOARD_OFFLINE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacer2" type="Control" parent="MainVBox" unique_id=779625560]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BottomSpacer" type="Control" parent="MainVBox" unique_id=1619850620]
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="SelfBarSlot" type="Control" parent="." unique_id=811240377 groups=["_safe_bottom"]]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -484.0
+offset_top = -330.0
+offset_right = 484.0
+offset_bottom = -150.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 1
+
+[editable path="MainVBox/TopBar/Header"]
+[editable path="MainVBox/TopBar/Header/SettingsBtn"]

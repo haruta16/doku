@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://gdn0dq88ag42"]
+
+[ext_resource type="Texture2D" uid="uid://kv5mu1mumvs1" path="res://assets/effect/texture/glow/et_glow_002.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="3"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_g5bi4"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_ergf7"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.14759536, 0.69691086), 0.688986, 0.688986, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_pw67g"]
+offsets = PackedFloat32Array(0, 0.13628319, 0.5097345, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.78431374, 1, 1, 1, 0.78431374, 1, 1, 1, 0)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_uc3be"]
+
+[sub_resource type="Curve" id="Curve_33hjp"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, -2.3211966, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.21227199, -0.6669904), 0.0, 0.0, 0, 0, Vector2(0.252073, -0.045657635), 0.09669888, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_86pyk"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.8117804, -0.22606552, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_p46th"]
+offsets = PackedFloat32Array(0.76391983, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_jnnkv"]
+offsets = PackedFloat32Array(0.311804, 0.7828508)
+colors = PackedColorArray(0.55, 0.48125002, 0.275, 1, 0.45, 0.45, 0.45, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_51y7u"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_ahon1"]
+offsets = PackedFloat32Array(0.3129176, 0.78396434)
+colors = PackedColorArray(1, 0.74509805, 0.2, 1, 1, 1, 0.5, 1)
+
+[node name="ScoreBurst" type="Control" unique_id=244401337]
+layout_mode = 3
+anchor_top = -0.067
+anchor_bottom = -0.067
+offset_top = 160.8
+offset_right = 40.0
+offset_bottom = 200.80013
+
+[node name="GlowAlp" type="CPUParticles2D" parent="." unique_id=1916719565]
+material = SubResource("CanvasItemMaterial_g5bi4")
+emitting = false
+amount = 1
+texture = ExtResource("1")
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("Curve_ergf7")
+color = Color(0.9, 0.69749993, 0.45, 0.23529412)
+color_ramp = SubResource("Gradient_pw67g")
+
+[node name="StarAlp" type="CPUParticles2D" parent="." unique_id=95456810]
+material = SubResource("CanvasItemMaterial_uc3be")
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 12
+texture = ExtResource("2")
+lifetime = 1.02
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 4033
+lifetime_randomness = 0.41
+fixed_fps = 60
+local_coords = true
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+linear_accel_min = 8640.0
+linear_accel_max = 11520.0
+linear_accel_curve = SubResource("Curve_33hjp")
+scale_amount_min = 0.2
+scale_amount_max = 0.6
+scale_amount_curve = SubResource("Curve_86pyk")
+color_ramp = SubResource("Gradient_p46th")
+color_initial_ramp = SubResource("Gradient_jnnkv")
+
+[node name="StarAdd" type="CPUParticles2D" parent="." unique_id=502994451]
+material = SubResource("CanvasItemMaterial_51y7u")
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 12
+texture = ExtResource("3")
+lifetime = 1.02
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 4033
+lifetime_randomness = 0.41
+fixed_fps = 60
+local_coords = true
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+linear_accel_min = 8640.0
+linear_accel_max = 11520.0
+linear_accel_curve = SubResource("Curve_33hjp")
+scale_amount_min = 0.2
+scale_amount_max = 0.6
+scale_amount_curve = SubResource("Curve_86pyk")
+color_ramp = SubResource("Gradient_p46th")
+color_initial_ramp = SubResource("Gradient_ahon1")

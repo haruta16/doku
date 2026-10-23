@@ -1,0 +1,13 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://b2w31w7xjg5ni"
+path="res://.godot/imported/home_companion_cat.skel-805be9d1537e6ac33ddcd8cd28aee04d.spskel"
+
+[deps]
+
+source_file="res://assets/effect/spine/home_companion_cat/home_companion_cat.skel"
+dest_files=["res://.godot/imported/home_companion_cat.skel-805be9d1537e6ac33ddcd8cd28aee04d.spskel"]
+
+[params]

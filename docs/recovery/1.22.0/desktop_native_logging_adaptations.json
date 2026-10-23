@@ -1,0 +1,24 @@
+[
+  {
+    "file": "addons/unikit/scripts/unikit.gd",
+    "reason": "只将编辑器和桌面无原生SDK的预期状态改为普通日志，移动平台保留警告。",
+    "behavior_unchanged": [
+      "原生单例仍为空",
+      "认证仍等待原有15秒",
+      "不生成luid或账号会话",
+      "不启动登录或云同步"
+    ],
+    "code_diff": "--- prepared/addons/unikit/scripts/unikit.gd\n+++ addons/unikit/scripts/unikit.gd\n@@ -55,7 +55,10 @@\n \t\t_plugin.usertag_data_updated.connect(_on_usertag_data_updated)\n \t\t_connect_required(\"ltv_received\", _on_ltv_received)\n \telse:\n-\t\tpush_warning(\"UniKitPlugin not available (non-Android platform)\")\n+\t\tif OS.has_feature(\"editor\") or not (OS.has_feature(\"android\") or OS.has_feature(\"ios\")):\n+\t\t\tprint(\"[学习工程] UniKitPlugin 不可用，继续使用脚本端回退行为\")\n+\t\telse:\n+\t\t\tpush_warning(\"UniKitPlugin not available (non-Android platform)\")\n \t_purchase_bridge = UniKitPurchaseNativeBridge.new(self)\n \tpurchase_module._set_native_bridge(_purchase_bridge)\n \t_purchase_bridge.native_init_success.connect(_on_purchase_init_success)"
+  },
+  {
+    "file": "scripts/common/auth_manager.gd",
+    "reason": "只将编辑器和桌面无原生SDK的预期状态改为普通日志，移动平台保留警告。",
+    "behavior_unchanged": [
+      "原生单例仍为空",
+      "认证仍等待原有15秒",
+      "不生成luid或账号会话",
+      "不启动登录或云同步"
+    ],
+    "code_diff": "--- prepared/scripts/common/auth_manager.gd\n+++ scripts/common/auth_manager.gd\n@@ -93,12 +93,14 @@\n func _warn_if_luid_stalled() -> void:\n \tawait get_tree().create_timer(_LUID_STALL_WARN_SEC).timeout\n \tif not _luid_ready:\n-\t\tpush_warning(\n-\t\t\t(\n-\t\t\t\t\"[Account (AuthManager)] 等 luid_ready 超过 %ds 仍未就绪：本会话不会登录、不会同步\"\n-\t\t\t\t% int(_LUID_STALL_WARN_SEC)\n-\t\t\t)\n-\t\t)\n+\t\tvar message: String = (\n+\t\t\t\"[Account (AuthManager)] 等 luid_ready 超过 %ds 仍未就绪：本会话不会登录、不会同步\"\n+\t\t\t% int(_LUID_STALL_WARN_SEC)\n+\t\t)\n+\t\tif _is_lx_available():\n+\t\t\tpush_warning(message)\n+\t\telse:\n+\t\t\tprint(\"[学习工程] \" + message)\n func start_bootstrap() -> void:\n \tif _auth_started:\n \t\treturn"
+  }
+]

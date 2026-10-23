@@ -2,20 +2,30 @@
 
 [ext_resource type="Script" uid="uid://dfnfpigtp3dl" path="res://scripts/module/daily/view/daily_win_page.gd" id="1"]
 [ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="2"]
-[ext_resource type="Script" uid="uid://nt1s0u2qanoc" path="res://scripts/module/ui/extensions/curve_label.gd" id="3"]
+[ext_resource type="Script" uid="uid://30aemu3th3lw" path="res://scripts/module/ui/extensions/single_line_glyph_label.gd" id="3"]
 [ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="4"]
-[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="5"]
-[ext_resource type="Texture2D" uid="uid://dxwhm5wfdiucl" path="res://assets/sprites/win/ray_light.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://b4172kbem80d8" path="res://assets/effect/texture/glow/et_glow_001.png" id="8"]
-[ext_resource type="SpineSkeletonDataResource" uid="uid://clbbj7kw5cnwh" path="res://assets/effect/spine/ui_win_settlement/ui_win_settlement.tres" id="9"]
-[ext_resource type="Texture2D" uid="uid://kv5mu1mumvs1" path="res://assets/effect/texture/glow/et_glow_002.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://b0gtsclkl27gx" path="res://assets/effect/texture/line/et_line_001.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://2qb2vueasbpc" path="res://assets/effect/texture/obj/et_ribbon_001.png" id="12"]
+[ext_resource type="Script" uid="uid://b7l8oc0h3r11u" path="res://scripts/module/ui/extensions/auto_fit_rich_text_label.gd" id="5"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="6"]
+[ext_resource type="Texture2D" uid="uid://dlk6bi13gchlq" path="res://assets/sprites/game/ad_play_icon.png" id="7"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="8"]
+[ext_resource type="Texture2D" uid="uid://dxwhm5wfdiucl" path="res://assets/sprites/win/ray_light.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://b4172kbem80d8" path="res://assets/effect/texture/glow/et_glow_001.png" id="11"]
+[ext_resource type="SpineSkeletonDataResource" uid="uid://clbbj7kw5cnwh" path="res://assets/effect/spine/ui_win_settlement/ui_win_settlement.tres" id="12"]
+[ext_resource type="Texture2D" uid="uid://kv5mu1mumvs1" path="res://assets/effect/texture/glow/et_glow_002.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://b0gtsclkl27gx" path="res://assets/effect/texture/line/et_line_001.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://2qb2vueasbpc" path="res://assets/effect/texture/obj/et_ribbon_001.png" id="15"]
 
-[sub_resource type="Curve" id="Curve_dtitle"]
+[sub_resource type="Curve" id="Curve_wpl6y"]
 _data = [Vector2(0, 0.5), 0.0, 2.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.5), -2.0, 0.0, 0, 0]
 point_count = 3
+
+[sub_resource type="StyleBoxFlat" id="sf_ad_badge"]
+bg_color = Color(0.008586928, 0.7442307, 0.3223179, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ajcyc"]
 blend_mode = 1
@@ -31,7 +41,7 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
 [sub_resource type="Gradient" id="Gradient_wpl6y"]
 colors = PackedColorArray(1, 0.8837067, 0.4517722, 1, 1, 0.39937484, 0, 1)
 
-[sub_resource type="Animation" id="Animation_3x0qi"]
+[sub_resource type="Animation" id="Animation_viee8"]
 resource_name = "RESET"
 length = 0.5
 tracks/0/type = "value"
@@ -59,7 +69,7 @@ tracks/1/keys = {
 "values": [false]
 }
 
-[sub_resource type="Animation" id="Animation_viee8"]
+[sub_resource type="Animation" id="Animation_4asj3"]
 resource_name = "appear"
 length = 2.5000002
 tracks/0/type = "value"
@@ -87,7 +97,7 @@ tracks/1/keys = {
 "values": [false]
 }
 
-[sub_resource type="Animation" id="Animation_4asj3"]
+[sub_resource type="Animation" id="Animation_f50yq"]
 resource_name = "appear_looped"
 length = 2.5000002
 tracks/0/type = "value"
@@ -115,7 +125,7 @@ tracks/1/keys = {
 "values": [true]
 }
 
-[sub_resource type="Animation" id="Animation_f50yq"]
+[sub_resource type="Animation" id="Animation_pg8kd"]
 resource_name = "idle"
 length = 3.1666667
 tracks/0/type = "value"
@@ -143,7 +153,7 @@ tracks/1/keys = {
 "values": [false]
 }
 
-[sub_resource type="Animation" id="Animation_pg8kd"]
+[sub_resource type="Animation" id="Animation_cic70"]
 resource_name = "idle_looped"
 length = 3.1666667
 tracks/0/type = "value"
@@ -171,14 +181,14 @@ tracks/1/keys = {
 "values": [true]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_cic70"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8r0y6"]
 _data = {
-&"-- Empty --": SubResource("Animation_3x0qi"),
-&"RESET": SubResource("Animation_3x0qi"),
-&"appear": SubResource("Animation_viee8"),
-&"appear_looped": SubResource("Animation_4asj3"),
-&"idle": SubResource("Animation_f50yq"),
-&"idle_looped": SubResource("Animation_pg8kd")
+&"-- Empty --": SubResource("Animation_viee8"),
+&"RESET": SubResource("Animation_viee8"),
+&"appear": SubResource("Animation_4asj3"),
+&"appear_looped": SubResource("Animation_f50yq"),
+&"idle": SubResource("Animation_pg8kd"),
+&"idle_looped": SubResource("Animation_cic70")
 }
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_tsmm8"]
@@ -469,7 +479,7 @@ tracks/17/keys = {
 tracks/18/type = "value"
 tracks/18/imported = false
 tracks/18/enabled = true
-tracks/18/path = NodePath("Root/Ctrl/TitleLabel:modulate")
+tracks/18/path = NodePath("Root/Ctrl/TitleLabelUnder:modulate")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/keys = {
@@ -481,7 +491,7 @@ tracks/18/keys = {
 tracks/19/type = "bezier"
 tracks/19/imported = false
 tracks/19/enabled = true
-tracks/19/path = NodePath("Root/Ctrl/TitleLabel:scale:x")
+tracks/19/path = NodePath("Root/Ctrl/TitleLabelUnder:scale:x")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
@@ -492,7 +502,7 @@ tracks/19/keys = {
 tracks/20/type = "bezier"
 tracks/20/imported = false
 tracks/20/enabled = true
-tracks/20/path = NodePath("Root/Ctrl/TitleLabel:scale:y")
+tracks/20/path = NodePath("Root/Ctrl/TitleLabelUnder:scale:y")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
@@ -515,7 +525,7 @@ tracks/21/keys = {
 tracks/22/type = "value"
 tracks/22/imported = false
 tracks/22/enabled = true
-tracks/22/path = NodePath("Root/Ctrl/BeatLabel:modulate")
+tracks/22/path = NodePath("Root/Ctrl/BeatCenter:modulate")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
@@ -546,19 +556,19 @@ tracks/24/keys = {
 "times": PackedFloat32Array(0.6063147, 0.90380585),
 "transitions": PackedFloat32Array(0.4204482, 0),
 "update": 0,
-"values": [Vector2(100, 1565), Vector2(100, 1505)]
+"values": [Vector2(100, 1432.5), Vector2(100, 1372.5)]
 }
 tracks/25/type = "value"
 tracks/25/imported = false
 tracks/25/enabled = true
-tracks/25/path = NodePath("Root/Ctrl/BeatLabel:position")
+tracks/25/path = NodePath("Root/Ctrl/BeatCenter:position")
 tracks/25/interp = 1
 tracks/25/loop_wrap = true
 tracks/25/keys = {
 "times": PackedFloat32Array(0.73351735, 1.0310085),
 "transitions": PackedFloat32Array(0.4204482, 0),
 "update": 0,
-"values": [Vector2(100, 1700), Vector2(100, 1640)]
+"values": [Vector2(100, 1584.5), Vector2(100, 1524.5)]
 }
 tracks/26/type = "value"
 tracks/26/imported = false
@@ -581,6 +591,52 @@ tracks/27/loop_wrap = true
 tracks/27/keys = {
 "clips": PackedStringArray("appear"),
 "times": PackedFloat32Array(0)
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Root/Ctrl/TitleLabelUp:modulate")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
+"times": PackedFloat32Array(0.16442053, 0.27560806),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/29/type = "bezier"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Root/Ctrl/TitleLabelUp:scale:x")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(1.6, 0, 0, 0.06648683, 0, 0.9, -0.086453706, 0.38227516, 0.08370065, 0, 1, -0.08370064, 0, 0, 0),
+"times": PackedFloat32Array(0.16398631, 0.39264965, 0.62883145)
+}
+tracks/30/type = "bezier"
+tracks/30/imported = false
+tracks/30/enabled = true
+tracks/30/path = NodePath("Root/Ctrl/TitleLabelUp:scale:y")
+tracks/30/interp = 1
+tracks/30/loop_wrap = true
+tracks/30/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(1.6, 0, 0, 0.06648683, 0, 0.9, -0.086453706, 0.38227516, 0.08370064, 0, 1, -0.08370064, 0, 0, 0),
+"times": PackedFloat32Array(0.16398631, 0.39264965, 0.62883145)
+}
+tracks/31/type = "value"
+tracks/31/imported = false
+tracks/31/enabled = true
+tracks/31/path = NodePath("Root/Ctrl/ReplayBtn:modulate")
+tracks/31/interp = 1
+tracks/31/loop_wrap = true
+tracks/31/keys = {
+"times": PackedFloat32Array(1.0036664, 1.3666668),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_kberf"]
@@ -860,7 +916,7 @@ tracks/18/keys = {
 tracks/19/type = "value"
 tracks/19/imported = false
 tracks/19/enabled = true
-tracks/19/path = NodePath("Root/Ctrl/BeatLabel:modulate")
+tracks/19/path = NodePath("Root/Ctrl/BeatCenter:modulate")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
@@ -891,19 +947,19 @@ tracks/21/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(100, 1505)]
+"values": [Vector2(100, 1372.5)]
 }
 tracks/22/type = "value"
 tracks/22/imported = false
 tracks/22/enabled = true
-tracks/22/path = NodePath("Root/Ctrl/BeatLabel:position")
+tracks/22/path = NodePath("Root/Ctrl/BeatCenter:position")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(100, 1640)]
+"values": [Vector2(100, 1524.5)]
 }
 tracks/23/type = "value"
 tracks/23/imported = false
@@ -916,6 +972,18 @@ tracks/23/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
+}
+tracks/24/type = "value"
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/path = NodePath("Root/Ctrl/ReplayBtn:modulate")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_hyunh"]
@@ -985,33 +1053,74 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TitleLabel" type="Label" parent="Root/Ctrl" unique_id=884929325]
+[node name="TitleLabelUnder" type="Label" parent="Root/Ctrl" unique_id=996928200]
 layout_mode = 0
 offset_left = 158.0
-offset_top = 340.0
+offset_top = 296.0
 offset_right = 952.0
-offset_bottom = 512.0
+offset_bottom = 481.0
 pivot_offset_ratio = Vector2(0.5, 0.12)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0.8, 0.34901962, 0, 1)
-theme_override_constants/outline_size = 12
 theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 120
 text = "DAILY_WIN_TITLE"
 horizontal_alignment = 1
+vertical_alignment = 1
 visible_characters = 0
 visible_ratio = 0.0
 script = ExtResource("3")
-curve = SubResource("Curve_dtitle")
 amplitude = 31.58
 align_to_tangent = true
+curve = SubResource("Curve_wpl6y")
+letter_spacing = 12.0
+outline_thickness = 75
+outline_gradient_enabled = true
+outline_gradient_start = Color(0.98317856, 0.7909724, 0.18972102, 1)
+outline_gradient_end = Color(0.99607843, 0.6666667, 0.20392157, 1)
+shadow_offset = Vector2(0, 3)
+shadow_thickness = 85
+shadow_gradient_enabled = true
+shadow_gradient_start = Color(0.6373698, 0.28085923, 0.089842625, 1)
+shadow_gradient_end = Color(0.51565945, 0.190611, 0.062050514, 1)
+metadata/draw_called = false
+metadata/draw_invoked = 1537
+
+[node name="TitleLabelUp" type="Label" parent="Root/Ctrl" unique_id=1099657995]
+layout_mode = 0
+offset_left = 157.99998
+offset_top = 290.0
+offset_right = 952.0
+offset_bottom = 475.0
+pivot_offset_ratio = Vector2(0.5, 0.12)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 120
+text = "DAILY_WIN_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
+script = ExtResource("3")
+amplitude = 31.58
+align_to_tangent = true
+curve = SubResource("Curve_wpl6y")
+letter_spacing = 12.0
+gradient_enabled = true
+gradient_end_color = Color(1, 0.9460719, 0.8782402, 1)
+outline_thickness = 35
+outline_gradient_enabled = true
+outline_gradient_start = Color(0.8509804, 0.47058824, 0, 1)
+outline_gradient_end = Color(0.7921569, 0.40784314, 0.03529412, 1)
+shadow_offset = Vector2(-1, 4)
+shadow_thickness = 35
+shadow_color = Color(0.59607846, 0.1882353, 0.007843138, 1)
+metadata/draw_called = false
+metadata/draw_invoked = 1537
 
 [node name="TimeLabel" type="RichTextLabel" parent="Root/Ctrl" unique_id=2107455102]
 layout_mode = 0
 offset_left = 100.0
-offset_top = 1505.0
+offset_top = 1372.5
 offset_right = 980.0
-offset_bottom = 1620.0
+offset_bottom = 1487.5
 mouse_filter = 2
 theme_override_fonts/normal_font = ExtResource("4")
 theme_override_fonts/bold_font = ExtResource("2")
@@ -1023,35 +1132,95 @@ scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BeatLabel" type="RichTextLabel" parent="Root/Ctrl" unique_id=1133365706]
+[node name="BeatCenter" type="CenterContainer" parent="Root/Ctrl" unique_id=454933276]
 layout_mode = 0
 offset_left = 100.0
-offset_top = 1640.0
+offset_top = 1524.5
 offset_right = 980.0
-offset_bottom = 1861.0
+offset_bottom = 1755.5
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BeatLabel" type="RichTextLabel" parent="Root/Ctrl/BeatCenter" unique_id=454933275]
+custom_minimum_size = Vector2(880, 0)
+layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/normal_font = ExtResource("4")
 theme_override_fonts/bold_font = ExtResource("2")
-theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/normal_font_size = 65
 theme_override_font_sizes/bold_font_size = 90
 bbcode_enabled = true
-text = "[color=#ffe375]Beat [/color][color=#02be52][font_size=90][b]95.9%[/b][/font_size][/color][color=#ffe375] of players![/color]
-
-
-"
+text = "[color=#ffe375]Beat [/color][color=#02be52][font_size=65][b]95.9%[/b][/font_size][/color][color=#ffe375] of players![/color]"
+fit_content = true
 scroll_active = false
 horizontal_alignment = 1
+script = ExtResource("5")
+max_font_size = 90
+max_content_height = 231.0
+metadata/_custom_type_script = "uid://b7l8oc0h3r11u"
 
-[node name="ContinueBtn" parent="Root/Ctrl" unique_id=256697999 instance=ExtResource("5")]
+[node name="ContinueBtn" parent="Root/Ctrl" unique_id=256697999 instance=ExtResource("6")]
 layout_mode = 0
 offset_left = 148.0
-offset_top = 1802.0
+offset_top = 1732.0
 offset_right = 932.0
-offset_bottom = 2060.0
+offset_bottom = 1990.0
 text = "WIN_CONTINUE"
 btn_text = "WIN_CONTINUE"
 show_difficult = false
 show_shadow = false
+
+[node name="ReplayBtn" parent="Root/Ctrl" unique_id=498282386 instance=ExtResource("6")]
+visible = false
+layout_mode = 0
+offset_left = 148.0
+offset_top = 1932.0
+offset_right = 932.0
+offset_bottom = 2190.0
+bg_color = Color(1, 0.8132034, 0.5846757, 1)
+shadow_color = Color(0, 0, 0, 0.15)
+btn_text = "DC_REPLAY_CONFIRM_BTN"
+text_color = Color(0.7538461, 0.4546269, 0.2551475, 1)
+show_difficult = false
+show_shadow = false
+
+[node name="AdBadge" type="Panel" parent="Root/Ctrl/ReplayBtn/Root" parent_id_path=PackedInt32Array(498282386, 664616521) index="10" unique_id=1800641560]
+layout_mode = 0
+offset_left = 663.195
+offset_top = 41.0
+offset_right = 789.195
+offset_bottom = 95.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_ad_badge")
+
+[node name="PlayIcon" type="TextureRect" parent="Root/Ctrl/ReplayBtn/Root/AdBadge" unique_id=1800641561]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 6.0
+offset_right = 56.0
+offset_bottom = 48.0
+mouse_filter = 2
+texture = ExtResource("7")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AdLabel" type="Label" parent="Root/Ctrl/ReplayBtn/Root/AdBadge" unique_id=1800641562]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 55.0
+offset_top = -2.5
+offset_right = -6.0
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 40
+text = "AD"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="EffectRayLight" type="Control" parent="Root/Ctrl" unique_id=1527187435]
 visible = false
@@ -1074,7 +1243,7 @@ mouse_filter = 2
 [node name="Shine" type="CPUParticles2D" parent="Root/Ctrl/EffectRayLight" unique_id=815982866]
 position = Vector2(516, 1099)
 amount = 1
-texture = ExtResource("6")
+texture = ExtResource("9")
 lifetime = 12.0
 preprocess = 10.0
 gravity = Vector2(0, 0)
@@ -1085,7 +1254,7 @@ angular_velocity_max = 30.0
 material = SubResource("CanvasItemMaterial_ajcyc")
 position = Vector2(521, 1109)
 amount = 40
-texture = ExtResource("7")
+texture = ExtResource("10")
 lifetime = 3.0
 preprocess = 10.0
 randomness = 1.0
@@ -1109,7 +1278,7 @@ color_initial_ramp = SubResource("Gradient_wpl6y")
 material = SubResource("CanvasItemMaterial_ajcyc")
 position = Vector2(521, 1109)
 amount = 40
-texture = ExtResource("8")
+texture = ExtResource("11")
 lifetime = 3.0
 preprocess = 10.0
 randomness = 1.0
@@ -1131,8 +1300,8 @@ color_initial_ramp = SubResource("Gradient_wpl6y")
 
 [node name="VictoryCat" type="SpineSprite" parent="Root/Ctrl" unique_id=1815556310]
 visible = false
-position = Vector2(539, 1483)
-skeleton_data_res = ExtResource("9")
+position = Vector2(539, 1365)
+skeleton_data_res = ExtResource("12")
 preview_skin = "Default"
 preview_animation = "idle"
 preview_frame = true
@@ -1142,15 +1311,15 @@ preview_time = 3.1666667
 track_index = 0
 
 [node name="VictoryCat Track 0" type="AnimationPlayer" parent="Root/Ctrl/VictoryCat/SpineAnimationTrack" unique_id=442723178]
-libraries/ = SubResource("AnimationLibrary_cic70")
+libraries/ = SubResource("AnimationLibrary_8r0y6")
 
 [node name="VictoryCatGlow" type="Sprite2D" parent="Root/Ctrl" unique_id=1751429425]
 modulate = Color(1, 0.65466666, 0.26, 0.23529412)
 self_modulate = Color(1, 1, 1, 0)
 material = SubResource("CanvasItemMaterial_tsmm8")
-position = Vector2(549, 382)
+position = Vector2(549, 280)
 scale = Vector2(4, 0.76)
-texture = ExtResource("10")
+texture = ExtResource("13")
 
 [node name="EffectFlreworks" type="Control" parent="Root/Ctrl" unique_id=146174759]
 layout_mode = 1
@@ -1166,7 +1335,7 @@ material = SubResource("CanvasItemMaterial_f3s6e")
 position = Vector2(-158, 1929)
 emitting = false
 amount = 12
-texture = ExtResource("11")
+texture = ExtResource("14")
 lifetime = 0.25
 one_shot = true
 explosiveness = 0.87
@@ -1196,7 +1365,7 @@ material = SubResource("CanvasItemMaterial_f3s6e")
 position = Vector2(1210, 1936)
 emitting = false
 amount = 12
-texture = ExtResource("11")
+texture = ExtResource("14")
 lifetime = 0.25
 one_shot = true
 explosiveness = 0.87
@@ -1225,7 +1394,7 @@ material = SubResource("CanvasItemMaterial_4md0a")
 position = Vector2(-211, 1755)
 emitting = false
 amount = 25
-texture = ExtResource("12")
+texture = ExtResource("15")
 one_shot = true
 explosiveness = 0.87
 randomness = 1.0
@@ -1256,7 +1425,7 @@ material = SubResource("CanvasItemMaterial_4md0a")
 position = Vector2(1257, 1779)
 emitting = false
 amount = 25
-texture = ExtResource("12")
+texture = ExtResource("15")
 one_shot = true
 explosiveness = 0.87
 randomness = 1.0
@@ -1287,7 +1456,7 @@ material = SubResource("CanvasItemMaterial_7uk0n")
 position = Vector2(-209, 1959)
 emitting = false
 amount = 12
-texture = ExtResource("7")
+texture = ExtResource("10")
 lifetime = 0.65
 one_shot = true
 explosiveness = 0.87
@@ -1319,7 +1488,7 @@ material = SubResource("CanvasItemMaterial_7uk0n")
 position = Vector2(1259, 1983)
 emitting = false
 amount = 12
-texture = ExtResource("7")
+texture = ExtResource("10")
 lifetime = 0.65
 one_shot = true
 explosiveness = 0.87
@@ -1351,7 +1520,7 @@ material = SubResource("CanvasItemMaterial_7uk0n")
 position = Vector2(-209, 1959)
 emitting = false
 amount = 12
-texture = ExtResource("8")
+texture = ExtResource("11")
 lifetime = 0.65
 one_shot = true
 explosiveness = 0.87
@@ -1383,7 +1552,7 @@ material = SubResource("CanvasItemMaterial_7uk0n")
 position = Vector2(1259, 1983)
 emitting = false
 amount = 12
-texture = ExtResource("8")
+texture = ExtResource("11")
 lifetime = 0.65
 one_shot = true
 explosiveness = 0.87
@@ -1416,7 +1585,7 @@ material = SubResource("CanvasItemMaterial_f3s6e")
 position = Vector2(-80, 1851)
 emitting = false
 amount = 30
-texture = ExtResource("11")
+texture = ExtResource("14")
 lifetime = 0.25
 one_shot = true
 explosiveness = 0.87
@@ -1450,7 +1619,7 @@ material = SubResource("CanvasItemMaterial_f3s6e")
 position = Vector2(1158, 1851)
 emitting = false
 amount = 30
-texture = ExtResource("11")
+texture = ExtResource("14")
 lifetime = 0.25
 one_shot = true
 explosiveness = 0.87
@@ -1483,7 +1652,7 @@ material = SubResource("CanvasItemMaterial_4md0a")
 position = Vector2(541, 648)
 emitting = false
 amount = 30
-texture = ExtResource("12")
+texture = ExtResource("15")
 lifetime = 3.0
 explosiveness = 0.3
 randomness = 1.0
@@ -1513,3 +1682,6 @@ libraries/ = SubResource("AnimationLibrary_hyunh")
 libraries/ = SubResource("AnimationLibrary_4md0a")
 
 [connection signal="tag_pressed" from="Root/Ctrl/ContinueBtn" to="." method="_on_continue_btn_pressed"]
+[connection signal="tag_pressed" from="Root/Ctrl/ReplayBtn" to="." method="_on_replay_btn_pressed"]
+
+[editable path="Root/Ctrl/ReplayBtn"]

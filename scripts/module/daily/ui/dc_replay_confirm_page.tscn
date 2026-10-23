@@ -1,0 +1,270 @@
+[gd_scene format=3 uid="uid://rcoct2axrcml"]
+
+[ext_resource type="Script" uid="uid://bmkv7jfivdqgh" path="res://scripts/module/daily/view/dc_replay_confirm_page.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://c13c13ngw57wp" path="res://assets/sprites/common/small_star.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bo2s741omuaag" path="res://assets/sprites/common/big_star.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dfgojvl84jec2" path="res://assets/sprites/common/love_heart.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="6"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="7"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="8"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="9"]
+[ext_resource type="Script" uid="uid://b7l8oc0h3r11u" path="res://scripts/module/ui/extensions/auto_fit_rich_text_label.gd" id="10"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="11"]
+[ext_resource type="Texture2D" uid="uid://dlk6bi13gchlq" path="res://assets/sprites/game/ad_play_icon.png" id="12"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lib"]
+_data = {
+&"GenericPopup": ExtResource("2")
+}
+
+[sub_resource type="StyleBoxFlat" id="sf_dialog_bg"]
+bg_color = Color(1, 0.984, 0.969, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="sf_title"]
+bg_color = Color(0.976, 0.925, 0.882, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_ad_badge"]
+bg_color = Color(0.008586928, 0.7442307, 0.3223179, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[node name="DcReplayConfirmPage" type="Control" unique_id=2024806162]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=1602877186]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=1981426289]
+libraries/ = SubResource("AnimationLibrary_lib")
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=1645878095]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="Content" type="Control" parent="Root" unique_id=787314399]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="DialogRoot" type="Control" parent="Root/Content" unique_id=301460872]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -465.0
+offset_right = 450.0
+offset_bottom = 465.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogBg" type="Panel" parent="Root/Content/DialogRoot" unique_id=2108028685]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_dialog_bg")
+
+[node name="TitleBgPanel" type="Panel" parent="Root/Content/DialogRoot" unique_id=1426344596]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title")
+
+[node name="CatDialog" type="Control" parent="Root/Content/DialogRoot" unique_id=399958243]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -292.50003
+offset_top = -346.99994
+offset_right = 292.5
+offset_bottom = 60.00006
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="SmallStarImg" type="TextureRect" parent="Root/Content/DialogRoot/CatDialog" unique_id=1401534239]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 280.0
+offset_right = 81.0
+offset_bottom = 325.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="BigStarImg" type="TextureRect" parent="Root/Content/DialogRoot/CatDialog" unique_id=385428874]
+layout_mode = 0
+offset_left = 453.0
+offset_right = 497.0
+offset_bottom = 53.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="LoveHeartImg" type="TextureRect" parent="Root/Content/DialogRoot/CatDialog" unique_id=1160548102]
+layout_mode = 0
+offset_top = 152.0
+offset_right = 74.0
+offset_bottom = 224.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="CatImg" type="TextureRect" parent="Root/Content/DialogRoot/CatDialog" unique_id=1951519370]
+layout_mode = 0
+offset_left = 98.0
+offset_right = 585.0
+offset_bottom = 407.0
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="TitleLabel" type="Label" parent="Root/Content/DialogRoot" unique_id=1332346181]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 16.0
+offset_right = 760.0
+offset_bottom = 116.0
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.3454792, 1)
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 68
+text = "DC_REPLAY_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+script = ExtResource("8")
+max_font_size = 86
+min_font_size = 50
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="ContentText" type="RichTextLabel" parent="Root/Content/DialogRoot" unique_id=785774215]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 310.0
+offset_right = 800.0
+offset_bottom = 310.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_separation = 9
+theme_override_fonts/normal_font = ExtResource("9")
+theme_override_font_sizes/normal_font_size = 60
+bbcode_enabled = true
+text = "[center]Best Time: [color=#F19320]06:39[/color]
+Try again?[/center]"
+fit_content = true
+scroll_active = false
+script = ExtResource("10")
+max_font_size = 60
+min_font_size = 40
+max_content_height = 220.0
+metadata/_custom_type_script = "uid://b7l8oc0h3r11u"
+
+[node name="LaterBtn" parent="Root/Content/DialogRoot" unique_id=261909423 instance=ExtResource("11")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 612.0
+offset_right = 840.0
+offset_bottom = 870.0
+bg_color = Color(1, 0.8132034, 0.5846757, 1)
+shadow_color = Color(0, 0, 0, 0.15)
+btn_text = "GAME_CLOSE"
+text_color = Color(0.7538461, 0.4546269, 0.2551475, 1)
+show_difficult = false
+
+[node name="ReplayBtn" parent="Root/Content/DialogRoot" unique_id=529198176 instance=ExtResource("11")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 412.0
+offset_right = 840.0
+offset_bottom = 670.0
+btn_text = "DC_REPLAY_CONFIRM_BTN"
+show_difficult = false
+
+[node name="AdBadge" type="Panel" parent="Root/Content/DialogRoot/ReplayBtn/Root" parent_id_path=PackedInt32Array(529198176, 664616521) index="10" unique_id=1800641558]
+layout_mode = 0
+offset_left = 663.195
+offset_top = 41.0
+offset_right = 789.195
+offset_bottom = 95.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_ad_badge")
+
+[node name="PlayIcon" type="TextureRect" parent="Root/Content/DialogRoot/ReplayBtn/Root/AdBadge" unique_id=226439695]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 6.0
+offset_right = 56.0
+offset_bottom = 48.0
+mouse_filter = 2
+texture = ExtResource("12")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AdLabel" type="Label" parent="Root/Content/DialogRoot/ReplayBtn/Root/AdBadge" unique_id=296703355]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 55.0
+offset_top = -2.5
+offset_right = -6.0
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 40
+text = "AD"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="tag_pressed" from="Root/Content/DialogRoot/LaterBtn" to="." method="_on_close_btn_pressed"]
+[connection signal="tag_pressed" from="Root/Content/DialogRoot/ReplayBtn" to="." method="_on_replay_btn_pressed"]
+
+[editable path="Root/Content/DialogRoot/ReplayBtn"]

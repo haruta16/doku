@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://2fg3k1aygwga"]
+
+[ext_resource type="Script" uid="uid://cto4ssrx03j8w" path="res://scripts/module/game/view/cat_progress_bar.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bdkfnr3cuiyek" path="res://assets/sprites/game/cat_progress_bar_bg.png" id="2"]
+[ext_resource type="PackedScene" uid="uid://k6wox3o18gor" path="res://scripts/module/game/ui/compont/cat_progress_slot.tscn" id="3"]
+
+[node name="CatProgressBar" type="Control" unique_id=91869936]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 890.0
+offset_bottom = 84.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="Bg" type="NinePatchRect" parent="." unique_id=21242998]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2")
+patch_margin_left = 64
+patch_margin_right = 64
+
+[node name="Slot1" parent="." unique_id=1749829489 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 8.0
+offset_right = 120.0
+offset_bottom = 76.0
+
+[node name="Slot2" parent="." unique_id=1658845983 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 8.0
+offset_right = 184.0
+offset_bottom = 76.0
+
+[node name="Slot3" parent="." unique_id=615318251 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 181.0
+offset_top = 8.0
+offset_right = 249.0
+offset_bottom = 76.0
+
+[node name="Slot4" parent="." unique_id=1252107477 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 8.0
+offset_right = 313.0
+offset_bottom = 76.0
+
+[node name="Slot5" parent="." unique_id=1631431193 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 310.0
+offset_top = 8.0
+offset_right = 378.0
+offset_bottom = 76.0
+
+[node name="Slot6" parent="." unique_id=1863206693 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 374.0
+offset_top = 8.0
+offset_right = 442.0
+offset_bottom = 76.0
+
+[node name="Slot7" parent="." unique_id=473608475 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 439.0
+offset_top = 8.0
+offset_right = 507.0
+offset_bottom = 76.0
+
+[node name="Slot8" parent="." unique_id=1443680656 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 504.0
+offset_top = 8.0
+offset_right = 572.0
+offset_bottom = 76.0
+
+[node name="Slot9" parent="." unique_id=218772216 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 569.0
+offset_top = 8.0
+offset_right = 637.0
+offset_bottom = 76.0
+
+[node name="Slot10" parent="." unique_id=1842658256 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 634.0
+offset_top = 8.0
+offset_right = 702.0
+offset_bottom = 76.0
+
+[node name="Slot11" parent="." unique_id=308595024 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 698.0
+offset_top = 8.0
+offset_right = 766.0
+offset_bottom = 76.0
+
+[node name="Slot12" parent="." unique_id=970319940 instance=ExtResource("3")]
+layout_mode = 0
+offset_left = 762.0
+offset_top = 8.0
+offset_right = 830.0
+offset_bottom = 76.0

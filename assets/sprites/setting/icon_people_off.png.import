@@ -3,20 +3,22 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7lf7iimymlc3"
-path="res://.godot/imported/icon_people_off.png-b1796e7511bd0a6b03c64340b0214792.ctex"
+path.bptc="res://.godot/imported/icon_people_off.png-b1796e7511bd0a6b03c64340b0214792.bptc.ctex"
+path.astc="res://.godot/imported/icon_people_off.png-b1796e7511bd0a6b03c64340b0214792.astc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/sprites/setting/icon_people_off.png"
-dest_files=["res://.godot/imported/icon_people_off.png-b1796e7511bd0a6b03c64340b0214792.ctex"]
+dest_files=["res://.godot/imported/icon_people_off.png-b1796e7511bd0a6b03c64340b0214792.bptc.ctex", "res://.godot/imported/icon_people_off.png-b1796e7511bd0a6b03c64340b0214792.astc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0
@@ -37,4 +39,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

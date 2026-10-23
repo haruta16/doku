@@ -1,0 +1,13 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://bof6cxuj2xxj8"
+path="res://.godot/imported/game_win_glodenfish.skel-16865663f4cfa8e821f99de1f7874e8c.spskel"
+
+[deps]
+
+source_file="res://assets/effect/spine/ui_win_glodenfish/game_win_glodenfish.skel"
+dest_files=["res://.godot/imported/game_win_glodenfish.skel-16865663f4cfa8e821f99de1f7874e8c.spskel"]
+
+[params]

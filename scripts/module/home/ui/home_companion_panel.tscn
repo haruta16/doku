@@ -1,0 +1,319 @@
+[gd_scene format=3 uid="uid://bpr1o2htgm1hs"]
+
+[ext_resource type="Script" uid="uid://d30hhem433wfw" path="res://scripts/module/home/panel/home_companion_panel.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bxqytiqnb8jqb" path="res://scripts/module/home/ui/home_companion_cat.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://bfhkmqver6fk4" path="res://scripts/module/home/ui/other/home_companion_food_bubble.tscn" id="3"]
+[ext_resource type="Script" uid="uid://bltuees5fj6x4" path="res://scripts/module/home/view/other/home_companion_click_button.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://hbryirpdsbem" path="res://assets/sprites/home_companion/capsule_companion_progress.png" id="5"]
+[ext_resource type="Script" uid="uid://cb1knkenb6cmw" path="res://scripts/module/home/view/other/home_companion_progress_bar.gd" id="6"]
+[ext_resource type="Texture2D" uid="uid://cj44n114eahat" path="res://assets/sprites/home_companion/capsule_companion_countdown.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://ddln3gh4jduht" path="res://assets/sprites/home_companion/corner_companion_countdown_left.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dw2yoxklvpiti" path="res://assets/sprites/home_companion/corner_companion_countdown_right.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cwjkqfm8pxfdo" path="res://assets/sprites/home_companion/icon_companion_countdown.png" id="10"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="11"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="12"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="13"]
+[ext_resource type="Texture2D" uid="uid://cgswks6piidi" path="res://assets/sprites/home_companion/icon_companion_progress_candy.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://7f11ans4roun" path="res://assets/sprites/home_companion/icon_companion_chest.png" id="15"]
+[ext_resource type="PackedScene" path="res://scripts/module/home/ui/other/home_companion_reward_preview.tscn" id="16"]
+
+[sub_resource type="StyleBoxEmpty" id="Track"]
+
+[sub_resource type="StyleBoxFlat" id="Fill"]
+bg_color = Color(0.98039216, 0.68235296, 0.08627451, 1)
+draw_center = false
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="StyleBoxFlat" id="PreviewFill"]
+bg_color = Color(0.98039216, 0.68235296, 0.08627451, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="Animation" id="Animation_pjy4d"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hud:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_sn6sp"]
+resource_name = "appear"
+length = 0.1
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hud:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c3pgs"]
+_data = {
+&"RESET": SubResource("Animation_pjy4d"),
+&"appear": SubResource("Animation_sn6sp")
+}
+
+[node name="HomeCompanionPanel" type="Control" unique_id=1884934430 node_paths=PackedStringArray("cat", "hud", "reward_button", "progress_bar", "progress_label", "countdown_label", "food_bubble", "progress_fill", "preview")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+cat = NodePath("Cat")
+hud = NodePath("Hud")
+reward_button = NodePath("Hud/RewardButton")
+progress_bar = NodePath("Hud/ProgressButton/ProgressBar")
+progress_label = NodePath("Hud/ProgressButton/ProgressLabel")
+countdown_label = NodePath("Hud/ProgressButton/Countdown/CountdownLabel")
+food_bubble = NodePath("FoodButton")
+progress_fill = NodePath("Hud/ProgressButton/ProgressBar/Fill")
+preview = NodePath("Hud/Preview")
+
+[node name="Cat" parent="." unique_id=805607425 node_paths=PackedStringArray("food_button", "food_icon", "food_count_label", "food_fly_layer") instance=ExtResource("2")]
+layout_mode = 0
+food_button = NodePath("../FoodButton")
+food_icon = NodePath("../FoodButton/Icon")
+food_count_label = NodePath("../FoodButton/Count")
+food_fly_layer = NodePath("../FoodFlyLayer")
+
+[node name="FoodButton" parent="." unique_id=1110149778 instance=ExtResource("3")]
+visible = false
+layout_mode = 0
+offset_left = 783.0
+offset_top = 911.0
+offset_right = 974.00134
+offset_bottom = 1083.7109
+
+[node name="FoodFlyLayer" type="Control" parent="." unique_id=1960355553]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Hud" type="Control" parent="." unique_id=1987710015]
+anchors_preset = 0
+offset_left = 319.0
+offset_top = 1491.0
+offset_right = 761.0
+offset_bottom = 1599.8667
+mouse_filter = 2
+
+[node name="ProgressButton" type="Button" parent="Hud" unique_id=1361390119 node_paths=PackedStringArray("click_visuals")]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 10.0
+offset_right = 429.0
+offset_bottom = 108.0
+focus_mode = 0
+flat = true
+script = ExtResource("4")
+click_visuals = [NodePath("CurrencyIcon")]
+
+[node name="ProgressBackground" type="TextureRect" parent="Hud/ProgressButton" unique_id=1556325901]
+layout_mode = 0
+offset_right = 430.0
+offset_bottom = 70.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="Hud/ProgressButton" unique_id=215937940 node_paths=PackedStringArray("fill_clip", "fill_shape", "stripes")]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 11.0
+offset_right = 415.0
+offset_bottom = 51.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("Track")
+theme_override_styles/fill = SubResource("Fill")
+value = 100.0
+show_percentage = false
+script = ExtResource("6")
+fill_clip = NodePath("Fill")
+fill_shape = NodePath("Fill/Shape")
+stripes = NodePath("Fill/Shape/Stripes")
+
+[node name="Fill" type="Control" parent="Hud/ProgressButton/ProgressBar" unique_id=1874154292]
+clip_contents = true
+anchors_preset = 0
+offset_right = 400.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Shape" type="Panel" parent="Hud/ProgressButton/ProgressBar/Fill" unique_id=1354049494]
+clip_children = 2
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("PreviewFill")
+
+[node name="Stripes" type="Control" parent="Hud/ProgressButton/ProgressBar/Fill/Shape" unique_id=165305687]
+anchors_preset = 0
+offset_left = -10.0
+offset_top = -19.0
+offset_right = 453.95358
+offset_bottom = 61.29635
+mouse_filter = 2
+
+[node name="CountdownBackground" type="Control" parent="Hud/ProgressButton" unique_id=103592085]
+anchors_preset = 0
+offset_left = 108.85156
+offset_top = 55.633965
+offset_right = 320.75067
+offset_bottom = 93.32056
+mouse_filter = 2
+
+[node name="Capsule" type="TextureRect" parent="Hud/ProgressButton/CountdownBackground" unique_id=1456513399]
+layout_mode = 0
+offset_left = 13.998367
+offset_top = 0.007171631
+offset_right = 197.91013
+offset_bottom = 37.686653
+mouse_filter = 2
+texture = ExtResource("7")
+expand_mode = 1
+
+[node name="LeftCorner" type="TextureRect" parent="Hud/ProgressButton/CountdownBackground" unique_id=314854244]
+layout_mode = 0
+offset_top = 0.012825012
+offset_right = 14.0
+offset_bottom = 14.012825
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+
+[node name="RightCorner" type="TextureRect" parent="Hud/ProgressButton/CountdownBackground" unique_id=669182288]
+layout_mode = 0
+offset_left = 197.89911
+offset_right = 211.89911
+offset_bottom = 14.000008
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+
+[node name="Countdown" type="Control" parent="Hud/ProgressButton" unique_id=837706443]
+anchors_preset = 0
+offset_left = 136.625
+offset_top = 48.070313
+offset_right = 292.625
+offset_bottom = 97.93698
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="Hud/ProgressButton/Countdown" unique_id=1363417469]
+layout_mode = 0
+offset_left = 6.8388577
+offset_top = 6.981332
+offset_right = 36.33143
+offset_bottom = 40.320763
+mouse_filter = 2
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="CountdownLabel" type="Label" parent="Hud/ProgressButton/Countdown" unique_id=755357755]
+layout_mode = 0
+offset_left = 42.0
+offset_right = 147.36191
+offset_bottom = 49.866665
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.78431374, 0.5294118, 0.3647059, 1)
+theme_override_fonts/font = ExtResource("11")
+theme_override_font_sizes/font_size = 30
+text = "10d 24h"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("12")
+
+[node name="ProgressLabel" type="Label" parent="Hud/ProgressButton" unique_id=342876424]
+layout_mode = 0
+offset_left = 121.0
+offset_top = 7.0
+offset_right = 309.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.8235294, 0.4509804, 0.15294118, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("13")
+theme_override_font_sizes/font_size = 32
+text = "30/30"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("12")
+
+[node name="CurrencyIcon" type="TextureRect" parent="Hud/ProgressButton" unique_id=720521132]
+layout_mode = 0
+offset_left = -24.78125
+offset_top = -16.275778
+offset_right = 83.21875
+offset_bottom = 75.72422
+mouse_filter = 2
+texture = ExtResource("14")
+expand_mode = 1
+
+[node name="RewardButton" type="Button" parent="Hud" unique_id=2040481781]
+layout_mode = 0
+offset_left = 363.0
+offset_right = 433.0
+offset_bottom = 70.0
+focus_mode = 0
+flat = true
+
+[node name="ChestIcon" type="TextureRect" parent="Hud/RewardButton" unique_id=1272126323]
+layout_mode = 0
+offset_left = 3.1818182
+offset_top = 0.3181808
+offset_right = 66.818184
+offset_bottom = 69.68182
+mouse_filter = 2
+texture = ExtResource("15")
+expand_mode = 1
+
+[node name="Preview" parent="Hud" unique_id=145554306 instance=ExtResource("16")]
+visible = false
+anchors_preset = 0
+offset_left = 108.0
+offset_top = -175.0
+offset_right = 709.0
+offset_bottom = -35.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=643627608]
+libraries/ = SubResource("AnimationLibrary_c3pgs")
+
+[connection signal="feeding_requested" from="Cat" to="." method="_on_feeding_requested"]
+[connection signal="pressed" from="FoodButton" to="Cat" method="_on_food_pressed"]
+[connection signal="pressed" from="Hud/ProgressButton" to="." method="_on_progress_pressed"]
+[connection signal="changed" from="Hud/ProgressButton/ProgressBar" to="Hud/ProgressButton/ProgressBar" method="_refresh_fill"]
+[connection signal="resized" from="Hud/ProgressButton/ProgressBar" to="Hud/ProgressButton/ProgressBar" method="_refresh_fill"]
+[connection signal="theme_changed" from="Hud/ProgressButton/ProgressBar" to="Hud/ProgressButton/ProgressBar" method="_on_theme_changed"]
+[connection signal="value_changed" from="Hud/ProgressButton/ProgressBar" to="Hud/ProgressButton/ProgressBar" method="_on_value_changed"]
+[connection signal="pressed" from="Hud/RewardButton" to="." method="_on_reward_pressed"]

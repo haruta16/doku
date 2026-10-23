@@ -1,0 +1,459 @@
+[gd_scene format=3 uid="uid://cwhbqfxl8aqsh"]
+
+[ext_resource type="SpineSkeletonDataResource" uid="uid://blj81otr6lw4e" path="res://assets/effect/spine/AutoXFillModeBanner/new_spine_skeleton_data_resource.tres" id="1"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="2"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://2qb2vueasbpc" path="res://assets/effect/texture/obj/et_ribbon_001.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dl6ni33dwnx13" path="res://assets/effect/texture/glow/et_glow_001_2.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="6"]
+
+[sub_resource type="Animation" id="Animation_qldvm"]
+resource_name = "RESET"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation_name")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [""]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:loop")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_71qpg"]
+resource_name = "Appear"
+length = 0.86666673
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation_name")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["Appear"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:loop")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_yd7yc"]
+resource_name = "Appear_looped"
+length = 0.86666673
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation_name")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["Appear"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:loop")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jg0vw"]
+_data = {
+&"-- Empty --": SubResource("Animation_qldvm"),
+&"Appear": SubResource("Animation_71qpg"),
+&"Appear_looped": SubResource("Animation_yd7yc"),
+&"RESET": SubResource("Animation_qldvm")
+}
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7donw"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_7ek7h"]
+_limits = [-2.2623444, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.89900273), 0.0, 0.0, 0, 0, Vector2(0.62098134, -0.0015569925), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_768tf"]
+_data = [Vector2(0, 0.42984724), 0.0, 2.7051253, 0, 0, Vector2(0.32994923, 1), 0.0, 0.0, 0, 0, Vector2(0.8159722, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_blx0k"]
+offsets = PackedFloat32Array(0.21699819, 0.7530266, 0.9909584)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_blx0k"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, -2.3211966, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.19900498, -0.8336896), 0.0, 0.0, 0, 0, Vector2(0.252073, -0.045657635), 0.09669888, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_ka84u"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.32504147, 1), 0.8117804, -0.22606552, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_68i7f"]
+offsets = PackedFloat32Array(0.47131148, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.41085273, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_0bfcw"]
+offsets = PackedFloat32Array(0.3079646)
+colors = PackedColorArray(1, 0.64983445, 0.39477575, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jrts2"]
+blend_mode = 1
+
+[sub_resource type="Animation" id="Animation_f2o2k"]
+resource_name = "Appera"
+length = 2.5
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Flreworks_2:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("StarAlp2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.06666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("StarAdd2:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.06666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Control:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1.5, 1.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/4/type = "animation"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Control/SpineSprite/SpineAnimationTrack/SpineSprite Track 0")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"clips": PackedStringArray("Appear"),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Control/SpineSprite:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.016666668),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Control/SpineSprite/SpineBoneNode/Label:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.016666668),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_yrv3t"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Flreworks_2:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("StarAlp2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("StarAdd2:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Control:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Control/SpineSprite:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Control/SpineSprite/SpineBoneNode/Label:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yrv3t"]
+_data = {
+&"Appear": SubResource("Animation_f2o2k"),
+&"RESET": SubResource("Animation_yrv3t")
+}
+
+[node name="AutoXFillModeBanner" type="Control" unique_id=1232872728]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="." unique_id=851616333]
+anchors_preset = 0
+offset_right = 800.0
+offset_bottom = 800.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="SpineSprite" type="SpineSprite" parent="Control" unique_id=1662233226]
+visible = false
+position = Vector2(406, 273)
+skeleton_data_res = ExtResource("1")
+preview_skin = "default"
+preview_animation = "-- Empty --"
+preview_frame = false
+preview_time = 0.0
+
+[node name="SpineAnimationTrack" type="SpineAnimationTrack" parent="Control/SpineSprite" unique_id=1789663523]
+track_index = 0
+
+[node name="SpineSprite Track 0" type="AnimationPlayer" parent="Control/SpineSprite/SpineAnimationTrack" unique_id=1071120332]
+libraries/ = SubResource("AnimationLibrary_jg0vw")
+
+[node name="SpineBoneNode" type="SpineBoneNode" parent="Control/SpineSprite" unique_id=1727947200]
+show_behind_parent = true
+scale = Vector2(1e-05, 1e-05)
+bone_name = "Main"
+
+[node name="Label" type="Label" parent="Control/SpineSprite/SpineBoneNode" unique_id=1391008456]
+visible = false
+offset_left = -237.0
+offset_top = 19.999996
+offset_right = 231.00003
+offset_bottom = 119.0
+rotation = -0.11868239
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 49
+text = "WIN_X_FREE_BONUS"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("3")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="Flreworks_2" type="CPUParticles2D" parent="." unique_id=1995184155]
+material = SubResource("CanvasItemMaterial_7donw")
+position = Vector2(406.00003, 260)
+rotation = -1.5707964
+scale = Vector2(0.5500001, 0.5500001)
+emitting = false
+amount = 15
+texture = ExtResource("4")
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+use_fixed_seed = true
+seed = 2279805931
+lifetime_randomness = 0.55
+fixed_fps = 60
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 1000)
+initial_velocity_min = 800.0
+initial_velocity_max = 2200.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_curve = SubResource("Curve_7ek7h")
+damping_min = 2.0
+damping_max = 10.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.8
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_768tf")
+color_ramp = SubResource("Gradient_blx0k")
+anim_offset_max = 1.0
+
+[node name="StarAlp2" type="CPUParticles2D" parent="." unique_id=2032523902]
+modulate = Color(1, 1, 1, 0.627451)
+position = Vector2(407, 261)
+rotation = -1.5707964
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 5
+texture = ExtResource("5")
+lifetime = 1.02
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 8000
+lifetime_randomness = 0.13
+fixed_fps = 60
+local_coords = true
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 800.0
+initial_velocity_max = 1500.0
+linear_accel_min = 10800.0
+linear_accel_max = 14400.0
+linear_accel_curve = SubResource("Curve_blx0k")
+damping_min = 200.0
+damping_max = 1000.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_ka84u")
+color = Color(1, 0.58150005, 0.19, 0.19607843)
+color_ramp = SubResource("Gradient_68i7f")
+color_initial_ramp = SubResource("Gradient_0bfcw")
+
+[node name="StarAdd2" type="CPUParticles2D" parent="." unique_id=1525518329]
+material = SubResource("CanvasItemMaterial_jrts2")
+position = Vector2(407, 261)
+rotation = -1.5707964
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 5
+texture = ExtResource("6")
+lifetime = 1.02
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 8000
+lifetime_randomness = 0.15
+fixed_fps = 60
+local_coords = true
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 800.0
+initial_velocity_max = 1500.0
+linear_accel_min = 10800.0
+linear_accel_max = 14400.0
+linear_accel_curve = SubResource("Curve_blx0k")
+damping_min = 200.0
+damping_max = 1000.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_ka84u")
+color_ramp = SubResource("Gradient_68i7f")
+color_initial_ramp = SubResource("Gradient_0bfcw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=918138273]
+libraries/ = SubResource("AnimationLibrary_yrv3t")

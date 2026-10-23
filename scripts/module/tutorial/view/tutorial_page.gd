@@ -1,10 +1,13 @@
-## 新手教学页（注册名 UiName.TUTORIAL）：用一局 4×4 教学关把「放猫 / 打叉 / 滑动排除」演给玩家
-## 步骤数据来自题库 SP 里 pattern == "guide" 的那一关；走完最后一步 = 写存档标记 + 直接进正式对局第 1 关
+## 教程页面：驱动默认及实验教学流程，锁定允许操作的格子并串联提示与演示。
 class_name TutorialPage
 extends UIFrameWindow
 
 ## 遮罩层用的临时格子场景：遮罩压暗整盘时，提示格靠它保持亮色
 const _CELL_SCENE: PackedScene = preload("res://assets/prefab/cell.tscn")
+const _G2_COPY: Script = preload("res://scripts/module/tutorial/model/tutorial_g2_copy.gd")
+const _FLOW_TRACKING: Script = preload(
+	"res://scripts/module/tutorial/model/tutorial_flow_tracking.gd"
+)
 
 ## 教学关答案（行 → 列），与题库 solution 一致，用于自由阶段的通关判定
 const TUTORIAL_SOLUTION: Array[Vector2i] = [
@@ -20,7 +23,6 @@ var _guide_color_map: Array[int] = [] # 区域编号 → 调色板下标的映�
 
 @onready var _board_view: BoardView = $Root/BoardContainer/BoardView
 @onready var _board_container: Control = $Root/BoardContainer
-@onready var _success_check: Control = $Root/BoardContainer/SuccessCheck
 @onready var _select_frame: Panel = $Root/BoardContainer/HighlightOverlay/SelectFrame
 @onready var _msg_panel: Panel = $Root/MessagePanel
 @onready var _msg_rich: RichTextLabel = $Root/MessagePanel/MsgRich
@@ -28,21 +30,21 @@ var _guide_color_map: Array[int] = [] # 区域编号 → 调色板下标的映�
 @onready var _sub_msg_rich: RichTextLabel = $Root/SubMsgPanel/SubMsgRich
 @onready var _hint_tool_panel: Panel = $Root/HintToolPanel
 @onready var _hint_label: RichTextLabel = $Root/HintToolPanel/HintLabel
+@onready var _lamp_icon: TextureRect = $Root/HintToolPanel/LampIcon
+@onready var _hint_btn: Control = $Root/HintBtn
+@onready var _hint_hit: Button = $Root/HintBtn/Hit
+@onready var _skip_btn: Button = $Root/SkipBtn
 @onready var _confirm_btn: Button = $Root/ConfirmBtn
 @onready var _hand_hint: Control = $Root/HandHint
 @onready var _hand_spine: SpineSprite = $Root/HandHint/ui_guide_hand
 @onready var _hand_static: TextureRect = $Root/HandHint/HandStatic
 @onready var _mask_layer: Control = $Root/MaskLayer
-@onready var _iq_bar: Control = $Root/IqBar
-@onready var _iq_fill: Panel = $Root/IqBar/BarFill
-@onready var _iq_label: Label = $Root/IqBar/IqLabel
+@onready var _hint_overlay: HintOverlay = $Root/HintOverlay
 @onready var _anim_msg_appear_2: AnimationPlayer = $MessagePanel_appear_2
 @onready var _anim_confirm_loop: AnimationPlayer = $ConfirmBtn_loop
 @onready var _anim_sub_msg_appear: AnimationPlayer = $SubMsgPanel_appear
 @onready var _anim_hint_tool_appear: AnimationPlayer = $HintToolPanel_appear
-@onready var _anim_guide_encourage: AnimationPlayer = $GuideEncourage
-@onready var _anim_effect_iq_bar: AnimationPlayer = $EffectIqBar
-@onready var _anim_effect_fireworks: AnimationPlayer = $EffectFlreworks
+@onready var _anim_hint_btn_appear: AnimationPlayer = $HintBtn_appear
 
 # ---- 步骤模式与内部信号 ----
 enum StepMode { NONE, PLACE_CAT, MARK_CELLS, FREE_PLAY, CONFIRM } # NONE 无 / PLACE_CAT 放猫 / MARK_CELLS 打叉 / FREE_PLAY 自由玩 / CONFIRM 等按钮
@@ -56,91 +58,153 @@ var _current_mode: int = StepMode.NONE # 当前步骤模式，决定输入怎么
 var _allowed_cells: Array[Vector2i] = [] # 当前步骤允许操作的格子白名单
 var _required_marks: int = 0 # 这一步需要打的叉数
 var _marked_count: int = 0 # 已经打好的叉数
+var _skip_requested: bool = false
 
 var _step7_hint_phase: int = 0 # 第 7 步提示阶段：0 未点提示 / 1 排除蓝行 / 2 排除粉行 / 3 落最后一猫
 
+var _flash_on_wrong_tap: bool = false
+
+var _g2_glow_cells: Array[Vector2i] = []
+
+var _g2_hint_data: Dictionary = {}
+var _g2_hint_highlight_layer: CanvasLayer = null
+
+const _G2_GLOW_PLACE: StringName = &"GridGlowing3"
+const _G2_GLOW_MARK: StringName = &"GridGlowing4"
+
+const _G2_ROW_LEAD_SEC: float = 0.6
+const _G2_MARK_ROW_SEC: float = 0.09
+const _G2_RING_LEAD_SEC: float = 0.7
+const _G2_MARK_RING_SEC: float = 0.11
+const _G2_DEDUCE_PAUSE_SEC: float = 0.6
+
+const _CONFLICT_LINE_SCENE: PackedScene = preload(
+	"res://scripts/module/rank_activity/ui/conflict_line.tscn"
+)
+
+const _G2_CONFLICT_GLOW: StringName = &"GridGlowing5"
+
+const _STEP_PAUSE_SEC: float = 0.4
+
+const _FREE_PLAY_COMPLETION_PAUSE_SEC: float = 0.5
+
+const _FAST_FINISH_SEC: float = 1.0
+
 var _mask_hint_cells: Dictionary = {} # 遮罩层上的提示格：格子坐标 → 临时 CellView
+var _mask_frozen_source_cells: Dictionary = {}
 var _mask_tween: Tween = null # 遮罩淡入淡出用的补间
 
 # ---- 手势状态（拖拽与连点） ----
 var _drag_start_cell: Vector2i = Vector2i(-1, -1) # 本次拖拽的起点（行, 列），(-1,-1) 表示没有拖拽
+var _drag_last_cell: Vector2i = Vector2i(-1, -1)
 var _drag_had_move: bool = false # 本次拖拽是否移动过（移动过就不算单击）
 
 var _drag_target_state: int = CellState.MARK # 拖拽时要写入的状态：MARK 打叉 或 EMPTY 擦除
+var _drag_target_pending: bool = false
+var _drag_start_processed: bool = false
 var _last_tap_cell: Vector2i = Vector2i(-1, -1) # 上一次单击的格子，用于识别「连点两次」
+
+var _double_tap_window_generation: int = 0
+
+const _DEFAULT_DOUBLE_TAP_SEC: float = 0.35
+var _last_window_sec: float = _DEFAULT_DOUBLE_TAP_SEC
+var _dbg_win_open_ms: int = -1
+var _dbg_win_open_cell: Vector2i = Vector2i(-1, -1)
 
 var _swipe_hand_tween: Tween = null # 滑动打叉手势的循环补间
 
 # ---- 埋点与布局测量 ----
 var _guide_start_ms: int = 0 # on_show 的时刻（毫秒），用于统计教学耗时
 
+const _GUIDE_BOARD_WIDTH: float = 919.0
+
 var _msg_to_board_gap: float = 0.0 # 消息面板与棋盘之间的初始间距（像素）
+var _hint_btn_base_scale: Vector2 = Vector2.ONE
+var _skip_btn_base_scale: Vector2 = Vector2.ONE
 
 # ---- 数值常量：消息面板与 IQ 条 ----
 const _MSG_PANEL_PADDING_Y: float = 40.0 # 消息面板上下各留的内边距（像素）
 
-const IQ_INIT: int = 60 # IQ 初始值
-const IQ_MAX: int = 180 # IQ 上限
-const IQ_STEP: int = 20 # 每次反馈增加的 IQ（点）
 
-const _IQ_BAR_PAD: float = 0.0 # 进度条起点偏移（像素，0 = 从最左开始）
-const _IQ_BAR_INNER_W: float = 592.0 # 进度条可填充宽度（像素）
-var _iq_value: int = IQ_INIT # 当前 IQ 值，只有 iq 分组流程用得到
-
-
-# ================= 生命周期与三条流程 =================
-## 建连：棋盘拖拽三个信号、提示条点击、消息框尺寸变化，并量一次消息面板与棋盘的初始间距
 func _ready() -> void:
 	_board_view.cell_drag_start.connect(_on_board_cell_drag_start)
 	_board_view.cell_drag_over.connect(_on_board_cell_drag_over)
 	_board_view.cell_drag_end.connect(_on_board_cell_drag_end)
+	_hint_btn_base_scale = _hint_btn.scale
+	_hint_hit.button_down.connect(
+		func() -> void: UIHelper.play_press_scale(_hint_btn, _hint_btn_base_scale)
+	)
+	_hint_hit.button_up.connect(
+		func() -> void: UIHelper.play_release_scale(_hint_btn, _hint_btn_base_scale)
+	)
+	_skip_btn_base_scale = _skip_btn.scale
+	_skip_btn.button_down.connect(
+		func() -> void: UIHelper.play_press_scale(_skip_btn, _skip_btn_base_scale)
+	)
+	_skip_btn.button_up.connect(
+		func() -> void: UIHelper.play_release_scale(_skip_btn, _skip_btn_base_scale)
+	)
 
 	_hint_tool_panel.gui_input.connect(_on_hint_tool_panel_gui_input)
+	_hint_overlay.set_board(_board_view)
 
 	_msg_rich.resized.connect(_on_msg_rich_resized)
 
-	_msg_to_board_gap = _board_container.offset_top - _msg_panel.offset_bottom # 记下初始间距，供 _align_msg_panel_to_board 复用
+	_msg_to_board_gap = _board_container.offset_top - _msg_panel.offset_bottom
 
 
-## 每次打开本页：复位 UI 与棋盘，再按 A/B 分组跑三条流程之一（默认 / check / iq）
+## 推进流程令牌并唤醒旧等待，清空交互限制后建立棋盘，选择当前实验对应的教程流程。
 func on_show(_params: Dictionary = {}) -> void:
-	_flow_token += 1 # 让上一轮没跑完的步骤协程失效
+	_flow_token += 1
+	_skip_requested = false
 
-	_step_completed.emit() # 先放掉上一轮可能还挂着的 await
+	_step_completed.emit()
 	_current_mode = StepMode.NONE
-	_last_tap_cell = Vector2i(-1, -1)
+	_reset_double_tap_window()
 	_drag_start_cell = Vector2i(-1, -1)
+	_drag_last_cell = Vector2i(-1, -1)
 	_drag_had_move = false
+	_drag_target_pending = false
+	_drag_start_processed = false
 	_reset_ui()
+	_sync_skip_button_visibility()
 	_setup_board()
 
-	# 等布局结算完再把消息面板对齐到棋盘
 	call_deferred("_align_msg_panel_to_board")
 
 	_guide_start_ms = Time.get_ticks_msec()
-	Tracker.track_new_guide_show(1) # 埋点：教学页展示（关卡号固定 1）
+	Tracker.track_new_guide_show(1)
 
-	# 三条流程共用同一批步骤函数，区别只在每步之后的反馈方式
-	if ABTestManager.guide_feedback.is_check_guide():
-		await _run_guide_flow_check()
-	elif ABTestManager.guide_feedback.is_iq_guide():
-		await _run_guide_flow_iq()
+	if ABTestManager.nu_guide.is_new_guide_flow():
+		await _run_guide_flow_g2()
 	else:
 		await _run_guide_flow_default()
 
 
-## 默认流程：7 个步骤顺序 await，每步完成后埋一次进度点
+## 使旧教程流程失效，释放步骤等待并停止提示、冲突动画与高亮。
+func on_hide() -> void:
+	_flow_token += 1
+	_current_mode = StepMode.NONE
+	_reset_double_tap_window()
+	_allowed_cells.clear()
+	_step_completed.emit()
+	_g2_cancel_conflict()
+	_g2_clear_glow()
+	_cleanup_g2_hint()
+
+
 func _run_guide_flow_default() -> void:
-	var _tok: int = _flow_token # 本轮令牌，下面每步都校验
+	var _tok: int = _flow_token
 	await _step_1_place_first_cat()
-	# token 变了说明页面被重开过，旧协程立刻收手（下面每步都做同样的检查）
 	if _flow_token != _tok:
 		return
 	Tracker.track_new_guide_step(1)
-	await _step_2_confirm_one_per_color()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(2)
+
+	if not ABTestManager.nu_guide.is_confirm_step_removed():
+		await _step_2_confirm_one_per_color()
+		if _flow_token != _tok:
+			return
+		Tracker.track_new_guide_step(2)
 	await _step_3_mark_row_col()
 	if _flow_token != _tok:
 		return
@@ -164,165 +228,311 @@ func _run_guide_flow_default() -> void:
 	await _step_finish()
 
 
-## check 分组流程：步骤相同，但去掉「每色一只」确认步，改成每步播一次成功反馈动画
-func _run_guide_flow_check() -> void:
+func _run_guide_flow_g2() -> void:
 	var _tok: int = _flow_token
-	await _step_1_place_first_cat(_step1_feedback_combined_msg())
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(1)
-	await _play_check_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_3_mark_row_col()
-	if _flow_token != _tok:
-		return
-	# check / iq 流程少了确认步，所以步骤号比默认流程少 1
-	Tracker.track_new_guide_step(2)
-	await _play_check_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_4_place_second_cat()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(3)
-	await _play_check_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_5_mark_neighbors()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(4)
-	await _play_check_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_6_place_third_cat()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(5)
-	await _play_check_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_7_free_play()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(6)
-	await _play_check_feedback()
-	if _flow_token != _tok:
-		return
+	for page: int in _G2_COPY.page_sequence():
+		await _g2_run_page(page)
+		if _flow_token != _tok:
+			return
+		_track_guide_step(page)
 	await _step_finish()
 
 
-## check 分组的步骤反馈：播一次成功勾选动画并等它播完
-func _play_check_feedback() -> void:
-	_anim_guide_encourage.play("SuccessCheck")
-	await _anim_guide_encourage.animation_finished
+func _g2_run_page(page: int) -> void:
+	match page:
+		1:
+			await _g2_stage_1_place_first_cat()
+		2:
+			await _g2_stage_2_mark_row_col()
+		3:
+			await _g2_stage_3_place_second_cat()
+		4:
+			await _g2_stage_4_neighbor_ring()
+		5:
+			await _g2_stage_5_free_play()
 
 
-## iq 分组流程：与 check 相同，只是把成功反馈换成 IQ 进度条上涨
-func _run_guide_flow_iq() -> void:
-	var _tok: int = _flow_token
-	_init_iq_bar()
-	await _step_1_place_first_cat(_step1_feedback_combined_msg())
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(1)
-	await _play_iq_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_3_mark_row_col()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(2)
-	await _play_iq_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_4_place_second_cat()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(3)
-	await _play_iq_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_5_mark_neighbors()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(4)
-	await _play_iq_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_6_place_third_cat()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(5)
-	await _play_iq_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_7_free_play()
-	if _flow_token != _tok:
-		return
-	Tracker.track_new_guide_step(6)
-	await _play_iq_feedback()
-	if _flow_token != _tok:
-		return
-	await _step_finish(true)
+func _g2_stage_1_place_first_cat() -> void:
+	_show_g2_message(1)
+	var target := Vector2i(0, 2)
+	_allowed_cells = [target]
+	_g2_glow([target], _G2_GLOW_PLACE)
+	_position_hand_at_cell(target)
+	_show_hand()
+	_current_mode = StepMode.PLACE_CAT
+	await _step_completed
+	_current_mode = StepMode.NONE
+	_hide_hand()
+	_g2_clear_glow()
 
 
-## 初始化 IQ 条：数值回到初始、显示进度条并播出现动画
-func _init_iq_bar() -> void:
-	_iq_value = IQ_INIT
-	_set_iq_fill_right(_iq_fill_right(float(IQ_INIT)))
-	_set_iq_number(float(IQ_INIT))
-	_iq_bar.visible = true
-	_anim_guide_encourage.play("IqBarAppear")
+func _g2_stage_2_mark_row_col() -> void:
+	var tok: int = _flow_token
+	_show_g2_message(2)
+	await get_tree().create_timer(_G2_ROW_LEAD_SEC).timeout
+	if _flow_token != tok:
+		return
+
+	var row_cells: Array[Vector2i] = [Vector2i(0, 0), Vector2i(0, 1), Vector2i(0, 3)]
+	await _g2_auto_mark(row_cells, _G2_MARK_ROW_SEC)
+	if _flow_token != tok:
+		return
+
+	var col_cells: Array[Vector2i] = [Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2)]
+	_allowed_cells = col_cells
+	_required_marks = col_cells.size()
+	_marked_count = 0
+	_g2_glow(col_cells, _G2_GLOW_MARK)
+	_current_mode = StepMode.MARK_CELLS
+	await _step_completed
+	_current_mode = StepMode.NONE
+	_g2_clear_glow()
 
 
-## 播 IQ 条消失动画，播完隐藏
-func _play_iq_disappear() -> void:
-	_anim_guide_encourage.play("IqBarDisAppear")
-	await _anim_guide_encourage.animation_finished
-	_iq_bar.visible = false
+func _g2_stage_3_place_second_cat() -> void:
+	var tok: int = _flow_token
+	_show_g2_message(3)
+	await get_tree().create_timer(_G2_DEDUCE_PAUSE_SEC).timeout
+	if _flow_token != tok:
+		return
+	var target := Vector2i(3, 1)
+	_allowed_cells = [target]
+	_g2_glow([target], _G2_GLOW_PLACE)
+	_current_mode = StepMode.PLACE_CAT
+	await _step_completed
+	_current_mode = StepMode.NONE
+	_g2_clear_glow()
 
 
-## 一次 IQ 反馈：数值加一档（封顶），进度条与数字同步补间 0.4 秒
-func _play_iq_feedback() -> void:
-	var old_v: int = _iq_value
-	var new_v: int = min(old_v + IQ_STEP, IQ_MAX)
-	_iq_value = new_v
+func _g2_stage_4_neighbor_ring() -> void:
+	var tok: int = _flow_token
+	_show_g2_message(4)
+	await get_tree().create_timer(_G2_RING_LEAD_SEC).timeout
+	if _flow_token != tok:
+		return
+	await _g2_auto_mark(_g2_neighbors_in_board(Vector2i(3, 1)), _G2_MARK_RING_SEC)
+	if _flow_token != tok:
+		return
+	await get_tree().create_timer(_G2_DEDUCE_PAUSE_SEC).timeout
+	if _flow_token != tok:
+		return
+	var target := Vector2i(1, 0)
+	_allowed_cells = [target]
+	_g2_glow([target], _G2_GLOW_PLACE)
+	_current_mode = StepMode.PLACE_CAT
+	await _step_completed
+	_current_mode = StepMode.NONE
+	_g2_clear_glow()
 
-	_anim_effect_iq_bar.play("EffectIqBar02" if new_v >= IQ_MAX else "EffectIqBar01")
-	var grow := create_tween()
-	grow.set_parallel(true)
-	(
-		grow
-		. tween_method(
-			_set_iq_fill_right, _iq_fill_right(float(old_v)), _iq_fill_right(float(new_v)), 0.4
-		)
-		. set_trans(Tween.TRANS_CUBIC)
-		. set_ease(Tween.EASE_OUT)
+
+func _g2_stage_5_free_play() -> void:
+	_show_g2_message(5)
+	_allowed_cells = [Vector2i(2, 3)]
+	_step7_hint_phase = 0
+	_flash_on_wrong_tap = true
+	_show_hint_btn()
+	_g2_clear_glow()
+	_board_view.clear_hint_cells()
+	_g2_hint_data = {}
+	_current_mode = StepMode.FREE_PLAY
+	await _step_completed
+	_current_mode = StepMode.NONE
+	_flash_on_wrong_tap = false
+	_g2_clear_glow()
+	_cleanup_g2_hint()
+	_hide_hand()
+	_hide_hint_btn()
+	await get_tree().create_timer(_FREE_PLAY_COMPLETION_PAUSE_SEC).timeout
+
+
+func _g2_auto_mark(cells: Array[Vector2i], interval_sec: float) -> void:
+	var tok: int = _flow_token
+	for cell: Vector2i in cells:
+		if not CellState.is_blank(_board_view.get_cell_state(cell.x, cell.y)):
+			continue
+		_board_view.set_cell_state(cell.x, cell.y, CellState.MARK)
+		VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
+		await get_tree().create_timer(interval_sec).timeout
+
+		if _flow_token != tok:
+			return
+
+
+func _g2_glow(cells: Array[Vector2i], anim: StringName) -> void:
+	_g2_clear_glow()
+	for cell: Vector2i in cells:
+		var cv: CellView = _board_view.get_cell_view(cell.x, cell.y)
+		if cv == null:
+			continue
+		cv.play_grid_glow_loop(anim)
+		_g2_glow_cells.append(cell)
+
+
+func _g2_clear_glow() -> void:
+	for cell: Vector2i in _g2_glow_cells:
+		var cv: CellView = _board_view.get_cell_view(cell.x, cell.y)
+		if cv != null:
+			cv.stop_grid_glow()
+	_g2_glow_cells.clear()
+
+
+func _g2_stop_glow_at(r: int, c: int) -> void:
+	var key := Vector2i(r, c)
+	if not _g2_glow_cells.has(key):
+		return
+	var cv: CellView = _board_view.get_cell_view(r, c)
+	if cv != null:
+		cv.stop_grid_glow()
+	_g2_glow_cells.erase(key)
+
+
+func _g2_neighbors_in_board(cell: Vector2i) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for dr: int in [-1, 0, 1]:
+		for dc: int in [-1, 0, 1]:
+			if dr == 0 and dc == 0:
+				continue
+			var nr: int = cell.x + dr
+			var nc: int = cell.y + dc
+			if nr >= 0 and nr < 4 and nc >= 0 and nc < 4:
+				out.append(Vector2i(nr, nc))
+	return out
+
+
+var _g2_conflict_token: int = 0
+
+var _g2_conflict_busy: bool = false
+var _g2_conflict_line: LineCrossConnector = null
+
+
+func _g2_find_conflict_cat(r: int, c: int) -> Vector2i:
+	if _guide_regions.is_empty():
+		return Vector2i(-1, -1)
+	var placed: Array[Vector2i] = []
+	for rr: int in range(4):
+		for cc: int in range(4):
+			if rr == r and cc == c:
+				continue
+			if _board_view.get_cell_state(rr, cc) == CellState.CAT:
+				placed.append(Vector2i(rr, cc))
+	return QueendokuCore.find_priority_conflict_cat(r, c, placed, _guide_regions)
+
+
+func _g2_conflict_rule_cells(r: int, c: int, conflict_pos: Vector2i) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	if _guide_regions.is_empty():
+		return result
+	match QueendokuCore.classify_violation(r, c, [conflict_pos], _guide_regions):
+		QueendokuCore.Rule.SAME_COLOR:
+			var region_id: int = int(_guide_regions[conflict_pos.x][conflict_pos.y])
+			for rr: int in range(4):
+				for cc: int in range(4):
+					if (
+						Vector2i(rr, cc) != conflict_pos
+						and int(_guide_regions[rr][cc]) == region_id
+					):
+						result.append(Vector2i(rr, cc))
+		QueendokuCore.Rule.SAME_LINE:
+			if conflict_pos.x == r:
+				for cc: int in range(mini(c, conflict_pos.y) + 1, maxi(c, conflict_pos.y)):
+					result.append(Vector2i(r, cc))
+			else:
+				for rr: int in range(mini(r, conflict_pos.x) + 1, maxi(r, conflict_pos.x)):
+					result.append(Vector2i(rr, c))
+		QueendokuCore.Rule.NO_TOUCH:
+			for dr: int in range(-1, 2):
+				for dc: int in range(-1, 2):
+					if dr == 0 and dc == 0:
+						continue
+					var p := Vector2i(conflict_pos.x + dr, conflict_pos.y + dc)
+					if p.x >= 0 and p.x < 4 and p.y >= 0 and p.y < 4:
+						result.append(p)
+	return result
+
+
+func _g2_play_conflict(r: int, c: int) -> void:
+	var tok: int = _g2_conflict_token
+	_g2_conflict_busy = true
+	var conflict_pos: Vector2i = _g2_find_conflict_cat(r, c)
+	var target_cell: CellView = _board_view.get_cell_view(r, c)
+	var conflict_cell: CellView = null
+	var rule_cells: Array[Vector2i] = []
+
+	if conflict_pos != Vector2i(-1, -1):
+		conflict_cell = _board_view.get_cell_view(conflict_pos.x, conflict_pos.y)
+		rule_cells = _g2_conflict_rule_cells(r, c, conflict_pos)
+		if target_cell != null:
+			target_cell.play_wrong_pos_reaction(MisplaceReactionConfig.TARGET_REACTION_ANIM_NAME)
+			target_cell.play_grid_glow_named(_G2_CONFLICT_GLOW)
+		if conflict_cell != null:
+			conflict_cell.play_named_anim(MisplaceReactionConfig.CONFLICT_REACTION_ANIM_NAME)
+			conflict_cell.play_grid_glow_named(_G2_CONFLICT_GLOW)
+		for pos: Vector2i in rule_cells:
+			var cv: CellView = _board_view.get_cell_view(pos.x, pos.y)
+			if cv != null:
+				cv.play_grid_glow_named(_G2_CONFLICT_GLOW)
+		_g2_spawn_conflict_line(r, c, conflict_pos, tok)
+
+	await get_tree().create_timer(MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC).timeout
+
+	if tok != _g2_conflict_token:
+		return
+
+	_g2_clear_conflict_visuals(target_cell, conflict_cell, rule_cells)
+
+	_board_view.play_error_feedback(r, c)
+	_mirror_state_to_mask_hint_cell(r, c, CellState.ERROR)
+	_g2_conflict_busy = false
+
+
+func _g2_spawn_conflict_line(r: int, c: int, conflict_pos: Vector2i, tok: int) -> void:
+	get_tree().create_timer(MisplaceReactionConfig.CONFLICT_LINE_DELAY_SEC).timeout.connect(
+		func() -> void:
+			if tok != _g2_conflict_token or not is_instance_valid(self):
+				return
+			var line := _CONFLICT_LINE_SCENE.instantiate() as LineCrossConnector
+			add_child(line)
+			var inv: Transform2D = get_global_transform().affine_inverse()
+			line.setup_points(
+				inv * _board_view.get_cell_global_center(r, c),
+				inv * _board_view.get_cell_global_center(conflict_pos.x, conflict_pos.y)
+			)
+			line.play_effect()
+			_g2_conflict_line = line
 	)
-	grow.tween_method(_set_iq_number, float(old_v), float(new_v), 0.4)
-	await grow.finished
 
 
-## 把 IQ 数值换算成进度条右边界坐标（像素）
-func _iq_fill_right(v: float) -> float:
-	var frac: float = clampf(v / float(IQ_MAX), 0.0, 1.0)
-	return _IQ_BAR_PAD + frac * _IQ_BAR_INNER_W
+func _g2_clear_conflict_visuals(
+	target_cell: CellView, conflict_cell: CellView, rule_cells: Array[Vector2i]
+) -> void:
+	if is_instance_valid(_g2_conflict_line):
+		_g2_conflict_line.queue_free()
+	_g2_conflict_line = null
+
+	if target_cell != null:
+		target_cell.stop_named_anim()
+		target_cell.stop_grid_glow()
+		target_cell.reset_glow_nodes()
+	if conflict_cell != null:
+		conflict_cell.stop_grid_glow()
+		conflict_cell.reset_glow_nodes()
+	for pos: Vector2i in rule_cells:
+		var cv: CellView = _board_view.get_cell_view(pos.x, pos.y)
+		if cv != null:
+			cv.stop_grid_glow()
+			cv.reset_glow_nodes()
 
 
-## 补间回调：写进度条填充宽度
-func _set_iq_fill_right(x: float) -> void:
-	_iq_fill.offset_right = x
+func _g2_cancel_conflict() -> void:
+	_g2_conflict_token += 1
+	_g2_conflict_busy = false
+	if is_instance_valid(_g2_conflict_line):
+		_g2_conflict_line.queue_free()
+	_g2_conflict_line = null
 
 
-## 补间回调：把 IQ 数值写进本地化格式文本
-func _set_iq_number(v: float) -> void:
-	_iq_label.text = tr("TUTORIAL_IQ_FORMAT") % int(round(v))
-
-
-## 从题库 SP 列表里挑出 pattern == "guide" 的教学关，铺到 BoardView，再把所有格子清空
 func _setup_board() -> void:
+	_g2_cancel_conflict()
 	_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sp_levels: Array = BankData.get_sp_levels()
 	var guide_entry: Dictionary = {}
@@ -334,7 +544,8 @@ func _setup_board() -> void:
 		push_error("TutorialPage: SP guide 关卡未找到")
 		return
 	_guide_regions = []
-	for row in guide_entry.get("regionMap", []):
+	var guide_regions: Array = BankData.get_region_map(guide_entry)
+	for row in guide_regions:
 		var int_row: Array = []
 		for v in row:
 			int_row.append(int(v))
@@ -344,12 +555,29 @@ func _setup_board() -> void:
 		_guide_color_map.append(int(v))
 	_board_view.setup(4, _guide_regions, _guide_color_map)
 
-	# 清掉场景里预置的格子状态，教学固定从空盘开始
 	for r in range(4):
 		for c in range(4):
 			var cv: CellView = _board_view.get_cell_view(r, c)
-			if cv != null and cv.get_state() != CellState.EMPTY:
+			if cv == null:
+				continue
+			if cv.get_state() != CellState.EMPTY:
 				cv.change_state({"state": CellState.EMPTY, "play_anim": false})
+
+			cv.resume_cat_idle()
+			cv.modulate = Color.WHITE
+
+			cv.stop_grid_glow()
+
+			cv.reset_glow_nodes()
+	_g2_glow_cells.clear()
+
+	var _guide_intrinsic: Vector2 = BoardView.intrinsic_size_for(4)
+	var _guide_scale: float = _GUIDE_BOARD_WIDTH / _guide_intrinsic.x
+	_board_view.size = _guide_intrinsic
+	_board_view.pivot_offset = Vector2.ZERO
+	_board_view.position = Vector2.ZERO
+	_board_view.scale = Vector2(_guide_scale, _guide_scale)
+	_board_view.apply_compensated_cell_corner_radius()
 
 
 # ================= 教学步骤（按顺序 await） =================
@@ -363,30 +591,30 @@ func _step1_rich_action_line() -> String:
 	return tr("TUTORIAL_STEP1_RICH").format({"breath": breath_seg})
 
 
-## 第 1 步的合并文案：规则说明 + 操作指引（check / iq 分组用）
-func _step1_feedback_combined_msg() -> String:
-	return tr("TUTORIAL_STEP1_ONE_PER_COLOR") + "\n" + _step1_rich_action_line()
+func _step1_message() -> String:
+	if _uses_group3_step1_copy():
+		return tr("TUTORIAL_STEP1_V3")
+	return _step1_rich_action_line()
 
 
-## 第 1 步：只允许点 (0,2) 放第一只猫（双击），完成后收起手势与遮罩
-func _step_1_place_first_cat(override_msg: String = "") -> void:
-	if override_msg != "":
-		_show_message("[center]" + override_msg + "[/center]")
-	else:
-		_show_message("[center]" + _step1_rich_action_line() + "[/center]")
-	var target := Vector2i(0, 2) # 目标格（行, 列）
+func _uses_group3_step1_copy() -> bool:
+	return ABTestManager.nu_guide.is_confirm_step_removed()
+
+
+func _step_1_place_first_cat() -> void:
+	_show_message("[center]" + _step1_message() + "[/center]")
+	var target := Vector2i(0, 2)
 	_allowed_cells = [target]
 	_show_mask_hints([target])
 	_position_hand_at_cell(target)
 	_show_hand()
-	# 切到放猫模式后挂起，等 _step_completed 信号
 	_current_mode = StepMode.PLACE_CAT
 	await _step_completed
 	_current_mode = StepMode.NONE
 	_hide_hand()
 	_clear_mask_hint_cells()
 	_fade_out_mask_layer()
-	await get_tree().create_timer(0.4).timeout
+	await get_tree().create_timer(_STEP_PAUSE_SEC).timeout
 
 
 ## 第 2 步：纯文字确认「每色一只」，点「我知道了」才继续
@@ -427,7 +655,6 @@ func _step_3_mark_row_col() -> void:
 	await get_tree().create_timer(0.4).timeout
 
 
-## 第 4 步：在 (3,1) 放第二只猫；文案按 A/B 分组给真实颜色名或写死的「粉色」
 func _step_4_place_second_cat() -> void:
 	var _pink_msg: String
 	if not ABTestManager.region_color.value() == RegionColorConfig.VALUE_CONTROL:
@@ -436,7 +663,7 @@ func _step_4_place_second_cat() -> void:
 	else:
 		_pink_msg = tr("TUTORIAL_STEP4_PINK_RICH")
 	_show_message("[center]" + _pink_msg + "[/center]")
-	var target := Vector2i(3, 1) # 目标格（行, 列）
+	var target := Vector2i(3, 1)
 
 	var hint_cells: Array[Vector2i] = [target]
 	var mirror_cells: Array[Vector2i] = [Vector2i(2, 2), Vector2i(3, 2)]
@@ -451,17 +678,11 @@ func _step_4_place_second_cat() -> void:
 	_hide_hand()
 	_clear_mask_hint_cells()
 	_fade_out_mask_layer()
-	await get_tree().create_timer(0.4).timeout
+	await get_tree().create_timer(_STEP_PAUSE_SEC).timeout
 
 
-## 第 5 步：一次滑动打掉 3 个八邻接格，文案与手势在两种 A/B 版本间切换
 func _step_5_mark_neighbors() -> void:
-	var step3_key: String = (
-		"TUTORIAL_STEP3_RICH_DIAGONAL"
-		if ABTestManager.tutorial_diagonal.is_diagonal_copy()
-		else "TUTORIAL_STEP3_RICH"
-	)
-	_show_message("[center]" + tr(step3_key) + "[/center]")
+	_show_message("[center]" + tr("TUTORIAL_STEP3_RICH") + "[/center]")
 
 	var cells: Array[Vector2i] = [
 		Vector2i(2, 0),
@@ -518,16 +739,16 @@ func _step_6_place_third_cat() -> void:
 	await get_tree().create_timer(0.4).timeout
 
 
-## 第 7 步：只剩一格，交给玩家自由点；提示按钮可用，摆完即通关
 func _step_7_free_play() -> void:
 	_show_message("[center]" + tr("TUTORIAL_LAST_ONE_RICH") + "[/center]")
-	# 整个教学只剩这一格可点
 	_allowed_cells = [Vector2i(2, 3)]
 	_step7_hint_phase = 0
-	_hint_label.text = tr("TUTORIAL_STEP7_HINT") # 提示按钮上的文案
+	_hint_label.text = tr("TUTORIAL_STEP7_HINT")
 	_show_hint_tool_panel()
 
 	_board_view.clear_hint_cells()
+
+	_flash_on_wrong_tap = false
 	_current_mode = StepMode.FREE_PLAY
 	await _step_completed
 	_current_mode = StepMode.NONE
@@ -537,7 +758,7 @@ func _step_7_free_play() -> void:
 	if _mask_layer.visible:
 		_fade_out_mask_layer()
 	_hide_hint_tool_panel()
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(_FREE_PLAY_COMPLETION_PAUSE_SEC).timeout
 
 
 ## 第 7 步的提示按钮：分三层升级——先排除蓝猫那行、再排除粉猫那行、最后直接代打答案
@@ -591,61 +812,155 @@ func _step7_show_hint() -> void:
 		_show_hand()
 
 
-## 收尾步：显示结束文案与「开始游戏」按钮，确认后调 complete_tutorial()
-func _step_finish(use_fireworks: bool = false) -> void:
+func _step_finish() -> void:
+	if _uses_new_guide_flow() or _uses_group3_step1_copy():
+		await _finish_fast()
+		return
 	_show_message("[center]" + tr("TUTORIAL_STEP6_RICH") + "[/center]")
-	_show_confirm_btn(tr("TUTORIAL_START_GAME")) # 按钮文案：开始游戏
-
-	# iq 分组走烟花结局，其余分组撒彩带
-	if use_fireworks:
-		_anim_effect_fireworks.play("Flreworks")
-
-		# 烟花播完再收 IQ 条
-		_hide_iq_bar_after_fireworks()
-	else:
-		_spawn_confetti()
+	_spawn_confetti()
+	_show_confirm_btn(tr("TUTORIAL_START_GAME"))
+	_track_finish_screen_step()
 	_current_mode = StepMode.CONFIRM
+	var tok: int = _flow_token
 	await _step_completed
+	if _flow_token != tok:
+		return
 	_current_mode = StepMode.NONE
+	_track_completion_step()
 	complete_tutorial()
 
 
-## 烟花动画播完后再收起 IQ 条（只有 iq 分组走这条路）
-func _hide_iq_bar_after_fireworks() -> void:
-	await _anim_effect_fireworks.animation_finished
-	await _play_iq_disappear()
+func _finish_fast() -> void:
+	_spawn_confetti()
+	var tok: int = _flow_token
+	await get_tree().create_timer(_FAST_FINISH_SEC).timeout
+
+	if _flow_token != tok:
+		return
+	_track_completion_step()
+	complete_tutorial(true)
 
 
-## 教学完成：上报耗时、写存档标记，然后跳转正式对局第 1 关
-func complete_tutorial() -> void:
-	# 从 on_show 记下的时刻算起（秒）
+func _track_finish_screen_step() -> void:
+	var finish_screen_step: int = (
+		_FLOW_TRACKING
+		. finish_screen_step(
+			_uses_new_guide_flow(),
+			_uses_group3_step1_copy(),
+		)
+	)
+	if finish_screen_step > 0:
+		_track_guide_step(finish_screen_step)
+
+
+func _track_completion_step() -> void:
+	var completion_step: int = (
+		_FLOW_TRACKING
+		. completion_step(
+			_uses_new_guide_flow(),
+			_uses_group3_step1_copy(),
+		)
+	)
+	if completion_step > 0:
+		_track_guide_step(completion_step)
+
+
+func _track_guide_step(step: int) -> void:
+	Tracker.track_new_guide_step(step)
+
+
+func _uses_new_guide_flow() -> bool:
+	return ABTestManager.nu_guide.is_new_guide_flow()
+
+
+func complete_tutorial(show_pass_toast: bool = false) -> void:
 	var time_sec: float = (Time.get_ticks_msec() - _guide_start_ms) / 1000.0
 	Tracker.track_new_guide_end(1, time_sec)
-	# 写存档标记：下次启动不再进教学
 	GameState.set_tutorial_done(true)
-	# 切到正式对局页，从第 1 关开始
-	UIManager.show_ui(UiName.GAME, {"level_index": 1})
+	var game_params: Dictionary = {"level_index": 1}
+	if show_pass_toast:
+		game_params["from_tutorial"] = true
+	UIManager.show_ui(UiName.GAME, game_params)
+
+	UIManager.hide_ui(UiName.TUTORIAL)
 
 
-# ================= UI 显示与隐藏 =================
-## 把所有临时 UI（面板 / 手势 / 遮罩 / IQ 条）复位成初始的不可见状态
+func skip_tutorial() -> void:
+	if _skip_requested or not _can_skip_tutorial():
+		return
+	_skip_requested = true
+	_flow_token += 1
+	_current_mode = StepMode.NONE
+	_allowed_cells.clear()
+	_step_completed.emit()
+	_g2_cancel_conflict()
+	_g2_clear_glow()
+	_cleanup_g2_hint()
+	if _swipe_hand_tween != null:
+		_stop_swipe_hand_loop()
+	_clear_mask_hint_cells()
+	if _mask_tween != null and _mask_tween.is_valid():
+		_mask_tween.kill()
+	_mask_tween = null
+	if is_instance_valid(_mask_layer):
+		_mask_layer.visible = false
+		_mask_layer.modulate.a = 1.0
+	complete_tutorial(true)
+
+
+func _can_skip_tutorial() -> bool:
+	return ABTestManager.nu_guide.is_skippable()
+
+
+func _sync_skip_button_visibility() -> void:
+	_skip_btn.visible = _can_skip_tutorial()
+
+
 func _reset_ui() -> void:
 	_sub_msg_panel.visible = false
 	_hint_tool_panel.visible = false
+	_hint_btn.visible = false
 	_confirm_btn.visible = false
 	_anim_confirm_loop.stop()
 	_hand_hint.visible = false
 	_select_frame.visible = false
-	_success_check.visible = false
-	_iq_bar.visible = false
 	_mask_layer.visible = false
 	_mask_layer.modulate.a = 1.0
+	_cleanup_g2_hint()
 
 
 ## 显示主提示文案并播出现动画
 func _show_message(text: String) -> void:
 	_msg_rich.text = text
 	_anim_msg_appear_2.play("MessagePanel_appear_2")
+
+
+func _show_g2_message(page: int) -> void:
+	var top_message_key: StringName = _G2_COPY.top_message_key_for_page(page)
+	if top_message_key.is_empty():
+		return
+	_show_message("[center]" + _translated_g2_message(top_message_key) + "[/center]")
+	var bottom_message_key: StringName = _G2_COPY.bottom_message_key_for_page(page)
+	if bottom_message_key.is_empty():
+		_hide_sub_message()
+		return
+	_move_sub_msg_below_board()
+	_show_sub_message("[center]" + _translated_g2_message(bottom_message_key) + "[/center]")
+
+
+func _translated_g2_message(message_key: StringName) -> String:
+	var translated: String = tr(message_key)
+	var color_bbcode: String = _g2_color_bbcode_for_message_key(message_key)
+	if color_bbcode.is_empty():
+		return translated
+	return _G2_COPY.inject_color_bbcode(translated, color_bbcode)
+
+
+func _g2_color_bbcode_for_message_key(message_key: StringName) -> String:
+	var cell: Vector2i = _G2_COPY.color_cell_for_message_key(message_key)
+	if cell.x < 0:
+		return ""
+	return _color_name_bbcode_for_cell(cell.x, cell.y)
 
 
 ## 显示棋盘下方的副提示并播出现动画
@@ -655,13 +970,13 @@ func _show_sub_message(text: String) -> void:
 	_anim_sub_msg_appear.play("SubMsgPanel_appear")
 
 
-## 隐藏副提示
 func _hide_sub_message() -> void:
+	_sub_msg_rich.text = ""
 	_sub_msg_panel.visible = false
 
 
-## 显示第 7 步的提示工具条并播出现动画
 func _show_hint_tool_panel() -> void:
+	_hint_btn.visible = false
 	_hint_tool_panel.visible = true
 	_anim_hint_tool_appear.play("HintToolPanel_appear")
 
@@ -669,6 +984,18 @@ func _show_hint_tool_panel() -> void:
 ## 隐藏提示工具条
 func _hide_hint_tool_panel() -> void:
 	_hint_tool_panel.visible = false
+
+
+func _show_hint_btn() -> void:
+	_hint_tool_panel.visible = false
+	_hint_btn.visible = true
+	_anim_hint_btn_appear.play("RESET")
+	_anim_hint_btn_appear.advance(0.0)
+	_anim_hint_btn_appear.play("HintBtn_appear")
+
+
+func _hide_hint_btn() -> void:
+	_hint_btn.visible = false
 
 
 ## 显示确认按钮、写入按钮文案并播呼吸动画
@@ -705,23 +1032,31 @@ func _position_select_frame(cell: Vector2i) -> void:
 	_select_frame.size = rect.size * s + Vector2(pad * 2.0, pad * 2.0)
 
 
-## 把手势提示挪到指定格：以基准格 (0,2) 的偏移为起点，按格宽逐格累加
-func _position_hand_at_cell(cell: Vector2i) -> void:
-	const BASE_ROW: int = 0
-	const BASE_COL: int = 2
-	const BASE_OFFSET_LEFT: float = 111.0
-	const BASE_OFFSET_TOP: float = -316.0
+const _HAND_BASE_CELL := Vector2i(0, 2)
+const _HAND_BASE_OFFSET := Vector2(111.0, -316.0)
+
+
+func _cell_topleft_rel_center(cell: Vector2i) -> Vector2:
 	var s: float = _board_view.scale.x
-	var slot_screen: float = BoardView.SLOT_PX * s
-	var d_col: float = (cell.y - BASE_COL) * slot_screen
-	var d_row: float = (cell.x - BASE_ROW) * slot_screen
-	_hand_hint.offset_left = BASE_OFFSET_LEFT + d_col
-	_hand_hint.offset_top = BASE_OFFSET_TOP + d_row
-	_hand_hint.offset_right = _hand_hint.offset_left + 110.0
-	_hand_hint.offset_bottom = _hand_hint.offset_top + 120.0
+	return (
+		Vector2(_board_container.offset_left, _board_container.offset_top)
+		+ _board_view.position
+		+ _board_view.cell_to_local_rect(cell.x, cell.y).position * s
+	)
 
 
-## 循环播「滑动打叉」手势：沿给定格子依次平移，最后淡出并从头再来
+func _hand_tip_offset() -> Vector2:
+	return _HAND_BASE_OFFSET - _cell_topleft_rel_center(_HAND_BASE_CELL)
+
+
+func _position_hand_at_cell(cell: Vector2i) -> void:
+	var pos: Vector2 = _cell_topleft_rel_center(cell) + _hand_tip_offset()
+	_hand_hint.offset_left = pos.x
+	_hand_hint.offset_top = pos.y
+	_hand_hint.offset_right = pos.x + 110.0
+	_hand_hint.offset_bottom = pos.y + 120.0
+
+
 func _start_swipe_hand_loop(cells: Array[Vector2i]) -> void:
 	if cells.is_empty():
 		return
@@ -732,20 +1067,14 @@ func _start_swipe_hand_loop(cells: Array[Vector2i]) -> void:
 
 	_hand_spine.visible = false
 	_hand_static.visible = true
-	var s: float = _board_view.scale.x
-	var slot_screen: float = BoardView.SLOT_PX * s
 
+	var hand_tip: Vector2 = _hand_tip_offset()
 	var offsets: Array[Vector2] = []
-	# 逐格算出目标偏移（基准格 (0,2) 的手势位置）
 	for cell in cells:
-		offsets.append(
-			Vector2(111.0 + (cell.y - 2) * slot_screen, -316.0 + (cell.x - 0) * slot_screen)
-		)
-	# 建一条无限循环的时间轴
+		offsets.append(_cell_topleft_rel_center(cell) + hand_tip)
 	var tw := create_tween()
-	tw.set_loops() # 无限循环
+	tw.set_loops()
 
-	# 每段：复位到起点 → 平移 → 停顿，循环播放
 	var off0: Vector2 = offsets[0]
 	tw.tween_callback(
 		func() -> void:
@@ -770,10 +1099,9 @@ func _start_swipe_hand_loop(cells: Array[Vector2i]) -> void:
 		tw.tween_interval(0.1)
 
 	tw.tween_interval(0.15)
-	# 一轮结束：渐隐 + 停顿，循环时由第 0 步复位
 	tw.tween_property(_hand_hint, "modulate:a", 0.0, 0.2)
 	tw.tween_interval(0.35)
-	_swipe_hand_tween = tw # 存下来，_stop_swipe_hand_loop 要 kill 它
+	_swipe_hand_tween = tw
 
 
 ## 停掉滑动手势补间，并把静态手图换回 Spine 手
@@ -809,29 +1137,38 @@ func _show_mask_hints(cells: Array[Vector2i], mirror_cells: Array[Vector2i] = []
 		_fade_in_mask_layer()
 
 
-## 复制一个格子到遮罩层：同步位置、缩放、圆角与区域色，并登记进 _mask_hint_cells
 func _instantiate_mask_temp(cell: Vector2i) -> CellView:
 	var s: float = _board_view.scale.x
 	var local_rect: Rect2 = _board_view.cell_to_local_rect(cell.x, cell.y)
 	var top_left: Vector2 = _board_container.position + local_rect.position * s
 
 	var src: CellView = _board_view.get_cell_view(cell.x, cell.y)
+	var should_freeze_idle: bool = _uses_new_guide_flow()
 	var temp: CellView = _CELL_SCENE.instantiate() as CellView
 
-	# 位置与缩放都按棋盘缩放换算，保证和棋盘上的格子像素对齐
 	temp.pivot_offset_ratio = Vector2.ZERO
 	temp.pivot_offset = Vector2.ZERO
 	temp.position = top_left
 	temp.scale = Vector2(s, s)
 
-	# 遮罩格只做展示，不吃输入
 	temp.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_mask_layer.add_child(temp)
 
-	temp.set_corner_radius_compensated(s)
+	temp.set_corner_radius_compensated(s, _board_view.get_puzzle_size())
+
+	temp.set_round_corners(_board_view.corner_round_mask_for(cell.x, cell.y))
+
+	temp.apply_cell_face_px(float(_board_view.get_grid_cell_face_px()))
+
+	temp.apply_cross_art_variant()
 	if src != null:
 		temp.set_region_color(src.get_region_color())
-	_mask_hint_cells[cell] = temp # 登记，之后同步状态或统一释放
+		if should_freeze_idle:
+			src.freeze_cat_idle()
+			_mask_frozen_source_cells[cell] = true
+	if should_freeze_idle:
+		temp.freeze_cat_idle()
+	_mask_hint_cells[cell] = temp
 	return temp
 
 
@@ -849,11 +1186,15 @@ func _spawn_mask_mirror_cell(cell: Vector2i) -> void:
 		temp.change_state({"state": src.get_state(), "play_anim": false})
 
 
-## 释放所有遮罩格并清空登记表
 func _clear_mask_hint_cells() -> void:
 	for key in _mask_hint_cells.keys():
+		if _mask_frozen_source_cells.has(key):
+			var src: CellView = _board_view.get_cell_view(key.x, key.y)
+			if src != null:
+				src.resume_cat_idle()
 		(_mask_hint_cells[key] as CellView).queue_free()
 	_mask_hint_cells.clear()
+	_mask_frozen_source_cells.clear()
 
 
 ## 棋盘某格状态变了，同步给遮罩层里的同名副本
@@ -863,21 +1204,15 @@ func _mirror_state_to_mask_hint_cell(r: int, c: int, state: int) -> void:
 		(_mask_hint_cells[key] as CellView).change_state({"state": state})
 
 
-## 淡入遮罩层（0.12 秒）
 func _fade_in_mask_layer() -> void:
 	if _mask_tween != null and _mask_tween.is_valid():
 		_mask_tween.kill()
-	# 先归零再淡入，重复调用也不会跳变
 	_mask_layer.modulate.a = 0.0
 	_mask_layer.visible = true
-	# 遮罩压暗后把 IQ 数字换成金色，否则看不清
-	if _iq_bar.visible:
-		_iq_label.add_theme_color_override("font_color", Color(1, 0.8, 0, 1))
 	_mask_tween = create_tween()
 	_mask_tween.tween_property(_mask_layer, "modulate:a", 1.0, 0.12)
 
 
-## 淡出遮罩层，结束时隐藏并恢复 IQ 数字颜色
 func _fade_out_mask_layer() -> void:
 	if not _mask_layer.visible:
 		return
@@ -885,13 +1220,10 @@ func _fade_out_mask_layer() -> void:
 		_mask_tween.kill()
 	_mask_tween = create_tween()
 	_mask_tween.tween_property(_mask_layer, "modulate:a", 0.0, 0.12)
-	# 淡出结束的回调：隐藏遮罩、还原透明度、恢复 IQ 数字颜色
 	_mask_tween.tween_callback(
 		func() -> void:
 			_mask_layer.visible = false
 			_mask_layer.modulate.a = 1.0
-			if _iq_bar.visible:
-				_iq_label.add_theme_color_override("font_color", Color(0.576, 0.353, 0.353, 1))
 	)
 
 
@@ -928,8 +1260,6 @@ func _spawn_confetti() -> void:
 		tw.tween_callback(rect.queue_free)
 
 
-# ================= 玩家输入 =================
-## 提示工具条的点击处理：只有第 7 步自由阶段才响应
 func _on_hint_tool_panel_gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton):
 		return
@@ -938,8 +1268,176 @@ func _on_hint_tool_panel_gui_input(event: InputEvent) -> void:
 		return
 	if _current_mode != StepMode.FREE_PLAY:
 		return
+	if ABTestManager.nu_guide.is_new_guide_flow():
+		_show_g2_game_hint()
+	else:
+		_step7_show_hint()
 
-	_step7_show_hint()
+
+func _on_hint_btn_pressed() -> void:
+	if _current_mode != StepMode.FREE_PLAY:
+		return
+	if not ABTestManager.nu_guide.is_new_guide_flow():
+		return
+	_show_g2_game_hint()
+
+
+func _show_g2_game_hint() -> void:
+	if _hint_overlay.visible or not _g2_hint_data.is_empty():
+		return
+	var solution: Array = []
+	for r: int in range(4):
+		var row: Array[bool] = []
+		row.resize(4)
+		row.fill(false)
+		solution.append(row)
+	for cell: Vector2i in TUTORIAL_SOLUTION:
+		(solution[cell.x] as Array)[cell.y] = true
+	_g2_hint_data = (
+		_G2_COPY
+		. find_next_hint(
+			_board_view.get_cell_state_folded_board(),
+			_guide_regions,
+			solution,
+			ABTestManager.hint_func.has_color_exclude(),
+			ABTestManager.hint_func.has_reverse_set_locking(),
+		)
+	)
+	if not _g2_hint_data.get("found", false):
+		_g2_hint_data = {}
+		return
+	_show_g2_hint_cells(_g2_hint_data)
+	SoundManager.play(SoundManager.Kind.USE_HINT)
+	_hint_overlay.show_hint(_g2_hint_data)
+
+
+func _show_g2_hint_cells(hint: Dictionary) -> void:
+	_clear_g2_hint_highlights()
+	_board_view.clear_hint_cells()
+	_g2_hint_highlight_layer = CanvasLayer.new()
+	_g2_hint_highlight_layer.name = "G2HintHighlightLayer"
+	_g2_hint_highlight_layer.layer = _hint_overlay.layer + 1
+	add_child(_g2_hint_highlight_layer)
+
+	var strategy: String = hint.get("strategy", "")
+	if strategy == "R1_mark":
+		var cat_cell: Vector2i = hint.get("cat_cell", Vector2i(-1, -1))
+		if cat_cell.x >= 0 and cat_cell.y >= 0:
+			var cat_copy: CellView = _spawn_g2_hint_temp_cell(cat_cell)
+			cat_copy.play_hint()
+		var mark_index: int = 0
+		var mark_cells: Array = hint.get("unit_cells", [])
+		for cell_value: Variant in mark_cells:
+			var mark_cell: Vector2i = cell_value as Vector2i
+			var mark_copy: CellView = _spawn_g2_hint_temp_cell(mark_cell)
+			mark_copy.play_r2_preview(mark_index * 0.06)
+			mark_index += 1
+	elif hint.has("cell"):
+		var target_cell: Vector2i = hint.get("cell", Vector2i(-1, -1))
+		if target_cell.x >= 0 and target_cell.y >= 0:
+			var target_copy: CellView = _spawn_g2_hint_temp_cell(target_cell)
+			target_copy.play_hint()
+	else:
+		var highlight_cells: Array = hint.get("highlight_cells", [])
+		for cell_value: Variant in highlight_cells:
+			var highlight_cell: Vector2i = cell_value as Vector2i
+			var highlight_copy: CellView = _spawn_g2_hint_temp_cell(highlight_cell)
+			highlight_copy.play_hint()
+
+
+func _spawn_g2_hint_temp_cell(cell: Vector2i) -> CellView:
+	var board_scale: float = _board_view.scale.x
+	var local_rect: Rect2 = _board_view.cell_to_local_rect(cell.x, cell.y)
+	var top_left: Vector2 = _board_view.global_position + local_rect.position * board_scale
+	var source: CellView = _board_view.get_cell_view(cell.x, cell.y)
+	var temp: CellView = _CELL_SCENE.instantiate() as CellView
+	temp.name = "TempCell_%d_%d" % [cell.x, cell.y]
+	temp.pivot_offset_ratio = Vector2.ZERO
+	temp.pivot_offset = Vector2.ZERO
+	temp.position = top_left
+	temp.scale = Vector2(board_scale, board_scale)
+	temp.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_g2_hint_highlight_layer.add_child(temp)
+	temp.set_corner_radius_compensated(board_scale, _board_view.get_puzzle_size())
+	temp.set_round_corners(_board_view.corner_round_mask_for(cell.x, cell.y))
+	temp.apply_cell_face_px(float(_board_view.get_grid_cell_face_px()))
+	temp.apply_cross_art_variant()
+	if source != null:
+		temp.set_region_color(source.get_region_color())
+		if source.get_pattern_tex() != null:
+			temp.configure_pattern(source.get_pattern_tex(), source.get_pattern_color())
+			temp.set_pattern_mode(source.is_pattern_on(), true)
+		var source_state: int = source.get_state()
+		if not CellState.is_blank(source_state):
+			var view_state: int = CellState.CAT if source_state == CellState.CAT else CellState.MARK
+			temp.change_state({"state": view_state, "play_anim": false})
+	return temp
+
+
+func _clear_g2_hint_highlights() -> void:
+	if _g2_hint_highlight_layer == null:
+		return
+	if _g2_hint_highlight_layer.is_inside_tree():
+		_g2_hint_highlight_layer.get_parent().remove_child(_g2_hint_highlight_layer)
+	_g2_hint_highlight_layer.queue_free()
+	_g2_hint_highlight_layer = null
+
+
+func _on_g2_hint_applied() -> void:
+	if not ABTestManager.nu_guide.is_new_guide_flow() or _g2_hint_data.is_empty():
+		return
+	var actions: Array[Dictionary] = (
+		_G2_COPY
+		. hint_actions(
+			_g2_hint_data,
+			_board_view.get_cell_state_folded_board(),
+			_guide_regions,
+		)
+	)
+	var applied_state: int = CellState.EMPTY
+	for action: Dictionary in actions:
+		var cell: Vector2i = action.get("cell", Vector2i(-1, -1))
+		var state: int = action.get("state", CellState.EMPTY)
+		if cell.x < 0:
+			continue
+		(
+			_board_view
+			. set_cell_state(
+				cell.x,
+				cell.y,
+				state,
+				true,
+				true,
+				BoardView.ChangeSource.HINT,
+			)
+		)
+		applied_state = state
+	if applied_state == CellState.CAT:
+		VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_CAT)
+	elif applied_state == CellState.MARK:
+		VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
+	elif not actions.is_empty():
+		VibrateManager.play_at(VibrateManager.Pos.HINT_CLEAR)
+	_cleanup_g2_hint()
+	_check_free_play_complete()
+
+
+func _on_g2_hint_dismissed() -> void:
+	_cleanup_g2_hint()
+
+
+func _on_g2_hint_detail_requested() -> void:
+	_hint_overlay.update_desc(_g2_hint_data.get("description", ""))
+	_hint_overlay.show_dismiss_btn()
+
+
+func _cleanup_g2_hint() -> void:
+	if _hint_overlay != null:
+		_hint_overlay.visible = false
+	_clear_g2_hint_highlights()
+	if _board_view != null:
+		_board_view.clear_hint_cells()
+	_g2_hint_data = {}
 
 
 ## 确认按钮回调（场景里接的是 tag_pressed 信号）：只有 CONFIRM 模式放行
@@ -957,134 +1455,223 @@ func _is_allowed(r: int, c: int) -> bool:
 	return false
 
 
-## 拖拽开始：记下起点格，并决定这次拖拽是「打叉」还是「擦除」
 func _on_board_cell_drag_start(pos: Vector2) -> void:
 	var cell: Vector2i = _board_view.pointer_to_cell(pos.x, pos.y)
 	if cell.x < 0:
 		return
-	# 注意 pointer_to_cell 返回的是 Vector2i(列, 行)
-	var r: int = cell.y
-	var c: int = cell.x
-	# 不在任何步骤模式，或点到已落定的猫：直接忽略
-	if _current_mode == StepMode.NONE or _board_view.get_cell_state(r, c) == CellState.CAT:
+	var row: int = cell.y
+	var column: int = cell.x
+	var start_state: int = _board_view.get_cell_state(row, column)
+
+	if _current_mode == StepMode.NONE or start_state == CellState.ERROR:
+		return
+	var can_seed_from_cat: bool = (
+		start_state == CellState.CAT and _current_mode in [StepMode.MARK_CELLS, StepMode.FREE_PLAY]
+	)
+	if start_state == CellState.CAT and not can_seed_from_cat:
 		return
 
-	# 第 7 步给过提示后只认提示圈定的格子；其他模式一律按 _allowed_cells 白名单
 	if _current_mode == StepMode.FREE_PLAY and _step7_hint_phase > 0:
-		if not _is_allowed(r, c):
+		if not can_seed_from_cat and not _is_allowed(row, column):
 			return
-	elif _current_mode != StepMode.FREE_PLAY and not _is_allowed(r, c):
+	elif (
+		_current_mode != StepMode.FREE_PLAY
+		and not can_seed_from_cat
+		and not _is_allowed(row, column)
+	):
 		return
-	_drag_start_cell = Vector2i(r, c) # 记下起点（行, 列）
+	_drag_start_cell = Vector2i(row, column)
+	_drag_last_cell = _drag_start_cell
 	_drag_had_move = false
+	_drag_start_processed = false
+	_drag_target_pending = false
 
-	# 阶段 0 / 3 是自由涂改：空白格盖叉，已有叉的格子擦掉
 	if _current_mode == StepMode.FREE_PLAY and (_step7_hint_phase == 0 or _step7_hint_phase == 3):
-		var cur: int = _board_view.get_cell_state(r, c)
-		_drag_target_state = CellState.MARK if CellState.is_blank(cur) else CellState.EMPTY # 空白 → 盖叉；已有叉 → 擦掉
+		if start_state == CellState.CAT:
+			_drag_target_pending = true
+		else:
+			_drag_target_state = (
+				CellState.MARK if CellState.is_blank(start_state) else CellState.EMPTY
+			)
+	if ABTestManager.guide_eliminate.is_press_aligned():
+		var mode_before_tap: int = _current_mode
+		var hint_phase_before_tap: int = _step7_hint_phase
+		var marked_count_before_tap: int = _marked_count
+		_drag_start_processed = true
+		var consumed_double_tap: bool = _dispatch_tap(row, column)
+		var completed_mark_step: bool = (
+			mode_before_tap == StepMode.MARK_CELLS
+			and _required_marks > 0
+			and marked_count_before_tap < _required_marks
+			and _marked_count >= _required_marks
+		)
+		var interaction_advanced: bool = _interaction_advanced(
+			mode_before_tap, hint_phase_before_tap
+		)
+		if consumed_double_tap or completed_mark_step or interaction_advanced:
+			_reset_drag_gesture()
 
 
-## 拖拽经过格子：按当前模式实时改状态，并同步遮罩层副本
 func _on_board_cell_drag_over(pos: Vector2) -> void:
 	var cell: Vector2i = _board_view.pointer_to_cell(pos.x, pos.y)
 	if cell.x < 0:
 		return
-	var r: int = cell.y
-	var c: int = cell.x
-	# 起点是 (-1,-1) 说明没落在棋盘内：忽略
+	var stop_when_interaction_advances: bool = ABTestManager.guide_eliminate.is_press_aligned()
+	var mode_before_motion: int = _current_mode
+	var hint_phase_before_motion: int = _step7_hint_phase
+	var row: int = cell.y
+	var column: int = cell.x
 	if _drag_start_cell == Vector2i(-1, -1):
 		return
-	# 拖过别的格子就只算拖拽，不再当作单击
-	if Vector2i(r, c) != _drag_start_cell:
+	var current_cell := Vector2i(row, column)
+	if current_cell != _drag_start_cell:
 		_drag_had_move = true
+	var row_delta: int = current_cell.x - _drag_last_cell.x
+	var column_delta: int = current_cell.y - _drag_last_cell.y
+	var step_count: int = maxi(absi(row_delta), absi(column_delta))
+	var first_step: int = 0 if not _drag_start_processed else 1
+	if step_count == 0:
+		if not _drag_start_processed:
+			_apply_drag_cell(current_cell.x, current_cell.y, true)
+			if (
+				stop_when_interaction_advances
+				and _interaction_advanced(mode_before_motion, hint_phase_before_motion)
+			):
+				_reset_drag_gesture()
+				return
+	else:
+		for step in range(first_step, step_count + 1):
+			var path_row: int = (
+				_drag_last_cell.x + int(roundi(float(row_delta) * step / step_count))
+			)
+			var path_column: int = (
+				_drag_last_cell.y + int(roundi(float(column_delta) * step / step_count))
+			)
+			_apply_drag_cell(path_row, path_column, step == step_count)
+			if (
+				stop_when_interaction_advances
+				and _interaction_advanced(mode_before_motion, hint_phase_before_motion)
+			):
+				_reset_drag_gesture()
+				return
+	_drag_last_cell = current_cell
+	_drag_start_processed = true
 
-	# 打叉步骤：只认白名单里的空格
-	if _current_mode == StepMode.MARK_CELLS and _is_allowed(r, c):
-		if CellState.is_blank(_board_view.get_cell_state(r, c)):
-			_board_view.set_cell_state(r, c, CellState.MARK)
-			_mirror_state_to_mask_hint_cell(r, c, CellState.MARK)
-			VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
-			_marked_count += 1 # 进度 +1
+
+func _apply_drag_cell(row: int, column: int, is_current: bool) -> void:
+	if _current_mode == StepMode.MARK_CELLS and _is_allowed(row, column):
+		if CellState.is_blank(_board_view.get_cell_state(row, column)):
+			_board_view.set_cell_state(row, column, CellState.MARK)
+			_mirror_state_to_mask_hint_cell(row, column, CellState.MARK)
+			_g2_stop_glow_at(row, column)
+			if is_current:
+				VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
+			_marked_count += 1
 			if _marked_count >= _required_marks:
-				_step_completed.emit() # 打满即完成这一步
+				_step_completed.emit()
 
-	# 自由阶段 + 提示阶段 1 / 2：只允许在提示格上打叉
 	elif _current_mode == StepMode.FREE_PLAY and (_step7_hint_phase == 1 or _step7_hint_phase == 2):
-		if _is_allowed(r, c) and CellState.is_blank(_board_view.get_cell_state(r, c)):
-			_board_view.set_cell_state(r, c, CellState.MARK)
-			_mirror_state_to_mask_hint_cell(r, c, CellState.MARK)
-			VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+		if _is_allowed(row, column) and CellState.is_blank(_board_view.get_cell_state(row, column)):
+			_board_view.set_cell_state(row, column, CellState.MARK)
+			_mirror_state_to_mask_hint_cell(row, column, CellState.MARK)
+			if is_current:
+				VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
 			_step7_check_phase_complete()
 
-	# 自由阶段 + 阶段 0 / 3：按拖拽开始时定下的目标状态刷格子
 	elif _current_mode == StepMode.FREE_PLAY and (_step7_hint_phase == 0 or _step7_hint_phase == 3):
-		var cur: int = _board_view.get_cell_state(r, c)
-		if cur == CellState.CAT or cur == _drag_target_state:
+		var current_state: int = _board_view.get_cell_state(row, column)
+
+		if current_state == CellState.CAT or current_state == CellState.ERROR:
 			return
-		_board_view.set_cell_state(r, c, _drag_target_state)
-		_mirror_state_to_mask_hint_cell(r, c, _drag_target_state)
-		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+		if _drag_target_pending:
+			_drag_target_state = (
+				CellState.MARK if CellState.is_blank(current_state) else CellState.EMPTY
+			)
+			_drag_target_pending = false
+		if current_state == _drag_target_state:
+			return
+		_board_view.set_cell_state(row, column, _drag_target_state)
+		_mirror_state_to_mask_hint_cell(row, column, _drag_target_state)
+		if is_current:
+			VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
 
 
-## 拖拽结束：没有移动过就当成单击，按当前模式分派给对应处理
-func _on_board_cell_drag_end() -> void:
+func _on_board_cell_drag_end(release_pos: Vector2 = Vector2(-1.0, -1.0)) -> void:
 	if _drag_start_cell == Vector2i(-1, -1):
 		return
-	# 拖动过就只算拖拽，不触发点击
+	if ABTestManager.guide_eliminate.is_press_aligned():
+		_reset_drag_gesture()
+		return
+	var release_cell: Vector2i = _board_view.pointer_to_cell(release_pos.x, release_pos.y)
+	var release_row_column := Vector2i(release_cell.y, release_cell.x)
+	if release_cell.x >= 0 and release_row_column != _drag_last_cell:
+		_on_board_cell_drag_over(release_pos)
 	if _drag_had_move:
-		_drag_start_cell = Vector2i(-1, -1)
-		_drag_had_move = false
+		_reset_drag_gesture()
 		return
 
-	var r: int = _drag_start_cell.x
-	var c: int = _drag_start_cell.y
-	_drag_start_cell = Vector2i(-1, -1)
-	_drag_had_move = false
+	var row: int = _drag_start_cell.x
+	var column: int = _drag_start_cell.y
+	_reset_drag_gesture()
+	_dispatch_tap(row, column)
 
-	# 单击按当前模式分派
+
+func _dispatch_tap(row: int, column: int) -> bool:
+	if _board_view.get_cell_state(row, column) == CellState.CAT:
+		return false
+
+	var matched_double_tap_window: bool = _last_tap_cell == Vector2i(row, column)
+	_log_double_tap_interval(row, column)
 	match _current_mode:
 		StepMode.MARK_CELLS:
-			_handle_mark_tap(r, c)
+			_handle_mark_tap(row, column)
 		StepMode.PLACE_CAT:
-			_handle_place_cat_tap(r, c)
+			_handle_place_cat_tap(row, column)
 		StepMode.FREE_PLAY:
-			_handle_free_play_tap(r, c)
+			_handle_free_play_tap(row, column)
+	return matched_double_tap_window and _last_tap_cell != Vector2i(row, column)
 
 
-# ================= 单击处理与通关判定 =================
-## 打叉模式单击：空白格盖叉，攒够 _required_marks 即算这一步完成
+func _reset_drag_gesture() -> void:
+	_drag_start_cell = Vector2i(-1, -1)
+	_drag_last_cell = Vector2i(-1, -1)
+	_drag_had_move = false
+	_drag_target_pending = false
+	_drag_start_processed = false
+
+
+func _interaction_advanced(mode_before: int, hint_phase_before: int) -> bool:
+	return mode_before != _current_mode or hint_phase_before != _step7_hint_phase
+
+
 func _handle_mark_tap(r: int, c: int) -> void:
 	if not CellState.is_blank(_board_view.get_cell_state(r, c)):
 		return
 	_board_view.set_cell_state(r, c, CellState.MARK)
 	_mirror_state_to_mask_hint_cell(r, c, CellState.MARK)
-	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+	_g2_stop_glow_at(r, c)
+	VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
 	_marked_count += 1
 	if _marked_count >= _required_marks:
 		_step_completed.emit()
 
 
-## 放猫模式单击：0.35 秒内连点同一格两次才落猫
 func _handle_place_cat_tap(r: int, c: int) -> void:
-	# 第二次点到同一格才算确认，避免误触
 	if _last_tap_cell == Vector2i(r, c):
 		_last_tap_cell = Vector2i(-1, -1)
+
+		_g2_stop_glow_at(r, c)
 		_place_cat(r, c)
-		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL3)
+		VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_CAT)
 		_step_completed.emit()
-	# 第一次点：先记下来，超时作废
 	else:
-		_last_tap_cell = Vector2i(r, c)
-		get_tree().create_timer(0.35).timeout.connect(
-			func() -> void:
-				if _last_tap_cell == Vector2i(r, c):
-					_last_tap_cell = Vector2i(-1, -1)
-		)
+		_open_double_tap_window(r, c, true)
 
 
-## 自由阶段单击：提示阶段 1 / 2 只打叉，其余双击落猫、单击涂改
 func _handle_free_play_tap(r: int, c: int) -> void:
-	# 提示阶段：在提示格上打叉 / 取消叉，全部打满才进入下一层
+	if _g2_conflict_busy:
+		return
+
 	if _step7_hint_phase == 1 or _step7_hint_phase == 2:
 		if not _is_allowed(r, c):
 			return
@@ -1092,7 +1679,7 @@ func _handle_free_play_tap(r: int, c: int) -> void:
 		if CellState.is_blank(state):
 			_board_view.set_cell_state(r, c, CellState.MARK)
 			_mirror_state_to_mask_hint_cell(r, c, CellState.MARK)
-			VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+			VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
 		elif state == CellState.MARK:
 			_board_view.set_cell_state(r, c, CellState.EMPTY)
 			_mirror_state_to_mask_hint_cell(r, c, CellState.EMPTY)
@@ -1100,20 +1687,22 @@ func _handle_free_play_tap(r: int, c: int) -> void:
 		_step7_check_phase_complete()
 		return
 
-	# 其余阶段：白名单格双击落猫，白名单外的格子单击涂改
 	if _is_allowed(r, c):
 		if _last_tap_cell == Vector2i(r, c):
 			_last_tap_cell = Vector2i(-1, -1)
 			_place_cat(r, c)
-			VibrateManager.play_vibrate(VibrateManager.Level.LEVEL3)
+
+			_mirror_state_to_mask_hint_cell(r, c, CellState.CAT)
+			VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_CAT)
 			_check_free_play_complete()
 		else:
-			_last_tap_cell = Vector2i(r, c)
-			get_tree().create_timer(0.35).timeout.connect(
-				func() -> void:
-					if _last_tap_cell == Vector2i(r, c):
-						_last_tap_cell = Vector2i(-1, -1)
-			)
+			_open_double_tap_window(r, c, true)
+	elif _flash_on_wrong_tap and _last_tap_cell == Vector2i(r, c):
+		_last_tap_cell = Vector2i(-1, -1)
+		if _board_view.get_cell_state(r, c) == CellState.MARK:
+			_board_view.set_cell_state(r, c, CellState.EMPTY)
+			_mirror_state_to_mask_hint_cell(r, c, CellState.EMPTY)
+		_g2_play_conflict(r, c)
 	else:
 		_do_single_tap_toggle(r, c)
 
@@ -1135,21 +1724,18 @@ func _step7_check_phase_complete() -> void:
 	_show_message("[center]" + tr("TUTORIAL_LAST_ONE_RICH") + "[/center]")
 
 
-## 再点一次提示按钮：直接把当前阶段的答案代打掉（打叉或落猫）
 func _apply_step7_hint() -> void:
-	# 阶段 1 / 2：把该阶段所有空格直接代打上叉
 	if _step7_hint_phase == 1 or _step7_hint_phase == 2:
 		for cell in _allowed_cells:
 			if CellState.is_blank(_board_view.get_cell_state(cell.x, cell.y)):
 				_board_view.set_cell_state(cell.x, cell.y, CellState.MARK)
 				_mirror_state_to_mask_hint_cell(cell.x, cell.y, CellState.MARK)
-		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+		VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
 		_step7_check_phase_complete()
-	# 阶段 3：直接把最后一只猫落好
 	elif _step7_hint_phase == 3:
 		var target := Vector2i(2, 3)
 		_place_cat(target.x, target.y)
-		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL3)
+		VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_CAT)
 		_step7_hint_phase = 0
 		_hide_hand()
 		_clear_mask_hint_cells()
@@ -1158,23 +1744,76 @@ func _apply_step7_hint() -> void:
 		_check_free_play_complete()
 
 
-## 自由阶段单击非答案格：在「叉」和「空」之间切换，并记录连点时间窗
 func _do_single_tap_toggle(r: int, c: int) -> void:
-	# 当前状态决定这次点击是盖叉还是擦掉
 	var cur: int = _board_view.get_cell_state(r, c)
 	if CellState.is_blank(cur):
 		_board_view.set_cell_state(r, c, CellState.MARK)
 		_mirror_state_to_mask_hint_cell(r, c, CellState.MARK)
-		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+		VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_MARK)
 	elif cur == CellState.MARK:
 		_board_view.set_cell_state(r, c, CellState.EMPTY)
 		_mirror_state_to_mask_hint_cell(r, c, CellState.EMPTY)
+
+	_open_double_tap_window(r, c, false)
+
+
+func _open_double_tap_window(r: int, c: int, on_solution_cat: bool) -> void:
+	_double_tap_window_generation += 1
+	var generation: int = _double_tap_window_generation
 	_last_tap_cell = Vector2i(r, c)
-	get_tree().create_timer(0.35).timeout.connect(
+	var sec: float = _double_tap_window_sec(r, c, on_solution_cat)
+	_last_window_sec = sec
+	_dbg_win_open_ms = Time.get_ticks_msec()
+	_dbg_win_open_cell = Vector2i(r, c)
+	get_tree().create_timer(sec).timeout.connect(
 		func() -> void:
+			if generation != _double_tap_window_generation:
+				return
 			if _last_tap_cell == Vector2i(r, c):
 				_last_tap_cell = Vector2i(-1, -1)
 	)
+
+
+func _reset_double_tap_window() -> void:
+	_double_tap_window_generation += 1
+	_last_tap_cell = Vector2i(-1, -1)
+	_dbg_win_open_ms = -1
+	_dbg_win_open_cell = Vector2i(-1, -1)
+
+
+func _double_tap_window_sec(r: int, c: int, on_solution_cat: bool) -> float:
+	var cfg := ABTestManager.doubletap_protect
+	var truth_has_cat: bool = cfg.needs_truth() and on_solution_cat
+	var would_conflict: bool = cfg.needs_conflict() and _would_cat_conflict(r, c)
+	return cfg.window_sec(truth_has_cat, would_conflict)
+
+
+func _would_cat_conflict(r: int, c: int) -> bool:
+	if _guide_regions.is_empty():
+		return false
+	var placed: Array = []
+	for rr in range(4):
+		for cc in range(4):
+			if _board_view.get_cell_state(rr, cc) == CellState.CAT:
+				placed.append(Vector2i(rr, cc))
+	return QueendokuCore.classify_violation(r, c, placed, _guide_regions) != QueendokuCore.Rule.NONE
+
+
+func _log_double_tap_interval(r: int, c: int) -> void:
+	if r < 0 or OS.has_feature("rel"):
+		return
+	if _dbg_win_open_ms < 0 or _dbg_win_open_cell != Vector2i(r, c):
+		return
+	var interval: int = Time.get_ticks_msec() - _dbg_win_open_ms
+	var hit: bool = _last_tap_cell == Vector2i(r, c)
+	print(
+		(
+			"[doubletap][tutorial] cell=(%d,%d) interval=%dms window=%dms → %s"
+			% [r, c, interval, int(round(_last_window_sec * 1000.0)), "HIT" if hit else "MISS"]
+		)
+	)
+	_dbg_win_open_ms = -1
+	_dbg_win_open_cell = Vector2i(-1, -1)
 
 
 ## 往格子里落猫：先清掉同格的叉，格子非空则不动
@@ -1186,13 +1825,11 @@ func _place_cat(r: int, c: int) -> void:
 	_board_view.set_cell_state(r, c, CellState.CAT)
 
 
-## 自由阶段通关判定：TUTORIAL_SOLUTION 四格都是猫就震动并发射步骤完成信号
 func _check_free_play_complete() -> void:
 	for sol in TUTORIAL_SOLUTION:
 		if _board_view.get_cell_state(sol.x, sol.y) != CellState.CAT:
 			return
-	# 最强一档震动
-	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL5) # 最强一档震动
+	VibrateManager.play_at(VibrateManager.Pos.TUTORIAL_WIN)
 	_step_completed.emit()
 
 
@@ -1270,7 +1907,6 @@ func _color_name_bbcode_for_cell(r: int, c: int) -> String:
 	return "[color=%s]%s[/color]" % [hex, name]
 
 
-## 在预置色表里找最接近的颜色名（比较 RGB 距离平方，省一次开方）
 func _nearest_color_name(color: Color) -> String:
 	var known: Array = [
 		[Color("#CBCB24"), tr("COLOR_OLIVE_YELLOW")],
@@ -1327,8 +1963,72 @@ func _nearest_color_name(color: Color) -> String:
 		[Color("#45b7b3"), tr("COLOR_TEAL")],
 		[Color("#dd8240"), tr("COLOR_ORANGE")],
 		[Color("#e4699c"), tr("COLOR_ROSE")],
+		[Color("#d3d551"), tr("COLOR_OLIVE_YELLOW")],
+		[Color("#d86c90"), tr("COLOR_ROSE")],
+		[Color("#767ae4"), tr("COLOR_PURPLE")],
+		[Color("#e57ee0"), tr("COLOR_MAGENTA")],
+		[Color("#e76f58"), tr("COLOR_ORANGE")],
+		[Color("#dccf95"), tr("COLOR_YELLOW")],
+		[Color("#7284b3"), tr("COLOR_DARK_BLUE")],
+		[Color("#c0d1dc"), tr("COLOR_LIGHT_BLUE")],
+		[Color("#399295"), tr("COLOR_TEAL")],
+		[Color("#459a5e"), tr("COLOR_DARK_GREEN")],
+		[Color("#99dbb1"), tr("COLOR_GREEN")],
+		[Color("#a67b63"), tr("COLOR_BROWN")],
+		[Color("#dc9e7c"), tr("COLOR_TAN")],
+		[Color("#9d9041"), tr("COLOR_OLIVE_YELLOW")],
+		[Color("#97cf7e"), tr("COLOR_GREEN")],
+		[Color("#618f74"), tr("COLOR_DARK_GREEN")],
+		[Color("#60d8d3"), tr("COLOR_TEAL")],
+		[Color("#76a9cc"), tr("COLOR_SKY_BLUE")],
+		[Color("#6881d0"), tr("COLOR_DARK_BLUE")],
+		[Color("#aa68e5"), tr("COLOR_PURPLE")],
+		[Color("#d899e4"), tr("COLOR_VIOLET")],
+		[Color("#e55ca6"), tr("COLOR_MAGENTA")],
+		[Color("#bb7e93"), tr("COLOR_ROSE")],
+		[Color("#dc5b6a"), tr("COLOR_RED")],
 	]
-	# 线性扫描取距离最小的那个名字
+
+	if ABTestManager.region_color.is_palette_v13():
+		(
+			known
+			. append_array(
+				[
+					[Color("#aed994"), tr("COLOR_LIGHT_GREEN")],
+					[Color("#fab4d0"), tr("COLOR_LIGHT_PINK")],
+					[Color("#e4bb49"), tr("COLOR_LIGHT_YELLOW")],
+					[Color("#a7bfd7"), tr("COLOR_TEAL")],
+					[Color("#6bbce7"), tr("COLOR_BLUE")],
+					[Color("#d57374"), tr("COLOR_RED")],
+					[Color("#ad6f48"), tr("COLOR_BROWN")],
+					[Color("#5b75b2"), tr("COLOR_DARK_BLUE")],
+					[Color("#9778d6"), tr("COLOR_PURPLE")],
+					[Color("#48b5b2"), tr("COLOR_TURQUOISE")],
+					[Color("#ffaa6d"), tr("COLOR_ORANGE")],
+					[Color("#eb85b7"), tr("COLOR_PINK")],
+				]
+			)
+		)
+	elif ABTestManager.region_color.is_palette_v14():
+		(
+			known
+			. append_array(
+				[
+					[Color("#f9d96a"), tr("COLOR_LIGHT_YELLOW")],
+					[Color("#faaf5c"), tr("COLOR_ORANGE")],
+					[Color("#d47363"), tr("COLOR_RED")],
+					[Color("#ee92a7"), tr("COLOR_PINK")],
+					[Color("#f9b0f7"), tr("COLOR_LIGHT_PINK")],
+					[Color("#80db8c"), tr("COLOR_GREEN")],
+					[Color("#c7c94a"), tr("COLOR_LIGHT_GREEN")],
+					[Color("#46b4a9"), tr("COLOR_TURQUOISE")],
+					[Color("#81d8e9"), tr("COLOR_SKY_BLUE")],
+					[Color("#77afde"), tr("COLOR_BLUE")],
+					[Color("#a590dd"), tr("COLOR_PURPLE")],
+					[Color("#6862a8"), tr("COLOR_DARK_PURPLE")],
+				]
+			)
+		)
 	var best_name: String = tr("HINT_SOME_COLOR")
 	var best_dist: float = INF
 	for pair in known:

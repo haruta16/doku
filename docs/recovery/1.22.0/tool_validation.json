@@ -1,0 +1,21 @@
+{
+  "atlas": {
+    "total": 326,
+    "restored": 326,
+    "failed": 0,
+    "atlas_count": 17,
+    "pixel_hashes_match_recorded_report": true
+  },
+  "textures": {
+    "total": 390,
+    "failed": 0,
+    "all_png_pixels_equal": true
+  },
+  "bytecode": {
+    "raw_identical": 845,
+    "identical_after_precision_fixes": 847,
+    "padding_only": 6,
+    "accounted_for": 853,
+    "matches_recorded_report": true
+  }
+}

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ck7e4qtugiu0f"
-path.s3tc="res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.s3tc.ctex"
-path.etc2="res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.etc2.ctex"
+path.bptc="res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.bptc.ctex"
+path.astc="res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/sprites/common/logo.png"
-dest_files=["res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.s3tc.ctex", "res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.etc2.ctex"]
+dest_files=["res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.bptc.ctex", "res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

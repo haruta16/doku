@@ -1,4 +1,4 @@
-## 待机动画实验：0=对照组（保留猫的待机动画） 1=关闭待机动画（省性能/更安静）
+## 实验配置 play_anim：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name PlayAnimConfig
 
@@ -7,13 +7,7 @@ const VALUE_CONTROL: int = 0 # 保留待机动画
 const VALUE_DISABLED: int = 1 # 关闭待机动画
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "play_anim"
-	default_value = VALUE_CONTROL # 默认档：保留待机动画
-	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
-
-
-## 待机动画是否启用（只有对照组为真）
-func is_idle_anim_enabled() -> bool:
-	return value() == VALUE_CONTROL
+	default_value = VALUE_CONTROL

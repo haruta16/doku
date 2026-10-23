@@ -1,0 +1,241 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://bw6i61v44vnw8" path="res://scripts/module/account/view/login_page.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://bse1j0ugxailu" path="res://assets/sprites/profile/popup_bg.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="4"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://n0qolxl6xt7i" path="res://assets/sprites/common/btn_close.png" id="6"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="7"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="8"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_popup"]
+_data = {
+&"GenericPopup": ExtResource("2")
+}
+
+[sub_resource type="StyleBoxFlat" id="sf_card"]
+bg_color = Color(1, 0.9843137, 0.96862745, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_title"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="sf_info"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="LoginPage" type="Control" unique_id=608303330]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+
+[node name="Root" type="Control" parent="." unique_id=576396566]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=1083790220]
+libraries/ = SubResource("AnimationLibrary_popup")
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=871867174]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="Root" unique_id=2139970624]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DialogRoot" type="Control" parent="Root/Content" unique_id=1752046446]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -565.0
+offset_right = 450.0
+offset_bottom = 565.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Shadow" type="NinePatchRect" parent="Root/Content/DialogRoot" unique_id=861761603]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 14.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3")
+patch_margin_left = 75
+patch_margin_top = 71
+patch_margin_right = 75
+patch_margin_bottom = 79
+
+[node name="Bg" type="Panel" parent="Root/Content/DialogRoot" unique_id=599085102]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_card")
+
+[node name="TitleGroup" type="Control" parent="Root/Content/DialogRoot" unique_id=164901806]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 130.0
+mouse_filter = 2
+
+[node name="TitleBg" type="Panel" parent="Root/Content/DialogRoot/TitleGroup" unique_id=377294096]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_title")
+
+[node name="TitleTxt" type="Label" parent="Root/Content/DialogRoot/TitleGroup" unique_id=732610547]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 16.0
+offset_right = 770.0
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 86
+text = "LOGIN_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("5")
+max_font_size = 86
+min_font_size = 46
+fit_height_single_line = false
+
+[node name="CloseBtn" type="Button" parent="Root/Content/DialogRoot/TitleGroup" unique_id=732091199]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+flat = true
+
+[node name="CloseIcon" type="TextureRect" parent="Root/Content/DialogRoot/TitleGroup/CloseBtn" unique_id=1672481580]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoBox" type="Panel" parent="Root/Content/DialogRoot" unique_id=1761641871]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 850.0
+offset_bottom = 420.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_info")
+
+[node name="MsgTxt" type="Label" parent="Root/Content/DialogRoot/InfoBox" unique_id=666412198]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 30.0
+offset_right = 750.0
+offset_bottom = 190.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 60
+text = "LOGIN_MSG"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ChannelList" type="Control" parent="Root/Content/DialogRoot" unique_id=1199354603]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_top = 480.0
+offset_right = 900.0
+offset_bottom = 1040.0
+mouse_filter = 2
+
+[node name="DeleteLink" type="Button" parent="Root/Content/DialogRoot" unique_id=1327143606]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_top = 840.0
+offset_right = 900.0
+offset_bottom = 920.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+flat = true
+
+[node name="LinkTxt" type="RichTextLabel" parent="Root/Content/DialogRoot/DeleteLink" unique_id=1392265511]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/normal_font = ExtResource("8")
+theme_override_font_sizes/normal_font_size = 50
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[connection signal="pressed" from="Root/Content/DialogRoot/TitleGroup/CloseBtn" to="." method="_on_close_btn_pressed"]
+[connection signal="pressed" from="Root/Content/DialogRoot/DeleteLink" to="." method="_on_delete_link_pressed"]

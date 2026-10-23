@@ -1,0 +1,13 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://1xjbvte83jr5"
+path="res://.godot/imported/cat_pot.skel-fa409d953f2eae1aed1f2a13b6dd1a47.spskel"
+
+[deps]
+
+source_file="res://assets/effect/spine/peekaboo_cat/cat_pot/cat_pot.skel"
+dest_files=["res://.godot/imported/cat_pot.skel-fa409d953f2eae1aed1f2a13b6dd1a47.spskel"]
+
+[params]

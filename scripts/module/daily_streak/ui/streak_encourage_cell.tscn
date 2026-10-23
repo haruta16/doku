@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://duqmyd5pifm27"]
+
+[ext_resource type="Script" uid="uid://jv4r5wxs431" path="res://scripts/module/daily_streak/view/streak_encourage_cell.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bfrqs7shrnk25" path="res://assets/sprites/daily_streak/enc_dawn_cat.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cyellooauy17q" path="res://assets/sprites/daily_streak/enc_morning_cat.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bhmm47qykhfb1" path="res://assets/sprites/daily_streak/enc_midmorning_cat.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bwys2kb704yjb" path="res://assets/sprites/daily_streak/enc_noon_cat.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://r7e5ft4fkq2t" path="res://assets/sprites/daily_streak/enc_lazy_cat.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://c0i3g3uiufff0" path="res://assets/sprites/daily_streak/enc_dusk_cat.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://byxn6ovd5ey1k" path="res://assets/sprites/daily_streak/enc_night_cat.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dw648wqy45mty" path="res://assets/sprites/daily_streak/enc_midnight_cat.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://w8qbavex014h" path="res://assets/sprites/daily_streak/enc_dawn_plain.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cynwo8ubepvqc" path="res://assets/sprites/daily_streak/enc_morning_plain.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://nofl0i7scpc5" path="res://assets/sprites/daily_streak/enc_midmorning_plain.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://tpn7hbh3jir8" path="res://assets/sprites/daily_streak/enc_noon_plain.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://b6db2e1hn86gf" path="res://assets/sprites/daily_streak/enc_lazy_plain.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://bfydhx68mnynw" path="res://assets/sprites/daily_streak/enc_dusk_plain.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://cpp6rmkkw77xh" path="res://assets/sprites/daily_streak/enc_night_plain.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://b86oku45dcgvv" path="res://assets/sprites/daily_streak/enc_midnight_plain.png" id="17"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="18"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="19"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="20"]
+
+[node name="StreakEncourageCell" type="Control" unique_id=1368629893]
+custom_minimum_size = Vector2(960, 214)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 960.0
+offset_bottom = 214.0
+mouse_filter = 2
+script = ExtResource("1")
+bg_with_cat = [ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9")]
+bg_no_cat = [ExtResource("10"), ExtResource("11"), ExtResource("12"), ExtResource("13"), ExtResource("14"), ExtResource("15"), ExtResource("16"), ExtResource("17")]
+
+[node name="Bg" type="TextureRect" parent="." unique_id=1475777556]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TitleTxt" type="Label" parent="." unique_id=331432627]
+layout_mode = 0
+offset_left = 244.0
+offset_top = 20.0
+offset_right = 900.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.4627451, 0.24313726, 0.2627451, 1)
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 60
+text = "Dawn Cat"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("19")
+max_font_size = 60
+min_font_size = 34
+fit_height_single_line = false
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+
+[node name="BodyTxt" type="Label" parent="." unique_id=400767086]
+layout_mode = 0
+offset_left = 244.0
+offset_top = 91.0
+offset_right = 900.0
+offset_bottom = 207.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.4627451, 0.24313726, 0.2627451, 1)
+theme_override_constants/line_spacing = -8
+theme_override_fonts/font = ExtResource("20")
+theme_override_font_sizes/font_size = 42
+text = "Up before dawn.So is the cat."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("19")
+max_font_size = 42
+min_font_size = 26
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"

@@ -1,0 +1,153 @@
+[gd_scene format=3 uid="uid://k6wox3o18gor"]
+
+[ext_resource type="Script" uid="uid://dch4pkynstu7e" path="res://scripts/module/game/view/cat_progress_slot.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b4m2p8mgynr21" path="res://assets/sprites/game/cat_progress_base.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://027x0mhob276" path="res://assets/sprites/game/cat_progress_slot.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dirjrsk4iw8l" path="res://assets/sprites/game/cat_progress_face.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dsv4jtpoxae7k" path="res://assets/sprites/game/cat_progress_base_face.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dllurrkdvc08r" path="res://assets/sprites/game/cat_progress_dot_bg.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://bkvusi5xe548r" path="res://assets/sprites/game/cat_progress_dot.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://bujp3cdo4ddw" path="res://assets/sprites/game/cat_progress_wrong_mark.png" id="8"]
+
+[node name="CatProgressSlot" type="Control" unique_id=1659644255]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 68.0
+offset_bottom = 68.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="ColorBase" type="TextureRect" parent="." unique_id=1409866331]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="Silhouette" type="TextureRect" parent="." unique_id=2135573164]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Face" type="TextureRect" parent="." unique_id=1191023031]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.07
+anchor_top = 0.1212
+anchor_right = 0.93
+anchor_bottom = 0.899
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ColorFace" type="TextureRect" parent="." unique_id=1174330298]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="CostumeCat" type="TextureRect" parent="." unique_id=1298356146]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CatDotRoot" type="Control" parent="." unique_id=1576993000]
+visible = false
+anchors_preset = 0
+offset_left = 41.0
+offset_top = 39.0
+offset_right = 65.0
+offset_bottom = 63.0
+
+[node name="CatDotBg" type="TextureRect" parent="CatDotRoot" unique_id=1373298877]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+
+[node name="CatDot" type="TextureRect" parent="CatDotRoot" unique_id=2025845569]
+modulate = Color(0.65882355, 1, 1, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("7")
+expand_mode = 1
+
+[node name="WrongMark" type="TextureRect" parent="." unique_id=1025980977]
+visible = false
+modulate = Color(1, 1, 1, 0.7)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = -12.0
+offset_right = 18.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5

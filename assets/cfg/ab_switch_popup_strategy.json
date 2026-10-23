@@ -1,0 +1,42 @@
+[
+  {
+    "Trigger": "trigger=abtest_switch,key=daily_streak,bf={3},af={1,2,4}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=DAILY_STREAK_SWITCH3_DESC,btn_text=DAILY_STREAK_GET_IT,feedback=1"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=game_auto_mark,bf={1,2,4,5},af={0}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=GAME_AUTO_MARK_SWITCH_ENDED_DESC,btn_text=AD_REWARD_RESTORED_COLLECT,feedback=1"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=leaderboard_func,bf={1,2,3},af={1,2}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=LEADERBOARD_SWITCH_DESC,feedback=1"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=leaderboard_func,bf={1,2},af={3}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=LEADERBOARD_SWITCH2_DESC,feedback=1"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=draft_mode,bf={5},af={0}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=DRAFT_SWITCH_ENDED_DESC_NO_REWARD,feedback=1,exchange_reward={from=draft,to=hint}"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=prop_mouse,bf={1},af={0}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=MOUSE_SWITCH_ENDED_DESC_NO_REWARD,feedback=1,exchange_reward={from=mouse,to=hint}"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=rank_1st_frame,bf={1},af={0}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=RANK_TIER_REFUND_THX,feedback=1"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=rank_tier_func,bf={1,2},af={0}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=RANK_TIER_END,btn_text=HOW_TO_PLAY_GOT_IT,feedback=1"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=dc_costume,bf={1},af={0}",
+    "Param": "title=DAILY_STREAK_MAJOR_UPDATE,body=DC_COSTUME_SWITCH_ENDED_DESC_NO_REWARD,feedback=1"
+  },
+  {
+    "Trigger": "trigger=abtest_switch,key=home_companion_cat,bf={1,2,4},af={0,3}",
+    "Param": "title=HOME_COMPANION_END_TITLE,body=HOME_COMPANION_END_BODY,btn_text=HOME_COMPANION_END_CONFIRM,feedback=1"
+  }
+]

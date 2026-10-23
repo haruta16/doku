@@ -1,0 +1,439 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://cxnhucuikikg1" path="res://scripts/module/home/view/home_companion_settle_strip.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://6nctu1emuf2t" path="res://assets/sprites/home_companion/halloween_settle_candy.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://mllpes2m87ac" path="res://assets/sprites/game/score_font/ui_mao_sz_pic_10.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://1xy7wkpwal5g" path="res://assets/sprites/game/score_font/ui_mao_sz_pic_01.png" id="4"]
+[ext_resource type="Script" uid="uid://cb1knkenb6cmw" path="res://scripts/module/home/view/other/home_companion_progress_bar.gd" id="5"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="6"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="7"]
+[ext_resource type="Texture2D" uid="uid://c4ethemwocc4" path="res://assets/sprites/daily_streak/treasure_box.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://bshj1tnptgbrn" path="res://assets/sprites/rank_activity/rankpage_countdown.png" id="9"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="10"]
+[ext_resource type="PackedScene" path="res://scripts/module/home/ui/other/home_companion_reward_preview.tscn" id="11"]
+[ext_resource type="Texture2D" uid="uid://dj7puncjbardh" path="res://assets/sprites/home_companion/halloween_settle_can_small.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://ss1l02d56rh" path="res://assets/sprites/home_companion/halloween_settle_can.png" id="13"]
+
+[sub_resource type="StyleBoxFlat" id="SegmentOn"]
+bg_color = Color(0.94509804, 0.5764706, 0.1254902, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="SegmentOff"]
+bg_color = Color(0.39215687, 0.39215687, 0.39215687, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="SegmentOnFirst"]
+bg_color = Color(0.94509804, 0.5764706, 0.1254902, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 30
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="SegmentOffFirst"]
+bg_color = Color(0.39215687, 0.39215687, 0.39215687, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 30
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="SegmentOnLast"]
+bg_color = Color(0.94509804, 0.5764706, 0.1254902, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 8
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="SegmentOffLast"]
+bg_color = Color(0.39215687, 0.39215687, 0.39215687, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 8
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="CandyTrack"]
+bg_color = Color(0.39215687, 0.39215687, 0.39215687, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 16
+
+[sub_resource type="StyleBoxEmpty" id="CandyBarBg"]
+
+[sub_resource type="StyleBoxFlat" id="CandyFillSource"]
+bg_color = Color(0.98039216, 0.68235296, 0.08627451, 1)
+draw_center = false
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="CandyFill"]
+bg_color = Color(0.98039216, 0.68235296, 0.08627451, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 16
+
+[node name="HomeCompanionSettleStrip" type="Control" unique_id=992627630 node_paths=PackedStringArray("candy_state", "can_state", "candy_gain", "progress_bar", "progress_label", "reward_button", "preview", "countdown_label", "can_gain", "segments")]
+custom_minimum_size = Vector2(677, 200)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 677.0
+offset_bottom = 200.0
+mouse_filter = 2
+script = ExtResource("1")
+candy_state = NodePath("CandyState")
+can_state = NodePath("CanState")
+candy_gain = NodePath("CandyState/Gain")
+progress_bar = NodePath("CandyState/Bar/Progress")
+progress_label = NodePath("CandyState/Bar/Label")
+reward_button = NodePath("CandyState/Bar/ChestBtn")
+preview = NodePath("CandyState/Preview")
+countdown_label = NodePath("CandyState/Countdown/Label")
+can_gain = NodePath("CanState/Gain")
+segments = NodePath("CanState/Segments")
+segment_on = SubResource("SegmentOn")
+segment_off = SubResource("SegmentOff")
+segment_on_first = SubResource("SegmentOnFirst")
+segment_off_first = SubResource("SegmentOffFirst")
+segment_on_last = SubResource("SegmentOnLast")
+segment_off_last = SubResource("SegmentOffLast")
+
+[node name="CandyState" type="Control" parent="." unique_id=1878761366]
+visible = false
+anchors_preset = 0
+offset_left = 41.0
+offset_right = 607.0
+offset_bottom = 200.0
+mouse_filter = 2
+
+[node name="Gain" type="Control" parent="CandyState" unique_id=1835566640]
+anchors_preset = 0
+offset_left = 185.0
+offset_right = 371.0
+offset_bottom = 78.0
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="CandyState/Gain" unique_id=470944928]
+layout_mode = 0
+offset_right = 99.0
+offset_bottom = 78.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Plus" type="TextureRect" parent="CandyState/Gain" unique_id=840696874]
+layout_mode = 0
+offset_left = 94.0
+offset_top = 14.0
+offset_right = 142.0
+offset_bottom = 69.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="One" type="TextureRect" parent="CandyState/Gain" unique_id=1648812030]
+layout_mode = 0
+offset_left = 146.0
+offset_top = 7.0
+offset_right = 179.0
+offset_bottom = 75.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Bar" type="Control" parent="CandyState" unique_id=98808221]
+anchors_preset = 0
+offset_top = 59.0
+offset_right = 566.0
+offset_bottom = 149.0
+mouse_filter = 2
+
+[node name="Track" type="Panel" parent="CandyState/Bar" unique_id=295847676]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 31.0
+offset_right = 525.0
+offset_bottom = 71.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CandyTrack")
+
+[node name="Progress" type="ProgressBar" parent="CandyState/Bar" unique_id=834072951 node_paths=PackedStringArray("fill_clip", "fill_shape", "stripes")]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 31.0
+offset_right = 525.0
+offset_bottom = 71.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("CandyBarBg")
+theme_override_styles/fill = SubResource("CandyFillSource")
+show_percentage = false
+script = ExtResource("5")
+fill_clip = NodePath("FillClip")
+fill_shape = NodePath("FillClip/Shape")
+stripes = NodePath("FillClip/Shape/Stripes")
+
+[node name="FillClip" type="Control" parent="CandyState/Bar/Progress" unique_id=971296479]
+visible = false
+clip_contents = true
+anchors_preset = 0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="Shape" type="Panel" parent="CandyState/Bar/Progress/FillClip" unique_id=1727112552]
+clip_children = 2
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CandyFill")
+
+[node name="Stripes" type="Control" parent="CandyState/Bar/Progress/FillClip/Shape" unique_id=2143500431]
+anchors_preset = 0
+offset_left = -10.0
+offset_top = -19.0
+offset_right = 470.0
+offset_bottom = 61.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CandyState/Bar" unique_id=1155475815]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 16.0
+offset_right = 525.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.8235294, 0.4509804, 0.15294118, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 36
+text = "20/30"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
+
+[node name="CandyIcon" type="TextureRect" parent="CandyState/Bar" unique_id=989698213]
+layout_mode = 0
+offset_top = 12.0
+offset_right = 99.0
+offset_bottom = 90.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ChestBtn" type="Button" parent="CandyState/Bar" unique_id=958674661]
+layout_mode = 0
+offset_left = 482.0
+offset_right = 566.0
+offset_bottom = 84.0
+focus_mode = 0
+flat = true
+
+[node name="Chest" type="TextureRect" parent="CandyState/Bar/ChestBtn" unique_id=5964978]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 80.0
+offset_bottom = 83.0
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Countdown" type="Control" parent="CandyState" unique_id=1846059580]
+anchors_preset = 0
+offset_left = 180.0
+offset_top = 140.0
+offset_right = 390.0
+offset_bottom = 200.0
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="CandyState/Countdown" unique_id=1792516047]
+layout_mode = 0
+offset_left = 9.6
+offset_top = 4.8
+offset_right = 51.0
+offset_bottom = 51.6
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CandyState/Countdown" unique_id=888596327]
+layout_mode = 0
+offset_left = 49.0
+offset_top = 3.0
+offset_right = 210.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0.78431374, 0.5294118, 0.3647059, 1)
+theme_override_fonts/font = ExtResource("10")
+theme_override_font_sizes/font_size = 36
+text = "22:55:44"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
+
+[node name="Preview" parent="CandyState" unique_id=982438325 instance=ExtResource("11")]
+visible = false
+anchors_preset = 0
+offset_left = 223.0
+offset_top = -126.0
+offset_right = 824.0
+offset_bottom = 14.0
+
+[node name="CanState" type="Control" parent="." unique_id=1712532514]
+visible = false
+anchors_preset = 0
+offset_top = 8.0
+offset_right = 677.0
+offset_bottom = 175.0
+mouse_filter = 2
+
+[node name="Gain" type="Control" parent="CanState" unique_id=1734781297]
+anchors_preset = 0
+offset_left = 227.0
+offset_right = 419.0
+offset_bottom = 82.0
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="CanState/Gain" unique_id=798288083]
+layout_mode = 0
+offset_right = 104.0
+offset_bottom = 82.0
+mouse_filter = 2
+texture = ExtResource("12")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Plus" type="TextureRect" parent="CanState/Gain" unique_id=1433731987]
+layout_mode = 0
+offset_left = 99.0
+offset_top = 17.0
+offset_right = 147.0
+offset_bottom = 72.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="One" type="TextureRect" parent="CanState/Gain" unique_id=1955533101]
+layout_mode = 0
+offset_left = 151.0
+offset_top = 10.0
+offset_right = 184.0
+offset_bottom = 78.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Segments" type="Control" parent="CanState" unique_id=116263196]
+anchors_preset = 0
+offset_top = 100.5
+offset_right = 582.0
+offset_bottom = 133.5
+mouse_filter = 2
+
+[node name="Segment0" type="Panel" parent="CanState/Segments" unique_id=1654199693]
+layout_mode = 0
+offset_right = 56.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment1" type="Panel" parent="CanState/Segments" unique_id=1123184177]
+layout_mode = 0
+offset_left = 61.0
+offset_right = 115.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment2" type="Panel" parent="CanState/Segments" unique_id=730051188]
+layout_mode = 0
+offset_left = 120.0
+offset_right = 174.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment3" type="Panel" parent="CanState/Segments" unique_id=348404207]
+layout_mode = 0
+offset_left = 179.0
+offset_right = 232.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment4" type="Panel" parent="CanState/Segments" unique_id=868567220]
+layout_mode = 0
+offset_left = 237.0
+offset_right = 290.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment5" type="Panel" parent="CanState/Segments" unique_id=739169167]
+layout_mode = 0
+offset_left = 295.0
+offset_right = 348.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment6" type="Panel" parent="CanState/Segments" unique_id=855233795]
+layout_mode = 0
+offset_left = 353.0
+offset_right = 406.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment7" type="Panel" parent="CanState/Segments" unique_id=574519365]
+layout_mode = 0
+offset_left = 411.0
+offset_right = 465.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment8" type="Panel" parent="CanState/Segments" unique_id=1134475322]
+layout_mode = 0
+offset_left = 470.0
+offset_right = 524.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Segment9" type="Panel" parent="CanState/Segments" unique_id=937326915]
+layout_mode = 0
+offset_left = 529.0
+offset_right = 582.0
+offset_bottom = 33.0
+mouse_filter = 2
+
+[node name="Can" type="TextureRect" parent="CanState" unique_id=191036306]
+layout_mode = 0
+offset_left = 560.58
+offset_top = 67.7
+offset_right = 659.42
+offset_bottom = 160.2
+mouse_filter = 2
+texture = ExtResource("13")
+expand_mode = 1
+stretch_mode = 5
+
+[connection signal="changed" from="CandyState/Bar/Progress" to="CandyState/Bar/Progress" method="_refresh_fill"]
+[connection signal="resized" from="CandyState/Bar/Progress" to="CandyState/Bar/Progress" method="_refresh_fill"]
+[connection signal="theme_changed" from="CandyState/Bar/Progress" to="CandyState/Bar/Progress" method="_on_theme_changed"]
+[connection signal="value_changed" from="CandyState/Bar/Progress" to="CandyState/Bar/Progress" method="_on_value_changed"]
+[connection signal="pressed" from="CandyState/Bar/ChestBtn" to="." method="_on_reward_pressed"]

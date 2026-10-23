@@ -1,0 +1,228 @@
+[gd_scene format=3 uid="uid://bwg8leuxoue2w"]
+
+[ext_resource type="Script" uid="uid://bw1sqilf1l31s" path="res://scripts/module/game/view/golden_fish_toast.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dmbrsx7ajlrbs" path="res://assets/sprites/game/fish_full_golden.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="3"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_root"]
+
+[sub_resource type="Gradient" id="Gradient_gf"]
+offsets = PackedFloat32Array(0, 0.05, 0.19712, 0.5, 0.8, 0.95, 1)
+colors = PackedColorArray(1, 0.811765, 0.203922, 0, 0.717647, 0.419608, 0, 0.63, 0.254902, 0.168627, 0.054902, 0.9, 0.145098, 0.058824, 0, 0.9, 0.254902, 0.168627, 0.054902, 0.9, 0.717647, 0.419608, 0, 0.63, 1, 0.811765, 0.203922, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gf"]
+gradient = SubResource("Gradient_gf")
+width = 1080
+height = 340
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gf"]
+content_margin_left = 110.0
+content_margin_top = 36.0
+content_margin_right = 110.0
+content_margin_bottom = 45.0
+texture = SubResource("GradientTexture2D_gf")
+
+[sub_resource type="Animation" id="Animation_beginning"]
+resource_name = "Beginning"
+step = 0.016666668
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Disappear",
+"time": 0.3666667
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.102020636, 0.6340667, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 2, 2, 2),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.07703971, 0, 0.050006103, 0, 1.05, -0.050006103, 0, 0.055549465, 0, 0.8, -0.055549465, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 2, 2, 2),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975, 1.05, -0.045182526, 0, 0.077880085, 0, 1, -0.07703971, 0, 0.050006103, 0, 1.05, -0.050006103, 0, 0.055549465, 0, 0.8, -0.055549465, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.13554758, 0.3666667, 0.516685, 0.6833334)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249, 0.679333, 0.6833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/Card:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/Card:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.029207453, 0.29331273),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/Card:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.7, 0, 0, 0.026969692, 0.2891975),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/Card:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.0025781249),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimLib_gf"]
+_data = {
+&"Beginning": SubResource("Animation_beginning"),
+&"RESET": SubResource("Animation_reset")
+}
+
+[node name="GoldenFishToast" type="CanvasLayer" unique_id=423536055]
+layer = 11
+script = ExtResource("1")
+
+[node name="Root" type="Control" parent="." unique_id=2133240158]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Card" type="PanelContainer" parent="Root" unique_id=164319280]
+visible = false
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_root")
+
+[node name="CardGolden" type="Control" parent="Root/Card" unique_id=1471121226]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Root/Card/CardGolden" unique_id=233806748]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -170.0
+offset_right = 540.0
+offset_bottom = 170.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_gf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/Card/CardGolden/PanelContainer" unique_id=345707305]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/Card/CardGolden/PanelContainer/VBoxContainer" unique_id=1304997651]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="FishIcon" type="TextureRect" parent="Root/Card/CardGolden/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1246981011]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("2")
+
+[node name="TitleLabel" type="Label" parent="Root/Card/CardGolden/PanelContainer/VBoxContainer/HBoxContainer" unique_id=2083140228]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.933333, 0, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 96
+text = "Golden Fish"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="RichTextLabel" parent="Root/Card/CardGolden/PanelContainer/VBoxContainer" unique_id=816777432]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 18
+theme_override_fonts/normal_font = ExtResource("4")
+theme_override_fonts/bold_font = ExtResource("3")
+theme_override_font_sizes/normal_font_size = 60
+theme_override_font_sizes/bold_font_size = 60
+bbcode_enabled = true
+text = "Challenge Mode"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1703445928]
+libraries/ = SubResource("AnimLib_gf")

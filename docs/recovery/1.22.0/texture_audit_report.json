@@ -1,0 +1,306 @@
+{
+	"failed": 0,
+	"items": [
+		{
+			"imported_path": "res://.godot/imported/cell_face_lossless.png-a38f68869dc41b98719db146cb9616a3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1844,
+				468
+			],
+			"source_file": "res://assets/atlas/cell_face_lossless.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/daily_streak_vram.png-910464ffb2c6feb911634b9f03aa8cbb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2376,
+				1724
+			],
+			"source_file": "res://assets/atlas/daily_streak_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/effect_ui_vram.png-3a97a82291e60f5bfc90e6ed2d2338b5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				588,
+				924
+			],
+			"source_file": "res://assets/atlas/effect_ui_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/encourage_vram.png-26685af4484895907bf0ff026e761dee.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				916,
+				1176
+			],
+			"source_file": "res://assets/atlas/encourage_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/game_ext_vram.png-fa8f4f6a155d8b7631eb67887c5f902c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1316,
+				808
+			],
+			"source_file": "res://assets/atlas/game_ext_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/home_companion_vram.png-1932a6e1f5952e958d11e991cba7c4a0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1432,
+				1128
+			],
+			"source_file": "res://assets/atlas/home_companion_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/jp_text_vram.png-ebbcb18c45f0081f888e3926d8190902.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				908,
+				1272
+			],
+			"source_file": "res://assets/atlas/jp_text_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/main_game_vram.png-9bec2c5e71c0fad0ed06156550e7cc58.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1556,
+				1180
+			],
+			"source_file": "res://assets/atlas/main_game_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/misc_ui_vram.png-e791436a93dcf4ef7b9301231530265e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1296,
+				1064
+			],
+			"source_file": "res://assets/atlas/misc_ui_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pop_vram.png-96312eb0de02dbd5a58bd9f583dcf39f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1064,
+				1180
+			],
+			"source_file": "res://assets/atlas/pop_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/profile_lossless.png-aafc91104cd4dbc5a6b559f46444d9ab.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1488,
+				1796
+			],
+			"source_file": "res://assets/atlas/profile_lossless.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/profile_vram.png-f06f2b1aacafd68f9f0ed15db5367de5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				824,
+				392
+			],
+			"source_file": "res://assets/atlas/profile_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/purchase_vram.png-378ee5cf8045bf7c2f819cfb80446d26.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				708,
+				1228
+			],
+			"source_file": "res://assets/atlas/purchase_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rank_activity_vram.png-aea55bd2121ca9601c629838c669a61d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1844,
+				1596
+			],
+			"source_file": "res://assets/atlas/rank_activity_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rank_row_lossless.png-78c565fa81f894de1298e0e655b4d3a4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				3540,
+				836
+			],
+			"source_file": "res://assets/atlas/rank_row_lossless.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/single_bg_9grid.png-b40fa975ad01e75384406eb3435f1b4c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				416,
+				2400
+			],
+			"source_file": "res://assets/atlas/single_bg_9grid.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/single_rectangle_312.png-66747ea4b9ed17a1e7798630a2698647.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1088,
+				668
+			],
+			"source_file": "res://assets/atlas/single_rectangle_312.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_end_off.png-79877450ffaeaa340a3e1d22b2750efb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				372,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_end_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_end_on.png-2077ae4bab7e4895e40f1e5ff470ebbd.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				372,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_end_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_start_off.png-106b9a4865212219a6f874da869a579c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				380,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_start_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_start_on.png-3c26b7480bc95aba5ca276aa6917d09a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				380,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_start_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_end_off.png-adf491e93e722d03f6fce67959ae1e27.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				328,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_end_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_end_on.png-6ac3ceae174477ce6e4af9e8d7f785d3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				328,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_end_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_start_off.png-a0f00563237abd5d127bbbfb0964b84a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				340,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_start_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_start_on.png-55d1573e1bf1130b61dae2440d7b7ec3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				340,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_start_on.png",
+			"status": "verified"
+		}
+	],
+	"total": 25
+}

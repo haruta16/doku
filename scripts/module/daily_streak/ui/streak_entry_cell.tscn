@@ -1,12 +1,11 @@
 [gd_scene format=3 uid="uid://dcmjpgfe82prq"]
 
 [ext_resource type="Script" uid="uid://pei8ohjoc5im" path="res://scripts/module/daily_streak/view/streak_entry_cell.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://drgolm8nmdyu" path="res://assets/sprites/daily_streak/state_checked1.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dursnv3ms1x11" path="res://assets/sprites/daily_streak/state_unchecked.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://beiukjhnra30e" path="res://assets/effect/texture/shine/et_shine_001.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://cn84vrhxurv0d" path="res://assets/sprites/daily_streak/sun.png" id="4"]
-[ext_resource type="Texture2D" uid="uid://ct410eq5eud4y" path="res://assets/sprites/daily_streak/state_checked2.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dursnv3ms1x11" path="res://assets/sprites/daily_streak/state_unchecked.png" id="6"]
-[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="7"]
+[ext_resource type="Texture2D" uid="uid://ct410eq5eud4y" path="res://assets/sprites/daily_streak/state_checked2.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://vt1w5py3gjog" path="res://scripts/module/daily_streak/ui/other/streak_day_icon.tscn" id="5"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="6"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_fuo8l"]
 blend_mode = 1
@@ -30,23 +29,24 @@ anchors_preset = 0
 offset_right = 460.0
 offset_bottom = 590.0
 
-[node name="StateChecked" type="Control" parent="StreakEntryImg" unique_id=2144655138]
-visible = false
-anchors_preset = 0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 440.0
-offset_bottom = 570.0
-
-[node name="Visual" type="TextureRect" parent="StreakEntryImg/StateChecked" unique_id=1313323977]
-clip_children = 2
+[node name="Visual2" type="TextureRect" parent="StreakEntryImg" unique_id=1582721855]
 layout_mode = 0
-offset_right = 420.0
-offset_bottom = 550.0
+offset_top = 6.0
+offset_right = 460.0
+offset_bottom = 596.0
 texture = ExtResource("2")
 expand_mode = 1
 
-[node name="ShineAddLoop" type="CPUParticles2D" parent="StreakEntryImg/StateChecked/Visual" unique_id=454058356]
+[node name="Visual" type="TextureRect" parent="StreakEntryImg" unique_id=1313323977]
+clip_children = 1
+layout_mode = 0
+offset_top = 6.0
+offset_right = 460.0
+offset_bottom = 596.0
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="ShineAddLoop" type="CPUParticles2D" parent="StreakEntryImg/Visual" unique_id=454058356]
 self_modulate = Color(0.6797581, 0.3065576, 0, 0.32156864)
 material = SubResource("CanvasItemMaterial_fuo8l")
 position = Vector2(213, 266)
@@ -65,7 +65,7 @@ angular_velocity_max = -10.0
 scale_amount_min = 1.6
 scale_amount_max = 1.6
 
-[node name="ShineAddLoop2" type="CPUParticles2D" parent="StreakEntryImg/StateChecked/Visual/ShineAddLoop" unique_id=378498273]
+[node name="ShineAddLoop2" type="CPUParticles2D" parent="StreakEntryImg/Visual/ShineAddLoop" unique_id=378498273]
 self_modulate = Color(1, 1, 1, 0.4627451)
 show_behind_parent = true
 amount = 1
@@ -83,16 +83,12 @@ angular_velocity_max = -10.0
 scale_amount_min = 1.6
 scale_amount_max = 1.6
 
-[node name="Visual2" type="TextureRect" parent="StreakEntryImg/StateChecked" unique_id=330331030]
-layout_mode = 0
-offset_left = -47.0
-offset_top = 2.0
-offset_right = 465.0
-offset_bottom = 514.0
-scale = Vector2(0.58, 0.58)
-pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("4")
-expand_mode = 1
+[node name="StateChecked" type="Control" parent="StreakEntryImg" unique_id=2144655138]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 440.0
+offset_bottom = 570.0
 
 [node name="Visual3" type="TextureRect" parent="StreakEntryImg/StateChecked" unique_id=1177137398]
 layout_mode = 0
@@ -100,7 +96,7 @@ offset_left = 316.0
 offset_right = 420.0
 offset_bottom = 86.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture = ExtResource("5")
+texture = ExtResource("4")
 expand_mode = 1
 
 [node name="StateUnchecked" type="Control" parent="StreakEntryImg" unique_id=1793121969]
@@ -110,14 +106,11 @@ offset_top = 20.0
 offset_right = 440.0
 offset_bottom = 570.0
 
-[node name="Visual" type="TextureRect" parent="StreakEntryImg/StateUnchecked" unique_id=1582721855]
+[node name="DayIcon" parent="StreakEntryImg" unique_id=330331030 instance=ExtResource("5")]
 layout_mode = 0
-offset_left = -20.0
-offset_top = -14.0
-offset_right = 440.0
-offset_bottom = 576.0
-texture = ExtResource("6")
-expand_mode = 1
+offset_left = 80.52
+offset_top = 129.52
+scale = Vector2(0.58, 0.58)
 
 [node name="StreakTxt" type="Label" parent="." unique_id=1176254482]
 layout_mode = 0
@@ -128,7 +121,7 @@ offset_bottom = 113.0
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.7701927, 0.45950356, 0.07553776, 1)
 theme_override_constants/line_spacing = -18
-theme_override_fonts/font = ExtResource("7")
+theme_override_fonts/font = ExtResource("6")
 theme_override_font_sizes/font_size = 60
 text = "DAILY_STREAK_ENTRY_TITLE"
 vertical_alignment = 1
@@ -156,7 +149,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.67620146, 0.38689873, 0, 1)
 theme_override_constants/line_spacing = -33
-theme_override_fonts/font = ExtResource("7")
+theme_override_fonts/font = ExtResource("6")
 theme_override_font_sizes/font_size = 70
 text = "0"
 horizontal_alignment = 1

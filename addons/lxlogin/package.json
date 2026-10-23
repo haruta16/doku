@@ -1,0 +1,14 @@
+{
+  "name": "com.learnings.godot.lxlogin",
+  "version": "2.0.0-v1",
+  "displayName": "LXLogin",
+  "description": "Godot版本的登录授权公共库",
+  "godot": "4.6",
+  "dependencies": {},
+  "keywords": [],
+  "author": {
+	"name": "Learnings",
+	"email": "",
+	"url": ""
+  }
+}

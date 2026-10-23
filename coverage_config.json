@@ -1,0 +1,25 @@
+{
+  "include": [
+    "res://scripts/"
+  ],
+  "exclude": [
+    "res://scripts/editor/**",
+    "res://scripts/**/test_*.gd",
+    "res://addons/**",
+    "res://.godot/**",
+    "res://android/**",
+    "res://ios/**",
+    "res://build/**",
+    "res://coverage_logs/**"
+  ],
+  "exclude_class": [
+    "scripts.module.ui.panel.cheat_commands"
+  ],
+  "exclude_class_regex": [
+    "^scripts\\.module\\.debug\\."
+  ],
+  "exclude_method": [
+    "_process",
+    "_physics_process"
+  ]
+}

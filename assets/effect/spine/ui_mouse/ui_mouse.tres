@@ -1,0 +1,8 @@
+[gd_resource type="SpineSkeletonDataResource" format=3 uid="uid://bs2jl1tmj4tn5"]
+
+[ext_resource type="SpineAtlasResource" uid="uid://c41ugdeg1e5sb" path="res://assets/effect/spine/ui_mouse/mousehead.atlas" id="1"]
+[ext_resource type="SpineSkeletonFileResource" uid="uid://cfjkvh30w8pmn" path="res://assets/effect/spine/ui_mouse/mousehead.skel" id="2"]
+
+[resource]
+atlas_res = ExtResource("1")
+skeleton_file_res = ExtResource("2")

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d2h6kbwign1k0"]
 
-[ext_resource type="Script" uid="uid://cckr2d7fxxiup" path="res://scripts/module/ui/widget/red_dot.gd" id="1"]
+[ext_resource type="Script" uid="uid://cckr2d7fxxiup" path="res://scripts/module/ui/red_dot/red_dot.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dbyhf4f18qfq6" path="res://assets/sprites/common/red_dot.png" id="2"]
 
 [node name="Node2D" type="Node2D" unique_id=1130428591]

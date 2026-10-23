@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://c41ugdeg1e5sb"
+path="res://.godot/imported/mousehead.atlas-871563a24f63ec870cc525082572ef60.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/ui_mouse/mousehead.atlas"
+dest_files=["res://.godot/imported/mousehead.atlas-871563a24f63ec870cc525082572ef60.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

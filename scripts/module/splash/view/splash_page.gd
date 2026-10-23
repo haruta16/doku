@@ -1,5 +1,4 @@
-## 启动页（Splash）：按 min_wait_seconds 平滑推进假进度条 + 每天换一句标语
-## 进度是否算「加载完」不由自己决定，外部（launcher / cheat 面板）调 force_complete() 才收尾并发 loading_complete
+## 启动展示页：组合活动装扮、标语和进度表现，完成收尾动画后发出结束信号。
 class_name SplashPage
 extends UIFrameWindow
 
@@ -7,97 +6,209 @@ extends UIFrameWindow
 signal loading_complete
 
 # ---- 进度条几何（像素，相对屏幕下边中点的偏移） ----
-const _PROGRESS_LEFT: float = -450.0  # 进度条左端 X 偏移
-const _PROGRESS_WIDTH: float = 900.0  # 进度条总宽
-const _DEFAULT_MIN_WAIT_SECONDS: float = 3.0  # 默认最短等待秒数（秒），可被 on_show 覆盖
+const _PROGRESS_LEFT: float = -450.0 # 进度条左端 X 偏移
+const _PROGRESS_WIDTH: float = 900.0 # 进度条总宽
+const _DEFAULT_MIN_WAIT_SECONDS: float = 3.0 # 默认最短等待秒数（秒），可被 on_show 覆盖
 
 # ---- 收尾补间与标语 key ----
-const _FINISH_TWEEN_DURATION: float = 0.1  # 补满剩余进度的补间时长（秒）
+const _FINISH_TWEEN_DURATION: float = 0.1 # 补满剩余进度的补间时长（秒）
 
-const _SLOGAN_COUNT: int = 67  # 普通标语条数，key 为 splash_slogan_0 ~ _66
-const _QUOTE_KEY_PREFIX: String = "splash_slogan_"  # 标语正文的翻译 key 前缀
-const _AUTHOR_KEY_PREFIX: String = "splash_slogan_author_"  # 标语署名的翻译 key 前缀
+const Picker: GDScript = preload("res://scripts/module/splash/core/splash_slogan_picker.gd")
 
-# ---- 子节点引用（@onready：进场景树后才可用） ----
-@onready var _progress_fill: Panel = $Root/ProgressFill  # 进度条填充块，靠改 offset_right 伸缩
-@onready var _cat_face: TextureRect = $Root/CatFace  # 骑在进度条前端的猫脸，跟着一起移动
-@onready var _quote_label: Label = $Root/QuoteAuthor/QuoteLabel  # 标语正文
-@onready var _author_label: Label = $Root/QuoteAuthor/AuthorLabel  # 标语署名（猫标语模式下隐藏）
+const _CHEAT_LONGEST_QUOTE: String = '"Mahalin ang isa\'t isa at tulungan ang iba na umangat sa mas mataas na antas, sa simpleng pagbuhos lamang ng pag-ibig. Nakakahawa ang pag-ibig at ito ang pinakadakilang enerhiya ng pagpapagaling."'
+const _CHEAT_LONGEST_QUOTE_AUTHOR: String = "Sai Baba"
+
+const _DESIGN_H: float = 2400.0
+
+const _PIN_ADAPT_RATIO_DESIGN: float = 1080.0 / 2400.0
+const _PIN_ADAPT_RATIO_FIT: float = 1080.0 / 1920.0
+const _TOP_ONLY_PIN_ADAPT_EDGE_DIST: float = 110.0
+
+@onready var _root: Control = $Root
+
+@onready var _top_pin: Control = $Root/TopPin
+@onready var _bottom_pin: Control = $Root/BottomPin
+
+@onready var _progress_bg: Control = $Root/BottomPin/ProgressBg
+@onready var _progress_fill: Panel = $Root/BottomPin/ProgressFill
+@onready var _cat_face: TextureRect = $Root/BottomPin/CatFace
+@onready var _logo: TextureRect = $Root/BottomPin/Logo
+@onready var _quote_author: VBoxContainer = $Root/TopPin/QuoteAuthor
+@onready var _quote_label: Label = $Root/TopPin/QuoteAuthor/QuoteLabel
+@onready var _author_label: Label = $Root/TopPin/QuoteAuthor/AuthorLabel
+@onready var _halloween_bat: TextureRect = $Root/HalloweenBat
+@onready var _halloween_bottom_scene: TextureRect = $Root/HalloweenBottomScene
+
+@export var halloween_logo: Texture2D
+@export var halloween_cat_face: Texture2D
+
+const _COMPANION_SERVICE: GDScript = preload("res://scripts/module/home/home_companion_service.gd")
+var _companion_service: RefCounted = _COMPANION_SERVICE.new()
+
+var _default_logo: Texture2D
+var _default_cat_face: Texture2D
 
 # ---- 运行时状态 ----
-var _current_progress: float = 0.0  # 当前进度，0~1
-var _elapsed_time: float = 0.0  # 已运行秒数
-var _min_wait_seconds: float = _DEFAULT_MIN_WAIT_SECONDS  # 本次的最短等待秒数
-var _running: bool = false  # 是否在推进（隐藏后置 false）
-var _force_complete_requested: bool = false  # 外部已请求收尾
-var _completed: bool = false  # 已收尾并发过信号
-var _finish_tween: Tween = null  # 收尾补间（null 表示还没建）
+var _current_progress: float = 0.0 # 当前进度，0~1
+var _min_wait_seconds: float = _DEFAULT_MIN_WAIT_SECONDS # 本次的最短等待秒数
+var _running: bool = false # 是否在推进（隐藏后置 false）
+
+var _cheat_force_longest_quote: bool = false
+var _force_complete_requested: bool = false # 外部已请求收尾
+var _completed: bool = false # 已收尾并发过信号
+var _finish_tween: Tween = null # 收尾补间（null 表示还没建）
+
+var _is_first_today: bool = false
+
+var _shared_base: Dictionary = {}
+
+var _pin_base_top_dist: float = -1.0
+
+const _BASE_ANCHOR_KEYS: Array[String] = [
+	"anchor_left",
+	"anchor_top",
+	"anchor_right",
+	"anchor_bottom",
+]
+const _BASE_OFFSET_KEYS: Array[String] = [
+	"offset_left",
+	"offset_top",
+	"offset_right",
+	"offset_bottom",
+]
 
 
-# ================= 生命周期 =================
-## 每次被 UIManager 显示时调用：复位进度、抽今日标语、打开逐帧推进
 func on_show(_params: Dictionary = {}) -> void:
-	# 先定标语，再决定进度从 0 开始跑
-	_setup_quote_for_today()
-	# 允许调用方覆盖最短等待秒数（当前调用方都没传，实际用默认 3 秒）
 	_min_wait_seconds = float(_params.get("min_wait_seconds", _DEFAULT_MIN_WAIT_SECONDS))
 	_current_progress = 0.0
-	_elapsed_time = 0.0
 	_force_complete_requested = false
 	_completed = false
 	_running = true
+
+	if _finish_tween != null:
+		_finish_tween.kill()
+		_finish_tween = null
+
+	var today_str: String = Time.get_date_string_from_system()
+	_is_first_today = GameState.get_last_splash_date() != today_str
+	if _is_first_today:
+		GameState.set_last_splash_date(today_str)
+	_cheat_force_longest_quote = GameState.consume_loading_page_test_force_longest_quote()
+	_apply_quote()
+
+	_capture_shared_base()
+	_restore_shared_base()
+	_apply_pin_adaptation()
+	_apply_halloween_dress()
+
 	_apply_progress(0.0)
-	# 进度推进完全靠 _process
 	set_process(true)
 
 
-## 挑选今天的标语：先记下「今天已展示过」，再按 A/B 分组取猫标语或普通名言
-func _setup_quote_for_today() -> void:
-	# 系统当天日期字符串
-	var today_str: String = Time.get_date_string_from_system()
-	# 存档里的上次展示日期；与今天不同即「今天第一次进启动页」
-	var is_first_today: bool = GameState.get_last_splash_date() != today_str
-	# 今天是第一次：更新存档日期（会写 user:// 存档）
-	if is_first_today:
-		GameState.set_last_splash_date(today_str)
+func _apply_halloween_dress() -> void:
+	if _default_logo == null:
+		_default_logo = _logo.texture
+		_default_cat_face = _cat_face.texture
+	var strategy: HomeCompanionCatStrategy = HomeCompanionCatStrategy.for_group(
+		ABTestManager.home_companion_cat.peek_group()
+	)
+	var mode: int = _companion_service.resolve_mode(strategy)
+	var active: bool = _COMPANION_SERVICE.is_halloween_dress_mode(mode)
+	_logo.texture = halloween_logo if active and halloween_logo != null else _default_logo
+	_cat_face.texture = (
+		halloween_cat_face if active and halloween_cat_face != null else _default_cat_face
+	)
 
-	# splash_slogan A/B：猫标语模式（随机猫语录，且不显示作者）
-	if ABTestManager.splash_slogan.is_cat_slogan():
-		# 先声明 key，下面各分支负责赋值
-		var key: String
-		# 每日固定模式 + 当天首启：固定用 SPLASH_CAT_01
-		if ABTestManager.splash_slogan.has_daily_fixed_slogan() and is_first_today:
-			key = SplashSloganConfig.CAT_DAILY_FIXED_KEY
-		# 每日固定模式但不是首启：在 02~35 里随机
-		elif ABTestManager.splash_slogan.has_daily_fixed_slogan():
-			key = "SPLASH_CAT_%02d" % randi_range(2, SplashSloganConfig.CAT_SLOGAN_COUNT)
-		# 随机模式：01~35 随机
-		else:
-			key = "SPLASH_CAT_%02d" % randi_range(1, SplashSloganConfig.CAT_SLOGAN_COUNT)
-		# 写正文（tr 查翻译表）
-		if _quote_label != null:
-			_quote_label.text = tr(key)
-		# 猫标语没有作者署名
-		if _author_label != null:
-			_author_label.visible = false
-	# 普通名言：当天首启固定第 0 条，之后在 1~66 随机
-	else:
-		# idx = 0 是当天的固定开场语
-		var idx: int = 0 if is_first_today else randi_range(1, _SLOGAN_COUNT - 1)
-		if _quote_label != null:
-			# 正文 key = 前缀 + 序号
-			_quote_label.text = tr("%s%d" % [_QUOTE_KEY_PREFIX, idx])
-		if _author_label != null:
-			# 普通名言才显示作者
-			_author_label.visible = true
-			# 署名前加「- 」
-			_author_label.text = "- " + tr("%s%d" % [_AUTHOR_KEY_PREFIX, idx])
+	_halloween_bat.visible = active
+	_halloween_bottom_scene.visible = active
 
 
-## 每次被隐藏时调用：停止推进，并杀掉可能还在跑的收尾补间
-## （补间不会因为隐藏而自动停，不 kill 会继续改 UI）
+func _shared_layout_nodes() -> Array[Control]:
+	return [_top_pin, _bottom_pin, _quote_author, _progress_bg, _progress_fill, _logo, _cat_face]
+
+
+func _capture_shared_base() -> void:
+	if not _shared_base.is_empty():
+		return
+	var nodes: Array[Control] = _shared_layout_nodes()
+	for node in nodes:
+		if node == null:
+			continue
+		var snapshot: Dictionary = {}
+		for key in _BASE_ANCHOR_KEYS:
+			snapshot[key] = node.get(key)
+		for key in _BASE_OFFSET_KEYS:
+			snapshot[key] = node.get(key)
+		_shared_base[node] = snapshot
+	if _top_pin != null:
+		_pin_base_top_dist = _top_pin.anchor_top * _DESIGN_H + _top_pin.offset_top
+
+
+func _restore_shared_base() -> void:
+	var nodes: Array[Control] = _shared_layout_nodes()
+	for node in nodes:
+		if node == null or not _shared_base.has(node):
+			continue
+		var snapshot: Dictionary = _shared_base[node]
+		for key in _BASE_ANCHOR_KEYS:
+			node.set(key, snapshot[key])
+		for key in _BASE_OFFSET_KEYS:
+			node.set(key, snapshot[key])
+
+
+func _apply_pin_adaptation() -> void:
+	if _root == null or _top_pin == null:
+		return
+	var target_top: float = lerpf(
+		_pin_base_top_dist, _TOP_ONLY_PIN_ADAPT_EDGE_DIST, _resolve_pin_adapt_factor()
+	)
+	var delta_top: float = _pin_base_top_dist - target_top
+	_top_pin.offset_top -= delta_top
+	_top_pin.offset_bottom -= delta_top
+
+
+func _resolve_pin_adapt_factor() -> float:
+	if _root == null:
+		return 0.0
+	var root_size: Vector2 = _root.size
+	if root_size.x <= 0.0 or root_size.y <= 0.0:
+		return 0.0
+	var ratio: float = root_size.x / root_size.y
+	if ratio <= _PIN_ADAPT_RATIO_DESIGN:
+		return 0.0
+	return clampf(
+		(ratio - _PIN_ADAPT_RATIO_DESIGN) / (_PIN_ADAPT_RATIO_FIT - _PIN_ADAPT_RATIO_DESIGN),
+		0.0,
+		1.0
+	)
+
+
+func _apply_quote() -> void:
+	var use_rich_pool: bool = ABTestManager.splash_slogan.uses_rich_pool()
+	var time_based: bool = ABTestManager.splash_slogan.is_time_based()
+	var quote_text: String = _CHEAT_LONGEST_QUOTE
+	var author_text: String = _CHEAT_LONGEST_QUOTE_AUTHOR
+	if not _cheat_force_longest_quote:
+		var hour: int = int(Time.get_datetime_dict_from_system()["hour"])
+		var index_range: Vector2i = Picker.index_range(
+			use_rich_pool, time_based, _is_first_today, hour
+		)
+		var index: int = randi_range(index_range.x, index_range.y)
+		quote_text = tr(Picker.quote_key(use_rich_pool, index))
+		author_text = tr(Picker.author_key(use_rich_pool, index))
+	if _quote_label != null:
+		_quote_label.text = quote_text
+	if _author_label != null:
+		_author_label.visible = true
+		_author_label.text = "- " + author_text
+
+
 func on_hide() -> void:
-	# 置 false 后 _process 直接返回
+	for i in 10:
+		var ev := InputEventScreenTouch.new()
+		ev.index = i
+		ev.pressed = false
+		Input.parse_input_event(ev)
 	_running = false
 	set_process(false)
 	if _finish_tween != null and _finish_tween.is_valid():
@@ -106,28 +217,19 @@ func on_hide() -> void:
 	visible = false
 
 
-# ================= 进度推进 =================
 func _process(delta: float) -> void:
-	# 逐帧逼近 1.0：越接近越慢（指数式），所以自然状态下不会真的到 1
 	if not _running or _completed:
 		return
 
-	# 累计运行秒数（目前只记录，不参与计算）
-	_elapsed_time += delta
-	# 没满 1 就继续推
-	if _current_progress < 1.0:
-		_current_progress += (1.0 - _current_progress) * (delta / _min_wait_seconds)
-		# 浮点误差可能超过 1，夹住
-		if _current_progress > 1.0:
-			_current_progress = 1.0
-		_apply_progress(_current_progress)
+	_current_progress += (1.0 - _current_progress) * (delta / _min_wait_seconds)
+	if _current_progress > 1.0:
+		_current_progress = 1.0
+	_apply_progress(_current_progress)
 
-	# 进度已满且外部请求过收尾：立刻最终化
 	if _current_progress >= 1.0 and _force_complete_requested:
 		_finalize()
 		return
 
-	# 外部请求收尾但进度还没满：起一个 0.1 秒补间补到 1
 	if _force_complete_requested and _finish_tween == null:
 		_start_finish_tween()
 
@@ -155,6 +257,7 @@ func _start_finish_tween() -> void:
 ## 把 0~1 的进度换算成进度条与猫脸的位置（猫脸 86 像素宽，所以左右各 43）
 func _apply_progress(value: float) -> void:
 	_current_progress = value
+
 	if _progress_fill != null:
 		# 进度条右端 = 左端 + 总宽 × 进度
 		_progress_fill.offset_right = _PROGRESS_LEFT + _PROGRESS_WIDTH * value

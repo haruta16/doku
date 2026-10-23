@@ -1,9 +1,13 @@
-## 滚动容器拖拽增强：手指按住拖动 + 松手惯性滑行 + 越界橡皮筋回弹；由 attach 挂到 ScrollContainer 下当一个子节点
+## 滚动手势辅助：在拖拽、惯性和边缘回弹间切换，统一同步内容位置与按下状态。
 class_name ScrollDragHelper
 extends Node
 
 const _DRAG_THRESHOLD: float = 12.0 # 位移超过 12 像素才判定成拖拽（否则算点击）
 const _MOTION_WINDOW_SEC: float = 0.06 # 只统计最近 0.06 秒的位移来估算松手速度
+
+signal content_shifted
+
+signal interaction_cancelled
 
 @export var with_inertia: bool = false # 是否开启松手惯性；false 则松手即停
 @export var friction: float = 0.95 # 速度衰减系数（数值越小刹得越快）
@@ -26,6 +30,43 @@ var _drag_active: bool = false # 是否已越过阈值进入拖拽
 var _press_pos: Vector2 = Vector2.ZERO # 按下时的坐标，用来算阈值
 var _last_pos: Vector2 = Vector2.ZERO # 上一次移动的坐标，用来算帧位移
 var _active_pointer_index: int = -1 # 正在追踪的指针号：触摸=手指 index，鼠标=-2，-1=无
+
+var _suppressed_release_pointer_index: int = -1
+
+
+func stop_motion() -> void:
+	if _is_pressing and _active_pointer_index != -1:
+		_suppressed_release_pointer_index = _active_pointer_index
+		_cancel_pressed_buttons(_scroll)
+	_reset_all()
+
+
+func synchronize_content_position() -> void:
+	if not is_instance_valid(_scroll) or _scroll.get_child_count() == 0:
+		return
+	var content: Control = _scroll.get_child(0) as Control
+	if (
+		content == null
+		or is_equal_approx(content.position.y, -float(_scroll.scroll_vertical) - _overscroll)
+	):
+		return
+	_apply_overscroll_visual()
+
+
+func cancel_pressed_interaction(root: Control) -> void:
+	if not is_instance_valid(root):
+		return
+	var cancelled: bool = _cancel_pressed_buttons(root)
+	if not cancelled or not _is_pressing:
+		return
+	_suppressed_release_pointer_index = _active_pointer_index
+	_is_pressing = false
+	_drag_active = false
+	_active_pointer_index = -1
+	_recent_motions.clear()
+	_consumed_drift_release = false
+	if _state == State.PRESSING or _state == State.DRAGGING:
+		_state = State.IDLE
 
 
 # ================= 挂载 =================
@@ -91,20 +132,33 @@ func _process(delta: float) -> void:
 			_tick_elastic(delta)
 
 
-## 惯性每帧：按速度推进滚动位置；越界就转橡皮筋，速度按 friction 衰减到阈值以下停
 func _tick_drift(delta: float) -> void:
 	var new_y: float = float(_scroll.scroll_vertical) + _velocity.y * delta
 	var max_y: float = float(_max_scroll())
 
-	if new_y < 0.0: # 冲到顶部之外
+	var elastic_off: bool = elastic_max_overscroll <= 0.0
+	if new_y < 0.0:
+		if elastic_off:
+			_scroll.scroll_vertical = 0
+			_overscroll = 0.0
+			_apply_overscroll_visual()
+			_stop_drift()
+			return
 		_enter_elastic(new_y)
 		return
-	if new_y > max_y: # 冲到底部之外
+	if new_y > max_y:
+		if elastic_off:
+			_scroll.scroll_vertical = int(max_y)
+			_overscroll = 0.0
+			_apply_overscroll_visual()
+			_stop_drift()
+			return
 		_enter_elastic(new_y - max_y)
 		return
 
 	_scroll.scroll_vertical = int(new_y)
-	_velocity.y *= pow(friction, delta * 60.0) # 乘 delta*60 让衰减与帧率无关（以 60fps 为基准）
+	_apply_overscroll_visual()
+	_velocity.y *= pow(friction, delta * 60.0)
 	if absf(_velocity.y) < min_velocity:
 		_stop_drift()
 
@@ -151,13 +205,20 @@ func _start_bounce_back() -> void:
 	)
 
 
+func _rubber_band(excess: float) -> float:
+	var d: float = elastic_max_overscroll
+	if d <= 0.0:
+		return 0.0
+	var a: float = absf(excess)
+	return signf(excess) * (1.0 - 1.0 / (a / d + 1.0)) * d
+
+
 ## 回弹补间的回调：更新越界量并刷新视觉
 func _set_overscroll(v: float) -> void:
 	_overscroll = v
 	_apply_overscroll_visual()
 
 
-## 越界视觉：直接改容器第一个子节点的 y（ScrollContainer 自身无法越界）
 func _apply_overscroll_visual() -> void:
 	if _scroll == null or _scroll.get_child_count() == 0:
 		return
@@ -165,7 +226,9 @@ func _apply_overscroll_visual() -> void:
 	if content == null:
 		return
 
-	content.position.y = -float(_scroll.scroll_vertical) - _overscroll # 内容 y = -滚动量 - 越界量，于是越界时内容被拉出边界
+	content.position.y = -float(_scroll.scroll_vertical) - _overscroll
+
+	content_shifted.emit()
 
 
 ## 容器不可见时重置（隐藏后不该继续滑）
@@ -201,14 +264,34 @@ func _max_scroll() -> int:
 	return int(maxf(0.0, v_scroll.get_max() - v_scroll.get_page()))
 
 
-# ================= 输入处理 =================
-## 全局输入：触摸与鼠标两路，统一转成 _handle_press / _handle_motion
 func _input(event: InputEvent) -> void:
+	if _suppressed_release_pointer_index != -1:
+		var released_pointer: int = -1
+		if event is InputEventScreenTouch and not event.pressed:
+			released_pointer = event.index
+		elif (
+			event is InputEventMouseButton
+			and event.button_index == MOUSE_BUTTON_LEFT
+			and not event.pressed
+		):
+			released_pointer = -2
+		if released_pointer == _suppressed_release_pointer_index:
+			_suppressed_release_pointer_index = -1
+			get_viewport().set_input_as_handled()
+			return
 	if _scroll == null or not _scroll.is_visible_in_tree():
 		_reset()
 		return
 
-	if event is InputEventScreenTouch: # 触摸：用 event.index 区分手指
+	if _scroll.mouse_filter == Control.MOUSE_FILTER_IGNORE:
+		_reset()
+		return
+
+	if UIManager.is_covered_by_mask(_scroll):
+		_reset()
+		return
+
+	if event is InputEventScreenTouch:
 		_handle_press(event.position, event.pressed, event.index)
 	elif event is InputEventScreenDrag:
 		if _active_pointer_index == event.index:
@@ -216,20 +299,23 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
-			_handle_press(mb.position, mb.pressed, -2) # 鼠标统一用 -2 当指针号
+			_handle_press(mb.position, mb.pressed, -2)
 	elif event is InputEventMouseMotion:
-		if _active_pointer_index == -2 and _is_pressing: # 鼠标移动不带按下状态，要自己看 _is_pressing
+		if _active_pointer_index == -2 and _is_pressing:
 			_handle_motion(event.position)
 
 
-## 处理按下 / 抬起：按下开始追踪；抬起时决定是继续滑行还是直接收尾
 func _handle_press(pos: Vector2, pressed: bool, pointer_index: int) -> void:
 	if pressed:
+		if _suppressed_release_pointer_index != -1:
+			return
+		if _is_pressing and _active_pointer_index != pointer_index:
+			return
 		var rect: Rect2 = _scroll.get_global_rect()
-		if not rect.has_point(pos): # 点在外面的按下不管
+		if not rect.has_point(pos):
 			return
 
-		var was_in_motion: bool = _state == State.DRIFTING or _state == State.ELASTIC # 按住正在滑行的列表 = 立刻刹停
+		var was_in_motion: bool = _state == State.DRIFTING or _state == State.ELASTIC
 		if was_in_motion:
 			_velocity = Vector2.ZERO
 			if _bounce_tween != null:
@@ -238,7 +324,7 @@ func _handle_press(pos: Vector2, pressed: bool, pointer_index: int) -> void:
 			if _state == State.ELASTIC:
 				_overscroll = 0.0
 				_apply_overscroll_visual()
-			_consumed_drift_release = true # 标记这次「刹车」需要吞掉后续抬起事件
+			_consumed_drift_release = true
 			set_process(false)
 
 		_state = State.PRESSING
@@ -252,15 +338,32 @@ func _handle_press(pos: Vector2, pressed: bool, pointer_index: int) -> void:
 		if _active_pointer_index != pointer_index:
 			return
 
-		var was_dragging: bool = _drag_active # 拖过（超过阈值）就吞掉抬起，避免误触发按钮
+		var was_dragging: bool = _drag_active
 		var should_swallow: bool = was_dragging or _consumed_drift_release
 		_consumed_drift_release = false
 
-		var release_v: float = _calc_release_velocity() # 松手瞬间估算出的甩动速度（像素/秒）
+		if should_swallow:
+			_cancel_pressed_buttons(_scroll)
+
+		if absf(_overscroll) > 0.5:
+			_is_pressing = false
+			_drag_active = false
+			_active_pointer_index = -1
+			_recent_motions.clear()
+			_velocity = Vector2.ZERO
+			_state = State.ELASTIC
+			set_process(false)
+			_start_bounce_back()
+			if should_swallow:
+				get_viewport().set_input_as_handled()
+				interaction_cancelled.emit()
+			return
+
+		var release_v: float = _calc_release_velocity()
 		var should_drift: bool = (
 			with_inertia and was_dragging and absf(release_v) > min_velocity * 2.0
 		)
-		if should_drift: # 开了惯性、确实拖动过且速度超过 min_velocity 的 2 倍：进入滑行
+		if should_drift:
 			_velocity = Vector2(0.0, release_v)
 			_is_pressing = false
 			_drag_active = false
@@ -270,17 +373,17 @@ func _handle_press(pos: Vector2, pressed: bool, pointer_index: int) -> void:
 		else:
 			_reset()
 
-		if should_swallow: # 吞掉事件，让下面的按钮收不到这次抬起
+		if should_swallow:
 			get_viewport().set_input_as_handled()
+			interaction_cancelled.emit()
 
 
-## 处理移动：超过阈值才算拖拽；拖拽期间直接改滚动值并吞掉事件
 func _handle_motion(pos: Vector2) -> void:
 	if not _is_pressing:
 		return
 	var delta: Vector2 = pos - _last_pos
 	if not _drag_active:
-		if (pos - _press_pos).length() > _DRAG_THRESHOLD: # 越过阈值：升级为拖拽，并取消子按钮的按下态
+		if (pos - _press_pos).length() > _DRAG_THRESHOLD:
 			_drag_active = true
 			_state = State.DRAGGING
 			_cancel_pressed_buttons(_scroll)
@@ -288,13 +391,26 @@ func _handle_motion(pos: Vector2) -> void:
 		var v_enabled: bool = _scroll.vertical_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED
 		var h_enabled: bool = _scroll.horizontal_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED
 		if v_enabled:
-			_scroll.scroll_vertical = int(_scroll.scroll_vertical - delta.y) # 手指往上滑（delta.y 为负）→ 滚动值变大
+			var rubber_on: bool = with_inertia and elastic_max_overscroll > 0.0
+			var max_y: float = float(_max_scroll())
+			var virtual: float = float(_scroll.scroll_vertical) + _overscroll - delta.y
+			if rubber_on and virtual < 0.0:
+				_scroll.scroll_vertical = 0
+				_overscroll = _rubber_band(virtual)
+			elif rubber_on and virtual > max_y:
+				_scroll.scroll_vertical = int(max_y)
+				_overscroll = _rubber_band(virtual - max_y)
+			else:
+				_scroll.scroll_vertical = int(clampf(virtual, 0.0, max_y))
+				_overscroll = 0.0
 		if h_enabled:
 			_scroll.scroll_horizontal = int(_scroll.scroll_horizontal - delta.x)
+		if v_enabled:
+			_apply_overscroll_visual()
 
 		var dt: float = get_process_delta_time()
 		if dt > 0.0:
-			_recent_motions.append({"delta_y": delta.y, "dt": dt}) # 记录本帧位移，供松手时算速度
+			_recent_motions.append({"delta_y": delta.y, "dt": dt})
 			_trim_recent_motions()
 		get_viewport().set_input_as_handled()
 	_last_pos = pos
@@ -333,11 +449,18 @@ func _calc_release_velocity() -> float:
 	return -total_dy / total_dt
 
 
-## 递归取消子按钮的按下态（拖拽开始后按钮不该保持高亮）
-func _cancel_pressed_buttons(node: Node) -> void:
+func _cancel_pressed_buttons(node: Node) -> bool:
+	if not is_instance_valid(node):
+		return false
+	var cancelled: bool = false
 	if node is BaseButton:
 		var btn := node as BaseButton
 		if btn.button_pressed and not btn.toggle_mode:
-			btn.button_pressed = false
-	for child in node.get_children():
-		_cancel_pressed_buttons(child)
+			var was_disabled: bool = btn.disabled
+			btn.disabled = true
+			btn.disabled = was_disabled
+			cancelled = true
+	var children: Array[Node] = node.get_children()
+	for child in children:
+		cancelled = _cancel_pressed_buttons(child) or cancelled
+	return cancelled

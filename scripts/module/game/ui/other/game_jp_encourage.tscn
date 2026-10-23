@@ -1,0 +1,221 @@
+[gd_scene format=3 uid="uid://cq8m8stlpppe8"]
+
+[ext_resource type="Texture2D" uid="uid://cqfy44k8ieok1" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_01.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://b42c5oh1nqotl" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_02.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bp5f8jg8jx8l5" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_03.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://h0ecj44w8ffm" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_04.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://qtk5imlrbt3j" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_05.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://b06etuld035d4" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_06.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://cbgha86a3tl1" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_07.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://beknatkymtpns" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_08.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://c1tc43ghqswe3" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_09.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://vjirn454bych" path="res://assets/sprites/encourage/ui_mao_glc_pic_jp_10.png" id="10"]
+
+[node name="GameJpEncourage" type="Control" unique_id=746618878]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 350.0
+offset_bottom = 1200.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+metadata/a2g_semantic_id = "1:4"
+
+[node name="JpNice" type="Control" parent="." unique_id=561750641]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 330.0
+offset_bottom = 118.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:5"
+
+[node name="TxtJpNiceImg" type="TextureRect" parent="JpNice" unique_id=1997739828]
+layout_mode = 0
+offset_left = 23.0
+offset_right = 286.0
+offset_bottom = 98.0
+pivot_offset = Vector2(131.5, 49)
+mouse_filter = 2
+texture = ExtResource("1")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:7"
+
+[node name="JpAmazing" type="Control" parent="." unique_id=370334325]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 138.0
+offset_right = 330.0
+offset_bottom = 236.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:8"
+
+[node name="TxtJpAmazingImg" type="TextureRect" parent="JpAmazing" unique_id=696378974]
+layout_mode = 0
+offset_left = 28.0
+offset_right = 282.0
+offset_bottom = 98.0
+pivot_offset = Vector2(127, 49)
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:10"
+
+[node name="JpImpressive" type="Control" parent="." unique_id=1178581850]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 256.0
+offset_right = 330.0
+offset_bottom = 354.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:11"
+
+[node name="TxtJpImpressiveImg" type="TextureRect" parent="JpImpressive" unique_id=627399368]
+layout_mode = 0
+offset_left = 31.0
+offset_right = 279.0
+offset_bottom = 98.0
+pivot_offset = Vector2(124, 49)
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:13"
+
+[node name="JpBravo" type="Control" parent="." unique_id=444221797]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 374.0
+offset_right = 330.0
+offset_bottom = 472.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:14"
+
+[node name="TxtJpBravoImg" type="TextureRect" parent="JpBravo" unique_id=1205219433]
+layout_mode = 0
+offset_left = 30.0
+offset_right = 279.0
+offset_bottom = 98.0
+pivot_offset = Vector2(124.5, 49)
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:16"
+
+[node name="JpAwesome" type="Control" parent="." unique_id=41205046]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 492.0
+offset_right = 330.0
+offset_bottom = 590.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:17"
+
+[node name="TxtJpAwesomeImg" type="TextureRect" parent="JpAwesome" unique_id=1816243806]
+layout_mode = 0
+offset_left = 64.0
+offset_right = 246.0
+offset_bottom = 98.0
+pivot_offset = Vector2(91, 49)
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:19"
+
+[node name="JpPerfect" type="Control" parent="." unique_id=1381047280]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 610.0
+offset_right = 330.0
+offset_bottom = 708.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:20"
+
+[node name="TxtJpPerfectImg" type="TextureRect" parent="JpPerfect" unique_id=1289063648]
+layout_mode = 0
+offset_left = 64.0
+offset_right = 246.0
+offset_bottom = 98.0
+pivot_offset = Vector2(91, 49)
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:22"
+
+[node name="JpGenius" type="Control" parent="." unique_id=1305387647]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 728.0
+offset_right = 330.0
+offset_bottom = 826.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:23"
+
+[node name="TxtJpGeniusImg" type="TextureRect" parent="JpGenius" unique_id=1803645392]
+layout_mode = 0
+offset_left = 63.0
+offset_right = 246.0
+offset_bottom = 98.0
+pivot_offset = Vector2(91.5, 49)
+mouse_filter = 2
+texture = ExtResource("7")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:25"
+
+[node name="JpGodlike" type="Control" parent="." unique_id=1735458475]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 846.0
+offset_right = 330.0
+offset_bottom = 944.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:26"
+
+[node name="TxtJpGodlikeImg" type="TextureRect" parent="JpGodlike" unique_id=1246431788]
+layout_mode = 0
+offset_left = 63.0
+offset_right = 246.0
+offset_bottom = 98.0
+pivot_offset = Vector2(91.5, 49)
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:28"
+
+[node name="JpLegendary" type="Control" parent="." unique_id=1242966932]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 964.0
+offset_right = 330.0
+offset_bottom = 1062.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:29"
+
+[node name="TxtJpLegendaryImg" type="TextureRect" parent="JpLegendary" unique_id=1926093865]
+layout_mode = 0
+offset_left = 61.0
+offset_right = 248.0
+offset_bottom = 98.0
+pivot_offset = Vector2(93.5, 49)
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:31"
+
+[node name="JpGreatVictory" type="Control" parent="." unique_id=797945570]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 1082.0
+offset_right = 330.0
+offset_bottom = 1180.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "1:32"
+
+[node name="TxtJpGreatVictoryImg" type="TextureRect" parent="JpGreatVictory" unique_id=335335389]
+layout_mode = 0
+offset_left = 29.0
+offset_right = 281.0
+offset_bottom = 98.0
+pivot_offset = Vector2(126, 49)
+mouse_filter = 2
+texture = ExtResource("10")
+expand_mode = 1
+metadata/a2g_semantic_id = "1:34"

@@ -1,4 +1,4 @@
-## 插屏冷却实验：按「存活天数」分段设置两次插屏之间的最小间隔秒数（UniKitManager 每次判定冷却时读取）
+## 实验配置 inter_cd_lc：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name InterCdLcConfig
 
@@ -9,11 +9,10 @@ const VALUE_DEFAULT: String = "{60}" # 默认方案：一律 60 秒
 var _seg_regex: RegEx = null # 匹配 {...} 片段的正则
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "inter_cd_lc"
-	default_value = VALUE_DEFAULT # 默认档：60 秒冷却
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = VALUE_DEFAULT
 
 
 ## 取当前存活天数分段的冷却秒数；段数不匹配用第 0 段，解析不出时兜底 60 秒

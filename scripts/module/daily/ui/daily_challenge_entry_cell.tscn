@@ -6,11 +6,13 @@
 [ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://d33a2k6oi03iw" path="res://assets/sprites/game/icon_timer.png" id="5"]
 [ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="6"]
-[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="7"]
-[ext_resource type="Texture2D" uid="uid://c4yd2751206ab" path="res://assets/sprites/daily/state_locked.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://c6hyhnojhdmu8" path="res://assets/sprites/home/lock.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://djalnxq8lyl8i" path="res://assets/sprites/home/daily_record.png" id="11"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="7"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="8"]
+[ext_resource type="Texture2D" uid="uid://c4yd2751206ab" path="res://assets/sprites/daily/state_locked.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://c6hyhnojhdmu8" path="res://assets/sprites/home/lock.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://djalnxq8lyl8i" path="res://assets/sprites/home/daily_record.png" id="12"]
+[ext_resource type="PackedScene" uid="uid://bc0ut1xlba13s" path="res://scripts/module/daily/ui/dc_players_joined_row.tscn" id="13"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8nd5n"]
 bg_color = Color(0.3518563, 0.35385624, 0.603846, 0.6)
@@ -75,16 +77,17 @@ expand_mode = 1
 [node name="DailyChallengeTxt" type="Label" parent="DcEntryImg/StateNormal" unique_id=1225172816]
 layout_mode = 0
 offset_left = 22.0
-offset_top = 14.0
-offset_right = 292.0
-offset_bottom = 154.0
+offset_top = -6.0
+offset_right = 305.0
+offset_bottom = 174.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.33730215, 0.35048613, 0.6932696, 1)
 theme_override_constants/line_spacing = -18
 theme_override_fonts/font = ExtResource("3")
-theme_override_font_sizes/font_size = 54
+theme_override_font_sizes/font_size = 60
 text = "DAILY_CHALLENGE_TITLE"
+vertical_alignment = 1
 autowrap_mode = 2
 script = ExtResource("4")
 min_font_size = 30
@@ -148,6 +151,8 @@ theme_override_font_sizes/font_size = 54
 text = "21:55:44"
 horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
 
 [node name="ActionBtn" type="Control" parent="DcEntryImg/StateNormal" unique_id=578009392]
 anchors_preset = 0
@@ -162,34 +167,35 @@ offset_right = 370.0
 offset_bottom = 90.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_h0rl7")
 
-[node name="PlayTxt" type="Label" parent="DcEntryImg/StateNormal/ActionBtn" unique_id=387380107]
+[node name="PlayTxt" type="Label" parent="DcEntryImg/StateNormal/ActionBtn" unique_id=1683225125]
 layout_mode = 0
-offset_left = 126.0
-offset_top = 17.0
-offset_right = 244.0
-offset_bottom = 73.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_left = 41.0
+offset_right = 331.0
+offset_bottom = 90.0
 theme_override_colors/font_color = Color(0.3372549, 0.34901962, 0.69411767, 1)
 theme_override_constants/line_spacing = -32
-theme_override_fonts/font = ExtResource("7")
+theme_override_fonts/font = ExtResource("8")
 theme_override_font_sizes/font_size = 60
 text = "DAILY_CHALLENGE_PLAY"
+horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("4")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
 
-[node name="Jun3Txt" type="Label" parent="DcEntryImg/StateNormal" unique_id=1424591427]
+[node name="Jun3Txt" type="Label" parent="DcEntryImg/StateNormal" unique_id=1157397467]
 layout_mode = 0
 offset_left = 23.0
-offset_top = 181.0
-offset_right = 224.0
-offset_bottom = 237.0
-grow_vertical = 2
+offset_top = 150.5
+offset_right = 394.0
+offset_bottom = 267.5
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/line_spacing = -61
-theme_override_fonts/font = ExtResource("7")
+theme_override_fonts/font = ExtResource("8")
 theme_override_font_sizes/font_size = 80
 text = "Jun 3"
 vertical_alignment = 1
+script = ExtResource("4")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
 
 [node name="StateLocked" type="Control" parent="DcEntryImg" unique_id=1787922367]
 visible = false
@@ -205,22 +211,23 @@ offset_left = -20.0
 offset_top = -14.0
 offset_right = 440.0
 offset_bottom = 578.0
-texture = ExtResource("8")
+texture = ExtResource("9")
 expand_mode = 1
 
 [node name="DailyChallengeTxt" type="Label" parent="DcEntryImg/StateLocked" unique_id=646120556]
 layout_mode = 0
 offset_left = 22.0
-offset_top = 14.0
-offset_right = 292.0
-offset_bottom = 154.0
+offset_top = -6.0
+offset_right = 305.0
+offset_bottom = 174.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.2784314, 0.2901961, 0.5411765, 1)
 theme_override_constants/line_spacing = -18
 theme_override_fonts/font = ExtResource("3")
-theme_override_font_sizes/font_size = 54
+theme_override_font_sizes/font_size = 60
 text = "DAILY_CHALLENGE_TITLE"
+vertical_alignment = 1
 autowrap_mode = 2
 script = ExtResource("4")
 min_font_size = 30
@@ -243,7 +250,7 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0.9647059, 0.9647059, 0.9764706, 1)
 theme_override_constants/line_spacing = -12
 theme_override_fonts/font = ExtResource("3")
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 45
 text = "DAILY_CHALLENGE_UNLOCK_AT"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -268,7 +275,7 @@ color = Color(0.9411765, 0.9411765, 0.972549, 0)
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 127.0
-texture = ExtResource("9")
+texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 5
 
@@ -295,7 +302,7 @@ self_modulate = Color(1, 1, 1, 0.7058824)
 texture_repeat = 1
 position = Vector2(364, 117)
 amount = 1
-texture = ExtResource("10")
+texture = ExtResource("11")
 lifetime = 2.0
 speed_scale = 1.4
 explosiveness = 1.0
@@ -315,9 +322,9 @@ scale_amount_curve = SubResource("Curve_5gte6")
 [node name="DailyChallengeTxt" type="Label" parent="DcEntryImg/StateDone" unique_id=887239165]
 layout_mode = 0
 offset_left = 22.0
-offset_top = 5.0
-offset_right = 292.0
-offset_bottom = 163.0
+offset_top = -6.0
+offset_right = 305.0
+offset_bottom = 174.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.33730215, 0.35048613, 0.6932696, 1)
@@ -325,6 +332,7 @@ theme_override_constants/line_spacing = -18
 theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 60
 text = "DAILY_CHALLENGE_TITLE"
+vertical_alignment = 1
 autowrap_mode = 2
 script = ExtResource("4")
 min_font_size = 30
@@ -376,7 +384,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("11")
+texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 5
 
@@ -395,6 +403,8 @@ theme_override_font_sizes/font_size = 54
 text = "08:55"
 horizontal_alignment = 1
 vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
 
 [node name="ActionBtn" type="Control" parent="DcEntryImg/StateDone" unique_id=1279495858]
 anchors_preset = 0
@@ -419,30 +429,39 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/line_spacing = -32
-theme_override_fonts/font = ExtResource("7")
+theme_override_fonts/font = ExtResource("8")
 theme_override_font_sizes/font_size = 60
 text = "TOP 90%"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Jun3Txt" type="Label" parent="DcEntryImg/StateDone" unique_id=491183987]
+[node name="Jun3Txt" type="Label" parent="DcEntryImg/StateDone" unique_id=790832843]
 layout_mode = 0
 offset_left = 23.0
 offset_top = 150.5
-offset_right = 224.0
+offset_right = 392.0
 offset_bottom = 267.5
-grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/line_spacing = -61
-theme_override_fonts/font = ExtResource("7")
+theme_override_fonts/font = ExtResource("8")
 theme_override_font_sizes/font_size = 80
 text = "Jun 3"
 vertical_alignment = 1
+script = ExtResource("4")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
 
 [node name="ClickBtn" type="Button" parent="." unique_id=480981899]
 layout_mode = 0
 offset_right = 460.0
 offset_bottom = 590.0
 flat = true
+
+[node name="PlayersJoinedRow" parent="." unique_id=1531333992 instance=ExtResource("13")]
+layout_mode = 0
+offset_left = -25.0
+offset_top = 584.0
+offset_right = 725.0
+offset_bottom = 664.0
+scale = Vector2(0.68, 0.68)
 
 [connection signal="pressed" from="ClickBtn" to="." method="_on_click_pressed"]

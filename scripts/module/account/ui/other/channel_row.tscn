@@ -1,0 +1,59 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://txa4meijdowp" path="res://scripts/module/account/view/other/channel_row.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bpyumv0mhclji" path="res://assets/sprites/account/icon_facebook.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://cxh1kdsamvm05" path="res://assets/sprites/account/icon_google.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bkf2t14j8rje6" path="res://assets/sprites/account/icon_apple.png" id="4"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="5"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="6"]
+
+[node name="ChannelRow" type="Button" unique_id=1789116727]
+custom_minimum_size = Vector2(750, 160)
+offset_right = 750.0
+offset_bottom = 160.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+flat = true
+script = ExtResource("1")
+tex_facebook = ExtResource("2")
+tex_google = ExtResource("3")
+tex_apple = ExtResource("4")
+
+[node name="Bg" type="Panel" parent="." unique_id=1541597163]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="." unique_id=848145381]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 35.0
+offset_right = 125.0
+offset_bottom = 125.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LabelTxt" type="Label" parent="." unique_id=1423020217]
+layout_mode = 0
+offset_left = 135.0
+offset_top = 52.0
+offset_right = 705.0
+offset_bottom = 109.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/line_spacing = -2
+theme_override_fonts/font = ExtResource("5")
+theme_override_font_sizes/font_size = 56
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("6")
+max_font_size = 56
+min_font_size = 27
+fit_height_single_line = false
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"

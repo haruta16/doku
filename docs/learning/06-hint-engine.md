@@ -1,5 +1,7 @@
 # Hint Engine — 提示引擎
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 的实际入口、题库格式和新增系统请先看 [新版导读](08-version-1.22.0.md)，再对照当前源码；旧代码片段不是新版逐行镜像。
+
 > 文件：[scripts/module/gameplay/core/hint_engine.gd](../../scripts/module/gameplay/core/hint_engine.gd)
 >
 > 这是 Meowdoku 的**解题引擎**——给定当前棋盘，自动推导下一步该放哪只猫或标哪些叉。它是 `QueendokuCore` 最大的消费者，也是「如果玩家点提示按钮，系统怎么算出答案」的全部逻辑。

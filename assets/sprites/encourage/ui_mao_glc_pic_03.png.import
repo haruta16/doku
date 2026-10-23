@@ -3,26 +3,24 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://de8ncl6uvyomv"
-path.s3tc="res://.godot/imported/ui_mao_glc_pic_03.png-97bda5200d199d6e5bfe526b78e0ba57.s3tc.ctex"
-path.etc2="res://.godot/imported/ui_mao_glc_pic_03.png-97bda5200d199d6e5bfe526b78e0ba57.etc2.ctex"
+path="res://.godot/imported/ui_mao_glc_pic_03.png-97bda5200d199d6e5bfe526b78e0ba57.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/sprites/encourage/ui_mao_glc_pic_03.png"
-dest_files=["res://.godot/imported/ui_mao_glc_pic_03.png-97bda5200d199d6e5bfe526b78e0ba57.s3tc.ctex", "res://.godot/imported/ui_mao_glc_pic_03.png-97bda5200d199d6e5bfe526b78e0ba57.etc2.ctex"]
+dest_files=["res://.godot/imported/ui_mao_glc_pic_03.png-97bda5200d199d6e5bfe526b78e0ba57.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=1.0
-compress/uastc_level=2
-compress/rdo_quality_loss=0
-compress/hdr_compression=0
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

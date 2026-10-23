@@ -1,0 +1,4240 @@
+[
+  {
+    "path": "res://.godot/imported/et_broken_fish_2.png-b18ffed34f3b18661c08feb8de969d88.res",
+    "source_file": "res://assets/effect/texture/ui/et_broken_fish_2.png",
+    "uid": "uid://dy7mb4sc8x20r",
+    "import_path": "assets/effect/texture/ui/et_broken_fish_2.png.import",
+    "atlas_path": "res://assets/atlas/effect_ui_vram.png",
+    "region": [
+      489,
+      512,
+      57,
+      57
+    ]
+  },
+  {
+    "path": "res://.godot/imported/et_RewardFull_01.png-f027390288c45dcc59edf19bf222ec9d.res",
+    "source_file": "res://assets/effect/texture/ui/et_RewardFull_01.png",
+    "uid": "uid://cp4xgc7tirfxs",
+    "import_path": "assets/effect/texture/ui/et_RewardFull_01.png.import",
+    "atlas_path": "res://assets/atlas/effect_ui_vram.png",
+    "region": [
+      0,
+      512,
+      487,
+      410
+    ]
+  },
+  {
+    "path": "res://.godot/imported/et_RewardFull_02.png-dbf509cd315db8a19bdcdc3666411214.res",
+    "source_file": "res://assets/effect/texture/ui/et_RewardFull_02.png",
+    "uid": "uid://cqcpn6oahgcxw",
+    "import_path": "assets/effect/texture/ui/et_RewardFull_02.png.import",
+    "atlas_path": "res://assets/atlas/effect_ui_vram.png",
+    "region": [
+      0,
+      0,
+      587,
+      510
+    ]
+  },
+  {
+    "path": "res://.godot/imported/lock.png-a87f33695ab0473db2b5a445008d19d3.res",
+    "source_file": "res://assets/sprites/home/lock.png",
+    "uid": "uid://c6hyhnojhdmu8",
+    "import_path": "assets/sprites/home/lock.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1082,
+      0,
+      200,
+      254
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_bottom_scene.png-3e5524f9dd8c967bd518f413904ce864.res",
+    "source_file": "res://assets/sprites/splash/halloween/halloween_bottom_scene.png",
+    "uid": "uid://dc7r0e32muhui",
+    "import_path": "assets/sprites/splash/halloween/halloween_bottom_scene.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      0,
+      0,
+      1080,
+      288
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_bat.png-f63fb2e5a104a5cb6a529892b1a13a41.res",
+    "source_file": "res://assets/sprites/splash/halloween/halloween_bat.png",
+    "uid": "uid://b62ikcrspbvqu",
+    "import_path": "assets/sprites/splash/halloween/halloween_bat.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      435,
+      882,
+      187,
+      156
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_pumpkin.png-8210770b8a3b7b32866978ae67978d1d.res",
+    "source_file": "res://assets/sprites/splash/halloween/halloween_pumpkin.png",
+    "uid": "uid://dniyu4x0gfcpl",
+    "import_path": "assets/sprites/splash/halloween/halloween_pumpkin.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      624,
+      882,
+      174,
+      160
+    ]
+  },
+  {
+    "path": "res://.godot/imported/shape.png-5cde5e5c941661689965f3035bd17314.res",
+    "source_file": "res://assets/sprites/splash/push_guide_exp1/shape.png",
+    "uid": "uid://ie3dv22r1x8x",
+    "import_path": "assets/sprites/splash/push_guide_exp1/shape.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      930,
+      940,
+      114,
+      114
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bg_normal_toast11.png-14092209c6f33d0079b4b73ac6a1ded4.res",
+    "source_file": "res://assets/sprites/pop/bg_normal_toast11.png",
+    "uid": "uid://crxxhcw3pa8jo",
+    "import_path": "assets/sprites/pop/bg_normal_toast11.png.import",
+    "atlas_path": "res://assets/atlas/pop_vram.png",
+    "region": [
+      0,
+      460,
+      951,
+      353
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bg_normal_toast.png-1dd3bede77b565ce2837a0345317bc06.res",
+    "source_file": "res://assets/sprites/pop/bg_normal_toast.png",
+    "uid": "uid://bh3sefaq5iwle",
+    "import_path": "assets/sprites/pop/bg_normal_toast.png.import",
+    "atlas_path": "res://assets/atlas/pop_vram.png",
+    "region": [
+      0,
+      815,
+      900,
+      365
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bg_hard_toast11.png-f812b3a60895fe530c1c93bf0e756c5a.res",
+    "source_file": "res://assets/sprites/pop/bg_hard_toast11.png",
+    "uid": "uid://wofj7tenybjn",
+    "import_path": "assets/sprites/pop/bg_hard_toast11.png.import",
+    "atlas_path": "res://assets/atlas/pop_vram.png",
+    "region": [
+      0,
+      0,
+      948,
+      458
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_fire.png-af7effcbfd662dac746e9c19419ca9e7.res",
+    "source_file": "res://assets/sprites/pop/icon_fire.png",
+    "uid": "uid://c3qtucbhxvvo7",
+    "import_path": "assets/sprites/pop/icon_fire.png.import",
+    "atlas_path": "res://assets/atlas/pop_vram.png",
+    "region": [
+      953,
+      0,
+      80,
+      93
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_fire_super.png-cc863d4c4f2a6652a5327de6eea8f5ea.res",
+    "source_file": "res://assets/sprites/pop/icon_fire_super.png",
+    "uid": "uid://b0c5e1s643nw2",
+    "import_path": "assets/sprites/pop/icon_fire_super.png.import",
+    "atlas_path": "res://assets/atlas/pop_vram.png",
+    "region": [
+      902,
+      815,
+      160,
+      186
+    ]
+  },
+  {
+    "path": "res://.godot/imported/panel_bg_v2.png-0aed4f1056df91da530bb83c4c3f5ed1.res",
+    "source_file": "res://assets/sprites/result/pass_page_g1/panel_bg_v2.png",
+    "uid": "uid://v1gephh7yqcw",
+    "import_path": "assets/sprites/result/pass_page_g1/panel_bg_v2.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      0,
+      0,
+      902,
+      432
+    ]
+  },
+  {
+    "path": "res://.godot/imported/error_count.png-49d060863bb8a10400bb802540216e5d.res",
+    "source_file": "res://assets/sprites/result/pass_page_g2/error_count.png",
+    "uid": "uid://dky273277d2hc",
+    "import_path": "assets/sprites/result/pass_page_g2/error_count.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      904,
+      0,
+      104,
+      102
+    ]
+  },
+  {
+    "path": "res://.godot/imported/hint_count.png-bb6db16c4cec400bae4b13671c21bc8b.res",
+    "source_file": "res://assets/sprites/result/pass_page_g2/hint_count.png",
+    "uid": "uid://b2kb78icg0j6b",
+    "import_path": "assets/sprites/result/pass_page_g2/hint_count.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1192,
+      640,
+      92,
+      126
+    ]
+  },
+  {
+    "path": "res://.godot/imported/completion_rate.png-c85a5c4bf2fa52e9f6d8c275ce0962fe.res",
+    "source_file": "res://assets/sprites/result/pass_page_g2/completion_rate.png",
+    "uid": "uid://dhi0rdbr4xo6e",
+    "import_path": "assets/sprites/result/pass_page_g2/completion_rate.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1068,
+      610,
+      122,
+      122
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_reward_frame_avatar.png-2abaaff8edf1ddf8b3e72b2e9073799b.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_reward_frame_avatar.png",
+    "uid": "uid://uy2iisb1o5wx",
+    "import_path": "assets/sprites/home_companion/icon_companion_reward_frame_avatar.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1269,
+      529,
+      101,
+      101
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_reward_tag.png-1b892235b2abc2a07f2fdf76e1697d27.res",
+    "source_file": "res://assets/sprites/home_companion/halloween_reward_tag.png",
+    "uid": "uid://ojxok2og3e13",
+    "import_path": "assets/sprites/home_companion/halloween_reward_tag.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1022,
+      636,
+      345,
+      122
+    ]
+  },
+  {
+    "path": "res://.godot/imported/track_companion_satiety.png-2481d48459ded125ae84828520bbd964.res",
+    "source_file": "res://assets/sprites/home_companion/track_companion_satiety.png",
+    "uid": "uid://bkr7lrjibr47r",
+    "import_path": "assets/sprites/home_companion/track_companion_satiety.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      0,
+      1026,
+      820,
+      100
+    ]
+  },
+  {
+    "path": "res://.godot/imported/shadow_companion_speech.png-1b4f393a2b44d077acd9b8dd35032779.res",
+    "source_file": "res://assets/sprites/home_companion/shadow_companion_speech.png",
+    "uid": "uid://dgu8tkvl0p8cs",
+    "import_path": "assets/sprites/home_companion/shadow_companion_speech.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1197,
+      995,
+      90,
+      90
+    ]
+  },
+  {
+    "path": "res://.godot/imported/corner_companion_satiety_top.png-8b817efc3c19383447ad4950c131e5dc.res",
+    "source_file": "res://assets/sprites/home_companion/corner_companion_satiety_top.png",
+    "uid": "uid://bn8jttn5vy5fk",
+    "import_path": "assets/sprites/home_companion/corner_companion_satiety_top.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1072,
+      1010,
+      40,
+      30
+    ]
+  },
+  {
+    "path": "res://.godot/imported/banner_halloween_intro.png-0c700f550b6fb476e86ee3ef045bfd42.res",
+    "source_file": "res://assets/sprites/home_companion/banner_halloween_intro.png",
+    "uid": "uid://dcfwoqf41111t",
+    "import_path": "assets/sprites/home_companion/banner_halloween_intro.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      0,
+      0,
+      800,
+      425
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ribbon_companion_reward_trial.png-b224ff9991a2b65722f1f9f741e0e99a.res",
+    "source_file": "res://assets/sprites/home_companion/ribbon_companion_reward_trial.png",
+    "uid": "uid://dekk35gcsga6j",
+    "import_path": "assets/sprites/home_companion/ribbon_companion_reward_trial.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      643,
+      669,
+      250,
+      87
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bubble_companion_food.png-e6412339ed53fe54d9d08d2d0a2ac68d.res",
+    "source_file": "res://assets/sprites/home_companion/bubble_companion_food.png",
+    "uid": "uid://57alrpoowwej",
+    "import_path": "assets/sprites/home_companion/bubble_companion_food.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1022,
+      410,
+      245,
+      224
+    ]
+  },
+  {
+    "path": "res://.godot/imported/capsule_companion_countdown.png-97ea5186f9c8e6ca075b4ea83ebce75d.res",
+    "source_file": "res://assets/sprites/home_companion/capsule_companion_countdown.png",
+    "uid": "uid://cj44n114eahat",
+    "import_path": "assets/sprites/home_companion/capsule_companion_countdown.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      822,
+      1052,
+      368,
+      76
+    ]
+  },
+  {
+    "path": "res://.godot/imported/capsule_companion_satiety.png-3aba0c10a3d6bc9bff81964c435b870a.res",
+    "source_file": "res://assets/sprites/home_companion/capsule_companion_satiety.png",
+    "uid": "uid://bngnpocejtevp",
+    "import_path": "assets/sprites/home_companion/capsule_companion_satiety.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      0,
+      427,
+      1020,
+      240
+    ]
+  },
+  {
+    "path": "res://.godot/imported/corner_companion_satiety_bottom.png-6180f7303fd100e874bc833cb9c94a99.res",
+    "source_file": "res://assets/sprites/home_companion/corner_companion_satiety_bottom.png",
+    "uid": "uid://c8q8oe0u8rtxn",
+    "import_path": "assets/sprites/home_companion/corner_companion_satiety_bottom.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1114,
+      1010,
+      40,
+      30
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_reward_trial_costume.png-45d2b4c8a30a62c4bf1def8196582050.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_reward_trial_costume.png",
+    "uid": "uid://bcni3bj5lkjdr",
+    "import_path": "assets/sprites/home_companion/icon_companion_reward_trial_costume.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1197,
+      760,
+      117,
+      122
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_progress_candy.png-cd103490c346b746d41db340e3cf377e.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_progress_candy.png",
+    "uid": "uid://cgswks6piidi",
+    "import_path": "assets/sprites/home_companion/icon_companion_progress_candy.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1315,
+      904,
+      108,
+      92
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_reward_permanent_costume.png-3e9f6eace85cb324422f2dadf4ee4094.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_reward_permanent_costume.png",
+    "uid": "uid://dbg5btt2ghs1y",
+    "import_path": "assets/sprites/home_companion/icon_companion_reward_permanent_costume.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1072,
+      880,
+      123,
+      128
+    ]
+  },
+  {
+    "path": "res://.godot/imported/corner_companion_countdown_left.png-a792435f922edde851630b4bfe933633.res",
+    "source_file": "res://assets/sprites/home_companion/corner_companion_countdown_left.png",
+    "uid": "uid://ddln3gh4jduht",
+    "import_path": "assets/sprites/home_companion/corner_companion_countdown_left.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1399,
+      201,
+      28,
+      28
+    ]
+  },
+  {
+    "path": "res://.godot/imported/tail_companion_speech.png-f597e81907e5565d2f95c6aba77577c5.res",
+    "source_file": "res://assets/sprites/home_companion/tail_companion_speech.png",
+    "uid": "uid://je217bnp4ubg",
+    "import_path": "assets/sprites/home_companion/tail_companion_speech.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1108,
+      760,
+      72,
+      50
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_food_can_bubble.png-beb1be7c4c948ffdbd78c8455ffa174d.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_food_can_bubble.png",
+    "uid": "uid://5vo3qom8uwgi",
+    "import_path": "assets/sprites/home_companion/icon_companion_food_can_bubble.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1197,
+      884,
+      116,
+      109
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_reward_mouse.png-65f950a1455a6a79efbc1a9708cc5406.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_reward_mouse.png",
+    "uid": "uid://dkr5qvcqtvb86",
+    "import_path": "assets/sprites/home_companion/icon_companion_reward_mouse.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1197,
+      0,
+      223,
+      199
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_settle_candy.png-328e216abb996f42c6e523baa26b1c00.res",
+    "source_file": "res://assets/sprites/home_companion/halloween_settle_candy.png",
+    "uid": "uid://6nctu1emuf2t",
+    "import_path": "assets/sprites/home_companion/halloween_settle_candy.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      965,
+      760,
+      141,
+      118
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_settle_can.png-748acffc1400c58b4e48be6909a5ebcf.res",
+    "source_file": "res://assets/sprites/home_companion/halloween_settle_can.png",
+    "uid": "uid://ss1l02d56rh",
+    "import_path": "assets/sprites/home_companion/halloween_settle_can.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1197,
+      201,
+      198,
+      185
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_reward_cat_head.png-7018490d8675681696919cf6ec8cdd84.res",
+    "source_file": "res://assets/sprites/home_companion/halloween_reward_cat_head.png",
+    "uid": "uid://e2g4w151ug3y",
+    "import_path": "assets/sprites/home_companion/halloween_reward_cat_head.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      802,
+      0,
+      393,
+      408
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_countdown.png-e201ab92bb439c86a55a967e7f681e4b.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_countdown.png",
+    "uid": "uid://cwjkqfm8pxfdo",
+    "import_path": "assets/sprites/home_companion/icon_companion_countdown.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1372,
+      529,
+      59,
+      67
+    ]
+  },
+  {
+    "path": "res://.godot/imported/corner_companion_countdown_right.png-9be500763708a5e5d46e867ee69ab22b.res",
+    "source_file": "res://assets/sprites/home_companion/corner_companion_countdown_right.png",
+    "uid": "uid://dw2yoxklvpiti",
+    "import_path": "assets/sprites/home_companion/corner_companion_countdown_right.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1399,
+      231,
+      28,
+      28
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_chest.png-734349c0f7fcb4620980e564db62edcf.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_chest.png",
+    "uid": "uid://7f11ans4roun",
+    "import_path": "assets/sprites/home_companion/icon_companion_chest.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1269,
+      388,
+      128,
+      139
+    ]
+  },
+  {
+    "path": "res://.godot/imported/capsule_companion_progress.png-7f4b8246d285862041d9186120e9b2f8.res",
+    "source_file": "res://assets/sprites/home_companion/capsule_companion_progress.png",
+    "uid": "uid://hbryirpdsbem",
+    "import_path": "assets/sprites/home_companion/capsule_companion_progress.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      0,
+      884,
+      860,
+      140
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_reward_tag_trial.png-985132e8517287c031490a97177bf018.res",
+    "source_file": "res://assets/sprites/home_companion/halloween_reward_tag_trial.png",
+    "uid": "uid://bi0vtno7gg42o",
+    "import_path": "assets/sprites/home_companion/halloween_reward_tag_trial.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      643,
+      760,
+      320,
+      122
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_satiety.png-3df68600c2d4d65f80f5ae0558470425.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_satiety.png",
+    "uid": "uid://lucysxt5c1s1",
+    "import_path": "assets/sprites/home_companion/icon_companion_satiety.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      1316,
+      760,
+      100,
+      142
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_companion_reward_bubble.png-14a77e972245f911d75ed4320d6822fb.res",
+    "source_file": "res://assets/sprites/home_companion/icon_companion_reward_bubble.png",
+    "uid": "uid://dnnnyy5pa3urn",
+    "import_path": "assets/sprites/home_companion/icon_companion_reward_bubble.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      0,
+      669,
+      641,
+      213
+    ]
+  },
+  {
+    "path": "res://.godot/imported/halloween_settle_can_small.png-a74425686ffdddacab938ca56e00c03b.res",
+    "source_file": "res://assets/sprites/home_companion/halloween_settle_can_small.png",
+    "uid": "uid://dj7puncjbardh",
+    "import_path": "assets/sprites/home_companion/halloween_settle_can_small.png.import",
+    "atlas_path": "res://assets/atlas/home_companion_vram.png",
+    "region": [
+      862,
+      884,
+      208,
+      166
+    ]
+  },
+  {
+    "path": "res://.godot/imported/fish_dim.png-2bdcf6db8f1f7cff76806e6568154399.res",
+    "source_file": "res://assets/sprites/game/fish_dim.png",
+    "uid": "uid://dvwjwqc07u2nl",
+    "import_path": "assets/sprites/game/fish_dim.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1479,
+      1000,
+      62,
+      59
+    ]
+  },
+  {
+    "path": "res://.godot/imported/txt_safe_jp.png-2c168f7ec12cd51a848deeab5bb0bd0d.res",
+    "source_file": "res://assets/sprites/game/txt_safe_jp.png",
+    "uid": "uid://c5jpqwgsic246",
+    "import_path": "assets/sprites/game/txt_safe_jp.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      0,
+      1132,
+      404,
+      140
+    ]
+  },
+  {
+    "path": "res://.godot/imported/txt_clear_jp.png-b6e3b1d22fc723e3c3ce10c9b0b6c855.res",
+    "source_file": "res://assets/sprites/game/txt_clear_jp.png",
+    "uid": "uid://c43efdiuck1sn",
+    "import_path": "assets/sprites/game/txt_clear_jp.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      622,
+      990,
+      286,
+      140
+    ]
+  },
+  {
+    "path": "res://.godot/imported/txt_perfectly_marked_jp.png-483bb8514881dffeb32fcda2fd589f0d.res",
+    "source_file": "res://assets/sprites/game/txt_perfectly_marked_jp.png",
+    "uid": "uid://kcb0gl4btbvq",
+    "import_path": "assets/sprites/game/txt_perfectly_marked_jp.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      0,
+      990,
+      620,
+      140
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mouse.png-3203561d1f57100e2d1b1cc49144c50d.res",
+    "source_file": "res://assets/sprites/game/icon_mouse.png",
+    "uid": "uid://pubkn7aov11u",
+    "import_path": "assets/sprites/game/icon_mouse.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      0,
+      924,
+      240,
+      240
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mark_lock.png-8098001e4efab5c5e436108691c0d972.res",
+    "source_file": "res://assets/sprites/game/icon_mark_lock.png",
+    "uid": "uid://b07gho6iu6m5n",
+    "import_path": "assets/sprites/game/icon_mark_lock.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1454,
+      124,
+      100,
+      129
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_progress_bar_bg.png-589c2e5adda889645ac2d65e7bfc4d5a.res",
+    "source_file": "res://assets/sprites/game/cat_progress_bar_bg.png",
+    "uid": "uid://bdkfnr3cuiyek",
+    "import_path": "assets/sprites/game/cat_progress_bar_bg.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      442,
+      392,
+      884,
+      84
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_prompt_frame.png-77584e620643b0179407813b56450f19.res",
+    "source_file": "res://assets/sprites/game/icon_prompt_frame.png",
+    "uid": "uid://dkcbkof7i4pef",
+    "import_path": "assets/sprites/game/icon_prompt_frame.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1074,
+      0,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/fish_full_golden.png-51c78f3cbe22c3430835b79f2d25982d.res",
+    "source_file": "res://assets/sprites/game/fish_full_golden.png",
+    "uid": "uid://dmbrsx7ajlrbs",
+    "import_path": "assets/sprites/game/fish_full_golden.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1332,
+      124,
+      120,
+      120
+    ]
+  },
+  {
+    "path": "res://.godot/imported/btn_tool_bg.png-ad60aafde226ad94ac71303972c78d72.res",
+    "source_file": "res://assets/sprites/game/btn_tool_bg.png",
+    "uid": "uid://bmp0jwfup6jgd",
+    "import_path": "assets/sprites/game/btn_tool_bg.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      0,
+      0,
+      440,
+      440
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mark_white.png-558f989b9b26bbac911e114f06b5473b.res",
+    "source_file": "res://assets/sprites/game/icon_mark_white.png",
+    "uid": "uid://ddjpwk2vnmebl",
+    "import_path": "assets/sprites/game/icon_mark_white.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1401,
+      601,
+      100,
+      100
+    ]
+  },
+  {
+    "path": "res://.godot/imported/prop_locked.png-e8de899454ff5b08b58302aba73cb7c0.res",
+    "source_file": "res://assets/sprites/game/prop_locked.png",
+    "uid": "uid://bhb2c47ngxldg",
+    "import_path": "assets/sprites/game/prop_locked.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      952,
+      356,
+      50,
+      54
+    ]
+  },
+  {
+    "path": "res://.godot/imported/tool_cat_item.png-5b95d08b8f74c01d296b6b7f608d0613.res",
+    "source_file": "res://assets/sprites/game/tool_cat_item.png",
+    "uid": "uid://blcq54buvrrv5",
+    "import_path": "assets/sprites/game/tool_cat_item.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      0,
+      682,
+      240,
+      240
+    ]
+  },
+  {
+    "path": "res://.godot/imported/txt_good_eye_jp.png-9227ec81a3976c3f6adbae51ec215535.res",
+    "source_file": "res://assets/sprites/game/txt_good_eye_jp.png",
+    "uid": "uid://hjh4n7y2wmte",
+    "import_path": "assets/sprites/game/txt_good_eye_jp.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      406,
+      1132,
+      384,
+      138
+    ]
+  },
+  {
+    "path": "res://.godot/imported/txt_good_eye.png-9af0e2ad77c1e186eb3740dfeea3f38d.res",
+    "source_file": "res://assets/sprites/game/txt_good_eye.png",
+    "uid": "uid://n6l6os54jq2k",
+    "import_path": "assets/sprites/game/txt_good_eye.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      442,
+      222,
+      630,
+      168
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rule_highlight.png-f7a4a7fe022b46cceecda23c9e763bf8.res",
+    "source_file": "res://assets/sprites/game/rule_highlight.png",
+    "uid": "uid://c8q6brpj155ft",
+    "import_path": "assets/sprites/game/rule_highlight.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      484,
+      1002,
+      330,
+      140
+    ]
+  },
+  {
+    "path": "res://.godot/imported/hard.png-365b7e702d87e4b1f09f6cf98446a258.res",
+    "source_file": "res://assets/sprites/game/hard.png",
+    "uid": "uid://cm7iqt0evlqo",
+    "import_path": "assets/sprites/game/hard.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1337,
+      907,
+      80,
+      104
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mark_white_G5_2.png-f4458550568cafdcfe7b6498bb1f2be5.res",
+    "source_file": "res://assets/sprites/game/icon_mark_white_G5_2.png",
+    "uid": "uid://dck708rrp06nk",
+    "import_path": "assets/sprites/game/icon_mark_white_G5_2.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1503,
+      601,
+      46,
+      178
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mark_white_G5.png-bc97f21b0f8bd01b65e75a20e14899e6.res",
+    "source_file": "res://assets/sprites/game/icon_mark_white_G5.png",
+    "uid": "uid://c38itpf0rsv6p",
+    "import_path": "assets/sprites/game/icon_mark_white_G5.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1337,
+      805,
+      100,
+      100
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_light.png-825238f699816ba08ae3aa40dda41cd0.res",
+    "source_file": "res://assets/sprites/game/icon_light.png",
+    "uid": "uid://dtyati6yem5a",
+    "import_path": "assets/sprites/game/icon_light.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      484,
+      624,
+      228,
+      228
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_progress_base_face.png-c4e046335d4034145217328018810831.res",
+    "source_file": "res://assets/sprites/game/cat_progress_base_face.png",
+    "uid": "uid://dsv4jtpoxae7k",
+    "import_path": "assets/sprites/game/cat_progress_base_face.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1066,
+      938,
+      160,
+      156
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mark_white_2.png-d74289f126f36dc4d5a04e0a8ae64ff7.res",
+    "source_file": "res://assets/sprites/game/icon_mark_white_2.png",
+    "uid": "uid://b6752v2kmgxhe",
+    "import_path": "assets/sprites/game/icon_mark_white_2.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1228,
+      1001,
+      32,
+      168
+    ]
+  },
+  {
+    "path": "res://.godot/imported/txt_safe.png-1cb57f535e16433f36eeb7f95079e387.res",
+    "source_file": "res://assets/sprites/game/txt_safe.png",
+    "uid": "uid://c2mkhh7ni1bg",
+    "import_path": "assets/sprites/game/txt_safe.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      484,
+      854,
+      328,
+      146
+    ]
+  },
+  {
+    "path": "res://.godot/imported/txt_clear.png-1a634e8faea2116f927564b5dd4d8f60.res",
+    "source_file": "res://assets/sprites/game/txt_clear.png",
+    "uid": "uid://beuw05cm1od0l",
+    "import_path": "assets/sprites/game/txt_clear.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      270,
+      478,
+      388,
+      144
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_progress_dot_bg.png-81bbfc07c003cc73c7cbbd4ed95658dc.res",
+    "source_file": "res://assets/sprites/game/cat_progress_dot_bg.png",
+    "uid": "uid://dllurrkdvc08r",
+    "import_path": "assets/sprites/game/cat_progress_dot_bg.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1445,
+      1123,
+      48,
+      48
+    ]
+  },
+  {
+    "path": "res://.godot/imported/tool_cat_item_prompt.png-01d8f3411e2ab86cd7513c93ac169451.res",
+    "source_file": "res://assets/sprites/game/tool_cat_item_prompt.png",
+    "uid": "uid://7lgx7fcgqulc",
+    "import_path": "assets/sprites/game/tool_cat_item_prompt.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1401,
+      703,
+      100,
+      100
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_progress_dot.png-4e911e7894f717df0f6cef12c7bfa53c.res",
+    "source_file": "res://assets/sprites/game/cat_progress_dot.png",
+    "uid": "uid://bkvusi5xe548r",
+    "import_path": "assets/sprites/game/cat_progress_dot.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      660,
+      577,
+      40,
+      40
+    ]
+  },
+  {
+    "path": "res://.godot/imported/warn_bubble_tail.png-7fa5d951f22e4dfeee93511b89531ab4.res",
+    "source_file": "res://assets/sprites/game/warn_bubble_tail.png",
+    "uid": "uid://dk6ry28jq3ajt",
+    "import_path": "assets/sprites/game/warn_bubble_tail.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      270,
+      624,
+      80,
+      56
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_draft_pencil.png-0c18a7b69ba0d9beedc8fcfc57a64921.res",
+    "source_file": "res://assets/sprites/game/icon_draft_pencil.png",
+    "uid": "uid://cn61loanbcw8c",
+    "import_path": "assets/sprites/game/icon_draft_pencil.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      242,
+      924,
+      240,
+      240
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_progress_face.png-4c2ee26e7f1d11d461912834e81bdd1e.res",
+    "source_file": "res://assets/sprites/game/cat_progress_face.png",
+    "uid": "uid://dirjrsk4iw8l",
+    "import_path": "assets/sprites/game/cat_progress_face.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1116,
+      797,
+      117,
+      106
+    ]
+  },
+  {
+    "path": "res://.godot/imported/fish_golden_btn.png-5ea461071a3aac13e99a6b9f1a1b229e.res",
+    "source_file": "res://assets/sprites/game/fish_golden_btn.png",
+    "uid": "uid://cvr7v6ruyai40",
+    "import_path": "assets/sprites/game/fish_golden_btn.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1192,
+      528,
+      107,
+      110
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mark_white_G5_3.png-f123cb8471f6112bc8febd4b54b08cac.res",
+    "source_file": "res://assets/sprites/game/icon_mark_white_G5_3.png",
+    "uid": "uid://b8hubtfj504ws",
+    "import_path": "assets/sprites/game/icon_mark_white_G5_3.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1235,
+      899,
+      100,
+      100
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_mark_white_3.png-a9d4533e32fa664c67305a93b7ae5793.res",
+    "source_file": "res://assets/sprites/game/icon_mark_white_3.png",
+    "uid": "uid://ewhcr8x32w5p",
+    "import_path": "assets/sprites/game/icon_mark_white_3.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1235,
+      797,
+      100,
+      100
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_progress_base.png-90895a99b7753d6d343fc393e6eec4c1.res",
+    "source_file": "res://assets/sprites/game/cat_progress_base.png",
+    "uid": "uid://b4m2p8mgynr21",
+    "import_path": "assets/sprites/game/cat_progress_base.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      902,
+      610,
+      164,
+      166
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_hint_lamp.png-2b7b4e32bf0c75fbca400920e0f2a74e.res",
+    "source_file": "res://assets/sprites/game/icon_hint_lamp.png",
+    "uid": "uid://ibovplgqc6eg",
+    "import_path": "assets/sprites/game/icon_hint_lamp.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      242,
+      682,
+      240,
+      240
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_progress_wrong_mark.png-7e0aca680038e089c78af71ce90e8bbe.res",
+    "source_file": "res://assets/sprites/game/cat_progress_wrong_mark.png",
+    "uid": "uid://bujp3cdo4ddw",
+    "import_path": "assets/sprites/game/cat_progress_wrong_mark.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1479,
+      1061,
+      60,
+      60
+    ]
+  },
+  {
+    "path": "res://.godot/imported/union_86.png-12aaa1c4bb8f433df45ff7d75d5df70a.res",
+    "source_file": "res://assets/sprites/game/game_win_toast03/union_86.png",
+    "uid": "uid://ch1ggf4u1nxw0",
+    "import_path": "assets/sprites/game/game_win_toast03/union_86.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1110,
+      0,
+      206,
+      174
+    ]
+  },
+  {
+    "path": "res://.godot/imported/union_86.png-b59c57d4462f978e74366ed60e2e6035.res",
+    "source_file": "res://assets/sprites/game/game_win_toast04/union_86.png",
+    "uid": "uid://bpd1y73byed37",
+    "import_path": "assets/sprites/game/game_win_toast04/union_86.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      902,
+      434,
+      206,
+      174
+    ]
+  },
+  {
+    "path": "res://.godot/imported/union_86.png-7be11c925ddff78b002a110b7d19f613.res",
+    "source_file": "res://assets/sprites/game/game_win_toast02/union_86.png",
+    "uid": "uid://hldrw5u0l2ey",
+    "import_path": "assets/sprites/game/game_win_toast02/union_86.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1110,
+      176,
+      206,
+      174
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_02.png-16fd3ff1dae169c29ebaaafc26602d47.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_02.png",
+    "uid": "uid://dchaystmdwgf6",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_02.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      904,
+      356,
+      46,
+      69
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_07.png-4ceac7778cb5d8479ea0daa631f6ebc6.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_07.png",
+    "uid": "uid://d3e28f5qxkqyi",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_07.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      904,
+      286,
+      46,
+      68
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_00.png-174e46f2e06b4e1eb680349526c4c025.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_00.png",
+    "uid": "uid://k00q41it00yx",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_00.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1010,
+      70,
+      49,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_08.png-55e5d8ed10b99c280caf32fe428150e4.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_08.png",
+    "uid": "uid://cvup25rxtna0r",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_08.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1057,
+      142,
+      48,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_05.png-f8d6bb64c0a27c6af5011d9d897fa274.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_05.png",
+    "uid": "uid://2nnidupoknwu",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_05.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1061,
+      70,
+      47,
+      69
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_06.png-ca0ea9377ce0df7359529808a33c4d62.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_06.png",
+    "uid": "uid://rurf0yih5xgd",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_06.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1006,
+      142,
+      49,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_03.png-d3f39a076fd8f6819a0c3de8b5cf95ea.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_03.png",
+    "uid": "uid://bddatcchd6tqu",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_03.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1004,
+      214,
+      48,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_09.png-747eeeb1b0408be092c1e689a76ba2b3.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_09.png",
+    "uid": "uid://bsfv4ubfsxj16",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_09.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1068,
+      734,
+      50,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_04.png-b627a15233d4353df9ea6cf3258251ec.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_04.png",
+    "uid": "uid://c10lmsarmf2jd",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_04.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1010,
+      0,
+      51,
+      68
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_01.png-6ea614853307e76c661226b789c85216.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_01.png",
+    "uid": "uid://cxixaihkakjit",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_01.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1063,
+      0,
+      33,
+      68
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_jf_pic_10.png-ba65cd23a9f03d9eb698fb09b3649189.res",
+    "source_file": "res://assets/sprites/game/deduct_font/ui_mao_jf_pic_10.png",
+    "uid": "uid://8y7ca0lr3tkh",
+    "import_path": "assets/sprites/game/deduct_font/ui_mao_jf_pic_10.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      902,
+      778,
+      36,
+      29
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_03.png-6eaa21316f672c7d36e27edea1307a69.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_03.png",
+    "uid": "uid://kr3itd51rdsh",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_03.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      904,
+      176,
+      48,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_12.png-914915e8b045a3e9ae3646afeeaa4b08.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_12.png",
+    "uid": "uid://bhjy75oagc0nx",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_12.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1004,
+      399,
+      28,
+      33
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_06.png-937e2a1aeef7b6285361b25cd91d0c8d.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_06.png",
+    "uid": "uid://c5pby1v30h84w",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_06.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      904,
+      104,
+      49,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_01.png-75f2f213b1f796deb1793da3500245cf.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_01.png",
+    "uid": "uid://dc1pk7qbapgu",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_01.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1054,
+      356,
+      33,
+      68
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_10.png-a065cd2c54bb07a704e2de84f27cb0b4.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_10.png",
+    "uid": "uid://bqc0nn4wetfc7",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_10.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1004,
+      342,
+      48,
+      55
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_09.png-cbd0efa367c497ca4b21bb8d187b1a5f.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_09.png",
+    "uid": "uid://dvehc6cs4lou",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_09.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1120,
+      734,
+      50,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_04.png-f1b53ecf96a5327f5e566261fe682138.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_04.png",
+    "uid": "uid://cntalfr2lu3l0",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_04.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1110,
+      528,
+      51,
+      68
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_07.png-a5957b8e0d785d3bf04df33884e835d7.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_07.png",
+    "uid": "uid://bi4o3ysfob6vd",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_07.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      952,
+      248,
+      46,
+      68
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_02.png-935552281fcf3d7b6c731aeed5f28aeb.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_02.png",
+    "uid": "uid://dblu7463wvnem",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_02.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1054,
+      285,
+      46,
+      69
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_08.png-aecbba17729bd9430d693e4078a2bff5.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_08.png",
+    "uid": "uid://cbnb4cq3hg8q",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_08.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      954,
+      176,
+      48,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_05.png-5f6c5b7f430084493b548193392c792a.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_05.png",
+    "uid": "uid://cd7rj4hsvwtbj",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_05.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1054,
+      214,
+      47,
+      69
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_00.png-c33690320023f76144927544b068e6db.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_00.png",
+    "uid": "uid://cuwkhux2nl8sv",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_00.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      955,
+      104,
+      49,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_cf_pic_11.png-bed94faefc3f2bdd0224d433e0b64964.res",
+    "source_file": "res://assets/sprites/game/multiplier_font/ui_mao_cf_pic_11.png",
+    "uid": "uid://dtkbuitrm1anw",
+    "import_path": "assets/sprites/game/multiplier_font/ui_mao_cf_pic_11.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1000,
+      286,
+      50,
+      54
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bg.png-1acb90758eb892cb99dc82aa6ffc545e.res",
+    "source_file": "res://assets/sprites/game/win_toast/bg.png",
+    "uid": "uid://ckw47gsghder0",
+    "import_path": "assets/sprites/game/win_toast/bg.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      0,
+      434,
+      900,
+      370
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_05.png-fe1ea70dc10381cfe5271b82a4e36666.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_05.png",
+    "uid": "uid://re0g2476vw4s",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_05.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1419,
+      1000,
+      58,
+      82
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_08.png-239c2adcd12e77cad6fa06d50b5813a8.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_08.png",
+    "uid": "uid://bqmyky77i0qlw",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_08.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1419,
+      915,
+      60,
+      83
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_00.png-e1bd74c9f399c55d7fb10235fb3fa59a.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_00.png",
+    "uid": "uid://grke0bvnq31u",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_00.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1157,
+      1096,
+      62,
+      82
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_07.png-263a4fc88eb68d89c7b6c6854cac0e99.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_07.png",
+    "uid": "uid://bm0udkxjil71n",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_07.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1326,
+      1084,
+      58,
+      81
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_02.png-8536514d10f55e1600a22e8a345f7d5a.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_02.png",
+    "uid": "uid://cn8yqalmalik8",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_02.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1386,
+      1084,
+      57,
+      82
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_10.png-a411b0d339b6ad36e942bf9e52f44746.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_10.png",
+    "uid": "uid://mllpes2m87ac",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_10.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1326,
+      1013,
+      61,
+      67
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_01.png-5152788ffa76401321ac5300c4357155.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_01.png",
+    "uid": "uid://1xy7wkpwal5g",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_01.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1354,
+      601,
+      45,
+      81
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_04.png-5a8684b8618c7abf53f732dd7b4c59cf.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_04.png",
+    "uid": "uid://cy5h2tkldpten",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_04.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1092,
+      1096,
+      63,
+      81
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_09.png-6a857f054548cf3961ceaa70c6adc327.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_09.png",
+    "uid": "uid://bt31xvlydrwse",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_09.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1262,
+      1001,
+      62,
+      83
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_03.png-7acfa63b974f8b27d5521c2fa0ab4135.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_03.png",
+    "uid": "uid://bmnony0dd4a8x",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_03.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1481,
+      915,
+      59,
+      83
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_sz_pic_06.png-98d0e808e0ebd89cce6be99218b288aa.res",
+    "source_file": "res://assets/sprites/game/score_font/ui_mao_sz_pic_06.png",
+    "uid": "uid://ccgoo36fwh58u",
+    "import_path": "assets/sprites/game/score_font/ui_mao_sz_pic_06.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1262,
+      1086,
+      62,
+      83
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_claw.png-b7bcde71aace5912d2b421a72be78627.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_claw.png",
+    "uid": "uid://8g1ibsonpe2h",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_claw.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      736,
+      0,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_ear.png-c82fb493a079687a72d11d353bb142ad.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_ear.png",
+    "uid": "uid://bpitegqswwy8v",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_ear.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      1180,
+      0,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_dot.png-8df469ab317c4bcefc080d72b58acddf.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_dot.png",
+    "uid": "uid://b4sf4k7wy110d",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_dot.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      958,
+      0,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_sparkle.png-294f0425b3191bc59ff496a6f5e8c0ab.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_sparkle.png",
+    "uid": "uid://cmxoy687pol3o",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_sparkle.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      736,
+      222,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_paw.png-a203ea79de8db6fe4d4a1939ea49d8e8.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_paw.png",
+    "uid": "uid://ckdkxdg411usy",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_paw.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      514,
+      222,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_heart.png-337e858c0ecc9c3cd2103717e7eb3a7f.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_heart.png",
+    "uid": "uid://dwu3iyb5vbsgd",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_heart.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      1624,
+      0,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_sprout.png-428ffba09a59ffde4bf8b83830585cd9.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_sprout.png",
+    "uid": "uid://byu3nuid5pfjy",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_sprout.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      958,
+      222,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_triangle.png-fade7b7131c4991bc2f60f10a190bd13.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_triangle.png",
+    "uid": "uid://77df7db5yw7t",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_triangle.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      1180,
+      222,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_yarn.png-10ce7ae355d016f3e4c131d826e03c9d.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_yarn.png",
+    "uid": "uid://deyexkdf7xg6g",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_yarn.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      1624,
+      222,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_fishbone.png-4256b3d1d22723a1fdc8adb2862160f2.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_fishbone.png",
+    "uid": "uid://bilvrmf3hpm3b",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_fishbone.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      1402,
+      0,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_whisker.png-0369ab357eec6227c74c3fd667c666d2.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_whisker.png",
+    "uid": "uid://csg2xs7ovdhpe",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_whisker.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      1402,
+      222,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/pattern_bell.png-474dffb67a81b826cee5dd63d7dd1058.res",
+    "source_file": "res://assets/sprites/game/pattern_icon/pattern_bell.png",
+    "uid": "uid://fvws77pdh7jg",
+    "import_path": "assets/sprites/game/pattern_icon/pattern_bell.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      514,
+      0,
+      220,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/union_86.png-5d1c96c71b22c8900d1f9b6b76f004ec.res",
+    "source_file": "res://assets/sprites/game/game_win_toast01/union_86.png",
+    "uid": "uid://cyg3rpfn13ban",
+    "import_path": "assets/sprites/game/game_win_toast01/union_86.png.import",
+    "atlas_path": "res://assets/atlas/game_ext_vram.png",
+    "region": [
+      1110,
+      352,
+      206,
+      174
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cell_corner_table.png-fa121762ffd86f34cfe165fe2563655a.res",
+    "source_file": "res://assets/sprites/game/cell_face/cell_corner_table.png",
+    "uid": "uid://b8ksoab0voqyk",
+    "import_path": "assets/sprites/game/cell_face/cell_corner_table.png.import",
+    "atlas_path": "res://assets/atlas/cell_face_lossless.png",
+    "region": [
+      0,
+      0,
+      512,
+      468
+    ]
+  },
+  {
+    "path": "res://.godot/imported/dc_costume_trial_tag.png-a2f9d71195fa892a23f0a34b24d1668b.res",
+    "source_file": "res://assets/sprites/daily/dc_costume_trial_tag.png",
+    "uid": "uid://d4k3vay21lc4c",
+    "import_path": "assets/sprites/daily/dc_costume_trial_tag.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      924,
+      692,
+      320,
+      122
+    ]
+  },
+  {
+    "path": "res://.godot/imported/state_locked.png-978b5d97be173f2be833e553b5f30b55.res",
+    "source_file": "res://assets/sprites/daily/state_locked.png",
+    "uid": "uid://c4yd2751206ab",
+    "import_path": "assets/sprites/daily/state_locked.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      462,
+      290,
+      460,
+      590
+    ]
+  },
+  {
+    "path": "res://.godot/imported/state_normal.png-5c8c7d5c6703fbeb5e5567e33ece97e4.res",
+    "source_file": "res://assets/sprites/daily/state_normal.png",
+    "uid": "uid://vthyl3xj33e2",
+    "import_path": "assets/sprites/daily/state_normal.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      0,
+      290,
+      460,
+      590
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_target.png-b15fb042747d54e3d09715810188ed4e.res",
+    "source_file": "res://assets/sprites/daily/icon_target.png",
+    "uid": "uid://dvtsxucdcsjgk",
+    "import_path": "assets/sprites/daily/icon_target.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1054,
+      816,
+      109,
+      93
+    ]
+  },
+  {
+    "path": "res://.godot/imported/shape_81.png-36358233852b0b708e173557911a6fef.res",
+    "source_file": "res://assets/sprites/common/shape_81.png",
+    "uid": "uid://dupq3l7hgqwc7",
+    "import_path": "assets/sprites/common/shape_81.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1226,
+      915,
+      57,
+      57
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_paw.png-c6f5bc5460e97b269787ea848d07c6bc.res",
+    "source_file": "res://assets/sprites/common/cat_paw.png",
+    "uid": "uid://ctt8vikgxq3n6",
+    "import_path": "assets/sprites/common/cat_paw.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1439,
+      805,
+      92,
+      108
+    ]
+  },
+  {
+    "path": "res://.godot/imported/btn_shadow.png-cdf8584450a14235ea621845e12b7b70.res",
+    "source_file": "res://assets/sprites/common/btn_shadow.png",
+    "uid": "uid://dxescyjtr3vte",
+    "import_path": "assets/sprites/common/btn_shadow.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      0,
+      442,
+      268,
+      238
+    ]
+  },
+  {
+    "path": "res://.godot/imported/btn_orange_capsule.png-56b57d6674e688bb4c72d7eb354e7806.res",
+    "source_file": "res://assets/sprites/common/btn_orange_capsule.png",
+    "uid": "uid://bq4b31pyx4vsg",
+    "import_path": "assets/sprites/common/btn_orange_capsule.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      442,
+      0,
+      620,
+      220
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_face.png-eb7227206ff17dd15c884b0f3a8d2264.res",
+    "source_file": "res://assets/sprites/common/cat_face.png",
+    "uid": "uid://btynpayispkmj",
+    "import_path": "assets/sprites/common/cat_face.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1002,
+      1096,
+      88,
+      80
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_21.png-59df5b5081838a7216ce619b29dbf2b8.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_21.png",
+    "uid": "uid://bbq4yngbufl03",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_21.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      426,
+      478,
+      112
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_16.png-fa37e98d41c0fd10ef9d40793d31865c.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_16.png",
+    "uid": "uid://cx12b3txn720m",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_16.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      466,
+      868,
+      448,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_07.png-73be8252cf4c0b9add8563005144e0ca.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_07.png",
+    "uid": "uid://cbgha86a3tl1",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_07.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      500,
+      594,
+      366,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_05a.png-d6f625fc34ff6737c1a10706e8a38441.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_05a.png",
+    "uid": "uid://g1h1bdqn22dm",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_05a.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      714,
+      577,
+      354,
+      121
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_30.png-d394ac95577584bdca57b9c3f178366e.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_30.png",
+    "uid": "uid://dt5xa51riicxg",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_30.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      654,
+      459,
+      112
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_29.png-15039bfbd98601de2501f3e8a57c0425.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_29.png",
+    "uid": "uid://qdxat1mocoxm",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_29.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      540,
+      473,
+      112
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_02.png-1e31fac7cb447d54de5c52d15e33b7d9.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_02.png",
+    "uid": "uid://dtjxthi0v1cut",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_02.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1328,
+      381,
+      225,
+      95
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_02.png-93c4488b885d3cd215e23bcdd2abae44.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_02.png",
+    "uid": "uid://b42c5oh1nqotl",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_02.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      0,
+      198,
+      508,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_13.png-23f8ec3a898182c8f0674b538b48aafb.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_13.png",
+    "uid": "uid://b4blww2mujire",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_13.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      768,
+      486,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_24.png-5aa0b078507863c4ea1820d8b0ed19e0.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_24.png",
+    "uid": "uid://d1nv43xlhpxy7",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_24.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      1068,
+      342,
+      96
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_03a.png-2fa3e5f8de994c6e6d80ee6078b97e6a.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_03a.png",
+    "uid": "uid://b48bwt5vjuqyf",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_03a.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      814,
+      815,
+      300,
+      121
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_08.png-35cbe9fe00cac83569e91d9372cdd57f.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_08.png",
+    "uid": "uid://bn7icv4henohg",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_08.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      727,
+      100,
+      184,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_14.png-eb9aa8549b3ae11d9ff42b9a3f172fb6.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_14.png",
+    "uid": "uid://dh6qs3mvmclq",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_14.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      530,
+      211,
+      378,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_23.png-6d9fa20683dfaaaaa29fcc9e190f6562.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_23.png",
+    "uid": "uid://dwba1vylj7dqd",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_23.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      461,
+      654,
+      423,
+      112
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_05.png-9773cc0cf28d23eb116e0dacb045b739.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_05.png",
+    "uid": "uid://qtk5imlrbt3j",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_05.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      510,
+      198,
+      364,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_05.png-269005c4c1ca1cda9527bcf25ed44f0b.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_05.png",
+    "uid": "uid://02w45r1m3eh3",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_05.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      714,
+      700,
+      332,
+      113
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_19.png-8bde9aa33aae53f4fda1dd0bf43eb45c.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_19.png",
+    "uid": "uid://cwawnkhpjli5s",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_19.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      594,
+      311,
+      252,
+      95
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_08.png-f0d78d89516b24de0f3f393f93581739.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_08.png",
+    "uid": "uid://beknatkymtpns",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_08.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      506,
+      396,
+      366,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_06a.png-15df6671f64328fc68fb36d4e0b91bf5.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_06a.png",
+    "uid": "uid://dbl4x05qmogjw",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_06a.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1074,
+      258,
+      462,
+      121
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_26.png-ead8890861add8105b24a4f6496bb15b.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_26.png",
+    "uid": "uid://cfa3jso48r212",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_26.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      211,
+      528,
+      113
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_11.png-a010029b4b735ff3531083b8edca38c5.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_11.png",
+    "uid": "uid://d0f20kxd1k3h",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_11.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      968,
+      352,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_01a.png-2866014629357449b937c0db342e76fe.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_01a.png",
+    "uid": "uid://dkt856rf7vkpi",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_01a.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1332,
+      0,
+      214,
+      122
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_28.png-c215f70821bc1dd8f3c6de09146aea91.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_28.png",
+    "uid": "uid://ds5l8wwjd5bpp",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_28.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      111,
+      725,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_03.png-97bda5200d199d6e5bfe526b78e0ba57.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_03.png",
+    "uid": "uid://de8ncl6uvyomv",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_03.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1070,
+      601,
+      282,
+      96
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_03.png-d99a058d00159a3abad845ebc2dd3118.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_03.png",
+    "uid": "uid://bp5f8jg8jx8l5",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_03.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      0,
+      792,
+      496,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_12.png-ef17a9b1a4425f7c866c237dbcaffc83.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_12.png",
+    "uid": "uid://cn3ghdfbid4oc",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_12.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      344,
+      1068,
+      332,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_25.png-fb636b588befee8d3b353c6b25ebe496.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_25.png",
+    "uid": "uid://5ca6wwiwhgyy",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_25.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      326,
+      592,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_20.png-461438bbfc0dff55cfde7c272a3456fb.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_20.png",
+    "uid": "uid://bj30w5p0biwmu",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_20.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      678,
+      1064,
+      173,
+      112
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_17.png-892d104f00112f3d25bc8deebe8e6f8f.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_17.png",
+    "uid": "uid://bf83m3k2a2eew",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_17.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      475,
+      540,
+      398,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_06.png-a8527bb2c36641897a8984ce61e3fbd0.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_06.png",
+    "uid": "uid://b06etuld035d4",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_06.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      528,
+      0,
+      364,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_04a.png-d25579fb5ec7325d83ad027f1d89fc9b.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_04a.png",
+    "uid": "uid://bwfh2ph67x3ee",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_04a.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1148,
+      478,
+      366,
+      121
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_06.png-b1331cf0f16f08c679d269c1b6ffc4a6.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_06.png",
+    "uid": "uid://b0d50uiai8xb7",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_06.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      660,
+      478,
+      486,
+      97
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_31.png-ba356fb2c53c0c2852800dc505acfb9e.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_31.png",
+    "uid": "uid://dyari8d251nsr",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_31.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      0,
+      662,
+      109
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_01.png-66c676f91af7e5c0a137124c49ac9759.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_01.png",
+    "uid": "uid://bkvp8og7hwo1h",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_01.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      816,
+      1061,
+      184,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_10.png-85bf00133c21134c1e35c257f5c84b21.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_10.png",
+    "uid": "uid://vjirn454bych",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_10.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      0,
+      396,
+      504,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_01.png-6963991441e642b2697992a48415206a.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_01.png",
+    "uid": "uid://cqfy44k8ieok1",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_01.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      0,
+      0,
+      526,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_27.png-fec22de9e49fc7763c2cf599e87d1d2b.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_27.png",
+    "uid": "uid://dltiafs13kuwu",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_27.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      480,
+      426,
+      392,
+      95
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_10.png-b12b9d31060878c9c48fc78d2ee9d7a2.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_10.png",
+    "uid": "uid://lgr5uft886j8",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_10.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      354,
+      968,
+      282,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_09.png-91e39b3a3da8a3901a185c2b168d711d.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_09.png",
+    "uid": "uid://b1h854jdptegb",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_09.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      664,
+      0,
+      226,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_15.png-79e07828ba0cc23ed989e81e9c77ee87.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_15.png",
+    "uid": "uid://dgrfiqkexin4d",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_15.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      0,
+      868,
+      464,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_22.png-a8cb98c3ebb9776c3ace480a64948e52.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_22.png",
+    "uid": "uid://btv8oul210j7n",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_22.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      488,
+      768,
+      424,
+      98
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_04.png-045423dbc85d502a705ae991d7516591.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_04.png",
+    "uid": "uid://h0ecj44w8ffm",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_04.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      0,
+      594,
+      498,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_04.png-880acd8cb10eb35d4b073bf28a46651f.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_04.png",
+    "uid": "uid://bq3tlr2mywv6i",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_04.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      1048,
+      700,
+      351,
+      95
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_18.png-e68807e37885c48c60e19a2994f88322.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_18.png",
+    "uid": "uid://c0ohiuqondfjg",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_18.png.import",
+    "atlas_path": "res://assets/atlas/encourage_vram.png",
+    "region": [
+      638,
+      968,
+      255,
+      94
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_jp_09.png-d3bbe3900a4b53a879657c3747563265.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_jp_09.png",
+    "uid": "uid://c1tc43ghqswe3",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_jp_09.png.import",
+    "atlas_path": "res://assets/atlas/jp_text_vram.png",
+    "region": [
+      498,
+      792,
+      374,
+      196
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ui_mao_glc_pic_02a.png-c45ad431f07b4cf60b9b1c7e0541cb39.res",
+    "source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_02a.png",
+    "uid": "uid://cy4q3fflqlpoi",
+    "import_path": "assets/sprites/encourage/ui_mao_glc_pic_02a.png.import",
+    "atlas_path": "res://assets/atlas/main_game_vram.png",
+    "region": [
+      816,
+      938,
+      248,
+      121
+    ]
+  },
+  {
+    "path": "res://.godot/imported/lock_tip_arrow.png-d40a7a90dd108b3c6b5b86fc07e56713.res",
+    "source_file": "res://assets/sprites/profile/lock_tip_arrow.png",
+    "uid": "uid://baw4x8ilr8ce8",
+    "import_path": "assets/sprites/profile/lock_tip_arrow.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      728,
+      324,
+      72,
+      50
+    ]
+  },
+  {
+    "path": "res://.godot/imported/close_icon.png-7e34c5347bb30228942fbdafc89c1278.res",
+    "source_file": "res://assets/sprites/profile/close_icon.png",
+    "uid": "uid://bqtclbqlfffto",
+    "import_path": "assets/sprites/profile/close_icon.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      612,
+      272,
+      114,
+      114
+    ]
+  },
+  {
+    "path": "res://.godot/imported/lock_tip_bg.png-f970eca263b85155edd86583fe76766c.res",
+    "source_file": "res://assets/sprites/profile/lock_tip_bg.png",
+    "uid": "uid://d23x5vjb16q6s",
+    "import_path": "assets/sprites/profile/lock_tip_bg.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      659,
+      152,
+      110,
+      110
+    ]
+  },
+  {
+    "path": "res://.godot/imported/tab_inactive_bg.png-398d90b5e06ac80621eecff689d91856.res",
+    "source_file": "res://assets/sprites/profile/tab_inactive_bg.png",
+    "uid": "uid://774u6nc8te5o",
+    "import_path": "assets/sprites/profile/tab_inactive_bg.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      0,
+      0,
+      395,
+      270
+    ]
+  },
+  {
+    "path": "res://.godot/imported/popup_bg.png-60f6a18adad796b7dddea5950c59772e.res",
+    "source_file": "res://assets/sprites/profile/popup_bg.png",
+    "uid": "uid://bse1j0ugxailu",
+    "import_path": "assets/sprites/profile/popup_bg.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      659,
+      0,
+      150,
+      150
+    ]
+  },
+  {
+    "path": "res://.godot/imported/select_check.png-342dd28e449ea028756800fae47a15e4.res",
+    "source_file": "res://assets/sprites/profile/select_check.png",
+    "uid": "uid://cqwn2iao5fo88",
+    "import_path": "assets/sprites/profile/select_check.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      728,
+      264,
+      80,
+      58
+    ]
+  },
+  {
+    "path": "res://.godot/imported/tab_inactive_bg_260.png-914fe73519503ead0c6c481825c37c8b.res",
+    "source_file": "res://assets/sprites/profile/tab_inactive_bg_260.png",
+    "uid": "uid://de0oeosjv0tpk",
+    "import_path": "assets/sprites/profile/tab_inactive_bg_260.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      397,
+      0,
+      260,
+      270
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rename_btn_bg.png-cdc946a6cdda5381138990ce74e59951.res",
+    "source_file": "res://assets/sprites/profile/rename_btn_bg.png",
+    "uid": "uid://cspk20pymqs7e",
+    "import_path": "assets/sprites/profile/rename_btn_bg.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      771,
+      152,
+      50,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/nickname_bg.png-bbcdee6fc0a998ac744d9a41d0e26c7e.res",
+    "source_file": "res://assets/sprites/profile/nickname_bg.png",
+    "uid": "uid://cdsifkgiu3u86",
+    "import_path": "assets/sprites/profile/nickname_bg.png.import",
+    "atlas_path": "res://assets/atlas/profile_vram.png",
+    "region": [
+      0,
+      272,
+      610,
+      120
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0003.png-85b84a1b296de0888a995954f9a34195.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0003.png",
+    "uid": "uid://78qibkwqrks2",
+    "import_path": "assets/sprites/profile/frames/frame_0003.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      616,
+      1232,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0200.png-476bd42030d9f7efd24139f41a59b943.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0200.png",
+    "uid": "uid://cc58y21inpmss",
+    "import_path": "assets/sprites/profile/frames/frame_0200.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      0,
+      0,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_10.png-0ac59259671e11998841f7f1ce5a63d8.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_10.png",
+    "uid": "uid://b86bqv3nmjnnj",
+    "import_path": "assets/sprites/profile/frames/frame_0100_10.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      616,
+      308,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_5.png-f79a8d22c69960d1831daf81d93a9876.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_5.png",
+    "uid": "uid://cr527be1e0qcq",
+    "import_path": "assets/sprites/profile/frames/frame_0100_5.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      0,
+      616,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_8.png-f3bf41b44dd7aa5412e50e4755649768.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_8.png",
+    "uid": "uid://blivu4hdjrkd7",
+    "import_path": "assets/sprites/profile/frames/frame_0100_8.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      616,
+      0,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0006.png-ea06d97acb73bcec1133a98e0a67a53b.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0006.png",
+    "uid": "uid://btg1q0todfnit",
+    "import_path": "assets/sprites/profile/frames/frame_0006.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      616,
+      616,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0001.png-d9b84f8e0cbebf557db9b9e427dc3aab.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0001.png",
+    "uid": "uid://crjayocqk6c3i",
+    "import_path": "assets/sprites/profile/frames/frame_0001.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      924,
+      1232,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_2.png-d390f7be8af0baf9168860eaa87c1712.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_2.png",
+    "uid": "uid://dhvxa7nj177gj",
+    "import_path": "assets/sprites/profile/frames/frame_0100_2.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      308,
+      308,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_7.png-b4fc344bd089c989550a26f08ff76b6a.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_7.png",
+    "uid": "uid://baq0qowxchf1h",
+    "import_path": "assets/sprites/profile/frames/frame_0100_7.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      924,
+      0,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0004.png-60d7178089820b2529cc18b8bfc35c0e.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0004.png",
+    "uid": "uid://dokkvi73pxis7",
+    "import_path": "assets/sprites/profile/frames/frame_0004.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      616,
+      924,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_4.png-e887b1b52d776b023db27132c4dea717.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_4.png",
+    "uid": "uid://cxi36unspa87c",
+    "import_path": "assets/sprites/profile/frames/frame_0100_4.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      0,
+      924,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0007.png-d4f78b018c8f2e6532ada9bf818b76f6.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0007.png",
+    "uid": "uid://dyyq64wsh4oi5",
+    "import_path": "assets/sprites/profile/frames/frame_0007.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      308,
+      1232,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_9.png-fa2eef992fcacabf701fffcd95eff08d.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_9.png",
+    "uid": "uid://co3gq4yr2ksr6",
+    "import_path": "assets/sprites/profile/frames/frame_0100_9.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      308,
+      0,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0002.png-cb1adc03753b8307d6e99c37862f4021.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0002.png",
+    "uid": "uid://c3pxqs8tp3jvl",
+    "import_path": "assets/sprites/profile/frames/frame_0002.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      924,
+      924,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_1.png-1080708b8f22c930e7d4debbe476f46d.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_1.png",
+    "uid": "uid://dajaxucnm81f5",
+    "import_path": "assets/sprites/profile/frames/frame_0100_1.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      924,
+      308,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100.png-15aeeb6744c86bfd0478074fab4ec133.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100.png",
+    "uid": "uid://cenpt4ifhssjb",
+    "import_path": "assets/sprites/profile/frames/frame_0100.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      308,
+      616,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_6.png-99b949da1ce046cbd9cf77880897324a.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_6.png",
+    "uid": "uid://bct6vxtqfqk0l",
+    "import_path": "assets/sprites/profile/frames/frame_0100_6.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      0,
+      308,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0008.png-dcd823c54a32348f7d3458f3fd5b52ef.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0008.png",
+    "uid": "uid://bvpsqkvap28xs",
+    "import_path": "assets/sprites/profile/frames/frame_0008.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      308,
+      924,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0005.png-5c66c49d25c4c7b5f4f2f28ae2ff6578.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0005.png",
+    "uid": "uid://b3k81g2vyn50t",
+    "import_path": "assets/sprites/profile/frames/frame_0005.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      924,
+      616,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/frame_0100_3.png-455b029616afc6e8ff49107aefbe49c9.res",
+    "source_file": "res://assets/sprites/profile/frames/frame_0100_3.png",
+    "uid": "uid://bhkf8col616n5",
+    "import_path": "assets/sprites/profile/frames/frame_0100_3.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      0,
+      1232,
+      306,
+      306
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0101.png-32fe104d7ce41ab9532b599b0082b94d.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0101.png",
+    "uid": "uid://dkin8a0m6lpqs",
+    "import_path": "assets/sprites/profile/avatars/head_0101.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      0,
+      1540,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0004.png-2da27672332c083b3cfed9d72d4f775f.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0004.png",
+    "uid": "uid://bqeowg4qyhbgx",
+    "import_path": "assets/sprites/profile/avatars/head_0004.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      1232,
+      0,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0001.png-56195f08400c2ecbfc70520f6b8ad6c2.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0001.png",
+    "uid": "uid://b202hnwhkn2fl",
+    "import_path": "assets/sprites/profile/avatars/head_0001.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      1232,
+      774,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0006.png-625a961b5914c3ab288297b90d7116ba.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0006.png",
+    "uid": "uid://txuq7fkpvwqv",
+    "import_path": "assets/sprites/profile/avatars/head_0006.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      774,
+      1540,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0003.png-3143995d62053040b03a36a67821da92.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0003.png",
+    "uid": "uid://cjr2urwfqy5tp",
+    "import_path": "assets/sprites/profile/avatars/head_0003.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      1232,
+      258,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0000.png-6251217d2f22cf3afed38fd62a6adc16.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0000.png",
+    "uid": "uid://cghp5yq6uv2m6",
+    "import_path": "assets/sprites/profile/avatars/head_0000.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      1232,
+      1032,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0008.png-5ce1ce2ecf62c0ac9a623472b6e14251.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0008.png",
+    "uid": "uid://dlr165klsb86h",
+    "import_path": "assets/sprites/profile/avatars/head_0008.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      258,
+      1540,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0005.png-fff80f9268fdb7b0ab39389b3d13b306.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0005.png",
+    "uid": "uid://cj34v44f4be8g",
+    "import_path": "assets/sprites/profile/avatars/head_0005.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      1032,
+      1540,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0002.png-73ab1625b57c8bc83029832be2f7e74e.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0002.png",
+    "uid": "uid://c2eagvoh43f48",
+    "import_path": "assets/sprites/profile/avatars/head_0002.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      1232,
+      516,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/head_0007.png-c8360749386498bc139594642441b40f.res",
+    "source_file": "res://assets/sprites/profile/avatars/head_0007.png",
+    "uid": "uid://cdxw8d1d6l0dq",
+    "import_path": "assets/sprites/profile/avatars/head_0007.png.import",
+    "atlas_path": "res://assets/atlas/profile_lossless.png",
+    "region": [
+      516,
+      1540,
+      256,
+      256
+    ]
+  },
+  {
+    "path": "res://.godot/imported/sub_arrow_right.png-dcb8557b161e832113f21b1948cec892.res",
+    "source_file": "res://assets/sprites/purchase/sub_arrow_right.png",
+    "uid": "uid://cre32s2ryl0ku",
+    "import_path": "assets/sprites/purchase/sub_arrow_right.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      656,
+      970,
+      50,
+      84
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rectangle_312.png-efa59efafc68e6e1329968533cb92ae4.res",
+    "source_file": "res://assets/sprites/purchase/rectangle_312.png",
+    "uid": "uid://y6hiytk6fbg6",
+    "import_path": "assets/sprites/purchase/rectangle_312.png.import",
+    "atlas_path": "res://assets/atlas/single_rectangle_312.png",
+    "region": [
+      0,
+      0,
+      1088,
+      665
+    ]
+  },
+  {
+    "path": "res://.godot/imported/badge_base_year.png-bc226791b634d75e945151b29d74357c.res",
+    "source_file": "res://assets/sprites/purchase/badge_base_year.png",
+    "uid": "uid://worbu7hytfeu",
+    "import_path": "assets/sprites/purchase/badge_base_year.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      413,
+      866,
+      147,
+      156
+    ]
+  },
+  {
+    "path": "res://.godot/imported/polygon_12_white.png-631858f8c2d7c52781f611e7c42c6cff.res",
+    "source_file": "res://assets/sprites/purchase/polygon_12_white.png",
+    "uid": "uid://ctmrchcoypx16",
+    "import_path": "assets/sprites/purchase/polygon_12_white.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      562,
+      970,
+      92,
+      78
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_full.png-b2e492e800cdc3578658497d512342fe.res",
+    "source_file": "res://assets/sprites/purchase/cat_full.png",
+    "uid": "uid://sge6age3ruxn",
+    "import_path": "assets/sprites/purchase/cat_full.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      0,
+      0,
+      370,
+      400
+    ]
+  },
+  {
+    "path": "res://.godot/imported/ad.png-500da7f616c7ffdc71452dbc78cbab57.res",
+    "source_file": "res://assets/sprites/purchase/ad.png",
+    "uid": "uid://k7c43nprrqt5",
+    "import_path": "assets/sprites/purchase/ad.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      375,
+      0,
+      313,
+      349
+    ]
+  },
+  {
+    "path": "res://.godot/imported/sub_expiry_pill.png-d302e98ad3d3d8813a4fd35cbc921cca.res",
+    "source_file": "res://assets/sprites/purchase/sub_expiry_pill.png",
+    "uid": "uid://c84ploxn2sbv7",
+    "import_path": "assets/sprites/purchase/sub_expiry_pill.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      0,
+      704,
+      677,
+      160
+    ]
+  },
+  {
+    "path": "res://.godot/imported/badge_base_week.png-a4ebd5e10601663ef66dd70d4c26f96b.res",
+    "source_file": "res://assets/sprites/purchase/badge_base_week.png",
+    "uid": "uid://1f85y08cd60l",
+    "import_path": "assets/sprites/purchase/badge_base_week.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      393,
+      1024,
+      147,
+      156
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rectangle_284_shadow.png-cb2ad1034eaa4b6ac6c304154688a7e4.res",
+    "source_file": "res://assets/sprites/purchase/rectangle_284_shadow.png",
+    "uid": "uid://c5uu7lhejuk0w",
+    "import_path": "assets/sprites/purchase/rectangle_284_shadow.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      264,
+      1024,
+      102,
+      102
+    ]
+  },
+  {
+    "path": "res://.godot/imported/cat_bg.png-4997040ce346601766c94b0842c2c8a2.res",
+    "source_file": "res://assets/sprites/purchase/cat_bg.png",
+    "uid": "uid://byu5stsli0ny",
+    "import_path": "assets/sprites/purchase/cat_bg.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      375,
+      351,
+      314,
+      307
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bubble_bg_white.png-2174394bede4cef7b2f129ce942fdb38.res",
+    "source_file": "res://assets/sprites/purchase/bubble_bg_white.png",
+    "uid": "uid://cnpdaynwgyd4p",
+    "import_path": "assets/sprites/purchase/bubble_bg_white.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      0,
+      1130,
+      391,
+      95
+    ]
+  },
+  {
+    "path": "res://.godot/imported/badge_base_month.png-0cca92535ee3e6e947aa1efe881fd295.res",
+    "source_file": "res://assets/sprites/purchase/badge_base_month.png",
+    "uid": "uid://cmbptjlui3mts",
+    "import_path": "assets/sprites/purchase/badge_base_month.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      264,
+      866,
+      147,
+      156
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rectangle_305.png-9b8eb306f5db8d6bdeec9415530b3f11.res",
+    "source_file": "res://assets/sprites/purchase/rectangle_305.png",
+    "uid": "uid://m0arbssegdp4",
+    "import_path": "assets/sprites/purchase/rectangle_305.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      0,
+      402,
+      373,
+      300
+    ]
+  },
+  {
+    "path": "res://.godot/imported/layer50.png-f42255f9814fbd690d7bb7c5479e64e4.res",
+    "source_file": "res://assets/sprites/purchase/layer50.png",
+    "uid": "uid://bka6ts1a4qfjb",
+    "import_path": "assets/sprites/purchase/layer50.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      0,
+      866,
+      262,
+      262
+    ]
+  },
+  {
+    "path": "res://.godot/imported/vector_2_stroke_2.png-c8452bf3a76d490f9894b87a8cbfe2be.res",
+    "source_file": "res://assets/sprites/purchase/vector_2_stroke_2.png",
+    "uid": "uid://dbt48yevt6ll0",
+    "import_path": "assets/sprites/purchase/vector_2_stroke_2.png.import",
+    "atlas_path": "res://assets/atlas/purchase_vram.png",
+    "region": [
+      562,
+      866,
+      132,
+      102
+    ]
+  },
+  {
+    "path": "res://.godot/imported/entry_left_active.png-c4d137aa92615f1c7e6831204830ddae.res",
+    "source_file": "res://assets/sprites/rank_activity/entry_left_active.png",
+    "uid": "uid://cowi3qmdinjfr",
+    "import_path": "assets/sprites/rank_activity/entry_left_active.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      541,
+      499,
+      230,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_badge_bronze.png-7e1ee527c6380b177d95ff83ed7696d3.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_badge_bronze.png",
+    "uid": "uid://bnb0mxtn1xyql",
+    "import_path": "assets/sprites/rank_activity/rank_badge_bronze.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      3098,
+      596,
+      155,
+      174
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rankpage_white_fish2.png-f47525de64fdfaee023b268038e0e64f.res",
+    "source_file": "res://assets/sprites/rank_activity/rankpage_white_fish2.png",
+    "uid": "uid://pgse4w1pspsu",
+    "import_path": "assets/sprites/rank_activity/rankpage_white_fish2.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1210,
+      576,
+      102,
+      74
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_row_bg_self_noshadow.png-b42ed124880f65cf80ea4c5824f4ca43.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_row_bg_self_noshadow.png",
+    "uid": "uid://dfb0iptt7yqv",
+    "import_path": "assets/sprites/rank_activity/rank_row_bg_self_noshadow.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      0,
+      418,
+      1992,
+      416
+    ]
+  },
+  {
+    "path": "res://.godot/imported/entry_open.png-dd2c27877007164fee6409e2cb11df1e.res",
+    "source_file": "res://assets/sprites/rank_activity/entry_open.png",
+    "uid": "uid://bf8ei61lpgv4f",
+    "import_path": "assets/sprites/rank_activity/entry_open.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1363,
+      483,
+      460,
+      295
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_medal_bronze.png-c7f887a1d5139549ab51e6a8be6f5abc.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_medal_bronze.png",
+    "uid": "uid://d20jom2kg6e8k",
+    "import_path": "assets/sprites/rank_activity/rank_medal_bronze.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      1994,
+      0,
+      664,
+      416
+    ]
+  },
+  {
+    "path": "res://.godot/imported/award_podium_silver.png-ca07f17ac2f92f9ea121d3b4527e59bf.res",
+    "source_file": "res://assets/sprites/rank_activity/award_podium_silver.png",
+    "uid": "uid://bdui2pt8hpy25",
+    "import_path": "assets/sprites/rank_activity/award_podium_silver.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1379,
+      1263,
+      274,
+      136
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_rank_list.png-4458148b344ea1075dec2944213a659a.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_rank_list.png",
+    "uid": "uid://07r1bty5dtpt",
+    "import_path": "assets/sprites/rank_activity/htp_rank_list.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      868,
+      576,
+      340,
+      322
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_layer3_copy.png-8e52f57070261a7fe64b6d5e5c30b4a7.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_layer3_copy.png",
+    "uid": "uid://c3tsldev5w6xv",
+    "import_path": "assets/sprites/rank_activity/htp_layer3_copy.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      263,
+      1468,
+      90,
+      90
+    ]
+  },
+  {
+    "path": "res://.godot/imported/streak5_mid_off.png-15b4789836634cecb36483783631eb9f.res",
+    "source_file": "res://assets/sprites/rank_activity/streak5_mid_off.png",
+    "uid": "uid://bqpoa680egntf",
+    "import_path": "assets/sprites/rank_activity/streak5_mid_off.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1487,
+      780,
+      336,
+      156
+    ]
+  },
+  {
+    "path": "res://.godot/imported/fish_count_bg.png-48c93f660a95ee3341ea81a3779832b6.res",
+    "source_file": "res://assets/sprites/rank_activity/fish_count_bg.png",
+    "uid": "uid://b4g13sixwtjhk",
+    "import_path": "assets/sprites/rank_activity/fish_count_bg.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      2660,
+      458,
+      436,
+      176
+    ]
+  },
+  {
+    "path": "res://.godot/imported/entry_left_ring.png-0f3a0bbe778d88f89fa2174366a43a97.res",
+    "source_file": "res://assets/sprites/rank_activity/entry_left_ring.png",
+    "uid": "uid://bfc0ftwnsacln",
+    "import_path": "assets/sprites/rank_activity/entry_left_ring.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1363,
+      0,
+      480,
+      481
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_medal_gold.png-ad932756daa8db10138ec58abff46e04.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_medal_gold.png",
+    "uid": "uid://5abjgyc0nlkj",
+    "import_path": "assets/sprites/rank_activity/rank_medal_gold.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      1994,
+      418,
+      664,
+      416
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_rect1.png-1921a3a234fd0dce452a6b98745e9584.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_rect1.png",
+    "uid": "uid://clnisb1cqcdxj",
+    "import_path": "assets/sprites/rank_activity/htp_rect1.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      541,
+      952,
+      54,
+      54
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rankpage_white_fish.png-5797c61b2868de9bf34a4f5f413b446c.res",
+    "source_file": "res://assets/sprites/rank_activity/rankpage_white_fish.png",
+    "uid": "uid://jvhgxr35dxre",
+    "import_path": "assets/sprites/rank_activity/rankpage_white_fish.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1732,
+      1518,
+      102,
+      74
+    ]
+  },
+  {
+    "path": "res://.godot/imported/streak3_mid_off.png-fef442cc82ee9b874454302b958758cb.res",
+    "source_file": "res://assets/sprites/rank_activity/streak3_mid_off.png",
+    "uid": "uid://bdsuedj4yq6yh",
+    "import_path": "assets/sprites/rank_activity/streak3_mid_off.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1267,
+      1105,
+      376,
+      156
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_fish.png-3d9a16ea61fd2726503dcfe8895cae21.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_fish.png",
+    "uid": "uid://44fc1e6iu8hh",
+    "import_path": "assets/sprites/rank_activity/htp_fish.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      617,
+      1283,
+      270,
+      270
+    ]
+  },
+  {
+    "path": "res://.godot/imported/top3_silver_medal.png-2dadf84759f6278f05c3658ecfc3f71a.res",
+    "source_file": "res://assets/sprites/rank_activity/top3_silver_medal.png",
+    "uid": "uid://br2psnxvlb7ug",
+    "import_path": "assets/sprites/rank_activity/top3_silver_medal.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1566,
+      1401,
+      164,
+      186
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_layer2.png-b0c11b2e42c3b0d53afc469bd9f88749.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_layer2.png",
+    "uid": "uid://dko62jemjnbgs",
+    "import_path": "assets/sprites/rank_activity/htp_layer2.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1655,
+      1149,
+      182,
+      165
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_row_self_shadow.png-092e9c4180c833f83fa55c3b8e4b6f23.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_row_self_shadow.png",
+    "uid": "uid://cid0t061ityg0",
+    "import_path": "assets/sprites/rank_activity/rank_row_self_shadow.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      3326,
+      0,
+      211,
+      456
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_first_place_frame.png-a45fb47fb336f04413a170cf212a43d6.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_first_place_frame.png",
+    "uid": "uid://bmkj4rnef1164",
+    "import_path": "assets/sprites/rank_activity/htp_first_place_frame.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1379,
+      1401,
+      185,
+      185
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_badge_gold.png-2e5768813b18e609ac3e79ffb216f4e6.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_badge_gold.png",
+    "uid": "uid://dkgv7awn72wwm",
+    "import_path": "assets/sprites/rank_activity/rank_badge_gold.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      3255,
+      458,
+      152,
+      176
+    ]
+  },
+  {
+    "path": "res://.godot/imported/top3_silver_base.png-be81caf64e28c6ead246561c3e8140c2.res",
+    "source_file": "res://assets/sprites/rank_activity/top3_silver_base.png",
+    "uid": "uid://dsdl73mx1ldr0",
+    "import_path": "assets/sprites/rank_activity/top3_silver_base.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      598,
+      952,
+      278,
+      329
+    ]
+  },
+  {
+    "path": "res://.godot/imported/entry_left_offline_mask.png-f4afee1b19cdfb82d129d4c8bc76a69b.res",
+    "source_file": "res://assets/sprites/rank_activity/entry_left_offline_mask.png",
+    "uid": "uid://b36fd1kwotatr",
+    "import_path": "assets/sprites/rank_activity/entry_left_offline_mask.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1128,
+      1296,
+      249,
+      241
+    ]
+  },
+  {
+    "path": "res://.godot/imported/fish_count_bg_self.png-cc1fc261ad829856b06c0a34342abff6.res",
+    "source_file": "res://assets/sprites/rank_activity/fish_count_bg_self.png",
+    "uid": "uid://qcmkd74718l5",
+    "import_path": "assets/sprites/rank_activity/fish_count_bg_self.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      2660,
+      636,
+      436,
+      176
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_entry_podium.png-8499b11ca4e3b95f72189462b49920d6.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_entry_podium.png",
+    "uid": "uid://br4w8b4s5abwu",
+    "import_path": "assets/sprites/rank_activity/rank_entry_podium.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      0,
+      1018,
+      596,
+      318
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_row_bg.png-06484e385c53099998b2d79399dc5691.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_row_bg.png",
+    "uid": "uid://wk7uxir1apo",
+    "import_path": "assets/sprites/rank_activity/rank_row_bg.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      0,
+      0,
+      1992,
+      416
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_union.png-c5232d7870747e90ca50e2b63c82210e.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_union.png",
+    "uid": "uid://b81ktniwu44e3",
+    "import_path": "assets/sprites/rank_activity/htp_union.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1267,
+      1263,
+      42,
+      29
+    ]
+  },
+  {
+    "path": "res://.godot/imported/entry_left_open.png-62c7d3b3a71ae76269469978f5de1c17.res",
+    "source_file": "res://assets/sprites/rank_activity/entry_left_open.png",
+    "uid": "uid://dntqfovshiyms",
+    "import_path": "assets/sprites/rank_activity/entry_left_open.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      541,
+      427,
+      230,
+      70
+    ]
+  },
+  {
+    "path": "res://.godot/imported/top3_bronze_base.png-c0cee24b432111dcf144ef55ba62612c.res",
+    "source_file": "res://assets/sprites/rank_activity/top3_bronze_base.png",
+    "uid": "uid://dwteaxc68138y",
+    "import_path": "assets/sprites/rank_activity/top3_bronze_base.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1210,
+      780,
+      275,
+      323
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_arrow.png-0170519d2dd783662c4b47babecb143c.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_arrow.png",
+    "uid": "uid://bph86ne75f88y",
+    "import_path": "assets/sprites/rank_activity/htp_arrow.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      878,
+      900,
+      322,
+      190
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_tier3_box.png-020ec0436ec43f14acdedd9972b0fdb5.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_tier3_box.png",
+    "uid": "uid://dbteswm0jy62p",
+    "import_path": "assets/sprites/rank_activity/htp_tier3_box.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      889,
+      1296,
+      237,
+      266
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_fish_icon.png-e197aec30699fb207c7cc5779fd982b3.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_fish_icon.png",
+    "uid": "uid://3bt1e5eot5pg",
+    "import_path": "assets/sprites/rank_activity/rank_fish_icon.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      3409,
+      458,
+      120,
+      120
+    ]
+  },
+  {
+    "path": "res://.godot/imported/award_podium_gold.png-e2c62ddf1bd877f2b3259f3c8e6345ea.res",
+    "source_file": "res://assets/sprites/rank_activity/award_podium_gold.png",
+    "uid": "uid://dx44s3kw4byi7",
+    "import_path": "assets/sprites/rank_activity/award_podium_gold.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      889,
+      1105,
+      376,
+      189
+    ]
+  },
+  {
+    "path": "res://.godot/imported/collect_fish.png-53b5f26238962c19a1e6301bc25ed859.res",
+    "source_file": "res://assets/sprites/rank_activity/collect_fish.png",
+    "uid": "uid://bwarg466ymu0e",
+    "import_path": "assets/sprites/rank_activity/collect_fish.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1732,
+      1316,
+      106,
+      106
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rankpage_title_base.png-50184ba64c5a8cdd9cc91abc0f185345.res",
+    "source_file": "res://assets/sprites/rank_activity/rankpage_title_base.png",
+    "uid": "uid://db3l7g5aq3kyb",
+    "import_path": "assets/sprites/rank_activity/rankpage_title_base.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      0,
+      1338,
+      615,
+      128
+    ]
+  },
+  {
+    "path": "res://.godot/imported/layer553.png-b29037b9d7847573d295a467395fa6da.res",
+    "source_file": "res://assets/sprites/rank_activity/layer553.png",
+    "uid": "uid://cy5jtmfmlprlm",
+    "import_path": "assets/sprites/rank_activity/layer553.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      0,
+      0,
+      800,
+      425
+    ]
+  },
+  {
+    "path": "res://.godot/imported/top3_gold_medal.png-9266053c61c17069fc7bff96b0664846.res",
+    "source_file": "res://assets/sprites/rank_activity/top3_gold_medal.png",
+    "uid": "uid://ddvuod52wab2",
+    "import_path": "assets/sprites/rank_activity/top3_gold_medal.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1645,
+      938,
+      180,
+      209
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_avatar.png-6aa7affa5d5fece51867069beed69e2b.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_avatar.png",
+    "uid": "uid://c22e0gj0bcsdx",
+    "import_path": "assets/sprites/rank_activity/htp_avatar.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1487,
+      938,
+      155,
+      155
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_badge_silver.png-2de01c509bdea21a21e19fc243bb805e.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_badge_silver.png",
+    "uid": "uid://d1cmnnrqf6mem",
+    "import_path": "assets/sprites/rank_activity/rank_badge_silver.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      3098,
+      418,
+      155,
+      176
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_layer344.png-8ba5576c16788d0b406c4b4742acd933.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_layer344.png",
+    "uid": "uid://dnohdvoiksf6u",
+    "import_path": "assets/sprites/rank_activity/htp_layer344.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      802,
+      0,
+      559,
+      574
+    ]
+  },
+  {
+    "path": "res://.godot/imported/star_2.png-8a36873268882dc1e6fe7891079bbed8.res",
+    "source_file": "res://assets/sprites/rank_activity/star_2.png",
+    "uid": "uid://355nr5oepesp",
+    "import_path": "assets/sprites/rank_activity/star_2.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      355,
+      1558,
+      37,
+      37
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_layer3_copy_2.png-164f77071faae2b8d87649e4449253f8.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_layer3_copy_2.png",
+    "uid": "uid://8ooxnbyejmsb",
+    "import_path": "assets/sprites/rank_activity/htp_layer3_copy_2.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      1732,
+      1424,
+      90,
+      92
+    ]
+  },
+  {
+    "path": "res://.godot/imported/top3_gold_base.png-f25620444a3070b2c723e4d29ac504dc.res",
+    "source_file": "res://assets/sprites/rank_activity/top3_gold_base.png",
+    "uid": "uid://dulcdnbscjewr",
+    "import_path": "assets/sprites/rank_activity/top3_gold_base.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      541,
+      576,
+      325,
+      374
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_layer3_copy4.png-55f0b84b38c173334ea86b21c3a9d8c5.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_layer3_copy4.png",
+    "uid": "uid://bcuut64vi4y4p",
+    "import_path": "assets/sprites/rank_activity/htp_layer3_copy4.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      355,
+      1468,
+      90,
+      88
+    ]
+  },
+  {
+    "path": "res://.godot/imported/award_podium_bronze.png-5a941e26ebf118fb50739929d1c15f68.res",
+    "source_file": "res://assets/sprites/rank_activity/award_podium_bronze.png",
+    "uid": "uid://bk5onskdr8j8s",
+    "import_path": "assets/sprites/rank_activity/award_podium_bronze.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      0,
+      1468,
+      261,
+      124
+    ]
+  },
+  {
+    "path": "res://.godot/imported/rank_medal_silver.png-7bdf764c43512c959a86d042469ec9b9.res",
+    "source_file": "res://assets/sprites/rank_activity/rank_medal_silver.png",
+    "uid": "uid://bjdpixj1rs4q",
+    "import_path": "assets/sprites/rank_activity/rank_medal_silver.png.import",
+    "atlas_path": "res://assets/atlas/rank_row_lossless.png",
+    "region": [
+      2660,
+      0,
+      664,
+      416
+    ]
+  },
+  {
+    "path": "res://.godot/imported/htp_layer344_copy.png-38e91708e158917f0de9631cf177eacd.res",
+    "source_file": "res://assets/sprites/rank_activity/htp_layer344_copy.png",
+    "uid": "uid://l2ot4tklcs8s",
+    "import_path": "assets/sprites/rank_activity/htp_layer344_copy.png.import",
+    "atlas_path": "res://assets/atlas/rank_activity_vram.png",
+    "region": [
+      0,
+      427,
+      539,
+      589
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_cross_white.png-8a933058475fbcc9f90154ec9e4f1677.res",
+    "source_file": "res://assets/sprites/account/icon_cross_white.png",
+    "uid": "uid://o7e6reocrli7",
+    "import_path": "assets/sprites/account/icon_cross_white.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1165,
+      816,
+      96,
+      97
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_check_corner.png-24b47b3e7ec7a52eff509a6c8d01830d.res",
+    "source_file": "res://assets/sprites/account/icon_check_corner.png",
+    "uid": "uid://chba34ldjpa1c",
+    "import_path": "assets/sprites/account/icon_check_corner.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      0,
+      882,
+      231,
+      173
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_progress_local.png-50af09c77fcf10387f93c76542feec2c.res",
+    "source_file": "res://assets/sprites/account/icon_progress_local.png",
+    "uid": "uid://by3n6755l7isx",
+    "import_path": "assets/sprites/account/icon_progress_local.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      800,
+      882,
+      128,
+      127
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_no_wifi.png-65ed40fb16ec17d925e3158914b6ff7b.res",
+    "source_file": "res://assets/sprites/account/icon_no_wifi.png",
+    "uid": "uid://ca0h5y1wm0uy2",
+    "import_path": "assets/sprites/account/icon_no_wifi.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      233,
+      882,
+      200,
+      155
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bg_card_blob.png-a228c4cd87c0745aa57f72fefd09493d.res",
+    "source_file": "res://assets/sprites/account/bg_card_blob.png",
+    "uid": "uid://cvte06xen8ee2",
+    "import_path": "assets/sprites/account/bg_card_blob.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      924,
+      290,
+      353,
+      400
+    ]
+  },
+  {
+    "path": "res://.godot/imported/icon_row_arrow.png-fb5ddda362b8b4f68d133f84d0f389f6.res",
+    "source_file": "res://assets/sprites/setting/icon_row_arrow.png",
+    "uid": "uid://cybqq5ymdj2bm",
+    "import_path": "assets/sprites/setting/icon_row_arrow.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1158,
+      915,
+      66,
+      66
+    ]
+  },
+  {
+    "path": "res://.godot/imported/circle_white.png-6cf4c5ec7e3b553c9fb807d4ed146784.res",
+    "source_file": "res://assets/sprites/setting/circle_white.png",
+    "uid": "uid://bctjexwflpxuk",
+    "import_path": "assets/sprites/setting/circle_white.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      930,
+      816,
+      122,
+      122
+    ]
+  },
+  {
+    "path": "res://.godot/imported/lang_icon.png-019011175abd6e851ae1066ff1c55b14.res",
+    "source_file": "res://assets/sprites/setting/language_switch/lang_icon.png",
+    "uid": "uid://d0h06r435e8al",
+    "import_path": "assets/sprites/setting/language_switch/lang_icon.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1082,
+      256,
+      29,
+      29
+    ]
+  },
+  {
+    "path": "res://.godot/imported/arrow_close.png-5e0c115294146ee700c23d3bc35a1446.res",
+    "source_file": "res://assets/sprites/setting/language_switch/arrow_close.png",
+    "uid": "uid://1mo2b5dbg0nr",
+    "import_path": "assets/sprites/setting/language_switch/arrow_close.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1246,
+      692,
+      50,
+      84
+    ]
+  },
+  {
+    "path": "res://.godot/imported/panel_shadow.png-c8e76ca3ec43df011a38cfe5ffeea78f.res",
+    "source_file": "res://assets/sprites/setting/language_switch/panel_shadow.png",
+    "uid": "uid://b7f5ajfec43fr",
+    "import_path": "assets/sprites/setting/language_switch/panel_shadow.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      1046,
+      940,
+      110,
+      110
+    ]
+  },
+  {
+    "path": "res://.godot/imported/arrow_open.png-61dbfd1eaa4a77cce230a14b78576b7c.res",
+    "source_file": "res://assets/sprites/setting/language_switch/arrow_open.png",
+    "uid": "uid://b5u5yg4ce0jxw",
+    "import_path": "assets/sprites/setting/language_switch/arrow_open.png.import",
+    "atlas_path": "res://assets/atlas/misc_ui_vram.png",
+    "region": [
+      800,
+      1011,
+      84,
+      50
+    ]
+  },
+  {
+    "path": "res://.godot/imported/vector_1.png-7d0b95ce0dc5a6997aead1a64b33d081.res",
+    "source_file": "res://assets/sprites/daily_streak/vector_1.png",
+    "uid": "uid://cn4o5gqkbyxcn",
+    "import_path": "assets/sprites/daily_streak/vector_1.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      0,
+      592,
+      54,
+      46
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_dusk_cat.png-5a0671c939814059beff45cde4d8e08e.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_dusk_cat.png",
+    "uid": "uid://c0i3g3uiufff0",
+    "import_path": "assets/sprites/daily_streak/enc_dusk_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      957,
+      1295,
+      955,
+      213
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_lazy_plain.png-f14fc7810ecd661c5bf433d5f20d9cc0.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_lazy_plain.png",
+    "uid": "uid://b6db2e1hn86gf",
+    "import_path": "assets/sprites/daily_streak/enc_lazy_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      957,
+      648,
+      955,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_morning_plain.png-3b3d50e5f4946f42a2e533f84e2476ac.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_morning_plain.png",
+    "uid": "uid://cynwo8ubepvqc",
+    "import_path": "assets/sprites/daily_streak/enc_morning_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      1419,
+      432,
+      955,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_dusk_plain.png-ff83e15b7b9903e032dcbb79879e97f1.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_dusk_plain.png",
+    "uid": "uid://bfydhx68mnynw",
+    "import_path": "assets/sprites/daily_streak/enc_dusk_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      0,
+      1295,
+      955,
+      213
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_dawn_plain.png-1105acd29900d04836e8119a9dcac1d3.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_dawn_plain.png",
+    "uid": "uid://w8qbavex014h",
+    "import_path": "assets/sprites/daily_streak/enc_dawn_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      957,
+      1510,
+      954,
+      213
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_lazy_cat.png-594192f0382b95330ab42bd87d0c9ce8.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_lazy_cat.png",
+    "uid": "uid://r7e5ft4fkq2t",
+    "import_path": "assets/sprites/daily_streak/enc_lazy_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      0,
+      864,
+      955,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_night_cat.png-6a14808d8c02f53c471d5a318f7b5c40.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_night_cat.png",
+    "uid": "uid://byxn6ovd5ey1k",
+    "import_path": "assets/sprites/daily_streak/enc_night_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      1420,
+      0,
+      956,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_noon_plain.png-85b14573e93ee7b70e37fcd773b0712f.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_noon_plain.png",
+    "uid": "uid://tpn7hbh3jir8",
+    "import_path": "assets/sprites/daily_streak/enc_noon_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      462,
+      432,
+      955,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/state_unchecked.png-114c6fa1261ce07319ff07e2c77ec1e1.res",
+    "source_file": "res://assets/sprites/daily_streak/state_unchecked.png",
+    "uid": "uid://dursnv3ms1x11",
+    "import_path": "assets/sprites/daily_streak/state_unchecked.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      0,
+      0,
+      460,
+      590
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_night_plain.png-9d39555141024356332f4b5f8a196838.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_night_plain.png",
+    "uid": "uid://cpp6rmkkw77xh",
+    "import_path": "assets/sprites/daily_streak/enc_night_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      462,
+      0,
+      956,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_midnight_cat.png-fe18fa0c8128d008ffb2722b6ee1752e.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_midnight_cat.png",
+    "uid": "uid://dw648wqy45mty",
+    "import_path": "assets/sprites/daily_streak/enc_midnight_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      1420,
+      216,
+      956,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/state_checked2.png-4e19cadd7aebe086fb72221987aaa921.res",
+    "source_file": "res://assets/sprites/daily_streak/state_checked2.png",
+    "uid": "uid://ct410eq5eud4y",
+    "import_path": "assets/sprites/daily_streak/state_checked2.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      2183,
+      1075,
+      104,
+      86
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_midnight_plain.png-8957942d1d81a6b0e9320913d09f5733.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_midnight_plain.png",
+    "uid": "uid://b86oku45dcgvv",
+    "import_path": "assets/sprites/daily_streak/enc_midnight_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      462,
+      216,
+      956,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/mini_bg.png-36308b0c33715c22499751b0977faf62.res",
+    "source_file": "res://assets/sprites/daily_streak/mini_bg.png",
+    "uid": "uid://8ng2flp52xmd",
+    "import_path": "assets/sprites/daily_streak/mini_bg.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      2079,
+      1075,
+      102,
+      102
+    ]
+  },
+  {
+    "path": "res://.godot/imported/bg_9grid.png-66625759f9c9231ab7374350a1b7e386.res",
+    "source_file": "res://assets/sprites/daily_streak/bg_9grid.png",
+    "uid": "uid://cv25sq0vxb6sl",
+    "import_path": "assets/sprites/daily_streak/bg_9grid.png.import",
+    "atlas_path": "res://assets/atlas/single_bg_9grid.png",
+    "region": [
+      0,
+      0,
+      414,
+      2400
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_midmorning_cat.png-6e46341cbe929d8069e99acadf044473.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_midmorning_cat.png",
+    "uid": "uid://bhmm47qykhfb1",
+    "import_path": "assets/sprites/daily_streak/enc_midmorning_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      957,
+      1080,
+      955,
+      213
+    ]
+  },
+  {
+    "path": "res://.godot/imported/mini_unchecked_icon.png-d64c51caa715d16fb600176dbdbeeada.res",
+    "source_file": "res://assets/sprites/daily_streak/mini_unchecked_icon.png",
+    "uid": "uid://bvaa04gjyn1jt",
+    "import_path": "assets/sprites/daily_streak/mini_unchecked_icon.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      1914,
+      1075,
+      163,
+      164
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_noon_cat.png-b5400fb326f0ec4bb6316465032b40f3.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_noon_cat.png",
+    "uid": "uid://bwys2kb704yjb",
+    "import_path": "assets/sprites/daily_streak/enc_noon_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      0,
+      1510,
+      955,
+      213
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_morning_cat.png-ab86280ca5f92c8a00aeb870ef621884.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_morning_cat.png",
+    "uid": "uid://cyellooauy17q",
+    "import_path": "assets/sprites/daily_streak/enc_morning_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      0,
+      648,
+      955,
+      214
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_midmorning_plain.png-86f7eaf3f844dab3ea2a13e61b263c17.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_midmorning_plain.png",
+    "uid": "uid://nofl0i7scpc5",
+    "import_path": "assets/sprites/daily_streak/enc_midmorning_plain.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      0,
+      1080,
+      955,
+      213
+    ]
+  },
+  {
+    "path": "res://.godot/imported/mini_glow.png-c730dd5f7cf4635f07476348dd0576a4.res",
+    "source_file": "res://assets/sprites/daily_streak/mini_glow.png",
+    "uid": "uid://kvay612g361o",
+    "import_path": "assets/sprites/daily_streak/mini_glow.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      1914,
+      648,
+      426,
+      425
+    ]
+  },
+  {
+    "path": "res://.godot/imported/enc_dawn_cat.png-0cfa3a6e3b51fcf1b8098a954532c7c2.res",
+    "source_file": "res://assets/sprites/daily_streak/enc_dawn_cat.png",
+    "uid": "uid://bfrqs7shrnk25",
+    "import_path": "assets/sprites/daily_streak/enc_dawn_cat.png.import",
+    "atlas_path": "res://assets/atlas/daily_streak_vram.png",
+    "region": [
+      957,
+      864,
+      955,
+      214
+    ]
+  }
+]

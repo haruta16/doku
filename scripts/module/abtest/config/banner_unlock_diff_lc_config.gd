@@ -1,4 +1,4 @@
-## 开屏 banner 的尺寸白名单：按「存活天数」分段，规定该阶段哪些棋盘尺寸可以展示 banner
+## 实验配置 banner_unlock_diff_lc：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name BannerUnlockDiffLcConfig
 
@@ -9,11 +9,10 @@ const VALUE_DEFAULT: String = "{all}" # 默认方案：所有尺寸都允许
 var _seg_regex: RegEx = null # 匹配 {...} 片段的正则
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "banner_unlock_diff_lc"
-	default_value = VALUE_DEFAULT # 默认档：全尺寸允许
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = VALUE_DEFAULT
 
 
 ## 当前存活天数分段下，该棋盘尺寸是否允许展示 banner；段数不匹配时用第 0 段

@@ -1,0 +1,1238 @@
+[gd_scene format=3 uid="uid://bypdreqo7n565"]
+
+[ext_resource type="Script" uid="uid://d3x15e8wxt02i" path="res://scripts/module/result/view/dc_pass_page_board.gd" id="1"]
+[ext_resource type="Shader" uid="uid://b0sc0d7okkdxw" path="res://assets/shaders/linear_gradient.gdshader" id="2"]
+[ext_resource type="Texture2D" uid="uid://bflj20cut4jl6" path="res://assets/effect/texture/mask/et_mask_001.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://beiukjhnra30e" path="res://assets/effect/texture/shine/et_shine_001.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://v1gephh7yqcw" path="res://assets/sprites/result/pass_page_g1/panel_bg_v2.png" id="5"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="6"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="7"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="8"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="9"]
+[ext_resource type="Texture2D" uid="uid://dlk6bi13gchlq" path="res://assets/sprites/game/ad_play_icon.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://b0gtsclkl27gx" path="res://assets/effect/texture/line/et_line_001.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://2qb2vueasbpc" path="res://assets/effect/texture/obj/et_ribbon_001.png" id="12"]
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://b4172kbem80d8" path="res://assets/effect/texture/glow/et_glow_001.png" id="14"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4xpwb"]
+shader = ExtResource("2")
+shader_parameter/color_left = Color(1, 0.87618995, 0.5368588, 1)
+shader_parameter/color_right = Color(1, 0.96722037, 0.8798077, 1)
+shader_parameter/grad_p0 = Vector2(1, -6e-17)
+shader_parameter/grad_p1 = Vector2(1, 1)
+shader_parameter/pos0 = 0.0
+shader_parameter/pos1 = 1.0
+shader_parameter/corner_radius = Vector4(0, 0, 0, 0)
+shader_parameter/stroke_color_left = Color(0, 0, 0, 0)
+shader_parameter/stroke_color_right = Color(0, 0, 0, 0)
+shader_parameter/stroke_width = 0.0
+shader_parameter/rect_size = Vector2(1080, 2400)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_syaw2"]
+bg_color = Color(0.99607843, 0.94509804, 0.8235294, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="sf_ad_badge"]
+bg_color = Color(0.008586928, 0.7442307, 0.3223179, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_p0tx5"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_2y5co"]
+_limits = [-2.2623444, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.26776934), 0.0, 0.0, 0, 0, Vector2(0.72250426, 0.79800534), 0.0, 0.0, 0, 0, Vector2(1, -0.84320164), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_7fnj8"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_f1f61"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15905245, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_rmb8b"]
+offsets = PackedFloat32Array(0.21699819, 0.6238698, 0.9909584)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_scmlb"]
+offsets = PackedFloat32Array(0, 0.99638337)
+colors = PackedColorArray(1, 0.5411765, 0.015686275, 1, 1, 0.2784314, 0.007843138, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_wm35t"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 2
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_okrd4"]
+_limits = [-2.2623444, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.89900273), 0.0, 0.0, 0, 0, Vector2(0.62098134, -0.0015569925), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_qo5n4"]
+_data = [Vector2(0, 0.42984724), 0.0, 2.7051253, 0, 0, Vector2(0.32994923, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.7291129), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cub54"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_qv84n"]
+_limits = [-2.2623444, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.89900273), 0.0, 0.0, 0, 0, Vector2(1, -0.0015569925), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_1xm0d"]
+_data = [Vector2(0, 0.42210764), 0.0, 2.7051253, 0, 0, Vector2(0.1641286, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.3034333), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_e1w8d"]
+offsets = PackedFloat32Array(0.21699819, 0.6238698, 0.9909584)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_70rsq"]
+colors = PackedColorArray(1, 0.8837067, 0.4517722, 1, 1, 0.39937484, 0, 1)
+
+[sub_resource type="Curve" id="Curve_3ycdp"]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 2), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="Curve" id="Curve_sdafc"]
+_data = [Vector2(0, 0.42210764), 0.0, 2.7051253, 0, 0, Vector2(0.1641286, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.3034333), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_fajue"]
+offsets = PackedFloat32Array(0, 0.21699819, 0.6238698, 0.9909584)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Animation" id="Animation_askv3"]
+resource_name = "Appear"
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"button_show",
+"time": 0.69803995
+}]
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("EffectFlreworks/Flreworks_1:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.020671405, 0.03333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("EffectFlreworks/Flreworks_2:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.020671405, 0.03333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("EffectFlreworks/Flreworks_loop:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.15889698, 0.169406),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("EffectFlreworks/Flreworks_loop:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.020671405, 0.10412833, 0.114637464),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, false, true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("EffectFlreworks/Flreworks_loop:lifetime")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.15889698, 0.17324108),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.01, 3.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("EffectFlreworks/Line_1:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.06780794, 0.076164246),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("EffectFlreworks/Line_2:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.020671405, 0.029027708),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("EffectFlreworks/LineGlow_3:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.020671405, 0.029027708),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("EffectFlreworks/LineGlow_4:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0.020671405, 0.029027708),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("EffectFlreworks/Star_2:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0.020671405, 0.029027708),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("EffectFlreworks/Star_1:emitting")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0.020671405, 0.029027708),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("EffectFlreworks/Glow_2:emitting")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.020671405, 0.029027708),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("EffectFlreworks/Glow_1:emitting")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0.020671405, 0.029027708),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/13/type = "bezier"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("ContentGroup/Popup:scale:x")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"handle_modes": PackedInt32Array(2, 0, 0),
+"points": PackedFloat32Array(0.5, 0, 0, 0.06666668, 0, 1.1, -0.06666668, 0, 0.06666666, 0, 1, -0.06666666, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.33333334)
+}
+tracks/14/type = "bezier"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("ContentGroup/Popup:scale:y")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"handle_modes": PackedInt32Array(2, 0, 0),
+"points": PackedFloat32Array(0.5, 0, 0, 0.06666668, 0, 1.1, -0.06666668, 0, 0.06666666, 0, 1, -0.06666666, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.33333334)
+}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("ContentGroup/Popup:modulate")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0, 0.10198506),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("ContentGroup/PraiseLabel:modulate")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(0.3, 0.4666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("ContentGroup/CtaRow:modulate")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"times": PackedFloat32Array(0.53333336, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("ContentGroup/Sprite2D:modulate")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {
+"times": PackedFloat32Array(0.13333334, 0.23333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_2h4ew"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ContentGroup/Popup:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ContentGroup/PraiseLabel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ContentGroup/CtaRow:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("ContentGroup/Sprite2D:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tjfjy"]
+_data = {
+&"Appear": SubResource("Animation_askv3"),
+&"RESET": SubResource("Animation_2h4ew")
+}
+
+[node name="DcPassPageBoard" type="Control" unique_id=1509149944]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1")
+metadata/a2g_semantic_id = "11:2715"
+
+[node name="Bg" type="Control" parent="." unique_id=646459121]
+clip_children = 2
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -500.0
+offset_right = 500.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "11:2716"
+
+[node name="Bg1" type="ColorRect" parent="Bg" unique_id=1823955792]
+material = SubResource("ShaderMaterial_4xpwb")
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2716;6879:49987"
+
+[node name="ContentGroup" type="Control" parent="." unique_id=1546583354]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -540.0
+offset_right = 540.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "11:2718"
+
+[node name="Sprite2D" type="Sprite2D" parent="ContentGroup" unique_id=713573684]
+clip_children = 1
+position = Vector2(539.00006, 523)
+scale = Vector2(4.27, 4.15)
+texture = ExtResource("3")
+
+[node name="Shine2" type="CPUParticles2D" parent="ContentGroup/Sprite2D" unique_id=1377520415]
+self_modulate = Color(1, 1, 1, 0.47058824)
+position = Vector2(0.46836758, 42.6506)
+amount = 1
+texture = ExtResource("4")
+lifetime = 12.0
+preprocess = 10.0
+gravity = Vector2(0, 0)
+angular_velocity_min = -10.0
+angular_velocity_max = -10.0
+scale_amount_min = 3.0
+scale_amount_max = 3.0
+
+[node name="Popup" type="Control" parent="ContentGroup" unique_id=175421333]
+anchors_preset = 0
+anchor_top = 0.36
+anchor_bottom = 0.36
+offset_left = 90.0
+offset_top = -492.4
+offset_right = 990.0
+offset_bottom = 419.6
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "11:2719"
+
+[node name="PanelBg" type="NinePatchRect" parent="ContentGroup/Popup" unique_id=475259138]
+layout_mode = 0
+offset_left = -20.0
+offset_right = 920.0
+offset_bottom = 934.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("5")
+patch_margin_left = 450
+patch_margin_top = 350
+patch_margin_right = 450
+patch_margin_bottom = 80
+metadata/a2g_semantic_id = "I11:2719;6823:92504"
+
+[node name="StatsPanel" type="Panel" parent="ContentGroup/Popup" unique_id=254042832]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 350.0
+offset_right = 850.0
+offset_bottom = 862.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_styles/panel = SubResource("StyleBoxFlat_syaw2")
+metadata/a2g_semantic_id = "I11:2719;6846:92518"
+
+[node name="StatRow2" type="Control" parent="ContentGroup/Popup/StatsPanel" unique_id=274652004]
+anchors_preset = 0
+offset_right = 800.0
+offset_bottom = 128.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92552"
+
+[node name="Cells" type="Control" parent="ContentGroup/Popup/StatsPanel/StatRow2" unique_id=1153682317]
+anchors_preset = 0
+offset_right = 800.0
+offset_bottom = 128.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92552;6846:92602"
+
+[node name="KeyLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow2/Cells" unique_id=1467515588]
+layout_mode = 0
+offset_left = 40.0
+offset_right = 440.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 56
+text = "Size"
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92552;6846:92509"
+
+[node name="ValueLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow2/Cells" unique_id=110279046]
+layout_mode = 0
+offset_left = 460.0
+offset_right = 760.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 56
+text = "NXN"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92552;6846:92510"
+
+[node name="Divider" type="ColorRect" parent="ContentGroup/Popup/StatsPanel/StatRow2" unique_id=426445143]
+modulate = Color(1, 1, 1, 0.05)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 126.0
+offset_right = 760.0
+offset_bottom = 130.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+metadata/a2g_semantic_id = "I11:2719;6846:92552;6846:92619"
+
+[node name="StatRow3" type="Control" parent="ContentGroup/Popup/StatsPanel" unique_id=1402808567]
+anchors_preset = 0
+offset_top = 128.0
+offset_right = 800.0
+offset_bottom = 256.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92555"
+
+[node name="Cells" type="Control" parent="ContentGroup/Popup/StatsPanel/StatRow3" unique_id=1172115156]
+anchors_preset = 0
+offset_right = 800.0
+offset_bottom = 128.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92555;6846:92602"
+
+[node name="KeyLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow3/Cells" unique_id=2120634099]
+layout_mode = 0
+offset_left = 40.0
+offset_right = 440.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 56
+text = "Time"
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92555;6846:92509"
+
+[node name="ValueLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow3/Cells" unique_id=180959869]
+layout_mode = 0
+offset_left = 460.0
+offset_right = 760.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 56
+text = "00:00:00"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92555;6846:92510"
+
+[node name="Divider" type="ColorRect" parent="ContentGroup/Popup/StatsPanel/StatRow3" unique_id=626254008]
+modulate = Color(1, 1, 1, 0.05)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 126.0
+offset_right = 760.0
+offset_bottom = 130.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+metadata/a2g_semantic_id = "I11:2719;6846:92555;6846:92619"
+
+[node name="StatRow4" type="Control" parent="ContentGroup/Popup/StatsPanel" unique_id=1091527752]
+anchors_preset = 0
+offset_top = 256.0
+offset_right = 800.0
+offset_bottom = 448.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92558"
+
+[node name="Cells" type="Control" parent="ContentGroup/Popup/StatsPanel/StatRow4" unique_id=618586340]
+anchors_preset = 0
+offset_right = 800.0
+offset_bottom = 128.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92558;6846:92602"
+
+[node name="KeyLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow4/Cells" unique_id=1486588182]
+layout_mode = 0
+offset_left = 40.0
+offset_right = 440.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 56
+text = "Score"
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92558;6846:92509"
+
+[node name="ValueLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow4/Cells" unique_id=837453460]
+layout_mode = 0
+offset_left = 460.0
+offset_right = 760.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 56
+text = "18,000"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92558;6846:92510"
+
+[node name="Divider" type="ColorRect" parent="ContentGroup/Popup/StatsPanel/StatRow4" unique_id=926282874]
+modulate = Color(1, 1, 1, 0.05)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 126.0
+offset_right = 760.0
+offset_bottom = 130.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+metadata/a2g_semantic_id = "I11:2719;6846:92558;6846:92619"
+
+[node name="StatRow5" type="Control" parent="ContentGroup/Popup/StatsPanel" unique_id=355278399]
+anchors_preset = 0
+offset_top = 384.0
+offset_right = 800.0
+offset_bottom = 576.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92561"
+
+[node name="Cells" type="Control" parent="ContentGroup/Popup/StatsPanel/StatRow5" unique_id=340990078]
+anchors_preset = 0
+offset_right = 800.0
+offset_bottom = 128.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I11:2719;6846:92561;6846:92602"
+
+[node name="KeyLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow5/Cells" unique_id=578237949]
+layout_mode = 0
+offset_left = 40.0
+offset_right = 440.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 56
+text = "Combo"
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92561;6846:92509"
+
+[node name="ValueLabel" type="Label" parent="ContentGroup/Popup/StatsPanel/StatRow5/Cells" unique_id=1557292452]
+layout_mode = 0
+offset_left = 460.0
+offset_right = 760.0
+offset_bottom = 128.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 46
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 56
+text = "           36"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6846:92561;6846:92510"
+
+[node name="TitleLabel" type="Label" parent="ContentGroup/Popup" unique_id=1925425850]
+layout_mode = 0
+offset_left = 174.0
+offset_top = 244.0
+offset_right = 724.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -37
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 80
+text = "Perfect!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+metadata/a2g_semantic_id = "I11:2719;6823:92346"
+
+[node name="Spacer1" type="ColorRect" parent="ContentGroup" unique_id=754280249]
+clip_children = 2
+layout_mode = 0
+anchor_top = 0.36
+anchor_bottom = 0.36
+offset_top = 419.6
+offset_right = 1080.0
+offset_bottom = 509.6
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(1, 0, 0, 0)
+metadata/a2g_semantic_id = "11:2720"
+
+[node name="PraiseLabel" type="RichTextLabel" parent="ContentGroup" unique_id=173810174]
+layout_mode = 0
+anchor_top = 0.36
+anchor_bottom = 0.36
+offset_left = 100.0
+offset_top = 509.6
+offset_right = 980.0
+offset_bottom = 709.6
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/default_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_separation = 11
+theme_override_fonts/normal_font = ExtResource("6")
+theme_override_font_sizes/normal_font_size = 76
+bbcode_enabled = true
+text = "[font_size=76]0[/font_size][color=#935A5A][font_size=76] mistakes!Every cat perfectly placed![/font_size][/color]"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/a2g_semantic_id = "11:2721"
+
+[node name="Spacer2" type="ColorRect" parent="ContentGroup" unique_id=615953689]
+clip_children = 2
+layout_mode = 0
+anchor_top = 0.36
+anchor_bottom = 0.36
+offset_top = 709.6
+offset_right = 1080.0
+offset_bottom = 799.6
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(1, 0, 0, 0)
+metadata/a2g_semantic_id = "11:2722"
+
+[node name="CtaRow" type="Control" parent="ContentGroup" unique_id=820740301]
+anchors_preset = 0
+anchor_top = 0.36
+anchor_bottom = 0.36
+offset_top = 799.6
+offset_right = 1080.0
+offset_bottom = 959.6
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "11:2723"
+
+[node name="NextBtn" parent="ContentGroup/CtaRow" unique_id=256697999 instance=ExtResource("9")]
+layout_mode = 0
+offset_left = 146.0
+offset_top = -68.0
+offset_right = 930.0
+offset_bottom = 190.0
+btn_text = "Level 999"
+show_difficult = false
+
+[node name="ReplayBtn" parent="ContentGroup/CtaRow" unique_id=1604996310 instance=ExtResource("9")]
+visible = false
+layout_mode = 0
+offset_left = 146.0
+offset_top = 132.0
+offset_right = 930.0
+offset_bottom = 390.0
+bg_color = Color(1, 0.8132034, 0.5846757, 1)
+shadow_color = Color(0, 0, 0, 0.15)
+btn_text = "DC_REPLAY_CONFIRM_BTN"
+text_color = Color(0.7538461, 0.4546269, 0.2551475, 1)
+show_difficult = false
+
+[node name="AdBadge" type="Panel" parent="ContentGroup/CtaRow/ReplayBtn" unique_id=1800641570]
+layout_mode = 0
+offset_left = 663.195
+offset_top = 41.0
+offset_right = 789.195
+offset_bottom = 95.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sf_ad_badge")
+
+[node name="PlayIcon" type="TextureRect" parent="ContentGroup/CtaRow/ReplayBtn/AdBadge" unique_id=1800641571]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 6.0
+offset_right = 56.0
+offset_bottom = 48.0
+mouse_filter = 2
+texture = ExtResource("10")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AdLabel" type="Label" parent="ContentGroup/CtaRow/ReplayBtn/AdBadge" unique_id=1800641572]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 55.0
+offset_top = -2.5
+offset_right = -6.0
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 40
+text = "AD"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer3" type="ColorRect" parent="ContentGroup" unique_id=706346071]
+visible = false
+clip_children = 2
+layout_mode = 0
+anchor_top = 0.36
+anchor_bottom = 1.0
+offset_top = 959.6
+offset_right = 1080.0
+offset_bottom = -240.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+color = Color(1, 0, 0, 0)
+metadata/a2g_semantic_id = "11:2726"
+
+[node name="EffectFlreworks" type="Control" parent="." unique_id=1387320150]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 27.0
+offset_top = -44.0
+offset_right = 27.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Line_1" type="CPUParticles2D" parent="EffectFlreworks" unique_id=1755374254]
+material = SubResource("CanvasItemMaterial_p0tx5")
+position = Vector2(-158, 1929)
+emitting = false
+amount = 12
+texture = ExtResource("11")
+lifetime = 0.25
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(1.2, -2)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 3000.0
+initial_velocity_max = 5000.0
+linear_accel_min = -25000.0
+linear_accel_max = -20000.0
+linear_accel_curve = SubResource("Curve_2y5co")
+angle_max = 720.0
+scale_amount_min = 0.2
+scale_amount_max = 0.5
+split_scale = true
+scale_curve_x = SubResource("Curve_7fnj8")
+scale_curve_y = SubResource("Curve_f1f61")
+color_ramp = SubResource("Gradient_rmb8b")
+color_initial_ramp = SubResource("Gradient_scmlb")
+
+[node name="Line_2" type="CPUParticles2D" parent="EffectFlreworks" unique_id=548634146]
+material = SubResource("CanvasItemMaterial_p0tx5")
+position = Vector2(1210, 1936)
+emitting = false
+amount = 12
+texture = ExtResource("11")
+lifetime = 0.25
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(-1.2, -2)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 3000.0
+initial_velocity_max = 5000.0
+linear_accel_min = -25000.0
+linear_accel_max = -20000.0
+linear_accel_curve = SubResource("Curve_2y5co")
+scale_amount_min = 0.2
+scale_amount_max = 0.5
+split_scale = true
+scale_curve_x = SubResource("Curve_7fnj8")
+scale_curve_y = SubResource("Curve_f1f61")
+color_ramp = SubResource("Gradient_rmb8b")
+color_initial_ramp = SubResource("Gradient_scmlb")
+
+[node name="Flreworks_1" type="CPUParticles2D" parent="EffectFlreworks" unique_id=1675848653]
+material = SubResource("CanvasItemMaterial_wm35t")
+position = Vector2(-211, 1755)
+emitting = false
+amount = 25
+texture = ExtResource("12")
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(1.35, -2)
+spread = 22.0
+gravity = Vector2(0, 2600)
+initial_velocity_min = 6000.0
+initial_velocity_max = 6500.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_min = -22000.0
+linear_accel_max = -20000.0
+linear_accel_curve = SubResource("Curve_okrd4")
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.8
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_qo5n4")
+color_ramp = SubResource("Gradient_rmb8b")
+anim_offset_max = 1.0
+
+[node name="Flreworks_2" type="CPUParticles2D" parent="EffectFlreworks" unique_id=295935060]
+material = SubResource("CanvasItemMaterial_wm35t")
+position = Vector2(1257, 1779)
+emitting = false
+amount = 25
+texture = ExtResource("12")
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(-1.35, -2)
+spread = 22.0
+gravity = Vector2(0, 2600)
+initial_velocity_min = 6000.0
+initial_velocity_max = 6500.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_min = -22000.0
+linear_accel_max = -20000.0
+linear_accel_curve = SubResource("Curve_okrd4")
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.8
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_qo5n4")
+color_ramp = SubResource("Gradient_rmb8b")
+anim_offset_max = 1.0
+
+[node name="Star_1" type="CPUParticles2D" parent="EffectFlreworks" unique_id=1413803714]
+material = SubResource("CanvasItemMaterial_cub54")
+position = Vector2(-209, 1959)
+emitting = false
+amount = 12
+texture = ExtResource("13")
+lifetime = 0.65
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(1.2, -2)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 4000.0
+initial_velocity_max = 4500.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_min = -21000.0
+linear_accel_max = -15000.0
+linear_accel_curve = SubResource("Curve_qv84n")
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+scale_amount_curve = SubResource("Curve_1xm0d")
+color_ramp = SubResource("Gradient_e1w8d")
+color_initial_ramp = SubResource("Gradient_70rsq")
+
+[node name="Star_2" type="CPUParticles2D" parent="EffectFlreworks" unique_id=1890301761]
+material = SubResource("CanvasItemMaterial_cub54")
+position = Vector2(1259, 1983)
+emitting = false
+amount = 12
+texture = ExtResource("13")
+lifetime = 0.65
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(-1.2, -2)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 4000.0
+initial_velocity_max = 4500.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_min = -21000.0
+linear_accel_max = -15000.0
+linear_accel_curve = SubResource("Curve_qv84n")
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+scale_amount_curve = SubResource("Curve_1xm0d")
+color_ramp = SubResource("Gradient_e1w8d")
+color_initial_ramp = SubResource("Gradient_70rsq")
+
+[node name="Glow_1" type="CPUParticles2D" parent="EffectFlreworks" unique_id=1763182627]
+material = SubResource("CanvasItemMaterial_cub54")
+position = Vector2(-209, 1959)
+emitting = false
+amount = 12
+texture = ExtResource("14")
+lifetime = 0.65
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(1.2, -2)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 4000.0
+initial_velocity_max = 4500.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_min = -21000.0
+linear_accel_max = -15000.0
+linear_accel_curve = SubResource("Curve_qv84n")
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+scale_amount_curve = SubResource("Curve_1xm0d")
+color_ramp = SubResource("Gradient_e1w8d")
+color_initial_ramp = SubResource("Gradient_70rsq")
+
+[node name="Glow_2" type="CPUParticles2D" parent="EffectFlreworks" unique_id=923808474]
+material = SubResource("CanvasItemMaterial_cub54")
+position = Vector2(1259, 1983)
+emitting = false
+amount = 12
+texture = ExtResource("14")
+lifetime = 0.65
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+lifetime_randomness = 0.55
+fixed_fps = 60
+emission_shape = 1
+emission_sphere_radius = 86.57
+direction = Vector2(-1.2, -2)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 4000.0
+initial_velocity_max = 4500.0
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+linear_accel_min = -21000.0
+linear_accel_max = -15000.0
+linear_accel_curve = SubResource("Curve_qv84n")
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+scale_amount_curve = SubResource("Curve_1xm0d")
+color_ramp = SubResource("Gradient_e1w8d")
+color_initial_ramp = SubResource("Gradient_70rsq")
+
+[node name="LineGlow_3" type="CPUParticles2D" parent="EffectFlreworks" unique_id=506627798]
+modulate = Color(1, 1, 1, 0.11764706)
+material = SubResource("CanvasItemMaterial_p0tx5")
+position = Vector2(-80, 1851)
+emitting = false
+amount = 30
+texture = ExtResource("11")
+lifetime = 0.25
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+use_fixed_seed = true
+seed = 3013012119
+lifetime_randomness = 0.55
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(1.2, -2)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 3000.0
+initial_velocity_max = 3000.0
+linear_accel_min = -25000.0
+linear_accel_max = -20000.0
+linear_accel_curve = SubResource("Curve_2y5co")
+angle_max = 720.0
+scale_amount_min = 0.5
+scale_amount_max = 2.0
+split_scale = true
+scale_curve_x = SubResource("Curve_3ycdp")
+scale_curve_y = null
+color = Color(1, 1, 1, 0.19607843)
+color_ramp = SubResource("Gradient_rmb8b")
+color_initial_ramp = SubResource("Gradient_scmlb")
+
+[node name="LineGlow_4" type="CPUParticles2D" parent="EffectFlreworks" unique_id=1549609311]
+modulate = Color(1, 1, 1, 0.11764706)
+material = SubResource("CanvasItemMaterial_p0tx5")
+position = Vector2(1158, 1851)
+emitting = false
+amount = 30
+texture = ExtResource("11")
+lifetime = 0.25
+one_shot = true
+explosiveness = 0.87
+randomness = 1.0
+use_fixed_seed = true
+seed = 4270955571
+lifetime_randomness = 0.55
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(-1.2, -2)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 3000.0
+initial_velocity_max = 3000.0
+linear_accel_min = -25000.0
+linear_accel_max = -20000.0
+linear_accel_curve = SubResource("Curve_2y5co")
+scale_amount_min = 0.5
+scale_amount_max = 2.0
+split_scale = true
+scale_curve_x = SubResource("Curve_3ycdp")
+scale_curve_y = null
+color = Color(1, 1, 1, 0.19607843)
+color_ramp = SubResource("Gradient_rmb8b")
+color_initial_ramp = SubResource("Gradient_scmlb")
+
+[node name="Flreworks_loop" type="CPUParticles2D" parent="EffectFlreworks" unique_id=2038389843]
+material = SubResource("CanvasItemMaterial_wm35t")
+position = Vector2(541, 648)
+amount = 30
+texture = ExtResource("12")
+lifetime = 3.0
+explosiveness = 0.3
+randomness = 1.0
+fixed_fps = 60
+fract_delta = false
+emission_shape = 3
+emission_rect_extents = Vector2(1080, 800)
+direction = Vector2(0, 1)
+spread = 15.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 315.38
+angular_velocity_min = -200.0
+angular_velocity_max = 200.0
+angle_min = -360.0
+angle_max = 360.0
+scale_amount_min = 0.5
+scale_amount_max = 1.5
+scale_amount_curve = SubResource("Curve_sdafc")
+color_ramp = SubResource("Gradient_fajue")
+anim_offset_max = 1.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1844635721]
+libraries/ = SubResource("AnimationLibrary_tjfjy")

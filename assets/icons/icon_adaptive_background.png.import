@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://chlt0joju00db"
-path.s3tc="res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.etc2.ctex"
+path.bptc="res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.bptc.ctex"
+path.astc="res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/icons/icon_adaptive_background.png"
-dest_files=["res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.s3tc.ctex", "res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.bptc.ctex", "res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

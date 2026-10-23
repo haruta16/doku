@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://cxrv2m5lae7b1"]
 
 [ext_resource type="Script" uid="uid://efpfiy48qcc6" path="res://scripts/module/game/view/hint_overlay.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://cyknl0uih78dc" path="res://assets/sprites/game/btn_close.png" id="2"]
-[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="2"]
 
 [sub_resource type="StyleBoxFlat" id="sf_banner"]
 bg_color = Color(1, 0.984, 0.969, 1)
@@ -85,18 +84,6 @@ bbcode_enabled = true
 text = "HINT_CONTRADICTION"
 scroll_active = false
 
-[node name="CloseBtn" type="TextureButton" parent="Banner" unique_id=1234567892]
-visible = false
-layout_mode = 0
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -47.0
-offset_top = -183.0
-offset_right = 53.0
-offset_bottom = -83.0
-grow_horizontal = 2
-texture_normal = ExtResource("2")
-
 [node name="DetailBtn" type="Button" parent="Banner" unique_id=2042445195]
 visible = false
 layout_mode = 0
@@ -126,14 +113,14 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/separation = 40
 
-[node name="ApplyBtn" parent="BtnGroup" unique_id=1514325448 instance=ExtResource("3")]
+[node name="ApplyBtn" parent="BtnGroup" unique_id=1514325448 instance=ExtResource("2")]
 custom_minimum_size = Vector2(750, 160)
 layout_mode = 2
 btn_text = "HINT_APPLY"
 show_difficult = false
 show_shadow = false
 
-[node name="DismissBtn" parent="BtnGroup" unique_id=339029712 instance=ExtResource("3")]
+[node name="DismissBtn" parent="BtnGroup" unique_id=339029712 instance=ExtResource("2")]
 custom_minimum_size = Vector2(750, 160)
 layout_mode = 2
 bg_color = Color(1, 0.8117647, 0.58431375, 1)
@@ -143,28 +130,6 @@ text_color = Color(0.7529412, 0.45490196, 0.25490198, 1)
 show_difficult = false
 show_shadow = false
 
-[node name="CancelBtn" parent="BtnGroup" unique_id=1234567890 instance=ExtResource("3")]
-visible = false
-custom_minimum_size = Vector2(750, 160)
-layout_mode = 2
-bg_color = Color(1, 0.8117647, 0.58431375, 1)
-shadow_color = Color(1, 0.8117647, 0.58431375, 1)
-btn_text = "HINT_CANCEL"
-text_color = Color(0.7529412, 0.45490196, 0.25490198, 1)
-show_difficult = false
-show_shadow = false
-
-[node name="NextBtn" parent="BtnGroup" unique_id=1234567891 instance=ExtResource("3")]
-visible = false
-custom_minimum_size = Vector2(750, 160)
-layout_mode = 2
-btn_text = "HINT_NEXT"
-show_difficult = false
-show_shadow = false
-
-[connection signal="pressed" from="Banner/CloseBtn" to="." method="_on_close_btn_pressed"]
 [connection signal="pressed" from="Banner/DetailBtn" to="." method="_on_detail_btn_pressed"]
 [connection signal="tag_pressed" from="BtnGroup/ApplyBtn" to="." method="_on_apply_btn_pressed"]
 [connection signal="tag_pressed" from="BtnGroup/DismissBtn" to="." method="_on_dismiss_btn_pressed"]
-[connection signal="tag_pressed" from="BtnGroup/CancelBtn" to="." method="_on_cancel_btn_pressed"]
-[connection signal="tag_pressed" from="BtnGroup/NextBtn" to="." method="_on_next_btn_pressed"]

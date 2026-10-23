@@ -1,0 +1,120 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://biqq86l6wihcf" path="res://scripts/module/account/view/other/progress_option_row.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://by3n6755l7isx" path="res://assets/sprites/account/icon_progress_local.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://d2wylqreghij" path="res://assets/sprites/account/icon_progress_cloud.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://cvte06xen8ee2" path="res://assets/sprites/account/bg_card_blob.png" id="4"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="5"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="6"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="7"]
+[ext_resource type="Texture2D" uid="uid://chba34ldjpa1c" path="res://assets/sprites/account/icon_check_corner.png" id="8"]
+
+[node name="ProgressOptionRow" type="Button" unique_id=1770386388]
+custom_minimum_size = Vector2(800, 200)
+offset_right = 800.0
+offset_bottom = 200.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+flat = true
+script = ExtResource("1")
+tex_local = ExtResource("2")
+tex_cloud = ExtResource("3")
+
+[node name="Bg" type="Panel" parent="." unique_id=129270129]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BgBlob" type="TextureRect" parent="Bg" unique_id=62281059]
+layout_mode = 0
+offset_right = 176.5
+offset_bottom = 200.0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Border" type="Panel" parent="." unique_id=2050702587]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="." unique_id=125776642]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 25.0
+offset_right = 158.0
+offset_bottom = 175.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TitleTxt" type="Label" parent="." unique_id=1162888465]
+layout_mode = 0
+offset_left = 206.0
+offset_top = 14.0
+offset_right = 684.0
+offset_bottom = 84.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.77254903, 0.36078432, 0.23529412, 1)
+theme_override_fonts/font = ExtResource("5")
+theme_override_font_sizes/font_size = 46
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("6")
+max_font_size = 46
+min_font_size = 25
+fit_height_single_line = false
+
+[node name="LevelTxt" type="Label" parent="." unique_id=676819132]
+layout_mode = 0
+offset_left = 206.0
+offset_top = 70.0
+offset_right = 690.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 30
+vertical_alignment = 1
+
+[node name="ItemsTxt" type="Label" parent="." unique_id=653209243]
+layout_mode = 0
+offset_left = 206.0
+offset_top = 120.0
+offset_right = 690.0
+offset_bottom = 190.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 36
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("6")
+max_font_size = 36
+min_font_size = 30
+fit_height_single_line = false
+
+[node name="CheckMark" type="TextureRect" parent="." unique_id=995544268]
+layout_mode = 0
+offset_left = 684.0
+offset_right = 800.0
+offset_bottom = 87.0
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5

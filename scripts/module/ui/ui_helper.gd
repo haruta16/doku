@@ -1,5 +1,4 @@
-## 按压反馈工具（全静态）：按下缩小、松手回弹再归位
-## 同一个节点只保留一个按压 tween，挂在 meta 上，重复触发先杀掉旧的
+## 按钮按压反馈辅助：绑定按下与释放缩放，统一支点和中断动画的处理。
 class_name UIHelper
 extends RefCounted
 
@@ -37,6 +36,16 @@ static func play_release_scale(node: CanvasItem, base_scale: Vector2 = Vector2.O
 	node.set_meta(_PRESS_SCALE_TWEEN_META, t)
 
 
+static func reset_press_scale(node: CanvasItem, base_scale: Vector2 = Vector2.ONE) -> void:
+	if not is_instance_valid(node):
+		return
+	_kill_press_scale_tween(node)
+	if node is Control:
+		(node as Control).scale = base_scale
+	elif node is Node2D:
+		(node as Node2D).scale = base_scale
+
+
 ## 给按钮接上按下/松手反馈；UIFrameWindow 也提供同名转发方法给页面用
 static func bind_press_release_scale(button: BaseButton, base_scale: Vector2 = Vector2.ONE) -> void:
 	if not is_instance_valid(button):
@@ -52,10 +61,10 @@ static func _ensure_center_pivot(node: CanvasItem) -> void:
 		(node as Control).pivot_offset_ratio = Vector2(0.5, 0.5)
 
 
-## 杀掉节点上残留的按压 tween（快速连点时避免两个 tween 抢 scale）
 static func _kill_press_scale_tween(node: CanvasItem) -> void:
 	if not node.has_meta(_PRESS_SCALE_TWEEN_META):
 		return
-	var t: Tween = node.get_meta(_PRESS_SCALE_TWEEN_META)
-	if t and t.is_valid():
-		t.kill()
+	var tween: Tween = node.get_meta(_PRESS_SCALE_TWEEN_META)
+	if tween:
+		tween.kill()
+	node.remove_meta(_PRESS_SCALE_TWEEN_META)

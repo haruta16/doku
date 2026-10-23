@@ -1,5 +1,7 @@
 # 核心玩法系统精读 — 数据模型 & 规则引擎
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 的实际入口、题库格式和新增系统请先看 [新版导读](08-version-1.22.0.md)，再对照当前源码；旧代码片段不是新版逐行镜像。
+
 > 文件：
 > - [scripts/module/gameplay/model/cell_state.gd](../../scripts/module/gameplay/model/cell_state.gd) — 棋盘格子状态枚举（7 种状态 + 3 个判断函数）
 > - [scripts/module/gameplay/core/queendoku_core.gd](../../scripts/module/gameplay/core/queendoku_core.gd) — 游戏规则引擎（9 个 static 函数）

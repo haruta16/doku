@@ -1,0 +1,16 @@
+[
+  {
+    "path": "scripts/module/gameplay/core/puzzle_generator.gd",
+    "old": "4294967300.0",
+    "new": "4294967296.0",
+    "original_float32_hex": "0000804f",
+    "exact_value": "4294967296"
+  },
+  {
+    "path": "scripts/module/gameplay/selector/delivery/final_level_validator.gd",
+    "old": "9.223372e+18",
+    "new": "9223372036854775808.0",
+    "original_float32_hex": "0000005f (positive), 000000df (negative)",
+    "exact_value": "\u00b19223372036854775808"
+  }
+]

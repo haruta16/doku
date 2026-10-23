@@ -1,4 +1,4 @@
-## 单个生命槽：只负责一颗心的显隐与得失动画，总生命数由页面统一驱动
+## 单个生命槽：管理存活、失去、金色、复活和高亮的视觉状态。
 class_name LifeSlot
 extends Control
 
@@ -21,23 +21,76 @@ func show_alive() -> void:
 		_anim.seek(_anim.current_animation_length, true)
 
 
-## 显示为已失去；animate = false 时直接跳到动画末帧
-func show_lost(animate: bool) -> void:
+func show_lost(animate: bool, silent: bool = false) -> void:
 	if _anim == null:
 		return
-	# 已经丢过且不需要动画，跳过
 	if not animate and _is_lost:
 		return
 	_is_lost = true
-	# 播放失去动画
-	_anim.play("Appear")
-	# 不播动画就跳到末帧定住
+	stop_highlight_glow()
+	var anim_name: StringName = (
+		&"Disappear" if silent and _anim.has_animation(&"Disappear") else &"Appear"
+	)
+	_anim.play(anim_name)
 	if not animate:
 		_anim.seek(_anim.current_animation_length, true)
 
 
-## 复活特效：播放另一个动画器上的 Revive
+const GOLDEN_FULL_TEX: Texture2D = preload("res://assets/sprites/game/fish_full_golden.png")
+
+var _full_tex_before_golden: Texture2D = null
+
+
+func set_golden(is_golden: bool) -> void:
+	var golden := get_node_or_null("Content/FishFull/GoldenFish") as CanvasItem
+	if golden != null:
+		golden.visible = is_golden
+	for n: String in ["Content/FishFull/Star_3", "Content/FishFull/Star_4"]:
+		var normal := get_node_or_null(n) as CanvasItem
+		if normal != null:
+			normal.visible = not is_golden
+
+	var full := get_node_or_null("Content/FishFull/Full") as Sprite2D
+	if full == null:
+		return
+	if is_golden:
+		if _full_tex_before_golden == null:
+			_full_tex_before_golden = full.texture
+		full.texture = GOLDEN_FULL_TEX
+	elif _full_tex_before_golden != null:
+		full.texture = _full_tex_before_golden
+		_full_tex_before_golden = null
+
+
 func play_revive() -> void:
-	var life_plus_anim := get_node_or_null("AnimLifePlus") as AnimationPlayer
-	if life_plus_anim != null and life_plus_anim.has_animation("Revive"):
-		life_plus_anim.play("Revive")
+	var revive_anim := get_node_or_null("AnimLifePlus") as AnimationPlayer
+	if revive_anim != null and revive_anim.has_animation("Revive"):
+		revive_anim.play("Revive")
+
+
+func play_collect() -> void:
+	if _anim != null and _anim.has_animation(&"Collect"):
+		_anim.play(&"Collect")
+
+
+func play_lost_bounce() -> void:
+	if _anim != null and _anim.has_animation(&"Appear_2"):
+		_anim.play(&"Appear_2")
+
+
+const _NEAR_DEATH_GLOW_ANIM: StringName = &"Collect_neardeath"
+
+
+func play_highlight_glow() -> void:
+	if _anim == null or not _anim.has_animation(_NEAR_DEATH_GLOW_ANIM):
+		return
+	if _anim.is_playing() and _anim.current_animation != _NEAR_DEATH_GLOW_ANIM:
+		_anim.seek(_anim.current_animation_length, true)
+	_anim.play(_NEAR_DEATH_GLOW_ANIM)
+
+
+func stop_highlight_glow() -> void:
+	if _anim == null or _anim.current_animation != _NEAR_DEATH_GLOW_ANIM:
+		return
+	_anim.seek(_anim.current_animation_length, true)
+	_anim.stop(true)

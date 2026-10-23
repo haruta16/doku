@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://8ndv2pmhso28"]
+
+[ext_resource type="Shader" uid="uid://tpcken5jnqxu" path="res://assets/effect/shader/board_outer_glow.gdshader" id="1"]
+[ext_resource type="Texture2D" uid="uid://cadisn736p0ev" path="res://assets/effect/texture/line/et_line_004.png" id="2"]
+[ext_resource type="Script" uid="uid://mxf41fu4ce5b" path="res://scripts/module/gameplay/view/board_outer_glow.gd" id="3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a3pa0"]
+resource_local_to_scene = true
+shader = ExtResource("1")
+shader_parameter/glow_profile = ExtResource("2")
+shader_parameter/panel_size_px = Vector2(1136, 1136)
+shader_parameter/board_size_px = Vector2(1008, 1008)
+shader_parameter/corner_radius_px = 30.0
+shader_parameter/profile_span_px = 64.0
+
+[node name="BoardOuterGlow" type="ColorRect" unique_id=569399847]
+self_modulate = Color(1, 1, 1, 0)
+material = SubResource("ShaderMaterial_a3pa0")
+offset_right = 1136.0
+offset_bottom = 1136.0
+mouse_filter = 2
+script = ExtResource("3")
+glow_profile = ExtResource("2")

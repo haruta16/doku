@@ -1,4 +1,4 @@
-## 每日挑战角标实验：0=对照组（原角标） 1=换成猫爪角标
+## 实验配置 dc_tag_ui：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name DcTagUiConfig
 
@@ -7,13 +7,7 @@ const VALUE_CONTROL: int = 0 # 对照组，用原角标
 const VALUE_PAW: int = 1 # 用猫爪角标
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "dc_tag_ui"
-	default_value = VALUE_CONTROL # 默认档：原角标
-	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
-
-
-## 是否用猫爪角标
-func is_paw_enabled() -> bool:
-	return value() == VALUE_PAW
+	default_value = VALUE_CONTROL

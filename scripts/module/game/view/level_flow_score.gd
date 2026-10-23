@@ -1,4 +1,4 @@
-## 得分飘字：用图片字体拼出「+1234」，只有 4 个数字位，位数不够的槽位隐藏
+## 关卡分数表现控件：设置分数并播放倍增过渡，按内容尺寸更新缩放支点。
 extends Control
 class_name LevelFlowScore
 
@@ -24,16 +24,17 @@ const PLUS_TEXTURE: String = "res://assets/sprites/game/score_font/ui_mao_sz_pic
 @onready var _digit3: TextureRect = $HBox/Digit3 # 第 3 位
 @onready var _digit4: TextureRect = $HBox/Digit4 # 第 4 位
 
+var _current_gain: int = 0
 
-## 设置要显示的分数（按十进制逐位贴图）
+
 func set_score(gain: int) -> void:
+	_current_gain = gain
 	var digits: String = str(gain)
 	var slots: Array[TextureRect] = [_digit1, _digit2, _digit3, _digit4]
 
 	_plus.visible = true
 	_plus.texture = load(PLUS_TEXTURE)
 
-	# 第 i 位有数字就贴对应贴图，没有就把槽位藏起来
 	for i in range(4):
 		if i < digits.length():
 			slots[i].visible = true
@@ -43,6 +44,32 @@ func set_score(gain: int) -> void:
 			slots[i].visible = false
 
 	_update_pivot()
+
+
+func animate_to_multiplied(multiplier: float, delay: float) -> void:
+	get_tree().create_timer(delay).timeout.connect(
+		func() -> void:
+			if not is_instance_valid(self):
+				return
+			var from_val: float = float(_current_gain)
+			var to_val: float = from_val * multiplier
+			var tw: Tween = create_tween()
+			tw.tween_method(func(v: float) -> void: set_score(int(v)), from_val, to_val, 0.25),
+		CONNECT_ONE_SHOT
+	)
+
+
+func get_content_width() -> float:
+	var w: float = 0.0
+	var sep: int = $HBox.get_theme_constant("separation")
+	var first := true
+	for child: Control in $HBox.get_children():
+		if child.visible:
+			if not first:
+				w += sep
+			w += child.get_combined_minimum_size().x
+			first = false
+	return w
 
 
 ## 等布局完成后按 HBox 实际尺寸居中（缩放动画以中心为轴）

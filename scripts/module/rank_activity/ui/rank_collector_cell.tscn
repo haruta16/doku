@@ -1,0 +1,189 @@
+[gd_scene format=3 uid="uid://dpjyj7dcd8yis"]
+
+[ext_resource type="Script" uid="uid://dllfsmcyd5yh8" path="res://scripts/module/rank_activity/view/rank_collector_cell.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://cjdmvrcsbavw" path="res://assets/sprites/game/fish_full.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="3"]
+[ext_resource type="PackedScene" uid="uid://dis3kr2uvlfec" path="res://assets/prefab/collect_fish_burst.tscn" id="4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_outer"]
+bg_color = Color(0.964706, 0.905882, 0.858824, 1)
+corner_radius_top_right = 45
+corner_radius_bottom_right = 45
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inner"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_right = 39
+corner_radius_bottom_right = 39
+
+[sub_resource type="Animation" id="Animation_j6coh"]
+resource_name = "Appear"
+step = 0.016666668
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-220, 0, 0, 0, 183.5, 0, -0.21666667, -0.5, 0, 0),
+"times": PackedFloat32Array(0, 0.3)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.050000004),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_m42sq"]
+resource_name = "Collect"
+step = 0.016666668
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control/Icon:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.99952066, -0.018749893, 0, 0.018749893, 0, 0.5, -0.0062500834, 0, 0.0062500834, 0, 0.99952066, -0.0062500834, 0, 0.0062500834, 0, 0.5, -0.0062499642, 0, 0.0062499642, 0, 0.99952066, -0.0062499642, 0, 0.0062499642, 0, 0.5, -0.006250024, 0, 0.006250024, 0, 0.99952066, -0.006250024, 0, 0.006250024, 0),
+"times": PackedFloat32Array(0, 0.07499957, 0.099999905, 0.17500019, 0.20000005, 0.27499986, 0.29999995)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/Icon:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.99952066, -0.018749893, 0, 0.018749893, 0, 0.5, -0.0062500834, 0, 0.0062500834, 0, 0.99952066, -0.0062500834, 0, 0.0062500834, 0, 0.5, -0.0062499642, 0, 0.0062499642, 0, 0.99952066, -0.0062499642, 0, 0.0062499642, 0, 0.5, -0.006250024, 0, 0.006250024, 0, 0.99952066, -0.006250024, 0, 0.006250024, 0),
+"times": PackedFloat32Array(0, 0.07499957, 0.099999905, 0.17500019, 0.20000005, 0.27499986, 0.29999995)
+}
+
+[sub_resource type="Animation" id="Animation_fwg52"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(-220, 0, 0, 0, 183.5),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fwg52"]
+_data = {
+&"Appear": SubResource("Animation_j6coh"),
+&"Collect": SubResource("Animation_m42sq"),
+&"RESET": SubResource("Animation_fwg52")
+}
+
+[node name="RankCollectorCell" type="Control" unique_id=180463316]
+custom_minimum_size = Vector2(222, 90)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 222.0
+offset_bottom = 90.0
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="Control" type="Control" parent="." unique_id=1796948210]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(222, 90)
+anchors_preset = 0
+offset_left = -220.0
+offset_right = 2.0
+offset_bottom = 90.0
+
+[node name="BgOuter" type="Panel" parent="Control" unique_id=469571733]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_outer")
+
+[node name="BgInner" type="Panel" parent="Control" unique_id=1323866225]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -39.0
+offset_right = 216.0
+offset_bottom = 39.0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_inner")
+
+[node name="Icon" type="TextureRect" parent="Control" unique_id=359981320]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 14.0
+offset_top = -33.0
+offset_right = 80.0
+offset_bottom = 33.0
+grow_vertical = 2
+scale = Vector2(0.99952066, 0.99952066)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CountLabel" type="RichTextLabel" parent="Control" unique_id=1728223908]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 84.0
+offset_top = -33.0
+offset_right = 194.0
+offset_bottom = 33.0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("3")
+theme_override_font_sizes/normal_font_size = 56
+bbcode_enabled = true
+text = "[color=#935A5A]999[/color]"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Particle" type="Control" parent="." unique_id=1603085281]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FishBurst" parent="Particle" unique_id=2091770508 instance=ExtResource("4")]
+layout_mode = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1500056441]
+libraries/ = SubResource("AnimationLibrary_fwg52")

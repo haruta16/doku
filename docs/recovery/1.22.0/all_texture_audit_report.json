@@ -1,0 +1,4686 @@
+{
+	"failed": 0,
+	"items": [
+		{
+			"imported_path": "res://.godot/imported/icon.png-487276ed1e3a0c39cad0279d744ee560.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				432,
+				432
+			],
+			"source_file": "res://icon.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pass_anim_cat2.png-88549499d3208a27bc70b26f128f6ef2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				1024
+			],
+			"source_file": "res://assets/effect/spine/pass_anim_cat2/pass_anim_cat2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/failure_group1.png-d396d42856fdd97527aba56cbd5731c1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				792,
+				1036
+			],
+			"source_file": "res://assets/effect/spine/ui_fail_settlement1/failure_group1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pass_anim_cat3.png-de954fa7f4994f0500234e07b8fa21e7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				512
+			],
+			"source_file": "res://assets/effect/spine/pass_anim_cat3/pass_anim_cat3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/failure.png-0d1aba5687831683a1d21a6e76bd72b3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				512
+			],
+			"source_file": "res://assets/effect/spine/ui_fail_settlement/failure.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/failure_group_glodenfish.png-833e402c872b1192ed58524b0d1afe3d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				512
+			],
+			"source_file": "res://assets/effect/spine/ui_fail_settlement_glodenfish/failure_group_glodenfish.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_plant.png-12977dd8dd4daa28200445f6d9390c9c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				884,
+				332
+			],
+			"source_file": "res://assets/effect/spine/peekaboo_cat/cat_plant/cat_plant.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_basket.png-bef615a6008822a3a6712e74a61daccb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				820,
+				252
+			],
+			"source_file": "res://assets/effect/spine/peekaboo_cat/cat_basket/cat_basket.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_pot.png-b83ec61eefd038277f7bce848aaba287.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				916,
+				268
+			],
+			"source_file": "res://assets/effect/spine/peekaboo_cat/cat_pot/cat_pot.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_leaf.png-b531a0130a83b1a949a1e389a1143d95.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				868,
+				336
+			],
+			"source_file": "res://assets/effect/spine/peekaboo_cat/cat_leaf/cat_leaf.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_bag.png-85a239bc3e5681b06bb1a784fb1ec99b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				712,
+				268
+			],
+			"source_file": "res://assets/effect/spine/peekaboo_cat/cat_bag/cat_bag.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/mousehead.png-b329415836ebc79e6c5952c19994c1ff.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				880,
+				776
+			],
+			"source_file": "res://assets/effect/spine/ui_mouse/mousehead.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/LikeHand_7.png-7d510ba64ea2cc80c243e8010c0293ae.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1104,
+				400
+			],
+			"source_file": "res://assets/effect/spine/ui_like_hand/LikeHand_7/LikeHand_7.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/LikeHand_6.png-18680c861b88a2a6b0ec3679a4e4708e.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1272,
+				384
+			],
+			"source_file": "res://assets/effect/spine/ui_like_hand/LikeHand_6/LikeHand_6.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/LikeHand_3.png-f7502e7fdaeffa2a089c4be1be8e2f57.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				624,
+				376
+			],
+			"source_file": "res://assets/effect/spine/ui_like_hand/LinkeHand_3/LikeHand_3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/LikeHand_2.png-9830b0dfbb6f122d378dcbc5d9fe82be.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				932,
+				440
+			],
+			"source_file": "res://assets/effect/spine/ui_like_hand/LinkeHand_2/LikeHand_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/LikeHand_4.png-8656b3e836bb19f8ebb90482bce444e6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				256
+			],
+			"source_file": "res://assets/effect/spine/ui_like_hand/LikeHand_4/LikeHand_4.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/LikeHand_5.png-2bb178cdba3bbc88f7355cf52c79daa2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/spine/ui_like_hand/LikeHand_5/LikeHand_5.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/LikeHand_1.png-49a298456bcc60ce1b5dbc4e136fff68.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				280,
+				220
+			],
+			"source_file": "res://assets/effect/spine/ui_like_hand/LinkeHand_1/LikeHand_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/Box_01.png-266a787bc9075014bac873838c6e07d7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				512
+			],
+			"source_file": "res://assets/effect/spine/ui_box01/Box_01.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/maomi_fuor.png-c361f323ee61854a9d882adab1a07550.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				4052,
+				2280
+			],
+			"source_file": "res://assets/effect/spine/ui_cat_icon/maomi_fuor.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/AutoXFillModeBanner.png-b50bd33a48ef053ff0243230b992e7fc.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1024,
+				512
+			],
+			"source_file": "res://assets/effect/spine/AutoXFillModeBanner/AutoXFillModeBanner.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pass_anim_cat1.png-936c62e32e49ac061c2bbbf8c401d510.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				512
+			],
+			"source_file": "res://assets/effect/spine/pass_anim_cat1/pass_anim_cat1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/game_win_glodenfish.png-ab50fb05eb16d504c0fae6106596bc26.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				1024
+			],
+			"source_file": "res://assets/effect/spine/ui_win_glodenfish/game_win_glodenfish.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/game_win_result.png-7bbbce05486e0a25f0a7e910f6ee26e5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				512
+			],
+			"source_file": "res://assets/effect/spine/ui_win_settlement/game_win_result.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/home_companion_cat.png-32dccdcb2848382d0a1a4ba53355ea87.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				1024
+			],
+			"source_file": "res://assets/effect/spine/home_companion_cat/home_companion_cat.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/logo.png-9282d17cff1c61a12ad9340ecb69daf0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2072,
+				160
+			],
+			"source_file": "res://assets/effect/spine/ui_logo/logo.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/RankBox.png-86cfe01c7ec91346de056337115b5450.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2048,
+				2048
+			],
+			"source_file": "res://assets/effect/spine/ui_box02/RankBox.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_change_arrow.png-e94daefa9326318d6853442418778d1b.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				88,
+				102
+			],
+			"source_file": "res://assets/effect/texture/ui/et_change_arrow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_main_interface_flow_mask.png-c2ea3a4af34fdfe4c13a470889aca827.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/ui/et_main_interface_flow_mask.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				152,
+				152
+			],
+			"source_file": "res://assets/effect/texture/ui/et_broken_fish_glow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_btn_fire.png-0ca501b85841038a80dca861e89fd55d.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				810,
+				220
+			],
+			"source_file": "res://assets/effect/texture/ui/et_btn_fire.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glodenfish_001.png-ab7bc675dc5eed000124a410d38e2601.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				236,
+				224
+			],
+			"source_file": "res://assets/effect/texture/ui/et_glodenfish_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_cell_02.png-fccf47d0789747ce4d4f38aba4a60e2d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/effect/texture/ui/et_cell_02.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_broken_heart_2.png-8db38849c9f0ae8a9d5dd43604e2b57e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				40,
+				56
+			],
+			"source_file": "res://assets/effect/texture/ui/et_broken_heart_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_Rectangle_003.png-8451547403aad95ede4fefd83f39dae7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				132,
+				132
+			],
+			"source_file": "res://assets/effect/texture/ui/et_Rectangle_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_RewardFull_03.png-b10ca581e7417548367a84c734de8f37.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				300,
+				300
+			],
+			"source_file": "res://assets/effect/texture/ui/et_RewardFull_03.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_Rectangle_004.png-bccc8afc96cccb8a36a2cc1ac45b96e1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				156
+			],
+			"source_file": "res://assets/effect/texture/ui/et_Rectangle_004.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_block_001.png-5699b24c9af6c0c1c518f0111649ec31.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				92,
+				92
+			],
+			"source_file": "res://assets/effect/texture/ui/et_block_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_rank_interface_flow_mask.png-00661d9b1e9de9324103301579979a5f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/ui/et_rank_interface_flow_mask.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_purchase_interface_flow_mask.png-9b00c5259dd817206e6b9ec811e6bf42.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/ui/et_purchase_interface_flow_mask.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_Rectangle_001.png-e09b1dac29ec250ef4c0e085a0ed1506.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				132,
+				132
+			],
+			"source_file": "res://assets/effect/texture/ui/et_Rectangle_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_broken_heart_glow.png-dbf9e221c6f60d055df223a04967ab68.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				76,
+				68
+			],
+			"source_file": "res://assets/effect/texture/ui/et_broken_heart_glow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_broken_fish_1.png-6f9d3822a08852d2ac8a0be54be123b0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				68,
+				48
+			],
+			"source_file": "res://assets/effect/texture/ui/et_broken_fish_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_rank_interface_flow.png-de54984eb6b4d4796f4c478919202dee.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1260,
+				2356
+			],
+			"source_file": "res://assets/effect/texture/ui/et_rank_interface_flow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_Rectangle_002.png-65bfca5c6aa760a7e83a8ba0cb6220fb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				132,
+				132
+			],
+			"source_file": "res://assets/effect/texture/ui/et_Rectangle_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_fire_point.png-b3525d1c1fecf02e4cf891df4228d47f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/ui/et_fire_point.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_broken_heart_1.png-52b59ee9b1e56d5abe5331cb66880475.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				40,
+				52
+			],
+			"source_file": "res://assets/effect/texture/ui/et_broken_heart_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_cell_01.png-8ec1261c4adbfdaa0af7704d3c4ae0c7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				144,
+				144
+			],
+			"source_file": "res://assets/effect/texture/ui/et_cell_01.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_lock_mask.png-c6e55331be219483318e70789527f984.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/ui/et_lock_mask.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_main_interface_flow.png-7d7e5fca0ced3bfcb25dcbd3def665fa.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1092,
+				2356
+			],
+			"source_file": "res://assets/effect/texture/ui/et_main_interface_flow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_fish_full_002.png-6785df68f63e07730a70126c6ffcf0f6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/effect/texture/obj/et_fish_full_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_ribbon_003.png-11f7a3076af97db10bd63b03c02b69ae.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/obj/et_ribbon_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_broken_001.png-44838209fb8769f21debcdc39f1cbdac.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/obj/et_broken_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_ribbon_star_001.png-0453e1f42ad9ce4ed06807a91d3f6722.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				80,
+				76
+			],
+			"source_file": "res://assets/effect/texture/obj/et_ribbon_star_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_ribbon_001.png-2e725a4d7c464c47e9f926973b7a89ef.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/obj/et_ribbon_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_ribbon_002.png-ed68310ed1ac4fb0e8f364021e662609.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/obj/et_ribbon_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_double_fish_001.png-41d3ecfd579c2af3ee8ae76fba03d5a0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1024,
+				1024
+			],
+			"source_file": "res://assets/effect/texture/obj/et_double_fish_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_golden_fish_full_001.png-1ff54c03f254a59ddbb396748d3ee99a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/obj/et_golden_fish_full_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_fish_full_001.png-f8e46ad85e01c53328286b380f3f1139.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/obj/et_fish_full_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_spotlight_lamp.png-da6b9b42e7f325a6bbd11f3265d1ed07.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				204,
+				204
+			],
+			"source_file": "res://assets/effect/texture/spotlight/et_spotlight_lamp.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_spotlight_knockout.png-fdbb01b6e8c6b01576351c50128b28a7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				524,
+				524
+			],
+			"source_file": "res://assets/effect/texture/spotlight/et_spotlight_knockout.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_spotlight_beam.png-da147f69d01c4371fd20a4441700072e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				284,
+				776
+			],
+			"source_file": "res://assets/effect/texture/spotlight/et_spotlight_beam.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_spotlight_pool.png-52ef21ee54fbefcfb113b2c851c213b1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				228,
+				228
+			],
+			"source_file": "res://assets/effect/texture/spotlight/et_spotlight_pool.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_trail_001.png-12e01507bf35018855518b8e4623e796.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1024,
+				512
+			],
+			"source_file": "res://assets/effect/texture/trail/et_trail_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_trail_003.png-12f6d0f260d544fbbe5e1f904dfe1d3b.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				158,
+				1012
+			],
+			"source_file": "res://assets/effect/texture/trail/et_trail_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_trail_002.png-f94cf57e6d1508b7e74f7201b3ddd258.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/trail/et_trail_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_shine_006.png-d3ac4e4a823fe00c64937ead78127e0e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1060,
+				1076
+			],
+			"source_file": "res://assets/effect/texture/shine/et_shine_006.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_shine_300.png-90a81250c6f6e7fab81213fb6ecb104c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/effect/texture/shine/et_shine_300.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_shine_003.png-f461e951e364ce918bcb6842ba752b20.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/shine/et_shine_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_shine_004.png-9c1d95f475995caa86d2d96b0a9ccb2a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/shine/et_shine_004.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_shine_001.png-ea3850087b43b162c741ffd56b382c64.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/effect/texture/shine/et_shine_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_shine_002.png-213ccb596adbfd2057fc025c05635326.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/shine/et_shine_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_shine_005.png-3983dfb8bef7d063a79a8cd98efb71fb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				64,
+				128
+			],
+			"source_file": "res://assets/effect/texture/shine/et_shine_005.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ui_guide_hand01.png-fc407ad66f4832f4ad585598947b8731.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/ui_hand/ui_guide_hand01.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_star_003.png-baa05915622314a9ff8b265de153b5c3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/star/et_star_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_star_2.png-9e7c42debcd0d2e31c77c4ac6599a062.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/star/et_star_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_star_004.png-67cf1c0806d18c39881d9bef3401ad02.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				64,
+				64
+			],
+			"source_file": "res://assets/effect/texture/star/et_star_004.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_star_1.png-ffc1cb9459bb1688d122efe1877daca0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/star/et_star_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_008.png-53487c55cc48c620dad9349e0ecae5c3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				64,
+				64
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_008.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_014.png-995ef62d82ebb0e87d988196f490c6e6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_014.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_005.png-729590f740b62622f0bd8941c9c84f86.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_005.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_019.png-6beb99f73053e75cedabfae4126f85c8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_019.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_011.png-737ce2b20c98f4564c13e0fc9236f51a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_011.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_016.png-3dfa970b33912e8a05f9248ed9072b52.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_016.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_007.png-5a13030bf1d6e46bfa3e5f1e5fdae556.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				232,
+				232
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_007.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_002.png-dee8be483e9c9494874e8dce0b34bbd6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_013.png-8a919f0a30bbf5e09692d97c8e6a3b80.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_013.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_streak3_mid_022.png-50c8ee20941c237edd2a4c1e08197351.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				216,
+				108
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_streak3_mid_022.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_014_2.png-7d0dee0fbefaf563da1d671f3754dbfb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_014_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_001.png-ac9a18d7f0e26737e544ecade3129565.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_010.png-572fae1aa59f46c4a7d731ffa6e513ee.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_010.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_009.png-194ebb3d369210d392621637b6935874.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_009.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_015.png-b7b9aa3e2d04b3f1ec94561bf3862552.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_015.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_004.png-502fe5e47664ed86b223d0eb2f3121e2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_004.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_018.png-82b3c6038b7017d5001ca0e87480888c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_018.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_streak5_mid_020.png-1161affd6158031612f0fbb80b704417.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				196,
+				104
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_streak5_mid_020.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_003.png-778aee4e74e0466084852a3f700fb904.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_012.png-1cd489c549d1cfbdf7c3a48d6361c931.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_012.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_streak3_end_023.png-a9c19e6ec27748f76083d39c8a0ba17d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				216,
+				108
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_streak3_end_023.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_streak5_end_021.png-a1371e21bba3e6396b6a26f905a4fb60.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				192,
+				108
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_streak5_end_021.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_017.png-3949dd5943c713652c9ef82be0ec83b9.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_017.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_mask_006.png-59d02e4cb437b10c5bf9f48c94c78b4d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				128
+			],
+			"source_file": "res://assets/effect/texture/mask/et_mask_006.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_line_003.png-ecc9cee4db835e1a4b47929474fec7b5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/line/et_line_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_line_004.png-722b56bfb42dc636726b5956aa546539.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				64,
+				64
+			],
+			"source_file": "res://assets/effect/texture/line/et_line_004.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_line_001.png-52be81b9a0d80322ca7dbec56ab2f18e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				512
+			],
+			"source_file": "res://assets/effect/texture/line/et_line_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_line_002.png-cc14da979feff90a8e79b73c3bcf67ba.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				128
+			],
+			"source_file": "res://assets/effect/texture/line/et_line_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_line_005.png-e6a234db597050be296c8638279e38be.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				128
+			],
+			"source_file": "res://assets/effect/texture/line/et_line_005.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_rainbow_001.png-2a070b2e1a9ae949675008760933d7b5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/rainbow/et_rainbow_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_ring_001.png-65344d48ba2fc1617512f28803d1023f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/ring/et_ring_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_001.png-4e6d6131654cbf5182937254c6487fa2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_004.png-c36c8fc2d1416ce765e212a4373b8805.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				232,
+				232
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_004.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_001_2.png-5ff616687cfaa495b9ca87125ab06abb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_001_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_003.png-893e99624d0eb9a19d6ff860e39fa7d3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_003.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_006.png-440ae7c634165f489a3e849666cbf6a6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_006.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_005.png-da24715271ef50f2d302244ea746e7c3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_005.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_008.png-f80622574b6f14915ec91dbe8a4b8eb5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_008.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_fish.png-80f1bf1563d02f0191ab470f4d7ccf8b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_fish.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_007.png-651008c19a1817a3449c4904824ddeb6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_007.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_001_3.png-265111dbe7cf5c4a16eddd80d47b2d98.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_001_3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/et_glow_002.png-34f9641ac7a8d13b97edffa31699c4fa.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				256
+			],
+			"source_file": "res://assets/effect/texture/glow/et_glow_002.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				256
+			],
+			"source_file": "res://assets/effect/texture/ui_guide/ui_guide_hand.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ios_launch_3x.png-bc498a0cf79abee710432aeed4a1dbaf.ctex",
+			"original_format": 4,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1620,
+				3600
+			],
+			"source_file": "res://assets/icons/ios_launch_3x.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_192.png-befc4ab321ce5e744fd2de9667ab34f2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				192,
+				192
+			],
+			"source_file": "res://assets/icons/icon_192.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_adaptive_foreground.png-ba4db02ac37b32eae06dd73847201a90.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				432,
+				432
+			],
+			"source_file": "res://assets/icons/icon_adaptive_foreground.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_adaptive_background.png-f17134825387a538a3129b2fd744f801.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				432,
+				432
+			],
+			"source_file": "res://assets/icons/icon_adaptive_background.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/difficulty_banner_super.png-1ec378dfef086016ca8092bdceae9fdb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				776,
+				240
+			],
+			"source_file": "res://assets/sprites/home/difficulty_banner_super.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/daily_base_top.png-1806f3734cb6d4f32dca139bd1e49e41.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				404,
+				140
+			],
+			"source_file": "res://assets/sprites/home/daily_base_top.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_settings.png-0e821576252d74ee10b5cb3f58fd88e6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/home/icon_settings.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/daily_paw_dim.png-311558bebd7b19ee65a6e0ee803ff514.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				112,
+				120
+			],
+			"source_file": "res://assets/sprites/home/daily_paw_dim.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/hard_rectangle.png-2106069b30bf301510238f4d7a735b4f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				320,
+				56
+			],
+			"source_file": "res://assets/sprites/home/hard_rectangle.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/daily_record.png-0634084cbe28c91234d396dc4376b971.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				292
+			],
+			"source_file": "res://assets/sprites/home/daily_record.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/daily_paw.png-695f8b63726810f042cfcef65247ad49.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				112,
+				120
+			],
+			"source_file": "res://assets/sprites/home/daily_paw.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/difficult_btn.png-0e395886bd04e9d8a50a6497dacc366f.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				752,
+				178
+			],
+			"source_file": "res://assets/sprites/home/difficult_btn.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/difficulty_banner.png-069221424654b4670cff74db16110ed8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				776,
+				240
+			],
+			"source_file": "res://assets/sprites/home/difficulty_banner.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/fish_btn_icon.png-dfe0428fb74ea1988a3f02686a5ac269.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				112,
+				108
+			],
+			"source_file": "res://assets/sprites/peekaboo/fish_btn_icon.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_cat_paw.png-6d671e1511a5d3eed4f73372a299464e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				76,
+				76
+			],
+			"source_file": "res://assets/sprites/pop/icon_cat_paw.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/heart.png-7c53cfe6d15edd20642b45b6a256b66a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				148,
+				144
+			],
+			"source_file": "res://assets/sprites/privacy/privacy_dialog_v2/heart.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/btn.png-5155466d63cf86d0d10c222431978eff.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				220,
+				220
+			],
+			"source_file": "res://assets/sprites/privacy/privacy_dialog_v2/btn.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/blue_btn.png-a50d83700ac1dde64ce488d3dcb8f541.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				168,
+				168
+			],
+			"source_file": "res://assets/sprites/privacy/privacy_dialog_v3/blue_btn.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/popup_frame.png-1f8277c8a8b3fdb65bbacf90f9868df9.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				192,
+				192
+			],
+			"source_file": "res://assets/sprites/privacy/privacy_dialog_v3/popup_frame.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_btn.png-046d1a337a5a8a92ff8d5f39a0e81c5b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/fail/icon_btn.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_crying.png-8934f2cd794e77d5043f613249312b4f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				496,
+				660
+			],
+			"source_file": "res://assets/sprites/fail/cat_crying.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_face.png-ccffdc37f22409030e62bdab577dbf6c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				88,
+				80
+			],
+			"source_file": "res://assets/sprites/fail/cat_face.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ray_light.png-80eabc83f1c1b031bf317a4bc519432c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1252,
+				1252
+			],
+			"source_file": "res://assets/sprites/win/ray_light.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ray_light001.png-4475d7bb53b807c79f4c0e3efd2064f2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1068,
+				1076
+			],
+			"source_file": "res://assets/sprites/win/ray_light001.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_companion_food_candy.png-206496d6e44d26c14702859ad8d918b1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				144,
+				120
+			],
+			"source_file": "res://assets/sprites/home_companion/icon_companion_food_candy.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/halloween_reward_glow.png-206aa46e2ad6f21f86316ad51c24c1b3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1280,
+				1280
+			],
+			"source_file": "res://assets/sprites/home_companion/halloween_reward_glow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/vector_3.png-7c602f20b8aa866eb9a0395ce04dfec7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				56,
+				40
+			],
+			"source_file": "res://assets/sprites/language/language_setting_v2/vector_3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_fast.png-9e24b5dedf65ed8dae029c99b599f0a8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_fast.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rule_diagram_touch.png-c1b25eea791ef7cded4861676b1ab93e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				180,
+				180
+			],
+			"source_file": "res://assets/sprites/game/rule_diagram_touch.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_paw_chain.png-c2b6f0a8ee044a731a72cb7308838322.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				340,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_paw_chain.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rule_diagram_line.png-4224c076ebd4d354826875e8f9bff4f0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				180,
+				180
+			],
+			"source_file": "res://assets/sprites/game/rule_diagram_line.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ui_mao_glc_pic_07.png-096c4a526d3ed4d7ea7371f3a9c1c149.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				368,
+				108
+			],
+			"source_file": "res://assets/sprites/game/ui_mao_glc_pic_07.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_tool_alt.png-5db8c12526aef24e7af3c9efc035ab9e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				108
+			],
+			"source_file": "res://assets/sprites/game/icon_tool_alt.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_logic_master.png-e5c6b1874d8060c9fe2dd1f9abd40637.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				408,
+				88
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_logic_master.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_clever_path.png-effc6c3520eb1a1bf36a689a9371c255.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				376,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_clever_path.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_purrfect_streak.png-946f3c5f736ed4532b1d976255667f8f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				472,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_purrfect_streak.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_pencil.png-478783006083c35f88d6dcaa7fdd5980.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				136
+			],
+			"source_file": "res://assets/sprites/game/icon_pencil.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rule_diagram_color.png-38c4230366c772ded85babc18f63f291.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				180,
+				180
+			],
+			"source_file": "res://assets/sprites/game/rule_diagram_color.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_logic.png-a0151225b18b263855da40aaf721e57a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				192,
+				88
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_logic.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_combo.png-c7f4c409035f06253f444b4392b70a5b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				248,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_combo.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/golden_fish_tutorial_card.png-ee35d28da0590e663300329a20a11d0c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1908,
+				960
+			],
+			"source_file": "res://assets/sprites/game/golden_fish_tutorial_card.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_bravo.png-5c8bfcd3d179fdb6677d43194a9bb493.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				204,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_bravo.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_sharp_thinking.png-0aabb95634c695a8cc48d4b15183ca5f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				464,
+				88
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_sharp_thinking.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_bingo.png-1daed8c467059327adc45b3bac3d19f8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				200,
+				88
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_bingo.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_nonstop.png-e7f614fdae4e193577e4a7aa9109f35c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				284,
+				84
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_nonstop.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_calm_paws.png-1d14e84db26f59fa33eadd32931ca20d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				352,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_calm_paws.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/btn_auto_mark_1.png-860f7bb389d7eb6890c8924f7b987079.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				44,
+				40
+			],
+			"source_file": "res://assets/sprites/game/btn_auto_mark_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_patient_paws.png-83b79d3eb4fe5764d5add52f2b7eb3f4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				408,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_patient_paws.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_clever_paws.png-3deac84045bdfac0647fd952bdaf124d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				392,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_clever_paws.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_speedy_paws.png-6ae38bcdf984405f2f2f7031403d1fb0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				416,
+				84
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_speedy_paws.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_timer2.png-e5778cc09fbfd51af798039e488fb52a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				292
+			],
+			"source_file": "res://assets/sprites/game/icon_timer2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_undo.png-cbfe0b3dd95b3a758728aa98f03fa432.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				184,
+				180
+			],
+			"source_file": "res://assets/sprites/game/icon_undo.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_steady_paws.png-a9ff373c2ce36151224cb29593ced4ea.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				404,
+				84
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_steady_paws.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rule_divider.png-5a66aba09f2dfbe896666e39171e4f99.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				972,
+				16
+			],
+			"source_file": "res://assets/sprites/game/rule_divider.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_super.png-4a579047f40bf88b2ba34775e7de7596.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				208,
+				84
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_super.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_tool.png-82896f7a2e8cf09c93c2a45a43a207f1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				108
+			],
+			"source_file": "res://assets/sprites/game/icon_tool.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_double_paws.png-b476551a3b8a5e13ce3f94c06edac83c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				404,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_double_paws.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_smart_moves.png-041af19bc20163157401840872c3a1dd.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				416,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_smart_moves.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/btn_close.png-d6f42f4e990874c384f5420051507a32.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/game/btn_close.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ad_play_icon2.png-87918a58120fb3f9c0a5965656a2e258.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				104,
+				104
+			],
+			"source_file": "res://assets/sprites/game/ad_play_icon2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_purrfect_start.png-676a1fe724a52f930dceb7b444fe9c7a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				432,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_purrfect_start.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_progress_slot.png-271ef04396ad8579c9fb4d1746140a33.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				136,
+				136
+			],
+			"source_file": "res://assets/sprites/game/cat_progress_slot.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_pawsome_pair.png-5f0f71d1c9fd6e243a427de04888f627.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				436,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_pawsome_pair.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/btn_auto_mark_2.png-7ffab236ae05b4efc8ed2bdb12338ce2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				36,
+				32
+			],
+			"source_file": "res://assets/sprites/game/btn_auto_mark_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_expert.png-f914ee1614f0b201e3e69daa2bf3cd44.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				224,
+				84
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_expert.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_tip_arrow.png-599ce668e2ff1a8757ed23a64708f607.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				36,
+				28
+			],
+			"source_file": "res://assets/sprites/game/icon_tip_arrow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_perfectly_marked.png-07031bc8fbdf2da492ef9d9976226976.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1056,
+				168
+			],
+			"source_file": "res://assets/sprites/game/txt_perfectly_marked.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_pencil_selected.png-592f7407a5d7b91dbdd4c06a832e93d2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				136
+			],
+			"source_file": "res://assets/sprites/game/icon_pencil_selected.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_clever_streak.png-889ae6c948a35b0e5a0453d2c2e328c6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				428,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_clever_streak.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_quick_paws.png-289cdd0409ffb48ccf6de6845354a16d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				368,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_quick_paws.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_flash.png-8a45147e8dd12b4baae9c729c6afe018.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				184,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_flash.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_plus.png-bdb7997365f19c4106d39218f371bd6b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				32,
+				32
+			],
+			"source_file": "res://assets/sprites/game/icon_plus.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_rule_arrow.png-cf89fc469cf86df08ee0d71f62a8fe73.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				56,
+				92
+			],
+			"source_file": "res://assets/sprites/game/icon_rule_arrow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_master.png-bcb5801fa72c0f1c23d80e9a18ea70ea.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				240,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_master.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_timer.png-cd5f84eb891a809e7cd7302899a1738f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				136
+			],
+			"source_file": "res://assets/sprites/game/icon_timer.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ad_play_icon.png-16a61d75b4156b09e2dfca2f476671d1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				52,
+				60
+			],
+			"source_file": "res://assets/sprites/game/ad_play_icon.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_genius.png-13b82497dd70c48cd0602065076e1838.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				236,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_genius.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_wow.png-0b5e5ba94ad7aa13ea51cd52b49c1718.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				188,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_wow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_w_cool.png-b34b53080e5be7630a7ca5994a6f5b96.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				176,
+				72
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_w_cool.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_nice_patience.png-411adf7bbee0b0e2fc68852c76beeb12.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				432,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_nice_patience.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/fish_full.png-b7bd60ca6ffafc23f8ce2973a608334b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/game/fish_full.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/txt_ct_fast_finder.png-d13b44a4bb6ffb38d175e243d3109455.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				356,
+				76
+			],
+			"source_file": "res://assets/sprites/game/txt_ct_fast_finder.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_atlas_1.png-5c912a1d394855658d250ef5b94dd188.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				4088,
+				3708
+			],
+			"source_file": "res://assets/sprites/game/cat/cat_atlas_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_atlas.png-a7ffe494897b42c332dace4f0f9b536e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				4076,
+				3956
+			],
+			"source_file": "res://assets/sprites/game/cat/cat_atlas.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_flash.png-3caa1870ebcc699fda467eda1489bdb1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				132,
+				132
+			],
+			"source_file": "res://assets/sprites/game/bullets/icon_flash.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_leaf.png-e3f23d35e10f1d04bd00099278f2a9c4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				132,
+				132
+			],
+			"source_file": "res://assets/sprites/game/bullets/icon_leaf.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_star.png-b48cfee2f8fb78074a7ce898a10a6bc1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				132,
+				132
+			],
+			"source_file": "res://assets/sprites/game/bullets/icon_star.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_muscle.png-1371641c9f77fea28d4a859dbfd31437.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				132,
+				132
+			],
+			"source_file": "res://assets/sprites/game/bullets/icon_muscle.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_timer_check.png-5e79beba37d0d47e7d18b42c32cffa56.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				60,
+				68
+			],
+			"source_file": "res://assets/sprites/daily/icon_timer_check.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/entry_left_icon.png-e8d3e2c405c25443887298e8d57a27e8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				240,
+				256
+			],
+			"source_file": "res://assets/sprites/daily/entry_left_icon.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/dc_costume_glow.png-e16107c4575448624a7b6b6f9994bb0e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				640,
+				640
+			],
+			"source_file": "res://assets/sprites/daily/dc_costume_glow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/round_btn_base.png-04485a9b70a25dee2b4c58dc2146ce2b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				152,
+				152
+			],
+			"source_file": "res://assets/sprites/common/round_btn_base.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/love_heart.png-1fe1659623c530e72c6f7c14c332b31f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				76,
+				72
+			],
+			"source_file": "res://assets/sprites/common/love_heart.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_settings.png-43fcaee9554195c94ec9b66e52eca972.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/common/icon_settings.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/btn_primary.png-63e2b2657eb46860cc5e769d007b6935.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				812,
+				220
+			],
+			"source_file": "res://assets/sprites/common/btn_primary.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/btn_orange_round.png-5fed41179ba18b5f9b6e83241318e9d3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				220,
+				220
+			],
+			"source_file": "res://assets/sprites/common/btn_orange_round.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/vector_music.png-3399ffcdea26682f8cf12b20f92fb2ba.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				92,
+				96
+			],
+			"source_file": "res://assets/sprites/common/vector_music.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/bullet_dot.png-7aa09987773d6ed46326706b310cc255.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				20,
+				20
+			],
+			"source_file": "res://assets/sprites/common/bullet_dot.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_daily_streak.png-57a2440b6f0a2fb8780e8f6e81fe38e8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				488,
+				408
+			],
+			"source_file": "res://assets/sprites/common/cat_daily_streak.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/success_check_mark.png-7e52c45a8a16d4ba5fc165e67a85fb52.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				376,
+				272
+			],
+			"source_file": "res://assets/sprites/common/success_check_mark.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_back.png-681ea6eafb9d2b7b95181826a9a4a3f9.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/common/icon_back.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/subtract.png-a5562480157a41600a3871e33862a77b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				16,
+				16
+			],
+			"source_file": "res://assets/sprites/common/subtract.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/red_dot.png-290872c8b1c9a4f9b293985009e0aa7f.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				42,
+				42
+			],
+			"source_file": "res://assets/sprites/common/red_dot.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/border.png-09c4028afc347ed3e20ecc5c9b8400fb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				252,
+				252
+			],
+			"source_file": "res://assets/sprites/common/border.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/subtract_2.png-7e140285a72e3fcb7edefff9f7fd7475.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				16,
+				16
+			],
+			"source_file": "res://assets/sprites/common/subtract_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/big_star.png-536618c8296f65f5ce6cd72411c590fa.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				44,
+				56
+			],
+			"source_file": "res://assets/sprites/common/big_star.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/dialog_frame_9patch.png-7223ad486c93d241e9e61e24409aa988.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				200,
+				200
+			],
+			"source_file": "res://assets/sprites/common/dialog_frame_9patch.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/logo.png-b02a8eadb95589606719a8b946344857.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1180,
+				752
+			],
+			"source_file": "res://assets/sprites/common/logo.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/btn_close.png-0ab5e3dcd62d48496dde03f997d22931.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/common/btn_close.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/small_star.png-0432833140e5a86c3a0f6d71b0904605.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				36,
+				48
+			],
+			"source_file": "res://assets/sprites/common/small_star.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/vector_sound.png-577244ddd401593bc0c50ee53e9d459f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				88
+			],
+			"source_file": "res://assets/sprites/common/vector_sound.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/vector_phone.png-a1399bfb7de11c8d7e484e2ae6d0bf5c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				104,
+				108
+			],
+			"source_file": "res://assets/sprites/common/vector_phone.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/normal_btn_bg.png-4848f720ac2c10005350443f2abfce68.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				140,
+				140
+			],
+			"source_file": "res://assets/sprites/common/normal_btn_bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_info.png-c3d1d9a7fe6b982e1eab11344621ef94.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/common/icon_info.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ui_mao_glc_pic_07.png-b45400bf4c73bb217699526868e5f8af.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				368,
+				112
+			],
+			"source_file": "res://assets/sprites/encourage/ui_mao_glc_pic_07.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/lock.png-5db77873ca05a15cfe73075b7ad03e3d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				116
+			],
+			"source_file": "res://assets/sprites/profile/lock.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rename_icon.png-a10b123281b85b4da8598f54490d4ea4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				136
+			],
+			"source_file": "res://assets/sprites/profile/rename_icon.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/divider_line_right.png-332666430bdb76329007a157f86acc58.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				428,
+				4
+			],
+			"source_file": "res://assets/sprites/profile/divider_line_right.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/divider_line_left.png-2e88c90b0f7dddd1fdc9d1f4f1eb0185.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				428,
+				4
+			],
+			"source_file": "res://assets/sprites/profile/divider_line_left.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/costume_trial_timer.png-5354a7bc2c482deb32669bccbaa0d007.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				53,
+				60
+			],
+			"source_file": "res://assets/sprites/profile/costume_trial_timer.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_06.png-1c8a47b7ac7d63c2a295cb144765ad67.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_06.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_12.png-049c7cd9a4301851c38bcd6c7a3e275b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_12.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_03.png-153273d962dc1720bf30f7169355ebb3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_03.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_04.png-a55e506a02486536dcc3cea097a16a2e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_04.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_15.png-2f6cc7de872be64162e09f7ae66701bc.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				524
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_15.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_09.png-8ef7ddfeb9d7395a5e18cb1e026d4c41.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_09.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_10.png-ca828213b7c25ebd884d53ddc92d3146.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_10.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_01.png-64a0e34d444e1f22582b0ad90ccc77a6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_01.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_13.png-d19db851b26fdb1da3a9a52cf169d79d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_13.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_02.png-f28e868005de871d15211cb96d1bf14d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_02.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_07.png-772f49eca26218643806a20fdfbedad8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_07.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_11.png-5f3e676bba6a3bf111e353cec53f7042.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_11.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_00.png-70b7ef58f188242f5e0ebb0a14e1b114.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				404,
+				404
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_00.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_05.png-6b3d4383563d021c17ef2a85636d0219.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_05.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_14.png-b2a4cd22c407ade482820a87106fd848.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_14.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_costume_08.png-44bf63070cc80e5babdb8f13dde9075c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/profile/costume/cat_costume_08.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/card_base_week.png-8b884cdf5fcc47bc15e248fff5c0835e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1068,
+				360
+			],
+			"source_file": "res://assets/sprites/purchase/card_base_week.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pill_base_month.png-a7b159c795edad07436226b3fbf44f77.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				540,
+				220
+			],
+			"source_file": "res://assets/sprites/purchase/pill_base_month.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pill_base_year.png-ed9bfe7a187a6f63e73790a6491a58b6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				540,
+				220
+			],
+			"source_file": "res://assets/sprites/purchase/pill_base_year.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/popup_bg_gradient.png-75893072ae29337023b7da275296c6ca.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1460,
+				2000
+			],
+			"source_file": "res://assets/sprites/purchase/popup_bg_gradient.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/strike_line_white.png-37df96236e47b72c52fb421956a0816d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				400,
+				8
+			],
+			"source_file": "res://assets/sprites/purchase/strike_line_white.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/settings_card_week.png-268422b193679724cd8ba03e7e0495c9.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1608,
+				400
+			],
+			"source_file": "res://assets/sprites/purchase/settings_card_week.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/white_fish_3.png-1e10a715664fa402424aa196bb090da4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				140,
+				120
+			],
+			"source_file": "res://assets/sprites/purchase/white_fish_3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/badge_dim_mask.png-e6946856733d8e8def8018bedd43c0fe.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				148,
+				156
+			],
+			"source_file": "res://assets/sprites/purchase/badge_dim_mask.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/card_base_month.png-a8e535b6a27c5c885c1c477b22b86372.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1068,
+				360
+			],
+			"source_file": "res://assets/sprites/purchase/card_base_month.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/background.png-1841888e7f06104ffa6a49b67d73fc91.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				716,
+				568
+			],
+			"source_file": "res://assets/sprites/purchase/background.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ui_mao_glc_tx02_copy_3.png-a18e2698c28be44fdd6029f353299b19.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				52,
+				68
+			],
+			"source_file": "res://assets/sprites/purchase/ui_mao_glc_tx02_copy_3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/settings_card_entry.png-0b39fddaff5e9252d5fd851b9f1760cb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1608,
+				400
+			],
+			"source_file": "res://assets/sprites/purchase/settings_card_entry.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/white_fish.png-6926d609c7e51fd6eddab180f1a45aa3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				136,
+				128
+			],
+			"source_file": "res://assets/sprites/purchase/white_fish.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/settings_card_month.png-4bf56b84f7f8f8826986e340e72ece64.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1608,
+				400
+			],
+			"source_file": "res://assets/sprites/purchase/settings_card_month.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/vector_6.png-0fa680599817fb62d76442e156ac57f9.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				156
+			],
+			"source_file": "res://assets/sprites/purchase/vector_6.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ui_mao_glc_tx_01.png-a433056a3e77f23099438a5aa047a911.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				36,
+				44
+			],
+			"source_file": "res://assets/sprites/purchase/ui_mao_glc_tx_01.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/page_bg.png-4088ef4ac1f397fe2ea85ddf5231ed61.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				900,
+				2000
+			],
+			"source_file": "res://assets/sprites/purchase/page_bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/card_base_year.png-deb0e17cedc4225afccf744a02ee7506.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1068,
+				360
+			],
+			"source_file": "res://assets/sprites/purchase/card_base_year.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/benefit_icon_bg.png-774c27538a28719ce611073ce4746001.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				204,
+				204
+			],
+			"source_file": "res://assets/sprites/purchase/benefit_icon_bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/card_dim_mask.png-bd6e8cff40919df5a3c6b1415a5b37f7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1068,
+				360
+			],
+			"source_file": "res://assets/sprites/purchase/card_dim_mask.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pill_base_week.png-8c139aae775073a1d7eaf62c17bef8eb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				540,
+				220
+			],
+			"source_file": "res://assets/sprites/purchase/pill_base_week.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/ads.png-30a9e8ac7ad8881fd9eb0fec03b35993.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				108
+			],
+			"source_file": "res://assets/sprites/purchase/ads.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/settings_card_year.png-f61859be4b82b6e2000cffc36238f67c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1608,
+				400
+			],
+			"source_file": "res://assets/sprites/purchase/settings_card_year.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/white_fish_2.png-fead06cc6616403e3c1b6dc8caa4dd91.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				140,
+				112
+			],
+			"source_file": "res://assets/sprites/purchase/white_fish_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/star_1.png-82197f3833bcc078bc305542c9f53301.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				57,
+				58
+			],
+			"source_file": "res://assets/sprites/rank_activity/star_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/entry_left_medal.png-26c41dd6ce4a6e716b326be7be7471ce.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				144,
+				144
+			],
+			"source_file": "res://assets/sprites/rank_activity/entry_left_medal.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/htp_layer524_copy.png-c13fc54f3ef640ad28a31943a949f5e9.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				463,
+				497
+			],
+			"source_file": "res://assets/sprites/rank_activity/htp_layer524_copy.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rank_entry_podium_shadow.png-7b21e862d35ed4b593a7acd0e30470a1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				344,
+				16
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_entry_podium_shadow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_start_off.png-106b9a4865212219a6f874da869a579c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				380,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_start_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/top3_fish_bg3.png-08fbb828d87aebb8a79b7d1142f8797d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				376,
+				144
+			],
+			"source_file": "res://assets/sprites/rank_activity/top3_fish_bg3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rankpage_list_bg.png-7fb0b95a8619feef3158f3a56383b2d8.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1036,
+				1188
+			],
+			"source_file": "res://assets/sprites/rank_activity/rankpage_list_bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/change_countdown_bg.png-e7c5a5cce9a481f151c6b5a9c01535cd.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				640,
+				168
+			],
+			"source_file": "res://assets/sprites/rank_activity/change_countdown_bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rankpage_background.png-bb94d710ec2387d068aaffe8bab44e39.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				8,
+				2400
+			],
+			"source_file": "res://assets/sprites/rank_activity/rankpage_background.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/top3_bronze_medal.png-812e76237f4221480bab58825f003c1d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				164,
+				184
+			],
+			"source_file": "res://assets/sprites/rank_activity/top3_bronze_medal.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/change_banner_bar.png-30ce1c007c73c04e1d09fa1842b6aa73.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				540,
+				124
+			],
+			"source_file": "res://assets/sprites/rank_activity/change_banner_bar.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rankpage_list_bg2.png-1020eb8383b267e88057bf042524466f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				548,
+				132
+			],
+			"source_file": "res://assets/sprites/rank_activity/rankpage_list_bg2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_heart_full.png-af40df52af64df1662834fc6ccde9ec3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				112,
+				100
+			],
+			"source_file": "res://assets/sprites/rank_activity/icon_heart_full.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_end_on.png-6ac3ceae174477ce6e4af9e8d7f785d3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				328,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_end_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/top3_fish_bg2.png-a88a55bbbb7937e1dc1b37609e9ef8f1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				376,
+				144
+			],
+			"source_file": "res://assets/sprites/rank_activity/top3_fish_bg2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_start_on.png-3c26b7480bc95aba5ca276aa6917d09a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				380,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_start_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_start_on.png-55d1573e1bf1130b61dae2440d7b7ec3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				340,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_start_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/top3_fish_bg.png-76434c1bad29dea668515c3340047de7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				376,
+				144
+			],
+			"source_file": "res://assets/sprites/rank_activity/top3_fish_bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/award_podium_4_6.png-93524e2c12c14c12cba9134e41451b99.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				372,
+				172
+			],
+			"source_file": "res://assets/sprites/rank_activity/award_podium_4_6.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_bg_bullet.png-1198fd73494215dd55677f543735df88.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				524,
+				112
+			],
+			"source_file": "res://assets/sprites/rank_activity/icon_bg_bullet.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_end_off.png-79877450ffaeaa340a3e1d22b2750efb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				372,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_end_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_mid_on.png-e991fb1b6175966657c610037a75ccfd.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				336,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_mid_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/change_banner_glow.png-a14637c54ae7e6efa3ab597fb76036e7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				616,
+				164
+			],
+			"source_file": "res://assets/sprites/rank_activity/change_banner_glow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_end_off.png-adf491e93e722d03f6fce67959ae1e27.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				328,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_end_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rankpage_countdown.png-9ebd241091d6dbb2c636e385513e2211.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				83,
+				94
+			],
+			"source_file": "res://assets/sprites/rank_activity/rankpage_countdown.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_mid_on.png-8bf38ea0f3e26084d1b018032e747ab5.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				376,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_mid_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/htp_layer3_copy4_2.png-7f8e489c2271eaea2aa3e1bd4924f6de.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				88,
+				88
+			],
+			"source_file": "res://assets/sprites/rank_activity/htp_layer3_copy4_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak5_start_off.png-a0f00563237abd5d127bbbfb0964b84a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				340,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak5_start_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/change_countdown_icon.png-9cd51fa87a4e142b4daa4ffe445dc7ca.ctex",
+			"original_format": 5,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				116,
+				132
+			],
+			"source_file": "res://assets/sprites/rank_activity/change_countdown_icon.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/medal.png-4d226cc5227d4a3ba003ed2c7d31d557.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				164,
+				200
+			],
+			"source_file": "res://assets/sprites/rank_activity/medal.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak3_end_on.png-2077ae4bab7e4895e40f1e5ff470ebbd.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": true,
+			"recovered_png_matches": true,
+			"size": [
+				372,
+				156
+			],
+			"source_file": "res://assets/sprites/rank_activity/streak3_end_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/bg.png-bea683c46f599693397757445955c49f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1080,
+				2400
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_activity_offline_page/bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/no_wifi.png-3295beff9a50d78679ded55274dd9230.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				300,
+				300
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_activity_offline_page/no_wifi.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/union.png-c47cab9e46ab6d6645cd691fe843feca.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				108,
+				92
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_activity_offline_page/union.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/group_40.png-f26d7700dee8774115337a4f095ec718.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				20,
+				100
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_activity_offline_page/group_40.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/blue1.png-bb61e42bf191a310bcefcc63baf72d68.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				160,
+				160
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_activity_offline_page/blue1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/no_wifi_white.png-a9cf2fc3b9ad9255fbcf21c60c31b69e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				172,
+				172
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_activity_offline_page/no_wifi_white.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/red1.png-a17c8498cd7459c40ee6beface361ad0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				160,
+				160
+			],
+			"source_file": "res://assets/sprites/rank_activity/rank_activity_offline_page/red1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_google.png-e21c96c3520b4c9650b04f1748842f2d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				180,
+				180
+			],
+			"source_file": "res://assets/sprites/account/icon_google.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_facebook.png-29c580a0c98dc84ca139c510e2b0b72c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				180,
+				180
+			],
+			"source_file": "res://assets/sprites/account/icon_facebook.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_no_wifi_slash.png-e92dc0b27657a9421deb8419240be9a1.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				156
+			],
+			"source_file": "res://assets/sprites/account/icon_no_wifi_slash.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_account_deleted.png-547234e24e3e5f2c8d49651d8068ce0f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				420,
+				400
+			],
+			"source_file": "res://assets/sprites/account/icon_account_deleted.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_progress_cloud.png-1f4672b900b41a3604205f66c47ed90b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				148,
+				148
+			],
+			"source_file": "res://assets/sprites/account/icon_progress_cloud.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_apple.png-a4016c2afe24ba1139cf7e75a4c0970d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				180,
+				180
+			],
+			"source_file": "res://assets/sprites/account/icon_apple.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_people_off.png-b1796e7511bd0a6b03c64340b0214792.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_people_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_vibrate.png-eb3b7abd5e280087140b7f0de6a54a8e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_vibrate.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_people.png-1be59222db3272f7de7ffe9c306c724d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_people.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_music.png-40aa319de4722f9656e13c14151e50ee.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_music.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_music_off.png-69ce1620e92786c5322a0444c59be77a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_music_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_sound_off.png-082c4e77cd1ad184a3662f0755c39833.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_sound_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_vibrate_off.png-5b0cd9d6d96589ee37eb505d19b7fd06.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_vibrate_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_sound.png-fdef7d712e50d386c865bba80e06f53a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				120,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/icon_sound.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_save_progress.png-ba0e859a7c2f1d52d557191851b4f7c3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				100,
+				100
+			],
+			"source_file": "res://assets/sprites/setting/icon_save_progress.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/border.png-41674fd89e9899df18457c8bff8636a2.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				804,
+				120
+			],
+			"source_file": "res://assets/sprites/setting/pattern_mode_switch/border.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/colorblind_off.png-da1b97124578212d0ef7b96b307b398e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				160
+			],
+			"source_file": "res://assets/sprites/setting/colorblind_switch/colorblind_off.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/colorblind_on.png-de7f857e449e400cc02e75c8c1971f4a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				160
+			],
+			"source_file": "res://assets/sprites/setting/colorblind_switch/colorblind_on.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/star_big.png-5383329ae7d85817aab25469f273b7e5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				88,
+				108
+			],
+			"source_file": "res://assets/sprites/daily_auto_mark/star_big.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/star_small.png-22f5d94c814288ff839dd98f1667d847.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				72,
+				92
+			],
+			"source_file": "res://assets/sprites/daily_auto_mark/star_small.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/icon_ad.png-a5975b8a03f3ca1cf2def1f065b5da7d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				160,
+				140
+			],
+			"source_file": "res://assets/sprites/daily_auto_mark/icon_ad.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/sparkle_sm.png-7ada634520745248dec239a9c7c55393.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				36,
+				48
+			],
+			"source_file": "res://assets/sprites/rate_us/sparkle_sm.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/sparkle_lg.png-3e79567ed062aa2e5340bf62921f8217.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				44,
+				56
+			],
+			"source_file": "res://assets/sprites/rate_us/sparkle_lg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/star.png-b342433c0cec6a1cb7699cef48ba7c0b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				144,
+				144
+			],
+			"source_file": "res://assets/sprites/rate_us/star.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/heart.png-eeaf9b19200c058e63b502eb0f64e90b.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				76,
+				72
+			],
+			"source_file": "res://assets/sprites/rate_us/heart.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cat_wave.png-e69468edc769783fc9170461d212df93.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				488,
+				408
+			],
+			"source_file": "res://assets/sprites/rate_us/cat_wave.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/star_dim.png-692de807fe3db25de3fc5f555284fc87.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				144,
+				144
+			],
+			"source_file": "res://assets/sprites/rate_us/star_dim.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/wool_4.png-a54cc53330d2abca3ac9ec8c05a4fcc0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				188,
+				316
+			],
+			"source_file": "res://assets/sprites/daily_streak/wool_4.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/light_rays.png-5430d4cb0d8eb01d67addae350c5e3ce.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				304,
+				304
+			],
+			"source_file": "res://assets/sprites/daily_streak/light_rays.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/wool_1.png-37af48f7df9cf2b996aa6748ee9e2650.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				244,
+				248
+			],
+			"source_file": "res://assets/sprites/daily_streak/wool_1.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/treasure_box.png-b6395a681fe195f014d2425720e324e9.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				600,
+				656
+			],
+			"source_file": "res://assets/sprites/daily_streak/treasure_box.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/top_bg.png-66fccd68b99e8b4387bf5cfd23a3ae33.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				340,
+				140
+			],
+			"source_file": "res://assets/sprites/daily_streak/top_bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/wool_3.png-4a6063797c490d69e67e7359eaddf235.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				208
+			],
+			"source_file": "res://assets/sprites/daily_streak/wool_3.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/dot.png-af6dd73f427f525812fa54a78b46a20a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				148,
+				148
+			],
+			"source_file": "res://assets/sprites/daily_streak/dot.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/glow_layer.png-ee476dfb8554963c5833c95d89cb61cd.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1640,
+				1684
+			],
+			"source_file": "res://assets/sprites/daily_streak/glow_layer.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/wool_unchecked.png-e609d4268daf3a5839133aea65d44866.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				672,
+				1072
+			],
+			"source_file": "res://assets/sprites/daily_streak/wool_unchecked.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/sun.png-8b23402bfc62b2ccadc9ede9ccebb7b9.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				512,
+				512
+			],
+			"source_file": "res://assets/sprites/daily_streak/sun.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/sudoku_bg_round20.png-1757d40cb6c4e2bce66d43ad9ce54588.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				472,
+				80
+			],
+			"source_file": "res://assets/sprites/daily_streak/sudoku_bg_round20.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak_arrow.png-cf15560fea3932f9a75972747bfc7367.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				208,
+				84
+			],
+			"source_file": "res://assets/sprites/daily_streak/streak_arrow.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/wool_2.png-15d135b00fe3dd58c6c28b807428aeb6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				104,
+				16
+			],
+			"source_file": "res://assets/sprites/daily_streak/wool_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rectangle_361.png-49a6015df5926c14543914ea28337040.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				712,
+				68
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/rectangle_361.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak_artwork.png-fe3051635928cd4d7042d0300a5eb9a4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				208,
+				332
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/streak_artwork.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/reward_chest_open.png-b6190e797f97e5c10ade311948d38fc4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				256,
+				172
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/reward_chest_open.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/vector.png-72d51344fb2c2f734185cfced7c7a560.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				156,
+				224
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/vector.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/day_cell.png-842a844c33d873f2ba32b86b84e9a1ca.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/day_cell.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/day_cell_2.png-5af1eb715fee5bc76e7ba091c99ca4c6.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				128,
+				128
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/day_cell_2.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/reward_chest.png-2aa4460f1124aff750c1326365d59463.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				180,
+				196
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/reward_chest.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rectangle_361_after.png-17c98d761952d502f3d4ca0843dd5e26.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				708,
+				68
+			],
+			"source_file": "res://assets/sprites/daily_streak/home/rectangle_361_after.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/bg.png-be86027785ad4e4c4918078b6a09cd33.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1080,
+				2400
+			],
+			"source_file": "res://assets/sprites/daily_streak/success/bg.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/streak_artwork.png-450f6aaf92c9fe614e2874e028fd765a.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				332,
+				536
+			],
+			"source_file": "res://assets/sprites/daily_streak/success/streak_artwork.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/calendar_decoration.png-d70f48c0d7dd2bf9d448c0027db6b0e7.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				364,
+				472
+			],
+			"source_file": "res://assets/sprites/daily_streak/success/calendar_decoration.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/day_circle.png-2412771c73fefcc7f08d27d4fc805bdb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				148,
+				148
+			],
+			"source_file": "res://assets/sprites/daily_streak/success/day_circle.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/reward_chest.png-cd90d681a21f06e92a37e3e940661495.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				112,
+				120
+			],
+			"source_file": "res://assets/sprites/daily_streak/success/reward_chest.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/profile_vram.png-f06f2b1aacafd68f9f0ed15db5367de5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				824,
+				392
+			],
+			"source_file": "res://assets/atlas/profile_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/purchase_vram.png-378ee5cf8045bf7c2f819cfb80446d26.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				708,
+				1228
+			],
+			"source_file": "res://assets/atlas/purchase_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/misc_ui_vram.png-e791436a93dcf4ef7b9301231530265e.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1296,
+				1064
+			],
+			"source_file": "res://assets/atlas/misc_ui_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rank_row_lossless.png-78c565fa81f894de1298e0e655b4d3a4.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				3540,
+				836
+			],
+			"source_file": "res://assets/atlas/rank_row_lossless.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/game_ext_vram.png-fa8f4f6a155d8b7631eb67887c5f902c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1316,
+				808
+			],
+			"source_file": "res://assets/atlas/game_ext_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/profile_lossless.png-aafc91104cd4dbc5a6b559f46444d9ab.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1488,
+				1796
+			],
+			"source_file": "res://assets/atlas/profile_lossless.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/single_rectangle_312.png-66747ea4b9ed17a1e7798630a2698647.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1088,
+				668
+			],
+			"source_file": "res://assets/atlas/single_rectangle_312.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/pop_vram.png-96312eb0de02dbd5a58bd9f583dcf39f.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1064,
+				1180
+			],
+			"source_file": "res://assets/atlas/pop_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/jp_text_vram.png-ebbcb18c45f0081f888e3926d8190902.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				908,
+				1272
+			],
+			"source_file": "res://assets/atlas/jp_text_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/effect_ui_vram.png-3a97a82291e60f5bfc90e6ed2d2338b5.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				588,
+				924
+			],
+			"source_file": "res://assets/atlas/effect_ui_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/daily_streak_vram.png-910464ffb2c6feb911634b9f03aa8cbb.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				2376,
+				1724
+			],
+			"source_file": "res://assets/atlas/daily_streak_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/main_game_vram.png-9bec2c5e71c0fad0ed06156550e7cc58.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1556,
+				1180
+			],
+			"source_file": "res://assets/atlas/main_game_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/cell_face_lossless.png-a38f68869dc41b98719db146cb9616a3.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1844,
+				468
+			],
+			"source_file": "res://assets/atlas/cell_face_lossless.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/encourage_vram.png-26685af4484895907bf0ff026e761dee.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				916,
+				1176
+			],
+			"source_file": "res://assets/atlas/encourage_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/rank_activity_vram.png-aea55bd2121ca9601c629838c669a61d.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1844,
+				1596
+			],
+			"source_file": "res://assets/atlas/rank_activity_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/home_companion_vram.png-1932a6e1f5952e958d11e991cba7c4a0.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				1432,
+				1128
+			],
+			"source_file": "res://assets/atlas/home_companion_vram.png",
+			"status": "verified"
+		},
+		{
+			"imported_path": "res://.godot/imported/single_bg_9grid.png-b40fa975ad01e75384406eb3435f1b4c.astc.ctex",
+			"original_format": 35,
+			"original_has_mipmaps": false,
+			"recovered_png_matches": true,
+			"size": [
+				416,
+				2400
+			],
+			"source_file": "res://assets/atlas/single_bg_9grid.png",
+			"status": "verified"
+		}
+	],
+	"total": 390
+}

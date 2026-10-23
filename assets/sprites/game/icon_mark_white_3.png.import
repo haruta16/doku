@@ -3,26 +3,24 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ewhcr8x32w5p"
-path.s3tc="res://.godot/imported/icon_mark_white_3.png-a9d4533e32fa664c67305a93b7ae5793.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_mark_white_3.png-a9d4533e32fa664c67305a93b7ae5793.etc2.ctex"
+path="res://.godot/imported/icon_mark_white_3.png-a9d4533e32fa664c67305a93b7ae5793.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/sprites/game/icon_mark_white_3.png"
-dest_files=["res://.godot/imported/icon_mark_white_3.png-a9d4533e32fa664c67305a93b7ae5793.s3tc.ctex", "res://.godot/imported/icon_mark_white_3.png-a9d4533e32fa664c67305a93b7ae5793.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_mark_white_3.png-a9d4533e32fa664c67305a93b7ae5793.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=1.0
-compress/uastc_level=2
-compress/rdo_quality_loss=0
-compress/hdr_compression=0
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

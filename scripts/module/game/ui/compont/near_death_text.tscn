@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://db4fapnp6nbjw"]
+
+[ext_resource type="Script" uid="uid://do4naahi5c5gv" path="res://scripts/module/game/view/near_death_text.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c2mkhh7ni1bg" path="res://assets/sprites/game/txt_safe.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c5jpqwgsic246" path="res://assets/sprites/game/txt_safe_jp.png" id="3"]
+
+[sub_resource type="Animation" id="Animation_appear"]
+resource_name = "Appear"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.12, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0.7, 0.7), Vector2(1.08, 1.08), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nd"]
+_data = {
+&"Appear": SubResource("Animation_appear"),
+&"RESET": SubResource("Animation_reset")
+}
+
+[node name="NearDeathText" type="Control" unique_id=354848462]
+custom_minimum_size = Vector2(164, 73)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 164.0
+offset_bottom = 73.0
+pivot_offset = Vector2(82, 36.5)
+mouse_filter = 2
+script = ExtResource("1")
+
+[node name="TextEn" type="TextureRect" parent="." unique_id=1830564387]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -82.0
+offset_top = -36.5
+offset_right = 82.0
+offset_bottom = 36.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextJp" type="TextureRect" parent="." unique_id=585405140]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -101.0
+offset_top = -35.0
+offset_right = 101.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=867383832]
+libraries/ = SubResource("AnimationLibrary_nd")

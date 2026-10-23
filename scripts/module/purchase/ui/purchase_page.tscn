@@ -1,0 +1,1131 @@
+[gd_scene format=3 uid="uid://dal1al6codk6u"]
+
+[ext_resource type="Script" uid="uid://blhapfdl6imk1" path="res://scripts/module/purchase/view/purchase_page.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dcr0qyh6kstfm" path="res://assets/effect/texture/ui/et_purchase_interface_flow_mask.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://3ld431cmfsjd" path="res://assets/effect/texture/ui/et_rank_interface_flow.png" id="3"]
+[ext_resource type="Script" uid="uid://8qcm4mjpwxb6" path="res://scripts/module/ui/extensions/grid_flow_bg.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://bcs7jqdibywfa" path="res://assets/sprites/purchase/page_bg.png" id="5"]
+[ext_resource type="Shader" uid="uid://b0sc0d7okkdxw" path="res://assets/shaders/linear_gradient.gdshader" id="6"]
+[ext_resource type="Texture2D" uid="uid://y6hiytk6fbg6" path="res://assets/sprites/purchase/rectangle_312.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://k7c43nprrqt5" path="res://assets/sprites/purchase/ad.png" id="8"]
+[ext_resource type="PackedScene" uid="uid://ca1ukj7hn0fny" path="res://scripts/module/game/ui/compont/header_adapt_holder.tscn" id="9"]
+[ext_resource type="PackedScene" uid="uid://b3mqb2vk2p3ta" path="res://assets/prefab/back_and_setting_header.tscn" id="10"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="11"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="12"]
+[ext_resource type="Texture2D" uid="uid://c5uu7lhejuk0w" path="res://assets/sprites/purchase/rectangle_284_shadow.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://hbtkei2e7kgu" path="res://assets/sprites/purchase/ads.png" id="14"]
+[ext_resource type="Texture2D" uid="uid://csqqlfwikgxhg" path="res://assets/sprites/purchase/benefit_icon_bg.png" id="15"]
+[ext_resource type="Texture2D" uid="uid://blcq54buvrrv5" path="res://assets/sprites/game/tool_cat_item.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://ibovplgqc6eg" path="res://assets/sprites/game/icon_hint_lamp.png" id="17"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="18"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="19"]
+[ext_resource type="Script" uid="uid://22yj3hnqwmoa" path="res://scripts/module/ui/extensions/batched_text_label.gd" id="20"]
+[ext_resource type="Script" uid="uid://cdgm3cspjgljb" path="res://scripts/module/ui/extensions/underline_link.gd" id="21"]
+
+[sub_resource type="Shader" id="Shader_4o3g5"]
+code = "shader_type canvas_item;
+
+/// 2D 流动条 + 蒙版 + 预乘 + 可选 Add 读屏加算
+/// 凡「可视为 0 透明度/0 加算」的片元 discard，避免挡下层
+
+render_mode blend_premul_alpha;
+
+// 内置下限：检查器全 0 时仍可靠去掉「几乎为 0」的片元（可按工程改）
+const float KILL_A = 0.00025;
+const float KILL_ADD = 0.0002;
+const float EPS = 0.0001;
+
+uniform vec2 scroll_speed = vec2(0.0, 0.0);
+uniform vec2 uv_scale = vec2(1.0, 1.0);
+uniform float base_rotation = 0.0;
+uniform vec2 base_uv_offset = vec2(0.0, 0.0);
+uniform bool base_repeat = true;
+
+uniform sampler2D mask_texture : hint_default_transparent, filter_linear_mipmap, repeat_enable;
+uniform float mask_rotation = 0.0;
+uniform vec2 mask_scale = vec2(1.0, 1.0);
+uniform vec2 mask_offset = vec2(0.0, 0.0);
+uniform vec2 mask_uv_offset = vec2(0.0, 0.0);
+uniform bool mask_repeat = true;
+uniform float mask_strength : hint_range(0.0, 1.0) = 1.0;
+uniform float mask_invert : hint_range(0.0, 1.0) = 0.0;
+/// true: m = A*max(R,G,B)；false: m = 仅 A
+uniform bool mask_luminance = true;
+
+uniform bool add_mode = false;
+uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;
+
+/// Alpha 切除
+uniform float alpha_cut : hint_range(0.0, 0.1) = 0.0;
+/// 主色/蒙版上「当黑用」
+uniform float black_transparent_threshold : hint_range(0.0, 0.2) = 0.0;
+/// 与内置 KILL 叠加，收紧软边/灰边
+uniform float invisible_epsilon : hint_range(0.0, 0.02) = 0.0;
+
+varying vec4 item_modulate;
+
+void vertex() {
+	item_modulate = COLOR;
+}
+
+vec2 rotate_at_center(vec2 uv, float degrees_ccw) {
+	float rad = radians(degrees_ccw);
+	float c = cos(rad);
+	float s = sin(rad);
+	vec2 p = uv - vec2(0.5);
+	return vec2(p.x * c - p.y * s, p.x * s + p.y * c) + vec2(0.5);
+}
+
+vec2 wrap_uv(vec2 uv, bool do_repeat) {
+	if (do_repeat) {
+		return fract(uv);
+	}
+	return clamp(uv, vec2(0.0), vec2(1.0));
+}
+
+void fragment() {
+	vec2 b_uv = wrap_uv(
+		rotate_at_center(UV, base_rotation) * uv_scale + scroll_speed * TIME + base_uv_offset,
+		base_repeat
+	);
+	vec4 ta = texture(TEXTURE, b_uv);
+
+	vec2 m_uv = wrap_uv(
+		rotate_at_center(UV, mask_rotation) * uv_scale * mask_scale + mask_offset + mask_uv_offset,
+		mask_repeat
+	);
+	vec4 ms = texture(mask_texture, m_uv);
+
+	float mk = max(max(ms.r, ms.g), ms.b);
+	float m0 = mask_luminance ? (ms.a * mk) : ms.a;
+	m0 = clamp(m0 * mask_strength, 0.0, 1.0);
+	if (m0 <= (black_transparent_threshold + EPS)) {
+		m0 = 0.0;
+	}
+	m0 = mix(m0, 1.0 - m0, mask_invert);
+	float m = min(m0, ta.a);
+
+	float shape = clamp(ta.a - m, 0.0, 1.0);
+	vec3 rgb = ta.rgb * item_modulate.rgb;
+	float a = shape * item_modulate.a;
+
+	// ① 全透明/浮点毛刺
+	if (a < KILL_A) {
+		discard;
+	}
+	float a_need = max(alpha_cut, 0.0) + max(invisible_epsilon, 0.0) + KILL_A;
+	if (a < a_need) {
+		discard;
+	}
+	// ② 主色近黑/纯黑
+	float luma = max(max(rgb.r, rgb.g), rgb.b);
+	if (luma <= max(black_transparent_threshold, 0.0) + 0.001) {
+		discard;
+	}
+
+	if (add_mode) {
+		vec3 energy = rgb * a;
+		if (max(max(energy.r, energy.g), energy.b) < (KILL_ADD + max(invisible_epsilon, 0.0))) {
+			discard;
+		}
+		vec3 b = texture(screen_texture, SCREEN_UV).rgb;
+		COLOR = vec4(clamp(b + energy, vec3(0.0), vec3(1.0)), 1.0);
+	} else {
+		COLOR = vec4(rgb * a, a);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fv8hb"]
+shader = SubResource("Shader_4o3g5")
+shader_parameter/scroll_speed = Vector2(0.015, -0.015)
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/base_rotation = 0.0
+shader_parameter/base_uv_offset = Vector2(0, 0)
+shader_parameter/base_repeat = true
+shader_parameter/mask_texture = ExtResource("2")
+shader_parameter/mask_rotation = 0.0
+shader_parameter/mask_scale = Vector2(1, 1)
+shader_parameter/mask_offset = Vector2(0, 0)
+shader_parameter/mask_uv_offset = Vector2(0, 0)
+shader_parameter/mask_repeat = false
+shader_parameter/mask_strength = 1.0
+shader_parameter/mask_invert = 0.0
+shader_parameter/mask_luminance = true
+shader_parameter/add_mode = false
+shader_parameter/alpha_cut = 0.0
+shader_parameter/black_transparent_threshold = 0.0
+shader_parameter/invisible_epsilon = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_44aru"]
+shader = ExtResource("6")
+shader_parameter/color_left = Color(1, 0.95686275, 0.81960785, 1)
+shader_parameter/color_right = Color(1, 0.9885575, 0.96730745, 1)
+shader_parameter/grad_p0 = Vector2(1, -6e-17)
+shader_parameter/grad_p1 = Vector2(1, 1)
+shader_parameter/pos0 = 0.0
+shader_parameter/pos1 = 1.0
+shader_parameter/corner_radius = Vector4(0, 0, 0, 0)
+shader_parameter/stroke_color_left = Color(0, 0, 0, 0)
+shader_parameter/stroke_color_right = Color(0, 0, 0, 0)
+shader_parameter/stroke_width = 0.0
+shader_parameter/rect_size = Vector2(1080, 2400)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t6eug"]
+bg_color = Color(1, 0.99349093, 0.9788455, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="Gradient" id="Gradient_md2us"]
+offsets = PackedFloat32Array(0.72, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_f6s0t"]
+gradient = SubResource("Gradient_md2us")
+width = 8
+height = 256
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Animation" id="Animation_ewg8l"]
+resource_name = "Appear"
+length = 0.3
+step = 0.016666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Background:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Background2:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.06666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.8627451)]
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Background/AdImg:scale:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(1.2, 0, 0, 0.06666667, 0, 1, -0.06666667, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.2)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Background/AdImg:scale:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(1.2, 0, 0, 0.06666667, 0, 1, -0.06666667, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.2)
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Background/AdImg:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.13333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("MainVBox/Header:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(-3.7252903e-09, 0.06666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("MainVBox/TitleGroup:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.016666668, 0.116666675),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("MainVBox/BenefitList:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.03333333, 0.13333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("MainVBox/RestoreGroup:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("MainVBox/Compliance:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("MainVBox/ServiceAndPrivacy:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_7t7vk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Background:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Background/AdImg:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Background/AdImg:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Background/AdImg:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MainVBox/Header:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("MainVBox/TitleGroup:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("MainVBox/BenefitList:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("MainVBox/RestoreGroup:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("MainVBox/Compliance:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("MainVBox/ServiceAndPrivacy:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kfgpj"]
+_data = {
+&"Appear": SubResource("Animation_ewg8l"),
+&"RESET": SubResource("Animation_7t7vk")
+}
+
+[node name="PurchasePage" type="Control" unique_id=969833039]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1")
+is_fullscreen = true
+metadata/a2g_semantic_id = "136:4672"
+
+[node name="Background2" type="ColorRect" parent="." unique_id=1877088739]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.96862745, 0.9490196, 0.93333334, 1)
+
+[node name="GridFlowLoop" type="Sprite2D" parent="Background2" unique_id=137238350]
+modulate = Color(1, 1, 1, 0.23529412)
+self_modulate = Color(1, 1, 1, 0.79736406)
+texture_repeat = 2
+material = SubResource("ShaderMaterial_fv8hb")
+position = Vector2(539, 1197)
+scale = Vector2(1.02, 1.02)
+texture = ExtResource("3")
+script = ExtResource("4")
+
+[node name="Background" type="Control" parent="." unique_id=999027674]
+clip_children = 2
+z_index = -1
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4673"
+
+[node name="PageBg" type="TextureRect" parent="Background" unique_id=1372408983]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Rectangle321" type="ColorRect" parent="Background" unique_id=1531288167]
+visible = false
+material = SubResource("ShaderMaterial_44aru")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I136:4673;8049:149738"
+
+[node name="Rectangle312" type="Control" parent="Background" unique_id=1250262743]
+visible = false
+anchors_preset = 0
+offset_right = 1080.0
+offset_bottom = 657.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I136:4673;8049:149739"
+
+[node name="Visual" type="TextureRect" parent="Background/Rectangle312" unique_id=1097030575]
+layout_mode = 0
+offset_left = -4.0
+offset_right = 1084.0
+pivot_offset = Vector2(544, 332.5)
+texture = ExtResource("7")
+expand_mode = 1
+metadata/a2g_semantic_id = "I136:4673;8049:149739::visual"
+
+[node name="AdImg" type="TextureRect" parent="Background" unique_id=644678885]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -359.0
+offset_top = 19.0
+offset_right = -46.0
+offset_bottom = 368.0
+grow_horizontal = 0
+pivot_offset = Vector2(156.5, 174.5)
+texture = ExtResource("8")
+expand_mode = 1
+metadata/a2g_semantic_id = "I136:4673;8049:149749"
+
+[node name="MainVBox" type="VBoxContainer" parent="." unique_id=340400001 groups=["_safe_bottom", "_safe_top"]]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -540.0
+offset_right = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="HeaderAdaptHolder" parent="MainVBox" unique_id=340400002 instance=ExtResource("9")]
+layout_mode = 2
+
+[node name="Header" parent="MainVBox" unique_id=340400003 instance=ExtResource("10")]
+layout_mode = 2
+show_settings_btn = false
+
+[node name="Space1" type="Control" parent="MainVBox" unique_id=340400004]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 42.0
+mouse_filter = 2
+
+[node name="TitleGroup" type="Control" parent="MainVBox" unique_id=340300002]
+custom_minimum_size = Vector2(1080, 148)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="TitleTxt" type="Label" parent="MainVBox/TitleGroup" unique_id=2015501714]
+layout_mode = 0
+offset_left = 75.0
+offset_top = -45.0
+offset_right = 1005.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.53749996, 0.28204957, 0.18915851, 1)
+theme_override_constants/line_spacing = -120
+theme_override_fonts/font = ExtResource("11")
+theme_override_font_sizes/font_size = 113
+text = "PURCHASE_TITLE"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("12")
+max_font_size = 120
+min_font_size = 60
+metadata/a2g_semantic_id = "136:4696"
+
+[node name="SubtitleTxt" type="Label" parent="MainVBox/TitleGroup" unique_id=987917551]
+modulate = Color(1, 1, 1, 0.8)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 75.0
+offset_top = -50.5
+offset_right = 1005.0
+offset_bottom = 17.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.53749996, 0.28204957, 0.18915851, 1)
+theme_override_constants/line_spacing = -8
+theme_override_fonts/font = ExtResource("11")
+theme_override_font_sizes/font_size = 46
+text = "PURCHASE_SUBTITLE"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("12")
+max_font_size = 46
+min_font_size = 30
+metadata/a2g_semantic_id = "136:4695"
+
+[node name="Space2" type="Control" parent="MainVBox" unique_id=340400005]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 90.0
+mouse_filter = 2
+
+[node name="BenefitList" type="Control" parent="MainVBox" unique_id=424364522]
+custom_minimum_size = Vector2(1080, 200)
+layout_mode = 2
+size_flags_vertical = 0
+metadata/a2g_semantic_id = "136:4680"
+
+[node name="Rectangle284" type="Control" parent="MainVBox/BenefitList" unique_id=871268517]
+anchors_preset = 0
+offset_left = 36.0
+offset_right = 1044.0
+offset_bottom = 200.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+metadata/a2g_semantic_id = "136:4681"
+
+[node name="Shadow" type="NinePatchRect" parent="MainVBox/BenefitList/Rectangle284" unique_id=1786590613]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -16.0
+offset_right = 20.0
+offset_bottom = 24.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("13")
+patch_margin_left = 51
+patch_margin_top = 47
+patch_margin_right = 51
+patch_margin_bottom = 55
+metadata/a2g_semantic_id = "136:4681::shadow_split_shadow"
+
+[node name="Bg" type="Panel" parent="MainVBox/BenefitList/Rectangle284" unique_id=427898313]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_t6eug")
+metadata/a2g_semantic_id = "136:4681::shadow_split_bg"
+
+[node name="ADS" type="Control" parent="MainVBox/BenefitList" unique_id=1463578667]
+clip_children = 2
+anchors_preset = 0
+offset_left = 75.0
+offset_top = 37.0
+offset_right = 129.0
+offset_bottom = 91.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4682"
+
+[node name="AdsImg" type="TextureRect" parent="MainVBox/BenefitList/ADS" unique_id=731360087]
+layout_mode = 0
+offset_right = 54.0
+offset_bottom = 54.0
+pivot_offset = Vector2(27, 27)
+texture = ExtResource("14")
+expand_mode = 1
+metadata/a2g_semantic_id = "I136:4682;8029:147912"
+
+[node name="@Control@28336" type="Control" parent="MainVBox/BenefitList" unique_id=658915485]
+clip_children = 2
+anchors_preset = 0
+offset_left = 75.0
+offset_top = 119.0
+offset_right = 129.0
+offset_bottom = 173.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4683"
+
+[node name="AdsImg" type="TextureRect" parent="MainVBox/BenefitList/@Control@28336" unique_id=2106439772]
+layout_mode = 0
+offset_right = 54.0
+offset_bottom = 54.0
+pivot_offset = Vector2(27, 27)
+texture = ExtResource("14")
+expand_mode = 1
+metadata/a2g_semantic_id = "I136:4683;8029:147912"
+
+[node name="Component13" type="Control" parent="MainVBox/BenefitList" unique_id=1638558225]
+anchors_preset = 0
+offset_left = 597.0
+offset_top = 29.0
+offset_right = 659.0
+offset_bottom = 91.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4684"
+
+[node name="IconBg" type="Control" parent="MainVBox/BenefitList/Component13" unique_id=449033251]
+anchors_preset = 0
+offset_right = 62.0
+offset_bottom = 62.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4685"
+
+[node name="IconBg" type="Control" parent="MainVBox/BenefitList/Component13/IconBg" unique_id=2133228333]
+anchors_preset = 0
+offset_right = 62.0
+offset_bottom = 62.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I136:4685;611:8390"
+
+[node name="Visual" type="TextureRect" parent="MainVBox/BenefitList/Component13/IconBg/IconBg" unique_id=1283241826]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 82.0
+offset_bottom = 90.0
+pivot_offset = Vector2(51, 51)
+texture = ExtResource("15")
+expand_mode = 1
+metadata/a2g_semantic_id = "I136:4685;611:8390::visual"
+
+[node name="ToolIcon" type="Control" parent="MainVBox/BenefitList/Component13" unique_id=369811094]
+anchors_preset = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 53.0
+offset_bottom = 53.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4686"
+
+[node name="ToolLocateImg" type="TextureRect" parent="MainVBox/BenefitList/Component13/ToolIcon" unique_id=1247587906]
+layout_mode = 0
+offset_top = 0.49999928
+offset_right = 43.0
+offset_bottom = 43.5
+pivot_offset = Vector2(21.5, 21.5)
+texture = ExtResource("16")
+expand_mode = 1
+metadata/a2g_semantic_id = "I136:4686;1149:25610"
+
+[node name="Component14" type="Control" parent="MainVBox/BenefitList" unique_id=1806579653]
+anchors_preset = 0
+offset_left = 597.0
+offset_top = 110.0
+offset_right = 659.0
+offset_bottom = 172.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4687"
+
+[node name="IconBg" type="Control" parent="MainVBox/BenefitList/Component14" unique_id=344462150]
+anchors_preset = 0
+offset_right = 62.0
+offset_bottom = 62.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4688"
+
+[node name="IconBg" type="Control" parent="MainVBox/BenefitList/Component14/IconBg" unique_id=91032635]
+anchors_preset = 0
+offset_right = 62.0
+offset_bottom = 62.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "I136:4688;611:8390"
+
+[node name="Visual" type="TextureRect" parent="MainVBox/BenefitList/Component14/IconBg/IconBg" unique_id=377340010]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -12.0
+offset_right = 82.0
+offset_bottom = 90.0
+pivot_offset = Vector2(51, 51)
+texture = ExtResource("15")
+expand_mode = 1
+metadata/a2g_semantic_id = "I136:4688;611:8390::visual"
+
+[node name="ToolIcon" type="Control" parent="MainVBox/BenefitList/Component14" unique_id=1762295108]
+anchors_preset = 0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 56.0
+offset_bottom = 56.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4689"
+
+[node name="ToolHintImg" type="TextureRect" parent="MainVBox/BenefitList/Component14/ToolIcon" unique_id=7836]
+layout_mode = 0
+offset_left = 9.014151
+offset_top = 0.45492676
+offset_right = 39.985847
+offset_bottom = 49.54507
+pivot_offset = Vector2(15.485848, 24.545073)
+texture = ExtResource("17")
+expand_mode = 1
+stretch_mode = 5
+metadata/a2g_semantic_id = "I136:4689;593:8315"
+
+[node name="NoBannerAdsTxt" type="Label" parent="MainVBox/BenefitList" unique_id=327880685]
+layout_mode = 0
+offset_left = 146.0
+offset_top = 31.5
+offset_right = 585.0
+offset_bottom = 99.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 32
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 30
+text = "PURCHASE_BENEFIT_NO_BANNER"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("12")
+max_font_size = 46
+min_font_size = 30
+metadata/a2g_semantic_id = "136:4690"
+
+[node name="1Locate1dayTxt" type="Label" parent="MainVBox/BenefitList" unique_id=1469977255]
+layout_mode = 0
+offset_left = 679.0
+offset_top = 31.5
+offset_right = 1024.0
+offset_bottom = 99.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 32
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 30
+text = "PURCHASE_BENEFIT_LOCATE_PER_DAY"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("12")
+max_font_size = 46
+min_font_size = 30
+metadata/a2g_semantic_id = "136:4691"
+
+[node name="1Hint1dayTxt" type="Label" parent="MainVBox/BenefitList" unique_id=1864900488]
+layout_mode = 0
+offset_left = 679.0
+offset_top = 112.5
+offset_right = 1024.0
+offset_bottom = 180.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 32
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 30
+text = "PURCHASE_BENEFIT_HINT_PER_DAY"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("12")
+max_font_size = 46
+min_font_size = 30
+metadata/a2g_semantic_id = "136:4692"
+
+[node name="NoInterstitialAdsTxt" type="Label" parent="MainVBox/BenefitList" unique_id=1069306257]
+layout_mode = 0
+offset_left = 146.0
+offset_top = 112.5
+offset_right = 585.0
+offset_bottom = 180.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_spacing = 32
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 30
+text = "PURCHASE_BENEFIT_NO_INTERSTITIAL"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("12")
+max_font_size = 46
+min_font_size = 30
+metadata/a2g_semantic_id = "136:4693"
+
+[node name="Space3" type="Control" parent="MainVBox" unique_id=340400006]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 78.0
+mouse_filter = 2
+
+[node name="PlanGroup" type="Control" parent="MainVBox" unique_id=340300003]
+custom_minimum_size = Vector2(1080, 992)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="CellContainer" type="Control" parent="MainVBox/PlanGroup" unique_id=1942045351]
+anchors_preset = 0
+offset_left = 36.0
+offset_right = 1044.0
+offset_bottom = 992.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "136:4694"
+
+[node name="ScrollCellContainer" type="ScrollContainer" parent="MainVBox/PlanGroup" unique_id=340200001]
+layout_mode = 0
+offset_left = -12.0
+offset_top = -48.0
+offset_right = 1092.0
+offset_bottom = 1040.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="CellMargin" type="MarginContainer" parent="MainVBox/PlanGroup/ScrollCellContainer" unique_id=340200003]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="VBox" type="VBoxContainer" parent="MainVBox/PlanGroup/ScrollCellContainer/CellMargin" unique_id=340200002]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 38
+
+[node name="OfflineHint" type="Control" parent="MainVBox" unique_id=514731928]
+visible = false
+custom_minimum_size = Vector2(1080, 120)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="HintTxt" type="Label" parent="MainVBox/OfflineHint" unique_id=2014888509]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 75.0
+offset_right = -75.0
+theme_override_colors/font_color = Color(0.53749996, 0.28204957, 0.18915851, 1)
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 40
+text = "PURCHASE_OFFLINE_HINT"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("12")
+max_font_size = 40
+min_font_size = 26
+
+[node name="Space4" type="Control" parent="MainVBox" unique_id=340400007]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 80.0
+mouse_filter = 2
+
+[node name="RestoreGroup" type="Control" parent="MainVBox" unique_id=340300004]
+custom_minimum_size = Vector2(1080, 160)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="RestoreBtn" parent="MainVBox/RestoreGroup" unique_id=340400011 instance=ExtResource("19")]
+layout_mode = 0
+offset_left = 146.0
+offset_top = -68.0
+offset_right = 930.0
+offset_bottom = 190.0
+bg_color = Color(0, 0, 0, 0)
+btn_text = "PURCHASE_RESTORE_BTN"
+text_color = Color(0.7538461, 0.4546269, 0.25514755, 1)
+show_difficult = false
+show_shadow = false
+border_color = Color(0.7538461, 0.4546269, 0.25514755, 1)
+border_width = 4
+
+[node name="Space5" type="Control" parent="MainVBox" unique_id=340400008]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 70.0
+mouse_filter = 2
+
+[node name="Compliance" type="Control" parent="MainVBox" unique_id=1010546745]
+custom_minimum_size = Vector2(1080, 150)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 225.0
+metadata/a2g_semantic_id = "136:4674"
+
+[node name="ComplianceMask" type="TextureRect" parent="MainVBox/Compliance" unique_id=1830327812]
+clip_children = 1
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_f6s0t")
+expand_mode = 1
+
+[node name="ComplianceScroll" type="ScrollContainer" parent="MainVBox/Compliance/ComplianceMask" unique_id=1790978555]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="ComplianceMargin" type="MarginContainer" parent="MainVBox/Compliance/ComplianceMask/ComplianceScroll" unique_id=1138288449]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 43
+theme_override_constants/margin_right = 36
+
+[node name="ComplianceVBox" type="VBoxContainer" parent="MainVBox/Compliance/ComplianceMask/ComplianceScroll/ComplianceMargin" unique_id=388598267]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="ThePaymentWillBeDeductedViaYourAppleIDGoogleAccountUponPurchaseConfirmationTxt" type="Label" parent="MainVBox/Compliance/ComplianceMask/ComplianceScroll/ComplianceMargin/ComplianceVBox" unique_id=463376326]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7921569, 0.67058825, 0.654902, 1)
+theme_override_constants/line_spacing = 1
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 30
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("20")
+metadata/a2g_semantic_id = "136:4675"
+
+[node name="SubscriptionAutoRenewsUnlessTurnedOffAtLeast24HoursBeforeTheCurrentPeriodEndsTxt" type="Label" parent="MainVBox/Compliance/ComplianceMask/ComplianceScroll/ComplianceMargin/ComplianceVBox" unique_id=1987509546]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.7921569, 0.67058825, 0.654902, 1)
+theme_override_constants/line_spacing = 1
+theme_override_fonts/font = ExtResource("18")
+theme_override_font_sizes/font_size = 30
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("20")
+metadata/a2g_semantic_id = "136:4676"
+
+[node name="Space6" type="Control" parent="MainVBox" unique_id=340400009]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+mouse_filter = 2
+
+[node name="ServiceAndPrivacy" type="Control" parent="MainVBox" unique_id=340100001]
+custom_minimum_size = Vector2(1080, 80)
+layout_mode = 2
+size_flags_vertical = 0
+metadata/a2g_semantic_id = "8221:341539"
+
+[node name="TermsBtn" type="RichTextLabel" parent="MainVBox/ServiceAndPrivacy" unique_id=340100002]
+layout_mode = 0
+offset_left = 140.0
+offset_right = 505.0
+offset_bottom = 80.0
+theme_override_colors/default_color = Color(0.7058824, 0.54509807, 0.5372549, 1)
+theme_override_fonts/normal_font = ExtResource("18")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[center][u]SETTING_TOS[/u][/center]"
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("21")
+text_key = "SETTING_TOS"
+
+[node name="PrivacyBtn" type="RichTextLabel" parent="MainVBox/ServiceAndPrivacy" unique_id=340100003]
+layout_mode = 0
+offset_left = 634.0
+offset_right = 940.0
+offset_bottom = 80.0
+theme_override_colors/default_color = Color(0.7058824, 0.54509807, 0.5372549, 1)
+theme_override_fonts/normal_font = ExtResource("18")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[center][u]SETTING_PRIVACY[/u][/center]"
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("21")
+text_key = "SETTING_PRIVACY"
+
+[node name="Space7" type="Control" parent="MainVBox" unique_id=340400010]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 40.0
+mouse_filter = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1414643777]
+libraries/ = SubResource("AnimationLibrary_kfgpj")
+
+[connection signal="tag_pressed" from="MainVBox/RestoreGroup/RestoreBtn" to="." method="_on_restore_pressed"]
+[connection signal="gui_input" from="MainVBox/ServiceAndPrivacy/TermsBtn" to="." method="_on_terms_btn_pressed"]
+[connection signal="gui_input" from="MainVBox/ServiceAndPrivacy/PrivacyBtn" to="." method="_on_privacy_btn_pressed"]

@@ -1,0 +1,305 @@
+[gd_scene format=3 uid="uid://cvg8ky3hsmjgl"]
+
+[ext_resource type="Script" uid="uid://davfpckmwjusm" path="res://scripts/module/daily_streak/view/streak_revive_page.gd" id="1"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="2"]
+[ext_resource type="Texture2D" uid="uid://bse1j0ugxailu" path="res://assets/sprites/profile/popup_bg.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="4"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://ie3dv22r1x8x" path="res://assets/sprites/splash/push_guide_exp1/shape.png" id="6"]
+[ext_resource type="PackedScene" uid="uid://vt1w5py3gjog" path="res://scripts/module/daily_streak/ui/other/streak_day_icon.tscn" id="7"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="8"]
+[ext_resource type="Texture2D" uid="uid://denlxna1emtpn" path="res://assets/sprites/daily_streak/streak_arrow.png" id="9"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="10"]
+[ext_resource type="Script" uid="uid://b7l8oc0h3r11u" path="res://scripts/module/ui/extensions/auto_fit_rich_text_label.gd" id="11"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="12"]
+[ext_resource type="Texture2D" uid="uid://dr61mx46wjtey" path="res://assets/sprites/daily_auto_mark/icon_ad.png" id="13"]
+
+[sub_resource type="AnimationLibrary" id="AnimLib"]
+_data = {
+&"GenericPopup": ExtResource("2")
+}
+
+[sub_resource type="StyleBoxFlat" id="SB_card"]
+bg_color = Color(1, 0.9843137, 0.96862745, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+
+[sub_resource type="StyleBoxFlat" id="SB_titlebar"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="SB_infobox"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="StreakRevivePopup" type="Control" unique_id=153177331]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+info_text_key = "STREAK_REVIVE_BACKFILL_INFO"
+show_mask = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=240557876]
+libraries/ = SubResource("AnimLib")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=598092214]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="." unique_id=1208940999]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -650.0
+offset_right = 450.0
+offset_bottom = 650.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FrameBg" type="Control" parent="Content" unique_id=773447770]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 1300.0
+
+[node name="PopupBg" type="Control" parent="Content/FrameBg" unique_id=526561393]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 1300.0
+mouse_filter = 2
+
+[node name="Shadow" type="NinePatchRect" parent="Content/FrameBg/PopupBg" unique_id=1809695584]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 14.0
+offset_bottom = 18.0
+texture = ExtResource("3")
+patch_margin_left = 75
+patch_margin_top = 71
+patch_margin_right = 75
+patch_margin_bottom = 79
+
+[node name="Bg" type="Panel" parent="Content/FrameBg/PopupBg" unique_id=864219473]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("SB_card")
+
+[node name="TitleBg" type="Panel" parent="Content/FrameBg" unique_id=450188382]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+theme_override_styles/panel = SubResource("SB_titlebar")
+
+[node name="PopupTitle" type="Label" parent="Content/FrameBg" unique_id=187682380]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 16.0
+offset_right = 900.0
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -26
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 85
+text = "DAILY_STREAK_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("5")
+max_font_size = 86
+min_font_size = 40
+
+[node name="CloseBtn" type="Button" parent="Content/FrameBg" unique_id=1618703675]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+focus_mode = 0
+flat = true
+
+[node name="CloseIcon" type="TextureRect" parent="Content/FrameBg/CloseBtn" unique_id=1379261174]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 22.0
+offset_right = 78.0
+offset_bottom = 78.0
+mouse_filter = 2
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SunGroup" type="Control" parent="Content" unique_id=1894906023]
+anchors_preset = 0
+offset_left = 177.0
+offset_top = 190.0
+offset_right = 717.0
+offset_bottom = 450.0
+
+[node name="Sun2" type="Control" parent="Content/SunGroup" unique_id=711105391]
+anchors_preset = 0
+offset_right = 191.0
+offset_bottom = 260.0
+
+[node name="SunImg" parent="Content/SunGroup/Sun2" unique_id=17106305 instance=ExtResource("7")]
+layout_mode = 0
+scale = Vector2(0.37304688, 0.37304688)
+auto_idle_loop = false
+owns_checked_visual = false
+
+[node name="SunFromNum" type="Label" parent="Content/SunGroup/Sun2" unique_id=326353232]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 212.0
+offset_right = 191.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.94509804, 0.5764706, 0.1254902, 1)
+theme_override_constants/line_spacing = -62
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 70
+text = "63"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sun1" type="Control" parent="Content/SunGroup" unique_id=545409856]
+anchors_preset = 0
+offset_left = 349.0
+offset_right = 540.0
+offset_bottom = 260.0
+
+[node name="SunImg" parent="Content/SunGroup/Sun1" unique_id=1020979921 instance=ExtResource("7")]
+modulate = Color(1, 1, 1, 0.2)
+layout_mode = 0
+scale = Vector2(0.37304688, 0.37304688)
+auto_idle_loop = false
+owns_checked_visual = false
+
+[node name="SunToNum" type="Label" parent="Content/SunGroup/Sun1" unique_id=461608029]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 212.0
+offset_right = 191.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.69803923, 0.53333336, 0.5294118, 1)
+theme_override_constants/line_spacing = -62
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 70
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Arrow" type="Control" parent="Content/SunGroup" unique_id=2120937038]
+anchors_preset = 0
+offset_left = 224.0
+offset_top = 74.0
+offset_right = 323.0
+offset_bottom = 114.0
+
+[node name="ArrowImg" type="TextureRect" parent="Content/SunGroup/Arrow" unique_id=2005974499]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Info" type="Control" parent="Content" unique_id=1580348289]
+anchors_preset = 0
+offset_left = 50.0
+offset_top = 488.0
+offset_right = 850.0
+offset_bottom = 868.0
+
+[node name="PopupBg" type="Panel" parent="Content/Info" unique_id=1960074806]
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 302.0
+theme_override_styles/panel = SubResource("SB_infobox")
+
+[node name="InfoText" type="RichTextLabel" parent="Content/Info" unique_id=1273708977]
+unique_name_in_owner = true
+auto_translate_mode = 2
+layout_mode = 0
+offset_left = 25.0
+offset_top = 36.0
+offset_right = 775.0
+offset_bottom = 266.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.5764706, 0.3529412, 0.3529412, 1)
+theme_override_constants/line_separation = 13
+theme_override_fonts/normal_font = ExtResource("10")
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("11")
+max_font_size = 54
+min_font_size = 34
+max_content_height = 230.0
+
+[node name="BtnGroup" type="Control" parent="Content" unique_id=780650721]
+anchors_preset = 0
+offset_top = 849.0
+offset_right = 900.0
+offset_bottom = 1209.0
+
+[node name="RestoreBtn" parent="Content/BtnGroup" unique_id=2119874454 instance=ExtResource("12")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 56.0
+offset_top = -68.0
+offset_right = 840.0
+offset_bottom = 190.0
+btn_text = "STREAK_REVIVE_RESTORE"
+btn_icon = ExtResource("13")
+show_difficult = false
+
+[node name="GiveUpBtn" parent="Content/BtnGroup" unique_id=200677319 instance=ExtResource("12")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 56.0
+offset_top = 132.0
+offset_right = 840.0
+offset_bottom = 390.0
+bg_color = Color(1, 0.9843137, 0.96862745, 1)
+btn_text = "STREAK_REVIVE_GIVE_UP"
+text_color = Color(0.7538461, 0.4546269, 0.25514755, 1)
+show_difficult = false
+show_shadow = false
+border_color = Color(0.7538461, 0.4546269, 0.25514755, 1)
+border_width = 4

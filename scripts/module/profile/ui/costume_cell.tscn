@@ -1,0 +1,158 @@
+[gd_scene format=3 uid="uid://c4gho8pyfeh6h"]
+
+[ext_resource type="Script" uid="uid://cn0x21j57ljt8" path="res://scripts/module/profile/view/costume_cell.gd" id="1"]
+[ext_resource type="Shader" uid="uid://cofjp2u3mfkht" path="res://assets/shaders/avatar_round_corner.gdshader" id="2"]
+[ext_resource type="Texture2D" uid="uid://cghp5yq6uv2m6" path="res://assets/sprites/profile/avatars/head_0000.png" id="3"]
+[ext_resource type="Shader" uid="uid://bsqg4tcgbjpaq" path="res://assets/shaders/silhouette_fill.gdshader" id="4"]
+[ext_resource type="Texture2D" uid="uid://bm0qoigw8gnjr" path="res://assets/sprites/profile/costume_trial_timer.png" id="5"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="6"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="7"]
+[ext_resource type="Texture2D" uid="uid://cqwn2iao5fo88" path="res://assets/sprites/profile/select_check.png" id="8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_round"]
+shader = ExtResource("2")
+shader_parameter/size_px = Vector2(155, 155)
+shader_parameter/radius_px = 20.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p2mol"]
+resource_local_to_scene = true
+shader = ExtResource("4")
+shader_parameter/fill_color = Color(0.93333334, 0.8509804, 0.7607843, 1)
+shader_parameter/fill_amount = 0.0
+
+[sub_resource type="StyleBoxFlat" id="sb_badge"]
+bg_color = Color(0.26666668, 0.21960784, 0.21960784, 0.7)
+corner_radius_top_left = 19
+corner_radius_top_right = 19
+
+[sub_resource type="StyleBoxFlat" id="sb_check"]
+bg_color = Color(0.007843138, 0.74509805, 0.32156864, 1)
+corner_radius_top_left = 29
+corner_radius_top_right = 29
+corner_radius_bottom_right = 29
+corner_radius_bottom_left = 29
+
+[node name="CostumeCell" type="Control" unique_id=171599087]
+custom_minimum_size = Vector2(185, 185)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 185.0
+offset_bottom = 185.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1")
+
+[node name="Base" type="TextureRect" parent="." unique_id=1881153948]
+material = SubResource("ShaderMaterial_round")
+layout_mode = 0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 170.0
+offset_bottom = 170.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CatSlot" type="Control" parent="." unique_id=1733218410]
+clip_contents = true
+anchors_preset = 0
+offset_right = 185.0
+offset_bottom = 185.0
+mouse_filter = 2
+
+[node name="CatIcon" type="TextureRect" parent="CatSlot" unique_id=1359978844]
+visible = false
+material = SubResource("ShaderMaterial_p2mol")
+layout_mode = 0
+offset_left = 21.5
+offset_top = 21.5
+offset_right = 163.5
+offset_bottom = 163.5
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CatAnchor" type="Node2D" parent="CatSlot" unique_id=1140610395]
+position = Vector2(93, 152)
+scale = Vector2(0.5126, 0.5126)
+
+[node name="TrialBadge" type="Control" parent="." unique_id=173717178]
+visible = false
+anchors_preset = 0
+offset_left = 15.5
+offset_top = 14.5
+offset_right = 170.5
+offset_bottom = 52.5
+mouse_filter = 2
+
+[node name="Bg" type="Panel" parent="TrialBadge" unique_id=1915814437]
+layout_mode = 0
+offset_right = 155.0
+offset_bottom = 36.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sb_badge")
+
+[node name="TimerIcon" type="TextureRect" parent="TrialBadge" unique_id=1915814438]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 3.0
+offset_right = 53.0
+offset_bottom = 33.0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="Label" parent="TrialBadge" unique_id=2079414353]
+layout_mode = 0
+offset_left = 50.0
+offset_right = 132.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 26
+text = "22:55"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
+max_font_size = 26
+min_font_size = 18
+fit_height_single_line = false
+
+[node name="Check" type="Control" parent="." unique_id=715880816]
+visible = false
+anchors_preset = 0
+offset_left = 129.5
+offset_top = 125.5
+offset_right = 187.5
+offset_bottom = 183.5
+mouse_filter = 2
+
+[node name="CircleBg" type="Panel" parent="Check" unique_id=1217866411]
+layout_mode = 0
+offset_right = 58.0
+offset_bottom = 58.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sb_check")
+
+[node name="CheckMark" type="TextureRect" parent="Check" unique_id=1229511660]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 16.0
+offset_right = 49.0
+offset_bottom = 45.0
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+
+[node name="ClickBtn" type="Button" parent="." unique_id=1950776449]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[connection signal="button_down" from="ClickBtn" to="." method="_on_click_down"]
+[connection signal="pressed" from="ClickBtn" to="." method="_on_click_pressed"]

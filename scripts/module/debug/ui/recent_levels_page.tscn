@@ -1,0 +1,94 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://of6ol1i3tdw0" path="res://scripts/module/debug/view/recent_levels_page.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="sf_header"]
+bg_color = Color(1, 1, 1, 0.95)
+border_width_bottom = 1
+border_color = Color(0.886, 0.91, 0.941, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="sf_back_btn"]
+content_margin_left = 22.0
+content_margin_right = 22.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="sf_transparent"]
+bg_color = Color(0, 0, 0, 0)
+
+[node name="RecentLevelsPage" type="Control" unique_id=401254253]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1675701775]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.961, 0.941, 1, 1)
+
+[node name="Header" type="PanelContainer" parent="." unique_id=401273565]
+z_index = 10
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 194.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("sf_header")
+
+[node name="HBox" type="HBoxContainer" parent="Header" unique_id=2132765486]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="BackBtn" type="Button" parent="Header/HBox" unique_id=1205804461]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.388, 0.4, 0.945, 1)
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("sf_back_btn")
+theme_override_styles/pressed = SubResource("sf_back_btn")
+theme_override_styles/hover = SubResource("sf_back_btn")
+theme_override_styles/focus = SubResource("sf_transparent")
+text = "< Back"
+
+[node name="TitleLabel" type="Label" parent="Header/HBox" unique_id=357578100]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.118, 0.106, 0.294, 1)
+theme_override_font_sizes/font_size = 38
+text = "最近关卡 · 同构检测"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightSpacer" type="Control" parent="Header/HBox" unique_id=953721697]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=144837207]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 194.0
+grow_horizontal = 2
+grow_vertical = 2
+scroll_vertical_custom_step = 80.0
+
+[node name="Grid" type="GridContainer" parent="ScrollContainer" unique_id=1641671786]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 24
+columns = 3
+
+[connection signal="pressed" from="Header/HBox/BackBtn" to="." method="_on_back_btn_pressed"]

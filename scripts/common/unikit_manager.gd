@@ -1,5 +1,4 @@
-## UniKit 第三方 SDK（归因 / AB 实验 / 广告 / 推送 / Crashlytics）的 GDScript 封装，autoload 名 UniKitManager
-## 原生插件不存在时自动退化成「离线适配层」：接口照样能调，只是返回保守默认值，业务无需分平台判断
+## 游戏侧 SDK 门面：协调广告会话、奖励补偿、通知、统计与实验，并保留编辑器模拟入口。
 extends Node
 
 # ---- 信号：推送权限、设备标识、广告结果 ----
@@ -7,6 +6,7 @@ extends Node
 signal push_permission_done
 ## 原生 LUID 就绪（客服工单与 AB 上报会用到）
 signal luid_ready(luid: String)
+signal usertag_ready(data: Dictionary)
 ## 广告关闭，参数是广告位（interstitial / reward / banner …）
 signal ad_closed(placement_id: String)
 ## 激励视频看完并确认发奖
@@ -19,6 +19,8 @@ signal ad_shown(placement_id: String)
 signal ad_error_occurred(placement_id: String, msg: String)
 ## 收到曝光回调，data 是原生 JSON 解析后的字典
 signal ad_impression_received(data: Dictionary)
+
+signal ad_loaded(placement_id: String)
 ## 收到推送下发的指令 JSON，由业务侧自行解析
 signal push_cmd_received(cmd_json: String)
 
@@ -35,8 +37,8 @@ signal abtest_ready(user_info: Dictionary)
 signal abtest_params_updated(update_type: String, user_info: Dictionary)
 ## 远端 AB 配置拉取完成
 signal abtest_remote_config_ready
-## 本地服务（locsrv）AB 参数拉取结束，success 为 false 时带错误串
-signal abtest_locsrv_fetched(success: bool, error: String)
+
+signal abtest_locsrv_fetched(success: bool)
 
 # ---- 信号：合规与授权 ----
 ## CMP（GDPR 等隐私同意）流程结束
@@ -66,9 +68,7 @@ const PUSH_PERMISSION_TYPE_SYSTEM_AND_SETTING: int = 2
 ## 只引导去系统设置页
 const PUSH_PERMISSION_TYPE_SETTING: int = 3
 
-# ---- 原生插件句柄与调试开关 ----
-## UniKitPlugin 原生单例；null 表示当前平台没有插件（编辑器 / 桌面），所有接口走降级分支
-var _plugin: Object = null
+const _AD_QUERY_TIMEOUT_SEC: float = 3.0
 
 ## 编辑器里强制走 ATT 测试流程（作弊指令置位，流程结束由 AttGuideHelper 复位）
 static var debug_force_editor_test: bool = false
@@ -94,9 +94,6 @@ var cheat_show_banner: bool = not OS.has_feature("editor")
 ## 作弊：模拟「视频看完却不发奖」，用于验证发奖兜底
 var _debug_reward_miss: bool = false
 
-## 是否正在等推送权限弹窗的结果（回前台时用它兜底收尾）
-var _push_permission_pending: bool = false
-
 # ---- Crashlytics 异常缓存 ----
 ## 统计未初始化时最多缓存多少条异常，超出丢最旧的
 const _CRASHLYTICS_LOG_CACHE_MAX: int = 20
@@ -106,6 +103,10 @@ var _crashlytics_log_cache: Array[Dictionary] = []
 var _is_analyze_inited: bool = false
 ## 广告模块是否已初始化
 var _is_ad_inited: bool = false
+
+var _banner_load_requested: bool = false
+
+var _banner_show_requested: bool = false
 
 # ---- 激励视频发奖兜底 ----
 ## 关广告后等这么久（秒）还没收到发奖回调，就记一笔待补发
@@ -127,162 +128,146 @@ var _reward_shown: bool = false
 var _pending_watchdogs: Dictionary = {}
 
 
-# ================= 生命周期 =================
-## autoload 启动：抓原生单例、把原生信号逐个接到转发回调，并用 SDK 数据补齐首开时间与安装版本
+## 连接 UniKit 子模块事件、配置音频恢复，并更新首次安装与版本迁移状态。
 func _ready() -> void:
-	if Engine.has_singleton("UniKitPlugin"):
-		_plugin = Engine.get_singleton("UniKitPlugin")
+	_is_analyze_inited = true
+	_flush_crashlytics_cache()
 
-		# 统计模块初始化成功
-		_plugin.analyze_init_success.connect(_on_analyze_init_success)
-		# 广告模块初始化成功
-		_plugin.ad_init_success.connect(_on_ad_init_success)
-		# 广告模块初始化失败
-		_plugin.ad_init_error.connect(_on_ad_init_error)
-		# GRT 模块初始化成功
-		_plugin.grt_init_success.connect(_on_grt_init_success)
-		# 推送模块初始化成功
-		_plugin.push_init_success.connect(_on_push_init_success)
-		# 用户标签模块初始化成功
-		_plugin.usertag_init_success.connect(_on_usertag_init_success)
-		# 内购初始化成功
-		_plugin.purchase_init_success.connect(_on_purchase_init_success)
-		# 内购初始化失败
-		_plugin.purchase_init_fail.connect(_on_purchase_init_fail)
-		# AB 参数首次就绪
-		_plugin.abtest_init.connect(_on_abtest_init)
-		# AB 参数更新
-		_plugin.abtest_updated.connect(_on_abtest_updated)
-		# 远端 AB 配置就绪
-		_plugin.abtest_remote_config_ready.connect(_on_abtest_remote_config_ready)
-		# 本地服务 AB 结果
-		_plugin.abtest_locsrv_result.connect(_on_abtest_locsrv_result)
-		# 归因（AF）回调成功
-		_plugin.af_callback_success.connect(_on_af_callback_success)
-		# 归因（AF）回调失败
-		_plugin.af_callback_fail.connect(_on_af_callback_fail)
-		# LUID 就绪
-		_plugin.luid_ready.connect(_on_luid_ready)
-		# 广告关闭
-		_plugin.ad_closed.connect(_on_ad_closed)
-		# 激励视频发奖
-		_plugin.ad_rewarded.connect(_on_ad_rewarded)
-
-		# ad_shown 是可选信号：某些插件版本没有，先探测再连
-		if _plugin.has_signal("ad_shown"):
-			_plugin.ad_shown.connect(_on_ad_shown)
-		# 广告出错
-		_plugin.ad_error.connect(_on_ad_error)
-		# 广告曝光
-		_plugin.ad_impression.connect(_on_ad_impression)
-		# 推送权限结果
-		_plugin.push_permission_result.connect(_on_push_permission_result)
-		# 推送下发的指令
-		_plugin.push_cmd_received.connect(_on_push_cmd_received)
-
-		# 隐私合规（CMP）流程结束
-		_plugin.cmp_completed.connect(_on_cmp_completed)
-
-		# ATT 相关信号只有 iOS 原生提供
-		if OS.has_feature("ios"):
-			_plugin.att_status_changed.connect(_on_att_status_changed)
-			_plugin.att_dismissed.connect(_on_att_dismissed)
-	# 没有原生插件：打印一行提示，之后所有接口都走离线降级实现
+	if UniKit.ad_module.is_ad_inited():
+		_on_ad_init_success()
 	else:
-		print("UniKitPlugin not available; offline adapter active")
+		UniKit.ad_module.ad_init_completed.connect(_on_ad_init_success)
 
-	# 用 SDK 的首开时间补本地存档（本地已有值就不动）
+	UniKit.ad_module.ad_closed.connect(_on_ad_closed)
+	UniKit.ad_module.ad_rewarded.connect(_on_ad_rewarded)
+	UniKit.ad_module.ad_will_show.connect(_on_ad_shown)
+	UniKit.ad_module.ad_error_occurred.connect(_on_ad_error)
+	UniKit.ad_module.ad_impression_received.connect(_on_ad_impression)
+
+	NativeUtilManager.setup_audio_io_buffer_recovery()
+
+	UniKit.ad_module.ad_loaded.connect(
+		func(placement_id: String) -> void: ad_loaded.emit(placement_id)
+	)
+
+	UniKit.abtest_module.abtest_ready.connect(abtest_ready.emit)
+	UniKit.abtest_module.abtest_params_updated.connect(abtest_params_updated.emit)
+	UniKit.abtest_module.abtest_remote_config_ready.connect(abtest_remote_config_ready.emit)
+	UniKit.abtest_module.abtest_locsrv_fetched.connect(abtest_locsrv_fetched.emit)
+
+	UniKit.push_module.push_cmd_received.connect(push_cmd_received.emit)
+	UniKit.push_module.push_permission_done.connect(push_permission_done.emit)
+
+	UniKit.usertag_module.luid_ready.connect(luid_ready.emit)
+	UniKit.usertag_module.usertag_ready.connect(usertag_ready.emit)
+
+	UniKit.cmp_completed.connect(cmp_completed.emit)
+	UniKit.att_status_changed.connect(att_status_changed.emit)
+	UniKit.att_dismissed.connect(att_dismissed.emit)
+
 	GameState.ensure_first_open_time(get_first_open_time_ms())
-	# 同上：补齐安装版本号，客服工单会带上它
-	GameState.ensure_install_version(get_version_name())
+	var current_version: String = get_version_name()
+	GameState.ensure_install_version(current_version)
+
+	NormalLevelGroupTag.update_missing_tag_on_startup(
+		GameState.get_current_level(), GameState.is_first_session()
+	)
+
+	GameState.resolve_version_upgrade(current_version)
 
 
-# ================= 基础能力查询（在线 / 隐私 / CMP） =================
-## 原生插件是否可用（编辑器与桌面端为 false）
-func is_available() -> bool:
-	return _plugin != null
+## 退出场景树时清理原生单例保存的自定义回调引用。
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_EXIT_TREE:
+		_disconnect_native_lambda_callables()
 
 
-## 是否在线；没有插件时按「在线」处理，避免单机流程被网络判断拦住
-func is_online() -> bool:
-	if _plugin == null:
-		return true
-	return _plugin.isOnline()
-
-
-## 是否需要弹隐私政策同意；无插件时返回 false
-func check_privacy_required() -> bool:
-	if _plugin == null:
-		return false
-	return _plugin.checkPrivacyUiRequired()
-
-
-## 同意隐私政策（写进原生 SDK）
-func agree_privacy() -> void:
-	if _plugin == null:
+## 断开原生信号中的自定义 Callable，避免退出后继续持有脚本闭包。
+func _disconnect_native_lambda_callables() -> void:
+	if not Engine.has_singleton("UniKitPlugin"):
 		return
-	_plugin.agreePrivacyPolicy()
+	var plugin: Object = Engine.get_singleton("UniKitPlugin")
+	var sig_list: Array = plugin.get_signal_list()
+	for sig: Dictionary in sig_list:
+		var sig_name: String = sig["name"]
+		var conns: Array = plugin.get_signal_connection_list(sig_name)
+		for conn: Dictionary in conns:
+			var cb: Callable = conn["callable"]
+			if cb.is_custom():
+				plugin.disconnect(sig_name, cb)
 
 
-## 是否已同意隐私政策
-func is_privacy_agreed() -> bool:
-	if _plugin == null:
+## 查询底层原生 UniKit 是否可用，供游戏选择原生或回退路径。
+func is_available() -> bool:
+	return UniKit.is_available()
+
+
+var _mock_offline: bool = false
+
+var _mock_no_fill: bool = false
+
+
+## 优先采用调试离线开关，否则查询平台网络状态。
+func is_online() -> bool:
+	if _mock_offline:
 		return false
-	return _plugin.isPrivacyPolicyAgreed()
+	return NativeUtilManager.is_online()
 
 
-## 触发 CMP 检查；on_done 会在流程结束时一次性回调（无插件时用 call_deferred 立即回调，保证调用方走到同一条路）
+## 读取原生网络类型；没有插件时返回 unknown。
+func get_network_type() -> String:
+	return NativeUtilManager.get_network_type()
+
+
+## 查询原生 SDK 是否要求展示隐私界面，插件缺失时返回 false。
+func check_privacy_required() -> bool:
+	return UniKit.check_privacy_required()
+
+
+## 通知原生 SDK 用户已同意隐私条款。
+func agree_privacy() -> void:
+	UniKit.agree_privacy()
+
+
+## 查询原生持久化的隐私同意状态。
+func is_privacy_agreed() -> bool:
+	return UniKit.is_privacy_agreed()
+
+
+## 注册一次性业务回调，完成转化报告注册后发起 CMP 检查。
 func check_cmp(on_done: Callable = Callable()) -> void:
-	# 调用方给了回调就挂一次性连接
 	if on_done.is_valid():
 		cmp_completed.connect(on_done, CONNECT_ONE_SHOT)
-	# 没有原生插件也必须发信号，否则 await 的调用方会永远等下去
-	if _plugin == null:
-		cmp_completed.emit.call_deferred()
-		return
-	_plugin.checkCMP()
+
+	UniKit.register_icm_conversion_report()
+	UniKit.check_cmp()
 
 
-## 是否必须展示 CMP 弹窗
+## 查询是否需要展示 CMP 隐私同意界面。
 func check_cmp_required() -> bool:
-	if _plugin == null:
-		return false
-	return _plugin.checkCMPUiRequired()
+	return UniKit.check_cmp_required()
 
 
-## 弹出 CMP 同意界面
+## 请求原生显示 CMP 界面。
 func show_cmp_ui() -> void:
-	if _plugin == null:
-		return
-	_plugin.showCMPUi()
+	UniKit.show_cmp_ui()
 
 
-# ================= ATT（iOS 广告跟踪授权） =================
-## 现在能不能调起 ATT 弹窗：仅 iOS，且原生说可以（编辑器测试开关下直接放行）
+## 编辑器强制测试时允许展示模拟流程，否则采用原生判断。
 func can_show_att() -> bool:
-	# 编辑器测试模式：绕过平台与原生判断
 	if OS.has_feature("editor") and debug_force_editor_test:
 		return true
-	if not OS.has_feature("ios"):
-		return false
-	if _plugin == null:
-		return false
-	return _plugin.canShowATT()
+	return UniKit.can_show_att()
 
 
-## 初始化 ATT（仅 iOS 原生有）
+## 仅在 iOS 初始化 ATT 相关原生状态。
 func init_att() -> void:
-	if _plugin == null:
-		return
-	if not OS.has_feature("ios"):
-		return
-	_plugin.initATT()
+	UniKit.init_att()
 
 
-## 弹系统 ATT 弹窗；编辑器测试模式下不碰原生，用 2 秒定时器模拟「已授权 + 弹窗关闭」
+## 编辑器测试时用 2 秒定时器模拟授权与关闭，真机交给原生接口。
 func show_att_alert(source: String) -> void:
 	if OS.has_feature("editor") and debug_force_editor_test:
-		# 编辑器模拟分支
 		print("[UniKit] (editor mock) showATTAlert source=%s,2 秒后模拟用户授权 + dismissed" % source)
 		var timer: SceneTreeTimer = Engine.get_main_loop().create_timer(2.0)
 		timer.timeout.connect(
@@ -291,45 +276,27 @@ func show_att_alert(source: String) -> void:
 				att_dismissed.emit()
 		)
 		return
-	# 无插件或非 iOS：静默返回
-	if _plugin == null:
-		return
-	if not OS.has_feature("ios"):
-		return
-	_plugin.showATTAlert(source)
+	UniKit.show_att_alert(source)
 
 
-## 读当前 ATT 授权状态；非 iOS 或无插件时返回 NOT_DETERMINED
+## 读取 iOS ATT 状态，其他环境回退到尚未询问。
 func get_att_status() -> int:
-	if _plugin == null:
-		return ATT_STATUS_NOT_DETERMINED
-	if not OS.has_feature("ios"):
-		return ATT_STATUS_NOT_DETERMINED
-	return _plugin.getATTStatus()
+	return UniKit.get_att_status()
 
 
-# ================= 账号与杂项 =================
-## 调试：让原生侧模拟一次广告加载失败（仅 iOS）
+## 仅在 iOS 原生插件可用时触发广告加载失败测试。
 func debug_mock_ad_load_fail() -> void:
-	if _plugin == null:
-		return
-	if not OS.has_feature("ios"):
-		return
-	_plugin.debugMockAdLoadFail()
+	UniKit.ad_module.debug_mock_ad_load_fail()
 
 
-## 设置账号 ID（登录后关联统计与归因）
+## 把业务账号标识交给原生 SDK，以关联统计和实验身份。
 func set_account_id(account_id: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.setAccountId(account_id)
+	UniKit.set_account_id(account_id)
 
 
-## 把隐私政策链接换成本地化版本；无插件时原样返回
+## 请求原生按地区处理隐私链接；无插件时保留原链接。
 func get_localized_privacy_url(url: String) -> String:
-	if _plugin == null:
-		return url
-	return _plugin.getLocalizedPrivacyUrl(url)
+	return UniKit.get_localized_privacy_url(url)
 
 
 # ================= 推送与本地通知 =================
@@ -338,61 +305,53 @@ func request_push_permission() -> void:
 	request_notification_permission(PUSH_PERMISSION_TYPE_SYSTEM, "app_start")
 
 
-## 申请通知权限：type 见 PUSH_PERMISSION_TYPE_*，position 只用于埋点
+## 检查平台能力后发起权限流程，无法申请时也延迟发完成信号。
 func request_notification_permission(
 	type: int = PUSH_PERMISSION_TYPE_SYSTEM_AND_SETTING, position: String = "default"
 ) -> void:
-	# 没有插件直接回调，别让调用方 await 卡住
-	if _plugin == null:
-		push_permission_done.emit.call_deferred()
-		return
-	# Android 13 以下没有通知运行时权限，「只弹系统权限」这种类型直接算完成
-	if (
-		type == PUSH_PERMISSION_TYPE_SYSTEM
-		and OS.has_feature("android")
-		and not _is_android_13_or_above()
-	):
-		push_permission_done.emit.call_deferred()
-		return
-	# 打上等待标记：弹窗期间切回前台也能收尾（见 _notification）
-	_push_permission_pending = true
-	_plugin.requestPushPermission(type, position)
+	UniKit.push_module.request_notification_permission(type, position)
 
 
-## 判断是否 Android 13 及以上（13 起才有通知运行时权限）
-static func _is_android_13_or_above() -> bool:
-	if not OS.has_feature("android"):
-		return false
-	var v: String = OS.get_version()
-	if v.is_empty():
-		return false
-	# 取主版本号（形如 "13" / "14.0"）
-	return v.split(".")[0].to_int() >= 13
-
-
-## 加一条每日重复的本地推送：本地时间 hour_local 点触发，contents 里每项会拆成一份多语言文案
+## 把本地小时数转换为下一次提醒日期，并建立 24 小时重复通知。
 func add_daily_push(
 	push_id: String, hour_local: float, contents: Array[Dictionary], disturb_type: int = 1
 ) -> void:
-	if _plugin == null:
+	UniKit.push_module.add_daily_push(push_id, hour_local, contents, disturb_type)
+
+
+## 按本地日历偏移指定天数建立每日通知，避免只用秒数推算日期。
+func add_daily_push_from_offset(
+	push_id: String,
+	day_offset: int,
+	hour_local: float,
+	contents: Array[Dictionary],
+	disturb_type: int = 1
+) -> void:
+	var plugin: Object = Engine.get_singleton("UniKitPlugin")
+	if plugin == null:
 		return
-	# 把小数小时拆成「时 + 分」
 	var target_hour: int = int(hour_local)
 	var target_minute: int = int(round((hour_local - float(target_hour)) * 60.0))
-
-	# 当前本地时间
 	var local: Dictionary = Time.get_datetime_dict_from_system()
+	if day_offset > 0:
+		var shifted: Dictionary = _local_date_offset(
+			int(local["year"]), int(local["month"]), int(local["day"]), day_offset
+		)
+		local["year"] = shifted["year"]
+		local["month"] = shifted["month"]
+		local["day"] = shifted["day"]
 
-	# 今天这个点已经过了（或正好到点）：首次触发顺延到明天
 	var advance_one_day: bool = (
-		local["hour"] > target_hour
-		or (local["hour"] == target_hour and local["minute"] >= target_minute)
+		day_offset == 0
+		and (
+			local["hour"] > target_hour
+			or (local["hour"] == target_hour and local["minute"] >= target_minute)
+		)
 	)
-	# 原生要求 contents 是字典，key 形如 <push_id>_c<序号>
+	var normalized: Array[Dictionary] = _normalize_push_contents(contents, OS.has_feature("ios"))
 	var contents_dict: Dictionary = {}
-	for i: int in range(contents.size()):
-		contents_dict["%s_c%d" % [push_id, i]] = contents[i]
-	# 推送体：每 86400000 毫秒（24 小时）重复一次，不限次数
+	for i: int in range(normalized.size()):
+		contents_dict["%s_c%d" % [push_id, i]] = normalized[i]
 	var push_data: Dictionary = {
 		"push_id": push_id,
 		"local_year": local["year"],
@@ -405,186 +364,221 @@ func add_daily_push(
 		"repeat_interval_ms": 86400000,
 		"is_infinite_repeat": true,
 		"disturb_type": disturb_type,
-		"contents": contents_dict
+		"contents": contents_dict,
 	}
+
 	print(
-		(
-			"[UniKit] add_daily_push: push_id=%s hour=%.1f contents_count=%d disturb=%d"
-			% [push_id, hour_local, contents.size(), disturb_type]
-		)
+		"[UniKitManager] add_daily_push_from_offset: %s" % JSON.stringify(push_data).substr(0, 300)
 	)
-	_plugin.saveLocalPush(JSON.stringify(push_data))
+	plugin.saveLocalPush(JSON.stringify(push_data))
 
 
-## 删掉指定 id 的本地推送
-func remove_push(push_id: String) -> void:
-	if _plugin == null:
-		return
-	print("[UniKit] remove_push: push_id=%s" % push_id)
-	_plugin.removeLocalPush(push_id)
+const _PUSH_CONTENT_FIELDS: Dictionary = {
+	"title": {"ios": true, "type": TYPE_STRING},
+	"content": {"ios": true, "type": TYPE_STRING},
+	"large_icon": {"ios": true, "type": TYPE_STRING},
+	"content_image": {"ios": true, "type": TYPE_STRING},
+	"sound": {"ios": true, "type": TYPE_STRING},
+	"bg_color": {"ios": false, "type": TYPE_STRING},
+	"btn_bg_color": {"ios": false, "type": TYPE_STRING},
+	"btn_content": {"ios": false, "type": TYPE_STRING},
+	"bg_image": {"ios": false, "type": TYPE_STRING},
+	"vibrate": {"ios": false, "type": TYPE_BOOL},
+	"title_night": {"ios": false, "type": TYPE_STRING},
+	"content_night": {"ios": false, "type": TYPE_STRING},
+	"large_icon_night": {"ios": false, "type": TYPE_STRING},
+}
 
 
-## 清空所有本地推送
-func remove_all_pushes() -> void:
-	if _plugin == null:
-		return
-	print("[UniKit] remove_all_pushes")
-	_plugin.removeAllLocalPush()
+## 按字段白名单、平台与类型过滤通知内容，保留原业务的候选内容顺序。
+static func _normalize_push_contents(
+	contents: Array[Dictionary], is_ios: bool
+) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for raw: Dictionary in contents:
+		var item: Dictionary = {}
+		for content_key: Variant in raw:
+			var key: String = str(content_key)
+			if not _PUSH_CONTENT_FIELDS.has(key):
+				push_warning("[UniKitManager] push content 未知字段「%s」,剔除" % key)
+				continue
+			var field: Dictionary = _PUSH_CONTENT_FIELDS[key]
+			if is_ios and not field["ios"]:
+				continue
+			var value_type: int = typeof(raw[content_key])
+			if value_type != int(field["type"]):
+				push_warning(
+					(
+						"[UniKitManager] push content 字段「%s」类型不符(%d != %d),剔除"
+						% [key, value_type, int(field["type"])]
+					)
+				)
+				continue
+			item[key] = raw[content_key]
+		out.append(item)
+	return out
 
 
-## 打开 / 关闭推送总开关
-func set_push_enabled(enabled: bool) -> void:
-	if _plugin == null:
-		return
-	_plugin.enablePush(enabled)
+## 把日历日期转为连续日数后偏移，再转回年月日。
+static func _local_date_offset(year: int, month: int, day: int, days: int) -> Dictionary:
+	var jdn: int = _date_to_jdn(year, month, day) + days
+	return _jdn_to_date(jdn)
 
 
-## 推送总开关当前是否打开
-func is_push_enabled() -> bool:
-	if _plugin == null:
-		return false
-	return _plugin.isEnablePush()
+## 将公历日期转换为儒略日编号，便于跨月跨年加减整天。
+static func _date_to_jdn(year: int, month: int, day: int) -> int:
+	var a: int = (14 - month) / 12
+	var y: int = year + 4800 - a
+	var m: int = month + 12 * a - 3
+	return day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045
 
 
-## 系统通知权限是否已开
-func is_notification_permission_enabled() -> bool:
-	if _plugin == null:
-		return false
-	return _plugin.isNotificationPermissionEnabled()
-
-
-## 是否允许跳系统设置页引导（部分商店包会禁用）
-func is_goto_setting_enabled() -> bool:
-	if _plugin == null:
-		return false
-	return _plugin.isGotoSettingEnabled()
-
-
-## 调试用：安排一条 5 秒后立刻触发的测试推送
-func trigger_test_push(push_id: String, title: String, content: String) -> void:
-	if _plugin == null:
-		return
-	# 先删同 id，保证能反复触发
-	_plugin.removeLocalPush(push_id)
-	var now_ms: int = int(Time.get_unix_time_from_system() * 1000)
-	# 5 秒后触发一次，不重复
-	var push_data: Dictionary = {
-		"push_id": push_id,
-		"push_time_ms": now_ms + 5000,
-		"repeat_interval_ms": 0,
-		"is_infinite_repeat": false,
-		"disturb_type": 0,
-		"contents": {"c0": {"title": title, "content": content}}
+## 将连续日编号还原为公历年月日。
+static func _jdn_to_date(jdn: int) -> Dictionary:
+	var a: int = jdn + 32044
+	var b: int = (4 * a + 3) / 146097
+	var c: int = a - (146097 * b) / 4
+	var d: int = (4 * c + 3) / 1461
+	var e: int = c - (1461 * d) / 4
+	var m: int = (5 * e + 2) / 153
+	return {
+		"year": 100 * b + d - 4800 + m / 10,
+		"month": m + 3 - 12 * (m / 10),
+		"day": e - (153 * m + 2) / 5 + 1,
 	}
-	_plugin.saveLocalPush(JSON.stringify(push_data))
 
 
-## 注册推送指令回调（推送下发 JSON 时会发 push_cmd_received）
+## 取消原生层保存的指定通知。
+func remove_push(push_id: String) -> void:
+	UniKit.push_module.remove_push(push_id)
+
+
+## 清除原生层保存的全部本地通知。
+func remove_all_pushes() -> void:
+	UniKit.push_module.remove_all_pushes()
+
+
+## 设置 SDK 的通知总开关，独立于系统授权状态。
+func set_push_enabled(enabled: bool) -> void:
+	UniKit.push_module.set_push_enabled(enabled)
+
+
+## 查询 SDK 的通知总开关。
+func is_push_enabled() -> bool:
+	return UniKit.push_module.is_push_enabled()
+
+
+## 读取系统通知许可，iOS 临时授权也视为可通知。
+func is_notification_permission_enabled() -> bool:
+	return await UniKit.push_module.is_notification_permission_enabled()
+
+
+## 查询原生层是否允许引导用户前往通知设置。
+func is_goto_setting_enabled() -> bool:
+	return UniKit.push_module.is_goto_setting_enabled()
+
+
+## 按 Android 版本或 iOS 授权状态判断当前申请入口是否可用。
+func can_request_permission(type: int = PUSH_PERMISSION_TYPE_SYSTEM_AND_SETTING) -> bool:
+	return await UniKit.push_module.can_request_permission(type)
+
+
+## 先移除同名通知，再建立 5 秒后触发的单次测试提醒。
+func trigger_test_push(
+	push_id: String, title: String, content: String, extra: Dictionary = {}
+) -> void:
+	UniKit.push_module.trigger_test_push(push_id, title, content, extra)
+
+
+## 注册原生命令回调，使通知携带的命令进入模块信号。
 func register_cmd_callback() -> void:
-	if _plugin == null:
-		return
-	_plugin.registerCmdCallback()
+	UniKit.push_module.register_cmd_callback()
 
 
-# ================= 用户标签与设备标识 =================
-## 读内置标签（媒体来源、流程域等），客服工单与埋点会用到
+## 查询标签模块是否已收到首份有效原生数据。
+func is_usertag_inited() -> bool:
+	return UniKit.usertag_module._is_usertag_data_ready
+
+
+## 读取缓存中的 SDK 内部标签，不触发新的原生查询。
 func get_inner_tags() -> Dictionary:
-	if _plugin == null:
-		return {}
-	return JSON.parse_string(_plugin.getInnerTagJson())
+	return await UniKit.usertag_module.get_inner_tags()
 
 
-## 读本地标签（业务自己写进去的 KV）
+## 读取缓存中的本地单值标签。
 func get_local_tags() -> Dictionary:
-	if _plugin == null:
-		return {}
-	return JSON.parse_string(_plugin.getLocalTagJson())
+	return await UniKit.usertag_module.get_local_tags()
 
 
-## 读远端下发的标签
+## 读取缓存中的远端单值标签。
 func get_remote_tags() -> Dictionary:
-	if _plugin == null:
-		return {}
-	return JSON.parse_string(_plugin.getRemoteTagJson())
+	return await UniKit.usertag_module.get_remote_tags()
 
 
-## 写一个本地标签
+## 向原生标签系统写入一个本地单值标签。
 func add_local_tag(key: String, value: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.addLocalTag(key, value)
+	UniKit.usertag_module.add_local_tag(key, value)
 
 
-## 写一个列表型本地标签（数组序列化成 JSON 存）
+## 把列表序列化为 JSON 后写入原生本地标签。
 func add_local_list_tag(key: String, values: Array) -> void:
-	if _plugin == null:
-		return
-	_plugin.addLocalListTag(key, JSON.stringify(values))
+	UniKit.usertag_module.add_local_list_tag(key, values)
 
 
-## 删掉一个本地标签
+## 请求原生移除指定本地标签。
 func remove_local_tag(key: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.removeLocalTag(key)
+	UniKit.usertag_module.remove_local_tag(key)
 
 
-## 读 LUID（SDK 侧用户标识，客服与 AB 上报用）
+## 读取原生用户标识；尚无插件时返回空串。
 func get_luid() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.getLuid()
+	return UniKit.usertag_module.get_luid()
 
 
-## 注册 LUID 监听，就绪后触发 luid_ready
-func add_luid_listener() -> void:
-	if _plugin == null:
-		return
-	_plugin.addLuidListener()
+## 注册原生用户标识就绪监听，结果由宿主转发。
+func set_luid_listener() -> void:
+	UniKit.usertag_module.set_luid_listener()
 
 
-# ================= 广告（插屏 / 激励 / Banner） =================
-## 预加载某类广告（placement_id：reward / interstitial / banner）
+var _ad_query_channels: Dictionary = {}
+
+
+## 同通道查询串行执行，并限制实际异步查询等待 3 秒，超时按未就绪处理。
+func _query_with_timeout(coro: Callable, channel: String = "") -> bool:
+	while not channel.is_empty() and _ad_query_channels.has(channel):
+		await get_tree().process_frame
+	if not channel.is_empty():
+		_ad_query_channels[channel] = true
+	var state: Dictionary = {"done": false, "result": false}
+	var runner := func() -> void:
+		var result: bool = await coro.call()
+		state.result = result
+		state.done = true
+	runner.call()
+	var start_ms: int = Time.get_ticks_msec()
+	while (
+		not state.done and (Time.get_ticks_msec() - start_ms) < int(_AD_QUERY_TIMEOUT_SEC * 1000.0)
+	):
+		await get_tree().process_frame
+	if not channel.is_empty():
+		_ad_query_channels.erase(channel)
+	return state.result if state.done else false
+
+
+## 请求原生加载指定广告位，加载完成另由信号通知。
 func load_ad(placement_id: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.loadAd(placement_id)
+	print("[UniKit-DEBUG] load_ad called: placement=%s" % placement_id)
+	UniKit.ad_module.load_ad(placement_id)
 
 
-## 展示插屏：调试开关关闭或首局新手流程时不打扰；先埋点登记，再判断是否已就绪
-func show_interstitial(placement_id: String, position: String) -> void:
-	if _plugin == null:
-		return
-	# 调试总开关关掉：完全不展示
-	if not _debug_ad_enabled:
-		return
-	# 首次会话（新手）不弹插屏
-	if GameState.is_first_session():
-		return
-	# 每次展示生成唯一 show_id，用来串起埋点与曝光回调
-	var show_id: String = _plugin.createShowId()
-
-	# 先埋点并登记 show_id / position，曝光回来才认得出来
-	Tracker.track_ad_show_timing(show_id, placement_id, placement_id, position)
-	Tracker.remember_ad_show_id(placement_id, show_id)
-	_pending_ad_positions[placement_id] = position
-	# 已就绪才真正交给原生展示
-	if _plugin.isAdReady(placement_id, position, show_id):
-		_plugin.showAd(placement_id, position, show_id)
-
-
-## 用现成的 show_id 展示插屏；返回值表示是否走了展示分支（含 Mock）
+## 检查调试开关后选择模拟或原生展示；就绪检查由调用链其他阶段负责。
 func try_show_interstitial(placement_id: String, position: String, show_id: String) -> bool:
-	# 作弊开关关掉（编辑器默认）：不展示
 	if not cheat_show_interstitial:
 		return false
-	# 编辑器里改用 Mock 界面模拟
 	if _is_ad_mock_enabled():
 		_mock_show_ad(placement_id, position)
 		return true
-	if _plugin == null:
-		return false
-	_plugin.showAd(placement_id, position, show_id)
+	UniKit.ad_module.show_ad(placement_id, position, show_id)
 
 	return true
 
@@ -594,6 +588,11 @@ func get_interstitial_cd_sec() -> int:
 	return ABTestManager.inter_cd_lc.get_cd_sec()
 
 
+## 记录当前 Unix 秒时间，作为下一次插屏冷却计算起点。
+func reset_interstitial_cd() -> void:
+	_last_interstitial_close_unix = int(Time.get_unix_time_from_system())
+
+
 ## 是否还在插屏冷却期内
 func is_interstitial_in_cd() -> bool:
 	var cd_sec: int = get_interstitial_cd_sec()
@@ -601,82 +600,125 @@ func is_interstitial_in_cd() -> bool:
 	return now - _last_interstitial_close_unix < cd_sec
 
 
-## 展示激励视频：作弊开关关掉时直接发奖；reward 位会开一次发奖会话用于超时兜底
+## 按调试开关选择直接发奖或模拟广告，真机展示前登记激励会话。
 func show_reward(placement_id: String, position: String, show_id: String) -> void:
-	# 作弊开关关掉：不播广告，直接当成看完发奖
 	if not cheat_show_reward:
 		_grant_reward_directly(placement_id)
 		return
-	# 编辑器里改用 Mock 界面模拟
 	if _is_ad_mock_enabled():
 		_mock_show_ad(placement_id, position)
 		return
-	if _plugin == null:
-		return
 
-	# 只有 reward 位需要发奖兜底会话
-	if placement_id == "reward":
+	if placement_id == AdPlacement.REWARD:
 		_start_reward_session(show_id, position)
-	_plugin.showAd(placement_id, position, show_id)
+	UniKit.ad_module.show_ad(placement_id, position, show_id)
 
 
-## 生成原生认可的 show_id；无插件时返回空串
-func gen_show_id() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.createShowId()
+## 记录一次广告展示时机，并取得后续查询与展示使用的 show_id。
+func stats_ad_show_timing(placement_id: String, position: String) -> String:
+	return UniKit.ad_module.stats_ad_show_timing(placement_id, position)
 
 
-## 激励视频是否已加载好；顺带登记 show_id / position 与埋点
+## 记录广告位在指定展示时机变为有效的埋点。
+func stats_ad_became_valid(placement_id: String, position: String, show_id: String) -> void:
+	UniKit.ad_module.stats_ad_became_valid(placement_id, position, show_id)
+
+
+## 记录展示流水并限时查询激励广告就绪状态，失败时发布不可展示原因。
 func is_reward_ready(placement_id: String, position: String, show_id: String) -> bool:
+	if _mock_no_fill:
+		return false
 	if _is_ad_mock_enabled():
 		return true
-	if _plugin == null:
+	if not UniKit.is_available():
+		_emit_ad_not_ready(AdPlacement.REWARD, placement_id, position, "not_available")
 		return false
 
-	Tracker.track_ad_show_timing(show_id, placement_id, placement_id, position)
-	Tracker.remember_ad_show_id(placement_id, show_id)
-	_pending_ad_positions[placement_id] = position
-	return _plugin.isAdReady(placement_id, position, show_id)
+	var query: Callable = func() -> bool:
+		Tracker.remember_ad_show_id(placement_id, show_id)
+		_pending_ad_positions[placement_id] = position
+		return await UniKit.ad_module.is_ad_ready(placement_id, position, show_id)
+	var ready: bool = await _query_with_timeout(query, "ready:%s" % placement_id)
+	if not ready:
+		_emit_ad_not_ready(AdPlacement.REWARD, placement_id, position, "no_fill")
+	return ready
 
 
-## 插屏是否已加载好；同样会登记埋点信息
+## 记录插屏流水并限时查询就绪状态，原生不可用时发布失败事件。
 func is_interstitial_ready(placement_id: String, position: String, show_id: String) -> bool:
 	if _is_ad_mock_enabled():
 		return true
-	if _plugin == null:
+	if not UniKit.is_available():
+		_emit_ad_not_ready(AdPlacement.INTERSTITIAL, placement_id, position, "not_available")
 		return false
-	Tracker.track_ad_show_timing(show_id, placement_id, placement_id, position)
+
 	Tracker.remember_ad_show_id(placement_id, show_id)
 	_pending_ad_positions[placement_id] = position
-	return _plugin.isAdReady(placement_id, position, show_id)
+	var ready: bool = await _query_with_timeout(
+		func() -> bool: return await UniKit.ad_module.is_ad_ready(placement_id, position, show_id)
+	)
+	if not ready:
+		_emit_ad_not_ready(AdPlacement.INTERSTITIAL, placement_id, position, "no_fill")
+	return ready
 
 
-## 激励视频是否仍然有效（展示前校验，防止过期）
+## 通过 EventBus 发布广告位、业务位置和不可展示原因，供诊断与埋点消费。
+func _emit_ad_not_ready(
+	kind: String, placement_id: String, position: String, reason: String
+) -> void:
+	if not is_instance_valid(EventBus):
+		return
+	(
+		EventBus
+		. emit_event(
+			EventName.AD_NOT_READY,
+			{
+				"kind": kind,
+				"placement": placement_id,
+				"pos": position,
+				"reason": reason,
+			}
+		)
+	)
+
+
+## 在编辑器与无填充测试之外，按广告位串行执行 3 秒限时有效性查询。
 func is_reward_valid(placement_id: String, position: String) -> bool:
+	if _mock_no_fill:
+		return false
 	if _is_ad_mock_enabled():
 		return true
-	if _plugin == null:
-		return false
-	return _plugin.isAdValid(placement_id, position)
+	var query: Callable = func() -> bool:
+		return await UniKit.ad_module.is_reward_valid(placement_id, position)
+	return await _query_with_timeout(query, "valid:%s" % placement_id)
 
 
-## Banner 是否有效
+## 模拟环境直接通过，真机执行带超时的横幅有效性查询。
 func is_banner_valid(placement_id: String, position: String) -> bool:
 	if _is_ad_mock_enabled():
 		return true
-	if _plugin == null:
-		return false
-	return _plugin.isAdValid(placement_id, position)
+	return await _query_with_timeout(
+		func() -> bool: return await UniKit.ad_module.is_banner_valid(placement_id, position)
+	)
 
 
-## 插屏是否有效
+## 模拟环境直接通过，真机执行带超时的插屏有效性查询。
 func is_interstitial_valid(placement_id: String, position: String) -> bool:
 	if _is_ad_mock_enabled():
 		return true
-	if _plugin == null:
-		return false
-	return _plugin.isAdValid(placement_id, position)
+	return await _query_with_timeout(
+		func() -> bool: return await UniKit.ad_module.is_interstitial_valid(placement_id, position)
+	)
+
+
+## 声明本适配层提供广告展示信号，供调用方检测接口能力。
+func is_ad_shown_signal_available() -> bool:
+	return true
+
+
+## 声明本适配层提供曝光信号，供调用方检测接口能力。
+func is_ad_impression_signal_available() -> bool:
+	return true
 
 
 # ================= 广告模拟（仅编辑器，用 Mock UI 顶替原生广告） =================
@@ -685,29 +727,27 @@ func _is_ad_mock_enabled() -> bool:
 	return OS.has_feature("editor")
 
 
-## 用 MockAd 界面模拟一次广告：照样发 shown / impression / closed 回调，业务逻辑与真机保持一致
+## 创建模拟展示会话并打开调试广告页，通过回调复现关闭和发奖顺序。
 func _mock_show_ad(placement_id: String, position: String) -> void:
 	var show_id: String = "mock_%d" % Time.get_ticks_usec()
-	Tracker.track_ad_show_timing(show_id, placement_id, placement_id, position)
 	Tracker.remember_ad_show_id(placement_id, show_id)
 	_pending_ad_positions[placement_id] = position
-	# 激励位先开一次会话，超时兜底才会生效
-	if placement_id == "reward":
+	if placement_id == AdPlacement.REWARD:
 		_start_reward_session(show_id, position)
 
 	_on_ad_shown(placement_id)
-	_on_ad_impression(JSON.stringify({"placement_id": placement_id, "position": position}))
 
-	# 交给 Mock UI 的两个关闭回调：普通关闭与「看完激励」
+	_on_ad_impression.call_deferred({"placement_id": placement_id, "position": position})
+
 	var on_close := func() -> void:
 		_on_ad_closed(placement_id)
 		UIManager.hide_ui(UiName.MOCK_AD)
-	# 激励回调按「发奖 → 关闭」的顺序，和真机一致
 	var on_reward_close := func() -> void:
 		_on_ad_rewarded(placement_id)
 		_on_ad_closed(placement_id)
 		UIManager.hide_ui(UiName.MOCK_AD)
-	# 弹出 Mock 广告界面，并附上定位信息与回调
+
+	var on_closed_first := func() -> void: _mock_emit_closed_first(placement_id)
 	(
 		UIManager
 		. show_ui(
@@ -717,9 +757,27 @@ func _mock_show_ad(placement_id: String, position: String) -> void:
 				"position": position,
 				"on_close": on_close,
 				"on_reward_close": on_reward_close,
+				"on_closed_first": on_closed_first,
 			}
 		)
 	)
+
+
+const _MOCK_CLOSED_FIRST_DELAY_SEC: float = 0.3
+
+
+## 先发送关闭事件，延迟 0.3 秒再发奖励，用于覆盖回调乱序场景。
+func _mock_emit_closed_first(placement_id: String) -> void:
+	UIManager.hide_ui(UiName.MOCK_AD)
+	print(
+		(
+			"[UniKit-MOCK] closed-first: emit ad_closed → %.1fs 后再 emit ad_rewarded"
+			% _MOCK_CLOSED_FIRST_DELAY_SEC
+		)
+	)
+	_on_ad_closed(placement_id)
+	await get_tree().create_timer(_MOCK_CLOSED_FIRST_DELAY_SEC).timeout
+	_on_ad_rewarded(placement_id)
 
 
 ## 用 MockBanner 界面模拟 banner（偏移与高度按 1080 基准缩放，和真机一致）
@@ -757,7 +815,17 @@ func set_debug_reward_miss(enabled: bool) -> void:
 	_debug_reward_miss = enabled
 
 
-## 展示 banner：编辑器走 Mock；真机把 1080 基准的偏移 / 高度按屏宽缩放后交给原生
+## 查询本层是否已发出横幅展示请求，用于避免重复展示。
+func is_banner_show_requested() -> bool:
+	return _banner_show_requested
+
+
+## 仅 iOS 对横幅展示请求去重，保留平台行为差异。
+func _should_dedupe_banner_show() -> bool:
+	return OS.has_feature("ios")
+
+
+## 结合调试开关、初始化状态与 iOS 去重策略展示横幅，按需触发首次加载。
 func show_banner(
 	placement_id: String,
 	position: String,
@@ -765,124 +833,146 @@ func show_banner(
 	offset_base: int = 0,
 	height_base: int = 180
 ) -> void:
-	# 作弊开关关掉：不展示
 	if not cheat_show_banner:
+		print(
+			(
+				"[Banner] show skip placement=%s position=%s reason=cheat_show_banner=false"
+				% [placement_id, position]
+			)
+		)
+		return
+	var dedupe_banner_show: bool = (
+		placement_id == AdPlacement.BANNER and _should_dedupe_banner_show()
+	)
+	if dedupe_banner_show and _banner_show_requested:
+		print(
+			(
+				"[Banner] show skip placement=%s position=%s reason=already_requested"
+				% [placement_id, position]
+			)
+		)
 		return
 	if _is_ad_mock_enabled():
+		if placement_id == AdPlacement.BANNER:
+			_banner_show_requested = true
+		print(
+			(
+				"[Banner] show route=mock placement=%s position=%s anchor_bottom=%s offset_base=%d height_base=%d"
+				% [placement_id, position, str(anchor_bottom), offset_base, height_base]
+			)
+		)
 		_mock_show_banner(placement_id, position, anchor_bottom, offset_base, height_base)
 		return
-	if _plugin == null:
-		return
-	# 以 1080 为设计基准换算到实际像素
-	var device_w_px: float = float(DisplayServer.window_get_size().x)
-	var scale: float = device_w_px / 1080.0
-	var offset_px: int = int(round(offset_base * scale))
-	var height_px: int = int(round(height_base * scale))
-	_plugin.showBanner(placement_id, position, anchor_bottom, offset_px, height_px)
+
+	if not _banner_load_requested:
+		if not _is_ad_inited:
+			print(
+				(
+					"[Banner] show skip placement=%s position=%s reason=ad_not_inited"
+					% [placement_id, position]
+				)
+			)
+			return
+		load_ad(AdPlacement.BANNER)
+		_banner_load_requested = true
+	if placement_id == AdPlacement.BANNER:
+		_banner_show_requested = true
+	print(
+		(
+			"[Banner] show route=addon placement=%s position=%s anchor_bottom=%s offset_base=%d height_base=%d"
+			% [placement_id, position, str(anchor_bottom), offset_base, height_base]
+		)
+	)
+	UniKit.ad_module.show_banner(placement_id, position, anchor_bottom, offset_base, height_base)
 
 
-## 销毁某类广告（编辑器里只处理 Mock banner）
+## 清理横幅请求状态，并按运行环境关闭模拟页或销毁原生广告。
 func destroy_ad(placement_id: String) -> void:
+	if placement_id == AdPlacement.BANNER:
+		_banner_show_requested = false
 	if _is_ad_mock_enabled():
-		if placement_id == "banner":
+		if placement_id == AdPlacement.BANNER:
+			print("[Banner] destroy route=mock placement=%s" % placement_id)
 			_mock_destroy_banner()
 		return
-	if _plugin == null:
-		return
-	_plugin.destroyAd(placement_id)
+	if placement_id == AdPlacement.BANNER:
+		print("[Banner] destroy route=addon placement=%s" % placement_id)
+	UniKit.ad_module.destroy_ad(placement_id)
 
 
-## 打开原生广告调试面板
+## 打开原生广告调试界面。
 func open_ad_debug_view() -> void:
-	if _plugin == null:
-		return
-	_plugin.openAdDebugView()
+	UniKit.ad_module.open_ad_debug_view()
 
 
-# ================= 埋点、标识与异常上报 =================
-## 上报自定义事件（params / platforms 会序列化成 JSON，platforms 默认 ["learnings"]）
+## 发送统计事件，未指定平台时默认投递到 learnings。
 func send_event(
 	event_name: String, params: Dictionary = {}, platforms: Array = [], value_to_sum: float = 0.0
 ) -> void:
-	if _plugin == null:
-		return
-	var _platforms: Array = platforms if not platforms.is_empty() else ["learnings"]
-	_plugin.sendEvent(event_name, JSON.stringify(params), JSON.stringify(_platforms), value_to_sum)
+	UniKit.analyze_module.send_event(event_name, params, platforms, value_to_sum)
 
 
-## 读 learnings 渠道 ID
+## 读取原生分析 SDK 分配的用户标识。
 func get_learnings_id() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.getLearningsId()
+	return UniKit.analyze_module.get_learnings_id()
 
 
-## 读设备 UUID
+## 读取原生统计 UUID；插件缺失时返回空串。
 func get_uuid() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.getUUID()
+	return UniKit.analyze_module.get_uuid()
 
 
-## 读版本名；没有插件时回退到 project.godot 的 config/version
+## 通过 NativeUtilManager 读取安装包版本名。
 func get_version_name() -> String:
-	if _plugin == null:
-		return ProjectSettings.get_setting("application/config/version", "") as String
-	return _plugin.getVersionName() as String
+	return NativeUtilManager.get_version_name()
 
 
-## 读版本号（build 号）
+## 通过 NativeUtilManager 读取安装包版本号。
 func get_version_code() -> int:
-	if _plugin == null:
-		return 0
-	return int(_plugin.getVersionCode())
+	return NativeUtilManager.get_version_code()
 
 
-## 读首次打开时间（毫秒时间戳，由 SDK 侧持久化）
+## 通过平台工具读取首次打开应用的毫秒时间戳。
 func get_first_open_time_ms() -> int:
-	if _plugin == null:
-		return 0
-	return int(_plugin.getFirstOpenTimeMs())
+	return NativeUtilManager.get_first_open_time_ms()
 
 
-## 设置用户属性（统计维度）
+## 设置原生统计系统的用户级属性。
 func set_user_property(key: String, value: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.setUserProperty(key, value)
+	UniKit.analyze_module.set_user_property(key, value)
 
 
-## 设置事件属性（会附到之后上报的事件上）
+## 设置原生统计系统附加到事件上的公共属性。
 func set_event_property(key: String, value: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.setEventProperty(key, value)
+	UniKit.analyze_module.set_event_property(key, value)
 
 
-## 设置 Crashlytics 用户 ID，方便按用户排查崩溃
+## 将业务用户标识交给原生崩溃统计，便于关联同一用户的异常。
 func set_crashlytics_user_id(user_id: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.setCrashlyticsUserId(user_id)
+	NativeUtilManager.set_crashlytics_user_id(user_id)
 
 
-## 上报一条异常：没给 stack 就现场抓；统计未初始化时先入缓存（上限 _CRASHLYTICS_LOG_CACHE_MAX）
+## 补齐缺失的脚本调用栈；分析未就绪时先缓存，原生工具不可用时跳过。
 func log_exception(message: String, stack: String = "") -> void:
-	if _plugin == null:
+	if not NativeUtilManager.is_available():
 		return
 
-	# 调用方没给调用栈：现场抓一份，并跳过本函数自己的栈帧
 	if stack.is_empty():
 		stack = _format_gd_backtraces(Engine.capture_script_backtraces(), 1)
-	# 统计已就绪：直接上报
 	if _is_analyze_inited:
-		_plugin.logCrashlyticsException(message, stack)
+		NativeUtilManager.log_crashlytics_exception(message, stack)
 		return
 
-	# 还没就绪：入缓存，满了丢最旧的一条
 	if _crashlytics_log_cache.size() >= _CRASHLYTICS_LOG_CACHE_MAX:
 		_crashlytics_log_cache.pop_front()
 	_crashlytics_log_cache.append({"message": message, "stack": stack})
+
+
+## 补发初始化前积累的异常，并清空本地缓存。
+func _flush_crashlytics_cache() -> void:
+	for entry in _crashlytics_log_cache:
+		NativeUtilManager.log_crashlytics_exception(entry["message"], entry["stack"])
+	_crashlytics_log_cache.clear()
 
 
 ## 把引擎的 ScriptBacktrace 数组拼成多行文本；skip_frames 用来跳过封装层自己的栈帧
@@ -905,11 +995,9 @@ func _format_gd_backtraces(backtraces: Array, skip_frames: int) -> String:
 	return "\n".join(lines)
 
 
-## 请求应用商店评分弹窗
+## 仅在 iOS 原生插件可用时请求系统评分界面。
 func request_store_review() -> void:
-	if _plugin == null:
-		return
-	_plugin.requestStoreReview()
+	NativeUtilManager.request_store_review()
 
 
 ## 统计模块是否已初始化
@@ -922,165 +1010,34 @@ func is_ad_inited() -> bool:
 	return _is_ad_inited
 
 
-# ================= 原生回调：初始化 =================
-## 统计初始化完成：把缓存里的异常补报出去，再通知业务；Cache 清空
-func _on_analyze_init_success() -> void:
-	_is_analyze_inited = true
-
-	for entry in _crashlytics_log_cache:
-		_plugin.logCrashlyticsException(entry["message"], entry["stack"])
-	_crashlytics_log_cache.clear()
-	analyze_init_completed.emit()
-
-
-## 广告初始化完成：开启曝光监听，然后按 reward → interstitial → banner 顺序懒预加载
+## 标记广告就绪并发信号，立即预加载激励广告，2 秒后预加载插屏。
 func _on_ad_init_success() -> void:
-	if _plugin == null:
-		push_warning("UniKit AD init_success but plugin is null")
-		return
-	# 让原生在曝光时回调（部分版本需要显式开启）
-	_plugin.setAdImpressionListener()
 	_is_ad_inited = true
 	ad_init_completed.emit()
-
-	# 三类广告依次预加载，每个间隔 2 秒，避免开局把网络和原生线程打满
-	load_ad("reward")
+	load_ad(AdPlacement.REWARD)
 	await get_tree().create_timer(2.0).timeout
-	load_ad("interstitial")
-	await get_tree().create_timer(2.0).timeout
-	load_ad("banner")
+	load_ad(AdPlacement.INTERSTITIAL)
 
 
-## 广告初始化失败：只告警，不阻塞游戏
-func _on_ad_init_error(error: String) -> void:
-	push_warning("UniKit AD init error: %s" % error)
-
-
-## GRT 模块初始化成功（当前无需处理，空实现）
-func _on_grt_init_success() -> void:
-	# 暂无动作
-	pass
-
-
-## 推送初始化成功 → 注册推送指令回调
-func _on_push_init_success() -> void:
-	register_cmd_callback()
-
-
-## 用户标签初始化成功 → 注册 LUID 监听
-func _on_usertag_init_success() -> void:
-	add_luid_listener()
-
-
-## 内购初始化成功（当前无需处理）
-func _on_purchase_init_success() -> void:
-	# 暂无动作
-	pass
-
-
-## 内购初始化失败：告警
-func _on_purchase_init_fail(error: String) -> void:
-	push_warning("UniKit Purchase init fail: %s" % error)
-
-
-## AB 参数首次就绪：JSON 解析成字典后转发（解析失败给空字典）
-func _on_abtest_init(params_json: String) -> void:
-	var d: Variant = JSON.parse_string(params_json)
-	abtest_ready.emit(d if d is Dictionary else {})
-
-
-## AB 参数更新：解析 user_info 后转发
-func _on_abtest_updated(update_type: String, user_info_json: String) -> void:
-	var d: Variant = JSON.parse_string(user_info_json)
-	abtest_params_updated.emit(update_type, d if d is Dictionary else {})
-
-
-## 远端 AB 配置就绪：原样转发
-func _on_abtest_remote_config_ready() -> void:
-	abtest_remote_config_ready.emit()
-
-
-## 本地服务 AB 结果：转发成功标志与错误串
-func _on_abtest_locsrv_result(success: bool, error: String) -> void:
-	abtest_locsrv_fetched.emit(success, error)
-
-
-## 归因回调成功：只打日志（数据由原生侧自行上报）
-func _on_af_callback_success(data_json: String) -> void:
-	print("[UniKit] AF 归因回调成功: ", data_json)
-
-
-## 归因回调失败：告警
-func _on_af_callback_fail(msg: String) -> void:
-	push_warning("UniKit AF callback fail: %s" % msg)
-
-
-# ================= 原生回调：权限与合规 =================
-## 推送权限结果：清等待标记并通知业务（_status 未使用）
-func _on_push_permission_result(_status: int) -> void:
-	_push_permission_pending = false
-	push_permission_done.emit()
-
-
-## 引擎通知：权限弹窗期间回到前台却还没结果，就主动收尾（有些系统不给回调）
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_IN and _push_permission_pending:
-		_resolve_push_permission_on_focus.call_deferred()
-
-
-## 回前台兜底：判定权限流程已结束并补发信号
-func _resolve_push_permission_on_focus() -> void:
-	if not _push_permission_pending:
-		return
-	_push_permission_pending = false
-	push_permission_done.emit()
-
-
-## 推送指令：转发给业务
-func _on_push_cmd_received(cmd_json: String) -> void:
-	push_cmd_received.emit(cmd_json)
-
-
-## CMP 流程结束：转发
-func _on_cmp_completed() -> void:
-	cmp_completed.emit()
-
-
-## ATT 状态变化：转发
-func _on_att_status_changed(status: int) -> void:
-	att_status_changed.emit(status)
-
-
-## ATT 弹窗关闭：转发
-func _on_att_dismissed() -> void:
-	att_dismissed.emit()
-
-
-## LUID 就绪：转发
-func _on_luid_ready(luid: String) -> void:
-	luid_ready.emit(luid)
-
-
-# ================= 原生回调：广告 =================
-## 广告关闭：记录关闭时刻（插屏冷却以最近一次关闭为起点）、转发信号；reward 位还要统计观看次数并启动发奖兜底
+## 恢复全屏广告音频管理、刷新冷却，并为已展示的激励广告检查发奖兜底。
 func _on_ad_closed(placement_id: String) -> void:
 	print("[UniKit] ad_closed: placement=%s reward_shown=%s" % [placement_id, _reward_shown])
 
-	_last_interstitial_close_unix = int(Time.get_unix_time_from_system())
+	if _is_fullscreen_audio_ad(placement_id):
+		NativeUtilManager.resume_audio_io_buffer_recovery()
+
+	reset_interstitial_cd()
 	ad_closed.emit(placement_id)
 
-	# 激励位额外收尾
-	if placement_id == "reward":
-	# 真展示过才计入本局观看次数
+	if placement_id == AdPlacement.REWARD:
 		if _reward_shown:
 			GameState.increment_session_reward_view_count()
 		_maybe_start_reward_grant_watchdog()
 
 
-## 激励视频发奖回调：调试开关可以吞掉它；reward 位记发奖并写一条普通奖励记录
+## 转发奖励事件并记录正常激励时间，调试漏奖开关可故意吞掉回执。
 func _on_ad_rewarded(placement_id: String) -> void:
-	# 作弊开关：模拟「看完不发奖」
-	if _debug_reward_miss and placement_id == "reward":
+	if _debug_reward_miss and placement_id == AdPlacement.REWARD:
 		print(
 			"[UniKit] ad_rewarded SKIPPED by cheat _debug_reward_miss: placement=%s" % placement_id
 		)
@@ -1088,18 +1045,27 @@ func _on_ad_rewarded(placement_id: String) -> void:
 	print("[UniKit] ad_rewarded: placement=%s" % placement_id)
 	ad_rewarded.emit(placement_id)
 
-	# 标记本次会话已发奖，并写入奖励流水（首页据此补发道具）
-	if placement_id == "reward":
+	if placement_id == AdPlacement.REWARD:
 		_mark_reward_received()
 
 		GameState.record_normal_reward(int(Time.get_unix_time_from_system()))
 
 
-## 广告展示回调：转发；reward 位借此确认「确实播过」
+## 暂停全屏广告期间的音频恢复，发布展示事件并标记激励确已展示。
 func _on_ad_shown(placement_id: String) -> void:
+	print("[UniKit-DEBUG] _on_ad_shown emit ad_shown: placement=%s" % placement_id)
+
+	if _is_fullscreen_audio_ad(placement_id):
+		NativeUtilManager.pause_audio_io_buffer_recovery()
+
 	ad_shown.emit(placement_id)
-	if placement_id == "reward" and _reward_active_show_id != "":
+	if placement_id == AdPlacement.REWARD and _reward_active_show_id != "":
 		_reward_shown = true
+
+
+## 只把激励与插屏视为需要切换原生音频恢复的全屏广告。
+func _is_fullscreen_audio_ad(placement_id: String) -> bool:
+	return placement_id == AdPlacement.REWARD or placement_id == AdPlacement.INTERSTITIAL
 
 
 ## 开一次激励视频会话：记住 show_id / position 并清空发奖标记
@@ -1156,15 +1122,11 @@ func _maybe_start_reward_grant_watchdog() -> void:
 	_reset_reward_session()
 
 
-## 发奖超时：仅当 AB 允许补发时，把这次奖励写进 GameState 的待补发列表（首页会弹）
+## 超过看门狗期限仍未发奖时，将补偿条目写入 GameState 待处理奖励。
 func _on_reward_grant_timeout(show_id: String, position: String) -> void:
 	if not _pending_watchdogs.has(show_id):
 		return
 	_pending_watchdogs.erase(show_id)
-
-	# AB 开关：只有允许补发的分组才记这笔账
-	if not ABTestManager.common_rewardad_logic.should_grant_reward_restore():
-		return
 
 	(
 		GameState
@@ -1178,7 +1140,7 @@ func _on_reward_grant_timeout(show_id: String, position: String) -> void:
 	)
 
 
-## 把广告位 position 映射回它该给的奖励：提示 / 定位 / 撤销各 1 个，连胜翻倍给一整份基础奖励，其余返回空数组
+## 依据广告来源恢复相应道具或连续奖励基础份额，未知来源返回空列表。
 func restore_items_for_position(position: String) -> Array:
 	if position == Tracker.AdPos.PROPS_NORMAL_HINT or position == Tracker.AdPos.PROPS_DAILY_HINT:
 		return [{"kind": "hint", "count": 1}]
@@ -1188,8 +1150,8 @@ func restore_items_for_position(position: String) -> Array:
 	):
 		return [{"kind": "locate", "count": 1}]
 
-	if position == "props_normal_undo":
-		return [{"kind": "undo", "count": 1}]
+	if position == Tracker.AdPos.PROPS_NORMAL_DRAFT or position == Tracker.AdPos.PROPS_DAILY_DRAFT:
+		return [{"kind": "draft", "count": 1}]
 
 	if position == Tracker.AdPos.STREAK_X2_REWARD:
 		var items: Array = []
@@ -1207,40 +1169,34 @@ func _reset_reward_session() -> void:
 	_reward_shown = false
 
 
-## 广告出错：告警并转发
+## 恢复全屏广告音频管理，并把原生错误转发给业务。
 func _on_ad_error(placement_id: String, msg: String) -> void:
 	push_warning("UniKit AD error: placement=%s, msg=%s" % [placement_id, msg])
+
+	if _is_fullscreen_audio_ad(placement_id):
+		NativeUtilManager.resume_audio_io_buffer_recovery()
 	ad_error_occurred.emit(placement_id, msg)
 
 
-## 曝光回调：转发原始数据，并按广告位类型补埋点（interstitial / reward）
-func _on_ad_impression(data_json: String) -> void:
-	var data: Dictionary = JSON.parse_string(data_json)
+## 先发布曝光数据，再消费展示流水并清理该广告位的待关联位置。
+func _on_ad_impression(data: Dictionary) -> void:
 	ad_impression_received.emit(data)
-
 	var placement_id: String = data.get("placement_id", "")
 	if placement_id == "":
-		push_warning("UniKit AD impression: placement_id 为空, raw=%s" % data_json)
+		push_warning("UniKit AD impression: placement_id 为空, raw=%s" % JSON.stringify(data))
 		return
-	# 取出展示前登记的 show_id 与 position（消费即删除）
-	var ad_show_id: String = Tracker.consume_ad_show_id(placement_id)
-	var position: String = _pending_ad_positions.get(placement_id, data.get("position", ""))
+
+	Tracker.consume_ad_show_id(placement_id)
 	_pending_ad_positions.erase(placement_id)
-	# 按广告位类型补曝光埋点
-	if placement_id == "interstitial":
-		Tracker.track_interstitial_ad_show(ad_show_id, GameState.get_current_level(), position)
-	elif placement_id == "reward":
-		Tracker.track_rewarded_ad_show(ad_show_id, GameState.get_current_level(), position)
 
 
-## 调试总开关：值有变化才处理，关掉时顺手销毁 banner
+## 更新广告调试总开关，关闭时立即销毁横幅。
 func set_debug_ad_enabled(enabled: bool) -> void:
 	if _debug_ad_enabled == enabled:
 		return
 	_debug_ad_enabled = enabled
-	# 关掉广告时把 banner 一起销毁
 	if not enabled:
-		destroy_ad("banner")
+		destroy_ad(AdPlacement.BANNER)
 
 
 ## 读调试总开关
@@ -1248,140 +1204,116 @@ func is_debug_ad_enabled() -> bool:
 	return _debug_ad_enabled
 
 
-# ================= AB 实验 =================
-## 读字符串型 AB 参数（无插件时返回默认值）
+## 读取字符串实验值；原生插件缺失时使用调用方默认值。
 func get_ab_string(key: String, default_value: String = "") -> String:
-	if _plugin == null:
-		return default_value
-	return _plugin.getAbString(key, default_value)
+	return UniKit.abtest_module.get_ab_string(key, default_value)
 
 
-## 读整型 AB 参数
+## 读取整数实验值；原生插件缺失时使用调用方默认值。
 func get_ab_int(key: String, default_value: int = 0) -> int:
-	if _plugin == null:
-		return default_value
-	return _plugin.getAbInt(key, default_value)
+	return UniKit.abtest_module.get_ab_int(key, default_value)
 
 
-## 读浮点型 AB 参数
+## 读取浮点实验值；原生插件缺失时使用调用方默认值。
 func get_ab_float(key: String, default_value: float = 0.0) -> float:
-	if _plugin == null:
-		return default_value
-	return _plugin.getAbFloat(key, default_value)
+	return UniKit.abtest_module.get_ab_float(key, default_value)
 
 
-## 把当前设备「染色」进指定 AB 实验组（调试用）
+## 通知原生层为指定实验染色，标记该实验已实际参与业务。
 func dye_ab(key: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.dyeAbTest(key)
+	UniKit.abtest_module.dye_ab(key)
 
 
-## 读全部 AB 实验的当前取值
+## 解析原生返回的全部实验字典，异常数据回退为空字典。
 func get_all_ab_experiments() -> Dictionary:
-	if _plugin == null:
-		return {}
-	var d: Variant = JSON.parse_string(_plugin.getAllAbExperimentsJson())
-	return d if d is Dictionary else {}
+	return UniKit.abtest_module.get_all_ab_experiments()
 
 
-## 读已发布的 AB 实验配置
+## 读取已发布实验的原生快照，供配置和调试使用。
 func get_all_publish_ab_experiments() -> Dictionary:
-	if _plugin == null:
-		return {}
-	var d: Variant = JSON.parse_string(_plugin.getAllPublishAbExperimentsJson())
-	return d if d is Dictionary else {}
+	return UniKit.abtest_module.get_all_publish_ab_experiments()
 
 
-## 读全部 AB 标签串
+## 通过实验模块查询指定实验是否已染色。
+func is_ab_dyeing(key: String) -> bool:
+	return UniKit.abtest_module.is_dyeing(key)
+
+
+## 通过实验模块读取指定实验的分组状态。
+func get_ab_group_status(key: String) -> String:
+	return UniKit.abtest_module.get_group_status(key)
+
+
+## 通过实验模块读取指定实验染色时间。
+func get_ab_dyeing_time(key: String) -> String:
+	return UniKit.abtest_module.get_dyeing_time(key)
+
+
+## 取得实验模块保存的全部染色时间快照。
+func get_all_ab_dyeing_times() -> Dictionary:
+	return UniKit.abtest_module.get_all_dyeing_times()
+
+
+## 读取原生聚合的全部实验标签字符串。
 func get_ab_all_tag() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.getAbAllTag()
+	return UniKit.abtest_module.get_ab_all_tag()
 
 
-## 读染色标签（上报「命中实验组」用）
+## 读取已经染色的实验标签字符串。
 func get_ab_dyeing_tag() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.getAbDyeingTag()
+	return UniKit.abtest_module.get_ab_dyeing_tag()
 
 
-## 读 AB 分组 ID
+## 读取原生实验分组标识。
 func get_ab_group_id() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.getAbGroupId()
+	return UniKit.abtest_module.get_ab_group_id()
 
 
-## 读 AB 用户信息字典
+## 解析原生实验用户信息，保留字典形式供业务消费。
 func get_ab_user_info() -> Dictionary:
-	if _plugin == null:
-		return {}
-	var d: Variant = JSON.parse_string(_plugin.getAbUserInfoJson())
-	return d if d is Dictionary else {}
+	return UniKit.abtest_module.get_ab_user_info()
 
 
-## 主动拉取远端 AB 结果
+## 发起远端实验结果刷新，完成状态通过模块信号返回。
 func fetch_remote_ab_result() -> void:
-	if _plugin == null:
-		return
-	_plugin.fetchRemoteAbResult()
+	UniKit.abtest_module.fetch_remote_ab_result()
 
 
-## 读本地服务 AB 参数（原生返回空串时回退默认值）
+## 读取远端实验参数，空串或插件缺失时使用默认值。
 func get_ab_locsrv_param(key: String, default_value: String = "") -> String:
-	if _plugin == null:
-		return default_value
-	var v: String = _plugin.getAbLocSrvParam(key)
-	return v if v != "" else default_value
+	return UniKit.abtest_module.get_ab_locsrv_param(key, default_value)
 
 
-## 读全部本地服务 AB 参数
+## 取得远端实验参数快照，异常 JSON 回退为空字典。
 func get_all_ab_locsrv_params() -> Dictionary:
-	if _plugin == null:
-		return {}
-	var d: Variant = JSON.parse_string(_plugin.getAllAbLocSrvParamsJson())
-	return d if d is Dictionary else {}
+	return UniKit.abtest_module.get_all_ab_locsrv_params()
 
 
-## 本地服务 AB 染色（调试用）
+## 通知原生层染色指定本地服务实验参数。
 func dye_ab_locsrv(key: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.dyeAbLocSrvTest(key)
+	UniKit.abtest_module.dye_ab_locsrv(key)
 
 
-## 写入本地服务 AB 的全部标签
-func set_ab_locsrv_all_tag(tags: Array[String]) -> void:
-	if _plugin == null:
-		return
-	_plugin.setAbLocSrvAllTag(JSON.stringify(tags))
+## 以 JSON 数组提交有效标签和空标签，保持原生接口的数据格式。
+func set_ab_locsrv_all_tag(all_tags: Array[String], empty_tags: Array[String] = []) -> void:
+	UniKit.abtest_module.set_ab_locsrv_all_tag(all_tags, empty_tags)
 
 
-## 按标签染色本地服务 AB
+## 向原生层提交服务端实验标签染色。
 func dye_ab_locsrv_tag(tag: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.dyeAbLocSrvTag(tag)
+	UniKit.abtest_module.dye_ab_locsrv_tag(tag)
 
 
-## 读 AB 判定的国家 / 地区
+## 读取实验系统采用的国家或地区标识。
 func get_ab_country() -> String:
-	if _plugin == null:
-		return ""
-	return _plugin.getAbCountry()
+	return UniKit.abtest_module.get_ab_country()
 
 
-## 覆盖 AB 分组 ID（调试用）
+## 覆盖原生实验分组标识，供指定分组或调试流程使用。
 func set_ab_group_id(group_id: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.setAbGroupId(group_id)
+	UniKit.abtest_module.set_ab_group_id(group_id)
 
 
-## 覆盖 AB 国家 / 地区（调试用）
+## 覆盖原生实验地区标识，后续实验读取由原生层处理。
 func set_ab_country(country: String) -> void:
-	if _plugin == null:
-		return
-	_plugin.setAbCountry(country)
+	UniKit.abtest_module.set_ab_country(country)

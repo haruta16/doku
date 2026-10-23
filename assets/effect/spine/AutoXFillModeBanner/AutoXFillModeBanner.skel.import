@@ -1,0 +1,13 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://di8pp40s1gsiu"
+path="res://.godot/imported/AutoXFillModeBanner.skel-628accf9e2bdcec0f1d01d59c88645da.spskel"
+
+[deps]
+
+source_file="res://assets/effect/spine/AutoXFillModeBanner/AutoXFillModeBanner.skel"
+dest_files=["res://.godot/imported/AutoXFillModeBanner.skel-628accf9e2bdcec0f1d01d59c88645da.spskel"]
+
+[params]

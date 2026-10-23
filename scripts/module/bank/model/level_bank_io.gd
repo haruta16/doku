@@ -1,30 +1,67 @@
-## 题库文件读取：编辑器里读 assets/editor/levels 的明文 JSON，导出后读 assets/resources/levels 的密文
-## 密文 = 明文逐字节异或 _KEY（由 addons/level_bank_encryptor 生成），只防手改、不防逆向
+## 题库文件入口：编辑器读明文 JSON，运行包先解 XOR，再优先解码二进制题库，兼容旧 JSON。
 class_name LevelBankIO
 extends RefCounted
 
 # ---- 常量：密钥与两个题库目录 ----
-const _KEY: String = "meowdoku-2026-bank-secret"  # XOR 密钥，明文写死在脚本里，加解密共用
-const _EDITOR_DIR: String = "res://assets/editor/levels"  # 编辑器环境：明文题库目录
-const _RUNTIME_DIR: String = "res://assets/resources/levels"  # 非编辑器（导出后）：加密题库目录
+const _KEY: String = "meowdoku-2026-bank-secret" # XOR 密钥，明文写死在脚本里，加解密共用
+const _EDITOR_DIR: String = "res://assets/editor/levels" # 编辑器环境：明文题库目录
+const _RUNTIME_DIR: String = "res://assets/resources/levels" # 非编辑器（导出后）：加密题库目录
+const _LEVEL_CODEC: GDScript = preload("res://scripts/module/bank/model/bank_level_codec.gd")
+const _BINARY_FORMAT: GDScript = preload("res://scripts/module/bank/model/bank_binary_format.gd")
 
 
-## 读一个题库 JSON：编辑器外先异或解密再解析；文件缺失 / 打开失败 / 解析失败一律返回 null
+## 按 editor 特性选择编辑器明文目录或发布包运行时目录。
 static func load_json(filename: String) -> Variant:
-	var is_editor: bool = OS.has_feature("editor")  # 用引擎特性判断当前进程是不是编辑器
-	var path: String = (_EDITOR_DIR if is_editor else _RUNTIME_DIR) + "/" + filename  # 两个目录里的文件名完全一致，只换根目录
+	if OS.has_feature("editor"):
+		return _load_text_json(_EDITOR_DIR + "/" + filename, filename, false)
+	return _load_runtime_json(filename)
+
+
+## 优先读取对应 .bin 并解 XOR、校验和解压；没有二进制文件时才回退加密 JSON。
+static func _load_runtime_json(filename: String) -> Variant:
+	var binary_filename: String = _BINARY_FORMAT.runtime_filename(filename)
+	var binary_path: String = _RUNTIME_DIR + "/" + binary_filename
+	if binary_filename != filename and FileAccess.file_exists(binary_path):
+		var bytes: PackedByteArray = _read_bytes(binary_path)
+		_xor_inplace(bytes)
+		var result: Dictionary = _BINARY_FORMAT.decode(bytes)
+		bytes.clear()
+		if not result["ok"]:
+			push_error(
+				"LevelBankIO: 二进制题库读取失败，file=%s reason=%s" % [binary_filename, result["error"]]
+			)
+			return null
+		return result["data"]
+	return _load_text_json(_RUNTIME_DIR + "/" + filename, filename, true)
+
+
+## 读取完整文件字节，文件缺失或打开失败返回空数组。
+static func _read_bytes(path: String) -> PackedByteArray:
 	if not FileAccess.file_exists(path):
-		return null  # 文件不存在：调用方按「没有这份题库」处理
-	var f: FileAccess = FileAccess.open(path, FileAccess.READ)
-	if f == null:
-		push_error("LevelBankIO: cannot open %s" % path)  # 只报错不中断，调用方拿到的还是 null
+		return PackedByteArray()
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		push_error("LevelBankIO: cannot open %s" % path)
+		return PackedByteArray()
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	return bytes
+
+
+## 按需解 XOR 后解析 UTF-8 JSON，普通题库字段会原地紧凑化以减少内存。
+static func _load_text_json(path: String, filename: String, encrypted: bool) -> Variant:
+	var bytes: PackedByteArray = _read_bytes(path)
+	if bytes.is_empty():
 		return null
-	var bytes: PackedByteArray = f.get_buffer(f.get_length())  # 一次性把整份文件读成字节流
-	f.close()
-	if not is_editor:
-		_xor_inplace(bytes)  # 导出后的文件是密文，先就地异或回明文
-	var text: String = bytes.get_string_from_utf8()  # 解密出来的字节按 UTF-8 还原成 JSON 文本
-	return JSON.parse_string(text)  # 解析失败会返回 null，由调用方判类型
+	if encrypted:
+		_xor_inplace(bytes)
+	var text: String = bytes.get_string_from_utf8()
+	var data: Variant = JSON.parse_string(text)
+	bytes.clear()
+	text = ""
+	if _BINARY_FORMAT.runtime_filename(filename) != filename:
+		_LEVEL_CODEC.compact_bank(data)
+	return data
 
 
 ## 原地 XOR 解密：密钥按字节循环异或，加密与解密是同一套操作

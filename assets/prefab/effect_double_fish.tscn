@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://cu3uvprsq7tdh"]
+
+[ext_resource type="Texture2D" uid="uid://bk4wnmdww33ms" path="res://assets/effect/texture/obj/et_double_fish_001.png" id="1"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ioast"]
+particles_animation = true
+particles_anim_h_frames = 8
+particles_anim_v_frames = 4
+particles_anim_loop = true
+
+[sub_resource type="Curve" id="Curve_tw0ta"]
+_data = [Vector2(0.08705883, 0), 0.0, 17.830393, 0, 0, Vector2(0.19882353, 1), 0.0, 0.0, 0, 0, Vector2(0.25, 0.6), 0.0, 0.0, 0, 0, Vector2(0.597, 0.6), 0.0, 0.0, 0, 0, Vector2(0.692, 1), 0.0, 0.0, 0, 0, Vector2(0.9, 0.57), 0.0, 0.0, 0, 0]
+point_count = 6
+
+[sub_resource type="Gradient" id="Gradient_jrfms"]
+offsets = PackedFloat32Array(0.9125616, 0.91502464)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="小鱼干1" type="CPUParticles2D" unique_id=1597828203]
+material = SubResource("CanvasItemMaterial_ioast")
+emitting = false
+amount = 1
+texture = ExtResource("1")
+lifetime = 1.75
+one_shot = true
+local_coords = true
+gravity = Vector2(0, 0)
+scale_amount_min = 1.4
+scale_amount_max = 1.4
+scale_amount_curve = SubResource("Curve_tw0ta")
+color_ramp = SubResource("Gradient_jrfms")
+anim_speed_min = -2.22
+anim_speed_max = -2.22

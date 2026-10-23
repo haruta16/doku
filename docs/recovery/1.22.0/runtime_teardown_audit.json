@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "package_version": "1.22.0",
+  "package_version_code": 1573,
+  "engine": {
+    "version": "4.6.1.stable.custom_build.14d19694e",
+    "spine_resource_versions": [
+      "4.2.43"
+    ],
+    "executable_sha256": "38a1848cb855b8baef5f83ec82648bde2ec275c1c4ba2d690383000ce3c4836b"
+  },
+  "findings": {
+    "board_teardown": {
+      "origin": "original_package_lifecycle_defect",
+      "confirmed": true,
+      "sequence": [
+        "BoardView PREDELETE frees and clears existing idle pool",
+        "CellView PREDELETE releases a still-valid active spine",
+        "Original recycle_cat_spine detaches spine and appends it to the already-cleared pool",
+        "Board destruction completes with a detached live spine"
+      ],
+      "local_fix": "Set BoardView._destroying at PREDELETE entry; immediately free spines recycled while destroying",
+      "normal_recycle_unchanged": true,
+      "renderer_override_added": false,
+      "desktop_metal_resume_and_close": "passed_exit_0_no_rid_objectdb_or_crash"
+    },
+    "profile_default_warning": {
+      "origin": "original_package_warning_on_unchanged_default",
+      "frame_form_before": 0,
+      "champion_wins": 0,
+      "first_form_min_wins": 1,
+      "is_form_unlocked": false,
+      "form_for_wins": -1,
+      "frame_form_after_clamp": 0,
+      "value_changed": false,
+      "behavior_modified": false
+    },
+    "headless_objectdb_warning": {
+      "still_observed": true,
+      "specific_object_cause": "not_established_without_verbose_instance_list",
+      "separate_from_fixed_desktop_rid_leak": true,
+      "business_changes_to_silence_warning": false
+    }
+  },
+  "original_source_evidence": [
+    {
+      "source_path": "scripts/module/gameplay/view/board_view.gd",
+      "raw_source_sha256": "c66cb4e621e6df1e7751c43bdcbc6ac6fbc954ce9fc14d10ac22c9c60a6877de",
+      "original_bytecode_sha256": "25caddf7cbf1d98e656557493f9cee7563db05068489e7c1f28b3f490d287214",
+      "raw_recompiled_sha256": "25caddf7cbf1d98e656557493f9cee7563db05068489e7c1f28b3f490d287214",
+      "raw_recompile_status": "identical"
+    },
+    {
+      "source_path": "scripts/module/gameplay/view/cell_view.gd",
+      "raw_source_sha256": "3135e89a3de950825c5c1292bc0ca82dc03c90c9e394dcd0f91a75bbd8307034",
+      "original_bytecode_sha256": "39839986eda744d6d57b4420276097ddbd161f4413792cbd4fd0b7070c14e479",
+      "raw_recompiled_sha256": "39839986eda744d6d57b4420276097ddbd161f4413792cbd4fd0b7070c14e479",
+      "raw_recompile_status": "identical"
+    },
+    {
+      "source_path": "scripts/module/profile/profile_service.gd",
+      "raw_source_sha256": "be4ff55175ac0a3a31f08700400dd33b413673e923e840eb3b96d11cd6498cc2",
+      "original_bytecode_sha256": "97954561c6810c2b0bddbeacace5dc4ba5c00699957566b111367c12993a128e",
+      "raw_recompiled_sha256": "97954561c6810c2b0bddbeacace5dc4ba5c00699957566b111367c12993a128e",
+      "raw_recompile_status": "identical"
+    },
+    {
+      "source_path": "scripts/module/profile/model/profile_data.gd",
+      "raw_source_sha256": "2b006a72942b247541e6d5bd5ac68012d500826808a37b19f54c5b7ccf8aa0d6",
+      "original_bytecode_sha256": "bea4794d20c847877fefa9e6ba530b3221ca96243168a46c1c38d2d847b75591",
+      "raw_recompiled_sha256": "bea4794d20c847877fefa9e6ba530b3221ca96243168a46c1c38d2d847b75591",
+      "raw_recompile_status": "identical"
+    },
+    {
+      "source_path": "scripts/module/profile/model/profile_catalog.gd",
+      "raw_source_sha256": "54854f1c2e78994f3a191157be7449a4f78c79f3db597d9ac1d0371460abebc8",
+      "original_bytecode_sha256": "f974d7b9cdc31e6cc8d2b566a9ef845dc5c6d7d55f3f9a7fe6b07da8c32400f2",
+      "raw_recompiled_sha256": "f974d7b9cdc31e6cc8d2b566a9ef845dc5c6d7d55f3f9a7fe6b07da8c32400f2",
+      "raw_recompile_status": "identical"
+    }
+  ],
+  "isolated_node_reproduction": {
+    "path": "originals/upgrades/1.22.0/exit_audit",
+    "original_active_alive_after_board_free": true,
+    "fixed_active_alive_after_board_free": false,
+    "unused_alive_after_board_free": false,
+    "business_project_started": false
+  },
+  "component_test": {
+    "path": "tools/verify_board_teardown.gd",
+    "sha256": "5eb593951452661a517c800e62840f0b08b458850a4c2f97ff1fe4240bb0986d",
+    "production_components": [
+      "BoardView",
+      "CellView",
+      "SpineSprite",
+      "CostumeSkin.SKELETON_RES"
+    ],
+    "expected_checks": 17,
+    "positive_checks": 17,
+    "positive_failures": [],
+    "positive_exit_code": 0,
+    "negative_control": "Temporary BoardView subclass overrides only recycle_cat_spine with exact method body extracted from recovered source",
+    "negative_checks": 17,
+    "negative_failures": [
+      "layer_before_cell: active spine must not survive its board",
+      "layer_after_cell: active spine must not survive its board"
+    ],
+    "negative_exit_code": 1,
+    "guards": [
+      "deferred dynamic loading after Autoload setup",
+      "can_instantiate check",
+      "instance validity check",
+      "exact assertion count required"
+    ]
+  },
+  "logs": {
+    "final_desktop_resume": {
+      "path": "originals/upgrades/1.22.0/logs/final_desktop_resume.log",
+      "sha256": "84a4744cf7eaec2c168085cb8a25a0e16ecd0ad18aff774e054547cfd8c1a1f3",
+      "script_error_count": 0,
+      "error_count": 6,
+      "warning_count": 3,
+      "objectdb_leak_warning": false,
+      "crash_signal_11": true,
+      "rid_or_gpu_leak_evidence": true
+    },
+    "desktop_gl_resume": {
+      "path": "originals/upgrades/1.22.0/logs/desktop_gl_resume.log",
+      "sha256": "0c9b9982acabd4941cb1f391cd485b5abf9b97678d26fedcbafdbc84f57230ff",
+      "script_error_count": 0,
+      "error_count": 74,
+      "warning_count": 165,
+      "objectdb_leak_warning": true,
+      "crash_signal_11": false,
+      "rid_or_gpu_leak_evidence": true,
+      "exit_code": 0
+    },
+    "desktop_teardown_fixed": {
+      "path": "originals/upgrades/1.22.0/logs/desktop_teardown_fixed.log",
+      "sha256": "cf4c58488aecab4cc763ff4d51118d1faea528e039b89b22ada764a529379b45",
+      "script_error_count": 0,
+      "error_count": 0,
+      "warning_count": 2,
+      "objectdb_leak_warning": false,
+      "crash_signal_11": false,
+      "rid_or_gpu_leak_evidence": false,
+      "exit_code": 0
+    },
+    "final_validation": {
+      "path": "originals/upgrades/1.22.0/logs/final_validation.log",
+      "sha256": "d3544bd55e132e8330e8d41de0b31b44c336179ec954f77c32d9678d14fc0851",
+      "script_error_count": 0,
+      "error_count": 0,
+      "warning_count": 3,
+      "objectdb_leak_warning": true,
+      "crash_signal_11": false,
+      "rid_or_gpu_leak_evidence": false
+    },
+    "board_teardown_components": {
+      "path": "originals/upgrades/1.22.0/logs/board_teardown_components.log",
+      "sha256": "cb5096a8de72f0d2b0f80ddc2ba8b11a645edb8c1292525b65dfbab99ec7d43c",
+      "script_error_count": 0,
+      "error_count": 0,
+      "warning_count": 3,
+      "objectdb_leak_warning": true,
+      "crash_signal_11": false,
+      "rid_or_gpu_leak_evidence": false,
+      "component_result": {
+        "audit": "board_teardown",
+        "checks": 17,
+        "failures": [],
+        "status": "passed"
+      },
+      "exit_code": 0
+    },
+    "board_teardown_original_negative": {
+      "path": "originals/upgrades/1.22.0/logs/board_teardown_original_negative.log",
+      "sha256": "ce56917f1beb9308583793e00793dd60daebd5003c23c9e645265420961f82de",
+      "script_error_count": 0,
+      "error_count": 2,
+      "warning_count": 3,
+      "objectdb_leak_warning": true,
+      "crash_signal_11": false,
+      "rid_or_gpu_leak_evidence": false,
+      "component_result": {
+        "audit": "board_teardown",
+        "checks": 17,
+        "failures": [
+          "layer_before_cell: active spine must not survive its board",
+          "layer_after_cell: active spine must not survive its board"
+        ],
+        "status": "failed"
+      },
+      "exit_code": 1
+    }
+  }
+}

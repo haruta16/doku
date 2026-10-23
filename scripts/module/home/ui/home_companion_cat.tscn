@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://bxqytiqnb8jqb"]
+
+[ext_resource type="Script" uid="uid://mo7xmqqp64el" path="res://scripts/module/home/view/home_companion_cat.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c8hvuu1txmlxm" path="res://assets/sprites/home_companion/icon_companion_food_candy.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://5vo3qom8uwgi" path="res://assets/sprites/home_companion/icon_companion_food_can_bubble.png" id="3"]
+[ext_resource type="PackedScene" path="res://assets/effect/spine/home_companion_cat/home_companion_cat.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scripts/module/home/ui/other/home_companion_food_bubble.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scripts/module/home/ui/other/home_companion_satiety_bar.tscn" id="6"]
+
+[node name="HomeCompanionCat" type="Control" unique_id=1570726002 node_paths=PackedStringArray("cat_sprite", "cat_button", "food_button", "food_icon", "food_count_label", "satiety_bar")]
+custom_minimum_size = Vector2(700, 620)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 700.0
+offset_bottom = 620.0
+mouse_filter = 2
+script = ExtResource("1")
+cat_sprite = NodePath("CatSprite")
+cat_button = NodePath("CatButton")
+food_button = NodePath("FoodButton")
+food_icon = NodePath("FoodButton/Icon")
+food_count_label = NodePath("FoodButton/Count")
+satiety_bar = NodePath("SatietyBar")
+candy_texture = ExtResource("2")
+can_texture = ExtResource("3")
+
+[node name="CatSprite" parent="." unique_id=627487713 instance=ExtResource("4")]
+position = Vector2(356.693, 533.645)
+scale = Vector2(1.118265, 1.118265)
+preview_skin = "Default"
+preview_animation = "-- Empty --"
+preview_frame = false
+preview_time = 0.0
+
+[node name="CatButton" type="Button" parent="." unique_id=1736150072]
+layout_mode = 0
+offset_left = 110.0
+offset_top = -330.0
+offset_right = 635.0
+offset_bottom = 560.0
+focus_mode = 0
+disabled = true
+flat = true
+
+[node name="FoodButton" parent="." unique_id=945187596 instance=ExtResource("5")]
+visible = false
+layout_mode = 0
+offset_left = 563.0
+offset_top = -10.0
+offset_right = 754.00134
+offset_bottom = 162.7109
+
+[node name="SatietyBar" parent="." unique_id=243189759 instance=ExtResource("6")]
+visible = false
+layout_mode = 0
+offset_left = 151.0
+offset_top = 591.0
+offset_right = 551.0
+offset_bottom = 631.0
+value = 60.0
+
+[connection signal="animation_completed" from="CatSprite" to="." method="_on_animation_completed"]
+[connection signal="pressed" from="CatButton" to="." method="_on_cat_pressed"]
+[connection signal="pressed" from="FoodButton" to="." method="_on_food_pressed"]

@@ -1,4 +1,4 @@
-## 普通关卡 Toast：与高难度版共用基类，额外支持一段 IQ 文案覆盖
+## 普通关开局提示卡：为通用提示流程提供动画名、卡片和文案节点。
 class_name GameNormalToast
 extends BaseGameToast
 
@@ -16,16 +16,19 @@ func _dlg_name() -> String:
 	return Tracker.Dlg.GAME_NORMAL_TOAST
 
 
-## 文案节点在卡片下的相对路径
-func _label_subpath() -> String:
-	return "PanelContainer/Label"
+func _label_subpaths() -> Dictionary:
+	return {
+		"Card6": "PanelContainer/Label",
+		"Card7": "PanelContainer/Label",
+		"Card11": "PanelContainer/Label",
+	}
 
 
-## 文案填充：有 iq_text_key 就用它，否则退回父类的首次尝试文案
 func _apply_text(params: Dictionary) -> void:
-	# 有 IQ 文案 key → 直接翻译显示
 	var iq_text_key: String = params.get("iq_text_key", "")
 	if iq_text_key != "":
-		_label.text = tr(iq_text_key)
+		_label.text = TextHighlightRenderer.render(
+			ABTestManager.text_highlight, iq_text_key, tr(iq_text_key), "#FFEE00"
+		)
 	else:
 		super._apply_text(params)

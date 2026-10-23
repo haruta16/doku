@@ -1,5 +1,4 @@
-## 游戏规则引擎：找冲突、判定违规类型、算出受影响的格子
-## 9 个函数全是 static，纯数据进纯数据出，不碰节点树也不碰 UI
+## 棋盘规则计算：检测同区域、同行同列和八邻接冲突，检查完成状态，并提供区域形状指标。
 class_name QueendokuCore
 extends RefCounted
 
@@ -53,31 +52,54 @@ static func _classify_pair(a: Vector2i, b: Vector2i, regions: Array) -> int:
 	return Rule.NONE
 
 
-## 对某个格子，在已放置的猫里挑一条最该报的违规原因
+## 在所有已放猫中选择优先级最高的违规类型，同色优先于同行列和相邻。
 static func classify_violation(r: int, c: int, placed_cats: Array, regions: Array) -> int:
-	var here : Vector2i = Vector2i(r, c)
+	var here := Vector2i(r, c)
 	var best: int = Rule.NONE
 	for cat: Vector2i in placed_cats:
 		var k: int = _classify_pair(here, cat, regions)
 
-		# 贪心取优先级最高（数值最小）的那条
 		if k != Rule.NONE and (best == Rule.NONE or k < best):
 			best = k
 
-			# SAME_COLOR 已经是最高优先级，不用再往下比
 			if best == Rule.SAME_COLOR:
 				return best
 	return best
 
 
-## 找出所有与目标格冲突的猫，用于高亮「是谁挡了你」
-static func find_conflicting_cats(r: int, c: int, placed_cats: Array, regions: Array) -> Array[Vector2i]:
-	var here : Vector2i = Vector2i(r, c)
-	var result: Array[Vector2i] = []
+## 优先按违规类型、再按曼哈顿距离选出冲突猫；同距时偏向同行，无冲突返回 (-1, -1)。
+static func find_priority_conflict_cat(
+	r: int, c: int, placed_cats: Array, regions: Array
+) -> Vector2i:
+	var here := Vector2i(r, c)
+	var not_found := Vector2i(-1, -1)
+	var best := not_found
+	var best_rule: int = Rule.NONE
+	var best_dist: int = 0
+	var best_same_row: bool = false
 	for cat: Vector2i in placed_cats:
-		if _classify_pair(here, cat, regions) != Rule.NONE:
-			result.append(cat)
-	return result
+		var rule: int = _classify_pair(here, cat, regions)
+		if rule == Rule.NONE:
+			continue
+		var d: int = absi(cat.x - r) + absi(cat.y - c)
+		var same_row: bool = cat.x == r
+
+		var better: bool = false
+		if best == not_found:
+			better = true
+		elif rule < best_rule:
+			better = true
+		elif rule == best_rule:
+			if d < best_dist:
+				better = true
+			elif d == best_dist and same_row and not best_same_row:
+				better = true
+		if better:
+			best = cat
+			best_rule = rule
+			best_dist = d
+			best_same_row = same_row
+	return best
 
 
 ## 一只猫会「禁掉」哪些格子：同行、同列、八邻接、同色区域，不含自己
@@ -92,45 +114,9 @@ static func cells_excluded_by_cat(cat: Vector2i, size: int, regions: Array) -> A
 	return out
 
 
-## 同上，但按四条规则分类返回：[同行格, 同列格, 邻接格, 同色格]
-## 提示系统要分别强调不同规则，所以这里不做合并
-static func constraint_cells_for_cat(cat: Vector2i, size: int, regions: Array) -> Array:
-	var row_cells: Array[Vector2i] = []
-	var col_cells: Array[Vector2i] = []
-	var nbr_cells: Array[Vector2i] = []
-	var reg_cells: Array[Vector2i] = []
-	var cat_region: int = int(regions[cat.x][cat.y])
-	for r in range(size):
-		for c in range(size):
-			if r == cat.x and c == cat.y:
-				continue
-			var p : Vector2i = Vector2i(r, c)
-			if r == cat.x:
-				row_cells.append(p)
-			if c == cat.y:
-				col_cells.append(p)
-			if abs(r - cat.x) <= 1 and abs(c - cat.y) <= 1:
-				nbr_cells.append(p)
-			if int(regions[r][c]) == cat_region:
-				reg_cells.append(p)
-	return [row_cells, col_cells, nbr_cells, reg_cells]
-
-
-## 没有颜色区域（regions）的玩法下，一只猫禁掉的格子：同行、同列、八邻接
-static func cells_excluded_by_cat_no_region(cat: Vector2i, size: int) -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	for r in range(size):
-		for c in range(size):
-			if r == cat.x and c == cat.y:
-				continue
-			if r == cat.x or c == cat.y or (abs(r - cat.x) <= 1 and abs(c - cat.y) <= 1):
-				out.append(Vector2i(r, c))
-	return out
-
-
-## 是否通关：猫的数量正好等于棋盘边长，且全盘无冲突
+## 要求正式猫数量恰好等于棋盘边长，且任意两只猫均不冲突。
 static func is_complete(board: Array, size: int, regions: Array) -> bool:
-	var piece_count : int = 0
+	var piece_count := 0
 	for r in range(size):
 		for c in range(size):
 			if board[r][c] == CellState.CAT:
@@ -160,3 +146,30 @@ static func validate_solution_entry(entry: Dictionary, size: int) -> bool:
 			return false
 		board[r][c] = CellState.CAT
 	return is_complete(board, size, regions)
+
+
+const DISPERSION_DENSITY_THRESHOLD: float = 0.7
+
+
+## 分别计算区域格数占其最小包围矩形的比例，再对所有区域取平均。
+static func compute_avg_region_bbox_fill_ratio(regions: Array) -> float:
+	var stats: Dictionary = {}
+	for r: int in range(regions.size()):
+		var row: Array = regions[r]
+		for c: int in range(row.size()):
+			var rid: int = int(row[c])
+			if not stats.has(rid):
+				stats[rid] = {"count": 0, "min_r": r, "max_r": r, "min_c": c, "max_c": c}
+			var s: Dictionary = stats[rid]
+			s["count"] += 1
+			s["min_r"] = min(s["min_r"], r)
+			s["max_r"] = max(s["max_r"], r)
+			s["min_c"] = min(s["min_c"], c)
+			s["max_c"] = max(s["max_c"], c)
+	if stats.is_empty():
+		return 0.0
+	var total_ratio: float = 0.0
+	for s: Dictionary in stats.values():
+		var bbox_area: int = (s["max_r"] - s["min_r"] + 1) * (s["max_c"] - s["min_c"] + 1)
+		total_ratio += float(s["count"]) / float(bbox_area)
+	return total_ratio / stats.size()

@@ -1,5 +1,7 @@
 # Level Data — 难度曲线与关卡分配
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 的实际入口、题库格式和新增系统请先看 [新版导读](08-version-1.22.0.md)，再对照当前源码；旧代码片段不是新版逐行镜像。
+
 > 文件：[scripts/module/gameplay/model/level_data.gd](../../scripts/module/gameplay/model/level_data.gd)
 >
 > 这是 Meowdoku 的**关卡系统**——棋盘大小怎么随关卡增长、哪些是特殊关卡、怎么从题库里取题。它连接了 `QueendokuCore`（题库验证）和 `BankData`（题库读取），也是 `GamePage._setup_entry_normal` 的核心依赖。

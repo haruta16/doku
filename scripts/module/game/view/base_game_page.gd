@@ -1,7 +1,5 @@
-## 对局页面基类：普通关 GamePage 与每日关 DailyGamePage 的共同父类，掌管一整局的主流程
-## 棋盘真源是子节点 BoardView（_board_view），本类只做「读棋盘 → 改棋盘 → 刷新周边 UI」的调度
+## 共享棋盘页面：组织输入、工具、生命、提示、残局与视觉反馈，普通关和每日关在此复用。
 class_name BaseGamePage
-# 沿用窗口基类：on_show / on_hide 由 UIManager 在切页时调用
 extends UIFrameWindow
 
 # 不少私有成员只给子类用，这里关掉「未使用私有变量」告警
@@ -9,6 +7,9 @@ extends UIFrameWindow
 
 # ---- 预制体：格子、点赞手势、三种规则条 ----
 const _CELL_SCENE: PackedScene = preload("res://assets/prefab/cell.tscn") # 棋盘单格（提示高亮也会临时实例化它）
+const _CONFLICT_LINE_SCENE: PackedScene = preload(
+	"res://scripts/module/rank_activity/ui/conflict_line.tscn"
+)
 ## 点赞手势（比心 / 鼓掌 / 吹号…）
 const _LIKE_HAND_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/game_like_hand.tscn"
@@ -16,14 +17,6 @@ const _LIKE_HAND_SCENE: PackedScene = preload(
 ## 规则条 V0：三条纯文字
 const _RULE_INFO_BAR_V0_SCENE: PackedScene = preload(
 	"res://scripts/module/game/ui/compont/rule_info_bar_v0.tscn"
-)
-## 规则条 V4：可折叠
-const _RULE_INFO_BAR_V4_SCENE: PackedScene = preload(
-	"res://scripts/module/game/ui/compont/rule_info_bar_v4.tscn"
-)
-## 规则条 V7：单张滑动卡
-const _RULE_INFO_BAR_V7_SCENE: PackedScene = preload(
-	"res://scripts/module/game/ui/compont/rule_info_bar_v7.tscn"
 )
 
 # ---- 规则条「图标 + 文字」的排版度量（像素 / 字号 / 行距） ----
@@ -43,32 +36,13 @@ const _RULE_ICON_TEXT_LETTER_SPACING_3: int = 0 # 第 3 条字间距
 
 var _rule_icon_text_fonts: Dictionary = {} # 字间距 → 字体副本缓存，避免每次排版都 duplicate()
 
-## 开场动画里「目标强调」要开关的动画轨道路径
-const _GOAL_RULE_HIGHLIGHT_PATHS: PackedStringArray = [
-	"Root/VBoxContainer/RuleBar/Control/Glow:self_modulate",
-	"Root/VBoxContainer/RuleBar/Control:scale:x",
-	"Root/VBoxContainer/RuleBar/Control:scale:y",
-]
-## 同上，对应猫数量目标那一行
-const _GOAL_CAT_HIGHLIGHT_PATHS: PackedStringArray = [
-	"Root/VBoxContainer/CatHeartRow/Target/Glow:self_modulate",
-	"Root/VBoxContainer/CatHeartRow/Target:scale:x",
-	"Root/VBoxContainer/CatHeartRow/Target:scale:y",
-]
-
 # ---- 子节点引用（@onready：进场景树后才可用） ----
 @onready var _anim_player: AnimationPlayer = $AnimationPlayer # 页面开场动画
 @onready var _anim_correct: AnimationPlayer = $AnimCorrectPrompt # 数量变化时的正确提示动画
-
-@onready var _ac_anim: AnimationPlayer = get_node_or_null("AnimationAutoComplete") as AnimationPlayer # 自动完成按钮的显隐动画（节点可能不存在）
-@onready var _ac_btn: Button = get_node_or_null("Root/AutoCompleteBtn") as Button # 自动完成按钮
-
-@onready var _draft_anim: AnimationPlayer = get_node_or_null("AnimDraftBtn") as AnimationPlayer # 草稿按钮动画
-
-@onready var _apply_anim: AnimationPlayer = get_node_or_null("AnimApplyBtn") as AnimationPlayer # 草稿「应用」按钮动画
-
-@onready var _fireworks_anim: AnimationPlayer = get_node_or_null("AnimFlreworks") as AnimationPlayer # 通关烟花动画（资源名拼写就是 Flreworks）
 @onready var _board_container: Control = $Root/VBoxContainer/BoardContainer # 棋盘容器，尺寸变化时触发重排
+@onready var _board_outer_glow: BoardOuterGlow = $Root/VBoxContainer/BoardContainer/BoardOuterGlow
+
+@onready var _anim_board_glow: AnimationPlayer = $AnimBoardGlow
 @onready var _board_view: BoardView = $Root/VBoxContainer/BoardContainer/BoardView # 棋盘视图：全盘状态的唯一真源
 @onready var _clock_timer: Timer = $Root/ClockTimer # 对局计时器，由子类启动
 @onready var _hint_overlay: HintOverlay = $Root/HintOverlay # 提示浮层（说明文字 + 应用/关闭按钮）
@@ -89,53 +63,55 @@ const _GOAL_CAT_HIGHLIGHT_PATHS: PackedStringArray = [
 @onready var _rule_diagram3: TextureRect = get_node_or_null(
 	"Root/VBoxContainer/RuleBar/Control/RuleDiagram3"
 )
-# ---- 底部道具按钮 ----
-@onready var _tool_hint_btn: Control = $Root/VBoxContainer/BottomTools/HintBtn # 提示道具
-@onready var _tool_locate_btn: Control = $Root/VBoxContainer/BottomTools/RevealBtn # 定位道具（节点名是 RevealBtn）
-@onready var _tool_clear_btn: Control = $Root/VBoxContainer/FunctionArea/ClearBtn # 清除按钮
-## 撤销道具（关闭撤销 AB 时节点不存在）
-@onready
-var _tool_undo_btn: Control = get_node_or_null("Root/VBoxContainer/BottomTools/UndoBtn") as Control # 撤销道具按钮
+
+@onready var _bt: BottomTools = $Root/VBoxContainer/ToolsRow/BottomTools
+
+@onready var _apply_btn: Button = get_node_or_null("Root/VBoxContainer/ToolsRow/ApplyBtn") as Button
+
+@onready var _apply_anim: AnimationPlayer = get_node_or_null("AnimApplyBtn") as AnimationPlayer # 草稿「应用」按钮动画
 @onready var _remaining_label: RichTextLabel = $Root/VBoxContainer/CatHeartRow/Target/CatCountLabel # 剩余猫数量文字
-# ---- 剩余数量进度条（AB: progress_emphasis 用进度条替掉数字） ----
-@onready var _progress_slot: Control = (
-	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot") as Control
-)
-## 轨道底
-@onready var _progress_track_bg: Panel = (
-	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot/TrackBg") as Panel
-)
-## 轨道填充
-@onready var _progress_track_fill: Panel = (
-	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot/TrackFill") as Panel
-)
-## 进度数字
-@onready var _progress_count_label: RichTextLabel = (
-	get_node_or_null("Root/VBoxContainer/CatHeartRow/ProgressSlot/CountLabel") as RichTextLabel
-)
 ## 数字模式下的目标节点（进度条模式下隐藏）
 @onready
 var _progress_target: Control = get_node_or_null("Root/VBoxContainer/CatHeartRow/Target") as Control # 猫数量目标节点
 
-# ---- 生命槽：3 条命，按 AB 换成心 / 鱼 / 闪电 ----
-var _heart1: Control = null # 第 1 条命
-var _heart2: Control = null # 第 2 条命
-var _heart3: Control = null # 第 3 条命
-
-## 三种生命图标各自的槽位预制体
-const HEART_SLOT_SCENE: PackedScene = preload(
-	"res://scripts/module/game/ui/compont/heart_slot.tscn"
-)
-const FISH_SLOT_SCENE: PackedScene = preload("res://scripts/module/game/ui/compont/fish_slot.tscn") # 鱼
-## 闪电
-const LIGHTNING_SLOT_SCENE: PackedScene = preload(
-	"res://scripts/module/game/ui/compont/lightning_slot.tscn"
+@onready var _target_cat_face_icon: TextureRect = (
+	get_node_or_null("Root/VBoxContainer/CatHeartRow/Target/CatFaceIcon") as TextureRect
 )
 
-# ---- 「生命 +1」飘字图标，Inspector 里拖入 ----
-@export var life_plus_icon_heart: Texture2D # 心
-@export var life_plus_icon_fish: Texture2D # 鱼
-@export var life_plus_icon_lightning: Texture2D # 闪电
+@onready var _target_costume_cat: SpineSprite = (
+	get_node_or_null("Root/VBoxContainer/CatHeartRow/Target/CostumeCat") as SpineSprite
+)
+
+var _target_costume_applied_id: int = -1
+
+var _cat_progress: Control = null
+
+var _cat_progress_total: int = -1
+
+var _cat_progress_region_order: Array[int] = []
+
+var _cat_progress_rotate_start: int = -1
+
+var _cat_progress_rotate_override: int = -1
+
+@onready var _life_bar_progress: HealthBarBase = $Root/VBoxContainer/CatHeartRow/HeartBg
+
+var _life_bar: HealthBarBase
+
+
+func _ready() -> void:
+	_life_bar = _life_bar_progress
+
+	_bullets_area = BulletsArea.ensure_on_page(self, $Root as Control, _hint_overlay)
+	if _bullets_area != null:
+		_bullets_area.barrage_displayed.connect(_on_game_barrage_displayed)
+		_bullets_area.barrage_spawn_failed.connect(_on_game_barrage_spawn_failed)
+	UniKitManager.ad_shown.connect(_on_game_barrage_ad_shown)
+	UniKitManager.ad_impression_received.connect(_on_game_barrage_ad_impression)
+	UniKitManager.ad_closed.connect(_on_game_barrage_ad_closed)
+	UniKitManager.ad_error_occurred.connect(_on_game_barrage_ad_error)
+
+
 # ---- 底部广告位 ----
 @onready var _ad_banner: Control = $Root/VBoxContainer/AdBanner # banner 广告占位
 @onready var _ad_down_adapt: Control = $Root/VBoxContainer/AdDownAdaptHolder # 底部安全区占位（算 banner 高度用）
@@ -144,32 +120,14 @@ const LIGHTNING_SLOT_SCENE: PackedScene = preload(
 @onready
 var _strategy_btn: Button = get_node_or_null("Root/VBoxContainer/Header/StrategyBtn") as Button # 策略分析入口
 
-# ---- 草稿按钮（铅笔） ----
-@onready
-var _draft_btn: Button = get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn") as Button # 草稿模式开关
-## 草稿按钮底图（进入草稿后换色）
-@onready var _draft_btn_bg: TextureRect = (
-	get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn/Bg") as TextureRect
-)
-## 草稿按钮上的铅笔图标
-@onready var _draft_btn_icon: TextureRect = (
-	get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn/IconRect") as TextureRect
-)
-
-## 草稿按钮上的角标文字
-@onready var _draft_btn_label: Label = (
-	get_node_or_null("Root/VBoxContainer/FunctionArea/DraftBtn/QLabel") as Label
-)
-
-const _PENCIL_TEX_DEFAULT: Texture2D = preload("res://assets/sprites/game/icon_pencil.png") # 铅笔：未选中
-## 铅笔：草稿模式中
-const _PENCIL_TEX_SELECTED: Texture2D = preload(
-	"res://assets/sprites/game/icon_pencil_selected.png"
-)
-
-## 草稿「应用」按钮（仅部分草稿变体存在）
-@onready
-var _apply_btn: Button = get_node_or_null("Root/VBoxContainer/FunctionArea/ApplyBtn") as Button # 把草稿落成正式标记
+var _game_barrage_logic: GameBarrageLogic = GameBarrageLogic.new()
+var _game_barrage_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _game_barrage_mode: int = GameBarrageLogic.MODE_DISABLED
+var _game_barrage_session_active: bool = false
+var _game_barrage_page_supported: bool = false
+var _game_barrage_ad_active: bool = false
+var _game_barrage_settings_open: bool = false
+var _bullets_area: BulletsArea = null
 
 ## 规则条上三块高亮（违规时闪哪条规则）
 @onready var _rule_highlights: Array[TextureRect] = [
@@ -185,52 +143,63 @@ const RULE_HL_FLOOR: float = 0.4 # 闪烁时最低不透明度
 # ---- 本局核心状态 ----
 var _level_config: Dictionary = {} # 关卡配置（子类在 on_show 里填：size / level / bank_* 等）
 var _puzzle: Dictionary = {} # 题面真源：{"regions": 区域图, "solution": 答案}，子类填
-var _lives: int = 3 # 剩余生命（0~3）
-var _mistake_count: int = 0 # 本局错误落子次数
 
-var _life_plus_used_this_game: bool = false # 「生命 +1」每局只送一次
+var _level_kind: int = LevelKind.MAIN
+var _lives: int = 3 # 剩余生命（0~3）
+
+var _lives_inf: bool = false
+
+var _life_cap: int = 3
+var _mistake_count: int = 0 # 本局错误落子次数
 var _is_complete: bool = false # 是否已判定通关（之后屏蔽一切操作）
 var _wrong_guess_pending: bool = false # 错落反馈播放中，期间屏蔽输入
 
-var _life_plus_appear1_suppress_thumb: bool = false # 首次生命 +1 的引导动画期间压掉点赞手势
+var _wrong_guess_lock_token: int = 0
 
-# ---- 输入系统：手势识别 + 普通/草稿两套输入方案 ----
-var _gesture_recognizer: BoardGestureRecognizer # 手势识别器（按 AB 在普通 / 防误触之间切换）
+var _screen_shake_tween: Tween = null
+var _screen_shake_rest_x: float = 0.0
+
+const _MOUSE_POINTER_INDEX: int = -2
+
+var _touch_slots: Dictionary = {}
+
+var _active_slot: BoardTouchSlot = null
 var _normal_scheme: BoardInputScheme # 普通落子输入方案
+
 var _draft_scheme: BoardInputScheme # 草稿模式输入方案
 
-var _split_pressed_cell: Vector2i = Vector2i(-1, -1) # 长按分裂输入中正按着的格子（-1,-1 表示没有）
+var _current_scheme: BoardInputScheme = null
+
+const _NO_POINTER_INDEX: int = -1
+
+var _locked_pointer_index: int = _NO_POINTER_INDEX
+
 var _last_placed_count: int = -1 # 上次显示的已放猫数（-1 表示还没初始化）
-var _progress_bar_mode: bool = false # 是否用进度条显示剩余数量
-var _progress_track_width: float = 163.0 # 当前进度条轨道宽度（像素）
-const _PROGRESS_TRACK_WIDTH_NORMAL: float = 163.0 # 轨道标准宽度（像素）
 
-const _PROGRESS_COUNT_FONT_BASE: int = 46 # 进度数字基准字号
-const _PROGRESS_FILL_DEAD_ZONE: float = 33.0 # 填充条起点的死区（像素）
-
-# ---- 连击（AB: combo_encourage） ----
-var _combo_count: int = 0 # 当前连击数
-var _combo_visual_suppressed: bool = false # 草稿提交期间先不弹连击飘字
-var _draft_combo_gain_sum: int = 0 # 草稿提交期间累计的分数
-var _combo_score: int = 0 # 本局累计连击分
+var _score_model: GameScoreModel = GameScoreModel.new()
 var _combo_feedback_view: Node = null # 连击飘字视图（子类里赋值）
 
-enum DraftTerminal { NORMAL, CONTRADICTION, ALL_CORRECT } # 草稿结局：正常退出 / 自相矛盾 / 已全对
+var _se_count: int = 0
 
-# ---- 草稿模式状态 ----
-var _draft_mode: bool = false # 是否处于草稿模式
+var _se_last_step: int = 0
 
-var _draft_root: Vector2i = Vector2i(-1, -1) # 草稿起点（第一只草稿猫，-1,-1 表示无）
-var _draft_terminal_state: int = DraftTerminal.NORMAL # 当前草稿结局
-var _draft_bubble: Label = null # 草稿提示气泡（懒创建）
-var _draft_check_token: int = 0 # 终局检查令牌，自增可作废旧的延时检查
-var _draft_enter_ms: int = 0 # 进入草稿模式的时刻（毫秒），用于统计停留时长
-var _pending_post_cat_auto_apply: bool = false # 已排队「等猫落下动画结束就自动应用草稿」
-const _CAT_APPEAR_SEC: float = 1.33 # 猫落下动画时长（秒），期间阻塞输入
+var _se_step_pending_this_place: bool = false
 
-var _draft_pre_enter_real_marks: Dictionary = {} # 进草稿前的正式标记快照（死锁时回滚用）
-var _draft_deadlock_pending: bool = false # 草稿提交后触发了死锁，待处理
-var _draft_deadlock_real_marks: Dictionary = {} # 死锁时要回滚到的正式标记
+var _dt_cross_landing_this_place: bool = false
+
+var _se_amortized_step: int = -1
+
+var _se_fly_token: int = 0
+
+var _conflict_anim_token: int = 0
+
+var _active_conflict_lines: Array[LineCrossConnector] = []
+
+var _conflict_target_positions: Array[Vector2i] = []
+
+var _se_last_fly_launch_ms: int = 0
+
+var _missed_cross_token: int = 0
 
 # ---- 提示：HintEngine 的结果与展示层 ----
 var _hint_data: Dictionary = {} # 当前展示中的提示数据
@@ -245,44 +214,92 @@ var _strategy_steps: Array[int] = [0, 0, 0, 0, 0] # 本局各策略（R1~R5）�
 
 var _last_tool_deplete_ms: int = 0 # 最近一次道具耗尽的时刻（毫秒），用于 800ms 防抖
 
-# ---- 步历史与撤销 ----
-var _step_history: StepHistory = StepHistory.new() # 本局步历史
-var _undo_executor: UndoHighlightExecutor = UndoHighlightExecutor.new() # 撤销高亮执行器
-var _highlight_cursor: int = -1 # 撤销预览游标（-1 未开始 / -2 已到头）
-var _current_step_cells: Array[Dictionary] = [] # 当前这一步已改过的格子，抬手时提交
+var _tool_reward_ad_opportunities: Dictionary = {}
+
+var _tool_reward_ad_seq: int = 0
+
+static var _tool_reward_ad_check_pending: bool = false
+
+const _MOUSE_STEP_INTERVAL_SEC: float = 0.85
+const _MOUSE_MARK_ANIM_SEC: float = 1.2
+const _MOUSE_CAT_ANIM_SEC: float = 2.0
+const _MOUSE_MARK_ANIM: String = "MouseAppear1"
+const _MOUSE_LAST_MARK_ANIM: String = "MouseAppear2"
+const _MOUSE_CAT_ANIM: String = "MouseAppear3"
+var _mouse_tool_busy: bool = false
+var _mouse_tool_token: int = 0
+var _mouse_completion_pending: bool = false
+var _mouse_rng := RandomNumberGenerator.new()
+
+# ---- 草稿模式状态 ----
+var _draft_mode: bool = false # 是否处于草稿模式
+
+var _draft_lethal_wrong_cells: Array[Vector2i] = []
+
+## 草稿提交中，期间不弹自动完成按钮
+var _applying_draft_commit: bool = false
+
+var _combo_visual_suppressed: bool = false # 草稿提交期间先不弹连击飘字
+
+var _draft_busy: bool = false
+
+var _draft_apply_conflict_shown: bool = false
+
+var _draft_apply_violated_rules: Array[int] = []
+
+var _draft_used_this_level: bool = false
+
+var _draft_enter_ms: int = 0 # 进入草稿模式的时刻（毫秒），用于统计停留时长
+
+const _DRAFT_UI_LOCK_SEC: float = 0.3
+
+var _step_dirty: bool = false
 
 var _hint_mutex: HintMutex = HintMutex.new() # 提示互斥锁（本文件未使用，留给子类）
 
 # ---- 空闲引导：长时间不操作就闪一下道具按钮 ----
 var _idle_hint_delay: float = 20.0 # 多久没操作就开始提示（秒）
 var _idle_time: float = 0.0 # 已累计的空闲时长（秒）
-var _hint_anim_active: bool = false # 提示动画是否正在播
-var _idle_hint_active_btn: ToolButton = null # 正在闪的道具按钮
 
 const IDLE_HINT_REPEAT_PLAY_SEC: float = 10.0 # 可重复模式下单次提示播放时长（秒）
+
+const _WIN_REPLAY_FULL_FPS_SEC: float = 6.0
 var _idle_hint_play_time: float = 0.0 # 本轮提示已播时长（秒）
+
+var _idle_hint_round_count: int = 0
+
+var _dead_board_armed: bool = false
+
+var _dead_board_wait_sec: float = 0.0
+
+const _DEAD_BOARD_HARD_HINT_STRATEGIES: Array[String] = ["R4", "R4b", "R4_chain", "R5_chain"]
+
 var _entry_anim_playing: bool = false # 开场动画还在播（期间屏蔽大部分操作）
 
-var _rule_tween: Tween = null # 规则条高亮的循环补间
-var _rule_active_highlight: TextureRect = null # 正在高亮的那一块
+var _tool_btns_locked: bool = false
+
+var _rule_tweens: Array[Tween] = []
+var _rule_active_highlights: Array[TextureRect] = []
 
 var _stat_status: String = "" # 埋点用：本次进入对局的状态（new/restart/continue），子类赋值
 var _stat_start_ms: int = 0 # 埋点用：本局开始时刻（毫秒），子类赋值
 
-var _goal_emphasis: int = 0 # 目标强调 AB 的取值（0 不强调 / 1 强调猫数量）
-
-# ---- 点赞手势的运行时状态（thumb_up） ----
-## 键：in_game_sec 局内秒数、triggered_count 已触发次数、wrong_cat_events 错落事件、missed_cat_* 漏猫候选
 var _like_hand_state: Dictionary = {
 	"in_game_sec": 0.0,
 	"last_cat_sec": 0.0,
 	"triggered_count": 0,
 	"clock_paused": false,
 	"has_seen_first_cat": false,
-	"wrong_cat_events": [],
-	"missed_cat_candidates": {},
-	"missed_cat_prev": {},
+	"cat_place_times": {},
+	"missed_cross_triggered_cats": {},
+	"latest_cat_key": "",
+	"manually_x_marked_cells": {},
+	"hint_marked_x_cells": {},
 }
+
+var _continue_play_sec: float = 0.0
+
+var _continue_clock_started: bool = false
 
 ## 可触发 R4+ 反馈（吹号）的格子缓存
 var _r4_plus_cells: Dictionary = {}
@@ -294,41 +311,12 @@ func _game_type() -> String:
 	return Tracker.GameType.NORMAL
 
 
-## 按 AB 变体设置第 3 条规则（八邻接）的文案 key
-func _apply_third_rule_text() -> void:
-	var variant: int = ABTestManager.third_rule_text.get_rule_text_variant()
-	var key: String
-	match variant:
-		ThirdRuleTextConfig.VALUE_VARIANT_A:
-			key = "GAME_RULE_NO_TOUCH_A"
-		ThirdRuleTextConfig.VALUE_VARIANT_B:
-			key = "GAME_RULE_NO_TOUCH_B"
-		ThirdRuleTextConfig.VALUE_VARIANT_C:
-			key = "GAME_RULE_NO_TOUCH_C"
-		_:
-			key = "GAME_RULE_NO_TOUCH"
-	_rule_label3.text = key
-
-
-## 按 AB 把规则条换成 V0 / V4 / V7 预制体之一（版本不符就整块重建）
-func _apply_rule_info_bar(level: int = 0) -> void:
+func _apply_rule_info_bar() -> void:
 	var rule_bar := get_node_or_null("Root/VBoxContainer/RuleBar")
 	if rule_bar == null:
 		return
-	var is_v4: bool = ABTestManager.rule_text.is_collapse_10()
-	var is_v7: bool = ABTestManager.rule_text.is_single_swipe()
 
-	if is_v4 and level >= 0 and level <= 10:
-		is_v4 = false
-
-	if is_v4 and rule_bar is RuleInfoBarV4:
-		(rule_bar as RuleInfoBarV4).apply_persisted_state()
-		_refresh_rule_bar_node_refs(rule_bar)
-		return
-	if is_v7 and rule_bar is RuleInfoBarV7:
-		_refresh_rule_bar_node_refs(rule_bar)
-		return
-	if not is_v4 and not is_v7 and rule_bar.get_meta("_rule_bar_v0", false):
+	if rule_bar.get_meta("_rule_bar_v0", false):
 		_refresh_rule_bar_node_refs(rule_bar)
 		return
 
@@ -337,18 +325,12 @@ func _apply_rule_info_bar(level: int = 0) -> void:
 	var idx: int = rule_bar.get_index()
 	vbox.remove_child(rule_bar)
 	rule_bar.queue_free()
-	var scene: PackedScene = (
-		_RULE_INFO_BAR_V4_SCENE
-		if is_v4
-		else (_RULE_INFO_BAR_V7_SCENE if is_v7 else _RULE_INFO_BAR_V0_SCENE)
-	)
-	var new_bar: Control = scene.instantiate()
+	var new_bar: Control = _RULE_INFO_BAR_V0_SCENE.instantiate()
 	new_bar.name = "RuleBar"
 	new_bar.custom_minimum_size = Vector2(1080, 170)
 	new_bar.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	new_bar.size_flags_stretch_ratio = 0.0
-	if not is_v4 and not is_v7:
-		new_bar.set_meta("_rule_bar_v0", true)
+	new_bar.set_meta("_rule_bar_v0", true)
 	vbox.add_child(new_bar)
 	vbox.move_child(new_bar, idx)
 	_refresh_rule_bar_node_refs(new_bar)
@@ -375,86 +357,30 @@ func _refresh_rule_bar_node_refs(rule_bar: Node) -> void:
 	)
 
 
-## 规则文案入口 AB：决定用信息按钮弹窗，还是直接隐藏规则条
-func _apply_rule_text_entry() -> void:
-	var info_btn: Button = get_node_or_null("Root/VBoxContainer/Header/InfoBtn") as Button
-	if info_btn == null:
-		return
-	var cfg: RuleTextConfig = ABTestManager.rule_text
-	var is_info_popup: bool = cfg.is_info_popup()
-	var is_setting_entry: bool = cfg.is_setting_entry()
-	var should_hide_rule_bar: bool = is_info_popup or is_setting_entry
-	info_btn.visible = is_info_popup
-
-	var rule_bar := get_node_or_null("Root/VBoxContainer/RuleBar") as Control
-	if rule_bar != null:
-		var rule_inner := rule_bar.get_node_or_null("Control") as CanvasItem
-		if rule_inner != null:
-			rule_inner.visible = not should_hide_rule_bar
-
-
-## 标记「已绑定过按压特效」的 meta key，防止重复绑定
-const _PRESS_FX_BOUND_META: StringName = &"_press_fx_bound"
-
-
-## 给顶栏的信息 / 设置按钮绑上按下缩放特效（只绑一次）
-func _bind_header_btn_press_fx() -> void:
-	for path: String in [
-		"Root/VBoxContainer/Header/InfoBtn", "Root/VBoxContainer/Header/SettingsBtn"
-	]:
-		var btn := get_node_or_null(path) as BaseButton
-		if btn != null and not btn.has_meta(_PRESS_FX_BOUND_META):
-			btn.set_meta(_PRESS_FX_BOUND_META, true)
-			bind_press_release_scale(btn)
-
-
-## 按 AB 排布规则条：纯图 / 图标+文字 / 仅第 3 条配图 / 纯文字
-func _apply_rule_bar_style(level: int = 0) -> void:
+func _apply_rule_bar_style() -> void:
 	if _rule_diagram1 == null or _rule_diagram3 == null:
 		return
-	var cfg: RuleTextConfig = ABTestManager.rule_text
-
-	if cfg.is_collapse_10() and level > 0 and level <= 10:
-		_layout_pills_third_img()
-		return
-	if cfg.is_all_img():
-		_set_labels_visible(false, false, false)
-		_rule_diagram1.visible = true
-		_rule_diagram2.visible = true
-		_rule_diagram3.visible = true
-		_set_rect(_rule_diagram1, 161.0, 261.0, 50.0, 150.0)
-		_set_rect(_rule_diagram2, 490.0, 590.0, 50.0, 150.0)
-		_set_rect(_rule_diagram3, 819.0, 919.0, 50.0, 150.0)
-	elif cfg.is_icon_text():
-		_set_labels_visible(true, true, true)
-		_apply_icon_text_label_style(
-			_rule_label1, _RULE_ICON_TEXT_LETTER_SPACING_1, _RULE_ICON_TEXT_LINE_SPACING_1
-		)
-		_apply_icon_text_label_style(
-			_rule_label2, _RULE_ICON_TEXT_LETTER_SPACING_2, _RULE_ICON_TEXT_LINE_SPACING_REST
-		)
-		_apply_icon_text_label_style(
-			_rule_label3, _RULE_ICON_TEXT_LETTER_SPACING_3, _RULE_ICON_TEXT_LINE_SPACING_REST
-		)
-		_set_h(_rule_label1, 169.0, 353.0)
-		_set_h(_rule_label2, 498.0, 682.0)
-		_set_h(_rule_label3, 827.0, 1011.0)
-		_rule_diagram1.visible = true
-		_rule_diagram2.visible = true
-		_rule_diagram3.visible = true
-		_set_rect(_rule_diagram1, 69.0, 159.0, 55.0, 145.0)
-		_set_rect(_rule_diagram2, 397.0, 487.0, 55.0, 145.0)
-		_set_rect(_rule_diagram3, 728.0, 818.0, 55.0, 145.0)
-	elif cfg.is_third_img():
-		_layout_pills_third_img()
-	else:
-		_set_labels_visible(true, true, true)
-		_set_h(_rule_label1, 56.0, 366.0)
-		_set_h(_rule_label2, 385.0, 695.0)
-		_set_h(_rule_label3, 714.0, 1024.0)
-		_rule_diagram1.visible = false
-		_rule_diagram2.visible = false
-		_rule_diagram3.visible = false
+	_rule_label1.visible = true
+	_rule_label2.visible = true
+	_rule_label3.visible = true
+	_apply_icon_text_label_style(
+		_rule_label1, _RULE_ICON_TEXT_LETTER_SPACING_1, _RULE_ICON_TEXT_LINE_SPACING_1
+	)
+	_apply_icon_text_label_style(
+		_rule_label2, _RULE_ICON_TEXT_LETTER_SPACING_2, _RULE_ICON_TEXT_LINE_SPACING_REST
+	)
+	_apply_icon_text_label_style(
+		_rule_label3, _RULE_ICON_TEXT_LETTER_SPACING_3, _RULE_ICON_TEXT_LINE_SPACING_REST
+	)
+	_set_h(_rule_label1, 169.0, 353.0)
+	_set_h(_rule_label2, 498.0, 682.0)
+	_set_h(_rule_label3, 827.0, 1011.0)
+	_rule_diagram1.visible = true
+	_rule_diagram2.visible = true
+	_rule_diagram3.visible = true
+	_set_rect(_rule_diagram1, 69.0, 159.0, 55.0, 145.0)
+	_set_rect(_rule_diagram2, 397.0, 487.0, 55.0, 145.0)
+	_set_rect(_rule_diagram3, 728.0, 818.0, 55.0, 145.0)
 
 
 ## 取（并缓存）指定字间距的字体副本
@@ -483,32 +409,6 @@ func _apply_icon_text_label_style(label: Label, letter_spacing: int, line_spacin
 		label.add_theme_font_size_override(&"font_size", _RULE_ICON_TEXT_FONT_SIZE)
 
 
-## 一次性设置三条规则文字的可见性
-func _set_labels_visible(a: bool, b: bool, c: bool) -> void:
-	_rule_label1.visible = a
-	_rule_label2.visible = b
-	_rule_label3.visible = c
-
-
-## 只有第 3 条规则配图时的排布
-func _layout_pills_third_img() -> void:
-	_set_labels_visible(true, true, true)
-	_set_h(_rule_label1, 56.0, 366.0)
-	_set_h(_rule_label2, 385.0, 695.0)
-	_set_h(_rule_label3, 812.0, 1024.0)
-	_rule_diagram1.visible = false
-	_rule_diagram2.visible = false
-	_rule_diagram3.visible = true
-	_set_rect(_rule_diagram3, 720.0, 812.0, 54.0, 146.0)
-
-
-## 把关卡号告诉 V7 规则条，决定它能不能折叠
-func _apply_rule_swipe_collapse(level: int) -> void:
-	var bar := get_node_or_null("Root/VBoxContainer/RuleBar")
-	if bar is RuleInfoBarV7:
-		(bar as RuleInfoBarV7).apply_level(level)
-
-
 ## 设置控件的左右偏移
 func _set_h(node: Control, left: float, right: float) -> void:
 	node.offset_left = left
@@ -523,38 +423,18 @@ func _set_rect(node: Control, left: float, right: float, top: float, bottom: flo
 	node.offset_bottom = bottom
 
 
-## 打开「怎么玩」页面
-func _on_info_btn_pressed() -> void:
-	UIManager.show_ui(UiName.HOW_TO_PLAY)
-
-
-## 按 AB 调整规则条与猫数量行的上下顺序（适配占位始终夹在中间）
-func _apply_rules_ui_order() -> void:
-	var vbox: Node = $Root/VBoxContainer
-	var rule_bar: Node = vbox.get_node_or_null("RuleBar")
-	var cat_heart_row: Node = vbox.get_node_or_null("CatHeartRow")
-	var holder: Node = vbox.get_node_or_null("RuleBarAdaptHolder")
-	if rule_bar == null or cat_heart_row == null or holder == null:
-		return
-	var want_rule_above: bool = ABTestManager.game_page_rules_ui.is_rule_bar_above()
-	var top: Node = rule_bar if want_rule_above else cat_heart_row
-	var bottom: Node = cat_heart_row if want_rule_above else rule_bar
-	if top.get_index() < holder.get_index() and holder.get_index() < bottom.get_index():
-		return
-	var min_idx: int = min(rule_bar.get_index(), cat_heart_row.get_index(), holder.get_index())
-	vbox.move_child(top, min_idx)
-	vbox.move_child(holder, min_idx + 1)
-	vbox.move_child(bottom, min_idx + 2)
-
-
-## 按规则条位置选开场动画名（Appear / Appear2）
-func _appear_anim_name() -> String:
-	return "Appear2" if ABTestManager.game_page_rules_ui.is_rule_bar_above() else "Appear"
-
-
-## 由 UIManager 在页面显示时调用：重置开场状态、挂生命/进度条、连信号、进开场动画
+## 恢复本局计分与计时状态，初始化规则、生命和棋盘交互，并更新异步演出令牌。
 func on_show(params: Dictionary = {}) -> void:
+	_reset_tool_reward_ad_opportunities()
+
+	PowerSaver.wake(PowerSaver.SHOW_FULL_FPS_SEC)
+
 	_eval_interstitial_cache = null
+
+	if LanguageManager.resolve_language_family() == "jp":
+		ABTestManager.dye_at_game_start_with_jp()
+
+	ABTestManager.doubletap_protect.reset_high_freq_state()
 	super.on_show(params)
 
 	SoundManager.start_bgm()
@@ -563,68 +443,102 @@ func on_show(params: Dictionary = {}) -> void:
 
 	set_process(true)
 
-	_auto_mark_token += 1
+	(
+		_score_model
+		. restore(
+			{
+				"score": params.get("restore_score", 0),
+				"combo": params.get("restore_combo", 0),
+				"max_combo": params.get("restore_max_combo", 0),
+			}
+		)
+	)
+	_se_count = params.get("restore_se_count", 0)
 
-	_lock_x_token += 1
+	_se_last_step = int(params.get("restore_se_last_step", 0))
 
-	# 续局时恢复连击分数与「生命 +1 是否已用」
-	_combo_count = params.get("restore_combo_count", 0)
-	_combo_score = params.get("restore_combo_score", 0)
+	_operable_sec = float(params.get("restore_operable_sec", 0.0))
+	_cat_toast_tracker.restore_state(params.get("restore_cat_toast", {}))
 
-	_life_plus_used_this_game = bool(params.get("restore_life_plus_used", false))
+	if params.has("restore_near_death_fired"):
+		_near_death_fired = bool(params["restore_near_death_fired"])
+		_near_death_level_key = str(params.get("restore_near_death_level_key", ""))
 
-	var rule_text_level: int = params.get("level_index", params.get("retry_level", 0))
-	_apply_rule_info_bar(rule_text_level)
-	_apply_third_rule_text()
+	_near_death_blocked = (
+		bool(params.get("restore_near_death_blocked", false))
+		or str(params.get("_tracker_status", "")) == Tracker.GameStatus.RESTART
+	)
 
-	_apply_rule_text_entry()
+	_wrong_zone_tracker.restore_state(params.get("restore_wrong_zone", {}))
+	_wrong_zone_idle_sec = 0.0
+	_stop_wrong_zone_highlight()
+	_se_amortized_step = -1
 
-	_bind_header_btn_press_fx()
+	_se_fly_token += 1
 
-	_apply_rule_bar_style(rule_text_level)
+	_missed_cross_token += 1
 
-	_apply_rules_ui_order()
+	_full_mark_defer_token += 1
 
-	_mount_life_bar()
+	_cancel_misplace_conflict("_on_show")
+
+	_cancel_mouse_tool_flow()
+	_mouse_rng.randomize()
+
+	_apply_rule_info_bar()
+
+	_apply_rule_bar_style()
+
+	_life_bar.apply_kind(false)
+
+	var life_bars: Array[Control] = _life_bar_nodes()
+	for bar_node: Control in life_bars:
+		if bar_node is HealthBarBase:
+			(bar_node as HealthBarBase).stop_highlight_glow()
 	_mount_progress_bar()
-	_goal_emphasis = ABTestManager.goal_emphasis.value()
 
-	# 接棋盘信号：R4+ 反馈缓存 + 轴自动打叉 + 轴按钮刷新
+	_apply_pattern_mode()
+
 	if not _board_view.cell_state_changed.is_connected(_on_board_cell_state_changed_for_r4):
 		_board_view.cell_state_changed.connect(_on_board_cell_state_changed_for_r4)
+	if not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_hint_cross):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_hint_cross)
 
-	if not _board_view.axis_auto_mark_pressed.is_connected(_on_axis_auto_mark_pressed):
-		_board_view.axis_auto_mark_pressed.connect(_on_axis_auto_mark_pressed)
-	if not _board_view.cell_state_changed.is_connected(_on_cell_changed_refresh_axis_btn):
-		_board_view.cell_state_changed.connect(_on_cell_changed_refresh_axis_btn)
-	_axis_busy_set.clear()
+	if not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_full_mark):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_full_mark)
 
-	_ac_shown = false
-	_ac_had_wrong_cat = false
-	if _ac_anim != null:
-		_ac_anim.play("RESET")
+	if not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_cat_toast):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_cat_toast)
 
-	_exit_draft_mode_and_clear()
+	if not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_near_death):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_near_death)
 
-	# 草稿按钮：按 AB 变体与关卡号决定是否可见
-	var unlocked: bool = _is_draft_unlocked()
-	if _draft_btn != null:
-		_draft_btn.visible = unlocked
-	if _apply_btn != null:
-		_apply_btn.visible = false
+	if not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_wrong_zone):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_wrong_zone)
 
-	_anim_player.play(_appear_anim_name())
+	if not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_today_marks):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_today_marks)
+
+	if (
+		not OS.has_feature("rel")
+		and not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_today_stats_log)
+	):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_today_stats_log)
+
+	if (
+		ABTestManager.found_cat_animation.should_blink_all_found()
+		and not _board_view.cell_state_changed.is_connected(_on_cell_changed_for_found_blink_all)
+	):
+		_board_view.cell_state_changed.connect(_on_cell_changed_for_found_blink_all)
+
+	_anim_player.play("Appear")
 	_anim_player.seek(0.0, true)
 	_anim_player.pause()
 
-	var rb_after_seek := get_node_or_null("Root/VBoxContainer/RuleBar")
-	if rb_after_seek is RuleInfoBarV4:
-		(rb_after_seek as RuleInfoBarV4).apply_persisted_state()
+	_init_session_state()
 
-	_set_rule_info_bar_v4_interactive(false)
-
-	# 恢复或重建撤销系统（续局会带 step_history）
-	_setup_undo_system(params.get("restore_step_history", []))
+	_cat_streak = int(params.get("restore_cat_streak", 0))
+	_cross_at_first_cat = int(params.get("restore_cross_at_first_cat", -1))
 
 	if not _board_container.resized.is_connected(_on_board_container_resized):
 		connect_managed(_board_container.resized, _on_board_container_resized)
@@ -632,180 +546,102 @@ func on_show(params: Dictionary = {}) -> void:
 	if not GameState.tool_count_changed.is_connected(_on_tool_count_changed):
 		connect_managed(GameState.tool_count_changed, _on_tool_count_changed)
 
+	if not PurchaseManager.vip_status_changed.is_connected(_on_vip_status_changed):
+		connect_managed(PurchaseManager.vip_status_changed, _on_vip_status_changed)
 
-## 按 AB 与关卡号开关开场动画里的高亮轨道与光效（规则条 / 猫数量）
-func _apply_goal_emphasis_tracks(level: int) -> void:
-	var rule_control: CanvasItem = (
-		get_node_or_null("Root/VBoxContainer/RuleBar/Control") as CanvasItem
-	)
-	var keep_rule: bool = true
-	var keep_cat: bool = false
-	if _goal_emphasis == 1 and level > 10:
-		keep_rule = false
-		keep_cat = true
+	_banner_suppressed = false
 
-	var rule_bar_collapsed: bool = (
-		ABTestManager.rule_text.is_collapse_10()
-		and level > 10
-		and GameState.is_rule_info_bar_collapsed()
-	)
-	if rule_bar_collapsed:
-		keep_rule = false
-		if rule_control != null:
-			rule_control.modulate = Color(1, 1, 1, 1)
-
-	var rule_glow: CanvasItem = (
-		get_node_or_null("Root/VBoxContainer/RuleBar/Control/Glow") as CanvasItem
-	)
-	if rule_glow != null:
-		rule_glow.visible = keep_rule
-	var cat_glow: CanvasItem = (
-		get_node_or_null("Root/VBoxContainer/CatHeartRow/Target/Glow") as CanvasItem
-	)
-	if cat_glow != null:
-		cat_glow.visible = keep_cat
-	var anim: Animation = _anim_player.get_animation(_appear_anim_name())
-	if anim == null:
-		return
-	for i in anim.get_track_count():
-		var p: String = str(anim.track_get_path(i))
-		if p in _GOAL_RULE_HIGHLIGHT_PATHS:
-			anim.track_set_enabled(i, keep_rule)
-		elif p in _GOAL_CAT_HIGHLIGHT_PATHS:
-			anim.track_set_enabled(i, keep_cat)
-		elif "RuleBar/Control" in p:
-			anim.track_set_enabled(i, not rule_bar_collapsed)
+	if not UIManager.events.window_shown.is_connected(_on_any_window_shown):
+		connect_managed(UIManager.events.window_shown, _on_any_window_shown)
+	if not UIManager.events.window_hidden.is_connected(_on_any_window_hidden):
+		connect_managed(UIManager.events.window_hidden, _on_any_window_hidden)
 
 
-# ================= 道具：提示 / 定位 / 撤销 =================
-## 按道具名取按钮（locate / hint / undo）
-func _tool_btn_of(kind: String) -> ToolButton:
-	match kind:
-		"locate":
-			return _tool_locate_btn as ToolButton
-		"hint":
-			return _tool_hint_btn as ToolButton
-		"undo":
-			return _tool_undo_btn as ToolButton
-	return null
-
-
-## GameState 道具数量变化时刷新按钮角标与状态
 func _on_tool_count_changed(kind: String, count: int) -> void:
-	var tb := _tool_btn_of(kind)
-	if tb == null or tb.state == ToolButton.State.FREE:
-		return
-	if count > 0:
-		tb.set_badge_count(count)
-		tb.state = ToolButton.State.HAS_TOOL
-	else:
-		tb.badge_count = 0
-		tb.state = ToolButton.State.NO_TOOL
+	_bt.refresh_kind(kind, count)
 
 
-## 按钮 → 埋点用的道具名
-func _btn_to_prop_name(btn: Control) -> String:
-	if btn == _tool_hint_btn:
-		return Tracker.Prop.HINT
-	elif btn == _tool_locate_btn:
-		return Tracker.Prop.LOCATE
-	elif btn == _tool_undo_btn:
-		return "undo"
+func _prop_name_of(kind: String) -> String:
+	match kind:
+		ToolKind.HINT:
+			return Tracker.Prop.HINT
+		ToolKind.LOCATE:
+			return Tracker.Prop.LOCATE
+		ToolKind.MOUSE:
+			return Tracker.Prop.MOUSE
+		ToolKind.DRAFT:
+			return Tracker.Prop.DRAFT
 	return ""
 
 
-## 把数量写回 GameState（会落存档）
-func _save_tool_to_state(btn: Control, count: int) -> void:
-	if btn == _tool_locate_btn:
-		GameState.set_tool_count("locate", count)
-	elif btn == _tool_hint_btn:
-		GameState.set_tool_count("hint", count)
-	elif btn == _tool_undo_btn:
-		GameState.set_tool_count("undo", count)
+func _save_tool_count(kind: String, count: int) -> void:
+	if kind != "":
+		GameState.set_tool_count(kind, count)
 
 
-## 消耗一个道具；FREE 直接放行，数量为 0 则转去请求激励广告并返回 false
-func _consume_tool(btn: Control, vibrate: bool = true) -> bool:
-	var tb := btn as ToolButton
-	if tb == null:
+func _consume_tool(kind: String, vibrate: bool = true, allow_reward_ad: bool = true) -> bool:
+	if kind == "":
 		return false
 
-	if tb.state == ToolButton.State.FREE:
+	if _is_free_kind(kind):
 		if vibrate:
-			VibrateManager.play_vibrate(VibrateManager.Level.LEVEL4)
+			VibrateManager.play_at(VibrateManager.Pos.TOOL_USE)
+
+		mark_continue_clock_started()
+		_record_game_barrage_action()
+		_note_wrong_zone_activity()
+		_record_elo_v2_action("tool")
 		return true
-	if tb.badge_count <= 0:
-		_request_reward_for_tool(btn)
+	var count: int = GameState.get_tool_count(kind)
+	if count <= 0:
+		if allow_reward_ad:
+			_request_reward_for_tool(kind)
 		return false
-	var new_count: int = tb.badge_count - 1
+	var new_count: int = count - 1
 	if new_count == 0:
 		_last_tool_deplete_ms = Time.get_ticks_msec()
 
-	_save_tool_to_state(btn, new_count)
+	_save_tool_count(kind, new_count)
 	if vibrate:
-		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL4)
+		VibrateManager.play_at(VibrateManager.Pos.TOOL_USE)
 
-	var prop_name: String = _btn_to_prop_name(btn)
+	var prop_name: String = _prop_name_of(kind)
 	if prop_name != "":
-		Tracker.track_prop_use(prop_name, Tracker.get_current_source(), 1, new_count)
+		Tracker.track_prop_use(prop_name, get_scr_name(), 1, new_count)
+
+	mark_continue_clock_started()
+	_record_game_barrage_action()
+	_note_wrong_zone_activity()
+	_record_elo_v2_action("tool")
 	return true
 
 
-## 用 GameState 的数量整体同步三个道具按钮（含免费区与调试强制免费）
-func _sync_tools_from_state() -> void:
-	var tb_r := _tool_locate_btn as ToolButton
-	var tb_h := _tool_hint_btn as ToolButton
-	if tb_r != null:
-		if GameState.get_tool_count("locate") > 0:
-			tb_r.state = ToolButton.State.HAS_TOOL
-			tb_r.set_badge_count(GameState.get_tool_count("locate"))
-		else:
-			tb_r.badge_count = 0
-			tb_r.state = ToolButton.State.NO_TOOL
-	if tb_h != null:
-		if GameState.get_tool_count("hint") > 0:
-			tb_h.state = ToolButton.State.HAS_TOOL
-			tb_h.set_badge_count(GameState.get_tool_count("hint"))
-		else:
-			tb_h.badge_count = 0
-			tb_h.state = ToolButton.State.NO_TOOL
+func _record_elo_v2_action(_action: String) -> void:
+	return
 
-	var tb_u := _tool_undo_btn as ToolButton
-	if tb_u != null:
-		if ABTestManager.undo_btn.is_free():
-			tb_u.state = ToolButton.State.FREE
-		elif GameState.get_tool_count("undo") > 0:
-			tb_u.state = ToolButton.State.HAS_TOOL
-			tb_u.set_badge_count(GameState.get_tool_count("undo"))
-		else:
-			tb_u.badge_count = 0
-			tb_u.state = ToolButton.State.NO_TOOL
+
+func _sync_tools_from_state() -> void:
+	_bt.sync_from_state(_free_kinds())
+
+
+func _is_free_kind(kind: String) -> bool:
+	if kind != ToolKind.LOCATE and kind != ToolKind.HINT:
+		return false
 
 	if _is_free_tool_zone():
-		if tb_r != null:
-			tb_r.state = ToolButton.State.FREE
-		if tb_h != null:
-			tb_h.state = ToolButton.State.FREE
-		if tb_u != null:
-			tb_u.state = ToolButton.State.FREE
+		return true
+	if debug_force_free_tool == "all":
+		return true
+	return debug_force_free_tool == kind
 
-	match debug_force_free_tool:
-		"hint":
-			if tb_h != null:
-				tb_h.state = ToolButton.State.FREE
-		"locate":
-			if tb_r != null:
-				tb_r.state = ToolButton.State.FREE
-		"undo":
-			if tb_u != null:
-				tb_u.state = ToolButton.State.FREE
-		"all":
-			if tb_r != null:
-				tb_r.state = ToolButton.State.FREE
-			if tb_h != null:
-				tb_h.state = ToolButton.State.FREE
-			if tb_u != null:
-				tb_u.state = ToolButton.State.FREE
+
+func _free_kinds() -> Array[String]:
+	var candidates: Array[String] = [ToolKind.LOCATE, ToolKind.HINT]
+	var out: Array[String] = []
+	for kind: String in candidates:
+		if _is_free_kind(kind):
+			out.append(kind)
+	return out
 
 
 ## 当前关卡是否处于「道具全免费」区间
@@ -815,57 +651,389 @@ func _is_free_tool_zone() -> bool:
 	)
 
 
-## 从外部设置某道具数量（写回 GameState）
-func set_tool_count(tool_name: String, count: int) -> void:
-	var btn: Control
-	match tool_name:
-		"locate":
-			btn = _tool_locate_btn
-		"hint":
-			btn = _tool_hint_btn
-		"undo":
-			btn = _tool_undo_btn
-		_:
-			return
-	var tb := btn as ToolButton
-	if tb == null:
+func _tool_ad_toast_key() -> String:
+	var cfg: NoNetworkRemindConfig = ABTestManager.no_network_remind
+	if not cfg.is_enabled():
+		return "AD_TOAST_NOT_READY"
+	if not UniKitManager.is_online():
+		return "AD_TOAST_NO_NETWORK"
+	return "AD_TOAST_NOT_FILLED" if cfg.covers_no_fill() else "AD_TOAST_NOT_READY"
+
+
+static var _ad_valid_query_in_flight: bool = false
+
+var _last_known_has_fill: bool = true
+
+var _fill_positive_epoch: int = 0
+
+const _FILL_RECHECK_MIN_INTERVAL_SEC: float = 5.0
+var _last_fill_query_msec: int = 0
+
+var _ad_badge_on: bool = false
+
+
+func _set_ad_badge(on: bool) -> void:
+	_ad_badge_on = on
+	_bt.set_ad_unavailable(on)
+
+
+func _reeval_ad_unavailable_badge() -> void:
+	if _bt == null:
+		return
+	var cfg: NoNetworkRemindConfig = ABTestManager.no_network_remind
+	if not cfg.is_enabled():
+		_set_ad_badge(false)
+		return
+	if not cfg.covers_no_fill():
+		_set_ad_badge(not UniKitManager.is_online())
 		return
 
-	_save_tool_to_state(btn, count)
+	_set_ad_badge(not _last_known_has_fill)
 
 
-## 道具用尽时请求激励视频；看完才发道具，800ms 内重复点击忽略
-func _request_reward_for_tool(btn: Control) -> void:
+func _refresh_ad_unavailable_badge(known_no_fill: bool = false) -> void:
+	if _bt == null:
+		return
+	if not ABTestManager.no_network_remind.is_enabled():
+		_set_ad_badge(false)
+		return
+	if known_no_fill:
+		_last_known_has_fill = false
+		_reeval_ad_unavailable_badge()
+		return
+	if _ad_valid_query_in_flight:
+		return
+
+	_ad_valid_query_in_flight = true
+
+	_last_fill_query_msec = Time.get_ticks_msec()
+
+	var epoch_at_request: int = _fill_positive_epoch
+
+	var has_fill: bool = await UniKitManager.is_reward_valid(
+		AdPlacement.REWARD, _reward_pos_for(ToolKind.HINT)
+	)
+	_ad_valid_query_in_flight = false
+
+	if not has_fill and epoch_at_request != _fill_positive_epoch:
+		return
+
+	_last_known_has_fill = has_fill
+
+	if not is_showing() or _bt == null:
+		return
+	_reeval_ad_unavailable_badge()
+
+
+const _NET_POLL_INTERVAL_SEC: float = 1.0
+
+var _net_poll_timer: Timer = null
+
+var _last_known_online: bool = true
+
+
+func _arm_network_poll() -> void:
+	if not ABTestManager.no_network_remind.is_enabled():
+		return
+	_last_known_online = UniKitManager.is_online()
+
+	if not UniKitManager.ad_loaded.is_connected(_on_ad_loaded):
+		UniKitManager.ad_loaded.connect(_on_ad_loaded)
+	if _net_poll_timer != null:
+		return
+	_net_poll_timer = create_tick(_NET_POLL_INTERVAL_SEC, _on_network_poll_tick)
+
+
+func _on_network_poll_tick() -> void:
+	if _bt == null:
+		return
+	if not ABTestManager.no_network_remind.is_enabled():
+		return
+	var online: bool = UniKitManager.is_online()
+	if online != _last_known_online:
+		_last_known_online = online
+		_reeval_ad_unavailable_badge()
+	_maybe_recheck_fill()
+
+
+func _maybe_recheck_fill() -> void:
+	if not _ad_badge_on:
+		return
+
+	if not ABTestManager.no_network_remind.covers_no_fill():
+		return
+	if _ad_valid_query_in_flight:
+		return
+	if Time.get_ticks_msec() - _last_fill_query_msec < int(_FILL_RECHECK_MIN_INTERVAL_SEC * 1000.0):
+		return
+	_refresh_ad_unavailable_badge()
+
+
+func _on_ad_loaded(placement_id: String) -> void:
+	if placement_id != AdPlacement.REWARD:
+		return
+
+	_fill_positive_epoch += 1
+	if _bt == null or not is_showing():
+		return
+	if not ABTestManager.no_network_remind.is_enabled():
+		return
+	if _last_known_has_fill:
+		return
+	_last_known_has_fill = true
+	_reeval_ad_unavailable_badge()
+
+
+func set_tool_count(tool_name: String, count: int) -> void:
+	_save_tool_count(tool_name, count)
+
+
+const MOUSE_UNLOCK_LEVEL: int = 21
+
+
+func _is_mouse_tool_enabled() -> bool:
+	return ABTestManager.prop_mouse.is_enabled()
+
+
+func _is_mouse_tool_unlocked() -> bool:
+	return GameState.get_current_level() >= MOUSE_UNLOCK_LEVEL
+
+
+func _try_start_mouse_tool() -> void:
+	if (
+		not _is_mouse_tool_enabled()
+		or _mouse_tool_busy
+		or _entry_anim_playing
+		or _hint_cooldown
+		or _tool_btns_locked
+	):
+		return
+
+	if not _is_mouse_tool_unlocked():
+		return
+
+	Tracker.track_btn_click(Tracker.Btn.MOUSE, self)
+	_reset_idle_hint()
+	if _is_complete or _wrong_guess_pending or _puzzle.is_empty():
+		return
+	var board: Array = _board_view.get_board()
+	var solution: Array = _puzzle.get("solution", [])
+	var regions: Array = _puzzle.get("regions", [])
+	var targets: Array[Dictionary] = MouseToolSelector.select_targets(
+		board, solution, regions, _mouse_rng
+	)
+	if targets.is_empty():
+		return
+
+	if not _consume_tool(ToolKind.MOUSE):
+		return
+	Tracker.inc_stat("mouse_used")
+	GameState.inc_game_total_stat(_game_type(), "mouse_used_total")
+	GameState.mark_current_level_dirty()
+	if not _isolate_onefish_main_state():
+		GameState.mark_dda_tool_or_revive_used()
+		GameState.inc_today_tool_consumed()
+
+	_count_board_step("mouse")
+	_mouse_tool_busy = true
+	_mouse_tool_token += 1
+	var token: int = _mouse_tool_token
+
+	_reset_all_touch_strokes()
+	_board_view.set_touch_enabled(false)
+	var last_target: Dictionary = targets[targets.size() - 1]
+	var tail_sec: float = _MOUSE_CAT_ANIM_SEC if bool(last_target.is_cat) else _MOUSE_MARK_ANIM_SEC
+	var flow_sec: float = float(targets.size() - 1) * _MOUSE_STEP_INTERVAL_SEC + tail_sec
+
+	UIManager.block_input_briefly(self, flow_sec)
+	_record_mouse_solution_step(targets)
+	_run_mouse_tool_flow(targets, token)
+
+
+func _run_mouse_tool_flow(targets: Array[Dictionary], token: int) -> void:
+	for i: int in range(targets.size()):
+		if i > 0:
+			await get_tree().create_timer(_MOUSE_STEP_INTERVAL_SEC).timeout
+			if not _is_mouse_flow_valid(token):
+				return
+		var target: Dictionary = targets[i]
+		var cell: Vector2i = target.cell
+		if bool(target.is_cat):
+			(
+				_board_view
+				. set_cell_state(
+					cell.x,
+					cell.y,
+					CellState.CAT,
+					true,
+					true,
+					BoardView.ChangeSource.MOUSE,
+					_MOUSE_CAT_ANIM,
+					true,
+				)
+			)
+
+			_record_correct_cat(_decide_like_hand_for_correct_cat(LikeHandTrigger.LOCATE))
+
+			if QueendokuCore.is_complete(
+				_board_view.get_board(), _level_config.get("size", 4), _puzzle.get("regions", [])
+			):
+				_mouse_completion_pending = true
+
+				_update_remaining()
+				_validate_board()
+				return
+			await get_tree().create_timer(_MOUSE_CAT_ANIM_SEC).timeout
+			if not _is_mouse_flow_valid(token):
+				return
+			_finish_mouse_tool_flow(token)
+			return
+
+		var is_last_target: bool = i == targets.size() - 1
+		var anim_name: String = _MOUSE_LAST_MARK_ANIM if is_last_target else _MOUSE_MARK_ANIM
+		(
+			_board_view
+			. set_cell_state(
+				cell.x,
+				cell.y,
+				CellState.MARK,
+				true,
+				true,
+				BoardView.ChangeSource.MOUSE,
+				anim_name,
+				false,
+			)
+		)
+		if is_last_target:
+			await get_tree().create_timer(_MOUSE_MARK_ANIM_SEC).timeout
+			if not _is_mouse_flow_valid(token):
+				return
+			_finish_mouse_tool_flow(token)
+			return
+
+
+func _is_mouse_flow_valid(token: int) -> bool:
+	return token == _mouse_tool_token and _mouse_tool_busy and is_showing()
+
+
+func _await_mouse_completion_anim_if_needed() -> bool:
+	if not _mouse_completion_pending:
+		return true
+	var token: int = _mouse_tool_token
+	await get_tree().create_timer(_MOUSE_CAT_ANIM_SEC).timeout
+	if not _is_mouse_flow_valid(token):
+		return false
+	_mouse_completion_pending = false
+	_mouse_tool_busy = false
+	return true
+
+
+func _finish_mouse_tool_flow(token: int) -> void:
+	if not _is_mouse_flow_valid(token):
+		return
+	_mouse_tool_busy = false
+	_update_remaining()
+	_validate_board()
+	if not _is_complete:
+		_board_view.set_touch_enabled(true)
+
+
+func _cancel_mouse_tool_flow() -> void:
+	var was_busy: bool = _mouse_tool_busy
+	_mouse_tool_token += 1
+	_mouse_tool_busy = false
+	_mouse_completion_pending = false
+	if _board_view != null and is_instance_valid(_board_view):
+		_board_view.set_touch_enabled(true)
+	if was_busy:
+		var blocker: Node = get_node_or_null("_InputBlocker")
+		if blocker != null:
+			remove_child(blocker)
+
+
+func _reset_tool_reward_ad_opportunities() -> void:
+	_tool_reward_ad_seq += 1
+	_tool_reward_ad_opportunities.clear()
+
+
+func _get_tool_reward_ad_opportunity(kind: String, position: String) -> Dictionary:
+	if not _tool_reward_ad_opportunities.has(kind):
+		_tool_reward_ad_opportunities[kind] = {
+			"show_id": UniKitManager.stats_ad_show_timing(AdPlacement.REWARD, position),
+			"became_valid_reported": false,
+		}
+	return _tool_reward_ad_opportunities[kind]
+
+
+func _query_tool_reward_ad_ready(
+	opportunity: Dictionary, position: String, is_new_opportunity: bool, seq: int
+) -> bool:
+	var show_id: String = opportunity["show_id"]
+	if not is_new_opportunity:
+		_ad_valid_query_in_flight = true
+		var ad_valid: bool = await UniKitManager.is_reward_valid(AdPlacement.REWARD, position)
+		_ad_valid_query_in_flight = false
+		if seq != _tool_reward_ad_seq or not is_showing():
+			return false
+		if not ad_valid:
+			return false
+		if not opportunity["became_valid_reported"]:
+			UniKitManager.stats_ad_became_valid(AdPlacement.REWARD, position, show_id)
+			opportunity["became_valid_reported"] = true
+	return await UniKitManager.is_reward_ready(AdPlacement.REWARD, position, show_id)
+
+
+func _request_reward_for_tool(kind: String) -> void:
 	if Time.get_ticks_msec() - _last_tool_deplete_ms < 800:
 		return
-	var pos: String = _reward_pos_for(btn)
+	if _tool_reward_ad_check_pending or _ad_valid_query_in_flight or not is_showing():
+		return
+	_tool_reward_ad_check_pending = true
+	var seq: int = _tool_reward_ad_seq
+	var position: String = _reward_pos_for(kind)
+	var is_new_opportunity: bool = not _tool_reward_ad_opportunities.has(kind)
+	var opportunity: Dictionary = _get_tool_reward_ad_opportunity(kind, position)
+	var show_id: String = opportunity["show_id"]
+	var ad_ready: bool = await _query_tool_reward_ad_ready(
+		opportunity, position, is_new_opportunity, seq
+	)
+	_tool_reward_ad_check_pending = false
+	if seq != _tool_reward_ad_seq or not is_showing():
+		return
+	if not ad_ready:
+		Toast.popup(_tool_ad_toast_key(), self)
 
-	var show_id := UniKitManager.gen_show_id()
-	if not UniKitManager.is_reward_ready("reward", pos, show_id):
-		Toast.popup("AD_TOAST_NOT_READY", self)
+		_refresh_ad_unavailable_badge(true)
 		return
 
+	_fill_positive_epoch += 1
+	if not _last_known_has_fill:
+		_last_known_has_fill = true
+		_reeval_ad_unavailable_badge()
+
 	var on_rewarded := func(placement_id: String) -> void:
-		if placement_id != "reward":
+		if placement_id != AdPlacement.REWARD:
 			return
 		GameState.inc_game_total_stat(_game_type(), "rv_count")
-		_grant_tool_reward(btn)
+		_grant_tool_reward(kind)
 	var on_closed := func(placement_id: String) -> void:
-		if placement_id != "reward":
+		if placement_id != AdPlacement.REWARD:
 			return
+
+		resume_like_hand_clock()
 
 	_disconnect_self_reward_callbacks()
 	UniKitManager.ad_rewarded.connect(on_rewarded, CONNECT_ONE_SHOT)
 	UniKitManager.ad_closed.connect(on_closed, CONNECT_ONE_SHOT)
-	UniKitManager.show_reward("reward", pos, show_id)
+
+	pause_like_hand_clock()
+
+	_tool_reward_ad_opportunities.erase(kind)
+	UniKitManager.show_reward(AdPlacement.REWARD, position, show_id)
 
 
-## 看完广告后经 AwardManager 发 1 个对应道具，并按来源埋点
-func _grant_tool_reward(btn: Control) -> void:
-	var tb := btn as ToolButton
-	if tb == null:
-		return
-	var prop_name: String = _btn_to_prop_name(btn)
+func _grant_tool_reward(kind: String) -> void:
+	var prop_name: String = _prop_name_of(kind)
 	if prop_name == "":
 		return
 	var source: String
@@ -874,6 +1042,10 @@ func _grant_tool_reward(btn: Control) -> void:
 			source = Tracker.PropSource.HINT_REWARD_AD
 		Tracker.Prop.LOCATE:
 			source = Tracker.PropSource.LOCATE_REWARD_AD
+		Tracker.Prop.MOUSE:
+			source = Tracker.PropSource.MOUSE_REWARD_AD
+		Tracker.Prop.DRAFT:
+			source = Tracker.PropSource.DRAFT_REWARD_AD
 		_:
 			source = Tracker.PropSource.UNDO_REWARD_AD
 
@@ -885,68 +1057,42 @@ func _grant_tool_reward(btn: Control) -> void:
 var _eval_interstitial_cache: Variant = null
 
 
-## 开局插屏判定入口：默认走缓存，dry_run 时只探测不落库
 func _eval_start_interstitial(
 	params: Dictionary = {}, ad_position: String = "", dry_run: bool = false
 ) -> Dictionary:
 	if not dry_run and _eval_interstitial_cache != null:
 		return _eval_interstitial_cache
-	var result: Dictionary = _compute_start_interstitial(params, ad_position, dry_run)
+
+	var result: Dictionary = await _compute_start_interstitial(params, ad_position, dry_run)
 	if not dry_run:
 		_eval_interstitial_cache = result
 	return result
 
 
-## 真正判开局插屏：概率组 → 解锁门槛 → 内存/额外保护 → 冷却 → 广告填充
 func _compute_start_interstitial(
 	params: Dictionary = {}, ad_position: String = "", dry_run: bool = false
 ) -> Dictionary:
-	if ABTestManager.inter_prob.is_enabled():
-		var view_count: int = GameState.get_session_reward_view_count()
-		var threshold: int = ABTestManager.inter_prob.get_threshold()
-		var pct_log: int = ABTestManager.inter_prob.get_show_percent()
-		print(
-			(
-				"[InterProb] enabled grp=%d view_count=%d threshold=%d show_pct=%d dry_run=%s"
-				% [ABTestManager.inter_prob.value(), view_count, threshold, pct_log, str(dry_run)]
-			)
-		)
-		if view_count >= threshold:
-			if dry_run:
-				params = params.duplicate()
-				params["_dry_run_prob_pending_pct"] = ABTestManager.inter_prob.get_show_percent()
-				print(
-					(
-						"[InterProb] reach threshold but dry_run → skip reset/roll, mark pending_pct=%d"
-						% pct_log
-					)
-				)
-			else:
-				GameState.reset_session_reward_view_count()
-				var ip_cfg: AbConfigBase = ABTestManager.inter_prob
-				if ip_cfg.is_debug_disabled():
-					print(
-						"[InterProb] reach threshold → reset done, debug_disabled → bypass roll, pass-through"
-					)
-				else:
-					var pct: int = ABTestManager.inter_prob.get_show_percent()
-					var roll: int = randi() % 100
-					if roll >= pct:
-						print(
-							(
-								"[InterProb] reach threshold → reset done, roll=%d vs pct=%d → miss(拦截)"
-								% [roll, pct]
-							)
-						)
-						return {"eligible": false, "reason": "inter_prob 概率未命中(%d%%)" % (100 - pct)}
-					print(
-						(
-							"[InterProb] reach threshold → reset done, roll=%d vs pct=%d → hit(放行)"
-							% [roll, pct]
-						)
-					)
-		else:
-			print("[InterProb] view_count<threshold → no reset/roll, pass-through")
+	if PurchaseManager.is_vip_active():
+		return {"eligible": false, "reason": "VIP 已去广告"}
+
+	var prob_cfg: InterProbConfig = ABTestManager.inter_prob
+	var view_count: int = GameState.get_session_reward_view_count()
+	var session_games: int = GameState.get_session_game_count()
+	var living_days: int = ABTestManager.living_days.days_since_first_open()
+	var post_probability: bool = prob_cfg.has_post_gate_probability(living_days)
+	var show_pct: int = prob_cfg.effective_percent(view_count, session_games, living_days)
+	var reset_cd_on_miss: bool = InterProbConfig.should_reset_cd_on_miss_for(
+		prob_cfg.live_group(), view_count, session_games, living_days
+	)
+	if not dry_run and prob_cfg.is_reward_gate_triggered(view_count):
+		GameState.reset_session_reward_view_count()
+	if show_pct < InterProbConfig.PERCENT_NO_CUT:
+		if dry_run:
+			params = params.duplicate()
+			params["_dry_run_prob_pending_pct"] = show_pct
+		elif not post_probability:
+			if not _roll_start_interstitial_probability(show_pct, view_count, session_games, false):
+				return {"eligible": false, "reason": "inter_prob 概率闸未命中(展示概率 %d%%)" % show_pct}
 
 	if params.get("endgame_restore", false):
 		return {"eligible": false, "reason": "残局复原入口不播"}
@@ -988,46 +1134,147 @@ func _compute_start_interstitial(
 
 	var inter_show_id: String = ""
 	if dry_run:
-		if not UniKitManager.is_interstitial_valid("interstitial", ad_position):
+		if not await UniKitManager.is_interstitial_valid(AdPlacement.INTERSTITIAL, ad_position):
 			return {"eligible": false, "reason": "无广告填充"}
 	else:
-		inter_show_id = UniKitManager.gen_show_id()
-		if not UniKitManager.is_interstitial_ready("interstitial", ad_position, inter_show_id):
+		inter_show_id = UniKitManager.stats_ad_show_timing(AdPlacement.INTERSTITIAL, ad_position)
+		if not await UniKitManager.is_interstitial_ready(
+			AdPlacement.INTERSTITIAL, ad_position, inter_show_id
+		):
 			return {"eligible": false, "reason": "无广告填充"}
 
 	if params.has("_dry_run_prob_pending_pct"):
 		var pct_dry: int = int(params["_dry_run_prob_pending_pct"])
 		return {
 			"eligible": false,
-			"reason": "其他闸全过;inter_prob 真实调用时 %d%% 概率拦截(dry_run 未掷骰)" % (100 - pct_dry)
+			"reason": "其他闸全过;inter_prob 概率闸真实调用时 %d%% 概率拦截(dry_run 未掷骰)" % (100 - pct_dry)
 		}
+
+	if post_probability and not dry_run and show_pct < InterProbConfig.PERCENT_NO_CUT:
+		if not _roll_start_interstitial_probability(
+			show_pct, view_count, session_games, reset_cd_on_miss
+		):
+			return {"eligible": false, "reason": "inter_prob 概率闸未命中(展示概率 %d%%)" % show_pct}
+
+	if not dry_run:
+		GameState.increment_session_interstitial_count()
+
+		if (
+			PurchaseManager.is_subscription_entry_enabled()
+			and ABTestManager.is_vip.should_replace_interstitial_at(
+				GameState.get_session_interstitial_count()
+			)
+			and PurchaseManager.can_show_sub_inter_today()
+		):
+			PurchaseManager.mark_vip_sub_inter_shown()
+
+			return {
+				"eligible": true,
+				"reason": "",
+				"show_id": inter_show_id,
+				"replace_with_subscription": true,
+			}
 	return {"eligible": true, "reason": "", "show_id": inter_show_id}
+
+
+func _roll_start_interstitial_probability(
+	show_pct: int, view_count: int, session_games: int, reset_cd_on_miss: bool
+) -> bool:
+	var roll: int = randi() % 100
+	var roll_ctx: String = "激励%d次/开局%d局 → 有效 %d%%" % [view_count, session_games, show_pct]
+	if roll >= show_pct:
+		if reset_cd_on_miss:
+			UniKitManager.reset_interstitial_cd()
+		last_reward_view_prob_roll = (
+			"掷骰 %d(<%d 展示,%s) → 未命中,插屏被拦,重置CD=%s"
+			% [roll, show_pct, roll_ctx, str(reset_cd_on_miss)]
+		)
+		return false
+	last_reward_view_prob_roll = "掷骰 %d(<%d 展示,%s) → 命中" % [roll, show_pct, roll_ctx]
+	return true
 
 
 ## 最近一次开局插屏的结果描述，供调试面板查看
 static var last_interstitial_status: String = "尚未触发开局插屏"
 
+static var last_reward_view_prob_roll: String = "尚未触发(有效概率 100%)"
+
 ## 调试用：强制某道具免费（"" 关闭 / hint / locate / undo / all）
 static var debug_force_free_tool: String = ""
 
-## 调试用：触发「生命 +1」所需的最短游戏时长（秒）
-static var debug_life_plus_min_sec: float = 60.0
 
-
-## 真的去播开局插屏，并把结果显示到调试状态里
 func _try_show_start_interstitial(ad_position: String, elig: Dictionary) -> bool:
 	if not elig.get("eligible", false):
 		last_interstitial_status = elig.get("reason", "未知原因")
 		return false
 
+	if elig.get("replace_with_subscription", false):
+		last_interstitial_status = "is_vip 组2:本次插屏位替换为订阅页"
+		return false
+
 	var show_id: String = elig.get("show_id", "")
-	var shown: bool = UniKitManager.try_show_interstitial("interstitial", ad_position, show_id)
+	var shown: bool = UniKitManager.try_show_interstitial(
+		AdPlacement.INTERSTITIAL, ad_position, show_id
+	)
 	last_interstitial_status = "已显示" if shown else "已通过判定但无填充(未显示)"
 	return shown
 
 
-## 判 banner 是否该展示（解锁门槛 / 额外保护 / 棋盘尺寸范围）
+func _try_show_replaced_interstitial(ad_position: String, elig: Dictionary) -> bool:
+	return _try_show_start_interstitial(ad_position, elig_without_replace_flag(elig))
+
+
+func elig_without_replace_flag(elig: Dictionary) -> Dictionary:
+	var out: Dictionary = elig.duplicate()
+	out.erase("replace_with_subscription")
+	return out
+
+
+func _show_subscription_instead_of_interstitial(ad_position: String, elig: Dictionary) -> bool:
+	var user_state: String = (
+		Tracker.SubscriptionUserState.SUBSCRIBED
+		if PurchaseManager.is_vip_active()
+		else Tracker.SubscriptionUserState.UNSUBSCRIBED
+	)
+	print(
+		(
+			"[Purchase (BaseGamePage)] is_vip 组2 插屏位替换为订阅页 ad_pos=%s user_state=%s session_inter_count=%d"
+			% [ad_position, user_state, GameState.get_session_interstitial_count()]
+		)
+	)
+	Tracker.track_sub_entry_click(Tracker.SubscriptionSource.INTERSTITIAL_AD_SLOT, user_state)
+	var page: UIFrameWindow = UIManager.show_ui(UiName.SUBSCRIPTION, {"from_interstitial": true})
+	if page == null or not page.has_signal("interstitial_slot_dismissed"):
+		push_error("[Purchase (BaseGamePage)] 插屏位订阅页打开失败,退化为照播原插屏 ad_pos=%s" % ad_position)
+		return false
+	page.interstitial_slot_dismissed.connect(
+		func(should_play: bool) -> void:
+			_on_interstitial_subscription_closed(ad_position, elig, should_play),
+		CONNECT_ONE_SHOT
+	)
+	return true
+
+
+func _on_interstitial_subscription_closed(
+	ad_position: String, elig: Dictionary, should_play_interstitial: bool
+) -> bool:
+	print(
+		(
+			"[Purchase (BaseGamePage)] is_vip 组2 订阅页已关 replay_interstitial=%s"
+			% should_play_interstitial
+		)
+	)
+	if not should_play_interstitial:
+		return false
+	var shown: bool = _try_show_replaced_interstitial(ad_position, elig)
+	print("[Purchase (BaseGamePage)] is_vip 组2 补播插屏 shown=%s（false 多为库存已过期，可接受）" % shown)
+	return shown
+
+
 func _eval_start_banner() -> Dictionary:
+	if PurchaseManager.is_vip_active():
+		return {"eligible": false, "reason": "VIP 已去广告"}
+
 	if not UniKitManager.is_debug_ad_enabled():
 		return {"eligible": false, "reason": "dev 广告总开关已关闭"}
 
@@ -1072,8 +1319,15 @@ func _eval_start_banner() -> Dictionary:
 ## 最近一次 banner 的结果描述，供调试面板查看
 static var last_banner_status: String = "尚未触发 banner"
 
+var _banner_suppressed: bool = false
 
-## 判定通过就展示 banner，高度避开底部安全区
+const _BANNER_TOP_WHITELIST: Array = [
+	UiName.GAME,
+	UiName.DAILY_GAME,
+	UiName.SETTING,
+]
+
+
 func _show_banner_if_eligible(ad_position: String) -> void:
 	var elig: Dictionary = _eval_start_banner()
 	if not elig.get("eligible", false):
@@ -1081,13 +1335,48 @@ func _show_banner_if_eligible(ad_position: String) -> void:
 		return
 	var banner_h: int = int(_ad_banner.custom_minimum_size.y)
 	var adapt_h: int = int(_ad_down_adapt.size.y)
-	UniKitManager.show_banner("banner", ad_position, true, 0, banner_h + adapt_h)
+	UniKitManager.show_banner(AdPlacement.BANNER, ad_position, true, 0, banner_h + adapt_h)
 	last_banner_status = "已展示"
 
 
-## 销毁 banner 广告
 func _destroy_banner() -> void:
-	UniKitManager.destroy_ad("banner")
+	UniKitManager.destroy_ad(AdPlacement.BANNER)
+
+
+func _on_vip_status_changed(is_active: bool) -> void:
+	if is_active:
+		_destroy_banner()
+
+
+func _on_any_window_shown(_ui_name: String, _win: UIFrameWindow) -> void:
+	_queue_banner_sync()
+
+
+func _on_any_window_hidden(_ui_name: String, _win: UIFrameWindow) -> void:
+	_queue_banner_sync()
+
+
+func _queue_banner_sync() -> void:
+	call_deferred("_sync_banner_by_top_window")
+
+
+func _sync_banner_by_top_window() -> void:
+	var top: StringName = StringName(UIManager.get_top_ui_name_excluding(UiName.MOCK_BANNER))
+	if not _BANNER_TOP_WHITELIST.has(top):
+		if UniKitManager.is_banner_show_requested():
+			_banner_suppressed = true
+			print("[Game] %s 位于最顶层(非白名单) → 暂时移除 banner" % top)
+			_destroy_banner()
+		return
+
+	if not _banner_suppressed:
+		return
+	_banner_suppressed = false
+
+	if _is_complete or _wrong_guess_pending:
+		return
+	print("[Game] 回到 %s → 按 eligibility 恢复 banner" % top)
+	_show_banner_if_eligible(_banner_ad_position())
 
 
 ## banner 广告位名：每日关用 daily，其余用 game
@@ -1095,28 +1384,192 @@ func _banner_ad_position() -> String:
 	return "daily" if _game_type() == Tracker.GameType.DAILY else "game"
 
 
-# ================= 生命周期与空闲引导 =================
-## 前后台切换通知：回前台重置空闲计时，并按需重播自动完成按钮
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
-		_idle_time = 0.0
-		_on_application_focus_in()
-		if _ac_shown and _ac_anim != null:
-			_ac_anim.play("appear")
+func _start_gameplay_timing(page_supported: bool) -> void:
+	_clock_timer.start()
+	_start_game_barrage_session(page_supported)
+
+
+func _start_game_barrage_session(page_supported: bool) -> void:
+	_game_barrage_logic.reset()
+	_game_barrage_rng.randomize()
+	_game_barrage_page_supported = page_supported
+	_game_barrage_mode = (
+		GameBarrageLogic
+		. resolve_mode(
+			page_supported and _bullets_area != null,
+			ABTestManager.barrage_func.is_single_barrage_mode(),
+			ABTestManager.barrage_func.is_multi_barrage_mode(),
+		)
+	)
+	_game_barrage_session_active = _game_barrage_mode != GameBarrageLogic.MODE_DISABLED
+	if _bullets_area != null:
+		_bullets_area.set_layout_active(_game_barrage_session_active)
+
+	_game_barrage_logic.start_clock(int(Time.get_unix_time_from_system() * 1000.0))
+	if _game_barrage_session_active:
+		_log_game_barrage_next_time("弹幕会话开始")
+
+
+func _sync_game_barrage_clock() -> void:
+	if _game_barrage_session_active:
+		_game_barrage_logic.sync_clock(
+			int(Time.get_unix_time_from_system() * 1000.0), _game_barrage_ad_active
+		)
+
+
+func _try_start_game_barrage_wave() -> void:
+	if (
+		not _game_barrage_session_active
+		or _game_barrage_settings_open
+		or not _game_barrage_logic.has_remaining_wave_quota()
+		or not _game_barrage_logic.is_attempt_due()
+	):
+		return
+
+	_game_barrage_logic.record_attempt()
+	if not UniKitManager.is_online():
+		_log_game_barrage_next_time("尝试弹出但无网")
+		return
+	if _bullets_area == null:
+		return
+	var daily_keys: Array = Array(GameState.get_game_barrage_daily_keys())
+	var wave: Array[Dictionary] = _game_barrage_logic.make_wave(
+		_game_barrage_mode, daily_keys, _game_barrage_rng, RobotNicknamePool.NAMES
+	)
+	if not wave.is_empty():
+		print("[局内弹幕] 第 %d 波弹幕开始播放" % _game_barrage_logic.get_started_wave_count())
+		if _game_barrage_logic.has_remaining_wave_quota():
+			_log_game_barrage_next_time("弹幕弹出")
 		else:
-			_refresh_auto_complete_btn()
+			print("[局内弹幕] 弹幕弹出，无后续弹幕")
+		_bullets_area.play_wave(wave, _game_barrage_rng)
+
+
+func _on_game_barrage_displayed(key: String) -> void:
+	if _game_barrage_session_active:
+		_game_barrage_logic.record_displayed(key)
+	if GameBarrageLogic.is_daily_key(key):
+		GameState.mark_game_barrage_daily_key(key)
+
+
+func _on_game_barrage_spawn_failed(key: String) -> void:
+	_game_barrage_logic.release_reserved(key)
+
+
+func _record_game_barrage_action() -> void:
+	if _game_barrage_session_active:
+		_sync_game_barrage_clock()
+		var next_eligible_before_action: float = _game_barrage_logic.get_next_eligible_sec()
+		_game_barrage_logic.record_action()
+		if _game_barrage_logic.get_next_eligible_sec() > next_eligible_before_action:
+			_log_game_barrage_next_time("玩家放猫或使用道具导致延期")
+
+
+func _log_game_barrage_next_time(event_name: String) -> void:
+	var now_unix_msec: int = int(Time.get_unix_time_from_system() * 1000.0)
+	var remaining_sec: float = maxf(
+		0.0, _game_barrage_logic.get_next_eligible_sec() - _game_barrage_logic.get_elapsed_sec()
+	)
+	var next_unix_msec: int = now_unix_msec + int(ceil(remaining_sec * 1000.0))
+	var timezone_bias_sec: int = int(Time.get_time_zone_from_system().get("bias", 0)) * 60
+	var local_datetime: String = Time.get_datetime_string_from_unix_time(
+		int(next_unix_msec / 1000) + timezone_bias_sec, true
+	)
+	print("[局内弹幕] %s，下次弹幕时间：%s（unix_ms=%d）" % [event_name, local_datetime, next_unix_msec])
+
+
+func _reset_game_barrage_session_state() -> void:
+	_game_barrage_session_active = false
+	_game_barrage_mode = GameBarrageLogic.MODE_DISABLED
+	_game_barrage_ad_active = false
+	_game_barrage_logic.reset()
+
+
+func _reset_game_barrages() -> void:
+	_reset_game_barrage_session_state()
+	_game_barrage_page_supported = false
+	if _bullets_area != null:
+		_bullets_area.clear_all()
+		_bullets_area.set_layout_active(false)
+
+
+func _restart_game_barrages_after_continue() -> void:
+	if _bullets_area != null:
+		_bullets_area.clear_all()
+	_start_game_barrage_session(_game_barrage_page_supported)
+
+
+func _on_game_barrage_ad_shown(placement_id: String) -> void:
+	if not GameBarrageLogic.is_fullscreen_ad_placement(placement_id):
+		return
+	if _game_barrage_session_active:
+		_sync_game_barrage_clock()
+	_game_barrage_ad_active = true
+
+
+func _on_game_barrage_ad_impression(data: Dictionary) -> void:
+	var placement_id: String = str(data.get("placement_id", ""))
+	_on_game_barrage_ad_shown(placement_id)
+
+
+func _on_game_barrage_ad_closed(placement_id: String) -> void:
+	if not GameBarrageLogic.is_fullscreen_ad_placement(placement_id):
+		return
+	var resumed_from_ad: bool = _game_barrage_ad_active
+	if _game_barrage_session_active:
+		_sync_game_barrage_clock()
+	_game_barrage_ad_active = false
+	if _game_barrage_session_active and resumed_from_ad:
+		_log_game_barrage_next_time("从广告回到前台")
+
+
+func _on_game_barrage_ad_error(placement_id: String, _message: String) -> void:
+	_on_game_barrage_ad_closed(placement_id)
+
+
+func _on_game_settings_opened() -> void:
+	_game_barrage_settings_open = true
+	pause_like_hand_clock()
+
+
+func _on_game_settings_closed() -> void:
+	resume_like_hand_clock()
+	_game_barrage_settings_open = false
+	_sync_game_barrage_clock()
+	_try_start_game_barrage_wave()
+
+
+func _notification(what: int) -> void:
+	if not is_showing():
+		return
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		_is_app_foreground = true
+		_idle_time = 0.0
+
+		_cancel_dead_board_wait()
+
+		if _locked_pointer_index != _NO_POINTER_INDEX:
+			_locked_pointer_index = _NO_POINTER_INDEX
+			_reset_all_touch_strokes()
+		_on_application_focus_in()
 	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		_is_app_foreground = false
 		_on_application_focus_out()
 
 
-## 回到前台的钩子，子类覆写
 func _on_application_focus_in() -> void:
-	pass
+	var resumed_from_ad: bool = _game_barrage_ad_active
+	_sync_game_barrage_clock()
+
+	_game_barrage_ad_active = false
+	if _game_barrage_session_active and resumed_from_ad:
+		_log_game_barrage_next_time("从广告回到前台")
+
+	_reeval_ad_unavailable_badge()
 
 
-## 切到后台的钩子，子类覆写（每日关用它停表）
 func _on_application_focus_out() -> void:
-	pass
+	_sync_game_barrage_clock()
 
 
 ## 齿轮按钮回调，子类覆写
@@ -1129,104 +1582,666 @@ func _on_back_request() -> void:
 	pass
 
 
-## 每帧：推进点赞手势时钟并清理过期事件；空闲够久就闪道具按钮
 func _process(delta: float) -> void:
+	_sync_game_barrage_clock()
+	_try_start_game_barrage_wave()
+
+	if _board_view != null and _board_view.is_touch_point_viz_on():
+		var viz_points: Array[Vector2] = []
+		var viz_slots: Array = _touch_slots.values()
+		for slot: BoardTouchSlot in viz_slots:
+			if slot.is_owned():
+				viz_points.append(slot.last_drag_pos)
+		_board_view.update_touch_points(viz_points)
+
 	if not _like_hand_state["clock_paused"]:
 		_like_hand_state["in_game_sec"] += delta
-		_prune_wrong_cat_events()
-	if not _can_show_idle_hint():
-		return
 
-	if _hint_anim_active and ABTestManager.prop_highlight.is_repeatable():
+		if _continue_clock_started:
+			_continue_play_sec += delta
+
+		if _can_operate_board():
+			_operable_sec += minf(delta, _OPERABLE_DELTA_CAP_SEC)
+
+			_tick_wrong_zone_idle(minf(delta, _OPERABLE_DELTA_CAP_SEC))
+
+	if _bt.is_idle_hint_playing():
 		_idle_hint_play_time += delta
 		if _idle_hint_play_time >= IDLE_HINT_REPEAT_PLAY_SEC:
 			_stop_idle_tool_hint()
 			_idle_time = 0.0
 			return
+
+	if ABTestManager.prop_highlight.triggers_on_dead_board():
+		_tick_dead_board_hint(delta)
+		return
+	if not _can_show_idle_hint():
+		return
+
+	if _in_opening_quiet_window():
+		_idle_time = 0.0
+		return
 	_idle_time += delta
-	if _idle_time >= _idle_hint_delay and not _hint_anim_active:
+	if _idle_time >= _idle_hint_delay and not _bt.is_idle_hint_playing():
 		_play_idle_tool_hint()
 
 
-## 有任何操作就清零空闲计时并停掉提示动画
 func _reset_idle_hint() -> void:
 	_idle_time = 0.0
 	_stop_idle_tool_hint()
+	_cancel_dead_board_wait()
 
 
-## 按 AB 选要闪哪个道具按钮（可指定 locate/hint，也可随机或按持有量挑）
-func _select_idle_tool_btn() -> ToolButton:
-	match ABTestManager.prop_highlight.target_prop():
-		"locate":
-			return _tool_locate_btn as ToolButton
-		"hint":
-			return _tool_hint_btn as ToolButton
-		"none":
-			return null
-		"random":
-			var locate_n: int = GameState.get_tool_count("locate")
-			var hint_n: int = GameState.get_tool_count("hint")
+func _select_idle_tool_kind() -> String:
+	if ABTestManager.prop_highlight.triggers_on_dead_board():
+		return _select_dead_board_tool_kind()
+	var locate_n: int = GameState.get_tool_count("locate")
+	var hint_n: int = GameState.get_tool_count("hint")
 
-			if (locate_n > 0) == (hint_n > 0):
-				return (_tool_hint_btn if randf() < 0.5 else _tool_locate_btn) as ToolButton
-			return (_tool_locate_btn if locate_n > 0 else _tool_hint_btn) as ToolButton
-		_:
-			if GameState.get_tool_count("locate") > 0:
-				return _tool_locate_btn as ToolButton
-			if GameState.get_tool_count("hint") > 0:
-				return _tool_hint_btn as ToolButton
-			return _tool_locate_btn as ToolButton
+	if (locate_n > 0) == (hint_n > 0):
+		return ToolKind.HINT if randf() < 0.5 else ToolKind.LOCATE
+	return ToolKind.LOCATE if locate_n > 0 else ToolKind.HINT
 
 
-## 让选中的道具按钮循环播提示动画，并记一次「已展示」
 func _play_idle_tool_hint() -> void:
-	var tb: ToolButton = _select_idle_tool_btn()
-	if tb == null:
+	var kind: String = _select_idle_tool_kind()
+	if kind.is_empty():
 		return
-	var ap: AnimationPlayer = tb.get_node_or_null("AnimationPlayer") as AnimationPlayer
-	if ap == null:
+
+	if not _bt.play_idle_hint(kind):
 		return
-	ap.play("tool_loop")
-	_hint_anim_active = true
 	_idle_hint_play_time = 0.0
-	_idle_hint_active_btn = tb
 
-	GameState.mark_prop_highlight_shown()
+	_idle_hint_round_count += 1
 
 
-## 停止空闲提示动画并复位按钮
 func _stop_idle_tool_hint() -> void:
-	if not _hint_anim_active:
+	_bt.stop_idle_hint()
+
+
+func _select_dead_board_tool_kind() -> String:
+	var candidates: Array[String] = [ToolKind.LOCATE, ToolKind.HINT]
+	if _is_mouse_tool_enabled() and _is_mouse_tool_unlocked():
+		candidates.append(ToolKind.MOUSE)
+	var stocked: Array[String] = []
+	for kind: String in candidates:
+		if _is_free_kind(kind) or GameState.get_tool_count(kind) > 0:
+			stocked.append(kind)
+	return PropHighlightConfig.pick_dead_board_tool(candidates, stocked, _ad_badge_on)
+
+
+func _arm_dead_board_hint() -> void:
+	_cancel_dead_board_wait()
+	if not ABTestManager.prop_highlight.triggers_on_dead_board():
+		return
+	if _draft_mode or _is_complete or _puzzle.is_empty():
+		return
+	_dead_board_armed = true
+
+
+func _cancel_dead_board_wait() -> void:
+	_dead_board_armed = false
+	_dead_board_wait_sec = 0.0
+
+
+func _tick_dead_board_hint(delta: float) -> void:
+	if (
+		_draft_mode
+		or _entry_anim_playing
+		or not _can_show_idle_hint()
+		or not UIManager.is_top_of_stack(self)
+	):
+		return
+	var hard_wait: float = PropHighlightConfig.DEAD_BOARD_HARD_HINT_WAIT_SEC
+	var idle_before: float = _idle_time
+	_idle_time += delta
+	if idle_before < hard_wait and _idle_time >= hard_wait and _next_hint_needs_tool():
+		_fire_dead_board_hint()
+		return
+	if not _dead_board_armed:
+		return
+	var wait_before: float = _dead_board_wait_sec
+	_dead_board_wait_sec += delta
+	var visible_wait: float = PropHighlightConfig.DEAD_BOARD_VISIBLE_WAIT_SEC
+	if (
+		wait_before < visible_wait
+		and _dead_board_wait_sec >= visible_wait
+		and _is_board_visibly_dead()
+	):
+		_fire_dead_board_hint()
+		return
+	if _dead_board_wait_sec < hard_wait:
+		return
+	_cancel_dead_board_wait()
+	if _is_board_visibly_dead():
+		_fire_dead_board_hint()
+
+
+func _fire_dead_board_hint() -> void:
+	_cancel_dead_board_wait()
+	if not _bt.is_idle_hint_playing():
+		_play_idle_tool_hint()
+
+
+func _is_board_visibly_dead() -> bool:
+	var board: Array = _board_view.get_cell_state_folded_board()
+	return DeadBoardDetector.is_visibly_dead(
+		board, int(_level_config.get("size", 0)), _puzzle["regions"]
+	)
+
+
+func _next_hint_needs_tool() -> bool:
+	var hint: Dictionary = _compute_next_hint()
+	if not hint.get("found", false):
+		return false
+	if hint.get("wrong_mark", false) or _hint_targets_marked_cell(hint):
+		return true
+	return _DEAD_BOARD_HARD_HINT_STRATEGIES.has(str(hint.get("strategy", "")))
+
+
+func _in_opening_quiet_window() -> bool:
+	if not ABTestManager.prop_highlight.has_opening_quiet_window():
+		return false
+	var window_sec: float = PropHighlightConfig.opening_quiet_window_sec(
+		int(_level_config.get("size", 0)), int(_level_config.get("rank", 0))
+	)
+	return float(_time_total_if_ended_now()) < window_sec
+
+
+func _time_total_if_ended_now() -> int:
+	return GameState.get_game_total_stat(_game_type(), "time_total") + _current_round_time_sec()
+
+
+func _current_round_time_sec() -> int:
+	@warning_ignore("integer_division")
+	return (Time.get_ticks_msec() - _stat_start_ms) / 1000
+
+
+func _is_draft_unlocked() -> bool:
+	if ABTestManager == null or ABTestManager.draft_mode == null:
+		return false
+	if not ABTestManager.draft_mode.is_tool_mode():
+		return false
+	return GameState.get_current_level() >= _DRAFT_MIN_LEVEL
+
+
+const _DRAFT_MIN_LEVEL: int = 21
+
+
+func _on_draft_btn_pressed() -> void:
+	if _entry_anim_playing or _tool_btns_locked:
+		return
+	if _is_complete or _wrong_guess_pending:
+		return
+	if not _is_draft_unlocked():
 		return
 
-	if _idle_hint_active_btn != null:
-		var ap: AnimationPlayer = (
-			_idle_hint_active_btn.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if _draft_busy:
+		return
+
+	if not LevelKind.is_color_challenge(_level_kind):
+		Tracker.track_btn_click(Tracker.Btn.DRAFT, self)
+	_reset_idle_hint()
+	_lock_draft_ui_briefly()
+
+	if _draft_mode:
+		_exit_draft_mode_and_clear()
+		return
+
+	if not _consume_tool(ToolKind.DRAFT):
+		return
+
+	GameState.mark_current_level_dirty()
+
+	if not _isolate_onefish_main_state():
+		GameState.mark_dda_tool_or_revive_used()
+		GameState.inc_today_tool_consumed()
+
+	_enter_draft_mode()
+
+
+func _on_apply_btn_pressed() -> void:
+	if _entry_anim_playing or _tool_btns_locked or _is_complete or _wrong_guess_pending:
+		return
+	if not _draft_mode:
+		return
+
+	if _draft_busy:
+		return
+	Tracker.track_btn_click(Tracker.Btn.DRAFT_APPLY, self)
+	_reset_idle_hint()
+	_lock_draft_ui_briefly()
+	_apply_draft_commit()
+
+
+func _lock_draft_ui_briefly() -> void:
+	_draft_busy = true
+	create_countdown(_DRAFT_UI_LOCK_SEC, func() -> void: _draft_busy = false)
+
+
+func _enter_draft_mode() -> void:
+	_draft_mode = true
+
+	_ensure_input_system()
+	_switch_input_scheme(_draft_scheme)
+
+	GameState.inc_game_total_stat(_game_type(), "draft_used_total")
+	_draft_enter_ms = Time.get_ticks_msec()
+
+	_draft_used_this_level = true
+
+	_bt.set_kind_selected(ToolKind.DRAFT, true)
+	_layout_bottom_tools(ToolLayout.DRAFT_ON)
+
+	if _apply_btn != null:
+		_apply_btn.visible = true
+		_apply_btn.modulate = Color.WHITE
+
+
+func _exit_draft_mode_and_clear(skip_cell_clear: bool = false, from_apply: bool = false) -> void:
+	var was_in_draft: bool = _draft_mode
+
+	if was_in_draft:
+		_record_draft_exit_stats()
+
+		if not from_apply:
+			GameState.inc_game_total_stat(_game_type(), "draft_stop_used_total")
+	_draft_mode = false
+
+	if _normal_scheme != null:
+		_switch_input_scheme(_normal_scheme)
+
+	_bt.set_kind_selected(ToolKind.DRAFT, false)
+	_layout_bottom_tools()
+
+	if _apply_btn != null:
+		_apply_btn.visible = false
+
+	if _board_view == null or skip_cell_clear:
+		return
+
+	var animate_cross: bool = was_in_draft
+	var draft_marks: Dictionary = _collect_draft_marks()
+	for key: Vector2i in draft_marks.keys():
+		var cv: CellView = _board_view.get_cell_view(key.x, key.y)
+		if cv == null:
+			continue
+		if animate_cross and draft_marks[key] == CellState.DRAFT_CROSS:
+			cv.play_draft_cross_disappear()
+		else:
+			cv.change_state({"state": CellState.EMPTY, "play_anim": false})
+
+
+func _set_cell_draft(r: int, c: int, mark: int) -> void:
+	if _board_view == null:
+		return
+	var cv: CellView = _board_view.get_cell_view(r, c)
+	if cv == null:
+		return
+	cv.change_state({"state": mark, "play_anim": false})
+
+
+func _collect_draft_marks() -> Dictionary:
+	var out: Dictionary = {}
+	if _board_view == null:
+		return out
+	var board: Array = _board_view.get_board()
+	for r: int in range(board.size()):
+		var row: Array = board[r]
+		for c: int in range(row.size()):
+			if CellState.is_draft(int(row[c])):
+				out[Vector2i(r, c)] = int(row[c])
+	return out
+
+
+func _record_draft_exit_stats() -> void:
+	var gt: String = _game_type()
+	if _draft_enter_ms > 0:
+		var dur_ms: int = Time.get_ticks_msec() - _draft_enter_ms
+		if dur_ms > 0:
+			GameState.inc_game_total_stat(gt, "draft_time_total_ms", dur_ms)
+	_draft_enter_ms = 0
+	var wrong_count: int = 0
+	var correct_count: int = 0
+	var draft_marks: Dictionary = _collect_draft_marks()
+	for key: Vector2i in draft_marks.keys():
+		var mark: int = draft_marks[key]
+		var is_sol: bool = _is_solution_cell(key.x, key.y)
+		if mark == CellState.DRAFT_CAT:
+			if is_sol:
+				correct_count += 1
+			else:
+				wrong_count += 1
+		elif mark == CellState.DRAFT_CROSS:
+			if is_sol:
+				wrong_count += 1
+
+	if wrong_count > 0:
+		GameState.inc_game_total_stat(gt, "draft_error_total", wrong_count)
+	elif correct_count > 0:
+		GameState.inc_game_total_stat(gt, "draft_correct_total", correct_count)
+
+
+func _has_draft_marks() -> bool:
+	if _board_view == null:
+		return false
+	var board: Array = _board_view.get_board()
+	for r: int in range(board.size()):
+		var row: Array = board[r]
+		for c: int in range(row.size()):
+			if CellState.is_draft(int(row[c])):
+				return true
+	return false
+
+
+## 动画显示「应用」按钮
+func _show_apply_btn_animated() -> void:
+	if _apply_btn == null:
+		return
+	if _apply_anim != null and _apply_anim.has_animation("Appear"):
+		if _apply_anim.is_playing() and _apply_anim.current_animation == "Appear":
+			return
+		_apply_anim.play("Appear")
+	else:
+		_apply_btn.modulate = Color.WHITE
+
+
+## 动画隐藏「应用」按钮
+func _hide_apply_btn_animated() -> void:
+	if _apply_btn == null:
+		return
+	if _apply_anim != null and _apply_anim.has_animation("Disappear") and _apply_btn.visible:
+		_apply_anim.play("Disappear")
+		_apply_anim.animation_finished.connect(
+			func(anim_name: StringName) -> void:
+				if anim_name == &"Disappear" and _apply_btn != null:
+					_apply_btn.visible = false,
+			CONNECT_ONE_SHOT
 		)
-		if ap != null and ap.has_animation("RESET"):
-			ap.play("RESET")
-	_hint_anim_active = false
-	_idle_hint_active_btn = null
+	else:
+		_apply_btn.visible = false
 
 
-# ================= 页面按钮与通用回调 =================
-## 坐标按钮：切换棋盘坐标显示，并计一次埋点
-func _on_coord_btn_pressed() -> void:
-	if _entry_anim_playing:
+func _is_solution_fully_placed() -> bool:
+	var sz: int = _level_config.get("size", 0)
+	if sz <= 0:
+		return false
+	var total: int = 0
+	var filled: int = 0
+	for r: int in range(sz):
+		for c: int in range(sz):
+			if not _is_solution_cell(r, c):
+				continue
+			total += 1
+			if _board_view.get_cell_state(r, c) == CellState.CAT:
+				filled += 1
+	return total > 0 and filled == total
+
+
+func _clear_draft_rollback_state() -> void:
+	_draft_lethal_wrong_cells = []
+
+
+func _apply_draft_commit() -> void:
+	var to_apply: Array = []
+	var draft_marks: Dictionary = _collect_draft_marks()
+	for key: Vector2i in draft_marks.keys():
+		to_apply.append({"pos": key, "mark": draft_marks[key]})
+	if to_apply.is_empty():
+		_exit_draft_mode_and_clear()
 		return
-	Tracker.track_btn_click(Tracker.Btn.COORD, self)
-	Tracker.inc_stat("coord_count")
-	_stop_idle_tool_hint()
-	_board_view.toggle_coords()
+
+	_break_cat_streak_from_non_gesture()
+
+	GameState.inc_game_total_stat(_game_type(), "draft_apply_used_total")
+
+	to_apply.sort_custom(
+		func(left: Dictionary, right: Dictionary) -> bool:
+			var pa: Vector2i = left["pos"]
+			var pb: Vector2i = right["pos"]
+			var diag_a: int = pa.y - pa.x
+			var diag_b: int = pb.y - pb.x
+			if diag_a != diag_b:
+				return diag_a < diag_b
+			return pa.x > pb.x
+	)
+
+	var wrong_draft_cats: Array[Vector2i] = []
+	for item: Dictionary in to_apply:
+		var wp: Vector2i = item["pos"]
+		if int(item["mark"]) == CellState.DRAFT_CAT and not _is_solution_cell(wp.x, wp.y):
+			wrong_draft_cats.append(wp)
+	if not _lives_inf and not wrong_draft_cats.is_empty() and wrong_draft_cats.size() >= _lives:
+		_apply_draft_commit_lethal(wrong_draft_cats)
+		return
+
+	_exit_draft_mode_and_clear(true, true)
+	if _board_view == null:
+		return
+	var wrong_positions: Array[Vector2i] = []
+
+	_applying_draft_commit = true
+	_combo_visual_suppressed = true
+	var draft_cat_top_right: Vector2i = Vector2i(-1, -1)
+
+	var cross_positions: Array[Vector2i] = []
+
+	SoundManager.set_silent(true)
+
+	var correct_cat_count: int = 0
+	for item: Dictionary in to_apply:
+		var scan_pos: Vector2i = item["pos"]
+		if _board_view.get_cell_state(scan_pos.x, scan_pos.y) == CellState.CAT:
+			continue
+		if int(item["mark"]) != CellState.DRAFT_CAT:
+			continue
+		if not _is_solution_cell(scan_pos.x, scan_pos.y):
+			continue
+		correct_cat_count += 1
+	if correct_cat_count > 0:
+		_se_amortized_step = ScoreEncourageConfig.amortized_step(
+			Tracker.get_stat("step_used") - _se_last_step, correct_cat_count
+		)
+
+	for item: Dictionary in to_apply:
+		var pos: Vector2i = item["pos"]
+		var draft_mark: int = item["mark"]
+		if _board_view.get_cell_state(pos.x, pos.y) == CellState.CAT:
+			continue
+		if draft_mark == CellState.DRAFT_CROSS:
+			cross_positions.append(pos)
+			continue
+		if draft_mark != CellState.DRAFT_CAT:
+			continue
+		if not _is_solution_cell(pos.x, pos.y):
+			wrong_positions.append(pos)
+			continue
+		_board_view.set_cell_state(
+			pos.x,
+			pos.y,
+			CellState.CAT,
+			true,
+			true,
+			BoardView.ChangeSource.DRAFT_APPLY,
+			"",
+			false,
+			_found_cat_spine_anim(BoardView.ChangeSource.DRAFT_APPLY)
+		)
+
+		if (
+			draft_cat_top_right.x < 0
+			or pos.y > draft_cat_top_right.y
+			or (pos.y == draft_cat_top_right.y and pos.x < draft_cat_top_right.x)
+		):
+			draft_cat_top_right = pos
+
+	_se_amortized_step = -1
+
+	for pos: Vector2i in cross_positions:
+		var cross_cv: CellView = _board_view.get_cell_view(pos.x, pos.y)
+		if cross_cv != null:
+			cross_cv.play_draft_cross_apply()
+		else:
+			_board_view.set_cell_state(
+				pos.x, pos.y, CellState.MARK, false, true, BoardView.ChangeSource.DRAFT_APPLY
+			)
+
+	SoundManager.set_silent(false)
+
+	if draft_cat_top_right.x >= 0:
+		SoundManager.play(SoundManager.Kind.MARK_CAT)
+
+	_combo_visual_suppressed = false
+	_flush_draft_batch_encourage(draft_cat_top_right)
+	_applying_draft_commit = false
+
+	if draft_cat_top_right.x >= 0:
+		_broadcast_found_blink_all(draft_cat_top_right)
+
+	_update_remaining()
+
+	_flush_full_mark_after_draft_apply()
+	if wrong_positions.size() > 0:
+		_apply_draft_wrong_cats(wrong_positions)
+		return
+
+	_validate_board()
 
 
-## 设置按钮：暂停手势时钟后打开设置页，关闭时恢复时钟
+func _apply_draft_commit_lethal(wrong_draft_cats: Array[Vector2i]) -> void:
+	_exit_draft_mode_and_clear(false, true)
+	if _board_view == null:
+		return
+
+	var shown_count: int = mini(wrong_draft_cats.size(), maxi(_lives, 1))
+	var shown_wrong: Array[Vector2i] = wrong_draft_cats.slice(0, shown_count)
+
+	_draft_lethal_wrong_cells = shown_wrong.duplicate()
+
+	_update_remaining()
+	_apply_draft_wrong_cats(shown_wrong)
+
+
+func _rollback_draft_lethal_cells() -> void:
+	if _draft_lethal_wrong_cells.is_empty():
+		return
+	var cells: Array[Vector2i] = _draft_lethal_wrong_cells
+	_draft_lethal_wrong_cells = []
+	if _board_view == null:
+		return
+	for pos: Vector2i in cells:
+		_board_view.set_cell_state(
+			pos.x, pos.y, CellState.EMPTY, false, true, BoardView.ChangeSource.DRAFT_ROLLBACK
+		)
+	_update_remaining()
+
+
+func _flush_draft_batch_encourage(top_right: Vector2i) -> void:
+	if _combo_feedback_view == null or top_right.x < 0:
+		return
+	if _score_model.combo < 3:
+		return
+	var pos_global: Vector2 = _board_view.get_cell_global_center(top_right.x, top_right.y)
+	_combo_feedback_view.show_combo_text_only(_score_model.combo, pos_global)
+
+
+func _on_draft_apply_wrong_batch_done() -> void:
+	pass
+
+
+func _apply_draft_wrong_cats(wrong_positions: Array[Vector2i]) -> void:
+	_draft_apply_conflict_shown = false
+	_draft_apply_violated_rules.clear()
+	for pos: Vector2i in wrong_positions:
+		do_wrong_guess_mark(pos.x, pos.y, true)
+
+	if not _draft_apply_violated_rules.is_empty():
+		_stop_rule_highlight()
+		for rule: int in _draft_apply_violated_rules:
+			_on_rule_violated(rule, true)
+
+	if _draft_apply_conflict_shown:
+		if _lives <= 0:
+			UIManager.block_input_briefly(
+				self, MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC + 2.0
+			)
+
+			_board_view.disable_touch_for(MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC + 2.0)
+		var token: int = _conflict_anim_token
+		await get_tree().create_timer(MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC).timeout
+
+		if not is_instance_valid(self) or not visible or token != _conflict_anim_token:
+			return
+	if _lives <= 0:
+		_board_view.play_cat_cry_loop_all()
+
+		if not _draft_apply_conflict_shown:
+			UIManager.block_input_briefly(self, 2.0)
+			_board_view.disable_touch_for(2.0)
+	elif _is_solution_fully_placed():
+		_wrong_guess_pending = false
+		_validate_board()
+		return
+	else:
+		_board_view.play_cat_frustrated_all()
+
+	_on_draft_apply_wrong_batch_done()
+
+	get_tree().create_timer(0.4).timeout.connect(
+		func() -> void:
+			if not is_instance_valid(self):
+				return
+			_update_remaining()
+			_wrong_guess_pending = false
+	)
+
+	if _lives <= 0:
+		get_tree().create_timer(0.6).timeout.connect(
+			func() -> void:
+				if not is_instance_valid(self) or not visible:
+					return
+				_on_game_fail()
+		)
+
+
+func _cmd_draft() -> void:
+	if _is_complete or _wrong_guess_pending:
+		return
+	if _draft_mode:
+		_exit_draft_mode_and_clear()
+	else:
+		_enter_draft_mode()
+	print(
+		"[cheat] draft_mode=%s (草稿道具剩余 %d,本次未扣)" % [_draft_mode, GameState.get_tool_count("draft")]
+	)
+
+
+func _cmd_draft_win() -> void:
+	if _is_complete:
+		return
+	if not _draft_mode:
+		_enter_draft_mode()
+	var sz: int = _level_config.get("size", 0)
+	var sol: Array = _puzzle.get("solution", [])
+	if sz <= 0 or sol.is_empty():
+		return
+	for r: int in range(sz):
+		for c: int in range(sz):
+			if not bool((sol[r] as Array)[c]):
+				continue
+			if _board_view.get_cell_state(r, c) == CellState.CAT:
+				continue
+			_set_cell_draft(r, c, CellState.DRAFT_CAT)
+	_apply_draft_commit()
+
+
 func _on_settings_btn_pressed() -> void:
 	if _is_complete:
 		return
 	Tracker.track_btn_click(Tracker.Btn.OPTIONS, self)
+	VibrateManager.play_at(VibrateManager.Pos.OPTIONS_BTN)
 
-	pause_like_hand_clock()
+	_on_game_settings_opened()
 	(
 		UIManager
 		. show_ui(
@@ -1234,16 +2249,26 @@ func _on_settings_btn_pressed() -> void:
 			{
 				"is_game_mode": true,
 				"on_restart": _on_restart_requested,
-				"on_close": Callable(self, "resume_like_hand_clock"),
+				"on_close": Callable(self, "_on_game_settings_closed"),
+				"on_pattern_changed": Callable(self, "_apply_pattern_mode"),
 			}
 		)
 	)
 
+	RedDotCenter.dismiss(DotName.PATTERN_ENTRY)
 
-## 玩家关掉提示：清理高亮，然后尝试展示 banner
+
+func _apply_pattern_mode() -> void:
+	if _board_view == null:
+		return
+	var on: bool = GameState.is_pattern_mode_on()
+	_board_view.set_pattern_mode(on, true)
+
+
 func _on_hint_dismissed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.HINT_STOP, self)
 	Tracker.inc_stat("hint_stop_used")
+	Tracker.record_solution_step(Tracker.StepAction.HINT_STOP, [])
 	_cleanup_hint()
 
 	_show_banner_if_eligible(_banner_ad_position())
@@ -1268,39 +2293,39 @@ func _close_chain_detail() -> void:
 	_hint_overlay._overlay.visible = true
 
 
-## 棋盘左右抖一下（错误落子反馈）
 func _play_screen_shake() -> void:
-	var orig := _board_view.position
-	var tw := create_tween()
-	tw.tween_property(_board_view, "position:x", orig.x + 8.0, 0.05)
-	tw.tween_property(_board_view, "position:x", orig.x - 8.0, 0.05)
-	tw.tween_property(_board_view, "position:x", orig.x + 5.0, 0.04)
-	tw.tween_property(_board_view, "position:x", orig.x - 5.0, 0.04)
-	tw.tween_property(_board_view, "position:x", orig.x, 0.03)
+	if _screen_shake_tween != null and _screen_shake_tween.is_valid():
+		_screen_shake_tween.kill()
+	else:
+		_screen_shake_rest_x = _board_view.position.x
+	var rest_x: float = _screen_shake_rest_x
+	_screen_shake_tween = create_tween()
+	_screen_shake_tween.tween_property(_board_view, "position:x", rest_x + 8.0, 0.05)
+	_screen_shake_tween.tween_property(_board_view, "position:x", rest_x - 8.0, 0.05)
+	_screen_shake_tween.tween_property(_board_view, "position:x", rest_x + 5.0, 0.04)
+	_screen_shake_tween.tween_property(_board_view, "position:x", rest_x - 5.0, 0.04)
+	_screen_shake_tween.tween_property(_board_view, "position:x", rest_x, 0.03)
 
 
-## 作弊指令：直接通关
+func _stop_screen_shake() -> void:
+	if _screen_shake_tween != null:
+		_screen_shake_tween.kill()
+		_screen_shake_tween = null
+
+
 func _cmd_win(_args: Array[String]) -> void:
 	if not _is_complete:
-		_on_game_complete()
+		_on_game_win()
 
 
-## 此刻能否弹空闲提示（页面可见、无弹层、AB 条件满足等）
 func _can_show_idle_hint() -> bool:
 	var base_ok: bool = (
 		visible and not _is_complete and not _wrong_guess_pending and not _hint_overlay.visible
 	)
 	if not base_ok:
 		return false
-	var ph: PropHighlightConfig = ABTestManager.prop_highlight
 
-	if ph.target_prop() == "none":
-		return false
-
-	if ph.is_once_per_lifetime() and GameState.has_prop_highlight_shown():
-		return false
-
-	if not ph.is_repeatable() and GameState.has_used_tool():
+	if _idle_hint_round_count >= 1:
 		return false
 	return true
 
@@ -1314,9 +2339,26 @@ func _clear_hint_highlights() -> void:
 		_hint_highlight_layer = null
 
 
-## 通关回调，子类覆写（进结算页 / 走连胜流程）
-func _on_game_complete() -> void:
+func _on_game_win() -> void:
 	pass
+
+
+func _is_no_mistake_level() -> bool:
+	return false
+
+
+func is_full_hp_win() -> bool:
+	return _lives == _life_cap
+
+
+func _display_lives() -> int:
+	return 99 if _lives_inf else _lives
+
+
+func is_perfect_win() -> bool:
+	if _lives_inf:
+		return true
+	return _is_no_mistake_level() and is_full_hp_win()
 
 
 ## 设置页点「重开」的回调，子类覆写
@@ -1329,12 +2371,13 @@ func _win_ui_name() -> StringName:
 	return &""
 
 
-## 道具对应的激励广告位名
-func _reward_pos_for(btn: Control) -> String:
-	if btn == _tool_locate_btn:
+func _reward_pos_for(kind: String) -> String:
+	if kind == ToolKind.LOCATE:
 		return Tracker.AdPos.PROPS_NORMAL_LOCATE
-	elif btn == _tool_undo_btn:
-		return "props_normal_undo"
+	if kind == ToolKind.MOUSE:
+		return Tracker.AdPos.PROPS_NORMAL_MOUSE
+	if kind == ToolKind.DRAFT:
+		return Tracker.AdPos.PROPS_NORMAL_DRAFT
 	return Tracker.AdPos.PROPS_NORMAL_HINT
 
 
@@ -1353,31 +2396,24 @@ func _play_win_toast_and_wait() -> bool:
 	return true
 
 
-## 按步数算档位、看 AB 覆盖范围，决定是否播通关 toast 并挑一句文案
 func _maybe_show_win_toast() -> CanvasLayer:
+	if _auto_x_banner_shown:
+		print("[WinToast] auto_x banner shown(本局无手动标叉) → skip toast")
+		return null
 	var scale: int = _level_config.get("size", 0)
 	var step: int = Tracker.get_stat("step_used")
 	var thresholds: Dictionary = WinToastTier.get_thresholds(scale)
-	var ab_enabled: bool = ABTestManager.win_toast.is_enabled()
-	if not ab_enabled:
-		print(
-			(
-				"[WinToast] scale=%d step=%d thresholds=%s ab_enabled=false → skip"
-				% [scale, step, thresholds]
-			)
-		)
-		return null
 	var tier: int = WinToastTier.determine_tier(scale, step)
-	var ab_covers: bool = tier >= 0 and ABTestManager.win_toast.covers_tier(tier)
-	if tier < 0 or not ab_covers:
+	var covered: bool = tier >= WinToastTier.TIER_PERFECT and tier <= WinToastTier.TIER_P10
+	if not covered:
 		print(
 			(
-				"[WinToast] scale=%d step=%d thresholds=%s tier=%s ab_covers=%s → skip"
-				% [scale, step, thresholds, WinToastTier.tier_name(tier), ab_covers]
+				"[WinToast] scale=%d step=%d thresholds=%s tier=%s covered=false → skip"
+				% [scale, step, thresholds, WinToastTier.tier_name(tier)]
 			)
 		)
 		return null
-	var toast: CanvasLayer = _resolve_win_toast_node(tier)
+	var toast: GameWinToast = _resolve_win_toast_node(tier)
 	if toast == null:
 		print(
 			(
@@ -1388,26 +2424,26 @@ func _maybe_show_win_toast() -> CanvasLayer:
 		return null
 	print(
 		(
-			"[WinToast] scale=%d step=%d thresholds=%s tier=%s ab_covers=true → show %s"
+			"[WinToast] scale=%d step=%d thresholds=%s tier=%s covered=true → show %s"
 			% [scale, step, thresholds, WinToastTier.tier_name(tier), toast.name]
 		)
 	)
-	toast.set_message(WinToastMessages.pick_random(tier, step, scale))
+	var message: Dictionary = WinToastMessages.pick_random(tier, step, scale, toast.highlight_color)
+	toast.set_message(message.get("text", ""))
 	toast.show_toast({})
 	return toast
 
 
-## 按档位取对应的 toast 节点
-func _resolve_win_toast_node(tier: int) -> CanvasLayer:
+func _resolve_win_toast_node(tier: int) -> GameWinToast:
 	match tier:
 		WinToastTier.TIER_PERFECT:
-			return get_node_or_null("Root/WinToast04") as CanvasLayer
+			return get_node_or_null("Root/WinToast04") as GameWinToast
 		WinToastTier.TIER_P5:
-			return get_node_or_null("Root/WinToast03") as CanvasLayer
+			return get_node_or_null("Root/WinToast03") as GameWinToast
 		WinToastTier.TIER_P10:
-			return get_node_or_null("Root/WinToast02") as CanvasLayer
+			return get_node_or_null("Root/WinToast02") as GameWinToast
 		WinToastTier.TIER_P20:
-			return get_node_or_null("Root/WinToast01") as CanvasLayer
+			return get_node_or_null("Root/WinToast01") as GameWinToast
 	return null
 
 
@@ -1419,42 +2455,77 @@ func _on_board_container_resized() -> void:
 ## 棋盘固定显示宽度（像素），缩放的基准
 const FIXED_BOARD_WIDTH: float = 1008.0
 
+const _BOARD_ENLARGE_FACTOR: float = 1.04167
+const _BOARD_ENLARGE_MIN_SIZE: int = 8
 
-## 把棋盘按容器宽度等比缩放并居中，再补偿圆角与自动打叉按钮的反向缩放
+
+func _grid_intro_sync_total(board_intro: BoardContainerCell_01) -> float:
+	if board_intro == null:
+		return 0.0
+	return board_intro.get_cell_fade_complete_time()
+
+
+var _grid_ui_anim_baked_captured: bool = false
+var _grid_ui_anim_baked_scale_curve: int = 0
+var _grid_ui_anim_baked_scale_dur: float = 0.0
+var _grid_ui_anim_baked_scale_curve_res: Curve = null
+
+
+func _apply_grid_ui_entry_anim(board_intro: BoardContainerCell_01) -> void:
+	if board_intro == null:
+		return
+	if not _grid_ui_anim_baked_captured:
+		_grid_ui_anim_baked_scale_curve = int(board_intro.g3_cell_scale_curve)
+		_grid_ui_anim_baked_scale_dur = board_intro.g3_cell_scale_duration
+		_grid_ui_anim_baked_scale_curve_res = board_intro.g3_cell_scale_custom_curve
+		_grid_ui_anim_baked_captured = true
+	if ABTestManager.game_grid_ui.is_single_line():
+		board_intro.g3_cell_scale_enabled = true
+		board_intro.g3_cell_scale_from = 0.0
+		board_intro.g3_cell_scale_curve = AutoAnimCurve.EaseType.LINEAR
+		board_intro.g3_cell_scale_duration = board_intro.g3_cell_fade_duration
+	else:
+		board_intro.g3_cell_scale_curve = _grid_ui_anim_baked_scale_curve as AutoAnimCurve.EaseType
+		board_intro.g3_cell_scale_duration = _grid_ui_anim_baked_scale_dur
+		board_intro.g3_cell_scale_custom_curve = _grid_ui_anim_baked_scale_curve_res
+
+
 func _relayout_board() -> void:
 	if _level_config.is_empty() or not _level_config.has("size"):
 		return
-	var intrinsic: Vector2 = BoardView.intrinsic_size_for(_level_config["size"])
-	var board_scale: float = FIXED_BOARD_WIDTH / intrinsic.x
+	var size_n: int = int(_level_config["size"])
+	var intrinsic: Vector2 = BoardView.intrinsic_size_for(size_n)
+
+	var target_width: float = FIXED_BOARD_WIDTH
+	if size_n >= _BOARD_ENLARGE_MIN_SIZE:
+		target_width = FIXED_BOARD_WIDTH * _BOARD_ENLARGE_FACTOR
+	var board_scale: float = target_width / intrinsic.x
 	_board_view.size = intrinsic
 	_board_view.pivot_offset = Vector2.ZERO
 	_board_view.scale = Vector2(board_scale, board_scale)
 	var visible_w: float = intrinsic.x * board_scale
 	var visible_h: float = intrinsic.y * board_scale
+
+	var wanted_min_h: float = maxf(FIXED_BOARD_WIDTH, visible_h)
+	if not is_equal_approx(_board_container.custom_minimum_size.y, wanted_min_h):
+		_board_container.custom_minimum_size.y = wanted_min_h
+
+	_stop_screen_shake()
 	_board_view.position = Vector2(
 		(_board_container.size.x - visible_w) / 2.0,
 		(_board_container.size.y - visible_h) / 2.0,
 	)
+	_board_outer_glow.sync_to_board()
 
 	_board_view.apply_compensated_cell_corner_radius()
 
-	_board_view.apply_inverse_scale_to_auto_mark_btns()
 
-
-## 清除按钮距棋盘底边的间距（像素）
-const _CLEAR_BTN_GAP_BELOW_BOARD: float = 30.0
-
-# ================= 点赞手势反馈（AB: thumb_up） =================
-# 6 种手势动画：比心 / 鼓掌 / 吹号 / 双拇指 / 纠正欢呼 / 鹰眼
-enum LikeHandAnim { LIKE, CLAP, BLOW_TRUMPET, DOUBLE_THUMBS, CORRECTION_CHEER, HAWK_EYE }
-## 枚举 → 动画名
+enum LikeHandAnim { LIKE, CLAP, BLOW_TRUMPET, STAR_EYE_CAT = 7 }
 const _LIKE_HAND_ANIM_NAMES: Dictionary = {
 	LikeHandAnim.LIKE: "Like",
 	LikeHandAnim.CLAP: "Clap",
 	LikeHandAnim.BLOW_TRUMPET: "BlowTrumpet",
-	LikeHandAnim.DOUBLE_THUMBS: "DoubleThumbs",
-	LikeHandAnim.CORRECTION_CHEER: "CorrectionCheer",
-	LikeHandAnim.HAWK_EYE: "HawkEye",
+	LikeHandAnim.STAR_EYE_CAT: "LikeHand_7",
 }
 
 const _LIKE_HAND_POOL_MAX: int = 5 # 手势节点对象池上限，超出直接 queue_free
@@ -1512,47 +2583,35 @@ func _release_like_hand(node: Node2D) -> void:
 ## 手势相对格心的默认 Y 偏移（像素，负数向上）
 const _LIKE_HAND_Y_OFFSET: float = -80.0
 
+const _LIKE_HAND_MARGIN: float = 185.0
+const _MARGIN_SPINE: float = 100.0
 
-## 在指定格子上方播手势，并按连击飘字与动画类型调整高度和左右边界
+
 func _play_like_hand_on_cell(r: int, c: int, anim: LikeHandAnim) -> void:
 	var cell_view: CellView = _board_view.get_cell_view(r, c)
 	if cell_view == null:
 		return
 	var cell_center: Vector2 = cell_view.get_global_transform_with_canvas() * (cell_view.size * 0.5)
 	var y_offset: float = _LIKE_HAND_Y_OFFSET
-
-	if ABTestManager.combo_encourage.is_enabled():
-		if ABTestManager.combo_encourage.is_follow_cat():
-			var has_score: bool = ABTestManager.combo_encourage.has_score_display()
-			var has_encourage: bool = _combo_count >= 3
-			if has_score and has_encourage:
-				var bs: float = _board_view.scale.x if _board_view != null else 1.0
-				y_offset -= (
-					ComboFeedbackView.BUBBLE_HEIGHT
-					+ ComboFeedbackView.BUBBLE_GAP
-					+ ComboFeedbackView.CAT_TOP_UNSCALED * bs
-					+ ComboFeedbackView.ENCOURAGE_Y_OFFSET_ABOVE_SCORE
-				)
-			elif has_score:
-				y_offset -= ComboFeedbackView.BUBBLE_HEIGHT
-		elif ABTestManager.combo_encourage.has_score_display():
-			y_offset -= ComboFeedbackView.BUBBLE_HEIGHT
-	if anim == LikeHandAnim.HAWK_EYE:
-		y_offset -= 40.0
+	if _combo_feedback_view != null:
+		y_offset -= _combo_feedback_view.get_current_effects_height()
+	if anim == LikeHandAnim.STAR_EYE_CAT:
+		var board_scale_y: float = _board_view.scale.y if _board_view != null else 1.0
+		y_offset = -cell_view.size.y * board_scale_y * 0.5
 	cell_center.y += y_offset
-	var viewport_w: float = get_viewport().get_visible_rect().size.x
-	const _LIKE_HAND_MARGIN: float = 185.0
-	const _MARGIN_HAWK_EYE: float = 260.0
-	const _MARGIN_SPINE: float = 100.0
-	var margin: float
-	if anim == LikeHandAnim.HAWK_EYE:
-		margin = _MARGIN_HAWK_EYE
-	elif anim == LikeHandAnim.CORRECTION_CHEER:
-		margin = _MARGIN_SPINE
+	if _combo_feedback_view != null and _combo_feedback_view.get_last_clamped_center_x() >= 0.0:
+		cell_center.x = _combo_feedback_view.get_last_clamped_center_x()
 	else:
-		margin = _LIKE_HAND_MARGIN
-	cell_center.x = clampf(cell_center.x, margin, viewport_w - margin)
+		var viewport_w: float = get_viewport().get_visible_rect().size.x
+		var margin: float = _get_like_hand_margin_for_anim(anim)
+		cell_center.x = clampf(cell_center.x, margin, viewport_w - margin)
 	play_like_hand(cell_center, anim)
+
+
+func _get_like_hand_margin_for_anim(anim: int) -> float:
+	if anim == LikeHandAnim.STAR_EYE_CAT:
+		return _MARGIN_SPINE
+	return _LIKE_HAND_MARGIN
 
 
 # 触发点赞手势的三种来源：玩家双击 / 定位道具 / 应用 R1 提示
@@ -1570,7 +2629,6 @@ const _LIKE_HAND_CONFIG_BY_SIZE: Dictionary = {
 }
 
 
-## 判断这次放对要不要播「点赞」：仅双击来源，且受间隔与次数限制
 func _decide_like_hand_for_correct_cat(trigger: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.LIKE}
 	if trigger != LikeHandTrigger.PLAYER_DOUBLE_TAP:
@@ -1584,13 +2642,10 @@ func _decide_like_hand_for_correct_cat(trigger: int) -> Dictionary:
 	var cfg: Dictionary = _LIKE_HAND_CONFIG_BY_SIZE[sz]
 	if _like_hand_state["triggered_count"] >= int(cfg["max_triggers"]):
 		return none
-	var override: float = ABTestManager.thumb_up.get_like_interval_override(sz)
-	var interval: float = override if override > 0.0 else float(cfg["min_interval"])
+	var interval: float = float(cfg["min_interval"])
 	if _like_hand_state["in_game_sec"] - _like_hand_state["last_cat_sec"] < interval:
 		return none
 
-	if _count_placed_cats(sz) >= sz:
-		return none
 	return {"should_play": true, "anim": LikeHandAnim.LIKE}
 
 
@@ -1624,6 +2679,14 @@ func _count_placed_cats(sz: int) -> int:
 	return n
 
 
+func _would_be_last_cat_after_place(r: int, c: int) -> bool:
+	var sz: int = _level_config.get("size", 4)
+	var placed: int = _count_placed_cats(sz)
+	if _board_view.get_cell_state(r, c) != CellState.CAT:
+		placed += 1
+	return placed >= sz
+
+
 ## 暂停手势时钟（打开设置页 / 插屏时调用）
 func pause_like_hand_clock() -> void:
 	_like_hand_state["clock_paused"] = true
@@ -1634,7 +2697,12 @@ func resume_like_hand_clock() -> void:
 	_like_hand_state["clock_paused"] = false
 
 
-## 判断要不要「鼓掌」：大棋盘、所在区域至少 3 格且从没被打过叉或出过错
+func mark_continue_clock_started() -> void:
+	if _continue_clock_started:
+		return
+	_continue_clock_started = true
+
+
 func _decide_clap_for_correct_cat(r: int, c: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.CLAP}
 
@@ -1642,9 +2710,10 @@ func _decide_clap_for_correct_cat(r: int, c: int) -> Dictionary:
 	if sz < 6:
 		return none
 
-	if _count_placed_cats(sz) >= sz:
-		return none
 	if _board_view.get_region_cell_count(r, c) < 3:
+		return none
+
+	if _draft_used_this_level:
 		return none
 	if _board_view.is_region_ever_marked_x(r, c):
 		return none
@@ -1658,11 +2727,20 @@ func _record_clap_played() -> void:
 	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
 
 
-## 棋盘变化时刷新 R4+ 缓存，并重算「漏猫」候选
-func _on_board_cell_state_changed_for_r4(_r: int, _c: int, state: int, _source: int = 0) -> void:
+func _on_board_cell_state_changed_for_r4(r: int, c: int, state: int, source: int = 0) -> void:
 	if state == CellState.CAT:
+		_record_cat_place_time(r, c)
 		call_deferred("_refresh_r4_plus_cache")
-	call_deferred("_update_missed_cat_candidates")
+
+	elif state == CellState.MARK and source == BoardView.ChangeSource.HINT:
+		_like_hand_state["hint_marked_x_cells"]["%d_%d" % [r, c]] = true
+
+
+func _record_cat_place_time(r: int, c: int) -> void:
+	var key: String = "%d_%d" % [r, c]
+	if not _like_hand_state["cat_place_times"].has(key):
+		_like_hand_state["cat_place_times"][key] = _like_hand_state["in_game_sec"]
+	_like_hand_state["latest_cat_key"] = key
 
 
 ## 用当前棋盘重算可吹号（R4+）的格子集合
@@ -1680,60 +2758,32 @@ func _refresh_r4_plus_cache() -> void:
 	_r4_plus_cells = HintEngine.compute_r4_plus_cells(board, sz, regions, solution)
 
 
-# ================= 连击（AB: combo_encourage） =================
-## 放下一只猫就累加连击与分数，并按需弹连击 / 分数飘字
-func _on_board_cell_state_changed_for_combo(r: int, c: int, state: int, _source: int = 0) -> void:
+func _on_board_cell_state_changed_for_combo(r: int, c: int, state: int, source: int = 0) -> void:
+	if _combo_feedback_view != null:
+		_combo_feedback_view.clear_last_clamped_center_x()
 	if state != CellState.CAT:
 		return
-	if not ABTestManager.combo_encourage.is_enabled():
-		return
-	_combo_count += 1
-	var ab_val: int = ABTestManager.combo_encourage.value()
-	var gain: int = 0
-	if (
-		ab_val == ComboEncourageConfig.VALUE_ENCOURAGE_SCORE
-		or ab_val == ComboEncourageConfig.VALUE_ENCOURAGE_IQ
-		or ab_val == ComboEncourageConfig.VALUE_ENCOURAGE_FOLLOW
-	):
-		gain = _calc_combo_point_gain(ab_val)
-		_combo_score += gain
+
+	_score_model.add_combo()
+
 	if _combo_feedback_view == null:
 		return
 	var cell_global_pos: Vector2 = _board_view.get_cell_global_center(r, c)
+
 	if _combo_visual_suppressed:
-		_draft_combo_gain_sum += gain
-		if gain > 0:
-			_combo_feedback_view.show_score_only(cell_global_pos, gain, _combo_score)
 		return
-	if _combo_count >= 3:
-		_combo_feedback_view.show_combo(_combo_count, cell_global_pos, _combo_score, gain)
-	elif gain > 0:
-		_combo_feedback_view.show_score_only(cell_global_pos, gain, _combo_score)
+
+	if _score_model.combo >= 3:
+		_combo_feedback_view.show_combo_text_only(_score_model.combo, cell_global_pos)
 
 
-## 按连击数与 AB 档位算本次得分（有上限）
-func _calc_combo_point_gain(ab_val: int) -> int:
-	var base: int
-	var step: int
-	var cap: int
-	if ab_val == ComboEncourageConfig.VALUE_ENCOURAGE_IQ:
-		base = 6
-		step = 2
-		cap = 24
-	else:
-		base = 600
-		step = 80
-		cap = 1320
-	return mini(base + maxi(0, _combo_count - 1) * step, cap)
+func _calc_combo_point_gain() -> int:
+	return mini(600 + maxi(0, _score_model.combo - 1) * 80, 1320)
 
 
-## 判断要不要「吹号」：该格属于 R4+ 集合且还没放满
 func _decide_blow_trumpet_for_correct_cat(r: int, c: int) -> Dictionary:
 	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.BLOW_TRUMPET}
-	var sz: int = _level_config.get("size", 4)
 
-	if _count_placed_cats(sz) >= sz:
-		return none
 	if not _r4_plus_cells.has(Vector2i(r, c)):
 		return none
 	return {"should_play": true, "anim": LikeHandAnim.BLOW_TRUMPET}
@@ -1744,185 +2794,181 @@ func _record_blow_trumpet_played() -> void:
 	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
 
 
-## 错后纠错的观察窗口（秒）
-const _CORRECTION_CHEER_WINDOW_SEC: float = 5.0
+const _MISSED_CROSS_DELAY_SEC: float = 10.0
+
+static var _missed_cross_delay_override: float = -1.0
 
 
-## 记一次错落事件（区域 + 时刻），用于纠错欢呼判定
-func _record_wrong_cat_event(r: int, c: int) -> void:
-	if not ABTestManager.thumb_up.is_feedback_enabled(ThumbUpConfig.Feedback.CORRECTION_CHEER):
-		return
+func _decide_missed_cross(r: int, c: int) -> Dictionary:
+	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.STAR_EYE_CAT, "cats": []}
 	var sz: int = _level_config.get("size", 4)
 	if sz < 6:
-		return
-	var regions: Array = _puzzle.get("regions", [])
-	if regions.is_empty():
-		return
-	var region_id: int = int(regions[r][c])
-	var events: Array = _like_hand_state["wrong_cat_events"]
-	events.append({"region_id": region_id, "time": _like_hand_state["in_game_sec"]})
-
-
-## 5 秒内在同区域错过的，这次放对就播「纠正欢呼」
-func _decide_correction_cheer_for_correct_cat(r: int, c: int) -> Dictionary:
-	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.CORRECTION_CHEER}
-	var sz: int = _level_config.get("size", 4)
-	if sz < 6:
-		return none
-	if _count_placed_cats(sz) >= sz:
 		return none
 	var regions: Array = _puzzle.get("regions", [])
 	if regions.is_empty():
 		return none
-	var region_id: int = int(regions[r][c])
+	var target: Vector2i = Vector2i(r, c)
+	var target_key: String = "%d_%d" % [r, c]
 	var now: float = _like_hand_state["in_game_sec"]
-	var events: Array = _like_hand_state["wrong_cat_events"]
-	for i in range(events.size() - 1, -1, -1):
-		var evt: Dictionary = events[i]
-		if now - evt["time"] > _CORRECTION_CHEER_WINDOW_SEC:
-			break
-		if int(evt["region_id"]) == region_id:
-			return {"should_play": true, "anim": LikeHandAnim.CORRECTION_CHEER}
-	return none
+	var place_times: Dictionary = _like_hand_state["cat_place_times"]
+	var triggered: Dictionary = _like_hand_state["missed_cross_triggered_cats"]
 
+	if _like_hand_state["hint_marked_x_cells"].has(target_key):
+		print("[thumb_up] X(%d,%d) SKIP:该格 hint 道具曾打过 X" % [r, c])
+		return none
 
-## 丢掉超出观察窗口的错落事件
-func _prune_wrong_cat_events() -> void:
-	var now: float = _like_hand_state["in_game_sec"]
-	var events: Array = _like_hand_state["wrong_cat_events"]
-	while not events.is_empty() and now - events[0]["time"] > _CORRECTION_CHEER_WINDOW_SEC:
-		events.pop_front()
+	var latest_key: String = _like_hand_state["latest_cat_key"]
+	if latest_key != "":
+		var lp: PackedStringArray = latest_key.split("_")
+		var latest_cat: Vector2i = Vector2i(int(lp[0]), int(lp[1]))
+		if target in QueendokuCore.cells_excluded_by_cat(latest_cat, sz, regions):
+			print("[thumb_up] X(%d,%d) SKIP:落在最新猫(%s)排除区内" % [r, c, latest_key])
+			return none
 
+	var missed_cross_delay: float = (
+		_missed_cross_delay_override
+		if _missed_cross_delay_override >= 0.0
+		else _MISSED_CROSS_DELAY_SEC
+	)
+	var committed_x: Dictionary = _like_hand_state["manually_x_marked_cells"]
+	var oldest_key: String = ""
+	var oldest_time: float = INF
 
-## 漏猫提示需要等待的时长（秒）
-const _MISSED_CAT_DELAY_SEC: float = 5.0
-
-
-## 扫区域 / 行 / 列，维护「只剩一格且答案就在这」的候选格与首次出现时刻
-func _update_missed_cat_candidates() -> void:
-	if not ABTestManager.thumb_up.is_feedback_enabled(ThumbUpConfig.Feedback.MISSED_CAT):
-		return
-	var sz: int = _level_config.get("size", 4)
-	if sz < 6:
-		return
-	var regions: Array = _puzzle.get("regions", [])
-	var solution: Array = _puzzle.get("solution", [])
-	if regions.is_empty() or solution.is_empty():
-		return
-	var candidates: Dictionary = _like_hand_state["missed_cat_candidates"]
-	_like_hand_state["missed_cat_prev"] = candidates.duplicate()
-	var now: float = _like_hand_state["in_game_sec"]
-
-	var valid_cells: Dictionary = {}
-
-	var region_info: Dictionary = {}
-	for r in range(sz):
-		for c in range(sz):
-			var rid: int = int(regions[r][c])
-			if not region_info.has(rid):
-				region_info[rid] = {"total": 0, "cat_count": 0, "empty_cells": []}
-			var info: Dictionary = region_info[rid]
-			info["total"] += 1
-
-			var s: int = _board_view.get_cell_state(r, c)
-			if s == CellState.CAT:
-				info["cat_count"] += 1
-			elif CellState.is_blank(s):
-				info["empty_cells"].append(Vector2i(r, c))
-	for rid: int in region_info:
-		var info: Dictionary = region_info[rid]
-		if info["total"] < 3:
+	var skip_reasons: Array[String] = []
+	for key: String in place_times:
+		var t: float = float(place_times[key])
+		var p: PackedStringArray = key.split("_")
+		var cat: Vector2i = Vector2i(int(p[0]), int(p[1]))
+		var zone: Array = QueendokuCore.cells_excluded_by_cat(cat, sz, regions)
+		if not (target in zone):
 			continue
-		var empties: Array = info["empty_cells"]
-		if info["cat_count"] > 0:
+		if triggered.has(key):
+			skip_reasons.append("猫(%s):已触发过" % key)
 			continue
-		if empties.size() != 1:
+		if now - t <= missed_cross_delay:
+			skip_reasons.append(
+				"猫(%s):填入才 %.1fs 未过延迟(需 >%.1fs)" % [key, now - t, missed_cross_delay]
+			)
 			continue
-		var cell: Vector2i = empties[0]
-		if solution[cell.x][cell.y]:
-			valid_cells["%d_%d" % [cell.x, cell.y]] = true
-
-	for row in range(sz):
-		var cat_count: int = 0
-		var sole_empty: Vector2i = Vector2i(-1, -1)
-		var empty_count: int = 0
-		for c in range(sz):
-			var s: int = _board_view.get_cell_state(row, c)
-			if s == CellState.CAT:
-				cat_count += 1
-			elif CellState.is_blank(s):
-				empty_count += 1
-				sole_empty = Vector2i(row, c)
-		if cat_count == 0 and empty_count == 1 and solution[sole_empty.x][sole_empty.y]:
-			valid_cells["%d_%d" % [sole_empty.x, sole_empty.y]] = true
-
-	for col in range(sz):
-		var cat_count: int = 0
-		var sole_empty: Vector2i = Vector2i(-1, -1)
-		var empty_count: int = 0
-		for r in range(sz):
-			var s: int = _board_view.get_cell_state(r, col)
-			if s == CellState.CAT:
-				cat_count += 1
-			elif CellState.is_blank(s):
-				empty_count += 1
-				sole_empty = Vector2i(r, col)
-		if cat_count == 0 and empty_count == 1 and solution[sole_empty.x][sole_empty.y]:
-			valid_cells["%d_%d" % [sole_empty.x, sole_empty.y]] = true
-
-	for k: String in candidates.keys():
-		if not valid_cells.has(k):
-			candidates.erase(k)
-	for k: String in valid_cells:
-		if not candidates.has(k):
-			candidates[k] = now
-
-
-## 该格在候选里挂了 5 秒以上仍没被填 → 播「漏猫」提示
-func _decide_missed_cat_for_correct_cat(r: int, c: int) -> Dictionary:
-	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.LIKE}
-	var sz: int = _level_config.get("size", 4)
-	if sz < 6:
+		if not _zone_has_committed_x(zone, committed_x, target_key):
+			skip_reasons.append("猫(%s):排除区里没有已提交的手动 X" % key)
+			continue
+		if t < oldest_time:
+			oldest_time = t
+			oldest_key = key
+	if oldest_key == "":
+		if not skip_reasons.is_empty():
+			print("[thumb_up] X(%d,%d) NO TRIGGER,候选猫被拒原因:%s" % [r, c, " | ".join(skip_reasons)])
 		return none
-	if _count_placed_cats(sz) >= sz:
-		return none
-	var regions: Array = _puzzle.get("regions", [])
-	if regions.is_empty():
-		return none
-	var prev: Dictionary = _like_hand_state["missed_cat_prev"]
-	var now: float = _like_hand_state["in_game_sec"]
-	var cell_key: String = "%d_%d" % [r, c]
-	if not prev.has(cell_key):
-		return none
-	var first_met: float = float(prev[cell_key])
-	if now - first_met < _MISSED_CAT_DELAY_SEC:
-		return none
-	var anim_id: int = ABTestManager.thumb_up.get_anim_id_for(ThumbUpConfig.Feedback.MISSED_CAT)
-	return {"should_play": true, "anim": anim_id as LikeHandAnim}
+	print("[thumb_up] MISSED_CROSS 触发 → X(%d,%d) 补上遗漏猫(%s) 排除区里的叉" % [r, c, oldest_key])
+	return {"should_play": true, "anim": LikeHandAnim.STAR_EYE_CAT, "cats": [oldest_key]}
 
 
-## 按 AB 给的优先级逐个试，选出唯一要播的手势反馈
+func _mark_missed_cross_cats_triggered(cats: Array) -> void:
+	var triggered: Dictionary = _like_hand_state["missed_cross_triggered_cats"]
+	for key in cats:
+		triggered[key] = true
+
+
+func _try_play_missed_cross(r: int, c: int) -> void:
+	var mc: Dictionary = _decide_missed_cross(r, c)
+	if mc["should_play"]:
+		_mark_missed_cross_cats_triggered(mc["cats"])
+		_play_like_hand_on_cell(r, c, mc["anim"])
+
+
+const _MISSED_CROSS_DEFER_MARGIN_SEC: float = 0.02
+
+
+func _defer_cat_streak_break(slot: BoardTouchSlot, seq: int) -> void:
+	var sec: float = _cur_window_sec() + _MISSED_CROSS_DEFER_MARGIN_SEC
+	var token: int = _cat_streak_token
+	get_tree().create_timer(sec).timeout.connect(
+		func() -> void:
+			if token != _cat_streak_token:
+				return
+			if slot.cat_streak_break_pending and seq == slot.cat_streak_break_seq:
+				slot.cat_streak_break_pending = false
+				_cat_streak = 0
+	)
+
+
+func _defer_missed_cross_decision(r: int, c: int) -> void:
+	var token: int = _missed_cross_token
+	var sec: float = _cur_window_sec() + _MISSED_CROSS_DEFER_MARGIN_SEC
+	get_tree().create_timer(sec).timeout.connect(
+		func() -> void:
+			if token != _missed_cross_token:
+				return
+			if _is_complete:
+				return
+			if _board_view == null:
+				return
+
+			if _conflict_target_positions.has(Vector2i(r, c)):
+				return
+
+			if _board_view.get_cell_state(r, c) != CellState.MARK:
+				return
+			_try_play_missed_cross(r, c),
+		CONNECT_ONE_SHOT
+	)
+
+
+func _zone_has_committed_x(zone: Array, committed_x: Dictionary, exclude_key: String = "") -> bool:
+	for cell: Vector2i in zone:
+		var k: String = "%d_%d" % [cell.x, cell.y]
+		if k == exclude_key:
+			continue
+		if not committed_x.has(k):
+			continue
+		if _board_view.get_cell_state(cell.x, cell.y) != CellState.MARK:
+			continue
+		return true
+	return false
+
+
+func _stage_x_mark_pending(r: int, c: int) -> void:
+	_active_slot.pending_x_marks.append("%d_%d" % [r, c])
+
+
+func _commit_pending_x_marks(slot: BoardTouchSlot) -> void:
+	if slot == null or slot.pending_x_marks.is_empty():
+		return
+	var committed: Dictionary = _like_hand_state["manually_x_marked_cells"]
+	for key: String in slot.pending_x_marks:
+		committed[key] = true
+	slot.pending_x_marks.clear()
+
+
+const _FEEDBACK_ARBITRATION_ORDER: Array = [
+	ThumbUpConfig.Feedback.BLOW_TRUMPET,
+	ThumbUpConfig.Feedback.CLAP,
+	ThumbUpConfig.Feedback.LIKE,
+]
+
+
 func _arbitrate_feedback_for_correct_cat(r: int, c: int) -> Dictionary:
-	var none: Dictionary = {
-		"should_play": false, "anim": LikeHandAnim.LIKE, "feedback": -1, "pos": "cell"
-	}
-	var priority_list: Array = ABTestManager.thumb_up.get_priority_list()
-	if priority_list.is_empty():
+	var none: Dictionary = {"should_play": false, "anim": LikeHandAnim.LIKE, "feedback": -1}
+
+	if _would_be_last_cat_after_place(r, c):
 		return none
-	for feedback: int in priority_list:
+	for feedback: int in _FEEDBACK_ARBITRATION_ORDER:
 		var decision: Dictionary = _evaluate_single_feedback(feedback, r, c)
 		if decision["should_play"]:
-			var anim_id: int = ABTestManager.thumb_up.get_anim_id_for(feedback)
-			return {
-				"should_play": true,
-				"anim": anim_id as LikeHandAnim,
-				"feedback": feedback,
-				"pos": "cell"
-			}
+			return {"should_play": true, "anim": decision["anim"], "feedback": feedback}
 	return none
 
 
-## 分派到各反馈自己的判定函数
+func _predict_like_hand_hw(r: int, c: int, source: int) -> float:
+	if source != BoardView.ChangeSource.USER_ACTION:
+		return 0.0
+	var predicted: Dictionary = _arbitrate_feedback_for_correct_cat(r, c)
+	if not predicted.get("should_play", false):
+		return 0.0
+	return _get_like_hand_margin_for_anim(int(predicted.get("anim", LikeHandAnim.LIKE)))
+
+
 func _evaluate_single_feedback(feedback: int, r: int, c: int) -> Dictionary:
 	var result: Dictionary
 	match feedback:
@@ -1935,131 +2981,103 @@ func _evaluate_single_feedback(feedback: int, r: int, c: int) -> Dictionary:
 		ThumbUpConfig.Feedback.LIKE:
 			result = _decide_like_hand_for_correct_cat(LikeHandTrigger.PLAYER_DOUBLE_TAP)
 			return result
-		ThumbUpConfig.Feedback.CORRECTION_CHEER:
-			result = _decide_correction_cheer_for_correct_cat(r, c)
-			return result
-		ThumbUpConfig.Feedback.MISSED_CAT:
-			result = _decide_missed_cat_for_correct_cat(r, c)
-			return result
 	return {"should_play": false, "anim": LikeHandAnim.LIKE}
 
 
-## 固定位置反馈在「规则条底 ~ 棋盘顶」之间的高度比例
-const _HAWK_EYE_Y_RATIO: float = 0.57
-
-
-## 在棋盘上方固定位置播手势（不贴格子的那种反馈）
-func _play_feedback_at_fixed_pos(anim: LikeHandAnim) -> void:
-	var board_top: float = _board_view.global_position.y
-	var rules_bottom: float = _rules_bg.global_position.y + _rules_bg.size.y
-	var board_scale_x: float = _board_view.get_global_transform().get_scale().x
-	var center_x: float = _board_view.global_position.x + _board_view.size.x * board_scale_x * 0.5
-	var center_y: float = rules_bottom + (board_top - rules_bottom) * _HAWK_EYE_Y_RATIO
-	play_like_hand(Vector2(center_x, center_y), anim)
-
-
-## 某种反馈播完后刷新手势时间戳
 func _on_feedback_played(feedback: int) -> void:
 	match feedback:
 		ThumbUpConfig.Feedback.BLOW_TRUMPET:
 			_record_blow_trumpet_played()
 		ThumbUpConfig.Feedback.CLAP:
 			_record_clap_played()
-		ThumbUpConfig.Feedback.CORRECTION_CHEER:
-			_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
-		ThumbUpConfig.Feedback.MISSED_CAT:
-			_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
 
 
-# ================= 通关校验与剩余数量 =================
-## 核心判定：棋盘放满且无冲突就通关；否则按 AB 检查草稿是否已全对可自动提交
 func _validate_board() -> void:
 	if _is_complete or _puzzle.is_empty() or not _puzzle.has("regions"):
 		return
 	var sz: int = _level_config.get("size", 4)
-	# 猫数 = 边长且无冲突 → 直接通关
-	if QueendokuCore.is_complete(_board_view.get_board(), sz, _puzzle["regions"]):
-		_on_game_complete()
+
+	if QueendokuCore.is_complete(_board_view.get_cell_state_folded_board(), sz, _puzzle["regions"]):
+		_emit_full_mark_achieved_if_any()
+
+		_win_encourage_snapshot = {
+			"perfect": is_perfect_win(),
+			"full_hp": is_full_hp_win(),
+		}
+		_on_game_win()
 		return
 
-	# 草稿模式中 / 没有草稿 / 已有排队中的自动应用 → 这次不再自动提交
-	if _draft_mode or not _has_draft_marks() or _pending_post_cat_auto_apply:
-		return
-	if not ABTestManager.draft_mode.auto_win_on_complete():
-		return
-	if not _detect_draft_all_correct():
-		return
 
-	_pending_post_cat_auto_apply = true
-	UIManager.block_input_briefly(self, _CAT_APPEAR_SEC)
-	get_tree().create_timer(_CAT_APPEAR_SEC).timeout.connect(
-		func() -> void:
-			_pending_post_cat_auto_apply = false
-			if _is_complete or not visible or not _has_draft_marks():
-				return
-			if not _detect_draft_all_correct():
-				return
-			_draft_terminal_state = DraftTerminal.ALL_CORRECT
-			_apply_draft_commit()
-	)
+func _refresh_score_performance(found: int, total: int, stage_immediate: bool = false) -> void:
+	if _combo_feedback_view == null:
+		return
+	var cfg: ScorePerformanceConfig = ABTestManager.score_performance
+	if not cfg.is_enabled():
+		_combo_feedback_view.apply_score_stage(0, 0)
+		return
+	var stage: int = cfg.stage_for_progress(found, total)
+	var stage_count: int = cfg.stage_count(total)
+
+	if stage_immediate or stage <= _combo_feedback_view.get_applied_score_stage():
+		_combo_feedback_view.apply_score_stage(stage, stage_count)
+		return
+	_combo_feedback_view.latch_score_stage(stage, stage_count)
 
 
-## 刷新剩余猫数量（数字或进度条模式），并按需播正确提示动画
-func _update_remaining() -> void:
+func _update_remaining(stage_immediate: bool = false) -> void:
 	var sz: int = _level_config.get("size", 4)
 	var placed: int = 0
 	for r in range(sz):
 		for c in range(sz):
 			if _board_view.get_cell_state(r, c) == CellState.CAT:
 				placed += 1
-	if _progress_bar_mode and _progress_count_label != null:
-		if _last_placed_count == -1:
-			_apply_progress_track_width(sz)
-		_progress_count_label.text = (
-			"[color=#00B31B]%d[/color][color=#935A5A]/%d[/color]" % [placed, sz]
+	if sz >= 10:
+		_remaining_label.text = (
+			"[font_size=40][color=#00B31B]%d[/color][color=#935A5A]/%d[/color][/font_size]"
+			% [placed, sz]
 		)
-		_fit_progress_count_font("%d/%d" % [placed, sz])
-		if _progress_track_fill != null:
-			var target_right: float
-			if placed == 0:
-				target_right = _progress_track_fill.offset_left
-			else:
-				var ratio: float = float(placed) / float(sz)
-				var visible_width: float = _progress_track_width - _PROGRESS_FILL_DEAD_ZONE
-				target_right = (
-					_progress_track_fill.offset_left
-					+ _PROGRESS_FILL_DEAD_ZONE
-					+ visible_width * ratio
-				)
-			if _last_placed_count != -1 and placed != _last_placed_count:
-				var tween := create_tween()
-				(
-					tween
-					. tween_property(_progress_track_fill, "offset_right", target_right, 0.4)
-					. set_ease(Tween.EASE_OUT)
-					. set_trans(Tween.TRANS_CUBIC)
-				)
-			else:
-				_progress_track_fill.offset_right = target_right
 	else:
-		if sz >= 10:
-			_remaining_label.text = (
-				"[font_size=40][color=#00B31B]%d[/color][color=#935A5A]/%d[/color][/font_size]"
-				% [placed, sz]
-			)
-		else:
-			_remaining_label.text = (
-				"[color=#00B31B]%d[/color][color=#935A5A]/%d[/color]" % [placed, sz]
-			)
-		if _last_placed_count != -1 and placed != _last_placed_count:
-			_anim_correct.play("CorrectPromptStatus")
+		_remaining_label.text = "[color=#00B31B]%d[/color][color=#935A5A]/%d[/color]" % [placed, sz]
+	if _last_placed_count != -1 and placed != _last_placed_count:
+		_anim_correct.play("CorrectPromptStatus")
 	_last_placed_count = placed
 
+	_refresh_score_performance(placed, sz, stage_immediate)
 
-## 判定刚落下的猫违反了哪条规则，命中就回调 _on_rule_violated
+	if _cat_progress != null and _cat_progress.visible:
+		var metrics: Dictionary = _cat_progress_metrics(sz)
+		var is_compact: bool = ABTestManager.normal_top_ui.is_cat_progress_compact()
+		if _cat_progress_total != sz:
+			_cat_progress_region_order.clear()
+			if is_compact:
+				_setup_cat_progress_compact(sz, metrics)
+			else:
+				_cat_progress.setup(sz, metrics["slot"], metrics["pitch"], metrics["padding"])
+			_cat_progress_total = sz
+
+			_cat_progress.set_cat_costume(in_game_costume_id(), uses_in_game_costume())
+
+		_layout_cat_progress_bar(metrics)
+		if is_compact:
+			_apply_cat_progress_compact(sz)
+		elif ABTestManager.normal_top_ui.is_cat_progress_colored():
+			_apply_cat_progress_colored(sz)
+		else:
+			_cat_progress.set_revealed_count(placed)
+		_refresh_cat_progress_wrong_marks()
+
+	_apply_target_costume_icon()
+
+
 func _try_emit_rule_violation(r: int, c: int) -> void:
+	var rule: int = _classify_violation_at(r, c)
+	if rule != QueendokuCore.Rule.NONE:
+		_on_rule_violated(rule)
+
+
+func _classify_violation_at(r: int, c: int) -> int:
 	if _puzzle.is_empty() or not _puzzle.has("regions"):
-		return
+		return QueendokuCore.Rule.NONE
 	var regions: Array = _puzzle["regions"]
 	var sz: int = _level_config.get("size", 4)
 	var placed: Array = []
@@ -2068,29 +3086,29 @@ func _try_emit_rule_violation(r: int, c: int) -> void:
 		for cc in range(sz):
 			if board[rr][cc] == CellState.CAT:
 				placed.append(Vector2i(rr, cc))
-	var rule: int = QueendokuCore.classify_violation(r, c, placed, regions)
-	if rule != QueendokuCore.Rule.NONE:
-		_on_rule_violated(rule)
+	return QueendokuCore.classify_violation(r, c, placed, regions)
 
 
-## 规则违规回调，子类覆写（例如每日关弹提示）
-func _on_rule_violated(_rule: int) -> void:
+func _on_rule_violated(_rule: int, _additive: bool = false) -> void:
 	pass
 
 
-## 让对应那条规则的高亮块呼吸闪两下
-func _play_rule_highlight(rule_index: int) -> void:
+func _play_rule_highlight(rule_index: int, additive: bool = false) -> void:
 	var idx: int = rule_index - 1
 	if idx < 0 or idx >= _rule_highlights.size():
 		return
-	_stop_rule_highlight()
+	if not additive:
+		_stop_rule_highlight()
 	var highlight: TextureRect = _rule_highlights[idx]
 
 	if not is_instance_valid(highlight):
 		return
-	_rule_active_highlight = highlight
-	_rule_tween = create_tween().set_loops(2)
-	_rule_tween.tween_method(
+	if _rule_active_highlights.has(highlight):
+		return
+	var tw: Tween = create_tween().set_loops(2)
+	_rule_active_highlights.append(highlight)
+	_rule_tweens.append(tw)
+	tw.tween_method(
 		func(t: float) -> void:
 			if not is_instance_valid(highlight):
 				return
@@ -2100,213 +3118,141 @@ func _play_rule_highlight(rule_index: int) -> void:
 		1.0,
 		RULE_HL_PERIOD
 	)
-	_rule_tween.finished.connect(_stop_rule_highlight)
+
+	tw.finished.connect(func() -> void: _stop_one_rule_highlight(highlight, tw))
 
 
-## 停掉规则高亮并复位透明度
+func _stop_one_rule_highlight(highlight: TextureRect, tw: Tween) -> void:
+	var i: int = _rule_tweens.find(tw)
+	if i >= 0:
+		_rule_tweens.remove_at(i)
+	var j: int = _rule_active_highlights.find(highlight)
+	if j >= 0:
+		_rule_active_highlights.remove_at(j)
+	if is_instance_valid(highlight):
+		highlight.modulate.a = 0.0
+
+
 func _stop_rule_highlight() -> void:
-	if _rule_tween != null and _rule_tween.is_valid():
-		_rule_tween.kill()
-	_rule_tween = null
-	if _rule_active_highlight != null:
-		if is_instance_valid(_rule_active_highlight):
-			_rule_active_highlight.modulate.a = 0.0
-		_rule_active_highlight = null
+	for tw: Tween in _rule_tweens:
+		if tw != null and tw.is_valid():
+			tw.kill()
+	_rule_tweens.clear()
+	for hl: TextureRect in _rule_active_highlights:
+		if is_instance_valid(hl):
+			hl.modulate.a = 0.0
+	_rule_active_highlights.clear()
 
 
-## 放错猫：扣一条命、清零连击、播错误反馈；命尽则稍后进失败流程
-func _on_wrong_guess(r: int, c: int) -> void:
-	_record_wrong_cat_event(r, c)
+func _on_wrong_guess(
+	row: int, column: int, skip_other_cats: bool = false, from_draft_apply: bool = false
+) -> void:
 	_mistake_count += 1
 	_wrong_guess_pending = true
-	_combo_count = 0
+
+	_wrong_guess_lock_token += 1
+	var lock_token: int = _wrong_guess_lock_token
+
+	_score_model.reset_combo()
+	_se_count = 0
 
 	GameState.inc_game_total_stat(_game_type(), "invalid_sign_total")
 	var lost_index: int = _lives - 1
-	_lives = maxi(_lives - 1, 0)
 
-	_board_view.play_error_feedback(r, c)
+	if not _lives_inf:
+		_lives = maxi(_lives - 1, 0)
 
-	# 命尽：所有猫一起哭，并短暂阻塞输入
+		GameState.inc_elo_fish_consumed()
+		_record_elo_v2_action("fish")
+
+	if _game_type() != Tracker.GameType.DAILY:
+		if LevelKind.is_insert_golden_fish(_level_kind):
+			GameState.inc_insert_golden_fish_wrong_cat_num()
+		else:
+			GameState.inc_current_wrong_cat_num()
+
+	var conflict_anim_played: bool = false
+
+	if ABTestManager.misplace_reaction.is_conflict_reaction():
+		var conflict: Vector2i = _find_conflict_cat(row, column)
+		if conflict != Vector2i(-1, -1):
+			if not ABTestManager.found_cat_animation.should_sigh_all_on_wrong():
+				skip_other_cats = true
+
+			if from_draft_apply:
+				_draft_apply_conflict_shown = true
+
+			if _lives <= 0 and not from_draft_apply:
+				UIManager.block_input_briefly(
+					self, MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC + 2.0
+				)
+
+				_board_view.disable_touch_for(
+					MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC + 2.0
+				)
+			var completed: bool = await _play_misplace_conflict_anim(row, column, conflict)
+
+			if not completed:
+				return
+			conflict_anim_played = true
+
+	_full_mark_defer_judgement = true
+	_board_view.play_error_feedback(row, column)
+	_full_mark_defer_judgement = false
+
+	if _lives <= 0:
+		_seed_full_mark_fired_units_from_board("死局,登记但不播")
+	elif conflict_anim_played:
+		_defer_full_mark_after_conflict(Vector2i(row, column))
+	else:
+		_flush_full_mark_unit_clear(Vector2i(row, column))
+
+	if from_draft_apply:
+		_life_bar.animate_lost(lost_index, _display_lives())
+		_play_screen_shake()
+		return
+
 	if _lives <= 0:
 		_board_view.play_cat_cry_loop_all()
 
 		UIManager.block_input_briefly(self, 2.0)
+
+		_board_view.disable_touch_for(2.0)
 	else:
-		_play_wrong_guess_cat_feedback(r, c)
+		if not skip_other_cats:
+			_board_view.play_cat_frustrated_all()
 
-	_animate_heart_lost(lost_index)
+	_life_bar.animate_lost(lost_index, _display_lives())
 
-	if not ABTestManager.wrong_cat_effect.should_skip_shake():
-		_play_screen_shake()
+	_play_screen_shake()
 
 	get_tree().create_timer(0.4).timeout.connect(
 		func() -> void:
+			if not is_instance_valid(self):
+				return
+
 			_update_remaining()
+
+			if lock_token != _wrong_guess_lock_token:
+				return
 			_wrong_guess_pending = false
 	)
 
 	if _lives <= 0:
 		get_tree().create_timer(0.6).timeout.connect(
 			func() -> void:
-				if not visible:
+				if not is_instance_valid(self) or not visible:
 					return
-				_on_game_over()
+
+				if lock_token != _wrong_guess_lock_token:
+					return
+				if _is_complete:
+					return
+				_on_game_fail()
 		)
 
 
-## 按 AB 决定哪些猫表现沮丧（全部 / 只让与之冲突的猫）
-func _play_wrong_guess_cat_feedback(r: int, c: int) -> void:
-	if ABTestManager.error_feedback.no_cats_react():
-		return
-	if not ABTestManager.error_feedback.only_conflicting_cats_react():
-		_board_view.play_cat_frustrated_all()
-		return
-
-	var regions: Array = _puzzle.get("regions", [])
-	if regions.is_empty():
-		_board_view.play_cat_frustrated_all()
-		return
-	var sz: int = _level_config.get("size", 4)
-	var placed: Array[Vector2i] = []
-	var board: Array = _board_view.get_board()
-	for rr in range(sz):
-		for cc in range(sz):
-			if board[rr][cc] == CellState.CAT:
-				placed.append(Vector2i(rr, cc))
-	var bad: Array[Vector2i] = QueendokuCore.find_conflicting_cats(r, c, placed, regions)
-	if not bad.is_empty():
-		_board_view.play_cat_frustrated_at(bad)
-
-
-## 满足条件时送一条命（每局一次、非每日关、只剩 1 命、处在二选一区域等）
-func _maybe_trigger_life_plus(r: int, c: int) -> void:
-	if _life_plus_used_this_game:
-		return
-	if not ABTestManager.game_life_rule.is_life_plus_enabled():
-		return
-	if _game_type() == Tracker.GameType.DAILY:
-		return
-	if _lives != 1:
-		return
-	if float(_like_hand_state["in_game_sec"]) <= debug_life_plus_min_sec:
-		return
-	var sz: int = _level_config.get("size", 4)
-	if _count_placed_cats(sz) >= sz:
-		return
-	if not _was_two_choice_in_region(r, c):
-		return
-	var first: bool = not GameState.is_life_plus_first_done()
-	if not first and randf() >= 0.5:
-		return
-	_apply_life_plus(first)
-
-
-## 该格所在区域是否只剩两个没打叉的格子（二选一困境）
-func _was_two_choice_in_region(r: int, c: int) -> bool:
-	var regions: Array = _puzzle.get("regions", [])
-	if regions.is_empty():
-		return false
-	var sz: int = _level_config.get("size", 4)
-	var region_id: int = int(regions[r][c])
-	var board: Array = _board_view.get_cell_state_folded_board()
-	var non_mark: int = 0
-	for rr in range(sz):
-		for cc in range(sz):
-			if int(regions[rr][cc]) == region_id and board[rr][cc] != CellState.MARK:
-				non_mark += 1
-	return non_mark == 2
-
-
-## 加一条命并播「生命 +1」表现，首次触发时记下引导已看
-func _apply_life_plus(show_guide: bool) -> void:
-	_lives = mini(_lives + 1, 3)
-	_life_plus_used_this_game = true
-	_refresh_hearts()
-	_pose_gained_heart_for_life_plus()
-	_play_life_plus_fx(show_guide)
-	if show_guide:
-		_life_plus_appear1_suppress_thumb = true
-		GameState.mark_life_plus_first_done()
-
-
-## 把新获得那颗心的初始状态摆好（先藏实心、露出遮罩）
-func _pose_gained_heart_for_life_plus() -> void:
-	var gained: Node = _gained_heart_slot()
-	if gained == null:
-		return
-	if gained.get_node_or_null("AnimLifePlus") == null:
-		return
-	var dim := gained.get_node_or_null("Dim") as CanvasItem
-	if dim != null:
-		dim.visible = true
-
-	var full_paths: Array[String] = ["Content/HeartFull", "Content/FishFull"]
-	for path in full_paths:
-		var full := gained.get_node_or_null(path) as CanvasItem
-		if full != null:
-			full.modulate = Color(1, 1, 1, 0)
-			return
-
-
-## 播生命 +1 动画：页面级动画优先，其次心槽动画，都没有就飘字兜底
-func _play_life_plus_fx(show_guide: bool) -> void:
-	var anim_name: String = "Appear1" if show_guide else "Appear2"
-	var played: bool = false
-	var life_plus_anim := get_node_or_null("AnimLifePlus") as AnimationPlayer
-	if life_plus_anim != null:
-		life_plus_anim.play(anim_name)
-		played = true
-
-	var gained: Node = _gained_heart_slot()
-	if gained != null:
-		var heart_anim := gained.get_node_or_null("AnimLifePlus") as AnimationPlayer
-		if heart_anim != null:
-			var gained_ci := gained as CanvasItem
-			if gained_ci != null:
-				var saved_z: int = gained_ci.z_index
-				gained_ci.z_index = 2
-				heart_anim.animation_finished.connect(
-					func(_n: StringName) -> void:
-						if is_instance_valid(gained_ci):
-							gained_ci.z_index = saved_z,
-					CONNECT_ONE_SHOT,
-				)
-			heart_anim.play(anim_name)
-			played = true
-	if not played:
-		_spawn_life_plus_float()
-
-
-## 取刚获得的那颗心（索引 = 生命数 - 1）
-func _gained_heart_slot() -> Node:
-	var hearts: Array = [_heart1, _heart2, _heart3]
-	var idx: int = _lives - 1
-	if idx < 0 or idx >= hearts.size():
-		return null
-	return hearts[idx]
-
-
-## 兜底表现：在生命槽旁飘一个 +1
-func _spawn_life_plus_float() -> void:
-	var anchor: Control = _heart3 if _heart3 != null else _heart1
-	if anchor == null:
-		return
-	var label := Label.new()
-	label.text = "+1"
-	label.add_theme_color_override("font_color", Color(0.3, 0.85, 0.35))
-	label.add_theme_font_size_override("font_size", 64)
-	label.z_index = 50
-	add_child(label)
-	label.global_position = anchor.global_position + Vector2(anchor.size.x + 12.0, 0.0)
-	var tw := create_tween().set_parallel(true)
-	tw.tween_property(label, "global_position:y", label.global_position.y - 80.0, 0.7)
-	tw.tween_property(label, "modulate:a", 0.0, 0.7)
-	tw.finished.connect(label.queue_free)
-
-
-## 失败回调，子类覆写（弹复活 / 跳失败页）
-func _on_game_over() -> void:
+func _on_game_fail() -> void:
 	pass
 
 
@@ -2315,29 +3261,33 @@ func _on_cheat_command(_cmd_name: String, _args: Array[String]) -> void:
 	pass
 
 
-# ================= 定位道具与提示高亮 =================
-## 定位道具：花一个道具，在候选里挑「区域最小」的答案格直接落猫
+func _on_mouse_btn_pressed() -> void:
+	_try_start_mouse_tool()
+
+
 func _on_locate_btn_pressed() -> void:
-	if _entry_anim_playing:
+	if _entry_anim_playing or _tool_btns_locked or _mouse_tool_busy:
 		return
 	Tracker.track_btn_click(Tracker.Btn.LOCATE, self)
 	_reset_idle_hint()
 
-	_exit_draft_mode_and_clear(ABTestManager.draft_mode.keep_marks_on_manual_exit())
+	if _draft_mode:
+		return
 	if _is_complete or _wrong_guess_pending:
 		return
-	var consumed: bool = _consume_tool(_tool_locate_btn, false)
-	GameState.mark_current_level_dirty()
-	GameState.mark_dda_tool_or_revive_used()
+	var consumed: bool = _consume_tool(ToolKind.LOCATE, false)
 	if not consumed:
 		return
+	GameState.mark_current_level_dirty()
+	if not _isolate_onefish_main_state():
+		GameState.mark_dda_tool_or_revive_used()
+		GameState.inc_today_tool_consumed()
 	Tracker.inc_stat("locate_used")
 	GameState.inc_game_total_stat(_game_type(), "locate_used_total")
 	var sz: int = _level_config.get("size", 4)
 	var sol: Array = _puzzle["solution"]
 	var regions: Array = _puzzle["regions"]
 
-	# 统计每个区域还有多少格没被排除（已打叉 / 错误叉不算）
 	var region_remaining: Dictionary = {}
 	for r in range(sz):
 		for c in range(sz):
@@ -2346,7 +3296,6 @@ func _on_locate_btn_pressed() -> void:
 				var rid: int = regions[r][c]
 				region_remaining[rid] = region_remaining.get(rid, 0) + 1
 
-	# 候选 = 答案格中还没放猫的，按「剩余格数 → 行 → 列」排序后取第一个
 	var candidates: Array = []
 	for r in range(sz):
 		for c in range(sz):
@@ -2357,27 +3306,39 @@ func _on_locate_btn_pressed() -> void:
 	if candidates.is_empty():
 		return
 	candidates.sort_custom(
-		func(a: Dictionary, b: Dictionary) -> bool:
+		func(left: Dictionary, right: Dictionary) -> bool:
 			return (
-				a["size"] < b["size"]
-				if a["size"] != b["size"]
-				else (a["r"] < b["r"] if a["r"] != b["r"] else a["c"] < b["c"])
+				left["size"] < right["size"]
+				if left["size"] != right["size"]
+				else (left["r"] < right["r"] if left["r"] != right["r"] else left["c"] < right["c"])
 			)
 	)
 	var best: Dictionary = candidates[0]
-	var prev_state: int = _board_view.get_cell_state(best["r"], best["c"])
-	_board_view.set_cell_state(
-		best["r"], best["c"], CellState.CAT, true, true, BoardView.ChangeSource.LOCATE
+	Tracker.record_solution_step(
+		Tracker.StepAction.LOCATE_SIGN,
+		[_step_cell(best["r"], best["c"], Tracker.StepResult.CORRECT)]
 	)
-	_record_cell_change(best["r"], best["c"], prev_state, CellState.CAT)
-	_commit_current_step(true, false)
+	_board_view.set_cell_state(
+		best["r"],
+		best["c"],
+		CellState.CAT,
+		true,
+		true,
+		BoardView.ChangeSource.LOCATE,
+		"",
+		false,
+		_found_cat_spine_anim(BoardView.ChangeSource.LOCATE)
+	)
+
+	_mark_step_dirty()
+	_clear_step_dirty()
+	_count_board_step("locate")
 
 	_record_correct_cat(_decide_like_hand_for_correct_cat(LikeHandTrigger.LOCATE))
 	_update_remaining()
 	_validate_board()
 
 
-## 按提示策略在棋盘上叠一层临时格子，演示这一手该怎么走
 func _build_hint_highlights(hint: Dictionary) -> void:
 	_clear_hint_highlights()
 	var s: float = _board_view.scale.x
@@ -2392,7 +3353,13 @@ func _build_hint_highlights(hint: Dictionary) -> void:
 	var key_cell: Vector2i = hint.get("cell", Vector2i(-1, -1))
 	var cells_to_show: Array = hint.get("unit_cells", hint.get("highlight_cells", []))
 
-	var highlight_all: bool = strategy == "R2" or strategy == "R3" or strategy == "R4"
+	var highlight_all: bool = (
+		strategy == "R2"
+		or strategy == "R3"
+		or strategy == "R4"
+		or strategy == "R3b"
+		or strategy == "R4b"
+	)
 	var is_chain: bool = strategy == "R4_chain" or strategy == "R5_chain"
 	var is_r1: bool = strategy == "" or strategy == "R1" or strategy == "R1_mark"
 
@@ -2462,6 +3429,32 @@ func _build_hint_highlights(hint: Dictionary) -> void:
 			temp_r.play_r2_preview(mark_idx_r * 0.06)
 			mark_idx_r += 1
 
+	if strategy == "R3b" or strategy == "R4b":
+		var sz_b: int = _level_config.get("size", 4)
+		var regs_b: Array = _puzzle["regions"]
+		var color_set_b: Dictionary = {}
+		for reg in hint.get("regions", []):
+			color_set_b[reg] = true
+		var row_in_b: Dictionary = {}
+		for row in hint.get("locked_rows", []):
+			row_in_b[row] = true
+		var col_in_b: Dictionary = {}
+		for col in hint.get("locked_cols", []):
+			col_in_b[col] = true
+		var mark_idx_b: int = 0
+		for r in range(sz_b):
+			for c in range(sz_b):
+				if not color_set_b.has(regs_b[r][c]):
+					continue
+				if not row_in_b.is_empty() and row_in_b.has(r):
+					continue
+				if not col_in_b.is_empty() and col_in_b.has(c):
+					continue
+				if CellState.is_blank(_board_view.get_cell_state(r, c)):
+					var temp_b: CellView = _spawn_temp_cell(Vector2i(r, c), s, bpos)
+					temp_b.play_r2_preview(mark_idx_b * 0.06)
+					mark_idx_b += 1
+
 	var contra_cells: Array = hint.get("contra_cells", [])
 	if not contra_cells.is_empty():
 		var contra_idx: int = 0
@@ -2491,7 +3484,6 @@ func _spawn_temp_cell(cv: Vector2i, s: float, bpos: Vector2) -> CellView:
 	return _spawn_temp_cell_in(_hint_highlight_layer, cv, s, bpos)
 
 
-## 在指定 CanvasLayer 里造临时格子，并复制源格的区域色与非空状态
 func _spawn_temp_cell_in(layer: CanvasLayer, cv: Vector2i, s: float, bpos: Vector2) -> CellView:
 	var local_rect: Rect2 = _board_view.cell_to_local_rect(cv.x, cv.y)
 	var top_left: Vector2 = bpos + local_rect.position * s
@@ -2505,9 +3497,21 @@ func _spawn_temp_cell_in(layer: CanvasLayer, cv: Vector2i, s: float, bpos: Vecto
 	temp.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(temp)
 
-	temp.set_corner_radius_compensated(s)
+	temp.set_corner_radius_compensated(s, _board_view.get_puzzle_size())
+
+	temp.set_round_corners(_board_view.corner_round_mask_for(cv.x, cv.y))
+
+	temp.apply_cell_face_px(float(_board_view.get_grid_cell_face_px()))
+
+	temp.apply_cross_art_variant()
+
+	temp.set_cat_costume(in_game_costume_id())
 	if src != null:
 		temp.set_region_color(src.get_region_color())
+
+		if src.get_pattern_tex() != null:
+			temp.configure_pattern(src.get_pattern_tex(), src.get_pattern_color())
+			temp.set_pattern_mode(src.is_pattern_on(), true)
 
 		var raw: int = src.get_state()
 		if not CellState.is_blank(raw):
@@ -2554,148 +3558,736 @@ func _compute_r2_mark_cells(hint: Dictionary) -> Array[Vector2i]:
 	return result
 
 
-## 应用 R3/R4 提示：把锁定的行、列上（非相关区域的）空格全部打叉
 func _apply_r3_r4_hint() -> void:
-	var sz: int = _level_config.get("size", 4)
-	var regs: Array = _puzzle["regions"]
-	var reg_set: Dictionary = {}
-	for reg in _hint_data.get("regions", []):
-		reg_set[reg] = true
-	for row in _hint_data.get("locked_rows", []):
-		for c in range(sz):
-			if reg_set.has(regs[row][c]):
-				continue
-			if CellState.is_blank(_board_view.get_cell_state(row, c)):
-				_record_cell_change(row, c, CellState.EMPTY, CellState.MARK)
-				_board_view.set_cell_state(
-					row, c, CellState.MARK, true, true, BoardView.ChangeSource.HINT
-				)
-	for col in _hint_data.get("locked_cols", []):
-		for r in range(sz):
-			if reg_set.has(regs[r][col]):
-				continue
-			if CellState.is_blank(_board_view.get_cell_state(r, col)):
-				_record_cell_change(r, col, CellState.EMPTY, CellState.MARK)
-				_board_view.set_cell_state(
-					r, col, CellState.MARK, true, true, BoardView.ChangeSource.HINT
-				)
+	var mark_cells: Array[Vector2i] = _compute_r3_r4_mark_cells(_hint_data)
+	for cell: Vector2i in mark_cells:
+		_mark_step_dirty()
+		_board_view.set_cell_state(
+			cell.x, cell.y, CellState.MARK, true, true, BoardView.ChangeSource.HINT
+		)
 	_validate_board()
 	_update_remaining()
 
 
-# ================= 棋盘输入（拖动 / 手势） =================
-## 按上棋盘：初始化输入系统后交给手势识别器
-func _on_board_cell_drag_start(pos: Vector2) -> void:
+func _compute_r3_r4_mark_cells(hint: Dictionary) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var sz: int = _level_config.get("size", 4)
+	var regs: Array = _puzzle["regions"]
+	var reg_set: Dictionary = {}
+	for reg in hint.get("regions", []):
+		reg_set[reg] = true
+	for row in hint.get("locked_rows", []):
+		for c in range(sz):
+			var row_cell: Vector2i = Vector2i(row, c)
+			if (
+				not reg_set.has(regs[row][c])
+				and not result.has(row_cell)
+				and CellState.is_blank(_board_view.get_cell_state(row, c))
+			):
+				result.append(row_cell)
+	for col in hint.get("locked_cols", []):
+		for r in range(sz):
+			var col_cell: Vector2i = Vector2i(r, col)
+			if (
+				not reg_set.has(regs[r][col])
+				and not result.has(col_cell)
+				and CellState.is_blank(_board_view.get_cell_state(r, col))
+			):
+				result.append(col_cell)
+	return result
+
+
+func _apply_r3_r4b_hint() -> void:
+	var mark_cells: Array[Vector2i] = _compute_r3_r4b_mark_cells(_hint_data)
+	for cell: Vector2i in mark_cells:
+		_mark_step_dirty()
+		_board_view.set_cell_state(
+			cell.x, cell.y, CellState.MARK, true, true, BoardView.ChangeSource.HINT
+		)
+	_validate_board()
+	_update_remaining()
+
+
+func _compute_r3_r4b_mark_cells(hint: Dictionary) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var sz: int = _level_config.get("size", 4)
+	var regs: Array = _puzzle["regions"]
+	var color_set: Dictionary = {}
+	for reg in hint.get("regions", []):
+		color_set[reg] = true
+	var row_in: Dictionary = {}
+	for row in hint.get("locked_rows", []):
+		row_in[row] = true
+	var col_in: Dictionary = {}
+	for col in hint.get("locked_cols", []):
+		col_in[col] = true
+	for r in range(sz):
+		for c in range(sz):
+			if not color_set.has(regs[r][c]):
+				continue
+			if not row_in.is_empty() and row_in.has(r):
+				continue
+			if not col_in.is_empty() and col_in.has(c):
+				continue
+			if CellState.is_blank(_board_view.get_cell_state(r, c)):
+				result.append(Vector2i(r, c))
+	return result
+
+
+func _should_skip_board_input() -> bool:
+	return _hint_overlay != null and is_instance_valid(_hint_overlay) and _hint_overlay.visible
+
+
+func _owns_board_input() -> bool:
+	if Engine.is_editor_hint():
+		return false
+
+	if not is_showing():
+		return false
+	if _board_view == null or not is_instance_valid(_board_view):
+		return false
+
+	if not UIManager.is_top_of_stack(self):
+		return false
+	if _is_cheat_panel_visible():
+		return false
+
+	if _strategy_overlay != null and _strategy_overlay.visible:
+		return false
+
+	if _should_skip_board_input():
+		return false
+
+	if _entry_anim_playing:
+		return false
+	return true
+
+
+func _can_operate_board() -> bool:
+	if ABTestManager.multi_touch.is_multi_touch_enabled() and UIManager.is_any_button_held():
+		return false
+	return _owns_board_input() and _board_view.is_touch_enabled() and _is_app_foreground
+
+
+func _input(event: InputEvent) -> void:
+	if not _owns_board_input():
+		_release_pointer_lock_on_release(event)
+		_abandon_strokes_on_input_gate(event)
+		return
+
+	if not _board_view.is_touch_enabled() and not _press_yields_through_short_lock(event):
+		_release_pointer_lock_on_release(event)
+
+		_abandon_strokes_on_input_gate(event)
+		return
+
+	if event.device == InputEvent.DEVICE_ID_EMULATION:
+		if _should_swallow_emulated_ui_press(event):
+			get_viewport().set_input_as_handled()
+		return
+
+	var is_touch_press: bool = (
+		event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed
+	)
+	var is_touch_release: bool = (
+		event is InputEventScreenTouch and not (event as InputEventScreenTouch).pressed
+	)
+	var is_touch_drag: bool = event is InputEventScreenDrag
+	var is_mouse_press: bool = false
+	var is_mouse_release: bool = false
+	var is_mouse_drag: bool = false
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index == MOUSE_BUTTON_LEFT:
+			is_mouse_press = mb.pressed
+			is_mouse_release = not mb.pressed
+	elif event is InputEventMouseMotion:
+		var mm := event as InputEventMouseMotion
+		is_mouse_drag = (mm.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0
+	var is_press: bool = is_touch_press or is_mouse_press
+	var is_release: bool = is_touch_release or is_mouse_release
+	var is_drag: bool = is_touch_drag or is_mouse_drag
+	if not (is_press or is_release or is_drag):
+		return
+
+	var global_pos: Vector2
+	if event is InputEventMouse:
+		global_pos = (event as InputEventMouse).position
+	elif event is InputEventScreenTouch:
+		global_pos = (event as InputEventScreenTouch).position
+	elif event is InputEventScreenDrag:
+		global_pos = (event as InputEventScreenDrag).position
+	else:
+		return
+	var local_pos: Vector2 = _board_view.to_local_touch_pos(global_pos)
+
+	var slop_px: float = ABTestManager.swipe_logic.slop_pct() * float(BoardView.CELL_PX)
+
+	_board_view.update_swipe_extra_zone_slop(slop_px)
+
+	var pointer_index: int = _pointer_index_of(event)
+	var in_board: bool = _board_view.is_pos_in_extended_hit_area(local_pos, slop_px)
+
+	if ABTestManager.multi_touch.is_multi_touch_enabled():
+		if is_press and in_board and UIManager.is_any_button_held():
+			get_viewport().set_input_as_handled()
+			return
+
+		if is_press and not in_board and _has_owned_stroke():
+			get_viewport().set_input_as_handled()
+			return
+
+	if not _admit_by_single_finger_lock(event, is_press, in_board):
+		return
+
+	if not is_press and not _touch_slots.has(pointer_index):
+		return
+
+	if is_press and not in_board:
+		return
+
+	var slot: BoardTouchSlot = _ensure_slot(pointer_index)
+	_active_slot = slot
+
+	if is_press:
+		slot.reset_stroke_phase()
+
+		slot.physically_down = true
+		var cell: Vector2i = _board_view.pointer_to_cell(local_pos.x, local_pos.y)
+		if cell.x >= 0:
+			_on_board_cell_drag_start(local_pos)
+		else:
+			slot.pending_enter = true
+			slot.last_drag_pos = local_pos
+		get_viewport().set_input_as_handled()
+		return
+
+	if is_release:
+		slot.physically_down = false
+
+		var was_owned: bool = slot.is_owned()
+		if slot.drag_in_progress:
+			_on_board_cell_drag_end(local_pos)
+
+		slot.reset_stroke()
+		_active_slot = null
+
+		_locked_pointer_index = _NO_POINTER_INDEX
+		if was_owned:
+			get_viewport().set_input_as_handled()
+		return
+
+	if is_drag:
+		if slot.latched:
+			get_viewport().set_input_as_handled()
+			return
+		if slot.pending_enter:
+			var in_zone: bool = _board_view.is_pos_in_extended_hit_area(local_pos, slop_px)
+			if not in_zone:
+				slot.pending_enter = false
+				slot.latched = true
+				get_viewport().set_input_as_handled()
+				return
+			var cell2: Vector2i = _board_view.pointer_to_cell(local_pos.x, local_pos.y)
+			if cell2.x >= 0:
+				slot.pending_enter = false
+				_on_board_cell_drag_start(local_pos, false)
+
+				if not slot.drag_in_progress:
+					slot.latched = true
+			else:
+				slot.last_drag_pos = local_pos
+			get_viewport().set_input_as_handled()
+			return
+		if slot.drag_in_progress:
+			var in_zone2: bool = _board_view.is_pos_in_extended_hit_area(local_pos, slop_px)
+			if not in_zone2:
+				_on_board_cell_drag_end()
+				slot.latched = true
+				get_viewport().set_input_as_handled()
+				return
+			_on_board_cell_drag_over(local_pos)
+			get_viewport().set_input_as_handled()
+			return
+
+		_active_slot = null
+		return
+
+
+func _raw_pointer_index_of(event: InputEvent) -> int:
+	if event is InputEventScreenTouch:
+		return (event as InputEventScreenTouch).index
+	if event is InputEventScreenDrag:
+		return (event as InputEventScreenDrag).index
+	return _MOUSE_POINTER_INDEX
+
+
+func _admit_by_single_finger_lock(event: InputEvent, is_press: bool, in_board: bool) -> bool:
+	if not ABTestManager.multi_touch.should_use_single_finger_lock():
+		return true
+	var raw_index: int = _raw_pointer_index_of(event)
+	if _locked_pointer_index != _NO_POINTER_INDEX and raw_index != _locked_pointer_index:
+		return false
+	if not is_press and _locked_pointer_index == _NO_POINTER_INDEX:
+		return false
+	if is_press and in_board:
+		_locked_pointer_index = raw_index
+	return true
+
+
+func _release_pointer_lock_on_release(event: InputEvent) -> void:
+	if _is_pointer_release(event) and _raw_pointer_index_of(event) == _locked_pointer_index:
+		_locked_pointer_index = _NO_POINTER_INDEX
+
+
+var _cached_cheat_panel: CheatPanel = null
+
+
+func _is_cheat_panel_visible() -> bool:
+	if OS.has_feature("rel"):
+		return false
+	if _cached_cheat_panel != null and is_instance_valid(_cached_cheat_panel):
+		return _cached_cheat_panel.visible
+	var root: Node = get_tree().root if get_tree() != null else null
+	if root == null:
+		return false
+	_cached_cheat_panel = _find_cheat_panel(root)
+	if _cached_cheat_panel == null:
+		return false
+	return _cached_cheat_panel.visible
+
+
+func _find_cheat_panel(node: Node) -> CheatPanel:
+	if node is CheatPanel:
+		return node as CheatPanel
+	for child in node.get_children():
+		var found: CheatPanel = _find_cheat_panel(child)
+		if found != null:
+			return found
+	return null
+
+
+func _on_board_cell_drag_start(pos: Vector2, is_physical_press_on_cell: bool = true) -> void:
 	_ensure_input_system()
 	_reset_idle_hint()
+
+	if _active_slot != null:
+		_active_slot.cat_placed_this_stroke = false
 
 	var sc: Vector2i = _board_view.pointer_to_cell(pos.x, pos.y)
 
 	var sc_state: int = _board_view.get_cell_state(sc.y, sc.x)
-	var is_terminal_x_start: bool = sc_state == CellState.ERROR or sc_state == CellState.LOCKED_MARK
-	var allow_x_start: bool = (
-		not _draft_mode and ABTestManager.tap_feedback.allows_mark_from_error_start()
+	var is_terminal_x_start: bool = sc_state == CellState.ERROR
+	if _is_complete or is_terminal_x_start:
+		if is_terminal_x_start and not _is_complete and is_physical_press_on_cell:
+			Tracker.record_solution_step(
+				Tracker.StepAction.CLICK_ERROR_MARK,
+				[_step_cell(sc.y, sc.x, Tracker.StepResult.NO_JUDGE)]
+			)
+		return
+
+	if _wrong_guess_pending and not _may_press_during_wrong_guess(sc.y, sc.x):
+		return
+
+	if _active_slot == null:
+		return
+	_consume_board_actions(
+		_active_slot.recognizer.on_drag_start(pos, is_physical_press_on_cell), true
 	)
-	if _is_complete or _wrong_guess_pending or (not allow_x_start and is_terminal_x_start):
-		return
 
-	_consume_board_actions(_gesture_recognizer.on_drag_start(pos))
+	_active_slot.drag_in_progress = true
+	_active_slot.last_drag_pos = pos
 
 
-## 拖动经过：先处理长按分裂的中断，再交给手势识别器
 func _on_board_cell_drag_over(pos: Vector2) -> void:
-	if _is_complete or _wrong_guess_pending:
+	if _is_complete:
 		return
 
-	if _gesture_recognizer == null:
+	if _wrong_guess_pending and not ABTestManager.multi_touch.is_multi_touch_enabled():
 		return
 
-	if _split_pressed_cell.x >= 0:
-		var fc: Vector2i = _board_view.pointer_to_cell(pos.x, pos.y)
-		if Vector2i(fc.y, fc.x) != _split_pressed_cell:
-			_release_split_pressed()
-	_consume_board_actions(_gesture_recognizer.on_drag_over(pos))
-
-
-## 抬手：结束手势、提交这一步并计一次步数
-func _on_board_cell_drag_end() -> void:
-	if _gesture_recognizer == null:
+	if _active_slot == null:
 		return
-	_gesture_recognizer.on_drag_end()
+	_active_slot.last_drag_pos = pos
+	_consume_board_actions(_active_slot.recognizer.on_drag_over(pos))
 
-	_release_split_pressed()
 
-	if _draft_mode:
+func _on_board_cell_drag_end(release_pos: Vector2 = Vector2(-1.0, -1.0)) -> void:
+	if _active_slot == null:
 		return
+	_active_slot.drag_in_progress = false
 
-	var had_change: bool = not _current_step_cells.is_empty()
-	_commit_current_step()
+	var is_cat_click: bool = _active_slot.recognizer.finish_drag(release_pos)
+	if is_cat_click:
+		Tracker.inc_stat("cat_click_num")
+
+	_commit_pending_x_marks(_active_slot)
+	_flush_gesture_solution_step(_active_slot, is_cat_click, release_pos)
+
+	if _active_slot.consume_lock_pending():
+		_board_view.disable_touch_for(ABTestManager.doubletap_protect.high_freq_lock_cd_sec(), true)
+
+	var had_change: bool = _active_slot != null and _active_slot.step_dirty
+	_clear_stroke_step_dirty()
 	if had_change:
-		_count_board_step()
+		_count_board_step("gesture", _active_slot)
+
+	_arm_dead_board_hint()
 
 
-## 结束长按分裂状态，让正按着的格子做抬起表现
-func _release_split_pressed() -> void:
-	if _split_pressed_cell.x >= 0:
-		_board_view.play_mark_release(_split_pressed_cell.x, _split_pressed_cell.y)
-		_split_pressed_cell = Vector2i(-1, -1)
-
-
-## 懒建输入方案；按 AB 决定用普通识别器还是防误触识别器
 func _ensure_input_system() -> void:
 	if _normal_scheme == null:
 		_normal_scheme = BoardInputScheme.create_normal(_board_view)
+	if _draft_scheme == null:
 		_draft_scheme = BoardInputScheme.create_draft(_board_view)
+	if _current_scheme == null:
+		_current_scheme = _normal_scheme
 
-	var want_guard: bool = ABTestManager.swipe_protect.is_enabled()
-	if _gesture_recognizer != null and (_gesture_recognizer is SwipeGuardRecognizer) == want_guard:
-		return
 
-	var keep_scheme: BoardInputScheme = (
-		_gesture_recognizer.active_scheme if _gesture_recognizer != null else _normal_scheme
+func _switch_input_scheme(scheme: BoardInputScheme) -> void:
+	_current_scheme = scheme
+	var switching_slots: Array = _touch_slots.values()
+	for slot: BoardTouchSlot in switching_slots:
+		slot.recognizer.active_scheme = scheme
+		slot.recognizer.reset_for_scheme_switch()
+
+
+func _ensure_slot(pointer_index: int) -> BoardTouchSlot:
+	if _touch_slots.has(pointer_index):
+		return _touch_slots[pointer_index]
+	_ensure_input_system()
+	var slot := BoardTouchSlot.new()
+	slot.recognizer = SwipeGuardRecognizer.new(_board_view)
+	slot.recognizer.active_scheme = _current_scheme
+
+	slot.recognizer.window_sec_provider = _double_tap_window_sec
+
+	slot.recognizer.cross_pointer_double_tap_provider = _consume_cross_pointer_double_tap
+
+	slot.recognizer.promote_to_double_tap_provider = _should_promote_to_double_tap
+
+	slot.recognizer.autofix_target_provider = _resolve_autofix_target
+
+	_touch_slots[pointer_index] = slot
+	return slot
+
+
+var _cross_dt_source_slot: BoardTouchSlot = null
+
+
+func _consume_cross_pointer_double_tap(requester: BoardGestureRecognizer, r: int, c: int) -> bool:
+	_cross_dt_source_slot = null
+	var source: BoardTouchSlot = BoardCrossPointerDoubleTap.try_consume(
+		_touch_slots.values(), requester, r, c
 	)
-	if want_guard:
-		_gesture_recognizer = SwipeGuardRecognizer.new(_board_view)
+	if source == null:
+		return false
+	_cross_dt_source_slot = source
+	return true
+
+
+func _take_cross_dt_source() -> BoardTouchSlot:
+	var source: BoardTouchSlot = _cross_dt_source_slot
+	_cross_dt_source_slot = null
+	return source
+
+
+func _cur_recognizer() -> BoardGestureRecognizer:
+	return _active_slot.recognizer if _active_slot != null else null
+
+
+func _cur_window_sec() -> float:
+	var rec: BoardGestureRecognizer = _cur_recognizer()
+	return (
+		rec.get_last_window_sec() if rec != null else BoardGestureRecognizer.DEFAULT_DOUBLE_TAP_SEC
+	)
+
+
+func _settle_stroke_before_abort(slot: BoardTouchSlot) -> void:
+	_commit_pending_x_marks(slot)
+	_flush_gesture_solution_step(slot, false, Vector2(-1.0, -1.0))
+	if slot.step_dirty:
+		_count_board_step("gesture", slot)
+
+
+func _reset_all_touch_strokes() -> void:
+	var resetting_slots: Array = _touch_slots.values()
+	for slot: BoardTouchSlot in resetting_slots:
+		_settle_stroke_before_abort(slot)
+		slot.reset_stroke()
+
+	_active_slot = null
+
+
+func _abandon_strokes_on_input_gate(event: InputEvent) -> void:
+	if _is_pointer_release(event):
+		var released: Variant = _touch_slots.get(_pointer_index_of(event), null)
+		if released != null:
+			(released as BoardTouchSlot).physically_down = false
+	if _touch_slots.is_empty():
+		return
+	_reset_all_touch_strokes()
+
+
+func _pointer_index_of(event: InputEvent) -> int:
+	if not ABTestManager.multi_touch.is_multi_touch_enabled():
+		return _MOUSE_POINTER_INDEX
+	if event is InputEventScreenTouch:
+		return (event as InputEventScreenTouch).index
+	if event is InputEventScreenDrag:
+		return (event as InputEventScreenDrag).index
+	return _MOUSE_POINTER_INDEX
+
+
+func _is_pointer_release(event: InputEvent) -> bool:
+	if event.device == InputEvent.DEVICE_ID_EMULATION:
+		return false
+	if event is InputEventScreenTouch:
+		return not (event as InputEventScreenTouch).pressed
+	if event is InputEventMouseButton:
+		var button := event as InputEventMouseButton
+		return button.button_index == MOUSE_BUTTON_LEFT and not button.pressed
+	return false
+
+
+func _release_conflict_line(node: LineCrossConnector) -> void:
+	if node == null:
+		return
+	_active_conflict_lines.erase(node)
+	if is_instance_valid(node):
+		node.queue_free()
+
+
+func _may_press_during_wrong_guess(r: int, c: int) -> bool:
+	if not ABTestManager.multi_touch.is_multi_touch_enabled():
+		return false
+	if _active_slot == null or _active_slot.recognizer == null:
+		return false
+	if _active_slot.recognizer.has_pending_tap(r, c):
+		return true
+
+	var slots: Array = _touch_slots.values()
+	return BoardCrossPointerDoubleTap.has_any(slots, _active_slot.recognizer, r, c)
+
+
+func _press_yields_through_short_lock(event: InputEvent) -> bool:
+	if not ABTestManager.multi_touch.is_multi_touch_enabled():
+		return false
+	if not _board_view.is_locked_only_by_yielding_locks():
+		return false
+	if event.device == InputEvent.DEVICE_ID_EMULATION:
+		return false
+	var global_pos: Vector2
+	if event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
+		global_pos = (event as InputEventScreenTouch).position
+	elif (
+		event is InputEventMouseButton
+		and (event as InputEventMouseButton).pressed
+		and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT
+	):
+		global_pos = (event as InputEventMouseButton).position
 	else:
-		_gesture_recognizer = BoardGestureRecognizer.new(_board_view)
-	_gesture_recognizer.active_scheme = keep_scheme
+		return false
+	var local_pos: Vector2 = _board_view.to_local_touch_pos(global_pos)
+
+	var cell: Vector2i = _board_view.pointer_to_cell(local_pos.x, local_pos.y)
+	if cell.x < 0:
+		return false
+	var row: int = cell.y
+	var col: int = cell.x
+	if not _is_solution_cell(row, col) or _board_view.get_cell_state(row, col) == CellState.CAT:
+		return false
+	var requester: BoardGestureRecognizer = null
+	var own_slot: Variant = _touch_slots.get(_pointer_index_of(event), null)
+	if own_slot != null:
+		requester = (own_slot as BoardTouchSlot).recognizer
+		if requester != null and requester.has_pending_tap(row, col):
+			return true
+	var slots: Array = _touch_slots.values()
+	return BoardCrossPointerDoubleTap.has_any(slots, requester, row, col)
 
 
-## 执行手势识别器产出的动作：双击 / 草稿 / 正式打叉擦除，统一经 BoardView 落地
-func _consume_board_actions(actions: Array[CellAction]) -> void:
+func _clear_all_touch_slots() -> void:
+	_touch_slots.clear()
+	_active_slot = null
+
+
+func _should_swallow_emulated_ui_press(event: InputEvent) -> bool:
+	if not ABTestManager.multi_touch.is_multi_touch_enabled():
+		return false
+	if not (event is InputEventMouseButton):
+		return false
+	var mouse_btn := event as InputEventMouseButton
+	if not mouse_btn.pressed or mouse_btn.button_index != MOUSE_BUTTON_LEFT:
+		return false
+	if not _has_owned_stroke():
+		return false
+	var local_pos: Vector2 = _board_view.to_local_touch_pos(mouse_btn.position)
+	var slop_px: float = ABTestManager.swipe_logic.slop_pct() * float(BoardView.CELL_PX)
+	return not _board_view.is_pos_in_extended_hit_area(local_pos, slop_px)
+
+
+func _has_owned_stroke() -> bool:
+	var owned_slots: Array = _touch_slots.values()
+	for slot: BoardTouchSlot in owned_slots:
+		if slot.is_owned():
+			return true
+	return false
+
+
+func _double_tap_window_sec(r: int, c: int) -> float:
+	var cfg := ABTestManager.doubletap_protect
+	var truth_has_cat: bool = cfg.needs_truth() and _solution_has_cat(r, c)
+	var would_conflict: bool = cfg.needs_conflict() and _would_cat_conflict(r, c)
+	return cfg.window_sec(truth_has_cat, would_conflict)
+
+
+func _should_promote_to_double_tap(r: int, c: int) -> bool:
+	var cfg := ABTestManager.doubletap_protect
+	if not cfg.is_promote_group():
+		return false
+	return cfg.should_promote_tap(_solution_has_cat(r, c))
+
+
+func _resolve_autofix_target(r: int, c: int, touch_pos: Vector2 = Vector2.ZERO) -> Vector2i:
+	var cfg := ABTestManager.doubletap_protect
+	if not cfg.should_autofix():
+		return Vector2i(-1, -1)
+
+	if _solution_has_cat(r, c):
+		return Vector2i(-1, -1)
+	var board_size: int = _level_config.get("size", 4)
+	var candidates: Array = []
+	var pixel_dist_sq: Array = []
+	var deltas: Array = [-1, 0, 1]
+	for row_delta in deltas:
+		for col_delta in deltas:
+			if row_delta == 0 and col_delta == 0:
+				continue
+			var neighbor_row: int = r + row_delta
+			var neighbor_col: int = c + col_delta
+			if neighbor_row < 0 or neighbor_row >= board_size:
+				continue
+			if neighbor_col < 0 or neighbor_col >= board_size:
+				continue
+			if not _solution_has_cat(neighbor_row, neighbor_col):
+				continue
+			if _board_view.get_cell_state(neighbor_row, neighbor_col) == CellState.CAT:
+				continue
+			candidates.append(Vector2i(neighbor_row, neighbor_col))
+			var cell_center: Vector2 = (
+				_board_view.cell_to_local_rect(neighbor_row, neighbor_col).get_center()
+			)
+			pixel_dist_sq.append(touch_pos.distance_squared_to(cell_center))
+	return DoubletapProtectConfig.pick_autofix_target(Vector2i(r, c), candidates, pixel_dist_sq)
+
+
+func _solution_has_cat(r: int, c: int) -> bool:
+	var solution: Array = _puzzle.get("solution", [])
+	if r < 0 or r >= solution.size():
+		return false
+	var row: Array = solution[r]
+	if c < 0 or c >= row.size():
+		return false
+	return bool(row[c])
+
+
+func _would_cat_conflict(r: int, c: int) -> bool:
+	var regions: Array = _puzzle.get("regions", [])
+	if regions.is_empty():
+		return false
+	var sz: int = _level_config.get("size", 4)
+	var placed: Array = []
+	var board: Array = _board_view.get_board()
+	for rr in range(sz):
+		for cc in range(sz):
+			if board[rr][cc] == CellState.CAT:
+				placed.append(Vector2i(rr, cc))
+	return QueendokuCore.classify_violation(r, c, placed, regions) != QueendokuCore.Rule.NONE
+
+
+func _consume_board_actions(actions: Array[CellAction], is_tap_start: bool = false) -> void:
+	var cross_source: BoardTouchSlot = _take_cross_dt_source()
 	if actions.is_empty():
 		return
+
+	mark_continue_clock_started()
+
+	_note_wrong_zone_activity()
+
+	if is_tap_start and _active_slot != null:
+		var opens_dt_window: bool = true
+		for a: CellAction in actions:
+			if a.kind == CellAction.Kind.DOUBLE_TAP:
+				opens_dt_window = false
+				break
+		if opens_dt_window:
+			_active_slot.cat_streak_break_seq += 1
+			_active_slot.cat_streak_break_pending = true
+			_defer_cat_streak_break(_active_slot, _active_slot.cat_streak_break_seq)
 	var applied: bool = false
 	for a: CellAction in actions:
-		if _board_view.is_cell_input_locked(a.row, a.col):
-			continue
 		if a.kind == CellAction.Kind.DOUBLE_TAP:
-			_consume_double_tap(a.row, a.col)
+			_consume_double_tap(a.row, a.col, not _dt_promoted_this_gesture(), cross_source)
 			applied = true
 			continue
+
 		if a.kind == CellAction.Kind.SET_DRAFT:
+			_mark_stroke_step_dirty()
 			_set_cell_draft(a.row, a.col, a.state)
+
+			if a.state == CellState.DRAFT_CAT and not _dt_promoted_this_gesture():
+				_clear_stroke_step_dirty()
+
+			if (
+				a.state != CellState.EMPTY
+				and ABTestManager.full_mark_feedback.has_full_mark_feedback()
+			):
+				_full_mark_last_cell = Vector2i(a.row, a.col)
+
+			if a.state == CellState.EMPTY:
+				SoundManager.play(SoundManager.Kind.UNMARK_X)
+			else:
+				SoundManager.play(SoundManager.Kind.MARK_X)
 			continue
 
 		if _board_view.get_cell_state(a.row, a.col) == CellState.DRAFT_CAT:
 			continue
 
-		var split: bool = ABTestManager.tap_feedback.is_press_release_split()
-		if split and _split_pressed_cell.x >= 0 and _split_pressed_cell != Vector2i(a.row, a.col):
-			_release_split_pressed()
+		if _conflict_target_positions.has(Vector2i(a.row, a.col)):
+			continue
 		if a.record:
-			_record_cell_change(a.row, a.col, a.before, a.state)
+			_mark_stroke_step_dirty()
 
-		var use_split_press: bool = (
-			split and (a.state == CellState.MARK or a.state == CellState.EMPTY)
+		var defer_full_mark: bool = (
+			is_tap_start and a.state == CellState.MARK and CellState.is_blank(a.before)
 		)
-		_board_view.set_cell_state(
-			a.row, a.col, a.state, a.play_anim, a.show_cat_visual, a.source, use_split_press
-		)
-		if use_split_press:
-			_split_pressed_cell = Vector2i(a.row, a.col)
+		_full_mark_defer_judgement = defer_full_mark
+		_board_view.set_cell_state(a.row, a.col, a.state, a.play_anim, a.show_cat_visual, a.source)
+		_full_mark_defer_judgement = false
+		_collect_gesture_step_cell(a)
 		if a.before == CellState.MARK and a.state == CellState.EMPTY:
 			Tracker.inc_stat("erase_count")
+
+		if a.state == CellState.MARK and CellState.is_blank(a.before):
+			if is_tap_start:
+				if (
+					ABTestManager.doubletap_protect.should_lock_after_mark_or_error()
+					and not _is_solution_cell(a.row, a.col)
+					and _active_slot != null
+				):
+					_active_slot.lock_pending = true
+			else:
+				if _active_slot != null:
+					_active_slot.lock_pending = false
+			if is_tap_start:
+				_defer_missed_cross_decision(a.row, a.col)
+
+				_defer_full_mark_unit_clear(a.row, a.col)
+			else:
+				_try_play_missed_cross(a.row, a.col)
+
+			_stage_x_mark_pending(a.row, a.col)
 		if a.vibrate >= 0:
 			VibrateManager.play_vibrate(a.vibrate)
 		applied = true
@@ -2704,52 +4296,71 @@ func _consume_board_actions(actions: Array[CellAction]) -> void:
 		_update_remaining()
 
 
-## 双击：答案格放猫，非答案格记为放错，并提交一步
-func _consume_double_tap(r: int, c: int) -> void:
+func _dt_promoted_this_gesture() -> bool:
+	var rec: BoardGestureRecognizer = _cur_recognizer()
+	return rec != null and rec.last_double_tap_promoted
+
+
+func _consume_double_tap(
+	r: int, c: int, first_tap_counted: bool = true, cross_source: BoardTouchSlot = null
+) -> void:
 	var cur: int = _board_view.get_cell_state(r, c)
 	if cur == CellState.CAT:
 		return
-	var original_before: int = consume_prior_tap_before(r, c, cur)
-	var is_cat: bool = _is_solution_cell(r, c)
-	if is_cat:
-		do_place_cat(r, c, original_before)
+	var dt_cfg := ABTestManager.doubletap_protect
+
+	var should_lock_on_mistake: bool = dt_cfg.should_lock_after_mark_or_error()
+
+	_se_step_pending_this_place = not first_tap_counted
+	_dt_cross_landing_this_place = cross_source != null
+
+	if cross_source != null:
+		cross_source.cat_streak_break_pending = false
+
+	var is_correct: bool = _is_solution_cell(r, c)
+	_record_double_tap_solution_step(r, c, is_correct, first_tap_counted)
+	if is_correct:
+		do_place_cat(r, c)
 	else:
-		do_wrong_guess_mark(r, c, original_before)
-	_commit_current_step(is_cat, not is_cat)
-	_count_board_step()
+		do_wrong_guess_mark(r, c)
+		if should_lock_on_mistake:
+			_board_view.disable_touch_for(dt_cfg.high_freq_lock_cd_sec(), true)
+
+	dt_cfg.notify_double_tap(is_correct)
+
+	if first_tap_counted:
+		_clear_stroke_step_dirty()
+	_se_step_pending_this_place = false
+	_dt_cross_landing_this_place = false
 
 
-## 双击会盖掉上一次单击，这里把上一步并回来，保证撤销能回到最初状态
-func consume_prior_tap_before(r: int, c: int, fallback: int) -> int:
-	var original_before: int = fallback
-	var prev_step: StepHistory.StepRecord = _step_history.peek_last()
-	if prev_step != null and prev_step.cells.size() == 1:
-		var prev_entry: Dictionary = prev_step.cells[0]
-		if prev_entry["pos"] == Vector2i(r, c):
-			original_before = prev_entry["before"] as int
-			_step_history.pop_last()
-	return original_before
+func do_place_cat(row: int, col: int) -> void:
+	_mark_stroke_step_dirty()
+	_board_view.set_cell_state(
+		row,
+		col,
+		CellState.CAT,
+		true,
+		true,
+		BoardView.ChangeSource.USER_ACTION,
+		"",
+		false,
+		_found_cat_spine_anim(BoardView.ChangeSource.USER_ACTION)
+	)
 
+	if not _dt_cross_landing_this_place:
+		_active_slot.cat_streak_break_pending = false
+	_cat_streak += 1
 
-## 在格子上放猫：记录变更、尝试送命、按优先级选手势反馈
-func do_place_cat(r: int, c: int, original_before: int) -> void:
-	_record_cell_change(r, c, original_before, CellState.CAT)
-	_board_view.set_cell_state(r, c, CellState.CAT)
+	_active_slot.cat_placed_this_stroke = true
 
-	_maybe_trigger_life_plus(r, c)
+	if _cross_at_first_cat < 0:
+		_cross_at_first_cat = _count_board_crosses()
 
-	var fb_result: Dictionary
-	if _life_plus_appear1_suppress_thumb:
-		_life_plus_appear1_suppress_thumb = false
-		fb_result = {"should_play": false, "anim": LikeHandAnim.LIKE, "feedback": -1, "pos": "cell"}
-	else:
-		fb_result = _arbitrate_feedback_for_correct_cat(r, c)
+	var fb_result: Dictionary = _arbitrate_feedback_for_correct_cat(row, col)
 	if fb_result["should_play"]:
 		_on_feedback_played(fb_result["feedback"])
-		if fb_result["pos"] == "board_top":
-			_play_feedback_at_fixed_pos(fb_result["anim"])
-		else:
-			_play_like_hand_on_cell(r, c, fb_result["anim"])
+		_play_like_hand_on_cell(row, col, fb_result["anim"])
 
 	var like_played: bool = (
 		fb_result["should_play"] and fb_result["feedback"] == ThumbUpConfig.Feedback.LIKE
@@ -2757,23 +4368,9 @@ func do_place_cat(r: int, c: int, original_before: int) -> void:
 	_record_correct_cat(
 		{"should_play": like_played, "anim": fb_result.get("anim", LikeHandAnim.LIKE)}
 	)
+	_record_game_barrage_action()
 
 
-# ================= 自动打叉（auto mark）与锁叉 =================
-## 等猫落下动画播完才开始打叉（秒）
-const _AUTO_MARK_CAT_APPEAR_DELAY_SEC: float = 0.733
-## 逐圈扩散时每圈的间隔（秒）
-const _AUTO_MARK_RING_STEP_SEC: float = 3.0 / 60.0
-## 自动打叉令牌，自增可作废进行中的异步扩散
-var _auto_mark_token: int = 0
-
-
-## 当前关卡号（转发 GameState）
-func _current_level() -> int:
-	return GameState.get_current_level()
-
-
-## 预生成格子节点避免进场卡顿；期间临时关掉容器入场动画
 func prewarm_board(size: int) -> void:
 	if _board_view == null:
 		return
@@ -2784,1265 +4381,633 @@ func prewarm_board(size: int) -> void:
 	if board_intro != null:
 		board_intro.set_auto_trigger(true)
 
-
-## 放下猫后自动把同行 / 同列 / 邻接 / 同色区域打叉（AB: game_auto_mark）
-func _on_cell_changed_for_auto_mark(_r: int, _c: int, state: int, source: int) -> void:
-	if state != CellState.CAT:
-		return
-	if source == BoardView.ChangeSource.RESTORE or source == BoardView.ChangeSource.PREFILL:
-		return
-	var cat: Vector2i = Vector2i(_r, _c)
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return
-	var excluded_cells: Array[Vector2i] = []
-	if ABTestManager.game_auto_mark.after_cat_enabled_at(_current_level()):
-		excluded_cells = QueendokuCore.cells_excluded_by_cat(cat, sz, _puzzle["regions"])
-	elif (
-		_game_type() == Tracker.GameType.DAILY
-		and ABTestManager.game_auto_mark.is_prop_ad_active_for_daily()
-	):
-		excluded_cells = QueendokuCore.cells_excluded_by_cat_no_region(cat, sz)
-	if excluded_cells.is_empty():
-		return
-	_spread_auto_cross(cat, _AUTO_MARK_CAT_APPEAR_DELAY_SEC, excluded_cells)
+	await _board_view.prewarm_cat_spines(size)
 
 
-## 等打叉动画播一会儿再开始锁叉（秒）
-const _LOCK_X_AFTER_MARK_DELAY_SEC: float = 29.0 / 60.0
-## 逐个锁叉的间隔（秒）
-const _LOCK_X_STEP_SEC: float = 0.1
-## 锁叉令牌，自增可作废进行中的异步锁叉
-var _lock_x_token: int = 0
-
-
-## 某条约束上的格子全打上叉后，把这些叉锁成不可改（AB: lock_x）
-func _on_cell_changed_for_lock_x(r: int, c: int, state: int, source: int) -> void:
-	if source == BoardView.ChangeSource.RESTORE or source == BoardView.ChangeSource.PREFILL:
-		return
-	if ABTestManager == null or ABTestManager.game_auto_mark == null:
-		return
-	if not ABTestManager.game_auto_mark.is_lock_x_enabled_at(_current_level()):
+func _apply_cat_found_grid_dim(animated: bool = false) -> void:
+	if _board_view == null:
 		return
 
-	if state != CellState.CAT and state != CellState.MARK and state != CellState.ERROR:
+	if LevelKind.is_color_challenge(_level_kind):
+		_board_view.set_region_dim_enabled(false, animated)
 		return
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return
+	_board_view.set_region_dim_enabled(ABTestManager.cat_found_grid.is_dim_enabled(), animated)
 
-	var cats: Array[Vector2i] = []
+
+func _on_cell_changed_for_hint_cross(_r: int, _c: int, state: int, source: int) -> void:
+	if source == BoardView.ChangeSource.HINT and CellState.is_cross(state):
+		Tracker.inc_stat("hint_cross_count")
+		print(
+			(
+				"[BaseGamePage] hint_cross +1 at (%d,%d), total=%d"
+				% [_r, _c, Tracker.get_stat("hint_cross_count")]
+			)
+		)
+
+
+func do_wrong_guess_mark(r: int, c: int, from_draft_apply: bool = false) -> void:
+	_cat_streak = 0
+
+	if not from_draft_apply and _active_slot != null:
+		_active_slot.cat_streak_break_pending = false
+
+	if not from_draft_apply:
+		_mark_stroke_step_dirty()
+
+	_full_mark_defer_judgement = true
+	_board_view.set_cell_state(r, c, CellState.MARK)
+	_full_mark_defer_judgement = false
+	VibrateManager.play_at(VibrateManager.Pos.CELL_ERROR)
+
+	if from_draft_apply:
+		var rule: int = _classify_violation_at(r, c)
+		if rule != QueendokuCore.Rule.NONE and not _draft_apply_violated_rules.has(rule):
+			_draft_apply_violated_rules.append(rule)
+	else:
+		_try_emit_rule_violation(r, c)
+	_on_wrong_guess(r, c, false, from_draft_apply)
+
+
+func _get_conflict_rule_cells(r: int, c: int, conflict_pos: Vector2i) -> Array[Vector2i]:
+	var regions: Array = _puzzle.get("regions", [])
+	if regions.is_empty():
+		return []
+	var sz: int = _level_config.get("size", 4)
+	var rule: int = QueendokuCore.classify_violation(r, c, [conflict_pos], regions)
+	var result: Array[Vector2i] = []
+	match rule:
+		QueendokuCore.Rule.SAME_COLOR:
+			var region_id: int = int(regions[conflict_pos.x][conflict_pos.y])
+			for rr in range(sz):
+				for cc in range(sz):
+					if Vector2i(rr, cc) == conflict_pos:
+						continue
+					if int(regions[rr][cc]) == region_id:
+						result.append(Vector2i(rr, cc))
+		QueendokuCore.Rule.SAME_LINE:
+			if conflict_pos.x == r:
+				var c_min: int = mini(c, conflict_pos.y)
+				var c_max: int = maxi(c, conflict_pos.y)
+				for cc in range(c_min + 1, c_max):
+					result.append(Vector2i(r, cc))
+			else:
+				var r_min: int = mini(r, conflict_pos.x)
+				var r_max: int = maxi(r, conflict_pos.x)
+				for rr in range(r_min + 1, r_max):
+					result.append(Vector2i(rr, c))
+		QueendokuCore.Rule.NO_TOUCH:
+			for dr in range(-1, 2):
+				for dc in range(-1, 2):
+					if dr == 0 and dc == 0:
+						continue
+					var nr: int = conflict_pos.x + dr
+					var nc: int = conflict_pos.y + dc
+					if nr >= 0 and nr < sz and nc >= 0 and nc < sz:
+						result.append(Vector2i(nr, nc))
+	return result
+
+
+func _find_conflict_cat(r: int, c: int) -> Vector2i:
+	var regions: Array = _puzzle.get("regions", [])
+	if regions.is_empty():
+		return Vector2i(-1, -1)
+	var sz: int = _level_config.get("size", 4)
+	var placed: Array[Vector2i] = []
+	var board: Array = _board_view.get_board()
 	for rr in range(sz):
 		for cc in range(sz):
-			if _board_view.get_cell_state(rr, cc) == CellState.CAT:
-				cats.append(Vector2i(rr, cc))
-	if cats.is_empty():
-		return
-
-	var qualified_sets: Array = []
-	for cat: Vector2i in cats:
-		var sets: Array = QueendokuCore.constraint_cells_for_cat(cat, sz, _puzzle["regions"])
-		for set_idx in range(sets.size()):
-			var cell_set: Array = sets[set_idx]
-			var all_cross: bool = true
-			for cell: Vector2i in cell_set:
-				if not CellState.is_cross(_board_view.get_cell_state(cell.x, cell.y)):
-					all_cross = false
-					break
-			if not all_cross:
+			if rr == r and cc == c:
 				continue
-			var marks: Array[Vector2i] = []
-			for cell: Vector2i in cell_set:
-				if _board_view.get_cell_state(cell.x, cell.y) == CellState.MARK:
-					marks.append(cell)
-			if marks.is_empty():
-				continue
-			qualified_sets.append({"set_type": set_idx, "cat": cat, "marks": marks})
-	if qualified_sets.is_empty():
-		return
+			if board[rr][cc] == CellState.CAT:
+				placed.append(Vector2i(rr, cc))
+	return QueendokuCore.find_priority_conflict_cat(r, c, placed, regions)
 
-	_lock_x_token += 1
-	if state == CellState.CAT:
-		var merged: Array[Vector2i] = []
-		var seen: Dictionary = {}
-		for info in qualified_sets:
-			for m: Vector2i in info["marks"]:
-				var key: String = "%d:%d" % [m.x, m.y]
-				if not seen.has(key):
-					seen[key] = true
-					merged.append(m)
-		_spread_status_lock_from_cat(Vector2i(r, c), merged)
-	else:
-		for info in qualified_sets:
-			var ordered: Array[Vector2i] = _sort_marks_for_set(
-				info["set_type"], info["cat"], info["marks"]
+
+func _play_misplace_conflict_anim(r: int, c: int, conflict_pos: Vector2i) -> bool:
+	_wrong_guess_pending = true
+	var token: int = _conflict_anim_token
+
+	if not _conflict_target_positions.has(Vector2i(r, c)):
+		_conflict_target_positions.append(Vector2i(r, c))
+
+	_save_endgame_for_pending_wrong_guess(r, c)
+	var target_cell: CellView = _board_view.get_cell_view(r, c)
+	var conflict_cell: CellView = _board_view.get_cell_view(conflict_pos.x, conflict_pos.y)
+
+	if target_cell != null:
+		target_cell.play_wrong_pos_reaction(MisplaceReactionConfig.TARGET_REACTION_ANIM_NAME)
+		target_cell.play_grid_glow()
+	if conflict_cell != null:
+		conflict_cell.play_named_anim(MisplaceReactionConfig.CONFLICT_REACTION_ANIM_NAME)
+		conflict_cell.play_grid_glow()
+
+	var rule_cells: Array[Vector2i] = _get_conflict_rule_cells(r, c, conflict_pos)
+	for pos in rule_cells:
+		var cell: CellView = _board_view.get_cell_view(pos.x, pos.y)
+		if cell != null:
+			cell.play_grid_glow()
+
+	var own_line: Dictionary = {"node": null}
+	get_tree().create_timer(MisplaceReactionConfig.CONFLICT_LINE_DELAY_SEC).timeout.connect(
+		func() -> void:
+			if token != _conflict_anim_token:
+				return
+			var line := _CONFLICT_LINE_SCENE.instantiate() as LineCrossConnector
+			add_child(line)
+			var inv := get_global_transform().affine_inverse()
+			line.setup_points(
+				inv * _board_view.get_cell_global_center(r, c),
+				inv * _board_view.get_cell_global_center(conflict_pos.x, conflict_pos.y)
 			)
-			_spread_status_lock_ordered(ordered)
+			line.play_effect()
+			own_line.node = line
+			_active_conflict_lines.append(line)
+	)
+
+	await get_tree().create_timer(MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC).timeout
+
+	if token != _conflict_anim_token:
+		_conflict_target_positions.erase(Vector2i(r, c))
+		return false
+
+	_conflict_target_positions.erase(Vector2i(r, c))
+
+	_release_conflict_line(own_line.node)
+	if target_cell != null:
+		target_cell.stop_named_anim()
+		target_cell.stop_grid_glow()
+	if conflict_cell != null:
+		conflict_cell.stop_grid_glow()
+	for pos in rule_cells:
+		var cell: CellView = _board_view.get_cell_view(pos.x, pos.y)
+		if cell != null:
+			cell.stop_grid_glow()
+
+	return true
 
 
-## 以猫为中心按曼哈顿距离逐圈锁叉
-func _spread_status_lock_from_cat(cat: Vector2i, marks: Array[Vector2i]) -> void:
-	if marks.is_empty():
+func _cancel_misplace_conflict(reason: String = "?") -> void:
+	if (
+		not ABTestManager.misplace_reaction.is_conflict_reaction()
+		and _conflict_target_positions.is_empty()
+		and _active_conflict_lines.is_empty()
+	):
 		return
-	var token: int = _lock_x_token
-	var rings: Dictionary = {}
-	for m: Vector2i in marks:
-		var d: int = abs(m.x - cat.x) + abs(m.y - cat.y)
-		if not rings.has(d):
-			rings[d] = []
-		rings[d].append(m)
-	for m: Vector2i in marks:
-		_board_view.set_cell_input_locked(m.x, m.y, true)
-	await get_tree().create_timer(_AUTO_MARK_CAT_APPEAR_DELAY_SEC).timeout
-	if token != _lock_x_token:
-		return
-	var dists: Array = rings.keys()
-	dists.sort()
-	for d: int in dists:
-		for m: Vector2i in rings[d]:
-			if _board_view.get_cell_state(m.x, m.y) == CellState.MARK:
-				_board_view.lock_mark(m.x, m.y, "StatusLock")
-		await get_tree().create_timer(_LOCK_X_STEP_SEC).timeout
-		if token != _lock_x_token:
-			return
+	_conflict_anim_token += 1
+
+	var lines: Array[LineCrossConnector] = _active_conflict_lines.duplicate()
+	for line: LineCrossConnector in lines:
+		_release_conflict_line(line)
+	_active_conflict_lines.clear()
+
+	var was_deferred: bool = _full_mark_defer_judgement
+	_full_mark_defer_judgement = true
+	for pos: Vector2i in _conflict_target_positions:
+		var cell_view: CellView = (
+			_board_view.get_cell_view(pos.x, pos.y) if _board_view != null else null
+		)
+		if cell_view != null:
+			cell_view.reset_wrong_pos_reaction()
+			if reason == "on_hide":
+				_board_view.mark_cell_error(pos.x, pos.y)
+	_full_mark_defer_judgement = was_deferred
+	_conflict_target_positions.clear()
+
+	_wrong_guess_pending = false
 
 
-## 按给定顺序逐个锁叉
-func _spread_status_lock_ordered(ordered: Array[Vector2i]) -> void:
-	if ordered.is_empty():
-		return
-	var token: int = _lock_x_token
-	for m: Vector2i in ordered:
-		_board_view.set_cell_input_locked(m.x, m.y, true)
-	await get_tree().create_timer(_LOCK_X_AFTER_MARK_DELAY_SEC).timeout
-	if token != _lock_x_token:
-		return
-	for m: Vector2i in ordered:
-		if _board_view.get_cell_state(m.x, m.y) == CellState.MARK:
-			_board_view.lock_mark(m.x, m.y, "StatusLock")
-		await get_tree().create_timer(_LOCK_X_STEP_SEC).timeout
-		if token != _lock_x_token:
-			return
+func _snapshot_cell_overrides(explicit_cells: Dictionary) -> Dictionary:
+	var cells: Dictionary = {}
+	for pos: Vector2i in _conflict_target_positions:
+		cells[pos] = CellState.ERROR
+	cells.merge(explicit_cells, true)
+	return cells
 
 
-## 按约束类型排序待锁的叉：行从下往上 / 列从左往右 / 八邻接顺时针 / 同色按对角线
-func _sort_marks_for_set(set_type: int, cat: Vector2i, marks: Array[Vector2i]) -> Array[Vector2i]:
-	var sorted: Array[Vector2i] = marks.duplicate()
-	match set_type:
-		0:
-			sorted.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y > b.y)
-		1:
-			sorted.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.x < b.x)
-		2:
-			sorted.sort_custom(
-				func(a: Vector2i, b: Vector2i) -> bool:
-					return _neighbor_clockwise_rank(a, cat) < _neighbor_clockwise_rank(b, cat)
-			)
-		3:
-			sorted.sort_custom(
-				func(a: Vector2i, b: Vector2i) -> bool: return (a.y - a.x) < (b.y - b.x)
-			)
-	return sorted
-
-
-## 八邻接格相对猫的顺时针序号（0~7），非邻接返回 999
-func _neighbor_clockwise_rank(cell: Vector2i, cat: Vector2i) -> int:
-	var dx: int = cell.x - cat.x
-	var dy: int = cell.y - cat.y
-	if dx == 1 and dy == -1:
-		return 0
-	if dx == 0 and dy == -1:
-		return 1
-	if dx == -1 and dy == -1:
-		return 2
-	if dx == -1 and dy == 0:
-		return 3
-	if dx == -1 and dy == 1:
-		return 4
-	if dx == 0 and dy == 1:
-		return 5
-	if dx == 1 and dy == 1:
-		return 6
-	if dx == 1 and dy == 0:
-		return 7
-	return 999
-
-
-## 自动打叉动画：先锁输入并预置，再按距离逐圈显现，最后解锁输入
-func _spread_auto_cross(
-	cat: Vector2i, initial_delay: float, excluded_cells: Array[Vector2i]
-) -> void:
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return
-	var token: int = _auto_mark_token
-	var rings: Dictionary = {}
-	var locked_cells: Array[Vector2i] = []
-	for cell: Vector2i in excluded_cells:
-		if _board_view.get_cell_state(cell.x, cell.y) != CellState.EMPTY:
-			continue
-		var d: int = abs(cell.x - cat.x) + abs(cell.y - cat.y)
-		if not rings.has(d):
-			rings[d] = []
-		rings[d].append(cell)
-		locked_cells.append(cell)
-	if rings.is_empty():
-		return
-
-	for cell: Vector2i in locked_cells:
-		_board_view.set_cell_input_locked(cell.x, cell.y, true)
-
-	for cell: Vector2i in locked_cells:
-		_board_view.preset_auto_cross(cell.x, cell.y)
-
-	_on_auto_mark_preset_done()
-	if initial_delay > 0.0:
-		await get_tree().create_timer(initial_delay).timeout
-		if token != _auto_mark_token:
-			return
-	var dists: Array = rings.keys()
-	dists.sort()
-	for d: int in dists:
-		for cell: Vector2i in rings[d]:
-			_board_view.play_pending_auto_cross_appear(cell.x, cell.y)
-		await get_tree().create_timer(_AUTO_MARK_RING_STEP_SEC).timeout
-		if token != _auto_mark_token:
-			return
-
-	for cell: Vector2i in locked_cells:
-		_board_view.set_cell_input_locked(cell.x, cell.y, false)
-
-
-## 打叉预置完成的钩子，子类覆写（新手引导用）
-func _on_auto_mark_preset_done() -> void:
+func _save_endgame_for_pending_wrong_guess(_row: int, _column: int) -> void:
 	pass
 
 
-## 续局恢复时，把已有猫本该打的叉一次性补齐
-func complete_auto_mark_for_restore() -> void:
-	if ABTestManager == null or ABTestManager.game_auto_mark == null:
-		return
-	if not ABTestManager.game_auto_mark.after_cat_enabled_at(_current_level()):
-		return
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return
-	var regions: Array = _puzzle.get("regions", [])
-	if regions.is_empty():
-		return
-	for r: int in range(sz):
-		for c: int in range(sz):
-			if _board_view.get_cell_state(r, c) != CellState.CAT:
-				continue
-			for cell: Vector2i in QueendokuCore.cells_excluded_by_cat(Vector2i(r, c), sz, regions):
-				if _board_view.get_cell_state(cell.x, cell.y) == CellState.EMPTY:
-					_board_view.set_cell_state(
-						cell.x, cell.y, CellState.MARK, false, true, BoardView.ChangeSource.RESTORE
-					)
+func _mark_step_dirty() -> void:
+	_step_dirty = true
 
 
-## 轴自动打叉的逐格间隔（秒）
-const _AUTO_MARK_AXIS_STEP_SEC: float = 4.0 / 60.0
-
-## 正在播动画的轴（键 "轴:序号"），避免重复触发
-var _axis_busy_set: Dictionary = {}
+func _clear_step_dirty() -> void:
+	_step_dirty = false
 
 
-## 轴的字典键：轴类型 + 序号
-func _axis_key(axis: int, idx: int) -> String:
-	return "%d:%d" % [axis, idx]
-
-
-## 点行 / 列外侧圆点：整条轴打叉或取消（AB: dot_toggle）
-func _on_axis_auto_mark_pressed(axis: int, idx: int, is_marked_before: bool) -> void:
-	if ABTestManager == null or ABTestManager.game_auto_mark == null:
+func _mark_stroke_step_dirty() -> void:
+	if _active_slot == null:
+		_step_dirty = true
 		return
-	if not ABTestManager.game_auto_mark.is_dot_toggle_enabled_at(_current_level()):
+	_active_slot.step_dirty = true
+
+
+func _clear_stroke_step_dirty() -> void:
+	if _active_slot == null:
+		_step_dirty = false
 		return
-	if _axis_busy_set.has(_axis_key(axis, idx)):
-		return
-	if is_marked_before:
-		_spread_axis_uncross(axis, idx)
+	_active_slot.step_dirty = false
+
+
+func _count_board_step(source: String = "gesture", stroke_slot: BoardTouchSlot = null) -> void:
+	if source == "gesture":
+		var slot: BoardTouchSlot = stroke_slot if stroke_slot != null else _active_slot
+		if _gesture_step_breaks_cat_streak(slot):
+			_cat_streak = 0
 	else:
-		var sz: int = _level_config.get("size", 0)
-		if sz <= 0:
-			return
+		_break_cat_streak_from_non_gesture()
 
-		var targets: Array[Vector2i] = []
-		if axis == 1:
-			for rr in range(sz):
-				if _board_view.get_cell_state(rr, idx) == CellState.EMPTY:
-					targets.append(Vector2i(rr, idx))
-		else:
-			for cc in range(sz):
-				if _board_view.get_cell_state(idx, cc) == CellState.EMPTY:
-					targets.append(Vector2i(idx, cc))
-		if targets.is_empty():
-			return
-		_spread_axis_cross(axis, idx, targets)
-
-
-## 整条轴逐格打叉的动画
-func _spread_axis_cross(axis: int, idx: int, targets: Array[Vector2i]) -> void:
-	var token: int = _auto_mark_token
-	var key: String = _axis_key(axis, idx)
-	_axis_busy_set[key] = true
-
-	var sorted: Array = targets.duplicate()
-	if axis == 1:
-		sorted.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.x < b.x)
-	else:
-		sorted.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y)
-
-	for cell: Vector2i in sorted:
-		_board_view.set_cell_input_locked(cell.x, cell.y, true)
-	for cell: Vector2i in sorted:
-		if token != _auto_mark_token:
-			_axis_busy_set.erase(key)
-			return
-		if _board_view.get_cell_state(cell.x, cell.y) == CellState.EMPTY:
-			_board_view.play_auto_cross(cell.x, cell.y)
-		await get_tree().create_timer(_AUTO_MARK_AXIS_STEP_SEC).timeout
-	if token != _auto_mark_token:
-		_axis_busy_set.erase(key)
-		return
-	for cell: Vector2i in sorted:
-		_board_view.set_cell_input_locked(cell.x, cell.y, false)
-	_board_view.refresh_axis_auto_mark_state(axis, idx, true)
-	_axis_busy_set.erase(key)
-
-
-## 整条轴逐格取消叉的动画
-func _spread_axis_uncross(axis: int, idx: int) -> void:
-	var token: int = _auto_mark_token
-	var key: String = _axis_key(axis, idx)
-	_axis_busy_set[key] = true
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		_axis_busy_set.erase(key)
-		return
-
-	var targets: Array[Vector2i] = []
-	if axis == 1:
-		for r in range(sz):
-			if _board_view.get_cell_state(r, idx) == CellState.MARK:
-				targets.append(Vector2i(r, idx))
-		targets.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.x > b.x)
-	else:
-		for c in range(sz):
-			if _board_view.get_cell_state(idx, c) == CellState.MARK:
-				targets.append(Vector2i(idx, c))
-		targets.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y > b.y)
-	if targets.is_empty():
-		_board_view.refresh_axis_auto_mark_state(axis, idx, false)
-		_axis_busy_set.erase(key)
-		return
-	for cell: Vector2i in targets:
-		_board_view.set_cell_input_locked(cell.x, cell.y, true)
-	for cell: Vector2i in targets:
-		if token != _auto_mark_token:
-			_axis_busy_set.erase(key)
-			return
-		if _board_view.get_cell_state(cell.x, cell.y) == CellState.MARK:
-			_board_view.play_auto_uncross(cell.x, cell.y)
-		await get_tree().create_timer(_AUTO_MARK_AXIS_STEP_SEC).timeout
-	if token != _auto_mark_token:
-		_axis_busy_set.erase(key)
-		return
-	for cell: Vector2i in targets:
-		_board_view.set_cell_input_locked(cell.x, cell.y, false)
-	_board_view.refresh_axis_auto_mark_state(axis, idx, false)
-	_axis_busy_set.erase(key)
-
-
-## 棋盘变化后刷新该行 / 列圆点状态（还有空格=未打叉，没空格=已打叉）
-func _on_cell_changed_refresh_axis_btn(r: int, c: int, _state: int, _source: int) -> void:
-	if ABTestManager == null or ABTestManager.game_auto_mark == null:
-		return
-	if not ABTestManager.game_auto_mark.is_dot_toggle_enabled_at(_current_level()):
-		return
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return
-
-	for axis_idx in [Vector2i(0, r), Vector2i(1, c)]:
-		var axis: int = axis_idx.x
-		var idx: int = axis_idx.y
-		if _axis_busy_set.has(_axis_key(axis, idx)):
-			continue
-		var has_empty: bool = false
-		if axis == 1:
-			for rr in range(sz):
-				if _board_view.get_cell_state(rr, idx) == CellState.EMPTY:
-					has_empty = true
-					break
-		else:
-			for cc in range(sz):
-				if _board_view.get_cell_state(idx, cc) == CellState.EMPTY:
-					has_empty = true
-					break
-		var is_marked: bool = _board_view.is_axis_auto_mark_marked(axis, idx)
-
-		if has_empty and is_marked:
-			_board_view.refresh_axis_auto_mark_state(axis, idx, false)
-		elif not has_empty and not is_marked:
-			_board_view.refresh_axis_auto_mark_state(axis, idx, true)
-
-
-# ================= 步历史与撤销 =================
-## 把格子标成错误叉，并走进错误反馈流程
-func do_wrong_guess_mark(r: int, c: int, original_before: int) -> void:
-	_record_cell_change(r, c, original_before, CellState.MARK)
-	_board_view.set_cell_state(r, c, CellState.MARK)
-	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL3)
-	_try_emit_rule_violation(r, c)
-	_on_wrong_guess(r, c)
-
-
-## 把一次格子变更累积进「当前这一步」
-func _record_cell_change(r: int, c: int, before: int, after: int) -> void:
-	_current_step_cells.append({"pos": Vector2i(r, c), "before": before, "after": after})
-
-
-## 结束当前步：写进步历史、清空累积、复位撤销游标
-func _commit_current_step(is_cat: bool = false, is_wrong_guess: bool = false) -> void:
-	if _current_step_cells.is_empty():
-		return
-	var step := StepHistory.StepRecord.new()
-	step.cells = _current_step_cells.duplicate()
-	step.is_cat_placement = is_cat
-	step.is_wrong_guess = is_wrong_guess
-	_step_history.push_step(step)
-	_current_step_cells.clear()
-	_highlight_cursor = -1
-	_refresh_undo_btn_state()
-
-
-## 计一次步数（本局统计 + 累计统计）
-func _count_board_step() -> void:
 	Tracker.inc_stat("step_used")
 	GameState.inc_game_total_stat(_game_type(), "step_total")
-
-
-## 刷新撤销按钮状态，子类覆写
-func _refresh_undo_btn_state() -> void:
-	pass
-
-
-## 初始化撤销系统：恢复步历史、接按钮信号、按 AB 决定显示与底部排版
-func _setup_undo_system(restore_data: Array = []) -> void:
-	_undo_executor.cancel()
-	_step_history.clear()
-	_current_step_cells.clear()
-	_highlight_cursor = -1
-	if not restore_data.is_empty():
-		_step_history.deserialize(restore_data)
-	_undo_executor.setup(_board_view, self, self)
-	var undo_enabled: bool = ABTestManager.undo_btn.is_enabled()
-	if _tool_undo_btn != null:
-		_tool_undo_btn.visible = undo_enabled
-		var tb := _tool_undo_btn as ToolButton
-		if tb != null and not tb.pressed.is_connected(_on_undo_btn_pressed):
-			tb.pressed.connect(_on_undo_btn_pressed)
-	_layout_bottom_tools(undo_enabled)
-	_sync_tools_from_state()
-	_refresh_undo_btn_state()
-
-
-## 底部道具排版：两个（无撤销）或三个（有撤销）
-func _layout_bottom_tools(three_tools: bool) -> void:
-	if three_tools:
-		if _tool_locate_btn != null:
-			_tool_locate_btn.offset_left = 115.0
-			_tool_locate_btn.offset_right = 325.0
-		if _tool_hint_btn != null:
-			_tool_hint_btn.offset_left = 435.0
-			_tool_hint_btn.offset_right = 645.0
-		if _tool_undo_btn != null:
-			_tool_undo_btn.offset_left = 755.0
-			_tool_undo_btn.offset_right = 965.0
-	else:
-		if _tool_locate_btn != null:
-			_tool_locate_btn.offset_left = 250.0
-			_tool_locate_btn.offset_right = 460.0
-		if _tool_hint_btn != null:
-			_tool_hint_btn.offset_left = 620.0
-			_tool_hint_btn.offset_right = 830.0
-
-
-## 撤销按钮：真撤销（回退步历史）或只高亮回顾，两种模式都要花道具
-func _on_undo_btn_pressed() -> void:
-	if _entry_anim_playing or _hint_cooldown:
-		return
-	Tracker.track_btn_click("undo", self)
-	_reset_idle_hint()
-	_exit_draft_mode_and_clear(ABTestManager.draft_mode.keep_marks_on_manual_exit())
-	if _is_complete or _wrong_guess_pending:
-		return
-	if _auto_completing:
-		return
-	if _undo_executor.is_executing():
-		if ABTestManager.undo_btn.is_highlight_only():
-			pass
-		else:
-			Toast.popup("UNDO_IN_PROGRESS", self)
-			return
-	if not _step_history.has_step():
-		if ABTestManager.undo_btn.is_undo_mode():
-			Toast.popup("UNDO_CANNOT_UNDO", self)
-		else:
-			Toast.popup("UNDO_NO_STEP", self)
-		return
-	var step: StepHistory.StepRecord = _step_history.peek_last()
-	if step == null:
-		return
-
-	if ABTestManager.undo_btn.is_undo_mode():
-		var target_step: StepHistory.StepRecord = null
-		var skip_count: int = 0
-		for i in range(_step_history.size() - 1, -1, -1):
-			var s: StepHistory.StepRecord = _step_history.peek_at(i)
-			if s == null or s.is_wrong_guess:
-				continue
-			var has_revertible: bool = false
-			for entry: Dictionary in s.cells:
-				var cv: CellView = _board_view.get_cell_view(entry["pos"].x, entry["pos"].y)
-				var cur: int = cv.get_state() if cv != null else CellState.EMPTY
-				if cur != CellState.CAT and cur != CellState.ERROR:
-					has_revertible = true
-					break
-			if has_revertible:
-				target_step = s
-				skip_count = _step_history.size() - 1 - i
-				break
-		if target_step == null:
-			Toast.popup("UNDO_CANNOT_UNDO", self)
-			return
-		var consumed: bool = _consume_tool(_tool_undo_btn)
-		if not consumed:
-			return
-		for j in range(skip_count + 1):
-			_step_history.pop_last()
-		_refresh_undo_btn_state()
-		for entry: Dictionary in target_step.cells:
-			var pos: Vector2i = entry["pos"]
-			var before_state: int = entry["before"]
-			var cv: CellView = _board_view.get_cell_view(pos.x, pos.y)
-			var current: int = cv.get_state() if cv != null else CellState.EMPTY
-			if current == CellState.CAT or current == CellState.ERROR:
-				continue
-			_board_view.set_cell_state(
-				pos.x, pos.y, before_state, true, true, BoardView.ChangeSource.UNDO
-			)
-		_validate_board()
-		_update_remaining()
-	else:
-		if _highlight_cursor == -2:
-			Toast.popup("UNDO_NO_STEP", self)
-			return
-		var prev_cursor: int = _highlight_cursor
-		if _highlight_cursor == -1:
-			_highlight_cursor = _step_history.size() - 1
-		else:
-			_highlight_cursor -= 1
-		if _highlight_cursor < 0:
-			_highlight_cursor = -2
-			Toast.popup("UNDO_NO_STEP", self)
-			return
-		var cur_step: StepHistory.StepRecord = _step_history.peek_at(_highlight_cursor)
-		if cur_step == null:
-			Toast.popup("UNDO_NO_STEP", self)
-			return
-		var highlight_step := StepHistory.StepRecord.new()
-		highlight_step.cells = cur_step.cells.duplicate()
-
-		if cur_step.is_cat_placement or cur_step.is_wrong_guess:
-			var has_non_cat_cell: bool = false
-			for entry: Dictionary in cur_step.cells:
-				if entry["after"] != CellState.CAT:
-					has_non_cat_cell = true
-					break
-			if not has_non_cat_cell:
-				var found_prev: bool = false
-				for i in range(_highlight_cursor - 1, -1, -1):
-					var s: StepHistory.StepRecord = _step_history.peek_at(i)
-					if s == null:
-						continue
-					highlight_step.cells.append_array(s.cells)
-					if not s.is_cat_placement and not s.is_wrong_guess:
-						_highlight_cursor = i
-						found_prev = true
-						break
-				if not found_prev:
-					_highlight_cursor = prev_cursor
-					Toast.popup("UNDO_NO_STEP", self)
-					return
-		var consumed: bool = _consume_tool(_tool_undo_btn)
-		if not consumed:
-			_highlight_cursor = prev_cursor
-			return
-		_undo_executor.cancel()
-		var cell_count: int = highlight_step.cells.size()
-		var duration: float = ABTestManager.undo_btn.get_highlight_duration(cell_count)
-		_undo_executor.execute(highlight_step, UndoHighlightExecutor.Mode.HIGHLIGHT_ONLY, duration)
-		if not _undo_executor.execution_finished.is_connected(_on_undo_execution_finished):
-			_undo_executor.execution_finished.connect(_on_undo_execution_finished, CONNECT_ONE_SHOT)
-
-
-## 撤销高亮播完：重新校验棋盘并刷新界面
-func _on_undo_execution_finished() -> void:
-	_validate_board()
-	_update_remaining()
-	_refresh_undo_btn_state()
-
-
-# ================= 草稿模式（AB: draft_mode） =================
-## 取草稿模式 AB 变体（0 表示没开启）
-func _get_draft_variant() -> int:
-	if ABTestManager == null or ABTestManager.draft_mode == null:
-		return 0
-	return ABTestManager.draft_mode.value()
-
-
-## 草稿是否已解锁：变体非 0 且关卡号 ≥ 21
-func _is_draft_unlocked() -> bool:
-	if _get_draft_variant() == 0:
-		return false
-	return GameState.get_current_level() >= 21
-
-
-## 草稿按钮：在进入 / 退出草稿模式之间切换
-func _on_draft_btn_pressed() -> void:
-	if _entry_anim_playing:
-		return
-	if _is_complete or _wrong_guess_pending:
-		return
-	if not _is_draft_unlocked():
-		return
-
-	if _draft_mode:
-		var keep: bool = ABTestManager.draft_mode.keep_marks_on_manual_exit()
-		_exit_draft_mode_and_clear(keep)
-	else:
-		_enter_draft_mode()
-
-
-## 草稿「应用」按钮：把草稿落成正式标记
-func _on_apply_btn_pressed() -> void:
-	if _entry_anim_playing or _is_complete or _wrong_guess_pending:
-		return
-	if not _draft_mode:
-		return
-	_apply_draft_commit()
-
-
-## 退出草稿时上报：停留时长与草稿正确 / 错误数量
-func _record_draft_exit_stats() -> void:
-	var gt: String = _game_type()
-	if _draft_enter_ms > 0:
-		var dur_ms: int = Time.get_ticks_msec() - _draft_enter_ms
-		if dur_ms > 0:
-			GameState.inc_game_total_stat(gt, "draft_time_total_ms", dur_ms)
-	_draft_enter_ms = 0
-	var wrong_count: int = 0
-	var correct_count: int = 0
-	var draft_marks: Dictionary = _collect_draft_marks()
-	for key in draft_marks.keys():
-		var pos: Vector2i = key as Vector2i
-		var mark: int = draft_marks[key]
-		var is_sol: bool = _is_solution_cell(pos.x, pos.y)
-		if mark == CellState.DRAFT_CAT:
-			if is_sol:
-				correct_count += 1
-			else:
-				wrong_count += 1
-		elif mark == CellState.DRAFT_CROSS:
-			if is_sol:
-				wrong_count += 1
-
-	if wrong_count > 0:
-		GameState.inc_game_total_stat(gt, "draft_error_total", wrong_count)
-	elif correct_count > 0:
-		GameState.inc_game_total_stat(gt, "draft_correct_total", correct_count)
-
-
-## 进入草稿模式：切输入方案、快照正式标记、换铅笔图标、按需露出应用按钮
-func _enter_draft_mode() -> void:
-	_draft_mode = true
-
-	_ensure_input_system()
-	_gesture_recognizer.active_scheme = _draft_scheme
-	_gesture_recognizer.reset_for_scheme_switch()
-
-	_draft_pre_enter_real_marks = _snapshot_real_marks()
-
-	GameState.inc_game_total_stat(_game_type(), "draft_used_total")
-	_draft_enter_ms = Time.get_ticks_msec()
-	_draft_root = Vector2i(-1, -1)
-	_draft_terminal_state = DraftTerminal.NORMAL
-
-	if _draft_btn == null:
-		return
-	if _draft_btn_bg != null:
-		_draft_btn_bg.self_modulate = Color(0.95, 0.5, 0.15, 1.0)
-	if _draft_btn_icon != null:
-		_draft_btn_icon.texture = _PENCIL_TEX_SELECTED
-
-	if ABTestManager.draft_mode.has_independent_apply_button() and _apply_btn != null:
-		_apply_btn.visible = true
-		_show_apply_btn_animated()
-
-	if _draft_anim != null:
-		_draft_anim.play("Appear")
-	_refresh_draft_terminal_state()
-
-
-## 动画显示「应用」按钮
-func _show_apply_btn_animated() -> void:
-	if _apply_btn == null:
-		return
-	if _apply_anim != null and _apply_anim.has_animation("Appear"):
-		if _apply_anim.is_playing() and _apply_anim.current_animation == "Appear":
-			return
-		_apply_anim.play("Appear")
-	else:
-		_apply_btn.modulate = Color.WHITE
-
-
-## 动画隐藏「应用」按钮
-func _hide_apply_btn_animated() -> void:
-	if _apply_btn == null:
-		return
-	if _apply_anim != null and _apply_anim.has_animation("Disappear") and _apply_btn.visible:
-		_apply_anim.play("Disappear")
-		_apply_anim.animation_finished.connect(
-			func(anim_name: StringName) -> void:
-				if anim_name == &"Disappear" and _apply_btn != null:
-					_apply_btn.visible = false,
-			CONNECT_ONE_SHOT
+	print(
+		(
+			"[BaseGamePage] step +1 (%s), step_used=%d step_total=%d"
+			% [
+				source,
+				Tracker.get_stat("step_used"),
+				GameState.get_game_total_stat(_game_type(), "step_total")
+			]
 		)
-	else:
+	)
+
+
+func _init_session_state() -> void:
+	_clear_step_dirty()
+
+	_clear_all_touch_slots()
+
+	_locked_pointer_index = _NO_POINTER_INDEX
+
+	ABTestManager.doubletap_protect.reset_high_freq_state()
+
+	_se_amortized_step = -1
+
+	_exit_draft_mode_and_clear()
+	_clear_draft_rollback_state()
+
+	_draft_busy = false
+
+	_draft_used_this_level = false
+
+	_full_mark_tracker.reset()
+	_full_mark_last_cell = Vector2i(-1, -1)
+
+	_is_app_foreground = true
+
+	_kill_full_mark_tween()
+
+	if _board_outer_glow != null:
+		_board_outer_glow.reset_glow_color()
+	if _apply_btn != null:
 		_apply_btn.visible = false
 
+	_today_mark_cells.clear()
+	_today_mark_withdrawn_cell = Vector2i(-1, -1)
 
-## 退出草稿模式：切回普通输入、还原按钮外观，必要时清掉草稿标记（会落存档）
-func _exit_draft_mode_and_clear(keep_marks: bool = false, skip_cell_clear: bool = false) -> void:
-	var was_in_draft: bool = _draft_mode
-	_draft_mode = false
+	reset_last_cat_stats()
 
-	if was_in_draft:
-		_record_draft_exit_stats()
+	if not OS.has_feature("rel"):
+		_today_log_base_cat = GameState.get_today_cat_found()
+		_today_log_base_mark = GameState.get_today_mark_placed()
 
-	if _gesture_recognizer != null:
-		_gesture_recognizer.active_scheme = _normal_scheme
-		_gesture_recognizer.reset_for_scheme_switch()
+	_layout_bottom_tools()
+	_sync_tools_from_state()
 
-	_draft_root = Vector2i(-1, -1)
-	_draft_terminal_state = DraftTerminal.NORMAL
+	_refresh_ad_unavailable_badge()
 
-	if _draft_btn != null:
-		if _draft_btn_bg != null:
-			_draft_btn_bg.self_modulate = Color.WHITE
-		if _draft_btn_icon != null:
-			_draft_btn_icon.texture = _PENCIL_TEX_DEFAULT
-		_set_draft_btn_text("?", 80)
-	if _draft_bubble != null:
-		_draft_bubble.visible = false
-
-	if _apply_btn != null:
-		if was_in_draft:
-			_hide_apply_btn_animated()
-		else:
-			_apply_btn.visible = false
-
-	if keep_marks:
-		return
-
-	if _board_view == null or skip_cell_clear:
-		_on_draft_changed_for_persist(true)
-		return
-
-	var animate_cross: bool = was_in_draft
-	var draft_marks: Dictionary = _collect_draft_marks()
-	for key in draft_marks.keys():
-		var pos: Vector2i = key as Vector2i
-		var cell_view: CellView = _board_view.get_cell_view(pos.x, pos.y)
-		if cell_view == null:
-			continue
-		if animate_cross and draft_marks[key] == CellState.DRAFT_CROSS:
-			cell_view.play_draft_cross_disappear()
-		else:
-			cell_view.change_state({"state": CellState.EMPTY, "play_anim": false})
-
-	_on_draft_changed_for_persist(true)
+	_arm_network_poll()
 
 
-## 设置单格草稿，维护草稿起点，并调度终局检查与持久化
-func _set_cell_draft(r: int, c: int, mark: int) -> void:
-	var key := Vector2i(r, c)
-	var cell_view: CellView = _board_view.get_cell_view(r, c) if _board_view != null else null
-	if cell_view == null:
-		return
+var _today_mark_cells: Dictionary = {}
 
-	var prev_mark: int = cell_view.get_state()
-	cell_view.change_state({"state": mark, "play_anim": false})
+var _today_mark_withdrawn_cell: Vector2i = Vector2i(-1, -1)
 
-	if mark == CellState.DRAFT_CAT and _draft_root == Vector2i(-1, -1):
-		_draft_root = key
-	elif prev_mark == CellState.DRAFT_CAT and mark != CellState.DRAFT_CAT and key == _draft_root:
-		_draft_root = Vector2i(-1, -1)
-	_schedule_draft_terminal_check()
-	_on_draft_changed_for_persist()
+var _cat_streak: int = 0
+
+var _cross_at_first_cat: int = -1
+
+var _cat_streak_token: int = 0
 
 
-## 收集全盘草稿格 → {Vector2i: 状态}
-func _collect_draft_marks() -> Dictionary:
-	var out: Dictionary = {}
-	if _board_view == null:
-		return out
-	var sz: int = _level_config.get("size", 0)
-	for r in range(sz):
-		for c in range(sz):
-			var s: int = _board_view.get_cell_state(r, c)
-			if CellState.is_draft(s):
-				out[Vector2i(r, c)] = s
-	return out
-
-
-## 盘上是否还有草稿
-func _has_draft_marks() -> bool:
-	if _board_view == null:
-		return false
-	var sz: int = _level_config.get("size", 0)
-	for r in range(sz):
-		for c in range(sz):
-			if CellState.is_draft(_board_view.get_cell_state(r, c)):
-				return true
-	return false
-
-
-## 草稿变化的持久化钩子，子类覆写（写快照）
-func _on_draft_changed_for_persist(_immediate: bool = false) -> void:
-	pass
-
-
-## 草稿改动后延迟多久做终局检查（秒）
-const _DRAFT_TERMINAL_CHECK_DELAY: float = 0.6
-
-
-## 延迟做一次草稿终局检查（带令牌，连续改动只算最后一次）
-func _schedule_draft_terminal_check() -> void:
-	if not _draft_mode:
-		return
-	_draft_check_token += 1
-	var token: int = _draft_check_token
-	get_tree().create_timer(_DRAFT_TERMINAL_CHECK_DELAY).timeout.connect(
-		func() -> void:
-			if token != _draft_check_token:
-				return
-			if not _draft_mode:
-				return
-			_refresh_draft_terminal_state()
-	)
-
-
-## 刷新草稿结局：全对时按变体露出应用按钮或直接自动应用
-func _refresh_draft_terminal_state() -> void:
-	if not _draft_mode or _board_view == null or _puzzle.is_empty():
-		return
-	var next_state: int = DraftTerminal.NORMAL
-	if _detect_draft_all_correct():
-		next_state = DraftTerminal.ALL_CORRECT
-	_draft_terminal_state = next_state
-	var variant: int = _get_draft_variant()
-
-	match next_state:
-		DraftTerminal.ALL_CORRECT:
-			if variant == ABTestManager.draft_mode.VALUE_APPLY_INPLACE:
-				if _apply_btn != null:
-					_apply_btn.visible = true
-					_show_apply_btn_animated()
-			elif ABTestManager.draft_mode.auto_win_on_complete():
-				_apply_draft_commit()
-				return
-		_:
-			if variant == ABTestManager.draft_mode.VALUE_APPLY_INPLACE and _apply_btn != null:
-				_hide_apply_btn_animated()
-			if _draft_bubble != null:
-				_draft_bubble.visible = false
-
-
-## 草稿叉转成正式叉的动画时长（秒）
-const _DRAFT_APPLY_TO_MARK_SEC: float = 0.77
-
-
-## 草稿通关表现：等标记转正 → 放烟花 → 庆祝动画 → 再校验通关
-func _run_draft_win_with_fireworks(has_mark_transition: bool = true) -> void:
-	var flreworks_len: float = _fireworks_anim.get_animation("Flreworks").length
-	var pre_delay: float = (_DRAFT_APPLY_TO_MARK_SEC + 0.5) if has_mark_transition else 0.0
-	UIManager.block_input_briefly(self, pre_delay + flreworks_len + 0.1)
-	if has_mark_transition:
-		await get_tree().create_timer(_DRAFT_APPLY_TO_MARK_SEC).timeout
-		if not visible or _is_complete:
+func _on_cell_changed_for_today_marks(r: int, c: int, state: int, source: int = 0) -> void:
+	var cell_key: Vector2i = Vector2i(r, c)
+	if state == CellState.MARK:
+		if source == BoardView.ChangeSource.PREFILL:
 			return
-		await get_tree().create_timer(0.5).timeout
-		if not visible or _is_complete:
-			return
-	_fireworks_anim.play("Flreworks")
-	await _fireworks_anim.animation_finished
-	if not visible or _is_complete:
+		_today_mark_cells[cell_key] = true
 		return
-	_play_celebrate_effect()
-	_validate_board()
 
-
-## 播一次庆祝动画
-func _play_celebrate_effect() -> void:
-	if _anim_correct != null and _anim_correct.has_animation("Appear"):
-		_anim_correct.stop()
-		_anim_correct.play("Appear")
-
-
-## 快照里草稿叉的编码
-const _DRAFT_PERSIST_CROSS: int = 1
-## 快照里草稿猫的编码
-const _DRAFT_PERSIST_CAT: int = 2
-
-
-## 草稿标记序列化成 [[r, c, 编码], ...]，供子类写进快照
-func _serialize_draft_marks() -> Array:
-	var out: Array = []
-	var draft_marks: Dictionary = _collect_draft_marks()
-	for key in draft_marks.keys():
-		var pos: Vector2i = key as Vector2i
-		var code: int = (
-			_DRAFT_PERSIST_CAT if draft_marks[key] == CellState.DRAFT_CAT else _DRAFT_PERSIST_CROSS
-		)
-		out.append([pos.x, pos.y, code])
-	return out
-
-
-## 从快照恢复草稿标记（仅 AUTO_WIN_PERSIST 变体；非空格跳过）
-func _restore_draft_marks_from_snapshot(data: Array) -> void:
-	if _board_view == null or data.is_empty():
+	if state == CellState.ERROR:
+		_today_mark_cells.erase(cell_key)
 		return
-	if _get_draft_variant() != ABTestManager.draft_mode.VALUE_AUTO_WIN_PERSIST:
+
+	if state == CellState.CAT:
+		if _today_mark_cells.erase(cell_key):
+			_today_mark_withdrawn_cell = cell_key
 		return
-	for item in data:
-		if not (item is Array) or item.size() < 3:
-			continue
-		var r: int = int(item[0])
-		var c: int = int(item[1])
 
-		var mark: int = (
-			CellState.DRAFT_CAT if int(item[2]) == _DRAFT_PERSIST_CAT else CellState.DRAFT_CROSS
-		)
-		if not CellState.is_blank(_board_view.get_cell_state(r, c)):
-			continue
-		_set_cell_draft(r, c, mark)
+	if source == BoardView.ChangeSource.UNDO:
+		_today_mark_cells.erase(cell_key)
 
 
-## 快照当前正式标记：猫 / 叉 / 错误叉 / 锁定叉
-func _snapshot_real_marks() -> Dictionary:
-	if _board_view == null:
-		return {}
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return {}
-	var board: Array = _board_view.get_board()
-	var placed_cats: Array = []
-	var marks: Array = []
-	var errors: Array = []
-	var locked_marks: Array = []
-	for r: int in range(sz):
-		for c: int in range(sz):
-			var st: int = board[r][c]
-			match st:
-				CellState.CAT:
-					placed_cats.append([r, c])
-				CellState.MARK:
-					marks.append([r, c])
-				CellState.ERROR:
-					errors.append([r, c])
-				CellState.LOCKED_MARK:
-					locked_marks.append([r, c])
-
-	return {
-		"placed_cats": placed_cats, "marks": marks, "errors": errors, "locked_marks": locked_marks
-	}
+func today_mark_cell_count() -> int:
+	return _today_mark_cells.size()
 
 
-## 答案格是否已经全部放上正式猫
-func _is_solution_fully_placed() -> bool:
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return false
+func _count_board_crosses() -> int:
+	var board_n: int = int(_level_config.get("size", 0))
+	if board_n <= 0 or _board_view == null:
+		return 0
 	var total: int = 0
-	var filled: int = 0
-	for r in range(sz):
-		for c in range(sz):
-			if not _is_solution_cell(r, c):
-				continue
-			total += 1
-			if _board_view.get_cell_state(r, c) == CellState.CAT:
-				filled += 1
-	return total > 0 and filled == total
+	for r in board_n:
+		for c in board_n:
+			var state: int = _board_view.get_cell_state(r, c)
+			if state == CellState.MARK or state == CellState.ERROR:
+				total += 1
+	return total
 
 
-## 清空草稿死锁相关状态
-func _clear_draft_deadlock_state() -> void:
-	_draft_pre_enter_real_marks = {}
-	_draft_deadlock_pending = false
-	_draft_deadlock_real_marks = {}
+func reset_last_cat_stats() -> void:
+	_cat_streak = 0
+	_cross_at_first_cat = -1
+
+	_cat_streak_token += 1
+	_clear_cat_streak_stroke_flags()
 
 
-## 草稿是否自相矛盾：并进棋盘后有冲突，或某行 / 列 / 区域被填满却没有猫
-func _detect_draft_contradiction() -> bool:
-	var sz: int = _level_config.get("size", 4)
-	if sz <= 0:
-		return false
-	var regions: Array = _puzzle.get("regions", [])
-	if regions.is_empty():
-		return false
-
-	var merged: Array = _board_view.get_cell_state_folded_board()
-	var draft_marks: Dictionary = _collect_draft_marks()
-	for key in draft_marks.keys():
-		var pos: Vector2i = key as Vector2i
-		if pos.x < 0 or pos.x >= sz or pos.y < 0 or pos.y >= sz:
-			continue
-		if merged[pos.x][pos.y] != CellState.EMPTY:
-			continue
-		var m: int = draft_marks[key]
-		if m == CellState.DRAFT_CAT:
-			merged[pos.x][pos.y] = CellState.CAT
-		elif m == CellState.DRAFT_CROSS:
-			merged[pos.x][pos.y] = CellState.MARK
-
-	var conflicts: Dictionary = QueendokuCore.find_conflicts(merged, sz, regions)
-	if not conflicts.is_empty():
+func _gesture_step_breaks_cat_streak(slot: BoardTouchSlot) -> bool:
+	if slot == null:
 		return true
-
-	for r in range(sz):
-		var cat_n: int = 0
-		var empty_n: int = 0
-		for c in range(sz):
-			var s: int = merged[r][c]
-			if s == CellState.CAT:
-				cat_n += 1
-			elif s == CellState.EMPTY:
-				empty_n += 1
-		if cat_n == 0 and empty_n == 0:
-			return true
-
-	for c in range(sz):
-		var cat_n: int = 0
-		var empty_n: int = 0
-		for r in range(sz):
-			var s: int = merged[r][c]
-			if s == CellState.CAT:
-				cat_n += 1
-			elif s == CellState.EMPTY:
-				empty_n += 1
-		if cat_n == 0 and empty_n == 0:
-			return true
-
-	var region_cat: Dictionary = {}
-	var region_empty: Dictionary = {}
-	for r in range(sz):
-		for c in range(sz):
-			var rid: int = int(regions[r][c])
-			var s: int = merged[r][c]
-			if s == CellState.CAT:
-				region_cat[rid] = int(region_cat.get(rid, 0)) + 1
-			elif s == CellState.EMPTY:
-				region_empty[rid] = int(region_empty.get(rid, 0)) + 1
-
-	var seen_rids: Dictionary = {}
-	for r in range(sz):
-		for c in range(sz):
-			seen_rids[int(regions[r][c])] = true
-	for rid in seen_rids.keys():
-		var cat_n: int = int(region_cat.get(rid, 0))
-		var empty_n: int = int(region_empty.get(rid, 0))
-		if cat_n == 0 and empty_n == 0:
-			return true
-	return false
+	return not slot.cat_placed_this_stroke and not slot.cat_streak_break_pending
 
 
-## 草稿是否已全对：正式猫 + 草稿猫正好铺满答案格，且草稿猫都落在答案上
-func _detect_draft_all_correct() -> bool:
-	var sz: int = _level_config.get("size", 4)
-	if sz <= 0:
-		return false
-	var real_cat_n: int = 0
-	for r in range(sz):
-		for c in range(sz):
-			if _board_view.get_cell_state(r, c) == CellState.CAT:
-				real_cat_n += 1
-	var draft_cat_n: int = 0
-	var draft_marks: Dictionary = _collect_draft_marks()
-	for key in draft_marks.keys():
-		if draft_marks[key] != CellState.DRAFT_CAT:
-			continue
-		var pos: Vector2i = key as Vector2i
-
-		if _board_view.get_cell_state(pos.x, pos.y) == CellState.CAT:
-			continue
-		if not _is_solution_cell(pos.x, pos.y):
-			return false
-		draft_cat_n += 1
-	return (real_cat_n + draft_cat_n) == sz and draft_cat_n > 0
+func _clear_cat_streak_stroke_flags() -> void:
+	var slots: Array = _touch_slots.values()
+	for slot: BoardTouchSlot in slots:
+		slot.cat_placed_this_stroke = false
+		slot.cat_streak_break_pending = false
 
 
-## 提交草稿：草稿猫转正式猫、草稿叉转叉；错的扣命，全对则放烟花通关
-func _apply_draft_commit() -> void:
-	var was_all_correct: bool = _draft_terminal_state == DraftTerminal.ALL_CORRECT
-	var to_apply: Array = []
-	var draft_marks: Dictionary = _collect_draft_marks()
-	for key in draft_marks.keys():
-		to_apply.append({"pos": key as Vector2i, "mark": draft_marks[key]})
+func _break_cat_streak_from_non_gesture() -> void:
+	_clear_cat_streak_stroke_flags()
+	_cat_streak = 0
 
-	to_apply.sort_custom(
-		func(a: Dictionary, b: Dictionary) -> bool:
-			var pa: Vector2i = a["pos"]
-			var pb: Vector2i = b["pos"]
-			var diag_a: int = pa.y - pa.x
-			var diag_b: int = pb.y - pb.x
-			if diag_a != diag_b:
-				return diag_a < diag_b
-			return pa.x > pb.x
+
+func _last_cat_at_last_flag() -> int:
+	var board_n: int = int(_level_config.get("size", 0))
+	return 1 if LastCatJudge.is_hit(_cat_streak, _cross_at_first_cat, board_n) else 0
+
+
+const _TODAY_LOG_PLAYER_SOURCES: Array[int] = [
+	BoardView.ChangeSource.USER_ACTION,
+	BoardView.ChangeSource.LOCATE,
+	BoardView.ChangeSource.HINT,
+	BoardView.ChangeSource.MOUSE,
+	BoardView.ChangeSource.DRAFT_APPLY,
+	BoardView.ChangeSource.UNDO,
+	BoardView.ChangeSource.FULL_MARK_AUTO_CROSS,
+]
+
+var _today_log_base_cat: int = 0
+var _today_log_base_mark: int = 0
+
+
+func _on_cell_changed_for_today_stats_log(r: int, c: int, state: int, source: int = 0) -> void:
+	if not _TODAY_LOG_PLAYER_SOURCES.has(source):
+		return
+	var what: String = ""
+	var note: String = ""
+	if state == CellState.CAT:
+		what = "放猫"
+
+		if _today_mark_withdrawn_cell == Vector2i(r, c):
+			note = " 覆盖了白叉,叉数已撤回"
+	elif state == CellState.MARK:
+		what = "标叉"
+	elif state == CellState.ERROR:
+		what = "红叉"
+		note = " 不记录,叉数已撤回"
+	elif source == BoardView.ChangeSource.UNDO:
+		what = "撤销"
+	else:
+		return
+
+	var board_n: int = int(_level_config.get("size", 0))
+	print(
+		(
+			"[今日战绩] %s(%d,%d)%s | 本局 猫=%d 叉=%d | 今日(本关开始时) 猫=%d 叉=%d,通关后才累加 | streak=%d cross@1st=%d 现叉=%d/阈%d flag=%d"
+			% [
+				what,
+				r,
+				c,
+				note,
+				_board_view.count_cat_cells(),
+				today_mark_cell_count(),
+				_today_log_base_cat,
+				_today_log_base_mark,
+				_cat_streak,
+				_cross_at_first_cat,
+				_count_board_crosses(),
+				LastCatJudge.cross_threshold(board_n),
+				_last_cat_at_last_flag()
+			]
+		)
 	)
 
-	_exit_draft_mode_and_clear(false, true)
-	if _board_view == null:
-		return
-	var wrong_positions: Array[Vector2i] = []
-	var has_cross_to_mark: bool = false
 
-	# 提交期间先抑制连击飘字，全部落完再统一展示
-	_applying_draft_commit = true
-	var has_cat_in_apply: bool = false
-	_combo_visual_suppressed = true
-	_draft_combo_gain_sum = 0
-	var draft_cat_top_right: Vector2i = Vector2i(-1, -1)
-	for item in to_apply:
-		var pos: Vector2i = item["pos"]
-		var m: int = item["mark"]
-		var before: int = _board_view.get_cell_state(pos.x, pos.y)
-		if before == CellState.CAT:
-			continue
-		if m == CellState.DRAFT_CAT:
-			if _is_solution_cell(pos.x, pos.y):
-				_record_cell_change(pos.x, pos.y, before, CellState.CAT)
-				has_cat_in_apply = true
-				_board_view.set_cell_state(
-					pos.x, pos.y, CellState.CAT, true, true, BoardView.ChangeSource.DRAFT_APPLY
-				)
+func _accumulate_today_win_stats() -> void:
+	var cat_delta: int = _board_view.count_cat_cells()
+	var mark_delta: int = today_mark_cell_count()
+	var delta: Dictionary = GameState.add_today_win_stats(
+		cat_delta, mark_delta, int(ABTestManager.pass_text.value())
+	)
+	_level_config["today_cat_before"] = delta["cat_before"]
+	_level_config["today_cat_after"] = delta["cat_after"]
+	_level_config["today_mark_before"] = delta["mark_before"]
+	_level_config["today_mark_after"] = delta["mark_after"]
 
-				if (
-					draft_cat_top_right.x < 0
-					or pos.y > draft_cat_top_right.y
-					or (pos.y == draft_cat_top_right.y and pos.x < draft_cat_top_right.x)
-				):
-					draft_cat_top_right = pos
-			else:
-				_record_cell_change(pos.x, pos.y, before, CellState.MARK)
-				_board_view.set_cell_state(
-					pos.x, pos.y, CellState.MARK, false, true, BoardView.ChangeSource.DRAFT_APPLY
-				)
-				wrong_positions.append(pos)
-		elif m == CellState.DRAFT_CROSS:
-			_record_cell_change(pos.x, pos.y, before, CellState.MARK)
-			has_cross_to_mark = true
-			var cross_cv: CellView = _board_view.get_cell_view(pos.x, pos.y)
-			if cross_cv != null:
-				cross_cv.play_draft_cross_apply()
-			else:
-				_board_view.set_cell_state(
-					pos.x, pos.y, CellState.MARK, false, true, BoardView.ChangeSource.DRAFT_APPLY
-				)
-	_commit_current_step(has_cat_in_apply, wrong_positions.size() > 0)
-
-	_combo_visual_suppressed = false
-	if (
-		draft_cat_top_right.x >= 0
-		and _combo_feedback_view != null
-		and ABTestManager.combo_encourage.is_enabled()
-	):
-		if _combo_count >= 3:
-			var pos_global: Vector2 = _board_view.get_cell_global_center(
-				draft_cat_top_right.x, draft_cat_top_right.y
-			)
-			_combo_feedback_view.show_combo_text_only(_combo_count, pos_global)
-
-	_applying_draft_commit = false
-	_refresh_auto_complete_btn()
-
-	_update_remaining()
-	if wrong_positions.size() > 0:
-		_wrong_guess_pending = true
-		_mistake_count += wrong_positions.size()
-		_combo_count = 0
-		var decrement: int = min(_lives, wrong_positions.size())
-		GameState.inc_game_total_stat(_game_type(), "invalid_sign_total", decrement)
-		var lost_top_index: int = _lives - 1
-		_lives -= decrement
-
-		if (
-			_lives <= 0
-			and _is_solution_fully_placed()
-			and not _draft_pre_enter_real_marks.is_empty()
-		):
-			_draft_deadlock_pending = true
-			_draft_deadlock_real_marks = _draft_pre_enter_real_marks
-
-		for pos: Vector2i in wrong_positions:
-			_board_view.play_error_feedback(pos.x, pos.y)
-
-		for i in range(decrement):
-			_animate_heart_lost(lost_top_index - i)
-		VibrateManager.play_vibrate(VibrateManager.Level.LEVEL3)
-		if not ABTestManager.wrong_cat_effect.should_skip_shake():
-			_play_screen_shake()
-		if _lives <= 0:
-			_board_view.play_cat_cry_loop_all()
-
-			UIManager.block_input_briefly(self, 2.0)
-		elif _is_solution_fully_placed():
-			_wrong_guess_pending = false
-			if _fireworks_anim != null and _fireworks_anim.has_animation("Flreworks"):
-				_run_draft_win_with_fireworks(has_cross_to_mark)
-			else:
-				_play_celebrate_effect()
-				_validate_board()
-			return
-		else:
-			_board_view.play_cat_frustrated_all()
-
-		get_tree().create_timer(0.4).timeout.connect(
-			func() -> void:
-				_update_remaining()
-				_wrong_guess_pending = false
+	print(
+		(
+			"[今日战绩] %s 本局 猫+%d 叉+%d | 猫 %d→%d | 叉 %d→%d | pass_text组=%d"
+			% [
+				_game_type(),
+				cat_delta,
+				mark_delta,
+				delta["cat_before"],
+				delta["cat_after"],
+				delta["mark_before"],
+				delta["mark_after"],
+				int(ABTestManager.pass_text.value())
+			]
 		)
+	)
 
-		if _lives <= 0:
-			get_tree().create_timer(0.6).timeout.connect(
-				func() -> void:
-					if not visible:
-						return
-					_on_game_over()
+
+enum ToolLayout { NORMAL, DRAFT_ON }
+
+const _DRAFT_ON_BT_INSET: float = 385.0
+
+
+func _layout_bottom_tools(mode: int = ToolLayout.NORMAL) -> void:
+	var draft_on: bool = mode == ToolLayout.DRAFT_ON
+
+	_bt.set_hint_first(ABTestManager.prop_position.is_hint_first())
+
+	_bt.set_kind_enabled(ToolKind.LOCATE, not draft_on)
+	_bt.set_kind_enabled(ToolKind.HINT, not draft_on)
+	_bt.set_kind_enabled(ToolKind.MOUSE, (not draft_on) and _is_mouse_tool_enabled())
+	_bt.set_kind_locked(ToolKind.MOUSE, not _is_mouse_tool_unlocked(), MOUSE_UNLOCK_LEVEL)
+
+	_bt.set_kind_enabled(ToolKind.DRAFT, _is_draft_unlocked())
+
+	_bt.offset_right = -_DRAFT_ON_BT_INSET if draft_on else 0.0
+
+
+func _step_cell(r: int, c: int, result: int) -> Dictionary:
+	return Tracker.build_step_cell(r, c, _region_of_cell(r, c), result)
+
+
+func _region_of_cell(r: int, c: int) -> int:
+	var regions: Array = _puzzle.get("regions", [])
+	if r < 0 or r >= regions.size():
+		return -1
+	var row: Array = regions[r] as Array
+	if c < 0 or c >= row.size():
+		return -1
+	return int(row[c])
+
+
+func _mark_step_result(r: int, c: int) -> int:
+	return Tracker.StepResult.WRONG if _is_solution_cell(r, c) else Tracker.StepResult.CORRECT
+
+
+func _sign_step_result(r: int, c: int) -> int:
+	return Tracker.StepResult.CORRECT if _is_solution_cell(r, c) else Tracker.StepResult.WRONG
+
+
+func _collect_gesture_step_cell(action: CellAction) -> void:
+	if _active_slot == null or action.before == action.state:
+		return
+	if _board_view.get_cell_state(action.row, action.col) != action.state:
+		return
+	_active_slot.step_cells.append({"r": action.row, "c": action.col, "state": action.state})
+
+
+func _flush_gesture_solution_step(
+	slot: BoardTouchSlot, is_cat_click: bool, release_pos: Vector2
+) -> void:
+	if slot.step_cells.is_empty():
+		if is_cat_click:
+			var click_cell: Vector2i = _board_view.pointer_to_cell(release_pos.x, release_pos.y)
+			Tracker.record_solution_step(
+				Tracker.StepAction.CLICK_EXISTING_SIGN,
+				[_step_cell(click_cell.y, click_cell.x, Tracker.StepResult.NO_JUDGE)]
 			)
 		return
-
-	if not was_all_correct:
-		return
-
-	if _fireworks_anim != null and _fireworks_anim.has_animation("Flreworks"):
-		_run_draft_win_with_fireworks(has_cross_to_mark)
+	var is_mark: bool = int(slot.step_cells[0]["state"]) == CellState.MARK
+	var cells: Array = []
+	for entry: Dictionary in slot.step_cells:
+		var row: int = int(entry["r"])
+		var col: int = int(entry["c"])
+		var result: int = _mark_step_result(row, col) if is_mark else Tracker.StepResult.NO_JUDGE
+		cells.append(_step_cell(row, col, result))
+	var action: String
+	if cells.size() == 1:
+		action = Tracker.StepAction.MARK if is_mark else Tracker.StepAction.ERASE_MARK
 	else:
-		_play_celebrate_effect()
-		_validate_board()
+		action = Tracker.StepAction.SWIPE_MARK if is_mark else Tracker.StepAction.SWIPE_ERASE
+	slot.step_cells.clear()
+	Tracker.record_solution_step(action, cells)
+
+
+func _record_double_tap_solution_step(
+	r: int, c: int, is_correct: bool, first_tap_counted: bool
+) -> void:
+	var result: int = Tracker.StepResult.CORRECT if is_correct else Tracker.StepResult.WRONG
+	var cells: Array = [_step_cell(r, c, result)]
+	if first_tap_counted:
+		Tracker.remove_latest_single_tap_step(r, c)
+	Tracker.record_solution_step(Tracker.StepAction.SIGN, cells)
+
+
+func _record_mouse_solution_step(targets: Array[Dictionary]) -> void:
+	var cells: Array = []
+	var has_cat: bool = false
+	for target: Dictionary in targets:
+		var cell: Vector2i = target.cell
+		if bool(target.is_cat):
+			has_cat = true
+			cells.append(_step_cell(cell.x, cell.y, _sign_step_result(cell.x, cell.y)))
+		else:
+			cells.append(_step_cell(cell.x, cell.y, _mark_step_result(cell.x, cell.y)))
+	var action: String = Tracker.StepAction.MOUSE_SIGN if has_cat else Tracker.StepAction.MOUSE_MARK
+	Tracker.record_solution_step(action, cells)
+
+
+func _hint_step_targets(hint: Dictionary) -> Array[Dictionary]:
+	var targets: Array[Dictionary] = []
+	var strategy: String = hint.get("strategy", "R1")
+	var mark_cells: Array[Vector2i] = []
+	if strategy == "R1_mark":
+		for cell_v in hint.get("unit_cells", []) as Array:
+			var unit_cell: Vector2i = cell_v as Vector2i
+			if CellState.is_blank(_board_view.get_cell_state(unit_cell.x, unit_cell.y)):
+				mark_cells.append(unit_cell)
+	elif strategy == "R3" or strategy == "R4":
+		mark_cells = _compute_r3_r4_mark_cells(hint)
+	elif strategy == "R3b" or strategy == "R4b":
+		mark_cells = _compute_r3_r4b_mark_cells(hint)
+	elif strategy == "R2":
+		mark_cells = _compute_r2_mark_cells(hint)
+	elif strategy == "R4_chain" or strategy == "R5_chain":
+		var chain_cell: Vector2i = hint.get("cell", Vector2i(-1, -1))
+		if chain_cell.x >= 0:
+			mark_cells.append(chain_cell)
+	else:
+		var key_cell: Vector2i = hint.get("cell", Vector2i(-1, -1))
+		if key_cell.x >= 0:
+			var effect: String = (
+				Tracker.StepEffect.ERASE
+				if hint.get("wrong_mark", false)
+				else Tracker.StepEffect.SIGN
+			)
+			targets.append({"cell": key_cell, "effect": effect})
+		return targets
+	for mark_cell: Vector2i in mark_cells:
+		targets.append({"cell": mark_cell, "effect": Tracker.StepEffect.MARK})
+	return targets
+
+
+func _record_hint_show_solution_step(hint: Dictionary) -> void:
+	var cells: Array = []
+	var targets: Array[Dictionary] = _hint_step_targets(hint)
+	for target: Dictionary in targets:
+		var cell: Vector2i = target["cell"]
+		cells.append(
+			Tracker.build_hint_show_cell(
+				cell.x, cell.y, _region_of_cell(cell.x, cell.y), target["effect"]
+			)
+		)
+	Tracker.record_solution_step(Tracker.StepAction.HINT_SHOW, cells)
+
+
+func _record_hint_apply_solution_step(hint: Dictionary) -> void:
+	var cells: Array = []
+	var action: String = Tracker.StepAction.HINT_APPLY_MARK
+	var targets: Array[Dictionary] = _hint_step_targets(hint)
+	for target: Dictionary in targets:
+		var cell: Vector2i = target["cell"]
+		match target["effect"]:
+			Tracker.StepEffect.SIGN:
+				action = Tracker.StepAction.HINT_APPLY_SIGN
+				cells.append(_step_cell(cell.x, cell.y, _sign_step_result(cell.x, cell.y)))
+			Tracker.StepEffect.ERASE:
+				action = Tracker.StepAction.HINT_APPLY_ERASE
+				cells.append(_step_cell(cell.x, cell.y, _sign_step_result(cell.x, cell.y)))
+			_:
+				cells.append(_step_cell(cell.x, cell.y, _mark_step_result(cell.x, cell.y)))
+	Tracker.record_solution_step(action, cells)
 
 
 ## 该格是否答案格（越界返回 false）
@@ -4056,75 +5021,23 @@ func _is_solution_cell(r: int, c: int) -> bool:
 	return bool(row[c])
 
 
-## 清空草稿（退出草稿模式并擦掉草稿标记）
-func _apply_draft_clear() -> void:
-	_exit_draft_mode_and_clear()
+func _puzzle_sol_1d() -> Array:
+	var sol_2d: Array = _puzzle.get("solution", [])
+	var result: Array = []
+	for r: int in range(sol_2d.size()):
+		var row: Array = sol_2d[r] as Array
+		var found: int = -1
+		for c: int in range(row.size()):
+			if bool(row[c]):
+				found = c
+				break
+		result.append(found)
+	return result
 
 
-## 改草稿按钮上的角标文字与字号
-func _set_draft_btn_text(text: String, font_size: int) -> void:
-	if _draft_btn == null:
-		return
-	var qlabel: Label = _draft_btn.get_node_or_null("QLabel") as Label
-	if qlabel == null:
-		return
-	qlabel.text = text
-	qlabel.add_theme_font_size_override("font_size", font_size)
-
-
-## 在草稿按钮上方显示一个提示气泡（懒创建）
-func _show_draft_bubble(text: String, bg_color: Color) -> void:
-	if _draft_btn == null:
-		return
-	if _draft_bubble == null:
-		_draft_bubble = Label.new()
-		_draft_bubble.name = "DraftBubble"
-		_draft_bubble.add_theme_font_size_override("font_size", 32)
-		_draft_bubble.add_theme_color_override("font_color", Color.WHITE)
-		_draft_bubble.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		_draft_bubble.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		_draft_bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var parent: Node = _draft_btn.get_parent()
-		if parent != null:
-			parent.add_child(_draft_bubble)
-
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = bg_color
-	sb.corner_radius_top_left = 12
-	sb.corner_radius_top_right = 12
-	sb.corner_radius_bottom_left = 12
-	sb.corner_radius_bottom_right = 12
-	sb.content_margin_left = 18
-	sb.content_margin_right = 18
-	sb.content_margin_top = 8
-	sb.content_margin_bottom = 8
-	_draft_bubble.add_theme_stylebox_override("normal", sb)
-	_draft_bubble.text = text
-
-	_draft_bubble.reset_size()
-	var btn_pos: Vector2 = _draft_btn.position
-	var btn_size: Vector2 = _draft_btn.size
-	var bubble_size: Vector2 = _draft_bubble.size
-	_draft_bubble.position = Vector2(
-		btn_pos.x + (btn_size.x - bubble_size.x) / 2.0,
-		btn_pos.y - bubble_size.y - 8.0,
-	)
-	_draft_bubble.visible = true
-
-
-# ================= 开场动画收尾 =================
-## 开场动画结束：放开棋盘操作、恢复规则条交互
 func _on_appear_animation_finished() -> void:
 	_entry_anim_playing = false
 	_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
-	_set_rule_info_bar_v4_interactive(true)
-
-
-## 开关 V4 规则条的交互
-func _set_rule_info_bar_v4_interactive(enabled: bool) -> void:
-	var rule_bar := get_node_or_null("Root/VBoxContainer/RuleBar")
-	if rule_bar is RuleInfoBarV4:
-		(rule_bar as RuleInfoBarV4).set_interactive(enabled)
 
 
 # ================= 自动完成（AB: auto_complete） =================
@@ -4140,89 +5053,13 @@ var _auto_completing: bool = false
 ## 自动完成令牌，自增即可中断进行中的流程
 var _auto_complete_token: int = 0
 
-## 自动完成按钮当前是否已弹出
-var _ac_shown: bool = false
-## 本局出现过错误落子 → 不再提供自动完成
-var _ac_had_wrong_cat: bool = false
 
-## 草稿提交中，期间不弹自动完成按钮
-var _applying_draft_commit: bool = false
-
-
-## 棋盘变化：出现错误叉就收起自动完成按钮，否则尝试弹出
-func _on_board_changed_for_auto_complete(_r: int, _c: int, state: int, source: int) -> void:
-	if state == CellState.ERROR:
-		_ac_had_wrong_cat = true
-		if source != BoardView.ChangeSource.RESTORE:
-			_hide_auto_complete_btn()
-		return
-	_refresh_auto_complete_btn()
-
-
-## 满足条件就弹一次自动完成按钮（只弹一次）
-func _refresh_auto_complete_btn() -> void:
-	if _ac_anim == null or _ac_shown:
-		return
-	if _should_offer_auto_complete():
-		_ac_shown = true
-		_ac_anim.play("appear")
-
-
-## 收起自动完成按钮
-func _hide_auto_complete_btn() -> void:
-	if _ac_anim == null:
-		return
-	if _ac_shown:
-		_ac_shown = false
-		_ac_anim.play("disappear")
-
-
-## 是否该提供自动完成：AB 开启、大棋盘、没出过错、且只差最后一只猫
-func _should_offer_auto_complete() -> bool:
-	if _applying_draft_commit:
-		return false
-	if _entry_anim_playing or _is_complete or _auto_completing or not visible:
-		return false
-	if not ABTestManager.auto_complete.is_enabled():
-		return false
-	var sz: int = _level_config.get("size", 0)
-	if sz < 6:
-		return false
-	if _ac_had_wrong_cat:
-		return false
-	return _board_view.count_cat_cells() == sz - 1
-
-
-## 自动完成按钮：遮罩期间自动补齐剩下的猫与叉
-func _on_auto_complete_btn_pressed() -> void:
-	if _entry_anim_playing or _is_complete or _wrong_guess_pending or _auto_completing:
-		return
-
-	if _ac_btn != null and _ac_btn.modulate.a < 1.0:
-		return
-	if _puzzle.is_empty() or not _puzzle.has("solution"):
-		return
-	_auto_completing = true
-	_auto_complete_token += 1
-	_hide_auto_complete_btn()
-	_reset_idle_hint()
-
-	_exit_draft_mode_and_clear(true)
-
-	UIMask.acquire()
-	await _run_auto_complete(_auto_complete_token)
-	UIMask.release()
-	_auto_completing = false
-
-
-## 自动完成流程：按对角线分批打叉、再逐只放猫，最后校验通关
 func _run_auto_complete(token: int) -> void:
 	var sz: int = _level_config.get("size", 0)
 	if sz <= 0:
 		return
 	var sol: Array = _puzzle["solution"]
 
-	# 按「反对角线」分层，动画沿对角线推进
 	var ring := func(v: Vector2i) -> int: return v.y + (sz - 1 - v.x)
 	var mark_cells: Array[Vector2i] = []
 	var cat_cells: Array[Vector2i] = []
@@ -4240,9 +5077,6 @@ func _run_auto_complete(token: int) -> void:
 	cat_cells.sort_custom(
 		func(a: Vector2i, b: Vector2i) -> bool: return ring.call(a) < ring.call(b)
 	)
-
-	if not ABTestManager.auto_complete.should_auto_mark_crosses():
-		mark_cells.clear()
 
 	if not mark_cells.is_empty():
 		SoundManager.set_silent(true)
@@ -4287,34 +5121,1004 @@ func _run_auto_complete(token: int) -> void:
 		if token != _auto_complete_token:
 			return
 
-	_on_draft_changed_for_persist(true)
 	_update_remaining()
 	_validate_board()
 
 
-# ================= 信号连接与页面隐藏 =================
-## 接上棋盘的格子变化信号（连击统计用）
+const _FOUND_BLINK_SOURCES: Array[int] = [
+	BoardView.ChangeSource.USER_ACTION,
+	BoardView.ChangeSource.LOCATE,
+	BoardView.ChangeSource.HINT,
+	BoardView.ChangeSource.DRAFT_APPLY,
+]
+
+
+func _on_cell_changed_for_found_blink_all(r: int, c: int, state: int, source: int = 0) -> void:
+	if state != CellState.CAT:
+		return
+	if not (source in _FOUND_BLINK_SOURCES):
+		return
+
+	if _applying_draft_commit:
+		return
+
+	_broadcast_found_blink_all(Vector2i(r, c))
+
+
+func _broadcast_found_blink_all(exclude: Vector2i = Vector2i(-1, -1)) -> void:
+	if not ABTestManager.found_cat_animation.should_blink_all_found():
+		return
+	if _board_view == null or not is_instance_valid(_board_view):
+		return
+
+	if Engine.is_editor_hint():
+		return
+
+	if _is_complete:
+		return
+
+	var sz: int = _level_config.get("size", 4)
+	if _count_placed_cats(sz) >= sz:
+		return
+
+	if _is_pre_cat_fx_playing():
+		return
+
+	_board_view.play_found_blink_all("", exclude)
+
+
+func _is_pre_cat_fx_playing() -> bool:
+	return false
+
+
+func _found_cat_spine_anim(source: int) -> String:
+	if not (source in _FOUND_BLINK_SOURCES):
+		return ""
+	return ABTestManager.found_cat_animation.single_found_anim_name()
+
+
 func _connect_combo_signal() -> void:
 	if not _board_view.cell_state_changed.is_connected(_on_board_cell_state_changed_for_combo):
 		_board_view.cell_state_changed.connect(_on_board_cell_state_changed_for_combo)
 
+	if not _board_view.cell_state_changed.is_connected(_on_board_cell_state_changed_for_se):
+		_board_view.cell_state_changed.connect(_on_board_cell_state_changed_for_se)
 
-## 断开连击信号
+
 func _disconnect_combo_signal() -> void:
 	if _board_view.cell_state_changed.is_connected(_on_board_cell_state_changed_for_combo):
 		_board_view.cell_state_changed.disconnect(_on_board_cell_state_changed_for_combo)
+	if _board_view.cell_state_changed.is_connected(_on_board_cell_state_changed_for_se):
+		_board_view.cell_state_changed.disconnect(_on_board_cell_state_changed_for_se)
 
 
-## 由 UIManager 在页面隐藏时调用：停表、断信号、收浮层、销毁 banner 并隐藏自己
+signal full_mark_units_cleared(units: Array)
+
+signal full_mark_achieved(cells_to_cross: Array, dominant_region: int)
+
+var _full_mark_tracker: FullMarkTracker = FullMarkTracker.new()
+
+var _full_mark_last_cell: Vector2i = Vector2i(-1, -1)
+
+var _full_mark_defer_judgement: bool = false
+
+var _full_mark_defer_token: int = 0
+
+const _FULL_MARK_AFTER_CONFLICT_SEC: float = 2.183
+
+var _full_mark_tween: Tween = null
+
+var _unit_clear_tweens: Array[Tween] = []
+
+const _FULL_MARK_WAVE_DELAY: float = 0.4667
+const _FULL_MARK_WAVE_STEP: float = 0.0333
+
+const _UNIT_CLEAR_WAVE_DELAY: float = 0.0667
+const _UNIT_CLEAR_WAVE_STEP: float = 0.0333
+
+
+func _full_mark_geometry() -> Dictionary:
+	if _board_view == null or _puzzle.is_empty() or not _puzzle.has("regions"):
+		return {}
+	var size: int = _level_config.get("size", 0)
+	if size <= 0:
+		return {}
+
+	return {
+		"board": _board_view.get_cell_state_folded_board(),
+		"size": size,
+		"regions": _puzzle["regions"],
+		"solution": _puzzle.get("solution", []),
+	}
+
+
+func _on_cell_changed_for_full_mark(r: int, c: int, state: int, source: int = 0) -> void:
+	if not ABTestManager.full_mark_feedback.has_full_mark_feedback():
+		return
+
+	if source == BoardView.ChangeSource.FULL_MARK_AUTO_CROSS:
+		return
+
+	if source == BoardView.ChangeSource.PREFILL or source == BoardView.ChangeSource.RESTORE:
+		return
+
+	if _applying_draft_commit:
+		return
+
+	_full_mark_last_cell = Vector2i(r, c)
+
+	if _full_mark_defer_judgement:
+		return
+	if not ABTestManager.full_mark_feedback.has_unit_clear_feedback():
+		return
+
+	if _full_mark_tracker.is_full_mark_consumed():
+		return
+	var geometry: Dictionary = _full_mark_geometry()
+	if geometry.is_empty():
+		return
+
+	var perf_takes_text: bool = state == CellState.CAT and _will_full_mark_take_over(geometry)
+	var fresh: Array[Dictionary] = _full_mark_tracker.collect_new_units(
+		geometry["board"], geometry["size"], geometry["regions"], geometry["solution"]
+	)
+	if not fresh.is_empty():
+		full_mark_units_cleared.emit(fresh)
+
+		_play_unit_clear_feedback(fresh, Vector2i(r, c), not perf_takes_text)
+
+
+func _will_full_mark_take_over(geometry: Dictionary) -> bool:
+	var board: Array = geometry["board"]
+	var size: int = geometry["size"]
+	if not FullMarkDetector.is_full_mark(board, size):
+		return false
+	return QueendokuCore.is_complete(board, size, geometry["regions"])
+
+
+func _emit_full_mark_achieved_if_any() -> void:
+	if not ABTestManager.full_mark_feedback.has_full_mark_feedback():
+		return
+	var geometry: Dictionary = _full_mark_geometry()
+	if geometry.is_empty():
+		return
+
+	var result: Dictionary = _full_mark_tracker.consume_full_mark(
+		geometry["board"], geometry["size"], geometry["regions"]
+	)
+	if bool(result["hit"]):
+		full_mark_achieved.emit(result["cells_to_cross"], int(result["dominant_region"]))
+		_play_full_mark_feedback(
+			result["cells_to_cross"], int(result["dominant_region"]), int(geometry["size"])
+		)
+
+
+func _play_full_mark_feedback(cells_to_cross: Array, dominant_region: int, size: int) -> void:
+	if _board_view == null or size <= 0:
+		return
+
+	for cell: Vector2i in cells_to_cross:
+		_board_view.set_cell_state(
+			cell.x,
+			cell.y,
+			CellState.MARK,
+			true,
+			true,
+			BoardView.ChangeSource.FULL_MARK_AUTO_CROSS,
+			"AutoXFillMode2",
+			false
+		)
+
+	if dominant_region >= 0 and _board_outer_glow != null:
+		_board_outer_glow.set_glow_color(_board_view.get_region_color(dominant_region))
+	if _anim_board_glow != null and _anim_board_glow.has_animation("BoardGlow"):
+		_anim_board_glow.stop()
+		_anim_board_glow.play("BoardGlow")
+
+	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL3)
+
+	if ABTestManager.full_mark_feedback.has_full_mark_text():
+		_show_full_mark_text(true, _full_mark_last_cell)
+
+	var cross_cells: Array[Vector2i] = []
+	for r in size:
+		for c in size:
+			if CellState.is_cross(_board_view.get_cell_state(r, c)):
+				cross_cells.append(Vector2i(r, c))
+	if _full_mark_tween != null and _full_mark_tween.is_valid():
+		_full_mark_tween.kill()
+	_full_mark_tween = _build_grid_glow_wave(
+		FullMarkDetector.group_by_diagonal(cross_cells, size),
+		_FULL_MARK_WAVE_DELAY,
+		_FULL_MARK_WAVE_STEP
+	)
+
+
+func _play_unit_clear_feedback(units: Array, anchor: Vector2i, show_text: bool = true) -> void:
+	if _board_view == null or anchor.x < 0 or units.is_empty():
+		return
+
+	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+
+	if show_text and ABTestManager.full_mark_feedback.has_unit_clear_text():
+		_show_full_mark_text(false, anchor)
+
+	_unit_clear_tweens = _unit_clear_tweens.filter(
+		func(tween: Tween) -> bool: return tween != null and tween.is_valid()
+	)
+	var wave: Tween = _build_grid_glow_wave(
+		FullMarkDetector.group_by_ring(_dedup_unit_cells(units), anchor),
+		_UNIT_CLEAR_WAVE_DELAY,
+		_UNIT_CLEAR_WAVE_STEP
+	)
+	if wave != null:
+		_unit_clear_tweens.append(wave)
+
+
+func _dedup_unit_cells(units: Array) -> Array[Vector2i]:
+	var seen: Dictionary = {}
+	var cells: Array[Vector2i] = []
+	for unit: Dictionary in units:
+		var unit_cells: Array = unit["cells"]
+		for cell: Vector2i in unit_cells:
+			if seen.has(cell):
+				continue
+			seen[cell] = true
+			cells.append(cell)
+	return cells
+
+
+func _build_grid_glow_wave(groups: Dictionary, first_delay: float, step: float) -> Tween:
+	if groups.is_empty():
+		return null
+	var keys: Array = groups.keys()
+	keys.sort()
+	var wave: Tween = create_tween()
+	wave.tween_interval(first_delay)
+	for i in keys.size():
+		wave.tween_callback(_play_grid_glow_on_cells.bind(groups[keys[i]]))
+		if i < keys.size() - 1:
+			wave.tween_interval(step)
+	return wave
+
+
+func _play_grid_glow_on_cells(cells: Array) -> void:
+	if _board_view == null:
+		return
+	for cell: Vector2i in cells:
+		var view: CellView = _board_view.get_cell_view(cell.x, cell.y)
+		if view != null:
+			view.play_grid_glow_2()
+
+
+func _flush_full_mark_after_draft_apply() -> void:
+	if not ABTestManager.full_mark_feedback.has_unit_clear_feedback():
+		return
+	if _full_mark_tracker.is_full_mark_consumed():
+		return
+	var geometry: Dictionary = _full_mark_geometry()
+	if geometry.is_empty():
+		return
+
+	if _will_full_mark_take_over(geometry):
+		return
+	var fresh: Array[Dictionary] = _full_mark_tracker.collect_new_units(
+		geometry["board"], geometry["size"], geometry["regions"], geometry["solution"]
+	)
+	if fresh.is_empty():
+		return
+	full_mark_units_cleared.emit(fresh)
+	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+
+	if ABTestManager.full_mark_feedback.has_unit_clear_text():
+		_show_full_mark_text(false, _full_mark_last_cell)
+
+	_unit_clear_tweens = _unit_clear_tweens.filter(
+		func(tween: Tween) -> bool: return tween != null and tween.is_valid()
+	)
+	var wave: Tween = _build_grid_glow_wave(
+		FullMarkDetector.group_by_diagonal(_dedup_unit_cells(fresh), int(geometry["size"])),
+		_FULL_MARK_WAVE_DELAY,
+		_FULL_MARK_WAVE_STEP
+	)
+	if wave != null:
+		_unit_clear_tweens.append(wave)
+
+
+func _flush_full_mark_unit_clear(anchor: Vector2i) -> void:
+	if not ABTestManager.full_mark_feedback.has_unit_clear_feedback():
+		return
+	if _full_mark_tracker.is_full_mark_consumed():
+		return
+	var geometry: Dictionary = _full_mark_geometry()
+	if geometry.is_empty():
+		return
+	var fresh: Array[Dictionary] = _full_mark_tracker.collect_new_units(
+		geometry["board"], geometry["size"], geometry["regions"], geometry["solution"]
+	)
+	if fresh.is_empty():
+		return
+	full_mark_units_cleared.emit(fresh)
+	_play_unit_clear_feedback(fresh, anchor)
+
+
+func _defer_full_mark_after_conflict(anchor: Vector2i) -> void:
+	if not ABTestManager.full_mark_feedback.has_unit_clear_feedback():
+		return
+	var remaining: float = (
+		_FULL_MARK_AFTER_CONFLICT_SEC - MisplaceReactionConfig.CONFLICT_ANIM_DURATION_SEC
+	)
+	if remaining <= 0.0:
+		_flush_full_mark_unit_clear(anchor)
+		return
+	var token: int = _full_mark_defer_token
+	get_tree().create_timer(remaining).timeout.connect(
+		func() -> void:
+			if token != _full_mark_defer_token:
+				return
+			if _board_view == null:
+				return
+			if _is_complete:
+				return
+			_flush_full_mark_unit_clear(anchor),
+		CONNECT_ONE_SHOT
+	)
+
+
+func _seed_full_mark_fired_units_from_board(reason: String = "开局棋面") -> void:
+	if not ABTestManager.full_mark_feedback.has_unit_clear_feedback():
+		return
+	var geometry: Dictionary = _full_mark_geometry()
+	if geometry.is_empty():
+		return
+	var primed: int = _full_mark_tracker.prime_fired_units(
+		geometry["board"], geometry["size"], geometry["regions"], geometry["solution"]
+	)
+	if primed > 0 and not OS.has_feature("rel"):
+		print("[full_mark] seed(%s):已满 %d 个单元,登记为已反馈(不播、不补播)" % [reason, primed])
+
+
+func _defer_full_mark_unit_clear(r: int, c: int) -> void:
+	if not ABTestManager.full_mark_feedback.has_unit_clear_feedback():
+		return
+	var token: int = _full_mark_defer_token
+	var sec: float = _cur_window_sec() + _MISSED_CROSS_DEFER_MARGIN_SEC
+	get_tree().create_timer(sec).timeout.connect(
+		func() -> void:
+			if token != _full_mark_defer_token:
+				return
+			if _board_view == null:
+				return
+			if _is_complete:
+				return
+
+			if _conflict_target_positions.has(Vector2i(r, c)):
+				return
+
+			_flush_full_mark_unit_clear(Vector2i(r, c)),
+		CONNECT_ONE_SHOT
+	)
+
+
+func _show_full_mark_text(is_perfect: bool, anchor: Vector2i) -> void:
+	if _combo_feedback_view == null or _board_view == null:
+		return
+	if anchor.x < 0:
+		return
+	if not _combo_feedback_view.has_method("show_full_mark_text"):
+		return
+	var cell_global: Vector2 = _board_view.get_cell_global_center(anchor.x, anchor.y)
+	_combo_feedback_view.show_full_mark_text(cell_global, is_perfect)
+
+
+func _kill_full_mark_tween() -> void:
+	if _full_mark_tween != null and _full_mark_tween.is_valid():
+		_full_mark_tween.kill()
+	_full_mark_tween = null
+	for tween: Tween in _unit_clear_tweens:
+		if tween != null and tween.is_valid():
+			tween.kill()
+	_unit_clear_tweens.clear()
+
+
+const _OPERABLE_DELTA_CAP_SEC: float = 0.1
+
+var _operable_sec: float = 0.0
+
+var _is_app_foreground: bool = true
+
+var _cat_toast_tracker: CatToastTracker = CatToastTracker.new()
+
+
+func _on_cell_changed_for_cat_toast(r: int, c: int, state: int, source: int = 0) -> void:
+	if state != CellState.CAT:
+		return
+	if source != BoardView.ChangeSource.USER_ACTION:
+		return
+	var cfg := ABTestManager.cat_toast
+
+	_cat_toast_tracker.sync_level(_cat_toast_level_key())
+
+	var board_size: int = _level_config.get("size", 0)
+	var consumed_step: int = _consumed_step_for_placed_cat(source)
+	var scene: int = _cat_toast_tracker.on_player_cat_placed(
+		int(cfg.value()), board_size, _operable_sec, consumed_step
+	)
+
+	if not OS.has_feature("rel"):
+		_log_cat_toast_decision(r, c, board_size, scene)
+	if scene == CatToastJudge.SCENE_NONE:
+		return
+
+	if _combo_feedback_view != null and _combo_feedback_view.has_method("show_cat_toast_text"):
+		_combo_feedback_view.show_cat_toast_text(
+			_board_view.get_cell_global_center(r, c), int(cfg.value()), scene
+		)
+
+
+func _log_cat_toast_decision(r: int, c: int, board_size: int, scene: int) -> void:
+	var cat_no: int = _cat_toast_tracker.player_cat_count()
+	var delta_sec: float = _cat_toast_tracker.last_delta_sec()
+	var delta_step: int = _cat_toast_tracker.last_delta_step()
+	var result: String = CatToastJudge.scene_name(scene)
+	if cat_no <= 1:
+		print(
+			(
+				"[cat_toast] 第1只猫 (%d,%d) sz=%d | 当前 %.2fs / %d步 | %s"
+				% [r, c, board_size, delta_sec, delta_step, result]
+			)
+		)
+		return
+	print(
+		(
+			"[cat_toast] 第%d只猫 (%d,%d) sz=%d | 距上一只 %.2fs / %d步 | 累计可操作 %.2fs | %s"
+			% [cat_no, r, c, board_size, delta_sec, delta_step, _operable_sec, result]
+		)
+	)
+
+
+func _cat_toast_level_key() -> String:
+	var pid: String = str(_level_config.get("_puzzle_id", ""))
+	if not pid.is_empty():
+		return pid
+	return "%s:%d" % [_game_type(), GameState.get_current_level()]
+
+
+var _near_death_fired: bool = false
+
+var _near_death_blocked: bool = false
+
+var _near_death_level_key: String = ""
+
+
+func _on_cell_changed_for_near_death(r: int, c: int, state: int, source: int = 0) -> void:
+	if state != CellState.CAT or source != BoardView.ChangeSource.USER_ACTION:
+		return
+	_sync_near_death_level()
+	if _near_death_blocked or _near_death_fired or _lives_inf or _lives != 1 or _life_cap <= 1:
+		return
+	if not _allows_near_death_feedback():
+		return
+	_near_death_fired = true
+
+	ABTestManager.dye_at_one_fish_cat()
+	var cfg := ABTestManager.near_death_fdb
+	if not OS.has_feature("rel"):
+		print("[near_death] 触发 (%d,%d) group=%d" % [r, c, int(cfg.value())])
+	if cfg.should_show_safe_text():
+		if _combo_feedback_view != null and _combo_feedback_view.has_method("show_near_death_text"):
+			_combo_feedback_view.show_near_death_text(_board_view.get_cell_global_center(r, c))
+	elif cfg.should_play_bounce_glow():
+		_board_view.play_near_death_appear(r, c)
+
+		_life_bar.play_highlight_glow_at(_lives - 1)
+
+
+func _allows_near_death_feedback() -> bool:
+	return true
+
+
+func _block_near_death_for_current_level() -> void:
+	_near_death_blocked = true
+
+
+func _sync_near_death_level() -> void:
+	var level_key: String = _cat_toast_level_key()
+	if _near_death_level_key.is_empty():
+		_near_death_level_key = level_key
+		return
+	if level_key != _near_death_level_key:
+		_near_death_level_key = level_key
+		_near_death_fired = false
+
+
+var _wrong_zone_tracker: WrongZoneTracker = WrongZoneTracker.new()
+
+
+func _on_cell_changed_for_wrong_zone(r: int, c: int, state: int, source: int = 0) -> void:
+	var regions: Array = _board_view.get_regions()
+	if r < 0 or r >= regions.size():
+		return
+	var region_row: Array = regions[r]
+	if c < 0 or c >= region_row.size():
+		return
+	var region_id: int = int(region_row[c])
+	var fully_crossed: bool = WrongZoneTracker.is_region_fully_crossed(
+		_board_view.get_board(), regions, region_id
+	)
+	var is_replay: bool = source == BoardView.ChangeSource.RESTORE
+	var first_full: bool = _wrong_zone_tracker.update_region(
+		region_id, fully_crossed, is_replay, Vector2i(r, c), state == CellState.CAT
+	)
+	if first_full and not is_replay and not OS.has_feature("rel"):
+		print(
+			(
+				"[wrong_zone] 色区%d 全叉 (%d,%d) source=%s group=%d"
+				% [
+					region_id,
+					r,
+					c,
+					BoardView.source_name(source),
+					int(ABTestManager.wrong_zone_fdb.value())
+				]
+			)
+		)
+
+	if not is_replay:
+		_refresh_cat_progress_wrong_marks()
+	if state == CellState.CAT:
+		if _board_view.highlighted_region() == region_id:
+			_stop_wrong_zone_highlight()
+		if source == BoardView.ChangeSource.USER_ACTION:
+			_try_show_good_eye(r, c, region_id)
+
+
+func _try_show_good_eye(r: int, c: int, region_id: int) -> void:
+	var cfg := ABTestManager.wrong_zone_fdb
+	if not cfg.should_show_good_eye() or not _allows_wrong_zone_feedback():
+		return
+	var requires_hint: bool = cfg.should_highlight_zone()
+	if not _wrong_zone_tracker.try_reward_good_eye(region_id, requires_hint):
+		return
+	if not OS.has_feature("rel"):
+		print("[wrong_zone] Good Eye! 色区%d (%d,%d) group=%d" % [region_id, r, c, int(cfg.value())])
+	if _combo_feedback_view != null and _combo_feedback_view.has_method("show_good_eye_text"):
+		_combo_feedback_view.show_good_eye_text(_board_view.get_cell_global_center(r, c))
+
+
+func _allows_wrong_zone_feedback() -> bool:
+	return true
+
+
+func _on_wrong_zone_state_changed() -> void:
+	return
+
+
+func _refresh_cat_progress_wrong_marks() -> void:
+	if _cat_progress == null or not _cat_progress.has_method("set_wrong_marks"):
+		return
+	var flags: Array = []
+	if (
+		_cat_progress.visible
+		and ABTestManager.wrong_zone_fdb.should_mark_progress_slot()
+		and _allows_wrong_zone_feedback()
+	):
+		flags = _cat_progress_wrong_mark_flags(_board_view.get_puzzle_size())
+	_cat_progress.set_wrong_marks(flags)
+
+
+func _cat_progress_wrong_mark_flags(sz: int) -> Array:
+	var flags: Array = []
+	var marked_regions: Array[int] = []
+	var with_cat: Dictionary = _collect_regions_with_cat(sz)
+	var full_regions: Array[int] = _wrong_zone_tracker.full_regions()
+	for region_id: int in full_regions:
+		if not with_cat.has(region_id):
+			marked_regions.append(region_id)
+	if marked_regions.is_empty():
+		return flags
+	var by_region: bool = (
+		ABTestManager.normal_top_ui.is_cat_progress_colored()
+		or ABTestManager.normal_top_ui.is_cat_progress_compact()
+	)
+	if by_region:
+		if _cat_progress_region_order.size() != sz:
+			return flags
+		for i in sz:
+			flags.append(marked_regions.has(_cat_progress_region_order[i]))
+		return flags
+	var first_marked: int = maxi(sz - marked_regions.size(), with_cat.size())
+	for i in sz:
+		flags.append(i >= first_marked)
+	return flags
+
+
+const _WRONG_ZONE_IDLE_SEC: float = 10.0
+
+var _wrong_zone_idle_sec: float = 0.0
+
+
+func _note_wrong_zone_activity() -> void:
+	_wrong_zone_idle_sec = 0.0
+	_stop_wrong_zone_highlight()
+
+
+func _stop_wrong_zone_highlight() -> void:
+	if _board_view != null and is_instance_valid(_board_view):
+		_board_view.stop_region_highlight()
+
+
+func _tick_wrong_zone_idle(delta: float) -> void:
+	if not ABTestManager.wrong_zone_fdb.should_highlight_zone():
+		return
+	if _draft_mode or _is_complete or _board_view == null:
+		return
+	if _board_view.highlighted_region() >= 0:
+		return
+	var idle_before: float = _wrong_zone_idle_sec
+	_wrong_zone_idle_sec += delta
+	if idle_before < _WRONG_ZONE_IDLE_SEC and _wrong_zone_idle_sec >= _WRONG_ZONE_IDLE_SEC:
+		_try_show_wrong_zone_highlight()
+
+
+func _try_show_wrong_zone_highlight() -> void:
+	if not _allows_wrong_zone_feedback():
+		return
+	var board_size: int = _board_view.get_puzzle_size()
+	if not WrongZoneTracker.meets_cross_ratio(_board_view.get_board(), board_size):
+		return
+	var region_id: int = _wrong_zone_tracker.pick_highlight_target()
+	if region_id < 0:
+		return
+	_wrong_zone_tracker.mark_hinted(region_id)
+	_board_view.show_region_highlight(region_id)
+
+	_on_wrong_zone_state_changed()
+	if not OS.has_feature("rel"):
+		print(
+			(
+				"[wrong_zone] 高亮色区%d 叉率=%.2f group=%d"
+				% [
+					region_id,
+					WrongZoneTracker.cross_ratio(_board_view.get_board(), board_size),
+					int(ABTestManager.wrong_zone_fdb.value())
+				]
+			)
+		)
+
+
+func _se_reserved_steps_on_other_fingers() -> int:
+	if _active_slot == null:
+		return 0
+	if not ABTestManager.multi_touch.is_multi_touch_enabled():
+		return 0
+	var reserved: int = 0
+	var slots: Array = _touch_slots.values()
+	for slot: BoardTouchSlot in slots:
+		if slot.recognizer == null:
+			continue
+		var is_own_slot: bool = slot == _active_slot
+
+		if is_own_slot and not _dt_cross_landing_this_place:
+			continue
+
+		if (
+			not is_own_slot
+			and slot.is_owned()
+			and slot.recognizer.is_window_from_latest_drag_start()
+		):
+			continue
+		var pending: Vector2i = slot.recognizer.get_pending_tap_cell()
+		if pending.x < 0:
+			continue
+		if not _se_window_may_become_cat(pending.x, pending.y):
+			continue
+		reserved += 1
+	return reserved
+
+
+func _se_window_may_become_cat(row: int, col: int) -> bool:
+	if not _solution_has_cat(row, col):
+		return false
+	if _board_view != null and _board_view.get_cell_state(row, col) == CellState.CAT:
+		return false
+	return true
+
+
+func _consumed_step_for_placed_cat(source: int) -> int:
+	var is_pending_step_source: bool = (
+		_se_step_pending_this_place
+		or source == BoardView.ChangeSource.LOCATE
+		or source == BoardView.ChangeSource.HINT
+	)
+	return (
+		Tracker.get_stat("step_used")
+		+ (1 if is_pending_step_source else 0)
+		- _se_reserved_steps_on_other_fingers()
+	)
+
+
+func _on_board_cell_state_changed_for_se(r: int, c: int, state: int, source: int = 0) -> void:
+	if state != CellState.CAT:
+		return
+	if source == BoardView.ChangeSource.PREFILL or source == BoardView.ChangeSource.RESTORE:
+		return
+	_se_count += 1
+
+	var consumed_step: int = _consumed_step_for_placed_cat(source)
+	var se_step_delta: int = (
+		_se_amortized_step if _se_amortized_step >= 0 else consumed_step - _se_last_step
+	)
+
+	if _se_last_step < 0:
+		se_step_delta = 0
+	_se_last_step = consumed_step
+	if _combo_feedback_view != null:
+		_combo_feedback_view.refresh_display_visibility()
+
+	var gain: int = ABTestManager.score_encourage.calc_gain(_se_count)
+
+	var tier_bonus: int = ABTestManager.score_encourage.calc_step_tier_bonus(
+		_level_config.get("size", 0), se_step_delta
+	)
+	var total_gain: int = gain + tier_bonus
+	if ABTestManager.score_encourage.is_step_tier_group():
+		print(
+			(
+				"[SE_TIER] cat(%d,%d) sz=%d step=%d tier=%s bonus=%d base=%d combo=%d gain=%d total=%d"
+				% [
+					r,
+					c,
+					int(_level_config.get("size", 0)),
+					se_step_delta,
+					ScoreEncourageConfig.tier_name(
+						ScoreEncourageConfig.tier_of(_level_config.get("size", 0), se_step_delta)
+					),
+					tier_bonus,
+					gain,
+					_se_count,
+					total_gain,
+					_score_model.score + total_gain
+				]
+			)
+		)
+
+	_score_model.add_score(total_gain)
+
+	var cell_global_pos: Vector2 = _board_view.get_cell_global_center(r, c)
+	if _combo_feedback_view != null:
+		var params: Dictionary = {
+			"gain": total_gain,
+			"like_hand_hw": _predict_like_hand_hw(r, c, source),
+		}
+		var _score_bubble: Control = _combo_feedback_view.show_se_bubble(cell_global_pos, params)
+
+		var fly_delay: float = _combo_feedback_view.get_se_fly_delay()
+
+		_se_last_fly_launch_ms = Time.get_ticks_msec() + int(maxf(0.0, fly_delay) * 1000.0)
+		if fly_delay > 0.0:
+			var _fly_gain: int = total_gain
+			var _fly_score: int = _score_model.score
+			var _fly_token: int = _se_fly_token
+
+			var _from_pos: Vector2 = (
+				_score_bubble.global_position + _score_bubble.size * 0.5
+				if is_instance_valid(_score_bubble)
+				else cell_global_pos
+			)
+			get_tree().create_timer(fly_delay).timeout.connect(
+				func() -> void:
+					if _fly_token != _se_fly_token:
+						return
+					if is_instance_valid(_combo_feedback_view):
+						_combo_feedback_view.play_se_fly_effect(_from_pos, _fly_gain, _fly_score),
+				CONNECT_ONE_SHOT
+			)
+		else:
+			_combo_feedback_view.play_se_fly_effect(cell_global_pos, total_gain, _score_model.score)
+
+
+func await_se_fly_settled() -> void:
+	if _se_last_fly_launch_ms <= 0:
+		return
+	var remaining_ms: int = _se_last_fly_launch_ms - Time.get_ticks_msec()
+	_se_last_fly_launch_ms = 0
+	if remaining_ms > 0:
+		await get_tree().create_timer(float(remaining_ms) / 1000.0).timeout
+
+
+const AUTO_CROSS_SCORE_GAIN: int = 10
+
+const AUTO_CROSS_BANNER_BONUS: int = 100
+
+const AUTO_CROSS_BONUS_ROLL_SEC: float = 0.3
+
+const AUTO_CROSS_DIAG_INTERVAL_SEC: float = AUTO_MARK_DIAG_INTERVAL_SEC * 0.5
+
+var _auto_x_banner_shown: bool = false
+
+var _win_encourage_snapshot: Dictionary = {}
+
+
+func _play_auto_cross_bonus_sequence() -> void:
+	_auto_x_banner_shown = false
+
+	var by_win_encourage: bool
+	if _win_encourage_snapshot.is_empty():
+		by_win_encourage = ABTestManager.win_encourage.should_show_win_encourage(
+			is_perfect_win(), is_full_hp_win()
+		)
+	else:
+		by_win_encourage = ABTestManager.win_encourage.should_show_win_encourage(
+			bool(_win_encourage_snapshot["perfect"]), bool(_win_encourage_snapshot["full_hp"])
+		)
+		_win_encourage_snapshot = {}
+	var by_auto_x_fill: bool = ABTestManager.auto_x_fill_mode.is_enabled()
+	if not by_win_encourage and not by_auto_x_fill:
+		return
+
+	if _draft_used_this_level and not by_win_encourage:
+		return
+	if _combo_feedback_view == null:
+		return
+	var sz: int = _level_config.get("size", 0)
+	if sz <= 0:
+		return
+
+	await get_tree().create_timer(0.95).timeout
+
+	var ring := func(v: Vector2i) -> int: return v.y + (sz - 1 - v.x)
+	var mark_cells: Array[Vector2i] = []
+	var player_cross_count: int = 0
+	for r in range(sz):
+		for c in range(sz):
+			var st: int = _board_view.get_cell_state(r, c)
+			if CellState.is_blank(st):
+				mark_cells.append(Vector2i(r, c))
+			elif CellState.is_cross(st):
+				player_cross_count += 1
+
+	if mark_cells.is_empty() and not by_win_encourage:
+		return
+	mark_cells.sort_custom(
+		func(a: Vector2i, b: Vector2i) -> bool: return ring.call(a) < ring.call(b)
+	)
+
+	var diag_ring_count: int = 1
+	for k in range(1, mark_cells.size()):
+		if ring.call(mark_cells[k]) != ring.call(mark_cells[k - 1]):
+			diag_ring_count += 1
+	var roll_duration: float = float(diag_ring_count) * AUTO_CROSS_DIAG_INTERVAL_SEC
+	var base_gain: int = mark_cells.size() * AUTO_CROSS_SCORE_GAIN
+
+	_auto_complete_token += 1
+	var token: int = _auto_complete_token
+
+	if by_win_encourage or player_cross_count == 0:
+		_auto_x_banner_shown = true
+		var title_key: String = "WIN_PERFECT_WIN" if by_win_encourage else "WIN_X_FREE_BONUS"
+		await _settle_auto_cross_no_mark(
+			mark_cells, ring, base_gain, roll_duration, token, title_key
+		)
+	else:
+		_combo_feedback_view.show_encourage_for_combo(_score_model.combo + 1)
+		await _settle_auto_cross_with_mark(mark_cells, ring, base_gain, roll_duration, token)
+
+
+func _settle_auto_cross_no_mark(
+	mark_cells: Array[Vector2i],
+	ring: Callable,
+	base_gain: int,
+	roll_duration: float,
+	token: int,
+	title_key: String = "WIN_X_FREE_BONUS"
+) -> void:
+	_combo_feedback_view.prepare_auto_x_banner(title_key)
+	var bubble: LevelFlowScore = _combo_feedback_view.spawn_auto_x_total_bubble(
+		base_gain, roll_duration
+	)
+	if not await _run_auto_cross_marking(mark_cells, ring, roll_duration, token):
+		return
+
+	await _combo_feedback_view.play_auto_x_banner_appear(
+		ComboFeedbackView.AUTO_X_BANNER_HOLD_AT_SEC
+	)
+	if token != _auto_complete_token:
+		return
+
+	var total_gain: int = base_gain + AUTO_CROSS_BANNER_BONUS
+	await _combo_feedback_view.roll_auto_x_total_bubble(
+		bubble, base_gain, total_gain, AUTO_CROSS_BONUS_ROLL_SEC
+	)
+	if token != _auto_complete_token:
+		return
+
+	_combo_feedback_view.resume_auto_x_banner_appear()
+	await _combo_feedback_view.fly_auto_x_total_score(
+		bubble, _make_auto_cross_on_arrive(total_gain), 0.0
+	)
+
+
+func _settle_auto_cross_with_mark(
+	mark_cells: Array[Vector2i], ring: Callable, base_gain: int, roll_duration: float, token: int
+) -> void:
+	var bubble: LevelFlowScore = _combo_feedback_view.spawn_auto_x_total_bubble(
+		base_gain, roll_duration
+	)
+	if not await _run_auto_cross_marking(mark_cells, ring, roll_duration, token):
+		return
+	await _combo_feedback_view.fly_auto_x_total_score(
+		bubble, _make_auto_cross_on_arrive(base_gain), 0.2
+	)
+
+
+func _run_auto_cross_marking(
+	mark_cells: Array[Vector2i], ring: Callable, roll_duration: float, token: int
+) -> bool:
+	var mark_one := func(cell: Vector2i) -> void:
+		_board_view.set_cell_state(
+			cell.x,
+			cell.y,
+			CellState.MARK,
+			true,
+			true,
+			BoardView.ChangeSource.AUTO_COMPLETE,
+			"AutoXFillMode"
+		)
+
+	SoundManager.play(SoundManager.Kind.AUTO_X_MARK)
+	SoundManager.set_silent(true)
+	if ABTestManager.auto_x_fill_mode.is_instant():
+		for cell: Vector2i in mark_cells:
+			mark_one.call(cell)
+		await get_tree().create_timer(roll_duration).timeout
+		if token != _auto_complete_token:
+			SoundManager.set_silent(false)
+			return false
+	else:
+		var cell_index: int = 0
+		while cell_index < mark_cells.size():
+			var cur_ring: int = ring.call(mark_cells[cell_index])
+			while cell_index < mark_cells.size() and ring.call(mark_cells[cell_index]) == cur_ring:
+				mark_one.call(mark_cells[cell_index])
+				cell_index += 1
+			await get_tree().create_timer(AUTO_CROSS_DIAG_INTERVAL_SEC).timeout
+			if token != _auto_complete_token:
+				SoundManager.set_silent(false)
+				return false
+	SoundManager.set_silent(false)
+	return true
+
+
+func _make_auto_cross_on_arrive(total_gain: int) -> Callable:
+	return func() -> void:
+		_score_model.add_score(total_gain)
+		_combo_feedback_view.update_se_score(_score_model.score)
+
+
+## 回收动画与提示、断开局内信号并取消输入；令牌失效使未结束的异步演出不能再更新旧界面。
 func on_hide() -> void:
+	_reset_tool_reward_ad_opportunities()
+
+	if _board_view != null and is_instance_valid(_board_view):
+		_board_view.release_cats_to_pool()
+	_reset_game_barrages()
 	_disconnect_combo_signal()
 	_clock_timer.stop()
 	_stop_idle_tool_hint()
 	_idle_time = 0.0
-	_undo_executor.cancel()
+	_stop_wrong_zone_highlight()
+	_wrong_zone_idle_sec = 0.0
+	_cancel_mouse_tool_flow()
 
 	_auto_complete_token += 1
 	_auto_completing = false
+
+	_missed_cross_token += 1
+
+	_full_mark_defer_token += 1
+
+	_cancel_misplace_conflict("on_hide")
 	SoundManager.set_silent(false)
 	if CheatBus.command_issued.is_connected(_on_cheat_command):
 		CheatBus.command_issued.disconnect(_on_cheat_command)
@@ -4328,109 +6132,448 @@ func on_hide() -> void:
 	visible = false
 
 
-# ================= 生命条与进度条 =================
-## 取生命图标 AB 档位（心 / 鱼 / 闪电）
-func _life_bar_style() -> int:
-	return int(ABTestManager.life_icon.value())
-
-
-## 档位对应的生命槽预制体
-func _life_bar_scene_for(style: int) -> PackedScene:
-	match style:
-		LifeIconConfig.VALUE_FISH:
-			return FISH_SLOT_SCENE
-		LifeIconConfig.VALUE_LIGHTNING:
-			return LIGHTNING_SLOT_SCENE
-	return HEART_SLOT_SCENE
-
-
-## 按档位挂载 / 替换 3 个生命槽，并缓存引用与 +1 图标
-func _mount_life_bar() -> void:
-	var bar: Node = get_node_or_null("Root/VBoxContainer/CatHeartRow/HeartBg")
-	if bar == null:
-		return
-	var style: int = _life_bar_style()
-	var scene: PackedScene = _life_bar_scene_for(style)
-	if scene != null and int(bar.get_meta("life_style", LifeIconConfig.VALUE_HEART)) != style:
-		for slot_name in ["LifeSlot", "LifeSlot2", "LifeSlot3"]:
-			var old := bar.get_node_or_null(slot_name) as Control
-			if old == null:
-				continue
-			var idx: int = old.get_index()
-
-			var anchors: Array[float] = [
-				old.get_anchor(0), old.get_anchor(1), old.get_anchor(2), old.get_anchor(3)
-			]
-			var offsets: Array[float] = [
-				old.get_offset(0), old.get_offset(1), old.get_offset(2), old.get_offset(3)
-			]
-			old.free()
-			var ns := scene.instantiate() as Control
-			ns.name = slot_name
-			for side in 4:
-				ns.set_anchor(side, anchors[side])
-				ns.set_offset(side, offsets[side])
-			bar.add_child(ns)
-			bar.move_child(ns, idx)
-		bar.set_meta("life_style", style)
-	_heart1 = bar.get_node_or_null("LifeSlot")
-	_heart2 = bar.get_node_or_null("LifeSlot2")
-	_heart3 = bar.get_node_or_null("LifeSlot3")
-	_apply_life_plus_icon(style)
-
-
-## 按档位换「生命 +1」飘字里的图标
-func _apply_life_plus_icon(style: int) -> void:
-	var icon := (
-		get_node_or_null("Root/VBoxContainer/CatHeartRow/LifePlus/PlusFloat/HeartIcon")
-		as TextureRect
-	)
-	if icon == null:
-		return
-	var tex: Texture2D = null
-	match style:
-		LifeIconConfig.VALUE_FISH:
-			tex = life_plus_icon_fish
-		LifeIconConfig.VALUE_LIGHTNING:
-			tex = life_plus_icon_lightning
-		_:
-			tex = life_plus_icon_heart
-	if tex != null:
-		icon.texture = tex
-
-
-## 按 AB 在「数字」与「进度条」两种剩余量显示之间切换
 func _mount_progress_bar() -> void:
-	_progress_bar_mode = ABTestManager.progress_emphasis.is_progress_bar()
-	if _progress_slot != null:
-		_progress_slot.visible = _progress_bar_mode
+	var cat_bar: bool = ABTestManager.normal_top_ui.is_cat_progress_bar()
+
+	_cat_progress = get_node_or_null(_cat_progress_path()) as Control
+	_hide_idle_progress_bars()
+
+	if _board_outer_glow != null:
+		if _cat_progress_uses_adjacent_bar() and _cat_progress != null:
+			_board_outer_glow.set_top_tab(
+				_cat_progress,
+				CatProgressBar.ADJACENT_BG_SIDE_INSET,
+				CatProgressBar.ADJACENT_BG_TOP_CORNER_RADIUS,
+				CatProgressBar.ADJACENT_BG_FILLET_RADIUS,
+				CatProgressBar.ADJACENT_BG_FILLET_BASELINE_Y
+			)
+		else:
+			_board_outer_glow.set_top_tab(null)
+	_apply_function_area_min_for_progress()
 	if _progress_target != null:
-		_progress_target.visible = not _progress_bar_mode
-	_align_glow_to_progress()
-	_apply_heart_bg_position_for_progress()
-	if _progress_bar_mode:
-		if _progress_track_fill != null:
-			_progress_track_fill.offset_right = _progress_track_fill.offset_left
-		_layout_for_progress_bar()
+		_progress_target.visible = not cat_bar
+	_align_glow_to_progress(cat_bar)
+	_apply_heart_bg_position_for_progress(cat_bar)
+
+	_set_cat_progress_row_visible(cat_bar and not _cat_progress_uses_adjacent_bar())
+
+	_cat_progress_region_order.clear()
+	_cat_progress_rotate_start = -1
+	if _cat_progress != null:
+		_cat_progress.visible = cat_bar
+
+		_cat_progress_total = -1
+		if cat_bar:
+			_cat_progress.set_colored_mode(ABTestManager.normal_top_ui.is_cat_progress_colored())
+
+			_cat_progress.set_done_dot_mode(
+				ABTestManager.normal_top_ui.is_cat_progress_show_done_color()
+			)
 
 
-## 进度条模式下微调生命背景位置（所调接口在本仓已缺失）
-func _apply_heart_bg_position_for_progress() -> void:
+func _cat_progress_path() -> String:
+	if _cat_progress_uses_adjacent_bar():
+		return _cat_progress_adjacent_path()
+	return _cat_progress_default_path()
+
+
+func _cat_progress_default_path() -> String:
+	return "Root/VBoxContainer/CatHeartRow/CatProgressBar"
+
+
+func _cat_progress_adjacent_path() -> String:
+	return ""
+
+
+func _cat_progress_adjacent_holder_path() -> String:
+	return ""
+
+
+func _cat_progress_uses_adjacent_bar() -> bool:
+	return (
+		ABTestManager.normal_top_ui.is_cat_progress_adjacent_board()
+		and not _cat_progress_adjacent_path().is_empty()
+	)
+
+
+func _hide_idle_progress_bars() -> void:
+	var adjacent_on: bool = _cat_progress_uses_adjacent_bar()
+
+	if adjacent_on:
+		var default_bar: Control = (
+			get_node_or_null(NodePath(_cat_progress_default_path())) as Control
+		)
+		if default_bar != null:
+			default_bar.visible = false
+
+	var holder_path: String = _cat_progress_adjacent_holder_path()
+	if not holder_path.is_empty():
+		var holder: Control = get_node_or_null(NodePath(holder_path)) as Control
+		if holder != null:
+			holder.visible = adjacent_on
+
+	if not adjacent_on:
+		var adjacent_path: String = _cat_progress_adjacent_path()
+		if not adjacent_path.is_empty():
+			var adjacent_bar: Control = get_node_or_null(NodePath(adjacent_path)) as Control
+			if adjacent_bar != null:
+				adjacent_bar.visible = false
+
+
+const _FUNCTION_AREA_MIN_H_ADJACENT: float = 0.0
+
+
+func _apply_function_area_min_for_progress() -> void:
+	var target: float = _function_area_min_h_for_adjacent_bar()
+	if target < 0.0:
+		return
+	var area: Control = get_node_or_null("Root/VBoxContainer/FunctionArea") as Control
+	if area == null:
+		return
+	if not area.has_meta("_fa_base_min_h"):
+		area.set_meta("_fa_base_min_h", area.custom_minimum_size.y)
+	area.custom_minimum_size.y = (
+		target if _cat_progress_uses_adjacent_bar() else float(area.get_meta("_fa_base_min_h"))
+	)
+
+
+func _function_area_min_h_for_adjacent_bar() -> float:
+	return _FUNCTION_AREA_MIN_H_ADJACENT
+
+
+func _set_cat_progress_row_visible(_on: bool) -> void:
+	pass
+
+
+func _cat_progress_metrics(total: int) -> Dictionary:
+	if _cat_progress_uses_adjacent_bar():
+		return {
+			"slot": Vector2(CatProgressBar.ADJACENT_SLOT, CatProgressBar.ADJACENT_SLOT),
+			"pitch": CatProgressBar.ADJACENT_PITCH,
+			"padding": CatProgressBar.ADJACENT_PADDING,
+			"align": "anchor_center",
+		}
+	return _cat_progress_default_metrics(total)
+
+
+func _cat_progress_default_metrics(total: int) -> Dictionary:
+	var metrics: Dictionary = CatProgressBar.solve_metrics(
+		total, CatProgressBar.DESIGN_MAX_BAR_WIDTH_MAIN
+	)
+	metrics["align"] = "group_center"
+	return metrics
+
+
+const CAT_PROGRESS_GROUP_GAP: float = 30.0
+
+
+func _layout_cat_progress_bar(metrics: Dictionary) -> void:
+	if _cat_progress == null:
+		return
+
+	if String(metrics.get("align", "center")) == "anchor_center":
+		var half_width: float = _cat_progress.size.x * 0.5
+		_cat_progress.offset_left = -half_width
+		_cat_progress.offset_right = half_width
+		return
+	var bar_width: float = _cat_progress.size.x
+	var parent: Control = _cat_progress.get_parent() as Control
+	var row_width: float = parent.size.x if parent != null else 1080.0
+	if String(metrics.get("align", "center")) == "group_center":
+		var bars: Array[Control] = _life_bar_nodes()
+		var fish_width: float = 0.0
+		for bar: Control in bars:
+			if bar.has_meta("_cp_base_l"):
+				fish_width = float(bar.get_meta("_cp_base_r")) - float(bar.get_meta("_cp_base_l"))
+				break
+		var group_width: float = bar_width + CAT_PROGRESS_GROUP_GAP + fish_width
+		var bar_left: float = (row_width - group_width) * 0.5
+		_cat_progress.offset_left = bar_left
+		_cat_progress.offset_right = bar_left + bar_width
+		if fish_width > 0.0:
+			var fish_left: float = bar_left + bar_width + CAT_PROGRESS_GROUP_GAP
+			for bar: Control in bars:
+				bar.offset_left = fish_left - row_width
+				bar.offset_right = fish_left + fish_width - row_width
+		return
+	_cat_progress.offset_left = (row_width - bar_width) * 0.5
+	_cat_progress.offset_right = _cat_progress.offset_left + bar_width
+
+
+func _apply_cat_progress_colored(sz: int) -> void:
+	if _cat_progress == null:
+		return
+	var snap: Dictionary = _build_cat_progress_snapshot(sz, true)
+
+	if int(snap["total"]) != sz:
+		return
+	_cat_progress.set_tints(snap["tints"])
+	_cat_progress.set_revealed(snap["revealed"])
+
+
+func build_cat_progress_snapshot() -> Dictionary:
+	var sz: int = int(_level_config.get("size", 0))
+	var snap: Dictionary = _build_cat_progress_snapshot(
+		sz, ABTestManager.normal_top_ui.is_cat_progress_colored()
+	)
+
+	if int(_puzzle.get("regions", []).size()) < sz:
+		snap = _degraded_cat_progress_snapshot()
+	if (
+		int(snap["total"]) == sz
+		and ABTestManager.normal_top_ui.is_cat_progress_compact()
+		and _cat_progress != null
+		and _cat_progress._compact
+	):
+		snap["compact_order"] = _cat_progress.compact_found_order()
+	if int(snap["total"]) != sz:
+		push_warning("build_cat_progress_snapshot: 棋盘数据异常(size=%d),失败页进度条降级为不展示" % sz)
+	return snap
+
+
+func _degraded_cat_progress_snapshot() -> Dictionary:
+	var empty_flags: Array[bool] = []
+	return {"total": 0, "tints": PackedColorArray(), "revealed": empty_flags}
+
+
+func _build_cat_progress_snapshot(sz: int, with_tints: bool) -> Dictionary:
+	var degraded: Dictionary = _degraded_cat_progress_snapshot()
+	if _board_view == null or sz <= 0:
+		return degraded
+	if _cat_progress_region_order.size() != sz:
+		_rebuild_cat_progress_region_order(sz)
+
+	if _cat_progress_region_order.size() != sz:
+		return degraded
+	return CatProgressBar.build_snapshot(
+		_cat_progress_region_order,
+		_collect_regions_with_cat(sz),
+		_board_view.get_region_color,
+		with_tints
+	)
+
+
+func _setup_cat_progress_compact(sz: int, metrics: Dictionary) -> void:
+	if _cat_progress == null or _board_view == null:
+		return
+	if _cat_progress_region_order.size() != sz:
+		_rebuild_cat_progress_region_order(sz)
+	if _cat_progress_region_order.size() != sz:
+		return
+	var tints: PackedColorArray = PackedColorArray()
+	for i in sz:
+		var region_tint: Color = _board_view.get_region_color(_cat_progress_region_order[i])
+		region_tint.a = CatProgressSlot.COLORED_SILHOUETTE_ALPHA
+		tints.append(region_tint)
+	_cat_progress.setup_compact(sz, metrics["slot"], metrics["pitch"], metrics["padding"], tints)
+
+
+func _apply_cat_progress_compact(sz: int) -> void:
+	if _cat_progress == null or _board_view == null:
+		return
+	if _cat_progress_region_order.size() != sz:
+		return
+	var with_cat: Dictionary = _collect_regions_with_cat(sz)
+	var flags: Array = []
+	for i in sz:
+		flags.append(with_cat.has(_cat_progress_region_order[i]))
+	_cat_progress.update_compact(flags)
+
+
+func _rebuild_cat_progress_region_order(sz: int) -> void:
+	_cat_progress_region_order.clear()
+	if _board_view == null or sz <= 0:
+		return
+	var idx: Array[int] = []
+	for i in sz:
+		idx.append(i)
+	var bv: Node = _board_view
+	idx.sort_custom(
+		func(left: int, right: int) -> bool:
+			return bv.get_region_color(left).h < bv.get_region_color(right).h
+	)
+
+	var rotate_start: int = (
+		(_cat_progress_rotate_override % sz)
+		if _cat_progress_rotate_override >= 0
+		else (randi() % sz)
+	)
+
+	_cat_progress_rotate_start = rotate_start
+	for i in sz:
+		_cat_progress_region_order.append(idx[(i + rotate_start) % sz])
+
+
+func _collect_regions_with_cat(sz: int) -> Dictionary:
+	var out: Dictionary = {}
+	var regions: Array = _puzzle.get("regions", [])
+
+	if regions.size() < sz:
+		return out
+	for r in sz:
+		var row: Array = regions[r]
+		if row.size() < sz:
+			continue
+		for c in sz:
+			if _board_view.get_cell_state(r, c) == CellState.CAT:
+				out[int(row[c])] = true
+	return out
+
+
+const LEVEL_CONFIG_COSTUME_ID_KEY: String = "costume_id"
+
+
+func in_game_costume_id() -> int:
+	if not uses_in_game_costume():
+		return CostumeCatalog.DEFAULT_COSTUME_ID
+	var snapshot: int = int(_level_config.get(LEVEL_CONFIG_COSTUME_ID_KEY, 0))
+	if CostumeCatalog.is_valid(snapshot):
+		return snapshot
+	return _entry_costume_id()
+
+
+func uses_in_game_costume() -> bool:
+	return ABTestManager.dc_costume.has_costume() or _companion_costume_override != 0
+
+
+var _companion_costume_override: int = 0
+const _COMPANION_SERVICE: GDScript = preload("res://scripts/module/home/home_companion_service.gd")
+
+
+func _companion_game_end_fields(include_this_win: bool) -> Dictionary:
+	var won_game_id: String = GameState.get_persisted_game_id("normal") if include_this_win else ""
+	return _COMPANION_SERVICE.new().game_end_fields(won_game_id, _level_kind)
+
+
+func refresh_companion_costume_override() -> void:
+	_companion_costume_override = _COMPANION_SERVICE.new().in_game_costume_override()
+	if _companion_costume_override != 0:
+		return
+
+	var equipped: int = ProfileService.get_costume_id()
+	if CostumeCatalog.is_event(equipped):
+		_companion_costume_override = equipped
+
+
+func _entry_costume_id() -> int:
+	if _companion_costume_override != 0:
+		return _companion_costume_override
+	if not ABTestManager.dc_costume.has_costume():
+		return CostumeCatalog.DEFAULT_COSTUME_ID
+	return ProfileService.get_costume_id()
+
+
+func _apply_in_game_costume() -> void:
+	var costume_id: int = _entry_costume_id()
+	_level_config[LEVEL_CONFIG_COSTUME_ID_KEY] = costume_id
+	if _board_view != null:
+		_board_view.set_cat_costume(costume_id)
+
+
+func _apply_target_costume_icon() -> void:
+	if _target_costume_cat == null:
+		return
+	var use_costume: bool = uses_in_game_costume()
+	if _target_cat_face_icon != null:
+		_target_cat_face_icon.visible = not use_costume
+	_target_costume_cat.visible = use_costume
+	if not use_costume:
+		return
+	_layout_target_costume_cat()
+	if _target_costume_cat.skeleton_data_res != CostumeSkin.SKELETON_RES:
+		_target_costume_cat.skeleton_data_res = CostumeSkin.SKELETON_RES
+		_target_costume_applied_id = -1
+	var costume_id: int = in_game_costume_id()
+	if _target_costume_applied_id == costume_id:
+		return
+
+	if _target_costume_cat.get_skeleton() == null:
+		return
+	CostumeSkin.apply(_target_costume_cat, costume_id)
+	_freeze_target_costume_cat_idle()
+	_target_costume_applied_id = costume_id
+
+
+func _layout_target_costume_cat() -> void:
+	if _target_cat_face_icon == null:
+		return
+	var icon_size: Vector2 = _target_cat_face_icon.size
+	if icon_size.x <= 0.0 or icon_size.y <= 0.0:
+		return
+	var icon_center: Vector2 = _target_cat_face_icon.position + icon_size * 0.5
+	_target_costume_cat.position = Vector2(
+		icon_center.x,
+		_target_cat_face_icon.position.y + icon_size.y * CatProgressSlot.COSTUME_CAT_ORIGIN_Y_RATIO
+	)
+	var spine_scale: float = (
+		icon_size.x / CatProgressSlot.COSTUME_CAT_REF_BOX_PX * CatProgressSlot.COSTUME_CAT_REF_SCALE
+	)
+	_target_costume_cat.scale = Vector2.ONE * spine_scale
+
+
+func _freeze_target_costume_cat_idle() -> void:
+	var data: SpineSkeletonDataResource = _target_costume_cat.get_skeleton_data_res()
+	if data == null or data.find_animation("idle") == null:
+		return
+	var state: SpineAnimationState = _target_costume_cat.get_animation_state()
+	if state == null:
+		return
+	state.set_animation("idle", false, 0)
+	state.set_time_scale(0.0)
+
+
+func _life_bar_nodes() -> Array[Control]:
+	var out: Array[Control] = []
+	if _life_bar_progress != null:
+		out.append(_life_bar_progress)
+	return out
+
+
+func _apply_heart_bg_position_for_progress(cat_bar: bool = false) -> void:
 	is_force_pass_scroll_events()
 
+	var adjacent_board: bool = ABTestManager.normal_top_ui.is_cat_progress_adjacent_board()
+	var defer_to_layout: bool = cat_bar and not adjacent_board
+	var bars: Array[Control] = _life_bar_nodes()
+	for hb: Control in bars:
+		if not hb.has_meta("_cp_base_l"):
+			hb.set_meta("_cp_base_l", hb.offset_left)
+			hb.set_meta("_cp_base_r", hb.offset_right)
+		if defer_to_layout:
+			continue
+		var base_l: float = float(hb.get_meta("_cp_base_l"))
+		var base_r: float = float(hb.get_meta("_cp_base_r"))
+		if adjacent_board:
+			var row_w: float = _cat_heart_row_width()
+			var own_w: float = base_r - base_l
+			hb.offset_left = -(row_w + own_w) * 0.5
+			hb.offset_right = hb.offset_left + own_w
+			continue
+		hb.offset_left = base_l
+		hb.offset_right = base_r
 
-## 把猫数量行的光效对齐到当前显示目标（数字或进度条）
-func _align_glow_to_progress() -> void:
+
+func _cat_heart_row_width() -> float:
+	var row: Control = get_node_or_null("Root/VBoxContainer/CatHeartRow") as Control
+	if row == null or row.size.x <= 0.0:
+		return 1080.0
+	return row.size.x
+
+
+func _align_glow_to_progress(cat_bar: bool = false) -> void:
 	var glow_control: Control = (
 		get_node_or_null("Root/VBoxContainer/CatHeartRow/Control") as Control
 	)
 	if glow_control == null:
 		return
-	glow_control.visible = true
+
+	glow_control.visible = not cat_bar
+	if cat_bar:
+		return
 	var glow_rect: NinePatchRect = glow_control.get_node_or_null("NinePatchRect") as NinePatchRect
 	if glow_rect == null:
 		return
-	var ref: Control = _progress_slot if _progress_bar_mode else _progress_target
+	var ref: Control = _progress_target
 	if ref == null:
 		return
 	const PAD_L: float = -24.0
@@ -4445,35 +6588,6 @@ func _align_glow_to_progress() -> void:
 	if sprite != null:
 		sprite.position.x = (ref.offset_left + ref.offset_right) * 0.5
 		sprite.position.y = (ref.offset_top + ref.offset_bottom) * 0.5
-
-
-## 设置进度条轨道宽度，并把数字挪到轨道右侧
-func _apply_progress_track_width(_sz: int) -> void:
-	_progress_track_width = _PROGRESS_TRACK_WIDTH_NORMAL
-	if _progress_track_bg != null:
-		_progress_track_bg.offset_right = _progress_track_bg.offset_left + _progress_track_width
-	if _progress_count_label == null:
-		return
-	_progress_count_label.offset_left = (
-		_progress_track_bg.offset_left + _progress_track_width + 12.0
-	)
-
-
-## 数字太长时按宽度等比缩小字号
-func _fit_progress_count_font(count_text: String) -> void:
-	if _progress_count_label == null:
-		return
-	var font: Font = _progress_count_label.get_theme_font("normal_font")
-	if font == null:
-		return
-	var box_w: float = _progress_count_label.offset_right - _progress_count_label.offset_left
-	var w: float = (
-		font.get_string_size(count_text, HORIZONTAL_ALIGNMENT_LEFT, -1, _PROGRESS_COUNT_FONT_BASE).x
-	)
-	var fit: int = _PROGRESS_COUNT_FONT_BASE
-	if box_w > 0.0 and w > box_w and w > 0.0:
-		fit = int(floor(_PROGRESS_COUNT_FONT_BASE * box_w / w))
-	_progress_count_label.add_theme_font_size_override("normal_font_size", fit)
 
 
 ## 进度条模式下的生命背景位置微调
@@ -4491,29 +6605,6 @@ func _layout_for_progress_bar() -> void:
 	heart_bg.offset_right = -225.0
 
 
-## 按当前生命数刷新三颗心的生死表现
-func _refresh_hearts() -> void:
-	var hearts: Array[Control] = [_heart1, _heart2, _heart3]
-	for i in range(3):
-		var slot := hearts[i] as LifeSlot
-		if slot == null:
-			continue
-		if i < _lives:
-			slot.show_alive()
-		else:
-			slot.show_lost(false)
-
-
-## 播第 index 颗心的失去动画
-func _animate_heart_lost(index: int) -> void:
-	var hearts: Array[Control] = [_heart1, _heart2, _heart3]
-	if index < 0 or index >= hearts.size():
-		return
-	var slot := hearts[index] as LifeSlot
-	if slot != null:
-		slot.show_lost(true)
-
-
 ## 断开自己接在广告激励 / 关闭信号上的回调，避免页面隐藏后仍被回调
 func _disconnect_self_reward_callbacks() -> void:
 	for c: Dictionary in UniKitManager.ad_rewarded.get_connections():
@@ -4526,29 +6617,8 @@ func _disconnect_self_reward_callbacks() -> void:
 			UniKitManager.ad_closed.disconnect(cb)
 
 
-# ================= 区域颜色与提示文案 =================
-## 按调色板 AB 返回 12 个区域色的本地化名称
 func _resolve_region_color_names() -> Array[String]:
-	if ABTestManager.region_color.is_custom_palette():
-		return [
-			tr("COLOR_OLIVE_YELLOW"),
-			tr("COLOR_ROSE"),
-			tr("COLOR_PURPLE"),
-			tr("COLOR_MAGENTA"),
-			tr("COLOR_ORANGE"),
-			tr("COLOR_YELLOW"),
-			tr("COLOR_DARK_BLUE"),
-			tr("COLOR_LIGHT_BLUE"),
-			tr("COLOR_SKY_BLUE"),
-			tr("COLOR_EMERALD"),
-			tr("COLOR_GREEN"),
-			tr("COLOR_BROWN")
-		]
-	if (
-		ABTestManager.region_color.is_new_cell_only_palette()
-		or ABTestManager.region_color.is_cell_color_v3()
-		or ABTestManager.region_color.is_new_cell_recompute()
-	):
+	if ABTestManager.region_color.is_new_cell_only_palette():
 		return [
 			tr("COLOR_OLIVE_YELLOW"),
 			tr("COLOR_ROSE"),
@@ -4593,21 +6663,6 @@ func _resolve_region_color_names() -> Array[String]:
 			tr("COLOR_LIME"),
 			tr("COLOR_GOLD")
 		]
-	if ABTestManager.region_color.is_palette_v7():
-		return [
-			tr("COLOR_BROWN"),
-			tr("COLOR_PEACH"),
-			tr("COLOR_GREEN"),
-			tr("COLOR_SKY_BLUE"),
-			tr("COLOR_PURPLE"),
-			tr("COLOR_LIME"),
-			tr("COLOR_INDIGO"),
-			tr("COLOR_GOLD"),
-			tr("COLOR_PINK"),
-			tr("COLOR_TEAL"),
-			tr("COLOR_ORANGE"),
-			tr("COLOR_ROSE")
-		]
 	return [
 		tr("COLOR_PINK"),
 		tr("COLOR_ROSE"),
@@ -4624,14 +6679,8 @@ func _resolve_region_color_names() -> Array[String]:
 	]
 
 
-## 同上，返回 12 个区域色的十六进制值（给提示文案上色用）
 func _resolve_region_color_hex_codes() -> Array[String]:
-	if (
-		ABTestManager.region_color.is_custom_palette()
-		or ABTestManager.region_color.is_new_cell_only_palette()
-		or ABTestManager.region_color.is_cell_color_v3()
-		or ABTestManager.region_color.is_new_cell_recompute()
-	):
+	if ABTestManager.region_color.is_new_cell_only_palette():
 		return [
 			"#A3A306",
 			"#E45F8A",
@@ -4676,21 +6725,6 @@ func _resolve_region_color_hex_codes() -> Array[String]:
 			"#7EDF88",
 			"#D0B038"
 		]
-	if ABTestManager.region_color.is_palette_v7():
-		return [
-			"#B67C54",
-			"#E88B69",
-			"#37B95E",
-			"#75B1D2",
-			"#A673D8",
-			"#8BC36C",
-			"#6767C3",
-			"#E3BD4D",
-			"#D987C6",
-			"#45B7B3",
-			"#DD8240",
-			"#E4699C"
-		]
 	return [
 		"#D980A4",
 		"#BC537C",
@@ -4707,12 +6741,18 @@ func _resolve_region_color_hex_codes() -> Array[String]:
 	]
 
 
-## 给区域色生成 BBCode 染色文字：控制组查表，其余组按最接近的颜色名
 func _color_name_bbcode(region_idx: int) -> String:
 	var cell_color: Color = _board_view.get_region_color(region_idx)
 	var hex: String
 	var name: String
-	if ABTestManager.region_color.value() == RegionColorConfig.VALUE_CONTROL:
+	var override_name: String = _hint_color_name_override(cell_color)
+	if not override_name.is_empty():
+		var darkened: Color = cell_color.darkened(0.28)
+		hex = (
+			"#%02x%02x%02x" % [int(darkened.r * 255), int(darkened.g * 255), int(darkened.b * 255)]
+		)
+		name = override_name
+	elif ABTestManager.region_color.value() == RegionColorConfig.VALUE_CONTROL:
 		var ci: int = _board_view.get_region_color_index(region_idx)
 		var names := _resolve_region_color_names()
 		name = names[ci] if ci < names.size() else tr("HINT_SOME_COLOR")
@@ -4727,7 +6767,10 @@ func _color_name_bbcode(region_idx: int) -> String:
 	return "[color=%s]%s[/color]" % [hex, name]
 
 
-## 在一张已知色表里找欧氏距离最近的颜色名
+func _hint_color_name_override(_color: Color) -> String:
+	return ""
+
+
 func _nearest_color_name(color: Color) -> String:
 	var known: Array = [
 		[Color("#CBCB24"), tr("COLOR_OLIVE_YELLOW")],
@@ -4784,7 +6827,72 @@ func _nearest_color_name(color: Color) -> String:
 		[Color("#45b7b3"), tr("COLOR_TEAL")],
 		[Color("#dd8240"), tr("COLOR_ORANGE")],
 		[Color("#e4699c"), tr("COLOR_ROSE")],
+		[Color("#d3d551"), tr("COLOR_OLIVE_YELLOW")],
+		[Color("#d86c90"), tr("COLOR_ROSE")],
+		[Color("#767ae4"), tr("COLOR_PURPLE")],
+		[Color("#e57ee0"), tr("COLOR_MAGENTA")],
+		[Color("#e76f58"), tr("COLOR_ORANGE")],
+		[Color("#dccf95"), tr("COLOR_YELLOW")],
+		[Color("#7284b3"), tr("COLOR_DARK_BLUE")],
+		[Color("#c0d1dc"), tr("COLOR_LIGHT_BLUE")],
+		[Color("#399295"), tr("COLOR_TEAL")],
+		[Color("#459a5e"), tr("COLOR_DARK_GREEN")],
+		[Color("#99dbb1"), tr("COLOR_GREEN")],
+		[Color("#a67b63"), tr("COLOR_BROWN")],
+		[Color("#dc9e7c"), tr("COLOR_TAN")],
+		[Color("#9d9041"), tr("COLOR_OLIVE_YELLOW")],
+		[Color("#97cf7e"), tr("COLOR_GREEN")],
+		[Color("#618f74"), tr("COLOR_DARK_GREEN")],
+		[Color("#60d8d3"), tr("COLOR_TEAL")],
+		[Color("#76a9cc"), tr("COLOR_SKY_BLUE")],
+		[Color("#6881d0"), tr("COLOR_DARK_BLUE")],
+		[Color("#aa68e5"), tr("COLOR_PURPLE")],
+		[Color("#d899e4"), tr("COLOR_VIOLET")],
+		[Color("#e55ca6"), tr("COLOR_MAGENTA")],
+		[Color("#bb7e93"), tr("COLOR_ROSE")],
+		[Color("#dc5b6a"), tr("COLOR_RED")],
 	]
+
+	if ABTestManager.region_color.is_palette_v13():
+		(
+			known
+			. append_array(
+				[
+					[Color("#aed994"), tr("COLOR_LIGHT_GREEN")],
+					[Color("#fab4d0"), tr("COLOR_LIGHT_PINK")],
+					[Color("#e4bb49"), tr("COLOR_LIGHT_YELLOW")],
+					[Color("#a7bfd7"), tr("COLOR_TEAL")],
+					[Color("#6bbce7"), tr("COLOR_BLUE")],
+					[Color("#d57374"), tr("COLOR_RED")],
+					[Color("#ad6f48"), tr("COLOR_BROWN")],
+					[Color("#5b75b2"), tr("COLOR_DARK_BLUE")],
+					[Color("#9778d6"), tr("COLOR_PURPLE")],
+					[Color("#48b5b2"), tr("COLOR_TURQUOISE")],
+					[Color("#ffaa6d"), tr("COLOR_ORANGE")],
+					[Color("#eb85b7"), tr("COLOR_PINK")],
+				]
+			)
+		)
+	elif ABTestManager.region_color.is_palette_v14():
+		(
+			known
+			. append_array(
+				[
+					[Color("#f9d96a"), tr("COLOR_LIGHT_YELLOW")],
+					[Color("#faaf5c"), tr("COLOR_ORANGE")],
+					[Color("#d47363"), tr("COLOR_RED")],
+					[Color("#ee92a7"), tr("COLOR_PINK")],
+					[Color("#f9b0f7"), tr("COLOR_LIGHT_PINK")],
+					[Color("#80db8c"), tr("COLOR_GREEN")],
+					[Color("#c7c94a"), tr("COLOR_LIGHT_GREEN")],
+					[Color("#46b4a9"), tr("COLOR_TURQUOISE")],
+					[Color("#81d8e9"), tr("COLOR_SKY_BLUE")],
+					[Color("#77afde"), tr("COLOR_BLUE")],
+					[Color("#a590dd"), tr("COLOR_PURPLE")],
+					[Color("#6862a8"), tr("COLOR_DARK_PURPLE")],
+				]
+			)
+		)
 	var best_name: String = tr("HINT_SOME_COLOR")
 	var best_dist: float = INF
 	for pair in known:
@@ -4799,7 +6907,6 @@ func _nearest_color_name(color: Color) -> String:
 	return best_name
 
 
-## 按策略给提示补上本地化描述文案
 func _enrich_hint_description(hint: Dictionary) -> void:
 	var strategy: String = hint.get("strategy", "")
 	var reg: int = hint.get("region", -1)
@@ -4817,11 +6924,7 @@ func _enrich_hint_description(hint: Dictionary) -> void:
 				"r2b_col":
 					hint["description"] = tr("HINT_R2B_COL") % [hint.get("col", 0) + 1, col_bb]
 		"R1_mark":
-			var cat: Vector2i = hint.get("cat_cell", Vector2i(-1, -1))
-			var count: int = (hint.get("unit_cells", []) as Array).size()
-			if cat.x >= 0:
-				hint["description"] = tr("HINT_R1_MARK")
-			else:
+			if str(hint.get("description", "")) == "":
 				hint["description"] = tr("HINT_R1_MARK")
 		"R1", "":
 			var unit_type: String = hint.get("unit_type", "")
@@ -4909,7 +7012,6 @@ func _on_chain_detail_requested() -> void:
 	_show_chain_detail(chain)
 
 
-## 展开连锁详情：标出假设格、推理步与被排除格，按序逐个显现
 func _show_chain_detail(chain: Dictionary) -> void:
 	var sz: int = _level_config.get("size", 4)
 	var regs: Array = _puzzle["regions"]
@@ -4942,7 +7044,7 @@ func _show_chain_detail(chain: Dictionary) -> void:
 		var step_cell: Vector2i = (chain.get("steps", []) as Array)[i]
 		all_steps.append({"cell": step_cell, "label": str(i + 1), "color": Color("#f59e0b")})
 	for cc in contra_cells:
-		all_steps.append({"cell": cc, "label": "✕", "color": Color("#dc2626")})
+		all_steps.append({"cell": cc, "label": "x", "color": Color("#dc2626")})
 
 	var all_chain_cells: Array[Vector2i] = []
 	for step in all_steps:
@@ -4967,12 +7069,12 @@ func _show_chain_detail(chain: Dictionary) -> void:
 			func() -> void:
 				if (
 					not _chain_detail_active
-					or detail_layer == null
+					or not is_instance_valid(detail_layer)
 					or not detail_layer.is_inside_tree()
 				):
 					return
 				var temp: CellView = _spawn_temp_cell_in(detail_layer, cv, s, bpos)
-				if lbl == "✕":
+				if lbl == "x":
 					temp.play_r2_preview()
 				else:
 					temp.play_prompt_cat()
@@ -4980,52 +7082,39 @@ func _show_chain_detail(chain: Dictionary) -> void:
 		step_delay += 0.05
 
 
-# ================= 作弊指令 =================
-## 作弊指令：设置生命数（设成 0 直接判失败）
+func _isolate_onefish_main_state() -> bool:
+	return (
+		LevelKind.is_golden_fish(_level_kind) and ABTestManager.normal_level.is_onefish_state_fix()
+	)
+
+
 func _cmd_lives(args: Array[String]) -> void:
-	var val: int = int(args[0]) if args.size() > 0 else 3
-	_lives = clampi(val, 0, 3)
-	_refresh_hearts()
+	var val: int = int(args[0]) if args.size() > 0 else _life_cap
+	_lives = clampi(val, 0, _life_cap)
+	_life_bar.refresh(_lives)
 	if _lives <= 0:
-		_on_game_over()
+		_on_game_fail()
 
 
-# ================= 提示主流程（HintEngine） =================
-## 提示按钮主流程：依次降级找一条可用提示，展示说明并高亮
-func _on_hint_btn_pressed() -> void:
-	if _entry_anim_playing or _hint_cooldown:
-		return
-	ABTestManager.dye_at_hint_use()
-	Tracker.track_btn_click(Tracker.Btn.HINT, self)
-	_reset_idle_hint()
-
-	_exit_draft_mode_and_clear(ABTestManager.draft_mode.keep_marks_on_manual_exit())
-	if _is_complete or _wrong_guess_pending:
-		return
-	var _hint_tb := _tool_hint_btn as ToolButton
-
-	if _hint_tb != null and _hint_tb.state != ToolButton.State.FREE and _hint_tb.badge_count <= 0:
-		_request_reward_for_tool(_tool_hint_btn)
-		return
-	Tracker.inc_stat("hint_used")
-	GameState.inc_game_total_stat(_game_type(), "hint_used_total")
+func _compute_next_hint() -> Dictionary:
 	var sz: int = _level_config.get("size", 4)
 	var board: Array = _board_view.get_cell_state_folded_board()
 	var regs: Array = _puzzle["regions"]
 
-	# 依次降级求解：错叉 → R1 → R2 → R3/R4 → 连锁推理
-	var hint: Dictionary = HintEngine.find_mark_hint(board, sz, regs)
+	var hint: Dictionary = HintEngine.find_mark_hint(
+		board, sz, regs, ABTestManager.hint_func.has_color_exclude()
+	)
 	if not hint["found"]:
 		var sol: Array = _puzzle.get("solution", [])
 		for r in range(sz):
 			for c in range(sz):
 				if (sol[r] as Array)[c] and _board_view.get_cell_state(r, c) == CellState.MARK:
-					var _wm_cells: Array[Vector2i] = [Vector2i(r, c)]
+					var wrong_mark_cells: Array[Vector2i] = [Vector2i(r, c)]
 					hint = {
 						"found": true,
 						"strategy": "",
 						"cell": Vector2i(r, c),
-						"unit_cells": _wm_cells,
+						"unit_cells": wrong_mark_cells,
 						"description": tr("HINT_WRONG_MARK"),
 						"wrong_mark": true,
 					}
@@ -5037,9 +7126,43 @@ func _on_hint_btn_pressed() -> void:
 	if not hint["found"]:
 		hint = HintEngine.find_r2_hint(board, sz, regs)
 	if not hint["found"]:
-		hint = HintEngine.find_r3_r4_hint(board, sz, regs)
+		hint = HintEngine.find_r3_r4_hint(
+			board, sz, regs, ABTestManager.hint_func.has_reverse_set_locking()
+		)
 	if not hint["found"]:
 		hint = HintEngine.find_chain_hint(board, sz, regs)
+	return hint
+
+
+func _hint_targets_marked_cell(hint: Dictionary) -> bool:
+	var hint_cell: Vector2i = hint.get("cell", Vector2i(-1, -1))
+	if hint_cell.x < 0:
+		return false
+	var hint_strategy: String = hint.get("strategy", "")
+	if hint_strategy in ["R1_mark", "R2", "R3", "R4", "R3b", "R4b"]:
+		return false
+	return _board_view.get_cell_state(hint_cell.x, hint_cell.y) == CellState.MARK
+
+
+func _on_hint_btn_pressed() -> void:
+	if _entry_anim_playing or _tool_btns_locked or _hint_cooldown or _mouse_tool_busy:
+		return
+	ABTestManager.dye_at_hint_use()
+	Tracker.track_btn_click(Tracker.Btn.HINT, self)
+	_reset_idle_hint()
+
+	if _draft_mode:
+		return
+	if _is_complete or _wrong_guess_pending:
+		return
+
+	if not _is_free_kind(ToolKind.HINT) and GameState.get_tool_count("hint") <= 0:
+		_request_reward_for_tool(ToolKind.HINT)
+		return
+	Tracker.inc_stat("hint_used")
+	GameState.inc_game_total_stat(_game_type(), "hint_used_total")
+	var sz: int = _level_config.get("size", 4)
+	var hint: Dictionary = _compute_next_hint()
 	if not hint["found"]:
 		if _level_config.get("bank_sp", false):
 			_on_locate_btn_pressed()
@@ -5060,10 +7183,12 @@ func _on_hint_btn_pressed() -> void:
 		for cell in hint.get("highlight_cells", []):
 			hl.append(cell)
 		_board_view.set_hint_cells(hl, Vector2i(-1, -1))
-	_consume_tool(_tool_hint_btn)
+	var consumed: bool = _consume_tool(ToolKind.HINT)
 	SoundManager.play(SoundManager.Kind.USE_HINT)
 	GameState.mark_current_level_dirty()
-	GameState.mark_dda_tool_or_revive_used()
+	if consumed and not _isolate_onefish_main_state():
+		GameState.mark_dda_tool_or_revive_used()
+		GameState.inc_today_tool_consumed()
 
 	var _chain: Dictionary = hint.get("chain", {})
 	if not _chain.is_empty() and (_chain.get("steps", []) as Array).size() == 0:
@@ -5115,71 +7240,17 @@ func _on_hint_btn_pressed() -> void:
 
 	_enrich_hint_description(hint)
 
-	var _hint_cell: Vector2i = hint.get("cell", Vector2i(-1, -1))
-	var _hint_strategy: String = hint.get("strategy", "")
-	var _hint_cell_state: int = (
-		_board_view.get_cell_state(_hint_cell.x, _hint_cell.y)
-		if _hint_cell.x >= 0
-		else CellState.EMPTY
-	)
-	if (
-		_hint_cell.x >= 0
-		and _hint_strategy != "R1_mark"
-		and _hint_strategy != "R2"
-		and _hint_strategy != "R3"
-		and _hint_strategy != "R4"
-		and (_hint_cell_state == CellState.MARK or _hint_cell_state == CellState.DRAFT_CROSS)
-	):
+	if _hint_targets_marked_cell(hint):
 		hint["description"] = tr("HINT_WRONG_MARK")
 		hint["wrong_mark"] = true
 	_hint_data = hint
+	_record_hint_show_solution_step(hint)
 
 	_destroy_banner()
 	_hint_overlay.show_hint(hint)
 	_build_hint_highlights(hint)
 
 
-## 清除按钮：擦掉全盘所有的叉（草稿 V4 变体下只擦草稿）
-func _on_clear_btn_pressed() -> void:
-	if _entry_anim_playing:
-		return
-	Tracker.track_btn_click(Tracker.Btn.CLEAR, self)
-	Tracker.inc_stat("clear_used")
-	GameState.inc_game_total_stat(_game_type(), "clear_used_total")
-	if _is_complete or _wrong_guess_pending:
-		return
-
-	var variant: int = _get_draft_variant()
-	var is_v4: bool = variant == ABTestManager.draft_mode.VALUE_AUTO_WIN_PERSIST
-	if is_v4 and _draft_mode:
-		var draft_marks: Dictionary = _collect_draft_marks()
-		for key in draft_marks.keys():
-			var pos: Vector2i = key as Vector2i
-			var cell_view: CellView = _board_view.get_cell_view(pos.x, pos.y)
-			if cell_view != null:
-				cell_view.change_state({"state": CellState.EMPTY, "play_anim": false})
-		_draft_root = Vector2i(-1, -1)
-		_refresh_draft_terminal_state()
-		_on_draft_changed_for_persist(true)
-		return
-
-	_exit_draft_mode_and_clear()
-	var sz: int = _level_config.get("size", 4)
-
-	var cleared_any: bool = false
-	SoundManager.set_silent(true)
-	for r in range(sz):
-		for c in range(sz):
-			if _board_view.get_cell_state(r, c) == CellState.MARK:
-				_board_view.set_cell_state(r, c, CellState.EMPTY)
-				cleared_any = true
-	SoundManager.set_silent(false)
-	if cleared_any:
-		SoundManager.play(SoundManager.Kind.UNMARK_X)
-	_update_remaining()
-
-
-## 应用 R2 提示：按四种模式在相应行 / 列 / 区域打叉
 func _apply_r2_hint() -> void:
 	var sz: int = _level_config.get("size", 4)
 	var regs: Array = _puzzle["regions"]
@@ -5190,14 +7261,14 @@ func _apply_r2_hint() -> void:
 		"r2a_row":
 			for c in range(sz):
 				if regs[row][c] != reg and CellState.is_blank(_board_view.get_cell_state(row, c)):
-					_record_cell_change(row, c, CellState.EMPTY, CellState.MARK)
+					_mark_step_dirty()
 					_board_view.set_cell_state(
 						row, c, CellState.MARK, true, true, BoardView.ChangeSource.HINT
 					)
 		"r2a_col":
 			for r in range(sz):
 				if regs[r][col] != reg and CellState.is_blank(_board_view.get_cell_state(r, col)):
-					_record_cell_change(r, col, CellState.EMPTY, CellState.MARK)
+					_mark_step_dirty()
 					_board_view.set_cell_state(
 						r, col, CellState.MARK, true, true, BoardView.ChangeSource.HINT
 					)
@@ -5209,7 +7280,7 @@ func _apply_r2_hint() -> void:
 						and r != row
 						and CellState.is_blank(_board_view.get_cell_state(r, c))
 					):
-						_record_cell_change(r, c, CellState.EMPTY, CellState.MARK)
+						_mark_step_dirty()
 						_board_view.set_cell_state(
 							r, c, CellState.MARK, true, true, BoardView.ChangeSource.HINT
 						)
@@ -5221,7 +7292,7 @@ func _apply_r2_hint() -> void:
 						and c != col
 						and CellState.is_blank(_board_view.get_cell_state(r, c))
 					):
-						_record_cell_change(r, c, CellState.EMPTY, CellState.MARK)
+						_mark_step_dirty()
 						_board_view.set_cell_state(
 							r, c, CellState.MARK, true, true, BoardView.ChangeSource.HINT
 						)
@@ -5229,16 +7300,16 @@ func _apply_r2_hint() -> void:
 	_update_remaining()
 
 
-## 玩家点「应用提示」：按策略把提示落成实际标记 / 猫，并进入短暂冷却
 func _on_hint_applied() -> void:
 	Tracker.track_btn_click(Tracker.Btn.HINT_APPLY, self)
 	Tracker.inc_stat("hint_apply_used")
+	_record_hint_apply_solution_step(_hint_data)
 	var strategy: String = _hint_data.get("strategy", "R1")
 	if strategy == "R1_mark":
 		for cell_v in _hint_data.get("unit_cells", []) as Array:
 			var cell: Vector2i = cell_v as Vector2i
 			if CellState.is_blank(_board_view.get_cell_state(cell.x, cell.y)):
-				_record_cell_change(cell.x, cell.y, CellState.EMPTY, CellState.MARK)
+				_mark_step_dirty()
 				_board_view.set_cell_state(
 					cell.x, cell.y, CellState.MARK, true, true, BoardView.ChangeSource.HINT
 				)
@@ -5246,12 +7317,14 @@ func _on_hint_applied() -> void:
 		_update_remaining()
 	elif strategy == "R3" or strategy == "R4":
 		_apply_r3_r4_hint()
+	elif strategy == "R3b" or strategy == "R4b":
+		_apply_r3_r4b_hint()
 	elif strategy == "R2":
 		_apply_r2_hint()
 	elif strategy == "R4_chain" or strategy == "R5_chain":
 		var cell: Vector2i = _hint_data.get("cell", Vector2i(-1, -1))
 		if cell.x >= 0:
-			_record_cell_change(cell.x, cell.y, CellState.EMPTY, CellState.MARK)
+			_mark_step_dirty()
 			_board_view.set_cell_state(
 				cell.x, cell.y, CellState.MARK, true, true, BoardView.ChangeSource.HINT
 			)
@@ -5261,27 +7334,31 @@ func _on_hint_applied() -> void:
 		var cell: Vector2i = _hint_data.get("cell", Vector2i(-1, -1))
 		if cell.x >= 0:
 			if _hint_data.get("wrong_mark", false):
-				_record_cell_change(cell.x, cell.y, CellState.MARK, CellState.EMPTY)
+				_mark_step_dirty()
 				_board_view.set_cell_state(
 					cell.x, cell.y, CellState.EMPTY, true, true, BoardView.ChangeSource.HINT
 				)
-				VibrateManager.play_vibrate(VibrateManager.Level.LEVEL2)
+				VibrateManager.play_at(VibrateManager.Pos.HINT_CLEAR)
 			else:
-				var prev: int = _board_view.get_cell_state(cell.x, cell.y)
-				_record_cell_change(cell.x, cell.y, prev, CellState.CAT)
+				_mark_step_dirty()
 				_board_view.set_cell_state(
-					cell.x, cell.y, CellState.CAT, true, true, BoardView.ChangeSource.HINT
+					cell.x,
+					cell.y,
+					CellState.CAT,
+					true,
+					true,
+					BoardView.ChangeSource.HINT,
+					"",
+					false,
+					_found_cat_spine_anim(BoardView.ChangeSource.HINT)
 				)
 				_record_correct_cat(
 					_decide_like_hand_for_correct_cat(LikeHandTrigger.HINT_R1_APPLY)
 				)
 			_update_remaining()
 			_validate_board()
-	# 应用完统一提交为一步（放猫的那次标为落猫步，便于撤销处理）
-	var is_cat_step: bool = (
-		(strategy == "" or strategy == "R1") and not _hint_data.get("wrong_mark", false)
-	)
-	_commit_current_step(is_cat_step, false)
+	_clear_step_dirty()
+	_count_board_step("hint_apply")
 	_close_chain_detail()
 	_clear_hint_highlights()
 	_board_view.clear_hint_cells()
@@ -5322,15 +7399,39 @@ func _build_qid() -> String:
 	return "%d_%s_%d_%d_%d" % [sz, src, strategy, idx, t]
 
 
-## 埋点用难度位：是否困难关（按 AB 有两种判定方式）
 func _get_diffi() -> int:
+	if LevelKind.is_color_challenge(_level_kind):
+		return 0
 	var lv: int = GameState.get_current_level()
-	var is_hard: bool = (
-		LevelData.is_hard_level_group_j(lv)
-		if ABTestManager.rule_normal_rank.is_group_j()
-		else LevelData.is_hard_level(lv)
-	)
-	return 1 if is_hard else 0
+	if LevelSelector.is_super_hard_level(lv):
+		return 2
+	return 1 if LevelSelector.is_hard_level(lv) else 0
+
+
+func _count_correct_crosses() -> int:
+	var sol: Array = _puzzle.get("solution", [])
+	if sol.is_empty():
+		return 0
+	var sz: int = _level_config.get("size", 0)
+	var n: int = 0
+	for r in range(sz):
+		for c in range(sz):
+			if CellState.is_cross(_board_view.get_cell_state(r, c)) and not bool(sol[r][c]):
+				n += 1
+	return n
+
+
+func _count_false_crosses() -> int:
+	var sol: Array = _puzzle.get("solution", [])
+	if sol.is_empty():
+		return 0
+	var sz: int = _level_config.get("size", 0)
+	var n: int = 0
+	for r in range(sz):
+		for c in range(sz):
+			if CellState.is_cross(_board_view.get_cell_state(r, c)) and bool(sol[r][c]):
+				n += 1
+	return n
 
 
 ## 策略面板的 5 行静态配置：徽标、名称 key、描述 key、配色
@@ -5480,32 +7581,44 @@ func _on_strategy_close() -> void:
 	_strategy_overlay.visible = false
 
 
-## 填充策略面板：5 行策略 + 当前档位 + 题库信息
 func _populate_strategy_vbox() -> void:
-	for child in _strategy_vbox.get_children():
+	var children: Array[Node] = _strategy_vbox.get_children()
+	for child in children:
 		child.queue_free()
-	for info: Dictionary in _RANK_STRATEGY_INFO:
-		var steps: int = _strategy_steps[info["rank"] - 1]
-		_strategy_vbox.add_child(_make_strategy_row(info, steps))
+	var regions: Array = _puzzle.get("regions", [])
+	var solution: Array = _puzzle.get("solution", [])
+	var analysis: Dictionary = HintEngine.compute_puzzle_difficulty(
+		regions.size(), regions, solution
+	)
+	var analysis_ok: bool = bool(analysis.get("ok", false))
+	var difficulty_label := Label.new()
+	difficulty_label.text = "整题难度 R%d" % int(analysis["r"]) if analysis_ok else "整题难度：无法完成推理"
+	difficulty_label.add_theme_font_size_override("font_size", 30)
+	difficulty_label.add_theme_color_override("font_color", Color("#333333"))
+	difficulty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_strategy_vbox.add_child(difficulty_label)
+	if analysis_ok:
+		for info: Dictionary in _RANK_STRATEGY_INFO:
+			var steps: int = int(analysis.get("r%d" % int(info["rank"]), 0))
+			_strategy_vbox.add_child(_make_strategy_row(info, steps))
 
-	var _bs: String = _level_config.get("bank_source", "")
-	if not _bs.is_empty():
+	var bank_source: String = _level_config.get("bank_source", "")
+	if not bank_source.is_empty():
 		var cur_strategy: int = GameState.get_current_strategy()
 		var cur_rank: int = LevelData.strategy_to_rank(cur_strategy)
 		var cur_tier: String = LevelData.strategy_to_tier(cur_strategy)
 		var tier_str: String = "H" if cur_tier == "H" else "N"
 		var strategy_lbl := Label.new()
-		strategy_lbl.text = "当前档位  strategy=%d  R%d%s" % [cur_strategy, cur_rank, tier_str]
+		strategy_lbl.text = "玩家档位  strategy=%d  R%d%s" % [cur_strategy, cur_rank, tier_str]
 		strategy_lbl.add_theme_font_size_override("font_size", 28)
 		strategy_lbl.add_theme_color_override("font_color", Color("#888888"))
 		strategy_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_strategy_vbox.add_child(strategy_lbl)
 
-	if not _bs.is_empty():
+	if not bank_source.is_empty():
 		var src: String = _level_config.get("bank_source", "")
 		var idx: int = _level_config.get("bank_idx", 0)
-		var sz: int = _level_config.get("size", 0)
-		var rank: int = _level_config.get("rank", 1)
+		var board_size: int = regions.size()
 		var src_text: String
 		match src:
 			"regular":
@@ -5523,7 +7636,7 @@ func _populate_strategy_vbox() -> void:
 			_:
 				src_text = src
 		var src_lbl := Label.new()
-		src_lbl.text = "%s  %dx%d  R%d  #%d" % [src_text, sz, sz, rank, idx]
+		src_lbl.text = "%s  %dx%d  #%d" % [src_text, board_size, board_size, idx]
 		src_lbl.add_theme_font_size_override("font_size", 28)
 		src_lbl.add_theme_color_override("font_color", Color("#888888"))
 		src_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

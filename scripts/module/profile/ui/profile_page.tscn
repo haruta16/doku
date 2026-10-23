@@ -1,0 +1,760 @@
+[gd_scene format=3 uid="uid://taq6c5vgpjvi"]
+
+[ext_resource type="Script" uid="uid://bb3nr3mb4eavr" path="res://scripts/module/profile/view/profile_page.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://774u6nc8te5o" path="res://assets/sprites/profile/tab_inactive_bg.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://de0oeosjv0tpk" path="res://assets/sprites/profile/tab_inactive_bg_260.png" id="3"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="4"]
+[ext_resource type="Texture2D" uid="uid://bse1j0ugxailu" path="res://assets/sprites/profile/popup_bg.png" id="5"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="6"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="7"]
+[ext_resource type="Texture2D" uid="uid://dbyhf4f18qfq6" path="res://assets/sprites/common/red_dot.png" id="8"]
+[ext_resource type="PackedScene" path="res://scripts/module/profile/ui/other/profile_divider.tscn" id="9"]
+[ext_resource type="Texture2D" uid="uid://bqtclbqlfffto" path="res://assets/sprites/profile/close_icon.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cdsifkgiu3u86" path="res://assets/sprites/profile/nickname_bg.png" id="11"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="12"]
+[ext_resource type="Texture2D" uid="uid://cspk20pymqs7e" path="res://assets/sprites/profile/rename_btn_bg.png" id="13"]
+[ext_resource type="Texture2D" uid="uid://duv8urb3mg7b6" path="res://assets/sprites/profile/rename_icon.png" id="14"]
+[ext_resource type="PackedScene" uid="uid://b3a61adynhyav" path="res://assets/prefab/btn_with_tag.tscn" id="15"]
+[ext_resource type="Texture2D" uid="uid://d23x5vjb16q6s" path="res://assets/sprites/profile/lock_tip_bg.png" id="16"]
+[ext_resource type="Texture2D" uid="uid://baw4x8ilr8ce8" path="res://assets/sprites/profile/lock_tip_arrow.png" id="17"]
+
+[sub_resource type="Animation" id="Animation_lce1l"]
+resource_name = "lock"
+length = 0.8
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Mark",
+"time": 0.4
+}]
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Content/LockTip/Bubble:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(2, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.5, 0, 0, 0, 0.2155906, 1.05, -0.06666667, 0.00017547607, 0.033333223, -8.773774e-05, 0.97, -0.033333335, 0, 0.03345514, 0, 1, -0.03345514, 0, 0.21098933, 0, 1, -0.21098933, 0, 0.049761713, 0, 1.05, -0.049761713, 0, 0.055793844, 0, 0.8, -0.055793844, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.06666667, 0.2, 0.33333334, 0.40000004, 0.5492852, 0.7166667)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Content/LockTip/Bubble:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.5, 0, 0, 0, 0.2147147, 1.05, -0.06666667, 0.0019272566, 0.033320084, -0.0009632453, 0.97, -0.033333335, 0, 0.03345514, 0, 1, -0.03345514, 0, 0.21098933, 0, 1, -0.21098933, 0, 0.049761713, 0, 1.05, -0.049761713, 0, 0.055793844, 0, 0.8, -0.055793844, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.06666667, 0.2, 0.33333334, 0.40000004, 0.5492852, 0.7166667)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Content/LockTip/Bubble:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.6333333, 0.73333335),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_457om"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gguk6"]
+_data = {
+&"GenericPopup": ExtResource("4"),
+&"Lock": SubResource("Animation_lce1l"),
+&"RESET": SubResource("Animation_457om")
+}
+
+[sub_resource type="StyleBoxFlat" id="sb_dialog"]
+bg_color = Color(1, 0.9843137, 0.96862745, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+
+[sub_resource type="StyleBoxFlat" id="sb_tab_active"]
+bg_color = Color(0.72307676, 0.5086565, 0.3657098, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+
+[sub_resource type="StyleBoxFlat" id="sb_grid"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="StyleBoxFlat" id="sb_title"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxEmpty" id="sb_edit_empty"]
+
+[sub_resource type="StyleBoxFlat" id="sb_rename"]
+bg_color = Color(1, 0.8117647, 0.58431375, 1)
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+
+[sub_resource type="StyleBoxFlat" id="sb_tip_bg"]
+bg_color = Color(0.25490198, 0.21176471, 0.21176471, 0.95)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="sb_tip_go"]
+bg_color = Color(0.94509804, 0.5764706, 0.1254902, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[node name="ProfilePage" type="Control" unique_id=1150683900]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+tab_bg_wide = ExtResource("2")
+tab_bg_narrow = ExtResource("3")
+show_mask = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1332981068]
+libraries/ = SubResource("AnimationLibrary_gguk6")
+
+[node name="Content" type="Control" parent="." unique_id=10943337]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -626.5
+offset_right = 450.0
+offset_bottom = 626.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="PopupBg" type="Control" parent="Content" unique_id=1463592693]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 1253.0
+mouse_filter = 2
+
+[node name="Shadow" type="NinePatchRect" parent="Content/PopupBg" unique_id=955625299]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 14.0
+offset_bottom = 18.0
+texture = ExtResource("5")
+patch_margin_left = 75
+patch_margin_top = 71
+patch_margin_right = 75
+patch_margin_bottom = 79
+
+[node name="Bg" type="Panel" parent="Content/PopupBg" unique_id=700808887]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sb_dialog")
+
+[node name="TabGroup" type="Control" parent="Content" unique_id=653335235]
+anchors_preset = 0
+offset_left = 50.0
+offset_top = 425.0
+offset_right = 850.0
+offset_bottom = 695.0
+
+[node name="AvatarTab" type="TextureRect" parent="Content/TabGroup" unique_id=1888654115]
+layout_mode = 0
+offset_right = 395.0
+offset_bottom = 270.0
+texture = ExtResource("2")
+expand_mode = 1
+flip_h = true
+
+[node name="AvatarLab" type="Label" parent="Content/TabGroup/AvatarTab" unique_id=1581147440]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 7.0
+offset_right = 284.0
+offset_bottom = 93.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.7372549, 0.60784316, 0.5411765, 1)
+theme_override_constants/line_spacing = -28
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 59
+text = "PROFILE_TAB_AVATAR"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 60
+min_font_size = 34
+
+[node name="AvatarActive" type="Panel" parent="Content/TabGroup/AvatarTab" unique_id=1731980415]
+layout_mode = 0
+offset_right = 395.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("sb_tab_active")
+
+[node name="AvatarLabActive" type="Label" parent="Content/TabGroup/AvatarTab/AvatarActive" unique_id=1332507817]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 7.0
+offset_right = 284.0
+offset_bottom = 93.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9843137, 0.96862745, 1)
+theme_override_constants/line_spacing = -28
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 59
+text = "PROFILE_TAB_AVATAR"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 60
+min_font_size = 34
+
+[node name="AvatarTabBtn" type="Button" parent="Content/TabGroup/AvatarTab" unique_id=1522225455]
+layout_mode = 0
+offset_right = 395.0
+offset_bottom = 100.0
+flat = true
+
+[node name="RedDot" type="TextureRect" parent="Content/TabGroup/AvatarTab" unique_id=764024723]
+visible = false
+layout_mode = 0
+offset_left = 357.0
+offset_top = -17.5
+offset_right = 413.0
+offset_bottom = 38.5
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FrameTab" type="TextureRect" parent="Content/TabGroup" unique_id=2039129313]
+layout_mode = 0
+offset_left = 405.0
+offset_right = 800.0
+offset_bottom = 270.0
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="FrameLab" type="Label" parent="Content/TabGroup/FrameTab" unique_id=1897869457]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 6.0
+offset_right = 282.0
+offset_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.7372549, 0.60784316, 0.5411765, 1)
+theme_override_constants/line_spacing = -28
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 60
+text = "PROFILE_TAB_FRAME"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 60
+min_font_size = 34
+
+[node name="FrameActive" type="Panel" parent="Content/TabGroup/FrameTab" unique_id=889897918]
+visible = false
+layout_mode = 0
+offset_right = 395.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("sb_tab_active")
+
+[node name="FrameTabActive" type="Label" parent="Content/TabGroup/FrameTab/FrameActive" unique_id=1016094365]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 7.0
+offset_right = 280.0
+offset_bottom = 95.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9843137, 0.96862745, 1)
+theme_override_constants/line_spacing = -28
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 60
+text = "PROFILE_TAB_FRAME"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 60
+min_font_size = 34
+
+[node name="FrameTabBtn" type="Button" parent="Content/TabGroup/FrameTab" unique_id=1995136177]
+layout_mode = 0
+offset_right = 395.0
+offset_bottom = 100.0
+flat = true
+
+[node name="RedDot" type="TextureRect" parent="Content/TabGroup/FrameTab" unique_id=1995136178]
+visible = false
+layout_mode = 0
+offset_left = 357.0
+offset_top = -17.5
+offset_right = 413.0
+offset_bottom = 38.5
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CostumeTab" type="TextureRect" parent="Content/TabGroup" unique_id=18616793]
+visible = false
+layout_mode = 0
+offset_left = 540.0
+offset_right = 800.0
+offset_bottom = 270.0
+texture = ExtResource("2")
+expand_mode = 1
+flip_h = true
+
+[node name="CostumeLab" type="Label" parent="Content/TabGroup/CostumeTab" unique_id=123557437]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 6.0
+offset_right = 246.0
+offset_bottom = 94.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.7372549, 0.60784316, 0.5411765, 1)
+theme_override_constants/line_spacing = -28
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 60
+text = "PROFILE_TAB_COSTUME"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
+max_font_size = 60
+min_font_size = 34
+
+[node name="CostumeActive" type="Panel" parent="Content/TabGroup/CostumeTab" unique_id=1492414450]
+visible = false
+layout_mode = 0
+offset_right = 260.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("sb_tab_active")
+
+[node name="CostumeLabActive" type="Label" parent="Content/TabGroup/CostumeTab/CostumeActive" unique_id=273144571]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 7.0
+offset_right = 246.0
+offset_bottom = 93.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9843137, 0.96862745, 1)
+theme_override_constants/line_spacing = -28
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 60
+text = "PROFILE_TAB_COSTUME"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
+max_font_size = 60
+min_font_size = 34
+
+[node name="CostumeTabBtn" type="Button" parent="Content/TabGroup/CostumeTab" unique_id=1930035515]
+layout_mode = 0
+offset_right = 260.0
+offset_bottom = 100.0
+flat = true
+
+[node name="RedDot" type="TextureRect" parent="Content/TabGroup/CostumeTab" unique_id=2108972402]
+visible = false
+layout_mode = 0
+offset_left = 222.0
+offset_top = -17.5
+offset_right = 278.0
+offset_bottom = 38.5
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GridBg" type="Panel" parent="Content" unique_id=882508665]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 525.0
+offset_right = 850.0
+offset_bottom = 943.0
+theme_override_styles/panel = SubResource("sb_grid")
+
+[node name="AvatarScroll" type="ScrollContainer" parent="Content" unique_id=1650296091]
+layout_mode = 0
+offset_left = 71.0
+offset_top = 546.0
+offset_right = 829.0
+offset_bottom = 922.0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="Content" type="VBoxContainer" parent="Content/AvatarScroll" unique_id=1414830057]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 9
+
+[node name="AvatarGrid" type="GridContainer" parent="Content/AvatarScroll/Content" unique_id=1655633037]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 4
+
+[node name="LeaderboardDivider" parent="Content/AvatarScroll/Content" unique_id=320922357 instance=ExtResource("9")]
+visible = false
+layout_mode = 2
+
+[node name="LeaderboardGrid" type="HBoxContainer" parent="Content/AvatarScroll/Content" unique_id=219480057]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="LeaderboardTierMargin" type="MarginContainer" parent="Content/AvatarScroll/Content" unique_id=219480058]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 11
+
+[node name="LeaderboardTierGrid" type="GridContainer" parent="Content/AvatarScroll/Content/LeaderboardTierMargin" unique_id=219480059]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 4
+
+[node name="EventDivider" parent="Content/AvatarScroll/Content" unique_id=1793653836 instance=ExtResource("9")]
+visible = false
+custom_minimum_size = Vector2(758, 58.12)
+layout_mode = 2
+
+[node name="EventGrid" type="HBoxContainer" parent="Content/AvatarScroll/Content" unique_id=1513519732]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="ClassicDivider" parent="Content/AvatarScroll/Content" unique_id=558097726 instance=ExtResource("9")]
+visible = false
+custom_minimum_size = Vector2(758, 58.12)
+layout_mode = 2
+
+[node name="LeftLine" parent="Content/AvatarScroll/Content/ClassicDivider" index="0"]
+offset_top = 29.12
+offset_bottom = 31.12
+
+[node name="Title" parent="Content/AvatarScroll/Content/ClassicDivider" index="1"]
+offset_top = 2.12
+offset_bottom = 58.12
+
+[node name="RightLine" parent="Content/AvatarScroll/Content/ClassicDivider" index="2"]
+offset_top = 29.12
+offset_bottom = 31.12
+
+[node name="ClassicGrid" type="GridContainer" parent="Content/AvatarScroll/Content" unique_id=1967430827]
+visible = false
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 4
+
+[node name="CostumeGrid" type="GridContainer" parent="Content/AvatarScroll/Content" unique_id=23711779]
+visible = false
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 4
+
+[node name="BottomPad" type="Control" parent="Content/AvatarScroll/Content" unique_id=140226462]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="Title" type="Control" parent="Content" unique_id=353481881]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 130.0
+
+[node name="PopupTitleBg" type="Panel" parent="Content/Title" unique_id=1025401641]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+theme_override_styles/panel = SubResource("sb_title")
+
+[node name="PopupTitle" type="Label" parent="Content/Title" unique_id=1367308375]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 16.0
+offset_right = 760.0
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_constants/line_spacing = -26
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 85
+text = "PROFILE_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 86
+min_font_size = 50
+
+[node name="CloseBtn" type="Button" parent="Content/Title" unique_id=1532424278]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+flat = true
+
+[node name="shape" type="Control" parent="Content/Title/CloseBtn" unique_id=1823760171]
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 27.0
+offset_right = 73.666664
+offset_bottom = 73.66667
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+
+[node name="Visual" type="TextureRect" parent="Content/Title/CloseBtn/shape" unique_id=494715745]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 51.666687
+offset_bottom = 51.666748
+pivot_offset = Vector2(28.333344, 28.333374)
+mouse_filter = 2
+texture = ExtResource("10")
+expand_mode = 1
+
+[node name="HeaderAvatarSlot" type="Control" parent="Content" unique_id=1987410832]
+anchors_preset = 0
+offset_left = 35.0
+offset_top = 185.0
+offset_right = 220.0
+offset_bottom = 370.0
+mouse_filter = 2
+
+[node name="Nickname" type="Control" parent="Content" unique_id=1096943042]
+anchors_preset = 0
+offset_left = 240.0
+offset_top = 218.0
+offset_right = 850.0
+offset_bottom = 338.0
+
+[node name="NicknameBg" type="TextureRect" parent="Content/Nickname" unique_id=662243890]
+layout_mode = 0
+offset_right = 610.0
+offset_bottom = 120.0
+mouse_filter = 2
+texture = ExtResource("11")
+expand_mode = 1
+
+[node name="NameEdit" type="LineEdit" parent="Content/Nickname" unique_id=870698192]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 11.0
+offset_right = 465.0
+offset_bottom = 111.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_colors/font_uneditable_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = SubResource("sb_edit_empty")
+theme_override_styles/read_only = SubResource("sb_edit_empty")
+theme_override_styles/focus = SubResource("sb_edit_empty")
+text = "Player name!"
+alignment = 1
+max_length = 12
+editable = false
+
+[node name="RenameBtn" type="Button" parent="Content/Nickname" unique_id=1592468173]
+layout_mode = 0
+offset_left = 490.0
+offset_right = 610.0
+offset_bottom = 120.0
+flat = true
+
+[node name="Shadow" type="NinePatchRect" parent="Content/Nickname/RenameBtn" unique_id=364980418]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_top = -12.0
+offset_right = 14.0
+offset_bottom = 16.0
+texture = ExtResource("13")
+patch_margin_left = 15
+patch_margin_top = 33
+patch_margin_right = 35
+patch_margin_bottom = 37
+
+[node name="Bg" type="Panel" parent="Content/Nickname/RenameBtn" unique_id=261486792]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sb_rename")
+
+[node name="Icon" type="TextureRect" parent="Content/Nickname/RenameBtn" unique_id=822658781]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 26.0
+offset_right = 87.0
+offset_bottom = 94.0
+mouse_filter = 2
+texture = ExtResource("14")
+expand_mode = 1
+
+[node name="Confirm" parent="Content" unique_id=544002526 instance=ExtResource("15")]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 935.0
+offset_right = 840.0
+offset_bottom = 1193.0
+btn_text = "PROFILE_CONFIRM"
+show_difficult = false
+
+[node name="LockTip" type="Control" parent="Content" unique_id=812060135]
+anchors_preset = 0
+offset_right = 900.0
+offset_bottom = 1253.0
+
+[node name="Catcher" type="Button" parent="Content/LockTip" unique_id=856459835]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[node name="Bubble" type="Control" parent="Content/LockTip" unique_id=1688529007]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+offset_right = 780.0
+offset_bottom = 185.0
+scale = Vector2(0.5, 0.5)
+pivot_offset_ratio = Vector2(0.5, 1)
+
+[node name="PopupBg" type="Control" parent="Content/LockTip/Bubble" unique_id=2091315081]
+anchors_preset = 0
+offset_right = 780.0
+offset_bottom = 160.0
+mouse_filter = 2
+
+[node name="Shadow" type="NinePatchRect" parent="Content/LockTip/Bubble/PopupBg" unique_id=291385776]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 14.0
+offset_bottom = 18.0
+texture = ExtResource("16")
+patch_margin_left = 55
+patch_margin_top = 51
+patch_margin_right = 55
+patch_margin_bottom = 59
+
+[node name="Bg" type="Panel" parent="Content/LockTip/Bubble/PopupBg" unique_id=426498183]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sb_tip_bg")
+
+[node name="TipText" type="Label" parent="Content/LockTip/Bubble" unique_id=1344682484]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 4.0
+offset_right = 540.0
+offset_bottom = 156.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = ExtResource("12")
+theme_override_font_sizes/font_size = 40
+text = "PROFILE_FIRST_PLACE_FRAME_HINT"
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("7")
+max_font_size = 40
+min_font_size = 24
+
+[node name="Arrow" type="TextureRect" parent="Content/LockTip/Bubble" unique_id=684585843]
+visible = false
+layout_mode = 0
+offset_left = 372.0
+offset_top = 159.0
+offset_right = 408.0
+offset_bottom = 184.0
+mouse_filter = 2
+texture = ExtResource("17")
+expand_mode = 1
+flip_v = true
+
+[node name="GoBtn" type="Button" parent="Content/LockTip/Bubble" unique_id=1874595408]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 30.0
+offset_right = 750.0
+offset_bottom = 130.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/normal = SubResource("sb_tip_go")
+theme_override_styles/pressed = SubResource("sb_tip_go")
+theme_override_styles/hover = SubResource("sb_tip_go")
+
+[node name="GoText" type="Label" parent="Content/LockTip/Bubble/GoBtn" unique_id=723161104]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 50
+text = "PROFILE_GO"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("7")
+max_font_size = 50
+min_font_size = 28
+
+[connection signal="pressed" from="Content/TabGroup/AvatarTab/AvatarTabBtn" to="." method="_on_avatar_tab_pressed"]
+[connection signal="pressed" from="Content/TabGroup/FrameTab/FrameTabBtn" to="." method="_on_frame_tab_pressed"]
+[connection signal="pressed" from="Content/TabGroup/CostumeTab/CostumeTabBtn" to="." method="_on_costume_tab_pressed"]
+[connection signal="focus_exited" from="Content/Nickname/NameEdit" to="." method="_on_name_focus_exited"]
+[connection signal="gui_input" from="Content/Nickname/NameEdit" to="." method="_on_name_edit_gui_input"]
+[connection signal="text_submitted" from="Content/Nickname/NameEdit" to="." method="_on_name_submitted"]
+[connection signal="pressed" from="Content/Nickname/RenameBtn" to="." method="_on_rename_pressed"]
+[connection signal="tag_pressed" from="Content/Confirm" to="." method="_on_confirm_pressed"]
+[connection signal="pressed" from="Content/LockTip/Catcher" to="." method="_on_lock_tip_dismiss"]
+[connection signal="pressed" from="Content/LockTip/Bubble/GoBtn" to="." method="_on_lock_tip_go"]
+
+[editable path="Content/AvatarScroll/Content/ClassicDivider"]

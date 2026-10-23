@@ -1,0 +1,27 @@
+[
+  {
+    "path": "scripts/module/debug/view/generator_page.gd",
+    "function": "_build_ui",
+    "reason": "gdformat nested lambda indentation; preserve original call structure"
+  },
+  {
+    "path": "scripts/module/purchase/view/purchase_page.gd",
+    "function": "_play_entry_anim",
+    "reason": "gdformat nested lambda indentation; preserve original call structure"
+  },
+  {
+    "path": "scripts/module/rank_activity/view/other/rank_streak_bar.gd",
+    "function": "play_tier_up",
+    "reason": "gdformat nested lambda indentation; preserve original call structure"
+  },
+  {
+    "path": "scripts/module/rank_activity/view/rank_activity_page.gd",
+    "function": "_play_intro",
+    "reason": "gdformat nested lambda indentation; preserve original call structure"
+  },
+  {
+    "path": "scripts/module/gameplay/view/cell_view.gd",
+    "function": "play_prompt_cat",
+    "reason": "same nested lambda layout correction"
+  }
+]

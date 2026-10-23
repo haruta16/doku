@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dis3kr2uvlfec"]
+
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="1"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_aebyc"]
+
+[sub_resource type="Curve" id="Curve_aebyc"]
+_limits = [0.0, 15000.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 15000.0, 0, 0, Vector2(0.01, 10200), 0.0, 0.0, 0, 0, Vector2(0.36, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_aoyqc"]
+_data = [Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_aebyc"]
+offsets = PackedFloat32Array(0.70734596, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_aoyqc"]
+offsets = PackedFloat32Array(0.20616114, 0.3613744)
+colors = PackedColorArray(1, 0.8627451, 0.39215687, 1, 1, 0.94509804, 0.34901962, 1)
+
+[node name="FishBurst" type="Control" unique_id=1864967564]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 100.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Stars" type="CPUParticles2D" parent="." unique_id=5374873]
+material = SubResource("CanvasItemMaterial_aebyc")
+position = Vector2(49, 44)
+rotation = -0.0017329791
+emitting = false
+amount = 12
+texture = ExtResource("1")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+randomness = 0.1
+lifetime_randomness = 0.1
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 900.0
+initial_velocity_max = 900.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_aebyc")
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_aoyqc")
+color_ramp = SubResource("Gradient_aebyc")
+color_initial_ramp = SubResource("Gradient_aoyqc")

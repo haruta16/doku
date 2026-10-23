@@ -1,0 +1,41 @@
+{
+  "business_scripts": 797,
+  "files_with_responsibility_header": 797,
+  "automatic_comment_migration": {
+    "leading_lines": 1722,
+    "inline_comments": 1392,
+    "unchanged_existing": 416
+  },
+  "root_manual_annotation": {
+    "template_files": 284,
+    "template_comment_lines": 1349,
+    "other_file_headers": 102,
+    "final_review_files": 17,
+    "final_comment_lines": 38,
+    "new_comment_lines": 1489
+  },
+  "other_manual_batches": {
+    "core": {
+      "files": 32,
+      "comment_lines": 504
+    },
+    "gameplay": {
+      "files": 59,
+      "comment_lines": 567
+    },
+    "addons_common_core": {
+      "files": 62,
+      "comment_lines": 728
+    },
+    "secondary_modules": {
+      "files": 137,
+      "comment_lines": 291
+    },
+    "services": {
+      "files": 132,
+      "comment_lines": 422
+    }
+  },
+  "coverage_note": "Every business source has a responsibility header. Core gameplay functions are individually documented; other modules focus on key functions and state/side effects, not a claim that every declaration has a new comment. Automatic migration statistics describe the original migration pass; later boundary audits are recorded separately.",
+  "new_manual_comment_lines": 4001
+}

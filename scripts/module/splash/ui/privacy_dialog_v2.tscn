@@ -1,0 +1,360 @@
+[gd_scene format=3 uid="uid://cjhehyyhqsg7w"]
+
+[ext_resource type="Script" uid="uid://di75d8oc6g7w2" path="res://scripts/module/splash/view/privacy_dialog_v2.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bse1j0ugxailu" path="res://assets/sprites/profile/popup_bg.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="3"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://cwhkq6w6vf1nq" path="res://assets/sprites/daily_auto_mark/star_small.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://bbytr84x65iu2" path="res://assets/sprites/daily_auto_mark/star_big.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://bb2auc0exr3ul" path="res://assets/sprites/privacy/privacy_dialog_v2/heart.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://hcgxq1or25el" path="res://assets/sprites/common/cat_daily_streak.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://ie3dv22r1x8x" path="res://assets/sprites/splash/push_guide_exp1/shape.png" id="9"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="10"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="11"]
+[ext_resource type="Texture2D" uid="uid://li7hjgfo0qx" path="res://assets/sprites/privacy/privacy_dialog_v2/btn.png" id="12"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="13"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="14"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_shadow"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("2")
+texture_margin_left = 75.0
+texture_margin_top = 71.0
+texture_margin_right = 75.0
+texture_margin_bottom = 79.0
+expand_margin_left = 14.0
+expand_margin_top = 10.0
+expand_margin_right = 14.0
+expand_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pen73"]
+bg_color = Color(1, 0.9843137, 0.96862745, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+corner_radius_bottom_right = 60
+corner_radius_bottom_left = 60
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k3s2i"]
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 60
+corner_radius_top_right = 60
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0jgow"]
+content_margin_left = 40.0
+content_margin_top = 36.0
+content_margin_right = 40.0
+content_margin_bottom = 36.0
+bg_color = Color(0.9764706, 0.9254902, 0.88235295, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6jfhe"]
+bg_color = Color(0.94509804, 0.5764706, 0.1254902, 1)
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+corner_detail = 18
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_popup"]
+_data = {
+&"GenericPopup": ExtResource("14")
+}
+
+[node name="PrivacyDialogV2" type="Control" unique_id=222938834]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+script = ExtResource("1")
+show_mask = true
+play_open_sound = true
+metadata/a2g_semantic_id = "5303:215868"
+
+[node name="Root" type="Control" parent="." unique_id=580001001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=1523234036]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Content" type="Control" parent="Root" unique_id=580001002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0484092, 1.0484092)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="Popup" type="Control" parent="Root/Content" unique_id=490358505]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -843.0
+offset_right = 450.0
+offset_bottom = 494.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "5303:215873"
+
+[node name="CenterBox" type="CenterContainer" parent="Root/Content/Popup" unique_id=490358506]
+layout_mode = 0
+offset_top = -51.0
+offset_right = 900.0
+offset_bottom = 1737.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PopupFrame" type="PanelContainer" parent="Root/Content/Popup/CenterBox" unique_id=1835097375]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_shadow")
+metadata/a2g_semantic_id = "5303:215874"
+
+[node name="Bg" type="PanelContainer" parent="Root/Content/Popup/CenterBox/PopupFrame" unique_id=937954699]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pen73")
+metadata/a2g_semantic_id = "5303:215874::shadow_split_bg"
+
+[node name="BgVBox" type="VBoxContainer" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg" unique_id=2031224137]
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox" unique_id=1351583807]
+custom_minimum_size = Vector2(900, 130)
+layout_mode = 2
+size_flags_vertical = 0
+metadata/a2g_semantic_id = "5303:215876"
+
+[node name="PopupTitleFrame" type="Panel" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title" unique_id=1995532804]
+layout_mode = 0
+offset_right = 900.0
+offset_bottom = 130.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_k3s2i")
+metadata/a2g_semantic_id = "I5303:215876;1069:24451"
+
+[node name="PopupTitle" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title" unique_id=489827433]
+anchors_preset = 0
+offset_left = 140.0
+offset_top = 16.0
+offset_right = 760.0
+offset_bottom = 116.0
+metadata/a2g_semantic_id = "5303:215879"
+
+[node name="PopupWindowTitleTxt" type="Label" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/PopupTitle" unique_id=71662771]
+layout_mode = 0
+offset_left = -140.11942
+offset_right = 760.1194
+offset_bottom = 125.0
+theme_override_colors/font_color = Color(0.426923, 0.3251181, 0.34547916, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 86
+text = "PRIVACY_DIALOG_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+metadata/a2g_semantic_id = "I5303:215879;1069:24456"
+
+[node name="CatPopup" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title" unique_id=1255067197]
+anchors_preset = 0
+offset_left = 157.0
+offset_top = -349.0
+offset_right = 157.0
+offset_bottom = -349.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+metadata/a2g_semantic_id = "5303:215881"
+
+[node name="SmallStarImg" type="TextureRect" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/CatPopup" unique_id=759839257]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 283.0
+offset_right = 81.0
+offset_bottom = 328.0
+pivot_offset = Vector2(18, 22.5)
+texture = ExtResource("5")
+expand_mode = 1
+metadata/a2g_semantic_id = "I5303:215881;3654:169072"
+
+[node name="BigStarImg" type="TextureRect" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/CatPopup" unique_id=1501226566]
+layout_mode = 0
+offset_left = 453.0
+offset_top = 3.0
+offset_right = 497.0
+offset_bottom = 56.0
+pivot_offset = Vector2(22, 26.5)
+texture = ExtResource("6")
+expand_mode = 1
+metadata/a2g_semantic_id = "I5303:215881;3654:169071"
+
+[node name="HeartImg" type="TextureRect" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/CatPopup" unique_id=1288758609]
+layout_mode = 0
+offset_top = 155.0
+offset_right = 74.0
+offset_bottom = 227.0
+pivot_offset = Vector2(37, 36)
+texture = ExtResource("7")
+expand_mode = 1
+metadata/a2g_semantic_id = "I5303:215881;3654:169070"
+
+[node name="CatImg" type="TextureRect" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/CatPopup" unique_id=1121495243]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 3.0
+offset_right = 585.0
+offset_bottom = 410.0
+pivot_offset = Vector2(243.5, 203.5)
+texture = ExtResource("8")
+expand_mode = 1
+metadata/a2g_semantic_id = "I5303:215881;3654:169074"
+
+[node name="CloseBtn" type="Button" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title" unique_id=1309714011]
+visible = false
+layout_mode = 0
+offset_left = 780.0
+offset_top = 20.0
+offset_right = 880.0
+offset_bottom = 120.0
+flat = true
+metadata/a2g_semantic_id = "5303:215877"
+
+[node name="Shape" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/CloseBtn" unique_id=262326911]
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 27.0
+offset_right = 73.666664
+offset_bottom = 73.66667
+metadata/a2g_semantic_id = "I5303:215877;966:5012"
+
+[node name="Visual" type="TextureRect" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/CloseBtn/Shape" unique_id=833900824]
+layout_mode = 0
+offset_left = -5.166656
+offset_top = -5.166656
+offset_right = 51.833344
+offset_bottom = 51.833344
+texture = ExtResource("9")
+expand_mode = 1
+metadata/a2g_semantic_id = "I5303:215877;966:5012::visual"
+
+[node name="TextAdapt" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox" unique_id=2020114462]
+custom_minimum_size = Vector2(900, 70)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ContentPanel" type="PanelContainer" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox" unique_id=682692365]
+custom_minimum_size = Vector2(800, 478)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_0jgow")
+metadata/a2g_semantic_id = "5303:215875"
+
+[node name="PopUpTextTxt" type="RichTextLabel" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/ContentPanel" unique_id=1973366462]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_separation = 17
+theme_override_fonts/normal_font = ExtResource("10")
+theme_override_fonts/bold_font = ExtResource("11")
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+text = "PRIVACY_DIALOG_DESC_RICH_V2"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/a2g_semantic_id = "I5303:215880;1069:24422"
+
+[node name="BtnAdapt" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox" unique_id=2020114463]
+custom_minimum_size = Vector2(900, 60)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Btn" type="Button" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox" unique_id=1757623707]
+custom_minimum_size = Vector2(750, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+flat = true
+metadata/a2g_semantic_id = "5303:215878"
+
+[node name="Shadow" type="NinePatchRect" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Btn" unique_id=763279661]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -30.0
+offset_top = -20.0
+offset_right = 30.0
+offset_bottom = 40.0
+texture = ExtResource("12")
+patch_margin_left = 110
+patch_margin_top = 100
+patch_margin_right = 110
+patch_margin_bottom = 120
+metadata/a2g_semantic_id = "5303:215878::shadow_split_shadow"
+
+[node name="Bg" type="Panel" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Btn" unique_id=1402775048]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6jfhe")
+metadata/a2g_semantic_id = "5303:215878::shadow_split_bg"
+
+[node name="BtnGroup" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Btn" unique_id=1239285341]
+anchors_preset = 0
+offset_left = 244.5
+offset_top = 30.0
+offset_right = 498.5
+offset_bottom = 130.0
+mouse_filter = 2
+metadata/a2g_semantic_id = "I5303:215878;1915:43209"
+
+[node name="BtnTxt" type="Label" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Btn/BtnGroup" unique_id=1087289091]
+layout_mode = 0
+offset_left = -174.72432
+offset_top = -29.912867
+offset_right = 430.0014
+offset_bottom = 129.37607
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("13")
+theme_override_font_sizes/font_size = 80
+text = "PRIVACY_DIALOG_ACCEPT"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+metadata/a2g_semantic_id = "I5303:215878;1915:43210"
+
+[node name="BottomAdapt" type="Control" parent="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox" unique_id=2020114464]
+custom_minimum_size = Vector2(900, 90)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=580001003]
+libraries/ = SubResource("AnimationLibrary_popup")
+
+[connection signal="pressed" from="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Title/CloseBtn" to="." method="_on_accept_btn_pressed"]
+[connection signal="pressed" from="Root/Content/Popup/CenterBox/PopupFrame/Bg/BgVBox/Btn" to="." method="_on_accept_btn_pressed"]

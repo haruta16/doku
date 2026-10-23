@@ -3,26 +3,24 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://blcq54buvrrv5"
-path.s3tc="res://.godot/imported/tool_cat_item.png-5b95d08b8f74c01d296b6b7f608d0613.s3tc.ctex"
-path.etc2="res://.godot/imported/tool_cat_item.png-5b95d08b8f74c01d296b6b7f608d0613.etc2.ctex"
+path="res://.godot/imported/tool_cat_item.png-5b95d08b8f74c01d296b6b7f608d0613.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/sprites/game/tool_cat_item.png"
-dest_files=["res://.godot/imported/tool_cat_item.png-5b95d08b8f74c01d296b6b7f608d0613.s3tc.ctex", "res://.godot/imported/tool_cat_item.png-5b95d08b8f74c01d296b6b7f608d0613.etc2.ctex"]
+dest_files=["res://.godot/imported/tool_cat_item.png-5b95d08b8f74c01d296b6b7f608d0613.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=1.0
-compress/uastc_level=2
-compress/rdo_quality_loss=0
-compress/hdr_compression=0
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

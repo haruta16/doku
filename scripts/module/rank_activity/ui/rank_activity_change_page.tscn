@@ -1,0 +1,633 @@
+[gd_scene format=3 uid="uid://b3pjcao85ak2"]
+
+[ext_resource type="Script" uid="uid://c3pmhw3in3tgx" path="res://scripts/module/rank_activity/view/rank_activity_change_page.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://ow1hq8bg4gv5" path="res://assets/sprites/rank_activity/change_banner_glow.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://drb02krq02xvc" path="res://assets/sprites/rank_activity/change_banner_bar.png" id="3"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="4"]
+[ext_resource type="Script" uid="uid://b7l8oc0h3r11u" path="res://scripts/module/ui/extensions/auto_fit_rich_text_label.gd" id="5"]
+[ext_resource type="FontVariation" uid="uid://ddrdwgvpbi4ga" path="res://assets/fonts/Roboto-bold-title.tres" id="6"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="7"]
+[ext_resource type="Texture2D" uid="uid://cls0e0v3bg2vn" path="res://assets/sprites/rank_activity/change_countdown_bg.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://tvp1485pupl1" path="res://assets/sprites/rank_activity/change_countdown_icon.png" id="9"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="10"]
+[ext_resource type="Script" uid="uid://cu1c53ha41q0m" path="res://scripts/module/ui/extensions/tabular_digit_label.gd" id="11"]
+[ext_resource type="Shader" uid="uid://b2c6inthrgwha" path="res://assets/shaders/text_drop_shadow.gdshader" id="12"]
+[ext_resource type="Texture2D" uid="uid://bvfotnu6xhv8s" path="res://assets/effect/texture/mask/et_mask_011.png" id="13"]
+[ext_resource type="PackedScene" uid="uid://cj2p8id5qbnfh" path="res://scripts/module/game/ui/compont/fish_slot.tscn" id="14"]
+
+[sub_resource type="Animation" id="Animation_06wax"]
+resource_name = "Appear"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3333332),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ProgressLabel:position:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(3, 3, 3),
+"points": PackedFloat32Array(79, -0.06666667, 0, 0.06666667, 0, 79, -0.1, 0, 0.1, 0, 79, -0.03333334, 0, 0.03333334, 0),
+"times": PackedFloat32Array(0, 0.26666668, 0.40000004)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ProgressLabel:position:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(3, 3, 3),
+"points": PackedFloat32Array(-284, -0.06666667, 0, 0.06666667, 0, 86, -0.1, 0, 0.1, 0, 76, -0.03333334, 0, 0.03333334, 0),
+"times": PackedFloat32Array(0, 0.26666668, 0.40000004)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BannerGlow:position:x")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(3, 3, 3),
+"points": PackedFloat32Array(36, -0.06666667, 0, 0.06666667, 0, 36, -0.1, 0, 0.1, 0, 36, -0.03333334, 0, 0.03333334, 0),
+"times": PackedFloat32Array(0, 0.26666668, 0.40000004)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BannerGlow:position:y")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(3, 3, 3),
+"points": PackedFloat32Array(-313.5, -0.06666667, 0, 0.06666667, 0, 56.5, -0.1, 0, 0.1, 0, 46.5, -0.03333334, 0, 0.03333334, 0),
+"times": PackedFloat32Array(0, 0.26666668, 0.40000004)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BannerBar:position:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(3, 3, 3),
+"points": PackedFloat32Array(46, -0.06666667, 0, 0.06666667, 0, 46, -0.1, 0, 0.1, 0, 46, -0.03333334, 0, 0.03333334, 0),
+"times": PackedFloat32Array(0, 0.26666668, 0.40000004)
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("BannerBar:position:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(3, 3, 3),
+"points": PackedFloat32Array(-284, -0.06666667, 0, 0.06666667, 0, 86, -0.1, 0, 0.1, 0, 76, -0.03333334, 0, 0.03333334, 0),
+"times": PackedFloat32Array(0, 0.26666668, 0.40000004)
+}
+
+[sub_resource type="Animation" id="Animation_akeee"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ProgressLabel:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(79, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ProgressLabel:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(76, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BannerGlow:position:x")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(36, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BannerGlow:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(46.5, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/4/type = "bezier"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("BannerBar:position:x")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(46, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("BannerBar:position:y")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(76, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_akeee"]
+_data = {
+&"Appear": SubResource("Animation_06wax"),
+&"RESET": SubResource("Animation_akeee")
+}
+
+[sub_resource type="Gradient" id="Gradient_mask"]
+offsets = PackedFloat32Array(0, 0.07572115, 0.9254808, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_mask"]
+gradient = SubResource("Gradient_mask")
+width = 8
+height = 256
+fill_to = Vector2(0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tap"]
+shader = ExtResource("12")
+shader_parameter/shadow_color = Color(0, 0, 0, 0.4)
+shader_parameter/shadow_offset = Vector2(0, 4)
+shader_parameter/blur_px = 10.0
+shader_parameter/spread_px = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sf2tc"]
+bg_color = Color(1, 1, 1, 0.9)
+corner_radius_top_left = 44
+corner_radius_top_right = 44
+corner_radius_bottom_right = 44
+corner_radius_bottom_left = 44
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_4oxs7"]
+
+[sub_resource type="Animation" id="Animation_k285i"]
+resource_name = "rank"
+length = 0.6666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Leaderboard:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Countdown:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.16666667, 0.26666668),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Mask:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.10000001),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HeartBg:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.16666667, 0.26666668),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_bxg0i"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Leaderboard:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Countdown:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Mask:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HeartBg:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_06wax"]
+_data = {
+&"Appear": SubResource("Animation_k285i"),
+&"RESET": SubResource("Animation_bxg0i")
+}
+
+[node name="RankActivityChangePage" type="Control" unique_id=869222164]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+settle_hold_dur = 0.05
+
+[node name="Mask" type="ColorRect" parent="." unique_id=761041163]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="EncourageTopBar" type="Control" parent="." unique_id=1100195442 groups=["_safe_top"]]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -316.0
+offset_top = -9.0
+offset_right = 314.0
+offset_bottom = 217.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="BannerGlow" type="TextureRect" parent="EncourageTopBar" unique_id=1921172588]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 46.5
+offset_right = 651.7
+offset_bottom = 210.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+
+[node name="BannerBar" type="TextureRect" parent="EncourageTopBar" unique_id=1301838387]
+layout_mode = 0
+offset_left = 46.0
+offset_top = 76.0
+offset_right = 586.0
+offset_bottom = 200.00009
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="ProgressLabel" type="RichTextLabel" parent="EncourageTopBar" unique_id=1683286099]
+layout_mode = 0
+offset_left = 79.0
+offset_top = 76.0
+offset_right = 552.0
+offset_bottom = 200.00009
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_constants/line_separation = 0
+theme_override_fonts/normal_font = ExtResource("4")
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "RANK_CHANGE_PROGRESS"
+fit_content = true
+scroll_active = false
+vertical_alignment = 1
+script = ExtResource("5")
+min_font_size = 20
+max_content_height = 124.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="EncourageTopBar" unique_id=1776675213]
+libraries/ = SubResource("AnimationLibrary_akeee")
+
+[node name="Leaderboard" type="Label" parent="." unique_id=1591080667 groups=["_safe_top"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_top = 248.0
+offset_right = 350.0
+offset_bottom = 368.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9958334, 0.9499993, 1)
+theme_override_colors/font_outline_color = Color(0.7808298, 0.3643872, 0, 1)
+theme_override_constants/line_spacing = -75
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 90
+text = "RANK_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
+min_font_size = 40
+
+[node name="Countdown" type="Control" parent="." unique_id=1337612816 groups=["_safe_top"]]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -160.0
+offset_top = 428.0
+offset_right = 160.0
+offset_bottom = 512.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="CountdownBg" type="TextureRect" parent="Countdown" unique_id=631751749]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 84.0
+mouse_filter = 2
+texture = ExtResource("8")
+expand_mode = 1
+
+[node name="CountdownIcon" type="TextureRect" parent="Countdown" unique_id=1923136055]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 8.0
+offset_right = 85.0
+offset_bottom = 73.0
+mouse_filter = 2
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CountdownText" type="Label" parent="Countdown" unique_id=1965926874]
+layout_mode = 0
+offset_left = 97.5
+offset_top = -2.0
+offset_right = 294.5
+offset_bottom = 90.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -33
+theme_override_fonts/font = ExtResource("10")
+theme_override_font_sizes/font_size = 50
+text = "12:05:05"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("11")
+
+[node name="ListGroup" type="Control" parent="." unique_id=786295120 groups=["_safe_bottom", "_safe_top"]]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -504.0
+offset_top = 620.0
+offset_right = 504.0
+offset_bottom = -620.0
+grow_horizontal = 2
+
+[node name="RankCellMask" type="TextureRect" parent="ListGroup" unique_id=1436927583]
+clip_children = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_mask")
+expand_mode = 1
+
+[node name="ScrollList" type="ScrollContainer" parent="ListGroup/RankCellMask" unique_id=246682816]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="RankMargin" type="MarginContainer" parent="ListGroup/RankCellMask/ScrollList" unique_id=453097051]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 0
+
+[node name="RowList" type="VBoxContainer" parent="ListGroup/RankCellMask/ScrollList/RankMargin" unique_id=2041625985]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="PlayerCelebrate" type="Control" parent="." unique_id=439686404]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TapToContinue" type="Button" parent="." unique_id=686667992 groups=["_safe_bottom"]]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -175.0
+offset_right = 240.0
+offset_bottom = -105.0
+grow_horizontal = 2
+grow_vertical = 0
+flat = true
+
+[node name="ShadowGroup" type="CanvasGroup" parent="TapToContinue" unique_id=1585393674]
+material = SubResource("ShaderMaterial_tap")
+
+[node name="Text" type="Label" parent="TapToContinue/ShadowGroup" unique_id=667701797]
+offset_left = 10.0
+offset_top = 2.0
+offset_right = 470.0
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.8915384, 0.4576921, 1)
+theme_override_constants/line_spacing = -42
+theme_override_fonts/font = ExtResource("6")
+theme_override_font_sizes/font_size = 44
+text = "RANK_TAP_CONTINUE"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+script = ExtResource("7")
+max_font_size = 56
+min_font_size = 24
+
+[node name="HeartBg" type="Panel" parent="." unique_id=785800863 groups=["_safe_top"]]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 207.0
+offset_top = 428.0
+offset_right = 467.0
+offset_bottom = 512.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sf2tc")
+
+[node name="EtMask007" type="Sprite2D" parent="HeartBg" unique_id=1532950223]
+modulate = Color(1, 0.5882353, 0, 0)
+material = SubResource("CanvasItemMaterial_4oxs7")
+position = Vector2(116, 42)
+scale = Vector2(1.7, 2)
+texture = ExtResource("13")
+
+[node name="LifeSlot" parent="HeartBg" unique_id=796491063 instance=ExtResource("14")]
+layout_mode = 1
+offset_left = -98.0
+offset_top = -30.0
+offset_right = -38.0
+offset_bottom = 30.0
+
+[node name="LifeSlot2" parent="HeartBg" unique_id=1252574932 instance=ExtResource("14")]
+layout_mode = 1
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+
+[node name="LifeSlot3" parent="HeartBg" unique_id=806206545 instance=ExtResource("14")]
+layout_mode = 1
+offset_left = 39.0
+offset_top = -30.0
+offset_right = 99.0
+offset_bottom = 30.0
+
+[node name="BulletsArea" type="Control" parent="." unique_id=527182569 groups=["_safe_top"]]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 103.0
+offset_bottom = 455.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Pos1" type="Control" parent="BulletsArea" unique_id=1596051229]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 3.0
+offset_bottom = 3.0
+grow_horizontal = 0
+
+[node name="Pos2" type="Control" parent="BulletsArea" unique_id=1367956256]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 124.0
+offset_bottom = 124.0
+grow_horizontal = 0
+
+[node name="Pos3" type="Control" parent="BulletsArea" unique_id=41438440]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 247.0
+offset_bottom = 247.0
+grow_horizontal = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1643060180]
+libraries/ = SubResource("AnimationLibrary_06wax")
+
+[connection signal="pressed" from="TapToContinue" to="." method="_on_tap_pressed"]
+
+[editable path="HeartBg/LifeSlot"]

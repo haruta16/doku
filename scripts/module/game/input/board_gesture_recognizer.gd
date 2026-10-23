@@ -1,6 +1,8 @@
-## 手势识别器：把拖拽坐标翻译成格子坐标，交给当前方案的 Operation，产出 CellAction 列表
+## 棋盘手势识别器：把按下、经过与抬起整理为点击或涂抹，并管理待决双击窗口。
 class_name BoardGestureRecognizer
 extends RefCounted
+
+const DEFAULT_DOUBLE_TAP_SEC: float = 0.35
 
 # ---- 依赖与手态势 ----
 var board: BoardView # 棋盘视图：坐标换算与格子状态都问它
@@ -8,34 +10,84 @@ var active_scheme: BoardInputScheme # 当前生效的输入方案
 var _stroke := BoardStrokeContext.new() # 这一笔的共享状态
 var _last_tap_cell: Vector2i = Vector2i(-1, -1) # 上一次点击的格子，(-1,-1) 表示窗口已关闭
 
+var _double_tap_window_generation: int = 0
+
+var _drag_start_serial: int = 0
+
+var _window_drag_start_serial: int = 0
+var _started_on_cat: bool = false
+
+var window_sec_provider: Callable = Callable()
+
+var cross_pointer_double_tap_provider: Callable = Callable()
+
+var promote_to_double_tap_provider: Callable = Callable()
+
+var autofix_target_provider: Callable = Callable()
+
+var last_double_tap_promoted: bool = false
+
+var _last_window_sec: float = DEFAULT_DOUBLE_TAP_SEC
+
+var _dbg_win_open_ms: int = -1
+var _dbg_win_open_cell: Vector2i = Vector2i(-1, -1)
+
 
 ## 绑定棋盘视图
 func _init(p_board: BoardView) -> void:
 	board = p_board
 
 
-# ================= 拖拽入口（页面调用） =================
-## 按下：同一格短时间内再次按下算双击，否则按点击处理
-func on_drag_start(pos: Vector2) -> Array[CellAction]:
+func on_drag_start(pos: Vector2, is_physical_press_on_cell: bool = true) -> Array[CellAction]:
+	_drag_start_serial += 1
 	var cell: Vector2i = _resolve_cell(pos)
-	var r: int = cell.y
-	var c: int = cell.x
+	var row: int = cell.y
+	var col: int = cell.x
+	_started_on_cat = (
+		is_physical_press_on_cell
+		and cell.x >= 0
+		and board.get_cell_state(row, col) == CellState.CAT
+		and board.is_cat_visual_revealed(row, col)
+	)
+	_log_double_tap_interval(row, col)
 
-	# 命中上一次点击的格子 → 判定双击，并关掉判定窗口
-	if _last_tap_cell == Vector2i(r, c):
+	last_double_tap_promoted = false
+
+	if try_consume_pending_tap(row, col):
+		_stroke.reset()
+		return active_scheme.double_tap_op.on_double_tap(row, col)
+
+	if cross_pointer_double_tap_provider.is_valid():
+		var consumed_cross_pointer: bool = cross_pointer_double_tap_provider.call(self, row, col)
+		if consumed_cross_pointer:
+			_stroke.reset()
+			return active_scheme.double_tap_op.on_double_tap(row, col)
+
+	if (
+		board.get_cell_state(row, col) != CellState.CAT
+		and promote_to_double_tap_provider.is_valid()
+		and promote_to_double_tap_provider.call(row, col)
+	):
 		_last_tap_cell = Vector2i(-1, -1)
 		_stroke.reset()
-		return active_scheme.double_tap_op.on_double_tap(r, c)
+		last_double_tap_promoted = true
+		return active_scheme.double_tap_op.on_double_tap(row, col)
 
-	# 新的一笔：记录起点
+	if autofix_target_provider.is_valid():
+		var fixed_cell: Vector2i = autofix_target_provider.call(row, col, pos)
+		if fixed_cell.x >= 0:
+			_last_tap_cell = Vector2i(-1, -1)
+			_stroke.reset()
+			last_double_tap_promoted = true
+			return active_scheme.double_tap_op.on_double_tap(fixed_cell.x, fixed_cell.y)
+
 	_stroke.reset()
-	_stroke.start_cell = Vector2i(r, c)
-	_stroke.last_cell = Vector2i(r, c)
-	var actions: Array[CellAction] = active_scheme.tap_op.on_tap(r, c, _stroke)
+	_stroke.start_cell = Vector2i(row, col)
+	_stroke.last_cell = Vector2i(row, col)
+	var actions: Array[CellAction] = active_scheme.tap_op.on_tap(row, col, _stroke)
 
-	# 只有点击真的产生动作时才开双击窗口，避免空点占位
 	if not actions.is_empty():
-		_open_double_tap_window(r, c)
+		_open_double_tap_window(row, col)
 	return actions
 
 
@@ -75,16 +127,36 @@ func on_drag_over(pos: Vector2) -> Array[CellAction]:
 	return out
 
 
-## 抬手：把结束时机交给滑动操作，然后清空手势状态
 func on_drag_end() -> void:
 	active_scheme.swipe_op.on_end(_stroke)
 	_stroke.reset()
+	_started_on_cat = false
 
 
-## 切换 normal/draft 方案时调用：清掉未完成的手势与双击窗口
+func finish_drag(release_pos: Vector2) -> bool:
+	var release_cell: Vector2i = board.pointer_to_cell(release_pos.x, release_pos.y)
+	var release_row_col := Vector2i(release_cell.y, release_cell.x)
+	var start_cell: Vector2i = _stroke.start_cell
+	var is_cat_click: bool = (
+		_stroke.is_active()
+		and release_cell.x >= 0
+		and start_cell == release_row_col
+		and _started_on_cat
+	)
+	on_drag_end()
+	return is_cat_click
+
+
 func reset_for_scheme_switch() -> void:
+	_double_tap_window_generation += 1
 	_last_tap_cell = Vector2i(-1, -1)
 	_stroke.reset()
+	_started_on_cat = false
+	last_double_tap_promoted = false
+
+	ABTestManager.doubletap_protect.reset_high_freq_state()
+	_dbg_win_open_ms = -1
+	_dbg_win_open_cell = Vector2i(-1, -1)
 
 
 # ================= 内部工具 =================
@@ -93,11 +165,71 @@ func _resolve_cell(pos: Vector2) -> Vector2i:
 	return board.pointer_to_cell(pos.x, pos.y)
 
 
-## 开启 0.35 秒双击窗口；超时没等到第二次按下就自动失效
+func get_last_window_sec() -> float:
+	return _last_window_sec
+
+
+func has_pending_tap(r: int, c: int) -> bool:
+	return _last_tap_cell == Vector2i(r, c)
+
+
+func get_pending_tap_cell() -> Vector2i:
+	return _last_tap_cell
+
+
+func is_window_from_latest_drag_start() -> bool:
+	return _last_tap_cell.x >= 0 and _window_drag_start_serial == _drag_start_serial
+
+
+func try_consume_pending_tap(r: int, c: int) -> bool:
+	if _last_tap_cell != Vector2i(r, c):
+		return false
+
+	_log_double_tap_interval(r, c)
+	_clear_pending_tap()
+	return true
+
+
 func _open_double_tap_window(r: int, c: int) -> void:
+	_double_tap_window_generation += 1
+	var generation: int = _double_tap_window_generation
+	_window_drag_start_serial = _drag_start_serial
 	_last_tap_cell = Vector2i(r, c)
-	board.get_tree().create_timer(0.35).timeout.connect(
+
+	var sec: float = DEFAULT_DOUBLE_TAP_SEC
+	if window_sec_provider.is_valid():
+		sec = window_sec_provider.call(r, c)
+	_last_window_sec = sec
+	_dbg_win_open_ms = Time.get_ticks_msec()
+	_dbg_win_open_cell = Vector2i(r, c)
+	board.get_tree().create_timer(sec).timeout.connect(
 		func() -> void:
+			if generation != _double_tap_window_generation:
+				return
 			if _last_tap_cell == Vector2i(r, c):
 				_last_tap_cell = Vector2i(-1, -1)
 	)
+
+
+func _clear_pending_tap() -> void:
+	_last_tap_cell = Vector2i(-1, -1)
+	_dbg_win_open_ms = -1
+	_dbg_win_open_cell = Vector2i(-1, -1)
+
+
+func _log_double_tap_interval(r: int, c: int) -> void:
+	if c < 0 or OS.has_feature("rel"):
+		return
+	if _dbg_win_open_ms < 0 or _dbg_win_open_cell != Vector2i(r, c):
+		return
+	var interval: int = Time.get_ticks_msec() - _dbg_win_open_ms
+	var hit: bool = _last_tap_cell == Vector2i(r, c)
+	print(
+		(
+			"[doubletap] cell=(%d,%d) interval=%dms window=%dms → %s"
+			% [r, c, interval, int(round(_last_window_sec * 1000.0)), "HIT" if hit else "MISS"]
+		)
+	)
+
+	_dbg_win_open_ms = -1
+	_dbg_win_open_cell = Vector2i(-1, -1)

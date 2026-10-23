@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://ta6lemwjkr6p"]
+
+[ext_resource type="Script" uid="uid://cxj46vvgi7y2l" path="res://addons/trail_preview/tw.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://40i3neq4gjjm" path="res://assets/effect/texture/trail/et_trail_002.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dtvd3xi8wfceb" path="res://assets/effect/texture/trail/et_trail_001.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bmvipmngkvdor" path="res://assets/effect/texture/star/et_star_2.png" id="4"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_t2a34"]
+
+[sub_resource type="Curve" id="Curve_djdtf"]
+_data = [Vector2(0, 0), 0.0, 1.0, 0, 1, Vector2(1, 1), 1.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_hy2kp"]
+offsets = PackedFloat32Array(0, 0.41982183, 0.85523385)
+colors = PackedColorArray(0.97933334, 1, 0.69, 0, 1, 0.9166667, 0.5, 0.19607843, 1, 0.47058824, 0, 1)
+
+[sub_resource type="Gradient" id="Gradient_5troy"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 0.8627451, 0.25490198, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yebl7"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_btxl1"]
+_data = [Vector2(0.25427353, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 3
+
+[node name="Control" type="Control" unique_id=356952784]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ScoreTrail" type="Sprite2D" parent="." unique_id=1405478737]
+process_mode = 3
+position = Vector2(50, 60)
+script = ExtResource("1")
+
+[node name="TrailAlp" type="Line2D" parent="ScoreTrail" unique_id=86447025]
+modulate = Color(1, 1, 1, 0)
+material = SubResource("CanvasItemMaterial_t2a34")
+width = 150.0
+width_curve = SubResource("Curve_djdtf")
+gradient = SubResource("Gradient_hy2kp")
+texture = ExtResource("2")
+texture_mode = 2
+round_precision = 6
+antialiased = true
+
+[node name="TrailGlow" type="Line2D" parent="ScoreTrail" unique_id=2072355215]
+material = SubResource("CanvasItemMaterial_t2a34")
+width = 180.0
+width_curve = SubResource("Curve_djdtf")
+gradient = SubResource("Gradient_5troy")
+texture = ExtResource("3")
+texture_mode = 2
+round_precision = 6
+antialiased = true
+
+[node name="TrailAdd" type="Line2D" parent="ScoreTrail" unique_id=57013180]
+modulate = Color(1, 1, 1, 0.39215687)
+material = SubResource("CanvasItemMaterial_yebl7")
+width = 150.0
+width_curve = SubResource("Curve_djdtf")
+gradient = SubResource("Gradient_hy2kp")
+texture = ExtResource("2")
+texture_mode = 2
+round_precision = 6
+antialiased = true
+
+[node name="Stars" type="CPUParticles2D" parent="ScoreTrail" unique_id=1678172114]
+amount = 16
+texture = ExtResource("4")
+lifetime = 0.35000000000000003
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 120.0
+scale_amount_min = 0.05
+scale_amount_max = 0.15
+scale_amount_curve = SubResource("Curve_btxl1")

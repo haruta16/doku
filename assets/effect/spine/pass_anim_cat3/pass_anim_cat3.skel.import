@@ -1,0 +1,13 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://nsaii60fswe8"
+path="res://.godot/imported/pass_anim_cat3.skel-78cbfff591b4271e4a49aff5190cdb8d.spskel"
+
+[deps]
+
+source_file="res://assets/effect/spine/pass_anim_cat3/pass_anim_cat3.skel"
+dest_files=["res://.godot/imported/pass_anim_cat3.skel-78cbfff591b4271e4a49aff5190cdb8d.spskel"]
+
+[params]

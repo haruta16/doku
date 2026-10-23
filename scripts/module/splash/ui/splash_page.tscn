@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://d6mqt7eyuhga"]
 
 [ext_resource type="Script" uid="uid://cppsj8hm7jbf1" path="res://scripts/module/splash/view/splash_page.gd" id="1"]
-[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="2"]
-[ext_resource type="Texture2D" uid="uid://ck7e4qtugiu0f" path="res://assets/sprites/common/logo.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://btynpayispkmj" path="res://assets/sprites/common/cat_face.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://ck7e4qtugiu0f" path="res://assets/sprites/common/logo.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dniyu4x0gfcpl" path="res://assets/sprites/splash/halloween/halloween_pumpkin.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dc7r0e32muhui" path="res://assets/sprites/splash/halloween/halloween_bottom_scene.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://b62ikcrspbvqu" path="res://assets/sprites/splash/halloween/halloween_bat.png" id="5"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="6"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="7"]
+[ext_resource type="Texture2D" uid="uid://btynpayispkmj" path="res://assets/sprites/common/cat_face.png" id="8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pbg"]
 bg_color = Color(0.898, 0.871, 0.855, 1)
@@ -32,6 +36,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
+halloween_logo = ExtResource("2")
+halloween_cat_face = ExtResource("3")
 
 [node name="Root" type="Control" parent="." unique_id=1421039062]
 layout_mode = 1
@@ -43,58 +49,86 @@ offset_left = -540.0
 offset_right = 540.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 mouse_filter = 2
 
-[node name="QuoteAuthor" type="VBoxContainer" parent="Root" unique_id=143634374]
+[node name="HalloweenBottomScene" type="TextureRect" parent="Root" unique_id=370241041]
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -288.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+texture = ExtResource("4")
+expand_mode = 1
+
+[node name="HalloweenBat" type="TextureRect" parent="Root" unique_id=1052497037]
+visible = false
+modulate = Color(1, 1, 1, 0.9)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -187.0
+offset_bottom = 156.0
+grow_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("5")
+expand_mode = 1
+
+[node name="TopPin" type="Control" parent="Root" unique_id=1701228819]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -450.0
-offset_top = 362.0
+offset_top = 350.0
 offset_right = 450.0
-offset_bottom = 362.0
+offset_bottom = 1450.0
+grow_horizontal = 2
+
+[node name="QuoteAuthor" type="VBoxContainer" parent="Root/TopPin" unique_id=143634374]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -450.0
+offset_right = 450.0
+offset_bottom = 711.0
 grow_horizontal = 2
 mouse_filter = 2
 
-[node name="QuoteLabel" type="Label" parent="Root/QuoteAuthor" unique_id=1557667820]
-custom_minimum_size = Vector2(0, 540)
+[node name="QuoteLabel" type="Label" parent="Root/TopPin/QuoteAuthor" unique_id=1557667820]
+custom_minimum_size = Vector2(900, 120)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.576, 0.353, 0.353, 1)
-theme_override_fonts/font = ExtResource("2")
+theme_override_constants/line_spacing = 4
+theme_override_fonts/font = ExtResource("6")
 theme_override_font_sizes/font_size = 80
-text = "splash_slogan_0"
+text = "‘’ According to research, playing for a while every day can make you smarter. ‘’"
 autowrap_mode = 3
+script = ExtResource("7")
+layout_box_override = Vector2(900, 990)
 
-[node name="Control" type="Control" parent="Root/QuoteAuthor" unique_id=1873307412]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-
-[node name="AuthorLabel" type="Label" parent="Root/QuoteAuthor" unique_id=429284139]
+[node name="AuthorLabel" type="Label" parent="Root/TopPin/QuoteAuthor" unique_id=1340500328]
+custom_minimum_size = Vector2(900, 110)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.639, 0.463, 0.463, 1)
+theme_override_constants/line_spacing = 4
 theme_override_font_sizes/font_size = 70
 text = "- Meowdoku"
 horizontal_alignment = 2
+clip_text = true
+script = ExtResource("7")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
 
-[node name="ProgressBg" type="Panel" parent="Root" unique_id=1850425251]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -453.0
-offset_top = -502.0
-offset_right = 453.36
-offset_bottom = -464.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_pbg")
-
-[node name="ProgressFill" type="Panel" parent="Root" unique_id=1514135198]
+[node name="BottomPin" type="Control" parent="Root" unique_id=35847301]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -102,45 +136,74 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -450.0
-offset_top = -498.0
-offset_right = 231.65997
-offset_bottom = -466.0
+offset_top = -600.0
+offset_right = 450.0
+offset_bottom = -137.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ProgressBg" type="Panel" parent="Root/BottomPin" unique_id=1850425251]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -454.0
+offset_top = -367.0
+offset_right = 454.0
+offset_bottom = -325.00012
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pbg")
+
+[node name="ProgressFill" type="Panel" parent="Root/BottomPin" unique_id=1514135198]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -450.0
+offset_top = -363.0
+offset_right = -2.065918
+offset_bottom = -329.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_pfill")
 
-[node name="Logo" type="TextureRect" parent="Root" unique_id=1663218895]
+[node name="Logo" type="TextureRect" parent="Root/BottomPin" unique_id=1663218895]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
+anchors_preset = -1
+anchor_left = 0.499
 anchor_top = 1.0
-anchor_right = 0.5
+anchor_right = 0.499
 anchor_bottom = 1.0
-offset_left = -195.99997
-offset_top = -432.0
-offset_right = 984.0
-offset_bottom = 317.0
+offset_left = -593.33374
+offset_top = -759.14954
+offset_right = 596.2505
+offset_bottom = 1.4379883
 grow_horizontal = 2
 grow_vertical = 0
 scale = Vector2(0.31, 0.31)
-texture = ExtResource("3")
-expand_mode = 1
+pivot_offset_ratio = Vector2(0.5, 1)
+texture = ExtResource("2")
 stretch_mode = 6
 
-[node name="CatFace" type="TextureRect" parent="Root" unique_id=929831312]
+[node name="CatFace" type="TextureRect" parent="Root/BottomPin" unique_id=929831312]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -51.0
-offset_top = -598.0
-offset_right = 35.0
-offset_bottom = -520.0
+offset_left = -43.014038
+offset_top = -450.73682
+offset_right = 42.985962
+offset_bottom = -372.73682
 grow_horizontal = 2
 grow_vertical = 0
-texture = ExtResource("4")
+texture = ExtResource("8")
 expand_mode = 1
 stretch_mode = 6
 

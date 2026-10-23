@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://r4bypyedkd17"
-path.s3tc="res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.s3tc.ctex"
-path.etc2="res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.etc2.ctex"
+path.bptc="res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.bptc.ctex"
+path.astc="res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/effect/texture/ui/et_broken_fish_glow.png"
-dest_files=["res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.s3tc.ctex", "res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.etc2.ctex"]
+dest_files=["res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.bptc.ctex", "res://.godot/imported/et_broken_fish_glow.png-5f6205c566e2a8e41f1359b8f81361ea.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

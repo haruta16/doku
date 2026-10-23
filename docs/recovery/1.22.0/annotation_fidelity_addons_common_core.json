@@ -1,0 +1,441 @@
+{
+  "files": 62,
+  "new_comment_lines": 728,
+  "documented_adaptations": "desktop_native_logging_adaptations.json",
+  "items": [
+    {
+      "file": "addons/helpshift_plugin/export_plugin.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "2c7e487a79f9dd81602463070994408f8842c4ee930b3dbdf911ae3a1f13fc0c"
+    },
+    {
+      "file": "addons/in_app_review_plugin/export_plugin.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "a5e4cbc88d125ccd93cb710103583cc5529e97e2b2c8fd15e85246bb651dbb09"
+    },
+    {
+      "file": "addons/lxlogin/editor/android_export_plugin.gd",
+      "new_comment_lines": 6,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "153a8370456110fe586a690e1aba0217f5aa2aa7d6506521797973155acd751b"
+    },
+    {
+      "file": "addons/lxlogin/editor/ios_export_plugin.gd",
+      "new_comment_lines": 12,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "101ba570d55e83587f4eaf404f9702817be094fb106d3699fa174125255bcddc"
+    },
+    {
+      "file": "addons/lxlogin/editor/lxauth_android_config.gd",
+      "new_comment_lines": 1,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "eee59d227815252672d681656f9c17847c1332ecf276090261a785c1468fc1e9"
+    },
+    {
+      "file": "addons/lxlogin/native/android_bridge_adapter.gd",
+      "new_comment_lines": 33,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "cdcb51e1d6e88537de430fdb80b68f33675b2c3f42bdb0392857628e613cb70a"
+    },
+    {
+      "file": "addons/lxlogin/plugin.gd",
+      "new_comment_lines": 6,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "493af1ef4e9261a7342ba38154f1d87e3213bd9b7b2eeca696b56f3f8a8ccab2"
+    },
+    {
+      "file": "addons/lxlogin/scripts/lx_auth.gd",
+      "new_comment_lines": 23,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "ca728549d46356057b1a79ae53532ababf138a85d4768efaf22d92a7cf0fd9e0"
+    },
+    {
+      "file": "addons/lxlogin/scripts/models/auth_error.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "f15e66058bf410664db319cce6db744beb74cefd0f09c2b1ba6bcef3ea3cc888"
+    },
+    {
+      "file": "addons/lxlogin/scripts/models/auth_expired_info.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "afa66437a131e5c8bbe0c45211b6d189b8567a850d06ca2f92906cdd9f3f58e0"
+    },
+    {
+      "file": "addons/lxlogin/scripts/models/auth_link_or_login_result.gd",
+      "new_comment_lines": 4,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "63ad1ff415f6637a9027bd287e78b15e5b9ea92ae678fdaf883f5d11dc05794c"
+    },
+    {
+      "file": "addons/lxlogin/scripts/models/auth_provider_info.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "2893826b02dbd75fbe95842a4961f736edca8126fd6c4b6970d0218bc46abd8a"
+    },
+    {
+      "file": "addons/lxlogin/scripts/models/auth_result.gd",
+      "new_comment_lines": 4,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "e08d30cc7ceaef160864eef2304a40a7ce40369dbc88f9e85337273dc0a99bea"
+    },
+    {
+      "file": "addons/lxlogin/scripts/models/auth_token_result.gd",
+      "new_comment_lines": 4,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "0932c77a5d127c1c8e65215789079d3ed45a187742299c85d8fc1786a99fa8cb"
+    },
+    {
+      "file": "addons/lxlogin/scripts/models/auth_user_profile.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "83d2fb20afc0f826c42df4587ca1176888d742fff747e1f2a3de6ecf423f50f6"
+    },
+    {
+      "file": "addons/trail_preview/plugin.gd",
+      "new_comment_lines": 7,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "e106dc61fea1d654c5c77130ebdad1aa7f4254b979c6a77a78a9da4e2ca28dfd"
+    },
+    {
+      "file": "addons/trail_preview/tw.gd",
+      "new_comment_lines": 28,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "1ae586e1fe25d1c37ba3c12e6da84cc95c6c15e603faf6df2be5764ca6261618"
+    },
+    {
+      "file": "addons/unikit/editor/android_export_plugin.gd",
+      "new_comment_lines": 13,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "fc2ad55708709c766b9d77887987962c7e1324aad0ee5a209a2618aa834f470a"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/bi_config_fetcher.gd",
+      "new_comment_lines": 5,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "6d0183e54fd03c6ac43a073064691a11c017667c3359bfd0d226fd2dcccacdf1"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/bi_config_inspector_plugin.gd",
+      "new_comment_lines": 5,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "0911f6f9877f391bc8ec2e2315e0b0a4672b04c4babf23e987f5c4b29936010c"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/bi_config_requester.gd",
+      "new_comment_lines": 8,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "6202d7aade4a564dec2ef04436161927d341db4c5947e5d219610cb19b728e47"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/bi_http.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "71d6a53f929efdced1559bd07b468b320f4410d4e624fc0cb9cf56093f3b6e4c"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/requesters/abtest_requester.gd",
+      "new_comment_lines": 5,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "ec7000e5017e9854a0683ecefad9f081268ea80f3c0ad84c9595f85dc16c7ed9"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/requesters/adconfig_requester.gd",
+      "new_comment_lines": 5,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "9f8687ecc2f6d4c65908cb9664ffc8e5dfa74eb16e8e5ee51fc73a36b7b2ab83"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/requesters/skadnetwork_requester.gd",
+      "new_comment_lines": 6,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "e3306b5301e6c9a05f2e9c565859dc91b2031d5ccaf79ba764eeb0882d44e27c"
+    },
+    {
+      "file": "addons/unikit/editor/bi_config/requesters/usertag_requester.gd",
+      "new_comment_lines": 6,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "ee94d31d5895a6cc1c337ea365cdd07d32d19cbedfa67f0f7b0fe3d3e70d1c27"
+    },
+    {
+      "file": "addons/unikit/editor/ios_export_plugin.gd",
+      "new_comment_lines": 39,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "7678e60fbcecbcaa93c81e3e78788b95f1293a882549ee6a9145ef23a4f0891e"
+    },
+    {
+      "file": "addons/unikit/editor/plugin.gd",
+      "new_comment_lines": 7,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "59c2d1b46643cca1df355e7a3762c7ab3428b3c058136ff222d82c2f496b13ac"
+    },
+    {
+      "file": "addons/unikit/editor/unikit_android_config.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "02b9e337123dbfd5dceaf3732128bd6fbc2c5d485f5c66551e7388b0ce877347"
+    },
+    {
+      "file": "addons/unikit/editor/unikit_config.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "364a7c8eb454a3fedea61f331b6fae9c1430e5b59a4d26e4b6719e89df4ffc71"
+    },
+    {
+      "file": "addons/unikit/editor/unikit_ios_config.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "629eb52da82d0ea024f7d3250f12f9984393e615365c436c68091e738649c1d2"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_abtest_module.gd",
+      "new_comment_lines": 25,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "977641f6c71e33eaaac01cb3fe47a2f3707fc47a4502267cd1337de380af539b"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_ad_module.gd",
+      "new_comment_lines": 22,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "949fbd649f241d3f8b0c230a7be2bbc12b2902caf3846c9550219d397a32ae46"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_analyze_module.gd",
+      "new_comment_lines": 6,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "4024a343bfada4cac2bd127b3b65f52817ef71f179f580b41f8a5aecccba5a8f"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_grt_module.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "b3f7ddf6e02936b05ae4d9f004cf094cf73c26d8a530d55b812272fdd88fae9a"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_module_base.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "09a2e5e1fc93b760669fc3b1a67825d7e02ee08e563a5d830fc31d192c6c2710"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_purchase_module.gd",
+      "new_comment_lines": 46,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "f4fa764b7b510e3b593656c097433d8dc255d17d6e9f7e9af1561080f92b2295"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_push_module.gd",
+      "new_comment_lines": 20,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "6259f33728b1100c9265d3cca15eec9ded716b526b7cec1bdacea2b44e434675"
+    },
+    {
+      "file": "addons/unikit/scripts/modules/unikit_usertag_module.gd",
+      "new_comment_lines": 21,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "af584d9599b163fd79ce68ec71f44c7b9630867fcea036513426e9f6d9d7b182"
+    },
+    {
+      "file": "addons/unikit/scripts/purchase/unikit_purchase_error.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "c9b0d79832a20ecb19b504194069021ec1edc2e16fd6ce5482949b095e46b8d0"
+    },
+    {
+      "file": "addons/unikit/scripts/purchase/unikit_purchase_native_bridge.gd",
+      "new_comment_lines": 40,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "40f883ffd7a02872d35fcde5671cb12f237fc9068bc67388431293e1753f8183"
+    },
+    {
+      "file": "addons/unikit/scripts/purchase/unikit_purchase_params.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "f31e682ecb5250aeab5031afd6eb8632490c9263d114c76d1e108d0b10c46c8a"
+    },
+    {
+      "file": "addons/unikit/scripts/purchase/unikit_purchase_product.gd",
+      "new_comment_lines": 4,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "78952a54f71c852fe423b00c88f3ad2fe63ca48b2956ed322bccc89025106ad1"
+    },
+    {
+      "file": "addons/unikit/scripts/purchase/unikit_purchase_transaction.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "f2d4283bc63e7e0e4bf9a310d76579cadfb75602f38eaeb6ed2dc00382eff035"
+    },
+    {
+      "file": "addons/unikit/scripts/push/unikit_notification_data.gd",
+      "new_comment_lines": 4,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "82b238d0b2c91e01186f4dc0426d16800629c54b724d46fea6280f994bba5f31"
+    },
+    {
+      "file": "addons/unikit/scripts/unikit.gd",
+      "new_comment_lines": 57,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "c01a3e50e4be45d420011b873549f43ce4bb0be96f9acb1f1238679eea632c78"
+    },
+    {
+      "file": "addons/unikit/scripts/unikit_init_params.gd",
+      "new_comment_lines": 4,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "55bad56d68cb455a456c4bf1cefd796bc0e5610895a0ad493a754e4674546882"
+    },
+    {
+      "file": "addons/vibrate_plugin/export_plugin.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "55c129cae449269e2579d682827f1d235154eb4c87c130616cfd8fc4f7b12168"
+    },
+    {
+      "file": "scripts/common/ad_placement.gd",
+      "new_comment_lines": 1,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "fb6429a916fae8fcaead9668276e808299e2d9abbb8137957cf866ec88e232db"
+    },
+    {
+      "file": "scripts/common/att_guide_helper.gd",
+      "new_comment_lines": 3,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "a8be50a78626ac347b1dbd093cde9bc3c0c7a89f37acfa3f2000a8c7357665ea"
+    },
+    {
+      "file": "scripts/common/auth_manager.gd",
+      "new_comment_lines": 31,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "ba70553d5bd3eb3d4b4bf7b63afa3b9d4d08a498c456c66afe0f71e908585b86"
+    },
+    {
+      "file": "scripts/common/font_experiment_selector.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "8e7137d22125b916116863b9e20305b91e429467f83d96c7cb031db59fa8fb68"
+    },
+    {
+      "file": "scripts/common/font_swap_manager.gd",
+      "new_comment_lines": 10,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "ef071f7bd7a88cc5d448755762aa105005ae8a6bec6991fcac1368c3a32a0e2d"
+    },
+    {
+      "file": "scripts/common/helpshift_manager.gd",
+      "new_comment_lines": 5,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "48d144fe5ed70678de74514ee608af0c6d36f2f40f1787fdbd4947700772817f"
+    },
+    {
+      "file": "scripts/common/native_util_manager.gd",
+      "new_comment_lines": 17,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "9ec1a9cbc88a85e7b5a5d36c9f16b863432f74b40eeb0c2bdc6bddf78b55f89a"
+    },
+    {
+      "file": "scripts/common/unikit_manager.gd",
+      "new_comment_lines": 112,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "1d2aae79302ad8d559eeac2f079bcaee1eb9fa6928f3874796bd38c645d86cb0"
+    },
+    {
+      "file": "scripts/core/global_unique_id.gd",
+      "new_comment_lines": 0,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "abe7ee26786e55aa240a8695c282131cf1a84a408f07f5905ea7d5ef9365def2"
+    },
+    {
+      "file": "scripts/core/log/log_util.gd",
+      "new_comment_lines": 9,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "fc72e86a12325a6bbfa7f46eb6dbc1787844ab604da27910bf143a1b631d3239"
+    },
+    {
+      "file": "scripts/core/net/api_config.gd",
+      "new_comment_lines": 8,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "6a008c9d7c9dfc8ec800f2ec03145a5d6ba16e2ea66b65b5295768eab5c6784d"
+    },
+    {
+      "file": "scripts/core/net/api_response.gd",
+      "new_comment_lines": 4,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "9a322a55df7a59fcb1adfbbb83e7ae47c09a7cf89648e557923c0d87b02341b9"
+    },
+    {
+      "file": "scripts/core/net/http_client.gd",
+      "new_comment_lines": 8,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "0088ab3f43075f8f99a3a6a296659d3c6adf38dc016929b4cd75a664f1c10876"
+    },
+    {
+      "file": "scripts/core/net/http_date.gd",
+      "new_comment_lines": 2,
+      "code_matches_baseline_after_documented_adaptations": true,
+      "original_lines_preserved_except_documented_adaptations": true,
+      "code_sha256": "41338f39e324d886cfa095aa72149ae84c8680bbc57e75224f6dc11e921eb7aa"
+    }
+  ]
+}

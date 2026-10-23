@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://d1bmmacrhgw2u"
+path="res://.godot/imported/home_companion_cat.atlas-cc1dcd8e4b04627fea284a9b06f058d5.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/home_companion_cat/home_companion_cat.atlas"
+dest_files=["res://.godot/imported/home_companion_cat.atlas-cc1dcd8e4b04627fea284a9b06f058d5.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

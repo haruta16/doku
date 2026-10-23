@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://crlvl2312lyw5"
+path="res://.godot/imported/cat_basket.atlas-c9fa812f3a75b5181c88ae3247a83563.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/peekaboo_cat/cat_basket/cat_basket.atlas"
+dest_files=["res://.godot/imported/cat_basket.atlas-c9fa812f3a75b5181c88ae3247a83563.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

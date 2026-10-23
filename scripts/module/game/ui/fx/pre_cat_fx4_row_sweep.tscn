@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://bwyjtnahsktv0" path="res://scripts/module/game/view/fx/fx4_row_sweep.gd" id="1"]
+
+[node name="Fx4RowSweep" type="Control" unique_id=668298685]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")

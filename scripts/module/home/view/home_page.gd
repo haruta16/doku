@@ -1,35 +1,58 @@
-## 首页（HomePage）：开始游戏 / 每日挑战两个入口，负责转场动画与启动后的弹窗排队
-## 入口状态与红点：每日挑战由 DailyEntryState 判定解锁（关卡数 < 21 锁定）；设置按钮上的红点由 Helpshift 未读数驱动（RedDotCenter 的「helpshift_unread」）
+## 首页协调器：刷新活动入口和续玩状态，按优先队列串起登录、奖励、引导与活动弹窗。
 class_name HomePage
 extends UIFrameWindow
 
 # ---- 子节点引用（@onready：进场景树后才可用） ----
-@onready var _start_btn: Control = $Root/StartBtn  # 开始按钮（BtnWithTag 场景，用 Control 类型以便设置 show_difficult）
-@onready var _daily_btn: Button = $Root/DailyBtn  # 每日挑战按钮外层，只用于绑按压缩放
-@onready var _daily_bg: Button = $Root/DailyBtn/Bg  # 每日按钮可换肤的背景
-@onready var _daily_shadow: NinePatchRect = $Root/DailyBtn/Shadow  # 按钮投影，锁定态隐藏
-@onready var _daily_lock_icon: HBoxContainer = $Root/DailyBtn/LockIcon  # 锁定态：锁图标 + 文案
-@onready var _daily_lock_label: Label = $Root/DailyBtn/LockIcon/LockLabel  # 锁定态文案
-@onready var _daily_unlock_box: HBoxContainer = $Root/DailyBtn/UnlockBox  # 可玩 / 已完成态：猫爪 + 文案
-@onready var _daily_unlock_label: Label = $Root/DailyBtn/UnlockBox/UnlockLabel  # 可玩 / 已完成态文案
-@onready var _daily_done_tag: Panel = $Root/DailyBtn/DoneTag  # 已完成角标（用时）
-@onready var _daily_done_time: Label = $Root/DailyBtn/DoneTag/DoneHBox/DoneTimeLabel  # 已完成用时文案
-@onready var _daily_top_tag: Control = $Root/DailyBtn/TopTag  # 已完成右上角名次标签
-@onready var _daily_top_label: Label = $Root/DailyBtn/TopTag/TopLabel  # 名次文案
-@onready var _countdown_tag: Panel = $Root/DailyBtn/CountdownTag  # 倒计时角标（可玩态显示）
-@onready var _daily_paw: TextureRect = $Root/DailyBtn/UnlockBox/Paw  # 猫爪图标（按 A/B 换亮 / 暗贴图）
+@onready var _start_btn: Control = $Root/StartBtn # 开始按钮（BtnWithTag 场景，用 Control 类型以便设置 show_difficult）
+@onready var _anim: AnimationPlayer = $AnimationPlayer # 首页主界面动画 MainInterface
+
+@onready var _companion: Control = $Root/HomeCompanionPanel
+var _home_companion_strategy: HomeCompanionCatStrategy
+var _companion_entry_generation: int = 0
+var _companion_entry_pending: bool = false
+
+@onready var _daily_btn: Button = $Root/DailyBtn # 每日挑战按钮外层，只用于绑按压缩放
+@onready var _daily_bg: Button = $Root/DailyBtn/Bg # 每日按钮可换肤的背景
+@onready var _daily_shadow: NinePatchRect = $Root/DailyBtn/Shadow # 按钮投影，锁定态隐藏
+@onready var _daily_lock_icon: HBoxContainer = $Root/DailyBtn/LockIcon # 锁定态：锁图标 + 文案
+@onready var _daily_lock_label: Label = $Root/DailyBtn/LockIcon/LockLabel # 锁定态文案
+@onready var _daily_unlock_box: HBoxContainer = $Root/DailyBtn/UnlockBox # 可玩 / 已完成态：猫爪 + 文案
+@onready var _daily_unlock_label: Label = $Root/DailyBtn/UnlockBox/UnlockLabel # 可玩 / 已完成态文案
+@onready var _daily_done_tag: Panel = $Root/DailyBtn/DoneTag # 已完成角标（用时）
+@onready var _daily_done_time: Label = $Root/DailyBtn/DoneTag/DoneHBox/DoneTimeLabel # 已完成用时文案
+@onready var _daily_top_tag: Control = $Root/DailyBtn/TopTag # 已完成右上角名次标签
+@onready var _daily_top_label: Label = $Root/DailyBtn/TopTag/TopLabel # 名次文案
+@onready var _countdown_tag: Panel = $Root/DailyBtn/CountdownTag # 倒计时角标（可玩态显示）
+@onready var _daily_paw: TextureRect = $Root/DailyBtn/UnlockBox/Paw # 猫爪图标（按 A/B 换亮 / 暗贴图）
+# ---- 倒计时与动画 ----
+@onready var _countdown_label: Label = $Root/DailyBtn/CountdownTag/HBox/CountdownLabel # 倒计时文案 HH:MM:SS
+@onready var _countdown_hbox: HBoxContainer = $Root/DailyBtn/CountdownTag/HBox
+@onready var _countdown_icon: TextureRect = $Root/DailyBtn/CountdownTag/HBox/TimerIcon
+@onready var _daily_done_hbox: HBoxContainer = $Root/DailyBtn/DoneTag/DoneHBox
+@onready var _daily_done_icon: TextureRect = $Root/DailyBtn/DoneTag/DoneHBox/DoneTimeIcon
+
+@onready var _daily_players_row: DcPlayersJoinedRow = $Root/DailyBtn/PlayersJoinedRow
+
+@onready var _daily_cat_wrap: Control = $Root/DailyBtn/UnlockBox/CatWrap
+
+@onready var _daily_cat_icon: TextureRect = $Root/DailyBtn/UnlockBox/CatWrap/CatSlot/CatIcon
+
+@onready var _daily_cat_shadow: TextureRect = $Root/DailyBtn/UnlockBox/CatWrap/CatShadow
+
+@onready var _daily_cat_anchor: Node2D = $Root/DailyBtn/UnlockBox/CatWrap/CatSlot/CatAnchor
+
+var _daily_cat_spine: SpineSprite = null
 
 # ---- 可调参数（Inspector 可改） ----
-@export var _daily_paw_tex_lit: Texture2D  # 猫爪亮色贴图（已完成态）
-@export var _daily_paw_tex_dim: Texture2D  # 猫爪暗色贴图（未完成态）
+@export var _daily_paw_tex_lit: Texture2D # 猫爪亮色贴图（已完成态）
+@export var _daily_paw_tex_dim: Texture2D # 猫爪暗色贴图（未完成态）
+
+@export var _logo_skin: String = "logo"
+@export var _halloween_logo_skin: String = "halloween"
 
 # ---- 每日按钮的原始样式缓存（首次显示时记下，换肤后靠它还原） ----
-var _daily_sf_normal: StyleBox  # Bg 的 normal 原始样式
-var _daily_sf_pressed: StyleBox  # Bg 的 pressed 原始样式
-# ---- 倒计时与动画 ----
-@onready var _countdown_label: Label = $Root/DailyBtn/CountdownTag/HBox/CountdownLabel  # 倒计时文案 HH:MM:SS
-@onready var _countdown_timer: Timer = $Root/DailyBtn/CountdownTimer  # 每秒超时（Timer 未改 wait_time，默认 1 秒）
-@onready var _anim: AnimationPlayer = $AnimationPlayer  # 首页主界面动画 MainInterface
+var _daily_sf_normal: StyleBox # Bg 的 normal 原始样式
+var _daily_sf_pressed: StyleBox # Bg 的 pressed 原始样式
 
 # ---- 入口格子场景（daily_streak A/B 的新版首页布局用） ----
 ## 每日挑战入口格子，在新版布局里替代原来的 DailyBtn
@@ -41,78 +64,181 @@ const _STREAK_ENTRY_CELL: PackedScene = preload(
 	"res://scripts/module/daily_streak/ui/streak_entry_cell.tscn"
 )
 
-# ---- 新版布局的槽位（Root/DailyStreakLayout，A/B 关闭时整体隐藏） ----
-@onready var _streak_layout: Control = $Root/DailyStreakLayout  # 新版布局整体容器
-@onready var _dc_slot: Control = $Root/DailyStreakLayout/DcEntrySlot  # 每日挑战格子槽位
-@onready var _streak_slot: Control = $Root/DailyStreakLayout/StreakEntrySlot  # 连续打卡格子槽位
-@onready var _start_btn_slot: Control = $Root/DailyStreakLayout/StartBtnSlot  # 开始按钮槽位
-@onready var _logo_slot: Control = $Root/DailyStreakLayout/LogoSlot  # Logo 槽位
+const _STREAK_MINI_ENTRY_CELL: PackedScene = preload(
+	"res://scripts/module/daily_streak/ui/streak_mini_entry_cell.tscn"
+)
+const _RANK_MINI_ENTRY_CELL: PackedScene = preload(
+	"res://scripts/module/rank_activity/ui/rank_activity_mini_entry_cell.tscn"
+)
+
+const _RANK_ENTRY_CELL: PackedScene = preload(
+	"res://scripts/module/rank_activity/ui/rank_activity_entry_cell.tscn"
+)
+
+const _STREAK_TOP_ENTRY_CELL: PackedScene = preload(
+	"res://scripts/module/daily_streak/ui/streak_entry_top_cell.tscn"
+)
+
+const _RANK_LEFT_ENTRY_CELL: PackedScene = preload(
+	"res://scripts/module/rank_activity/ui/rank_activity_entry_left_cell.tscn"
+)
+
+const _SIDE_BAR_DC_ENABLED: bool = false
+const _DC_LEFT_ENTRY_CELL: PackedScene = preload(
+	"res://scripts/module/daily/ui/daily_challenge_entry_left_cell.tscn"
+)
+
+const _AVATAR_CELL: PackedScene = preload("res://scripts/module/profile/ui/avatar_cell.tscn")
+
+const _PEEKABOO_CAT_CELL: PackedScene = preload(
+	"res://scripts/module/peekaboo/ui/peekaboo_cat_cell.tscn"
+)
+
+@onready var _streak_layout: Control = $Root/home_page_slot
+@onready var _dc_slot: Control = $Root/home_page_slot/DcEntrySlot
+@onready var _streak_slot: Control = $Root/home_page_slot/StreakEntrySlot
+@onready var _streak_small_slot: Control = $Root/home_page_slot/StreakSmallEntrySlot
+@onready var _rank_slot: Control = $Root/home_page_slot/RankEntrySlot
+
+@onready var _streak_icon_slot: Control = $Root/home_page_slot/StreakIconSlot
+
+@onready var _side_bar_left: VBoxContainer = $Root/home_page_slot/SideBarLeftSlot
+@onready var _side_bar_right: VBoxContainer = $Root/home_page_slot/SideBarRightSlot
+
+@onready var _peekaboo_slot: Control = $Root/PeekabooSlot
+
+@onready var _pos_table: Control = $Root/home_page_pos
+
+var _pos_origin: Dictionary = {}
 
 # ---- Logo 与坐标备份 ----
-@onready var _loge: Control = $Root/Loge  # 猫头 Logo 容器
-var _dc_cell = null  # 动态创建的每日挑战格子（懒加载）
-var _streak_cell = null  # 动态创建的连续打卡格子（懒加载）
+@onready var _loge: Control = $Root/Loge # 猫头 Logo 容器
 
-# ---- 原始坐标备份（_ready 时记录，切回旧布局时还原） ----
-var _start_btn_orig_off_l: float = 0.0  # 开始按钮原始 offset_left
-var _start_btn_orig_off_r: float = 0.0  # 开始按钮原始 offset_right
-var _loge_orig_pos: Vector2 = Vector2.ZERO  # Logo 原始位置
+@onready var _logo_spine: SpineSprite = $Root/Loge/LogoSpine
+@onready
+var _logo_track_player: AnimationPlayer = $"Root/Loge/LogoSpine/SpineAnimationTrack/LogoSpine Track 0"
 
-# ---- 开始按钮的两种纵向位置（像素，相对父节点） ----
-const _START_BTN_SOLO_OFFSET_TOP: float = 366.0  # 只剩开始按钮时的上边距
-const _START_BTN_SOLO_OFFSET_BOTTOM: float = 526.0  # 只剩开始按钮时的下边距
+const _LOGO_ENTRY_ANIM: String = "Appear"
 
-const _START_BTN_DUO_OFFSET_TOP: float = 222.0  # 两个入口并存时的上边距
-const _START_BTN_DUO_OFFSET_BOTTOM: float = 382.0  # 两个入口并存时的下边距
+@onready var _profile_entry: Control = $Root/VBoxContainer/Header/ProfileEntry
+@onready var _avatar_slot: Control = $Root/VBoxContainer/Header/ProfileEntry/AvatarSlot
+@onready var _avatar_btn: Button = $Root/VBoxContainer/Header/ProfileEntry/AvatarBtn
+var _avatar_cell = null
+var _dc_cell = null # 动态创建的每日挑战格子（懒加载）
+var _streak_cell = null # 动态创建的连续打卡格子（懒加载）
+var _streak_mini_cell = null
+var _rank_mini_cell = null
 
-# ---- 弹窗排队的延迟（秒） ----
-const HOME_RATE_US_DELAY: float = 0.5  # 弹评分弹窗前的延迟（秒）
+var _rank_cell = null
+var _streak_top_cell = null
+var _rank_left_cell = null
+var _dc_left_cell = null
+var _peekaboo_cell = null
 
-const HOME_RESTORE_DELAY: float = 0.4  # 漏奖补发判定前的延迟（秒）
+var _peekaboo_presenting: bool = false
+var _rank_popup_pending: bool = false
+
+var _rank_session_waiting_for_setting: bool = false
+
+var _rank_open_popup_deferred: bool = false
+
+var _rank_layout_locked: bool = false
+var _popup_queue: UIPopupQueue = UIPopupQueue.new()
+
+const HOME_RESTORE_DELAY: float = 0.4 # 漏奖补发判定前的延迟（秒）
 
 # ---- 诊断状态 ----
-static var last_restore_status: String = "尚未触发补发判定"  # 上次漏奖补发判定的结果，static 供 cheat 面板读取
+static var last_restore_status: String = "尚未触发补发判定" # 上次漏奖补发判定的结果，static 供 cheat 面板读取
 
 # ---- 运行时状态 ----
-var _is_exiting: bool = false  # 是否正在转场离开首页
-var _auto_mark_switch_checked: bool = false  # 自动标记变更提示本次启动只判定一次
+var _is_exiting: bool = false # 是否正在转场离开首页
 
-var _tap_diag_last_ms: int = 0  # 诊断用时间戳（除初始化外没有引用）
-var _pending_page: String = ""  # 转场目标页名
-var _pending_params: Dictionary = {}  # 转场目标页参数
-var _new_page_node: Node = null  # 转场后打开的新页面节点
+var _tap_diag_last_ms: int = 0 # 诊断用时间戳（除初始化外没有引用）
+var _pending_page: String = "" # 转场目标页名
+var _pending_params: Dictionary = {} # 转场目标页参数
+var _new_page_node: Node = null # 转场后打开的新页面节点
+var _setting_anchor_queued: bool = false
+var _bottom_layout_queued: bool = false
 
 
-# ================= 生命周期 =================
-## 初始化：备份原始坐标、绑按压缩放与按钮音效、按视口宽度摆放背景网格
 func _ready() -> void:
-	# 记住开始按钮原始左右偏移，切回旧布局时还原
-	_start_btn_orig_off_l = _start_btn.offset_left
-	_start_btn_orig_off_r = _start_btn.offset_right
-	if _loge != null:
-		_loge_orig_pos = _loge.position
-	# 设置按钮与每日按钮按下时缩放反馈
-	bind_press_release_scale($Root/VBoxContainer/Header/SettingsBtn)
+	_bind_setting_anchor_updates()
+
+	_avatar_cell = create_child(_AVATAR_CELL, {})
+	_mount_into_slot(_avatar_cell, _avatar_slot)
+	_avatar_cell.set_self()
+	_avatar_btn.button_down.connect(func() -> void: play_press_scale(_profile_entry))
+	_avatar_btn.button_up.connect(func() -> void: play_release_scale(_profile_entry))
 	bind_press_release_scale($Root/DailyBtn)
-	# 按视口宽度自适应每日按钮文案字号
 	_fit_daily_btn_font()
 
-	# 设置按钮的声音由自己播，避免与全局按钮音效叠加
+	_daily_btn.visibility_changed.connect(_refresh_daily_cat_head)
+
+	RankActivityManager.state_changed.connect(_on_rank_state_changed)
+
+	RankActivityManager.period_opened.connect(_on_rank_period_opened)
+
+	RankActivityManager.time_ticked.connect(_on_rank_time_ticked_for_peekaboo)
+
 	claim_button_sound($Root/VBoxContainer/Header/SettingsBtn)
 
-	# 背景网格按视口宽度居中；宽屏（> 1080）时整体放大 1.02 倍
+	DataSyncManager.data_sync_completed.connect(_on_cloud_sync_completed)
+
+	AccountManager.progress_select_required.connect(_on_progress_select_required)
+
+	AccountManager.account_deleted_notice_required.connect(_on_account_deleted_notice_required)
+
 	var grid: Sprite2D = $Background/GridFlowLoop
 	var vp_w: float = get_viewport_rect().size.x
 	grid.position.x = vp_w / 2.0
 	if vp_w > 1080.0:
-		var s: float = (vp_w / 1080.0) * 1.02
-		grid.scale = Vector2(s, s)
+		var grid_scale: float = (vp_w / 1080.0) * 1.02
+		grid.scale = Vector2(grid_scale, grid_scale)
 
 
-## 把设置按钮的屏幕中心 Y 广播给 HomeSettingAnchor，供其它页面（FollowHomeSettingBtnY）对齐
+func _bind_setting_anchor_updates() -> void:
+	var sources: Array[Control] = [$Root/VBoxContainer, $Root/VBoxContainer/Header]
+	for source: Control in sources:
+		if not source.item_rect_changed.is_connected(_queue_setting_anchor):
+			source.item_rect_changed.connect(_queue_setting_anchor)
+	var spacer: Control = $Root/VBoxContainer/HeaderAdaptHolder
+	if not spacer.minimum_size_changed.is_connected(_queue_setting_anchor):
+		spacer.minimum_size_changed.connect(_queue_setting_anchor)
+	_queue_setting_anchor()
+
+
+func _queue_setting_anchor() -> void:
+	if _setting_anchor_queued:
+		return
+	_setting_anchor_queued = true
+	_write_setting_anchor.call_deferred()
+
+
 func _write_setting_anchor() -> void:
-	var gb: Control = $Root/VBoxContainer/Header/SettingsBtn
-	HomeSettingAnchor.set_settingbtn_y(gb.global_position.y + gb.size.y * 0.5)
+	_setting_anchor_queued = false
+	var settings_button: Control = $Root/VBoxContainer/Header/SettingsBtn
+	var header: Control = $Root/VBoxContainer/Header
+	var container: VBoxContainer = $Root/VBoxContainer
+	var header_top: float = 0.0
+	var preceding_visible: bool = false
+	var children: Array[Node] = container.get_children()
+	for child: Node in children:
+		var row: Control = child as Control
+		if row == null or not row.visible:
+			continue
+		if preceding_visible:
+			header_top += container.get_theme_constant("separation")
+		if row == header:
+			break
+		header_top += row.get_combined_minimum_size().y
+		preceding_visible = true
+	var target_origin: Vector2 = container.get_global_transform() * Vector2(0.0, header_top)
+	var center: float = (
+		settings_button.get_global_rect().get_center().y
+		+ target_origin.y
+		- header.global_position.y
+	)
+	HomeSettingAnchor.set_settingbtn_y(center)
 
 
 ## 语言切换通知：刷新随语言变化的文案与字号
@@ -122,9 +248,97 @@ func _notification(what: int) -> void:
 		_fit_daily_btn_font()
 
 
-## 刷新开始按钮文案：显示当前关卡号
 func _refresh_dynamic_text() -> void:
 	_start_btn.btn_text = tr("GAME_LEVEL_TITLE") % GameState.get_current_level()
+	_apply_start_btn_golden_style()
+	_apply_start_btn_continue_style()
+
+
+func _apply_start_btn_golden_style() -> void:
+	var is_golden: bool = _is_start_btn_golden()
+	GoldenFishBtnStyle.apply(_start_btn, is_golden)
+
+	ColorChallengeBtnStyle.apply(_start_btn, (not is_golden) and _is_start_btn_color_challenge())
+
+
+func _is_start_btn_golden() -> bool:
+	return GoldenFishGate.should_show_golden_style(
+		GameState.get_current_level(),
+		GameState.get_available_golden_fish_pending(),
+		ABTestManager.golden_fish_func.is_enabled(),
+		ABTestManager.golden_fish_timing.unlock_min_level()
+	)
+
+
+func _is_start_btn_color_challenge() -> bool:
+	return ColorChallengeGate.should_show_style(
+		GameState.get_current_level(),
+		GameState.get_color_challenge_pending(),
+		ABTestManager.color_challenge_func.group_value()
+	)
+
+
+func _apply_start_btn_difficulty(lv: int) -> void:
+	var is_super_hard: bool = LevelSelector.is_super_hard_level(lv)
+	_start_btn.super_hard = is_super_hard
+	_start_btn.show_difficult = is_super_hard or LevelSelector.is_hard_level(lv)
+	_start_btn.hard_effect_variant = ABTestManager.hard_button.effect_variant()
+
+
+func _apply_start_btn_continue_style() -> void:
+	_start_btn.sub_text = ""
+
+	if _is_start_btn_golden():
+		return
+	if StaleEndgameGate.is_pending_stale_discard():
+		return
+	var lv: int = GameState.get_current_level()
+	var snap: Dictionary = GameState.get_endgame_snapshot()
+	if not ContinueEntryStats.has_player_progress(snap, lv):
+		return
+	if ContinueEntryStats.is_legacy_snapshot(snap):
+		return
+	var cfg: LevelBtnContinueConfig = ABTestManager.level_btn_continue
+	if not cfg.is_enabled():
+		return
+
+	_start_btn.btn_text = tr("WIN_CONTINUE")
+	if cfg.shows_progress():
+		var pct: float = ContinueEntryStats.progress_percent(snap)
+		_start_btn.sub_text = tr("HOME_CONTINUE_COMPLETED") % ContinueEntryStats.format_percent(pct)
+	elif cfg.shows_time():
+		var play_sec: float = float(snap.get(ContinueEntryStats.SNAP_KEY_PLAY_SEC, 0.0))
+		_start_btn.sub_text = (
+			tr("HOME_CONTINUE_STARTED") % ContinueEntryStats.format_play_time(play_sec)
+		)
+	elif cfg.shows_level_with_continue():
+		_start_btn.sub_text = tr("GAME_LEVEL_TITLE") % lv
+
+
+func _start_btn_name() -> String:
+	if _is_start_btn_golden():
+		return Tracker.Btn.GOLDEN_FISH_PLAY
+	if _is_start_btn_color_challenge():
+		return Tracker.Btn.COLOR_CHALLENGE_PLAY
+	return Tracker.Btn.NORMAL_PLAY
+
+
+func _on_cloud_sync_completed(changed: bool) -> void:
+	if not changed or not visible:
+		return
+	_refresh_progress_display()
+
+
+func _refresh_progress_display() -> void:
+	var lv: int = GameState.get_current_level()
+	_refresh_dynamic_text()
+	_apply_start_btn_difficulty(lv)
+	_apply_start_btn_golden_style()
+
+	_apply_start_btn_continue_style()
+	_refresh_daily_btn_state()
+
+	_relayout_rank_entries(true, false, false)
 
 
 ## 每日按钮字号下限（像素）
@@ -166,216 +380,1007 @@ func _fit_daily_btn_font() -> void:
 	_daily_unlock_label.add_theme_font_size_override("font_size", unlock_fs)
 
 
-## 每次被 UIManager 显示时调用：刷状态、摆布局，然后按顺序弹各种弹窗
+## 刷新入口与陪伴策略，建立活动弹窗队列，再按推送或残局直开条件决定后续入口。
 func on_show(_params: Dictionary = {}) -> void:
-	# 诊断日志：确认首页被重新显示
-	print("[StreakSwitch] home.on_show 被调用")
+	UniKitManager.destroy_ad(AdPlacement.BANNER)
 
-	# 首页不展示 banner，进入即销毁
-	UniKitManager.destroy_ad("banner")
+	_fire_home_10s_dye()
 
-	# 恢复 BGM（可能被游戏内暂停过）
 	SoundManager.start_bgm()
 
-	# 查 Helpshift 未读消息数，顺带刷新设置入口的红点
 	HelpshiftManager.request_unread()
-	# 复位转场标记，允许再次点入口
 	_is_exiting = false
 	_new_page_node = null
-	# 设置按钮先透明，由 MainInterface 动画淡入
+	_home_companion_strategy = HomeCompanionCatStrategy.create()
+	_companion_entry_generation += 1
+	_companion_entry_pending = false
+	_companion.prepare_entry(_home_companion_strategy)
+	connect_managed(get_viewport().size_changed, _queue_bottom_layout)
+	connect_managed($Root/VBoxContainer.item_rect_changed, _queue_bottom_layout)
+	_sync_companion_sound()
+	connect_managed(_popup_queue.drained, _on_popup_queue_drained)
+	connect_managed(UIManager.events.window_shown, _on_companion_cover_shown)
+	connect_managed(UIManager.events.window_hidden, _on_companion_cover_hidden)
+	_apply_halloween_logo()
+
+	connect_managed(ProfileService.avatar_frame_changed, _on_profile_display_changed)
+
+	connect_managed(ProfileService.costume_changed, _on_profile_display_changed)
+	_on_profile_display_changed()
 	$Root/VBoxContainer/Header/SettingsBtn.modulate.a = 0.0
 
-	# 延后一帧上报锚点，等布局稳定后取到的 Y 才准
-	_write_setting_anchor.call_deferred()
-	# 开始 / 每日按钮也交给动画淡入
+	_queue_setting_anchor()
 	$Root/StartBtn.modulate.a = 0.0
 	$Root/DailyBtn.modulate.a = 0.0
-	# 停掉上一次的动画再从头播，避免叠加
 	_anim.stop()
-	# 从开头播到 disappear 标记：入场段
+
+	_anim.play(&"RESET")
+	_anim.advance(0.0)
 	_anim.play_section_with_markers(&"MainInterface", &"", &"disappear")
-	# 首次进入时缓存每日按钮的原始样式，换肤后靠它还原
+	_anim.advance(0.0)
 	if _daily_sf_normal == null:
 		_daily_sf_normal = _daily_bg.get_theme_stylebox("normal")
 		_daily_sf_pressed = _daily_sf_normal
-	# 当前关卡号：开始按钮文案与难度标记都用它
 	var lv: int = GameState.get_current_level()
 	_refresh_dynamic_text()
-	# 难度标记按 A/B 分组取不同判定：J 组看「关卡号 %10 == 9」，其它组看「%10 == 0」
-	_start_btn.show_difficult = (
-		LevelData.is_hard_level_group_j(lv)
-		if ABTestManager.rule_normal_rank.is_group_j()
-		else LevelData.is_hard_level(lv)
-	)
-	# 每日按钮的显隐由 no_dc 决定
-	var hide_dc: bool = ABTestManager.no_dc.is_daily_challenge_hidden()
-	_daily_btn.visible = not hide_dc
-	# 隐藏时开始按钮挪到「单人」位置，否则用「双人」位置
-	if hide_dc:
-		_start_btn.offset_top = _START_BTN_SOLO_OFFSET_TOP
-		_start_btn.offset_bottom = _START_BTN_SOLO_OFFSET_BOTTOM
-	else:
-		_start_btn.offset_top = _START_BTN_DUO_OFFSET_TOP
-		_start_btn.offset_bottom = _START_BTN_DUO_OFFSET_BOTTOM
-	# 每日入口可见时才刷它的状态并起倒计时
-	if not hide_dc:
-		# 推进「历史最大可玩日期」，跨天时把完成态刷回可玩
-		DailyEntryState.ensure_max_daily_advanced()
-		_refresh_daily_btn_state()
-		_fit_daily_btn_font()
-		_update_countdown()
-		_countdown_timer.start()
+	_apply_start_btn_difficulty(lv)
+	_apply_start_btn_golden_style()
 
-	# 应用首页布局（daily_streak A/B 走新版布局，否则还原旧布局）
+	_apply_start_btn_continue_style()
+
+	DailyEntryState.ensure_max_daily_advanced()
+
+	connect_managed(ClockTicker.second_tick, _update_countdown)
+
+	_update_countdown()
+
+	connect_managed(ProfileService.costume_changed, _refresh_daily_cat_head)
+	_fit_daily_btn_font()
+
+	RankActivityManager.set_first_frame_tiered(ABTestManager.rank_1st_frame.is_enabled())
+
+	RankActivityManager.set_streak_rule(
+		ABTestManager.rank_win.streak_table(),
+		ABTestManager.rank_win.boost_spec(),
+		ABTestManager.rank_win.x_base_rule()
+	)
+	RankActivityManager.on_home_shown(_is_end_solo_podium_enabled())
+
+	connect_managed(RankActivityManager.settle_ready, _on_rank_settle_ready)
+
 	_apply_home_layout()
 
-	# 记录本次的 A/B 分组，供下次启动判断是否「切组」
+	_apply_entry_shape_pos()
+
+	_align_daily_btn_under_start()
+
+	_apply_entry_shape_cells()
+
+	_roll_dc_players_avatars()
+
+	if _peekaboo_presenting:
+		push_warning("[HomePage] 躲猫猫表现被打断(on_show 时仍在表现中)→ 强制释放闸门、布局锁与 blocker")
+		_peekaboo_presenting = false
+		set_rank_layout_locked(false)
+		RankActivityManager.end_external_presentation()
+
+		var stale_blocker: Node = find_child(PeekabooFlow.BLOCKER_NAME, false, false)
+		if stale_blocker != null and not stale_blocker.is_queued_for_deletion():
+			stale_blocker.queue_free()
+
+	PeekabooManager.evaluate_on_cold_start()
+
 	StreakManager.notify_group_dyed()
+	_build_popup_queue()
 
-	# 弹窗排队：跨组提示优先；没弹过才轮到自动标记变更提示
-	if not await _maybe_show_streak_switch_popup():
-		await _maybe_show_auto_mark_switch_popup()
+	if _try_trigger_streak_push_open():
+		return
 
-	# 评分弹窗与漏奖补发放最后，避免盖住前面的弹窗
-	await _maybe_show_rate_us_on_home()
-	await _maybe_show_pending_rewards()
+	if _try_trigger_direct_open():
+		return
+
+	refresh_peekaboo_cat()
+	_companion_entry_pending = true
+	_popup_queue.flush()
 
 
-# ================= 启动后弹窗排队 =================
-## 返回本次该弹的跨组提示页号（0 表示不弹）；弹过就消费掉标记，只弹一次
-func _maybe_show_streak_switch_popup() -> bool:
-	# StreakManager 内部有 eligible 标记：应用没重启时不会重复给出页号
-	var page: int = StreakManager.get_pending_switch_page()
-	print("[StreakSwitch] home._maybe_show_streak_switch_popup: pending=%d" % page)
-	# 0 表示没有待弹的切组提示
-	if page <= 0:
+func _on_popup_queue_drained() -> void:
+	if _companion_entry_pending:
+		_try_begin_companion_entry.bind(_companion_entry_generation).call_deferred()
+
+
+func _on_companion_cover_hidden(_ui_name: String, _window: UIFrameWindow) -> void:
+	_sync_companion_sound.call_deferred()
+	_on_popup_queue_drained()
+
+
+func _on_companion_cover_shown(_ui_name: String, _window: UIFrameWindow) -> void:
+	_sync_companion_sound()
+
+
+func _sync_companion_sound() -> void:
+	_companion.cat.set_sound_enabled(
+		is_showing() and not _is_exiting and UIManager.get_top_window() == self
+	)
+
+
+func _try_begin_companion_entry(generation: int) -> void:
+	if generation != _companion_entry_generation or not _companion_entry_pending:
+		return
+	if not is_showing() or _is_exiting or UIManager.get_top_window() != self:
+		return
+	if _popup_queue.is_running() or not _popup_queue.is_empty():
+		return
+	_companion_entry_pending = false
+	_sync_companion_sound()
+	_companion.begin_entry()
+	_enqueue_companion_guide(true)
+	_popup_queue.flush()
+
+
+func _enqueue_companion_guide(tutorial: bool) -> void:
+	if not is_showing() or _is_exiting or not _companion.has_companion():
+		return
+	if tutorial and not _companion.tutorial_needed():
+		return
+	var priority: int = 0
+	var configs: Array = _load_json_config(_POPUP_CONFIG_PATH)
+	for config: Variant in configs:
+		if config is Dictionary and str(config.get("OpenScene", "")) == "home":
+			priority = maxi(priority, int(config.get("Priority", 0)))
+	var entry: UIPopupEntry = UIPopupEntry.new()
+	entry.key = "home_companion_guide"
+	entry.priority = priority + 1
+	entry.callable = _show_companion_guide.bind(tutorial)
+	_popup_queue.cancel(entry.key)
+	_popup_queue.enqueue(entry)
+
+
+func _show_companion_guide(tutorial: bool) -> void:
+	if not is_showing() or _is_exiting or not _companion.has_companion():
+		return
+	if tutorial and not _companion.tutorial_needed():
+		return
+	_companion.set_interaction_enabled(false)
+	if tutorial:
+		_companion.begin_tutorial()
+	var generation: int = _companion_entry_generation
+	var page: UIFrameWindow = UIManager.show_ui(
+		UiName.HOME_COMPANION_GUIDE, _companion.guide_parameters(tutorial)
+	)
+	connect_managed(page.main_level_requested, _on_companion_main_level_requested)
+	await UIManager.await_hidden(UiName.HOME_COMPANION_GUIDE)
+	disconnect_managed(page.main_level_requested, _on_companion_main_level_requested)
+	if generation != _companion_entry_generation:
+		return
+	if tutorial and page.was_completed():
+		_companion.complete_tutorial()
+	if is_showing() and not _is_exiting:
+		if page.should_enter_main_level():
+			enter_main_level()
+			return
+		_sync_companion_sound()
+		if tutorial:
+			_companion.resume_after_tutorial()
+		_companion.set_interaction_enabled(true)
+
+
+func _on_companion_main_level_requested() -> void:
+	_companion_entry_pending = false
+	_companion.stop_presentation()
+
+
+func _on_companion_explanation_requested() -> void:
+	_enqueue_companion_guide(false)
+	if not _popup_queue.is_running():
+		_popup_queue.flush()
+
+
+## 把待演出的陪伴奖励合成一个队列项，先取消同键旧项以避免重复排队。
+func _enqueue_companion_rewards() -> void:
+	var pending: Array[int] = _companion.pending_reward_presentations()
+	if pending.is_empty():
+		return
+	var entry: UIPopupEntry = UIPopupEntry.new()
+	entry.key = "home_companion_reward"
+	entry.priority = _find_popup_priority("vip_daily_gift")
+	entry.callable = _show_companion_rewards
+	_popup_queue.cancel(entry.key)
+	_popup_queue.enqueue(entry)
+
+
+func _enqueue_companion_end_popup() -> void:
+	_popup_queue.cancel("home_companion_end")
+	_consume_companion_switch_before_event_end()
+	if not _should_show_companion_end_popup():
+		return
+	var entry: UIPopupEntry = UIPopupEntry.new()
+	entry.key = "home_companion_end"
+	entry.priority = _find_popup_priority("ab_switch_popup")
+	entry.callable = _show_companion_end_popup
+	_popup_queue.enqueue(entry)
+
+
+func _consume_companion_switch_before_event_end() -> void:
+	if (
+		not ABTestManager.is_app_start_dyed()
+		or _companion.event_ended()
+		or _should_show_ab_switch_popup()
+	):
+		return
+	var config: HomeCompanionCatConfig = ABTestManager.home_companion_cat
+	var previous: int = config.get_prev_saved_group()
+	if previous >= 0 and previous != config.peek_group():
+		config.consume_switch()
+
+
+func _should_show_companion_end_popup() -> bool:
+	if not ABTestManager.is_app_start_dyed():
 		return false
-	# 先消费再弹，避免弹窗过程中被重复触发
-	StreakManager.consume_pending_switch()
-	# 页号 → UI 名：1 / 2 / 3 对应三个不同文案的切组弹窗
-	var ui_name: StringName
-	match page:
-		1:
-			ui_name = UiName.STREAK_SWITCH1
-		2:
-			ui_name = UiName.STREAK_SWITCH2
-		3:
-			ui_name = UiName.STREAK_SWITCH3
-		_:
-			return false
-
-	# 等 0.1 秒，让首页入场动画先跑起来
-	await get_tree().create_timer(0.1).timeout
-	# 期间玩家已经离开首页就放弃弹窗
-	if not visible or _is_exiting:
+	var config: HomeCompanionCatConfig = ABTestManager.home_companion_cat
+	var previous: int = config.get_prev_saved_group()
+	var current: int = config.peek_group()
+	if previous < 0 or previous == current:
 		return false
-	var dlg: UIFrameWindow = UIManager.show_ui(ui_name)
-	if dlg == null:
-		return false
-	# 等用户关掉弹窗再返回 true，后面的弹窗排在它后面
-	while dlg.visible:
-		await dlg.visibility_changed
-	return true
+	return _companion.closed_notice_needed(
+		HomeCompanionCatStrategy.for_group(previous), HomeCompanionCatStrategy.for_group(current)
+	)
 
 
-## 自动标记（auto mark）功能变更提示：每次启动最多判定一次
-func _maybe_show_auto_mark_switch_popup() -> void:
-	# 本次启动已经判定过
-	if _auto_mark_switch_checked:
+func _show_companion_end_popup() -> void:
+	if not is_showing() or _is_exiting or not _should_show_companion_end_popup():
 		return
-	_auto_mark_switch_checked = true
-
-	# 存档里记录的旧 A/B 值（-1 表示从没记录过）
-	var stored: int = GameState.get_saved_game_auto_mark()
-	# 从没记录过就不提示
-	if stored == -1:
-		return
-
-	# 当前生效的 A/B 值（peek_value 读本地缓存，不触发网络拉取）
-	var current: int = ABTestManager.find_config("game_auto_mark").peek_value()
-	if stored == current:
-		return
-
-	# text_key 留空表示不属于要提示的变更组合
-	var text_key: String = ""
-	# 旧值有功能、新值关闭 → 「功能已下线」文案
-	if stored in [1, 2, 4, 5] and current == 0:
-		text_key = "GAME_AUTO_MARK_SWITCH_ENDED_DESC"
-	elif stored in [1, 2, 3, 4] and current in [1, 2, 3, 4]:
-		# 新旧都开着但档位变了 → 「功能升级」文案
-		text_key = "GAME_AUTO_MARK_SWITCH_UPGRADED_DESC"
-
-	# 两种之外的组合不提示
-	if text_key.is_empty():
-		return
-
-	# 等首页动画与上一个弹窗结束
-	await get_tree().create_timer(0.1).timeout
-	if not visible or _is_exiting:
-		return
-
-	# 通用 A/B 变更提示弹窗（标题 / 正文 / 按钮文案都由 key 指定）
-	var dlg: UIFrameWindow = (
+	var page: UIFrameWindow = (
 		UIManager
 		. show_ui(
 			UiName.AB_SWITCH_POPUP,
 			{
-				"title": "DAILY_STREAK_MAJOR_UPDATE",
-				"text": text_key,
-				"btn_text": "DAILY_STREAK_GET_IT",
+				"title": tr("HOME_COMPANION_END_TITLE"),
+				"body": tr("HOME_COMPANION_END_BODY"),
+				"btn_text": tr("HOME_COMPANION_END_CONFIRM"),
+				"feedback": "1",
+				"reward": {},
 			}
 		)
 	)
-	if dlg == null:
+	if page == null:
 		return
-	while dlg.visible:
-		await dlg.visibility_changed
 
-	# 弹完（无论玩家看没看）都记下当前值，避免下次再弹
-	GameState.set_saved_game_auto_mark(current)
+	ABTestManager.home_companion_cat.consume_switch()
+	await UIManager.await_hidden(UiName.AB_SWITCH_POPUP)
 
 
-## 漏奖补发：把玩家当时没领到的广告奖励延后补发，有每日次数上限
-func _maybe_show_pending_rewards() -> void:
-	# 等首页入场动画播完再判定
+func _show_companion_rewards() -> void:
+	var pending: Array[int] = _companion.pending_reward_presentations()
+	var generation: int = _companion_entry_generation
+	for tier: int in pending:
+		if generation != _companion_entry_generation or not is_showing() or _is_exiting:
+			return
+		var current_pending: Array[int] = _companion.pending_reward_presentations()
+		if not current_pending.has(tier):
+			continue
+		_companion.set_interaction_enabled(false)
+		var page: UIFrameWindow = UIManager.show_ui(
+			UiName.HOME_COMPANION_REWARD,
+			{"reward_tier": tier, "chest_from": _companion.chest_global_center()}
+		)
+		await UIManager.await_hidden(UiName.HOME_COMPANION_REWARD)
+		if generation != _companion_entry_generation:
+			return
+		if page.was_collected():
+			_companion.complete_reward_presentation(tier)
+		else:
+			break
+	if is_showing() and not _is_exiting:
+		_companion.set_interaction_enabled(true)
+
+
+func _fire_home_10s_dye() -> void:
+	await get_tree().create_timer(10.0).timeout
+	ABTestManager.dye_at_home_page_10s()
+
+
+func on_stack_top() -> void:
+	_sync_companion_sound()
+	_on_popup_queue_drained()
+
+	_apply_halloween_logo()
+	_repair_logo_entry_pose()
+
+	_relayout_rank_entries()
+	if _rank_open_popup_deferred:
+		_enqueue_deferred_rank_open_popup.call_deferred()
+
+
+func on_stack_bottom() -> void:
+	_companion.cat.set_sound_enabled(false)
+
+
+func try_open_rank_for_new_session() -> void:
+	if not is_showing() or _is_exiting:
+		return
+	if not RankActivityManager.maybe_open(true):
+		return
+	var setting: UIFrameWindow = UIManager.get_ui(UiName.SETTING)
+	_rank_session_waiting_for_setting = (
+		setting != null and setting.get_window_state() != UIBaseWindow.WindowState.HIDDEN
+	)
+	if _rank_session_waiting_for_setting:
+		connect_managed(UIManager.events.window_hidden, _on_rank_session_cover_hidden)
+
+
+func _on_rank_session_cover_hidden(ui_name: String, _window: UIFrameWindow) -> void:
+	if ui_name != UiName.SETTING:
+		return
+	_rank_session_waiting_for_setting = false
+	disconnect_managed(UIManager.events.window_hidden, _on_rank_session_cover_hidden)
+	_enqueue_deferred_rank_open_popup.call_deferred()
+
+
+func _apply_halloween_logo() -> void:
+	var data: SpineSkeletonDataResource = _logo_spine.get_skeleton_data_res()
+	var skeleton: SpineSkeleton = _logo_spine.get_skeleton()
+	if data == null or skeleton == null:
+		return
+	var skin_name: String = (
+		_halloween_logo_skin if _companion.halloween_dress_active() else _logo_skin
+	)
+	var skin: SpineSkin = data.find_skin(skin_name)
+	var current_skin: SpineSkin = skeleton.get_skin()
+	if current_skin != null and current_skin.get_name() == skin_name:
+		return
+	if skin == null:
+		push_warning("HomePage: logo 骨架缺皮肤 %s，回落 default" % skin_name)
+		if current_skin == null:
+			return
+	skeleton.set_skin(skin)
+	skeleton.set_slots_to_setup_pose()
+	_logo_spine.update_skeleton(0.0)
+
+
+func _repair_logo_entry_pose() -> void:
+	if _logo_track_player.is_playing():
+		return
+	var state: SpineAnimationState = _logo_spine.get_animation_state()
+	if state == null:
+		return
+	var current: SpineTrackEntry = state.get_current(0)
+	if current != null and current.get_animation().get_name() == _LOGO_ENTRY_ANIM:
+		return
+	var entry: SpineTrackEntry = state.set_animation(_LOGO_ENTRY_ANIM, false, 0)
+	entry.set_track_time(entry.get_animation_end())
+
+
+const _POPUP_CONFIG_PATH: String = "res://assets/cfg/dialog_priority_strategy.json"
+
+
+## 从配置读取首页弹窗及优先级，过滤条件后追加奖励、账号和云进度冲突提示。
+func _build_popup_queue() -> void:
+	if _popup_queue.is_running():
+		return
+	_popup_queue.clear()
+	var configs: Array = _load_json_config(_POPUP_CONFIG_PATH)
+	for cfg in configs:
+		if not cfg is Dictionary:
+			continue
+		if str(cfg.get("OpenScene", "")) != "home":
+			continue
+		var key: String = str(cfg.get("Key", ""))
+		var priority: int = int(cfg.get("Priority", 0))
+		var method_name: String = "_show_%s" % key
+		if not has_method(method_name):
+			push_warning("UIPopupQueue: no method '%s' on HomePage, skipping" % method_name)
+			continue
+
+		var should_method: String = "_should_show_%s" % key
+		if has_method(should_method) and not call(should_method):
+			continue
+		var entry := UIPopupEntry.new()
+		entry.key = key
+		entry.priority = priority
+		entry.callable = Callable(self, method_name)
+		_popup_queue.enqueue(entry)
+	_enqueue_companion_rewards()
+	_enqueue_companion_end_popup()
+
+	_enqueue_login_result_popup()
+
+	_enqueue_progress_select_popup()
+
+	_enqueue_account_deleted_popup()
+
+
+## 先消费本次直开门禁，再检查关卡、有效残局、实验和弹窗队列，满足才安排直接续玩。
+func _try_trigger_direct_open() -> bool:
+	var lv: int = GameState.get_current_level()
+	var ab_val: int = ABTestManager.unfinished_game_open.value()
+	var today_ses: int = GameState.get_today_session_count()
+
+	if not GameState.try_consume_direct_open_gate():
+		print(
+			(
+				"[UnfinishedOpen] SKIP reason=gate_consumed (level=%d ab=%d today_ses=%d)"
+				% [lv, ab_val, today_ses]
+			)
+		)
+		return false
+	if lv < 50:
+		print("[UnfinishedOpen] SKIP reason=level<50 (level=%d ab=%d)" % [lv, ab_val])
+		return false
+	if not _has_valid_endgame_snapshot():
+		var snap: Dictionary = GameState.get_endgame_snapshot()
+		var placed_n: int = (
+			(snap.get("placed_cats", []) as Array).size() if not snap.is_empty() else 0
+		)
+		var prefill_n: int = (
+			(snap.get("prefill_positions", []) as Array).size() if not snap.is_empty() else 0
+		)
+		var marks_n: int = (snap.get("marks", []) as Array).size() if not snap.is_empty() else 0
+		var errors_n: int = (snap.get("errors", []) as Array).size() if not snap.is_empty() else 0
+		print(
+			(
+				"[UnfinishedOpen] SKIP reason=invalid_endgame (empty=%s snap_level=%d cur_level=%d lives=%d placed=%d prefill=%d marks=%d errors=%d)"
+				% [
+					snap.is_empty(),
+					int(snap.get("level", -1)),
+					lv,
+					int(snap.get("lives", -1)),
+					placed_n,
+					prefill_n,
+					marks_n,
+					errors_n
+				]
+			)
+		)
+		return false
+	var cfg := ABTestManager.unfinished_game_open
+	if not cfg.is_enabled():
+		print("[UnfinishedOpen] SKIP reason=ab_control (ab=%d level=%d)" % [ab_val, lv])
+		return false
+	if cfg.requires_non_first_session() and today_ses <= 1:
+		print(
+			"[UnfinishedOpen] SKIP reason=first_session (ab=%d today_ses=%d)" % [ab_val, today_ses]
+		)
+		return false
+	if not _popup_queue.is_empty():
+		print("[UnfinishedOpen] SKIP reason=popup_queue_not_empty (ab=%d level=%d)" % [ab_val, lv])
+		return false
+	print(
+		(
+			"[UnfinishedOpen] TRIGGER (level=%d ab=%d today_ses=%d) → waiting entry anim"
+			% [lv, ab_val, today_ses]
+		)
+	)
+	_trigger_direct_open()
+	return true
+
+
+func _has_valid_endgame_snapshot() -> bool:
+	return ContinueEntryStats.has_player_progress(
+		GameState.get_endgame_snapshot(), GameState.get_current_level()
+	)
+
+
+func cheat_force_direct_open() -> void:
+	if _is_exiting or not is_showing():
+		print(
+			(
+				"[UnfinishedOpen] cheat direct_open aborted (home not showing, exiting=%s showing=%s)"
+				% [_is_exiting, is_showing()]
+			)
+		)
+		return
+	print("[UnfinishedOpen] cheat direct_open: bypassing all gates → exit_to_page(game)")
+	_exit_to_page(
+		"game",
+		{
+			"level_index": GameState.get_current_level(),
+			"endgame_restore": true,
+			"from_direct_open": true,
+		}
+	)
+
+
+enum StreakPushPending {
+	NONE,
+	COLD_START_CLICK,
+}
+
+static var pending_push_click: StreakPushPending = StreakPushPending.NONE
+
+
+func _try_trigger_streak_push_open() -> bool:
+	var click_src: StreakPushPending = pending_push_click
+	pending_push_click = StreakPushPending.NONE
+	if click_src != StreakPushPending.COLD_START_CLICK:
+		return false
+	if not _has_valid_endgame_snapshot():
+		print("[StreakPush] direct open skip: no valid endgame, stay on home")
+		return false
+	var blockers: Dictionary = _collect_streak_push_blockers()
+	if not blockers.is_empty() and not _only_rank_open_blockers(blockers):
+		print(
+			"[StreakPush] direct open skip: popups pending(%s), stay on home" % str(blockers.keys())
+		)
+		return false
+	print(
+		"[StreakPush] direct open TRIGGER (blockers=%s) → waiting entry anim" % str(blockers.keys())
+	)
+	_trigger_direct_open()
+	return true
+
+
+func _collect_streak_push_blockers() -> Dictionary:
+	var blockers: Dictionary = {}
+	for pending_key: String in _popup_queue.pending_keys():
+		blockers[pending_key] = true
+	return blockers
+
+
+func _only_rank_open_blockers(blockers: Dictionary) -> bool:
+	var rank_open_like: Dictionary = {}
+	for blocker_key: String in blockers:
+		if blocker_key == "rank_open_popup":
+			rank_open_like[blocker_key] = true
+			continue
+		if blocker_key == "rank_reward_and_tryopen_popup":
+			var has_reward_semantics: bool = (
+				not RankActivityManager.get_pending_reward().is_empty()
+				or (
+					not RankActivityManager.get_pending_end_solo_podium().is_empty()
+					and _is_end_solo_podium_enabled()
+				)
+			)
+			if not has_reward_semantics:
+				rank_open_like[blocker_key] = true
+	return rank_open_like.size() == blockers.size()
+
+
+func _trigger_direct_open() -> void:
+	connect_managed(_anim.animation_finished, _on_direct_open_anim_finished)
+
+
+func _on_direct_open_anim_finished(anim_name: StringName) -> void:
+	if anim_name != &"MainInterface":
+		return
+
+	disconnect_managed(_anim.animation_finished, _on_direct_open_anim_finished)
+
+	if _is_exiting or not is_showing():
+		print(
+			(
+				"[UnfinishedOpen] anim finished but home not eligible (exiting=%s showing=%s), abort"
+				% [_is_exiting, is_showing()]
+			)
+		)
+		return
+	print(
+		"[UnfinishedOpen] entry anim finished → exit_to_page(game, endgame_restore + from_direct_open)"
+	)
+	_exit_to_page(
+		"game",
+		{
+			"level_index": GameState.get_current_level(),
+			"endgame_restore": true,
+			"from_direct_open": true,
+		}
+	)
+
+
+func _enqueue_login_result_popup() -> void:
+	var pending: AccountFlowResult = AccountManager.take_pending_result()
+	if pending == null:
+		return
+	var entry := UIPopupEntry.new()
+	entry.key = "login_result"
+
+	entry.priority = 19999
+	entry.callable = func() -> void:
+		await get_tree().process_frame
+		if _is_exiting or not visible:
+			return
+		(
+			UIManager
+			. show_ui(
+				UiName.ACCOUNT_RESULT,
+				{
+					"type": pending.type,
+					"channel": pending.channel,
+				}
+			)
+		)
+
+		await UIManager.await_hidden(UiName.ACCOUNT_RESULT)
+	_popup_queue.insert_next(entry)
+
+
+func _enqueue_progress_select_popup() -> void:
+	var conflict: ProgressConflict = AccountManager.refresh_progress_conflict()
+	if conflict == null:
+		return
+	_popup_queue.cancel("progress_select")
+	var entry := UIPopupEntry.new()
+	entry.key = "progress_select"
+
+	entry.priority = 20000
+	entry.callable = func() -> void:
+		await get_tree().process_frame
+		if _is_exiting or not visible:
+			return
+		UIManager.show_ui(UiName.PROGRESS_SELECT, {"conflict": conflict})
+		await UIManager.await_hidden(UiName.PROGRESS_SELECT)
+	_popup_queue.insert_next(entry)
+
+
+func _on_progress_select_required() -> void:
+	if _is_exiting or not visible:
+		print("[HomePage] 收到进度选择请求但 home 未显示，等 on_show 取")
+		return
+	_enqueue_progress_select_popup()
+	if not _popup_queue.is_running():
+		_popup_queue.flush()
+
+
+func _enqueue_account_deleted_popup() -> void:
+	if not AccountManager.has_pending_account_deleted():
+		return
+	_popup_queue.cancel("account_deleted")
+	var entry := UIPopupEntry.new()
+	entry.key = "account_deleted"
+
+	entry.priority = 20001
+	entry.callable = func() -> void:
+		await get_tree().process_frame
+		if _is_exiting or not visible:
+			return
+
+		UIManager.show_ui(UiName.ACCOUNT_DELETED)
+		await UIManager.await_hidden(UiName.ACCOUNT_DELETED)
+	_popup_queue.insert_next(entry)
+
+
+func _on_account_deleted_notice_required() -> void:
+	if _is_exiting or not visible:
+		print("[HomePage] 收到账号已销毁告知但 home 未显示，等 on_show 取")
+		return
+	_enqueue_account_deleted_popup()
+	if not _popup_queue.is_running():
+		_popup_queue.flush()
+
+
+func _load_json_config(path: String) -> Array:
+	if not FileAccess.file_exists(path):
+		return []
+	var f: FileAccess = FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return []
+	var text: String = f.get_as_text()
+	f.close()
+	var parsed: Variant = JSON.parse_string(text)
+	return parsed if parsed is Array else []
+
+
+func _find_popup_priority(key: String) -> int:
+	for cfg in _load_json_config(_POPUP_CONFIG_PATH):
+		if cfg is Dictionary and str(cfg.get("Key", "")) == key:
+			return int(cfg.get("Priority", 0))
+	return 0
+
+
+const _AB_SWITCH_POPUP_CONFIG_PATH: String = "res://assets/cfg/ab_switch_popup_strategy.json"
+
+
+## 解析逗号分隔的键值条件，花括号内的逗号属于整数集合而不是外层分隔符。
+static func _parse_trigger_dsl(s: String) -> Dictionary:
+	var result: Dictionary = {}
+	var parts: PackedStringArray = []
+	var buf: String = ""
+	var depth: int = 0
+	for c in s:
+		if c == "{":
+			depth += 1
+			buf += c
+		elif c == "}":
+			depth -= 1
+			buf += c
+		elif c == "," and depth == 0:
+			parts.append(buf.strip_edges())
+			buf = ""
+		else:
+			buf += c
+	if not buf.strip_edges().is_empty():
+		parts.append(buf.strip_edges())
+	for part in parts:
+		var eq: int = part.find("=")
+		if eq < 0:
+			continue
+		var k: String = part.substr(0, eq).strip_edges()
+		var v: String = part.substr(eq + 1).strip_edges()
+		if v.begins_with("{") and v.ends_with("}"):
+			var inner: String = v.substr(1, v.length() - 2)
+			var nums: Array[int] = []
+			for item in inner.split(","):
+				var t: String = item.strip_edges()
+				if t.is_valid_int():
+					nums.append(t.to_int())
+			result[k] = nums
+		else:
+			result[k] = v
+	return result
+
+
+func _check_abtest_switch_trigger(trigger: Dictionary) -> bool:
+	var key: String = str(trigger.get("key", ""))
+	var bf: Array = trigger.get("bf", [])
+	var af: Array = trigger.get("af", [])
+
+	if not ABTestManager.is_app_start_dyed():
+		return false
+	match key:
+		_:
+			var cfg: AbConfigBase = ABTestManager.find_config(key)
+			if cfg == null:
+				return false
+			var prev: int = cfg.get_prev_saved_group()
+			if prev == -1:
+				return false
+
+			var current: int = int(cfg.peek_value())
+			if prev == current:
+				return false
+			if not (prev in bf and current in af):
+				return false
+			return not _is_switch_notice_suppressed(key)
+
+
+func _is_switch_notice_suppressed(key: String) -> bool:
+	match key:
+		"dc_costume":
+			return GameState.get_current_level() < DailyEntryState.UNLOCK_LEVEL
+		_:
+			return false
+
+
+func _should_show_ab_switch_popup() -> bool:
+	var entries: Array = _load_json_config(_AB_SWITCH_POPUP_CONFIG_PATH)
+	var streak_page: int = StreakManager.get_pending_switch_page()
+	var daily_streak_idx: int = 0
+	for entry in entries:
+		if not entry is Dictionary:
+			continue
+		var trigger_str: String = str(entry.get("Trigger", ""))
+		var trigger: Dictionary = _parse_trigger_dsl(trigger_str)
+		if str(trigger.get("trigger", "")) != "abtest_switch":
+			continue
+		var entry_key: String = str(trigger.get("key", ""))
+		if entry_key == "daily_streak":
+			daily_streak_idx += 1
+			if streak_page > 0 and daily_streak_idx == streak_page:
+				return true
+		else:
+			if _check_abtest_switch_trigger(trigger):
+				return true
+	return false
+
+
+func _show_ab_switch_popup() -> void:
+	var entries: Array = _load_json_config(_AB_SWITCH_POPUP_CONFIG_PATH)
+
+	var streak_page: int = StreakManager.get_pending_switch_page()
+	var daily_streak_idx: int = 0
+
+	var matched: Dictionary = {}
+	var matched_key: String = ""
+	for entry in entries:
+		if not entry is Dictionary:
+			continue
+		var trigger_str: String = str(entry.get("Trigger", ""))
+		var trigger: Dictionary = _parse_trigger_dsl(trigger_str)
+		if str(trigger.get("trigger", "")) != "abtest_switch":
+			continue
+		var entry_key: String = str(trigger.get("key", ""))
+		var matched_this: bool = false
+		if entry_key == "daily_streak":
+			daily_streak_idx += 1
+			matched_this = streak_page > 0 and daily_streak_idx == streak_page
+		else:
+			matched_this = _check_abtest_switch_trigger(trigger)
+		if matched_this:
+			matched = entry
+			matched_key = entry_key
+			break
+
+	if matched.is_empty():
+		return
+
+	await get_tree().create_timer(0.1).timeout
+	if not visible or _is_exiting:
+		return
+
+	var params: Dictionary = AbSwitchPopup.parse_param(str(matched.get("Param", "")))
+
+	var grant_reward: Dictionary = params.get("reward", {})
+
+	var exchange: Dictionary = params.get("exchange_reward", {})
+	var ex_from: String = str(exchange.get("from", ""))
+	var ex_to: String = str(exchange.get("to", ""))
+	var ex_count: int = 0
+	if ToolKind.is_valid(ex_from) and ToolKind.is_valid(ex_to):
+		if _is_exchange_kind_unlocked(ex_from):
+			ex_count = GameState.get_tool_count(ex_from)
+	elif not exchange.is_empty():
+		push_error("home_page: exchange_reward 的 kind 非法, from=%s to=%s" % [ex_from, ex_to])
+
+	if ex_count > 0:
+		var show_reward: Dictionary = grant_reward.duplicate()
+		show_reward[ex_to] = int(show_reward.get(ex_to, 0)) + ex_count
+		params["reward"] = show_reward
+
+	if not exchange.is_empty():
+		if ex_count > 0:
+			var base_body: String = str(params.get("body", ""))
+			var gift_line: String = tr("HERE_A_GIFT_FOR_YOU")
+			if base_body.is_empty():
+				params["body"] = gift_line
+			else:
+				params["body"] = "%s\n%s" % [tr(base_body).strip_edges(), gift_line]
+			params["btn_text"] = "AD_REWARD_RESTORED_COLLECT"
+		else:
+			params["btn_text"] = "HOW_TO_PLAY_GOT_IT"
+
+	if matched_key == "rank_1st_frame":
+		var comp: Dictionary = _rank_frame_switch_reward(ProfileService.get_max_unlocked_form())
+		if not comp.is_empty():
+			var show_reward: Dictionary = grant_reward.duplicate()
+			for k: String in comp:
+				show_reward[k] = int(show_reward.get(k, 0)) + int(comp[k])
+			params["reward"] = show_reward
+
+			grant_reward = show_reward
+			params["body"] = "RANK_TIER_REFUND_GIFT"
+			params["btn_text"] = "AD_REWARD_RESTORED_COLLECT"
+		else:
+			params["btn_text"] = "HOW_TO_PLAY_GOT_IT"
+
+		ProfileService.set_frame_form(0)
+
+	if matched_key == "dc_costume":
+		if _prepare_dc_costume_switch_reward(params):
+			grant_reward = params.get("reward", {})
+
+	var win := UIManager.show_ui(UiName.AB_SWITCH_POPUP, params)
+	if win == null:
+		return
+
+	_apply_all_switch_keys_to_current()
+	await UIManager.await_hidden(UiName.AB_SWITCH_POPUP)
+
+	var grant_kinds: Array = grant_reward.keys()
+	for kind: String in grant_kinds:
+		var count: int = int(grant_reward.get(kind, 0))
+		if count > 0:
+			GameState.set_tool_count(kind, GameState.get_tool_count(kind) + count)
+
+	if ex_count > 0:
+		GameState.exchange_tool_all(ex_from, ex_to)
+
+
+func _rank_frame_switch_reward(form: int) -> Dictionary:
+	match form:
+		1:
+			return {ToolKind.HINT: 1}
+		2:
+			return {ToolKind.HINT: 1, ToolKind.LOCATE: 1}
+		3:
+			return {ToolKind.HINT: 2, ToolKind.LOCATE: 1}
+		4:
+			return {ToolKind.HINT: 2, ToolKind.LOCATE: 2}
+		_:
+			return {}
+
+
+const _DC_COSTUME_SWITCH_HINT: int = 1
+
+
+func _prepare_dc_costume_switch_reward(params: Dictionary) -> bool:
+	if not _has_unexpired_trial_costume():
+		params["btn_text"] = "HOW_TO_PLAY_GOT_IT"
+		return false
+	var base_reward: Dictionary = params.get("reward", {})
+	var show_reward: Dictionary = base_reward.duplicate()
+	show_reward[ToolKind.HINT] = int(show_reward.get(ToolKind.HINT, 0)) + _DC_COSTUME_SWITCH_HINT
+	params["reward"] = show_reward
+	var base_body: String = str(params.get("body", ""))
+	var gift_line: String = tr("HERE_A_GIFT_FOR_YOU")
+	if base_body.is_empty():
+		params["body"] = gift_line
+	else:
+		params["body"] = "%s\n%s" % [tr(base_body).strip_edges(), gift_line]
+	params["btn_text"] = "AD_REWARD_RESTORED_COLLECT"
+	return true
+
+
+func _has_unexpired_trial_costume() -> bool:
+	var costume_ids: Array[int] = CostumeCatalog.all_ids()
+	for costume_id in costume_ids:
+		if CostumeCatalog.is_trial(costume_id) and ProfileService.is_costume_held(costume_id):
+			return true
+	return false
+
+
+func _is_exchange_kind_unlocked(from_kind: String) -> bool:
+	if from_kind == ToolKind.MOUSE:
+		return GameState.get_current_level() >= BaseGamePage.MOUSE_UNLOCK_LEVEL
+	return true
+
+
+func _apply_all_switch_keys_to_current() -> void:
+	var seen: Dictionary = {}
+	for entry in _load_json_config(_AB_SWITCH_POPUP_CONFIG_PATH):
+		if not entry is Dictionary:
+			continue
+		var trigger: Dictionary = _parse_trigger_dsl(str(entry.get("Trigger", "")))
+		if str(trigger.get("trigger", "")) != "abtest_switch":
+			continue
+		var key: String = str(trigger.get("key", ""))
+		if key.is_empty() or seen.has(key):
+			continue
+		seen[key] = true
+		match key:
+			"daily_streak":
+				StreakManager.consume_pending_switch()
+			_:
+				var cfg: AbConfigBase = ABTestManager.find_config(key)
+				if cfg != null:
+					cfg.consume_switch()
+
+
+func _should_show_ad_reward_restored() -> bool:
+	if not GameState.has_pending_rewards():
+		return false
+	var has_grantable: bool = false
+	for pr in GameState.get_pending_rewards():
+		var r_items: Array = UniKitManager.restore_items_for_position(str(pr.get("source", "")))
+		if not r_items.is_empty():
+			has_grantable = true
+			break
+	if not has_grantable:
+		return false
+	var now: int = int(Time.get_unix_time_from_system())
+	if GameState.get_restore_remaining_today(now) <= 0:
+		return false
+	return true
+
+
+func _show_ad_reward_restored() -> void:
 	await get_tree().create_timer(HOME_RESTORE_DELAY).timeout
-	# 期间玩家离开首页就放弃
 	if _is_exiting or not visible:
 		last_restore_status = "延迟期间玩家已离开 home,放弃本次判定"
 		return
-	# 队列为空则无事可做
 	if not GameState.has_pending_rewards():
 		last_restore_status = "无待补发奖励(漏奖队列为空)"
 		return
 
-	# 逐条筛：只有「属于可补发广告位」的队列项才补
 	var grantable: Array = []
 	for pr in GameState.get_pending_rewards():
-		# 广告位 → 补发道具列表；空列表表示这个位不是补发类
 		var r_items: Array = UniKitManager.restore_items_for_position(str(pr.get("source", "")))
 		if r_items.is_empty():
-			# 不可补发的条目直接跳过
 			continue
 		grantable.append({"entry": pr, "items": r_items})
-	# 一条都补不了：清空整个队列，免得每次进首页都判定一遍
 	if grantable.is_empty():
 		last_restore_status = "队列非空但无可补发道具(广告位非补发类)"
 		GameState.pop_all_pending_rewards()
 		return
 
-	# 今日还能补发几次（含「近 3 天正常领奖不足 3 次」的防刷门槛）
 	var now: int = int(Time.get_unix_time_from_system())
 	var remaining: int = GameState.get_restore_remaining_today(now)
 	if remaining <= 0:
 		last_restore_status = "今日不补发(已达上限或防刷未过,今日已补发 %d 次)" % GameState.get_restored_today_count()
 		return
 
-	# 队列倒序 = 后进先出，优先补最近漏掉的
 	grantable.reverse()
-	# 最多补到今日剩余额度
 	var to_grant: Array = grantable.slice(0, remaining)
 
-	# 同种道具合并计数后一次性展示
 	var by_kind: Dictionary = {}
 	var granted_entries: Array = []
 	for g in to_grant:
@@ -383,102 +1388,296 @@ func _maybe_show_pending_rewards() -> void:
 			var gk: String = str(it.get("kind", ""))
 			if gk == "":
 				continue
-			# 按 kind 累加数量
 			by_kind[gk] = int(by_kind.get(gk, 0)) + int(it.get("count", 0))
 		granted_entries.append(g.entry)
 	var rewards: Array = []
 	for k in by_kind:
 		rewards.append({"kind": k, "count": int(by_kind[k])})
-	# 把本次判定结果写进 static 字段，供 cheat 面板排查「为什么没补」
 	last_restore_status = (
 		"本批弹出 %d 次补发/%d 种道具(今日可发 %d 次, 队列可补 %d 次)"
 		% [to_grant.size(), rewards.size(), remaining, grantable.size()]
 	)
-	# 补发领取弹窗；rewards 形如 [{kind, count}]
 	var page := UIManager.show_ui(UiName.AD_REWARD_RESTORED, {"rewards": rewards})
 	if page == null:
 		return
 
-	# 用字典等弹窗结束：collected 表示玩家真的点了领取
-	var result := {"done": false, "collected": false, "rewards": []}
-	# 领取回调（一次性）
+	var result := {"done": false}
 	page.collected.connect(
-		func(rewards_collected: Array) -> void:
-			result.rewards = rewards_collected
-			result.collected = true
-			result.done = true,
-		CONNECT_ONE_SHOT
+		func(_rewards_collected: Array) -> void: result.done = true, CONNECT_ONE_SHOT
 	)
-	# 玩家直接关掉弹窗也算结束（collected 保持 false）
-	page.closed.connect(func() -> void: result.done = true, CONNECT_ONE_SHOT)
-	# 轮询等结束：弹窗内部流程较多，用信号 await 不方便
 	while not result.done:
 		await get_tree().process_frame
-	# 只有真领取了才计入今日已补发次数
-	if result.collected:
-		GameState.add_restored_today_count(to_grant.size())
 
-	# 已补发的条目从队列移除（没领取的也算处理过）
+	GameState.add_restored_today_count(to_grant.size())
 	GameState.remove_pending_rewards(granted_entries)
 	UIManager.hide_ui(UiName.AD_REWARD_RESTORED)
 
 
-## 首页评分弹窗：A/B 指定「通关后回首页」且关卡 >= 8 时才可能弹
-func _maybe_show_rate_us_on_home() -> void:
-	# 当前关卡号，下面用它做门槛判定
-	var lv: int = GameState.get_current_level()
-	# 门槛：rate_us_pop 取值为「通关后回首页」且 lv >= 8
-	if not ABTestManager.rate_us_pop.is_eligible_at_home(lv):
-		return
-	# 必须本次冷启动后赢过一局，且从未弹过
-	if not GameState.has_won_since_cold_start() or GameState.has_shown_rate_us():
-		return
-	# 离线不弹（评分需要联网提交）
-	if not UniKitManager.is_online():
-		return
-	# 先标记已弹，防止重复进首页时再弹
-	GameState.mark_rate_us_shown()
-	# 等首页入场动画
-	await get_tree().create_timer(HOME_RATE_US_DELAY).timeout
+func _should_show_rank_reward_and_tryopen_popup() -> bool:
+	if not RankActivityManager.get_pending_reward().is_empty():
+		return true
+	if (
+		not RankActivityManager.get_pending_end_solo_podium().is_empty()
+		and _is_end_solo_podium_enabled()
+	):
+		return true
+	if RankActivityManager.is_open_not_joined():
+		return true
+	return false
 
-	# 期间离开首页就作废
+
+func _show_rank_reward_and_tryopen_popup() -> void:
+	var pending_reward: Dictionary = RankActivityManager.get_pending_reward()
+	var reward_rank: int = int(pending_reward.get("rank", 0))
+	if not pending_reward.is_empty():
+		UIManager.show_ui(UiName.RANK_ACTIVITY_PAGE)
+		await UIManager.await_hidden(UiName.RANK_ACTIVITY_PAGE)
+	else:
+		var shown: bool = await _run_end_solo_podium(true)
+		if not shown:
+			return
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	if (
+		reward_rank in [2, 3]
+		and not _is_exiting
+		and visible
+		and _should_show_rank_frame_unlock_popup()
+	):
+		_popup_queue.cancel("rank_frame_unlock_popup")
+		await _show_rank_frame_unlock_popup()
+		if _is_exiting or not visible:
+			return
+
+	await _show_rank_open_popup()
+
+
+func _is_end_solo_podium_enabled() -> bool:
+	return ABTestManager.podium_per_leaderboard.has_end_solo_podium()
+
+
+func _run_end_solo_podium(at_home: bool) -> bool:
+	var pending: Dictionary = RankActivityManager.get_pending_end_solo_podium()
+	if pending.is_empty():
+		return false
+	if not _is_end_solo_podium_enabled():
+		return false
+	if not RankActivityManager.begin_end_solo_podium():
+		return false
+	UIManager.show_ui(UiName.RANK_ACTIVITY_SOLO_PODIUM, {"rank": int(pending.get("rank", 4))})
+	await UIManager.await_hidden(UiName.RANK_ACTIVITY_SOLO_PODIUM)
+	RankActivityManager.complete_end_solo_podium(at_home)
+	return true
+
+
+func _on_rank_settle_ready(_result: Dictionary) -> void:
+	await get_tree().process_frame
 	if _is_exiting or not visible:
 		return
+	if RankActivityManager.get_pending_end_solo_podium().is_empty():
+		return
+	if not _is_end_solo_podium_enabled():
+		RankActivityManager.notify_settlement_done()
+		return
 
-	# 评分弹窗；await closed 拿回 {is_submitted, star_count}
-	var rate_us := UIManager.show_ui(UiName.RATE_US)
-	var data: Dictionary = await rate_us.closed
-	UIManager.hide_ui(UiName.RATE_US)
-	# 提交且 4 星以上 → 走系统内评分（InAppReview）
-	if data.get("is_submitted") and data.get("star_count", 0) > 4:
-		InAppReviewManager.request_review()
-	# 提交但 4 星及以下 → 转成反馈弹窗收集意见
-	elif data.get("is_submitted") and data.get("star_count", 0) <= 4:
-		var feedback := UIManager.show_ui(UiName.FEEDBACK, {"as_dlg": true})
-		await feedback.closed
-		UIManager.hide_ui(UiName.FEEDBACK)
+	_popup_queue.cancel("rank_settle")
+	var entry := UIPopupEntry.new()
+	entry.key = "rank_settle"
+	entry.priority = _find_popup_priority("rank_reward_and_tryopen_popup")
+	entry.callable = func() -> void:
+		if _is_exiting or not visible:
+			return
+
+		if not await _run_end_solo_podium(true):
+			return
+		await _show_rank_open_popup()
+	_popup_queue.enqueue(entry)
+	if not _popup_queue.is_running():
+		_popup_queue.flush()
 
 
-# ================= 显隐与刷新 =================
-## 每次被 UIManager 隐藏时调用：停倒计时并隐藏自己
+func _should_show_vip_daily_gift() -> bool:
+	return PurchaseManager.can_claim_vip_daily_gift()
+
+
+func _show_vip_daily_gift() -> void:
+	if _is_exiting or not visible:
+		return
+	await VipDailyGiftFlow.run()
+
+
+func _should_show_rank_open_popup() -> bool:
+	if not RankActivityManager.is_open_not_joined():
+		return false
+	if _rank_popup_pending:
+		return false
+	var existing: UIFrameWindow = UIManager.get_ui(UiName.RANK_ACTIVITY_OPEN_POPUP)
+	if existing != null and existing.visible:
+		return false
+	return true
+
+
+func _show_rank_open_popup() -> void:
+	if not RankActivityManager.is_open_not_joined():
+		return
+
+	if _rank_popup_pending:
+		return
+	var existing: UIFrameWindow = UIManager.get_ui(UiName.RANK_ACTIVITY_OPEN_POPUP)
+	if existing != null and existing.visible:
+		return
+	_rank_popup_pending = true
+
+	await get_tree().create_timer(0.1).timeout
+	for _i in range(60):
+		if _is_exiting or visible:
+			break
+		await get_tree().process_frame
+	if _is_exiting or not visible:
+		_rank_popup_pending = false
+		_rank_open_popup_deferred = (
+			not _is_exiting and is_showing() and RankActivityManager.is_open_not_joined()
+		)
+		return
+	_rank_open_popup_deferred = false
+	var dlg: UIFrameWindow = UIManager.show_ui(UiName.RANK_ACTIVITY_OPEN_POPUP)
+	if dlg == null:
+		_rank_popup_pending = false
+		return
+
+	await UIManager.await_hidden(UiName.RANK_ACTIVITY_OPEN_POPUP)
+	_rank_popup_pending = false
+
+	RankActivityManager.confirm_participation()
+	if _is_exiting or not visible:
+		return
+	var is_first: bool = RankActivityManager.get_period_count() == 1
+
+	if not (is_first or dlg.was_started()):
+		return
+
+	if is_first and ProfileService.is_identity_default():
+		var profile: UIFrameWindow = UIManager.show_ui(
+			UiName.PROFILE, {"from_rank_open_guide": true}
+		)
+		if profile != null:
+			await UIManager.await_hidden(UiName.PROFILE)
+		if _avatar_cell != null:
+			_avatar_cell.set_self()
+		if _is_exiting or not visible:
+			return
+
+	_enter_main_level_covering()
+
+
+func request_rank_open_popup() -> void:
+	_show_rank_open_popup()
+
+
+func _should_show_rank_frame_unlock_popup() -> bool:
+	if not ABTestManager.rank_1st_frame.is_enabled():
+		return false
+
+	return ProfileService.get_pending_frame_tier_form() > 0
+
+
+func _show_rank_frame_unlock_popup() -> void:
+	if not _should_show_rank_frame_unlock_popup():
+		return
+	var page: UIFrameWindow = UIManager.show_ui(UiName.RANK_FRAME_UNLOCK)
+	if page == null or not page.has_method("show_frame_tier_only"):
+		push_error("HomePage: RANK_FRAME_UNLOCK page missing show_frame_tier_only")
+		return
+	page.show_frame_tier_only(
+		ProfileService.get_pending_frame_tier_form(),
+		ProfileService.get_first_place_wins(),
+		"RANK_TIER_CELE"
+	)
+	await UIManager.await_hidden(UiName.RANK_FRAME_UNLOCK)
+
+
+func _on_rank_period_opened(_count: int) -> void:
+	await get_tree().process_frame
+	if _is_exiting or not is_showing():
+		return
+	_rank_open_popup_deferred = true
+	_enqueue_deferred_rank_open_popup()
+
+
+func _enqueue_deferred_rank_open_popup() -> void:
+	if not _rank_open_popup_deferred or _is_exiting or not is_showing():
+		return
+	if _rank_session_waiting_for_setting:
+		return
+	if not RankActivityManager.is_open_not_joined():
+		_rank_open_popup_deferred = false
+		return
+	if not visible:
+		return
+	if not _should_show_rank_open_popup():
+		return
+
+	var pending_keys: Array[String] = _popup_queue.pending_keys()
+	if pending_keys.has("rank_open_popup"):
+		_rank_open_popup_deferred = false
+		return
+	var entry := UIPopupEntry.new()
+	entry.key = "rank_open_popup"
+	entry.priority = _find_popup_priority("rank_open_popup")
+	entry.callable = _show_rank_open_popup
+	_popup_queue.enqueue(entry)
+	_rank_open_popup_deferred = false
+	if not _popup_queue.is_running():
+		_popup_queue.flush()
+
+
 func on_hide() -> void:
-	# 倒计时 Timer 是场景常驻节点，必须显式停
-	_countdown_timer.stop()
-	visible = false
+	_companion.cat.set_sound_enabled(false)
+	_companion_entry_generation += 1
+	_companion_entry_pending = false
+	_companion.end_entry()
+	_popup_queue.clear()
+	_rank_open_popup_deferred = false
+	_rank_session_waiting_for_setting = false
+
+	for cell: Variant in [_streak_cell, _streak_mini_cell, _streak_top_cell]:
+		if cell != null and cell.has_method("reset_icon"):
+			cell.reset_icon()
 
 
-## 倒计时每秒超时一次 → 刷新每日按钮
-func _on_countdown_timer_timeout() -> void:
-	_update_countdown()
+func _set_streak_cell_visible(cell: Variant, vis: bool) -> void:
+	if cell == null:
+		return
+	var ctrl := cell as Control
+	if not vis and ctrl.visible and cell.has_method("reset_icon"):
+		cell.reset_icon()
+	var became_visible: bool = vis and not ctrl.visible
+	ctrl.visible = vis
+	if became_visible and cell.has_method("on_show"):
+		cell.on_show({})
 
 
-## 刷新每日按钮状态与倒计时文案（跨天时会从已完成回到可玩）
 func _update_countdown() -> void:
-	# 先推进历史最大日期，再算状态
+	_companion.tick()
+	_apply_halloween_logo()
 	DailyEntryState.ensure_max_daily_advanced()
 	_refresh_daily_btn_state()
-	# 倒计时到次日 0 点，格式 HH:MM:SS
 	_countdown_label.text = DailyEntryState.countdown_text()
+
+	var previous_time_layout: int = _dc_in_btn_state
+	_apply_dc_number_time_layout()
+	if previous_time_layout != _dc_in_btn_state:
+		_queue_bottom_layout()
+	_sync_players_row_canvas_rect()
+	_daily_players_row.refresh(DailyEntryState.compute_state())
+
+
+func _roll_dc_players_avatars() -> void:
+	_daily_players_row.roll_avatars()
+	if _dc_cell != null and _dc_cell.has_method("roll_players_avatars"):
+		_dc_cell.roll_players_avatars()
 
 
 # ================= 输入与入口按钮 =================
@@ -500,82 +1699,318 @@ func _request_quit_confirm() -> void:
 	UIManager.show_ui(UiName.CONFIRM, {"on_confirm": func(): get_tree().quit()})
 
 
-## 打开设置页（先埋点按钮点击）
 func _on_settings_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.SETTINGS, self)
+	VibrateManager.play_at(VibrateManager.Pos.SETTINGS_BTN)
 	UIManager.show_ui(UiName.SETTING)
 
 
-## 开始游戏：带当前关卡号进 game 页
+func _on_avatar_btn_pressed() -> void:
+	Tracker.track_btn_click(Tracker.Btn.SELF_INFO, self)
+	VibrateManager.play_at(VibrateManager.Pos.AVATAR_BTN)
+
+	var page: UIFrameWindow = UIManager.show_ui(UiName.PROFILE)
+	if page == null:
+		return
+	await UIManager.await_hidden(UiName.PROFILE)
+	if _avatar_cell != null:
+		_avatar_cell.set_self()
+
+	_refresh_avatar_red_dot()
+
+
+func _on_profile_display_changed() -> void:
+	if _avatar_cell != null:
+		_avatar_cell.set_self()
+	_refresh_avatar_red_dot()
+
+
+func _refresh_avatar_red_dot() -> void:
+	if _avatar_cell != null:
+		var has_skin_tab: bool = (
+			ABTestManager.dc_costume.has_costume()
+			or ProfileService.is_costume_held(CostumeCatalog.HALLOWEEN_COSTUME_ID)
+		)
+		_avatar_cell.set_red_dot(
+			(
+				ProfileService.has_frame_red_dot()
+				or ProfileService.has_avatar_red_dot()
+				or (has_skin_tab and ProfileService.has_costume_red_dot())
+			)
+		)
+
+
+func get_profile_entry_center() -> Vector2:
+	return _profile_entry.global_position + _profile_entry.size * 0.5
+
+
+func play_profile_shake() -> void:
+	if _avatar_cell != null:
+		_avatar_cell.play_shake()
+
+
+func get_rank_entry_center() -> Vector2:
+	for cell in [_rank_cell, _rank_mini_cell, _rank_left_cell]:
+		var c: Control = cell as Control
+		if c != null and c.is_inside_tree() and c.is_visible_in_tree():
+			return c.get_global_rect().get_center()
+	push_warning("HomePage.get_rank_entry_center: 三种 rank 入口卡均不可见,返 Vector2.ZERO")
+	return Vector2.ZERO
+
+
+func get_rank_entry_cell() -> Control:
+	for cell in [_rank_cell, _rank_mini_cell, _rank_left_cell]:
+		var candidate: Control = cell as Control
+		if candidate != null and candidate.is_inside_tree() and candidate.is_visible_in_tree():
+			return candidate
+	return null
+
+
+func is_rank_entry_left_side() -> bool:
+	var left_cell: Control = _rank_left_cell as Control
+	return left_cell != null and left_cell.is_inside_tree() and left_cell.is_visible_in_tree()
+
+
 func _on_start_btn_pressed() -> void:
-	Tracker.track_btn_click(Tracker.Btn.NORMAL_PLAY, self)
+	VibrateManager.play_at(VibrateManager.Pos.START_BTN)
+	UIManager.hide_all_except([UiName.HOME, UiName.GAME])
+	enter_main_level()
+
+
+func enter_main_level() -> void:
+	Tracker.track_btn_click(_start_btn_name(), self)
 	_exit_to_page("game", {"level_index": GameState.get_current_level()})
 
 
-## 每日挑战入口：点击交给 DailyEntryState 判定
+func _enter_main_level_covering() -> void:
+	Tracker.track_btn_click(_start_btn_name(), self)
+	UIManager.show_ui(UiName.GAME, {"level_index": GameState.get_current_level()})
+	if is_showing():
+		UIManager.hide_ui(UiName.HOME)
+
+
 func _on_daily_btn_pressed() -> void:
 	Tracker.track_btn_click(Tracker.Btn.DAILY_PLAY, self)
 
-	# 锁定 / 已完成只弹 Toast，可玩才真的进 daily_game
-	DailyEntryState.handle_click(self, _exit_to_page.bind("daily_game", {}))
+	DailyEntryState.handle_click(
+		self,
+		_exit_to_page.bind("daily_game", {}),
+		func() -> void:
+			DcReplayFlow.open_confirm(
+				self, _exit_to_page.bind("daily_game", DcReplayFlow.enter_params())
+			)
+	)
 
 
-# ================= 转场 =================
-## 转场退出：先播首页退场动画，动画走到标记点时才打开目标页
 func _exit_to_page(page_name: String, params: Dictionary) -> void:
-	# 防重入：一次只允许一次转场
 	if _is_exiting:
 		return
 	_is_exiting = true
-	# 这里只记录目标，真正打开在 _on_entry_reached
+	_companion.set_interaction_enabled(false)
 	_pending_page = page_name
 	_pending_params = params
-	# 用动画里 Entry 与 disappear 两个标记的时间差当延迟（当前两者几乎重合，延迟≈0）
 	var anim: Animation = _anim.get_animation(&"MainInterface")
 	var entry_delay: float = maxf(
 		0.0, anim.get_marker_time(&"Entry") - anim.get_marker_time(&"disappear")
 	)
-	# 只连一次；隐藏首页后会断开
-	if not _anim.animation_finished.is_connected(_on_anim_finished):
-		_anim.animation_finished.connect(_on_anim_finished)
-	# 从 disappear 标记播到末尾（退场段）
+	var anim_finish_delay: float = maxf(0.0, anim.length - anim.get_marker_time(&"disappear"))
 	_anim.play_section_with_markers(&"MainInterface", &"disappear", &"")
-	# 延迟到点后打开目标页
-	get_tree().create_timer(entry_delay).timeout.connect(_on_entry_reached)
+	get_tree().create_timer(entry_delay).timeout.connect(
+		func() -> void:
+			_on_entry_reached()
+			get_tree().create_timer(maxf(0.0, anim_finish_delay - entry_delay)).timeout.connect(
+				func() -> void: _on_anim_finished(&"MainInterface")
+			)
+	)
 
 
-## 动画到点：打开目标页，并把首页抬到它上面，让退场动画盖住新页
 func _on_entry_reached() -> void:
-	# 已经开过或节点已出树就不重复处理
 	if _new_page_node != null or not is_inside_tree():
 		return
 
-	# show_ui 会缓存复用页面，重复调用只是重新 on_show
 	_new_page_node = UIManager.show_ui(_pending_page, _pending_params)
 	if _new_page_node == null:
 		return
 
-	# z_index 比新页大 1：首页的退场动画画在新页之上
 	if _new_page_node is CanvasItem:
 		z_index = (_new_page_node as CanvasItem).z_index + 1
 
+		_daily_players_row.sync_now()
 
-## 退场动画播完：先断开自己，再隐藏首页
+
 func _on_anim_finished(_anim_name: StringName) -> void:
-	if _anim.animation_finished.is_connected(_on_anim_finished):
-		_anim.animation_finished.disconnect(_on_anim_finished)
-	# 只有目标页真的开起来了才隐藏首页（否则会黑屏）
-	if _new_page_node != null:
-		UIManager.hide_ui(UiName.HOME)
+	if _new_page_node == null:
+		return
+
+	var _dest_win: UIFrameWindow = _new_page_node as UIFrameWindow
+	if _dest_win != null and not _dest_win.is_showing():
+		return
+	UIManager.hide_ui(UiName.HOME)
 
 
-# ================= 每日挑战按钮 =================
-## 按 DailyEntryState 的三态刷新每日按钮外观
+const _DAILY_PAW_ENABLED: bool = false
+
+const _DC_IN_BTN_TIME_TOP: float = 106.0
+const _DC_IN_BTN_TIME_BOTTOM: float = 146.0
+const _DC_IN_BTN_TITLE_CENTER_Y: float = 61.0
+const _DC_IN_BTN_ICON_SIZE: Vector2 = Vector2(35, 40)
+const _DC_IN_BTN_TIME_FONT_SIZE: int = 44
+const _DC_IN_BTN_TIME_SEP: int = 10
+const _DC_IN_BTN_PLAYERS_TOP: float = 170.0
+const _DC_IN_BTN_PLAYERS_BOTTOM: float = 250.0
+
+const _DC_IN_BTN_TIME_FONT: FontVariation = preload("res://assets/fonts/Roboto-medium.tres")
+
+var _dc_in_btn_state: int = -1
+
+var _dc_in_btn_baseline: Dictionary = {}
+
+
+func _apply_dc_number_time_layout() -> void:
+	var want: int = 1 if ABTestManager.dc_number.is_count_visible() else 0
+	if want == _dc_in_btn_state:
+		return
+	if _dc_in_btn_baseline.is_empty():
+		_dc_in_btn_baseline = {
+			"unlock_top": _daily_unlock_box.offset_top,
+			"unlock_bottom": _daily_unlock_box.offset_bottom,
+			"cd_rect":
+			Rect2(
+				_countdown_tag.offset_left,
+				_countdown_tag.offset_top,
+				_countdown_tag.offset_right - _countdown_tag.offset_left,
+				_countdown_tag.offset_bottom - _countdown_tag.offset_top
+			),
+			"done_rect":
+			Rect2(
+				_daily_done_tag.offset_left,
+				_daily_done_tag.offset_top,
+				_daily_done_tag.offset_right - _daily_done_tag.offset_left,
+				_daily_done_tag.offset_bottom - _daily_done_tag.offset_top
+			),
+			"cd_panel": _countdown_tag.get_theme_stylebox(&"panel"),
+			"done_panel": _daily_done_tag.get_theme_stylebox(&"panel"),
+			"cd_sep": _countdown_hbox.get_theme_constant(&"separation"),
+			"done_sep": _daily_done_hbox.get_theme_constant(&"separation"),
+			"cd_icon": _countdown_icon.custom_minimum_size,
+			"done_icon": _daily_done_icon.custom_minimum_size,
+			"cd_font": _countdown_label.get_theme_font(&"font"),
+			"done_font": _daily_done_time.get_theme_font(&"font"),
+			"cd_fs": _countdown_label.get_theme_font_size(&"font_size"),
+			"done_fs": _daily_done_time.get_theme_font_size(&"font_size"),
+			"players_top": _daily_players_row.offset_top,
+			"players_bottom": _daily_players_row.offset_bottom,
+			"players_left": _daily_players_row.offset_left,
+			"players_right": _daily_players_row.offset_right,
+			"players_z": _daily_players_row.z_index,
+			"players_mod": _daily_players_row.modulate,
+			"players_anchors":
+			[
+				_daily_players_row.anchor_left,
+				_daily_players_row.anchor_top,
+				_daily_players_row.anchor_right,
+				_daily_players_row.anchor_bottom,
+			],
+			"cd_z": _countdown_tag.z_index,
+			"done_z": _daily_done_tag.z_index,
+		}
+	_dc_in_btn_state = want
+	if want == 1:
+		var base_center: float = (
+			(
+				float(_dc_in_btn_baseline["unlock_top"])
+				+ _daily_btn.size.y
+				+ float(_dc_in_btn_baseline["unlock_bottom"])
+			)
+			* 0.5
+		)
+		var shift: float = _DC_IN_BTN_TITLE_CENTER_Y - base_center
+		_daily_unlock_box.offset_top = float(_dc_in_btn_baseline["unlock_top"]) + shift
+		_daily_unlock_box.offset_bottom = float(_dc_in_btn_baseline["unlock_bottom"]) + shift
+
+		for tag: Panel in [_countdown_tag, _daily_done_tag]:
+			tag.offset_left = 0.0
+			tag.offset_right = _daily_btn.size.x
+			tag.offset_top = _DC_IN_BTN_TIME_TOP
+			tag.offset_bottom = _DC_IN_BTN_TIME_BOTTOM
+
+			tag.add_theme_stylebox_override(&"panel", StyleBoxEmpty.new())
+
+			tag.z_index = 1
+		for hb: HBoxContainer in [_countdown_hbox, _daily_done_hbox]:
+			hb.add_theme_constant_override(&"separation", _DC_IN_BTN_TIME_SEP)
+		for ic: TextureRect in [_countdown_icon, _daily_done_icon]:
+			ic.custom_minimum_size = _DC_IN_BTN_ICON_SIZE
+		for lb: Label in [_countdown_label, _daily_done_time]:
+			lb.add_theme_font_override(&"font", _DC_IN_BTN_TIME_FONT)
+			lb.add_theme_font_size_override(&"font_size", _DC_IN_BTN_TIME_FONT_SIZE)
+
+		_daily_players_row.top_level = true
+		_daily_players_row.anchor_left = 0.0
+		_daily_players_row.anchor_top = 0.0
+		_daily_players_row.anchor_right = 0.0
+		_daily_players_row.anchor_bottom = 0.0
+		_sync_players_row_canvas_rect()
+
+		_daily_players_row.follow_host(_daily_btn)
+		return
+	_daily_unlock_box.offset_top = float(_dc_in_btn_baseline["unlock_top"])
+	_daily_unlock_box.offset_bottom = float(_dc_in_btn_baseline["unlock_bottom"])
+	var cd: Rect2 = _dc_in_btn_baseline["cd_rect"]
+	var dn: Rect2 = _dc_in_btn_baseline["done_rect"]
+	_countdown_tag.offset_left = cd.position.x
+	_countdown_tag.offset_top = cd.position.y
+	_countdown_tag.offset_right = cd.end.x
+	_countdown_tag.offset_bottom = cd.end.y
+	_daily_done_tag.offset_left = dn.position.x
+	_daily_done_tag.offset_top = dn.position.y
+	_daily_done_tag.offset_right = dn.end.x
+	_daily_done_tag.offset_bottom = dn.end.y
+	_countdown_tag.add_theme_stylebox_override(&"panel", _dc_in_btn_baseline["cd_panel"])
+	_daily_done_tag.add_theme_stylebox_override(&"panel", _dc_in_btn_baseline["done_panel"])
+	_countdown_hbox.add_theme_constant_override(&"separation", int(_dc_in_btn_baseline["cd_sep"]))
+	_daily_done_hbox.add_theme_constant_override(
+		&"separation", int(_dc_in_btn_baseline["done_sep"])
+	)
+	_countdown_icon.custom_minimum_size = _dc_in_btn_baseline["cd_icon"]
+	_daily_done_icon.custom_minimum_size = _dc_in_btn_baseline["done_icon"]
+	_countdown_label.add_theme_font_override(&"font", _dc_in_btn_baseline["cd_font"])
+	_daily_done_time.add_theme_font_override(&"font", _dc_in_btn_baseline["done_font"])
+	_countdown_label.add_theme_font_size_override(&"font_size", int(_dc_in_btn_baseline["cd_fs"]))
+	_daily_done_time.add_theme_font_size_override(&"font_size", int(_dc_in_btn_baseline["done_fs"]))
+	_daily_players_row.top_level = false
+	var anc: Array = _dc_in_btn_baseline["players_anchors"]
+	_daily_players_row.anchor_left = float(anc[0])
+	_daily_players_row.anchor_top = float(anc[1])
+	_daily_players_row.anchor_right = float(anc[2])
+	_daily_players_row.anchor_bottom = float(anc[3])
+	_daily_players_row.offset_left = float(_dc_in_btn_baseline["players_left"])
+	_daily_players_row.offset_right = float(_dc_in_btn_baseline["players_right"])
+	_daily_players_row.offset_top = float(_dc_in_btn_baseline["players_top"])
+	_daily_players_row.offset_bottom = float(_dc_in_btn_baseline["players_bottom"])
+	_countdown_tag.z_index = int(_dc_in_btn_baseline["cd_z"])
+	_daily_done_tag.z_index = int(_dc_in_btn_baseline["done_z"])
+	_daily_players_row.z_index = int(_dc_in_btn_baseline["players_z"])
+	_daily_players_row.follow_host(null)
+	_daily_players_row.modulate = _dc_in_btn_baseline["players_mod"]
+
+
+func _sync_players_row_canvas_rect() -> void:
+	if not _daily_players_row.top_level:
+		return
+	var host: CanvasItem = _daily_btn.get_parent() as CanvasItem
+	if host == null:
+		return
+	var btn_canvas: Vector2 = host.get_global_transform() * _daily_btn.position
+	_daily_players_row.offset_left = btn_canvas.x
+	_daily_players_row.offset_right = btn_canvas.x + _daily_btn.size.x
+	_daily_players_row.offset_top = btn_canvas.y + _DC_IN_BTN_PLAYERS_TOP
+	_daily_players_row.offset_bottom = btn_canvas.y + _DC_IN_BTN_PLAYERS_BOTTOM
+
+
 func _refresh_daily_btn_state() -> void:
-	# LOCKED 关卡不够 / DONE 今日已完成（或已过日期） / 其它为可玩
 	var s: int = DailyEntryState.compute_state()
 	match s:
-		# 锁定态：统一灰底圆角，隐藏阴影与所有角标，只留锁图标
 		DailyEntryState.State.LOCKED:
 			var sf := StyleBoxFlat.new()
 			sf.bg_color = Color(0.667, 0.667, 0.667, 1)
@@ -589,13 +2024,11 @@ func _refresh_daily_btn_state() -> void:
 			_daily_done_tag.visible = false
 			_daily_top_tag.visible = false
 			_countdown_tag.visible = false
-		# 已完成态：蓝色底 + 投影，显示完成角标、名次与猫爪
-		DailyEntryState.State.DONE:
+		DailyEntryState.State.DONE, DailyEntryState.State.REPLAY:
 			var sf_n := StyleBoxFlat.new()
 			sf_n.bg_color = Color(0.576, 0.651, 0.945, 1)
 			sf_n.set_corner_radius_all(200)
 			sf_n.shadow_color = Color(0.576, 0.651, 0.945, 0.15)
-			# 投影参数（像素）：偏移 10、向下 4
 			sf_n.shadow_size = 10
 			sf_n.shadow_offset = Vector2(0, 4)
 			var sf_p := StyleBoxFlat.new()
@@ -610,17 +2043,12 @@ func _refresh_daily_btn_state() -> void:
 			_daily_done_tag.visible = true
 			_daily_top_tag.visible = true
 			_countdown_tag.visible = false
-			# 完成用时与名次文案由 DailyEntryState 生成
 			_daily_done_time.text = DailyEntryState.done_time_text()
 			_daily_top_label.text = DailyEntryState.done_rank_text()
-
-			# 猫爪按 dc_tag_ui A/B 决定是否显示；已完成态用亮色贴图
-			_daily_paw.visible = ABTestManager.dc_tag_ui.is_paw_enabled()
+			_daily_paw.visible = _DAILY_PAW_ENABLED
 			if _daily_paw.visible:
 				_daily_paw.texture = _daily_paw_tex_lit
-			# 名次标签宽度随文案变化，延后一帧等排版完成再算
 			call_deferred("_update_top_tag_layout")
-		# 默认（可玩）：还原原始样式，显示倒计时；猫爪用暗色
 		_:
 			_daily_bg.add_theme_stylebox_override("normal", _daily_sf_normal)
 			_daily_bg.add_theme_stylebox_override("pressed", _daily_sf_pressed)
@@ -631,10 +2059,65 @@ func _refresh_daily_btn_state() -> void:
 			_daily_done_tag.visible = false
 			_daily_top_tag.visible = false
 			_countdown_tag.visible = true
-
-			_daily_paw.visible = ABTestManager.dc_tag_ui.is_paw_enabled()
+			_daily_paw.visible = _DAILY_PAW_ENABLED
 			if _daily_paw.visible:
 				_daily_paw.texture = _daily_paw_tex_dim
+	_refresh_daily_cat_head()
+
+
+func _refresh_daily_cat_head() -> void:
+	if _daily_cat_icon == null:
+		return
+	var state: int = DailyEntryState.compute_state()
+	var has_cat: bool = (
+		ABTestManager.dc_costume.has_costume() and state != DailyEntryState.State.LOCKED
+	)
+
+	_apply_daily_btn_cat_layout(has_cat)
+	if not has_cat:
+		_daily_cat_icon.visible = false
+		_daily_cat_shadow.visible = false
+		if _daily_cat_spine != null:
+			_daily_cat_spine.visible = false
+		return
+
+	var costume_id: int = ProfileService.get_today_costume()
+	var dimmed: bool = not ProfileService.is_costume_held(costume_id)
+	var tex: Texture2D = CostumeIcon.texture_for(costume_id)
+
+	_daily_cat_icon.visible = tex != null
+	_daily_cat_icon.texture = tex
+	_daily_cat_icon.modulate.a = DcEntryCatHead.DIM_ALPHA if dimmed else 1.0
+
+	_daily_cat_shadow.visible = tex != null
+	_daily_cat_shadow.texture = tex
+	_daily_cat_shadow.self_modulate.a = DcEntryCatHead.DIM_ALPHA if dimmed else 1.0
+	if tex != null:
+		if _daily_cat_spine != null:
+			_daily_cat_spine.visible = false
+		return
+	_ensure_daily_cat_spine()
+	_daily_cat_spine.visible = true
+	CostumeSkin.apply(_daily_cat_spine, costume_id)
+	_daily_cat_spine.modulate.a = DcEntryCatHead.DIM_ALPHA if dimmed else 1.0
+
+
+func _ensure_daily_cat_spine() -> void:
+	if _daily_cat_spine != null:
+		return
+	_daily_cat_spine = SpineSprite.new()
+	_daily_cat_spine.skeleton_data_res = CostumeSkin.SKELETON_RES
+	_daily_cat_anchor.add_child(_daily_cat_spine)
+
+
+const _DAILY_BTN_TEXT_KEY: String = "HOME_DAILY_CHALLENGE"
+
+
+func _apply_daily_btn_cat_layout(has_cat: bool) -> void:
+	if _daily_cat_wrap != null:
+		_daily_cat_wrap.visible = has_cat
+	if _daily_btn != null:
+		_daily_btn.text = "" if has_cat else _DAILY_BTN_TEXT_KEY
 
 
 ## 重新摆放右上角名次标签：宽度随文字自适应并保持右边对齐
@@ -667,60 +2150,379 @@ func _update_top_tag_layout() -> void:
 	_daily_top_label.size = Vector2(lbl_w, DEFAULT_TAG_H)
 
 
-# ================= 首页布局（daily_streak A/B） =================
-## 应用首页布局：A/B 开启时切到带打卡入口的新版布局
-func _apply_home_layout() -> void:
-	# daily_streak A/B：取值非 0 即启用新版布局
-	var use_l2: bool = ABTestManager.daily_streak.is_enabled()
-	_streak_layout.visible = use_l2
-	# A/B 关闭：还原开始按钮 offset 与 Logo 位置
-	if not use_l2:
-		_start_btn.offset_left = _start_btn_orig_off_l
-		_start_btn.offset_right = _start_btn_orig_off_r
-		if _loge != null:
-			_loge.position = _loge_orig_pos
+func _apply_entry_shape_pos() -> void:
+	var shape_root: Control = _shape_root()
+
+	var solo: bool = not RankActivityManager.has_home_entry()
+
+	_place(_streak_slot, ["StreakSoloPos", "StreakPos"] if solo else ["StreakPos"], shape_root)
+	_place(_dc_slot, ["DcSoloPos", "DcPos"] if solo else ["DcPos"], shape_root)
+	_place(_rank_slot, ["RankPos"], shape_root)
+
+	_place(_side_bar_left, ["SideBarLeftPos"], shape_root)
+	_place(_side_bar_right, ["SideBarRightPos"], shape_root)
+
+	_place(_loge, ["LogoPos"], shape_root)
+
+
+func _place(target: Control, names: Array, shape_root: Control) -> void:
+	if target == null:
 		return
+	_snapshot_pos_origin(target)
+	if shape_root != null:
+		for nm: String in names:
+			var mark: Control = shape_root.get_node_or_null(nm) as Control
+			if mark != null:
+				_write_offsets(
+					target,
+					[
+						mark.anchor_left,
+						mark.anchor_top,
+						mark.anchor_right,
+						mark.anchor_bottom,
+						mark.offset_left,
+						mark.offset_top,
+						mark.offset_right,
+						mark.offset_bottom
+					]
+				)
+				return
+	_write_offsets(target, _pos_origin[target])
 
-	# A/B 开启：原来的每日按钮让位给新版格子
-	_daily_btn.visible = false
 
-	# 开始按钮与 Logo 对齐到槽位
-	_start_btn.global_position = _start_btn_slot.global_position
-	_start_btn.size = _start_btn_slot.size
+func _snapshot_pos_origin(target: Control) -> void:
+	if _pos_origin.has(target):
+		return
+	_pos_origin[target] = [
+		target.anchor_left,
+		target.anchor_top,
+		target.anchor_right,
+		target.anchor_bottom,
+		target.offset_left,
+		target.offset_top,
+		target.offset_right,
+		target.offset_bottom
+	]
 
-	if _loge != null:
-		var slot_center: Vector2 = _logo_slot.global_position + _logo_slot.size * 0.5
-		_loge.global_position = slot_center - _loge.size * 0.5
 
-	# 两个入口格子懒加载：只在第一次切到新版布局时创建
+func _write_offsets(target: Control, v: Array) -> void:
+	target.anchor_left = v[0]
+	target.anchor_top = v[1]
+	target.anchor_right = v[2]
+	target.anchor_bottom = v[3]
+	target.offset_left = v[4]
+	target.offset_top = v[5]
+	target.offset_right = v[6]
+	target.offset_bottom = v[7]
+
+
+func _apply_entry_shape_cells() -> void:
+	var shape: int = ABTestManager.home_entry_shape.get_shape()
+	var is_control: bool = shape == HomeEntryShapeConfig.VALUE_CURRENT_WIDGET
+	var rank_on: bool = RankActivityManager.has_home_entry()
+	var is_side: bool = shape == HomeEntryShapeConfig.VALUE_RANK_SIDE
+
+	var want_dc_big: bool = not ABTestManager.home_entry_shape.has_daily_btn()
+	_daily_btn.visible = not want_dc_big
+	if _dc_cell != null:
+		(_dc_cell as Control).visible = want_dc_big
+
+	var streak_top: bool = (
+		shape in [HomeEntryShapeConfig.VALUE_ICON_TOP, HomeEntryShapeConfig.VALUE_RANK_SIDE]
+	)
+
+	if not is_control:
+		if _streak_cell != null:
+			_set_streak_cell_visible(_streak_cell, not streak_top)
+		if _streak_mini_cell != null:
+			_set_streak_cell_visible(_streak_mini_cell, false)
+		if _rank_mini_cell != null:
+			(_rank_mini_cell as Control).visible = false
+
+	if streak_top:
+		if _streak_top_cell == null:
+			_streak_top_cell = create_child(_STREAK_TOP_ENTRY_CELL, {})
+			_mount_into_slot(_streak_top_cell, _streak_icon_slot)
+		(_streak_top_cell as Control).visible = true
+		_streak_top_cell.on_show({})
+	elif _streak_top_cell != null:
+		_set_streak_cell_visible(_streak_top_cell, false)
+
+	if rank_on and not is_side and not is_control:
+		if _rank_cell == null:
+			_rank_cell = create_child(_RANK_ENTRY_CELL, {})
+			_mount_into_slot(_rank_cell, _rank_slot)
+		(_rank_cell as Control).visible = true
+		_rank_cell.on_show({})
+	elif _rank_cell != null:
+		(_rank_cell as Control).visible = false
+
+	if rank_on and is_side:
+		if _rank_left_cell == null:
+			_rank_left_cell = create_child(_RANK_LEFT_ENTRY_CELL, {})
+			_mount_into_container(_rank_left_cell, _side_bar_left)
+		(_rank_left_cell as Control).visible = true
+		_rank_left_cell.on_show({})
+	elif _rank_left_cell != null:
+		(_rank_left_cell as Control).visible = false
+
+	if _SIDE_BAR_DC_ENABLED and is_side:
+		if _dc_left_cell == null:
+			_dc_left_cell = create_child(_DC_LEFT_ENTRY_CELL, {})
+			_mount_into_container(_dc_left_cell, _side_bar_right)
+		(_dc_left_cell as Control).visible = true
+		_dc_left_cell.on_show({})
+	elif _dc_left_cell != null:
+		(_dc_left_cell as Control).visible = false
+
+
+const _DAILY_BTN_GAP: float = 60.0
+
+
+func _align_daily_btn_under_start() -> void:
+	var bg: Control = _start_btn.get_node_or_null("Root/Bg") as Control
+	var reference_rect: Rect2 = bg.get_global_rect() if bg != null else _start_btn.get_global_rect()
+	var daily_rect: Rect2 = _daily_btn.get_global_rect()
+
+	var bottom_extent: float = maxf(
+		_daily_btn.size.y,
+		(
+			maxf(_countdown_tag.get_global_rect().end.y, _daily_done_tag.get_global_rect().end.y)
+			- daily_rect.position.y
+		)
+	)
+	if ABTestManager.dc_number.is_count_visible():
+		bottom_extent = maxf(bottom_extent, _DC_IN_BTN_PLAYERS_BOTTOM)
+	_companion.fit_start_button(reference_rect.end.y + _DAILY_BTN_GAP + bottom_extent)
+	reference_rect = bg.get_global_rect() if bg != null else _start_btn.get_global_rect()
+	var horizontal_shift: float = reference_rect.get_center().x - daily_rect.get_center().x
+	var vertical_shift: float = reference_rect.end.y + _DAILY_BTN_GAP - daily_rect.position.y
+	_daily_btn.offset_left += horizontal_shift
+	_daily_btn.offset_right += horizontal_shift
+	_daily_btn.offset_top += vertical_shift
+	_daily_btn.offset_bottom += vertical_shift
+
+	_sync_players_row_canvas_rect()
+
+
+func _queue_bottom_layout() -> void:
+	if not is_showing() or _is_exiting or _bottom_layout_queued:
+		return
+	_bottom_layout_queued = true
+	_refresh_bottom_layout.call_deferred()
+
+
+func _refresh_bottom_layout() -> void:
+	_bottom_layout_queued = false
+	if not is_showing() or _is_exiting:
+		return
+	_align_daily_btn_under_start()
+	_companion.refresh_layout()
+
+
+func _shape_root() -> Control:
+	return _pos_table.get_node_or_null("Shape%d" % ABTestManager.home_entry_shape.get_shape())
+
+
+func _apply_home_layout() -> void:
+	_streak_layout.visible = true
+
 	if _dc_cell == null:
-		# create_child 要求场景根节点继承 UIChildWindow，并且会立刻 _do_show
 		_dc_cell = create_child(_DC_ENTRY_CELL, {})
 		_mount_into_slot(_dc_cell, _dc_slot)
 	if _streak_cell == null:
 		_streak_cell = create_child(_STREAK_ENTRY_CELL, {})
 		_mount_into_slot(_streak_cell, _streak_slot)
-	# 再按打卡是否「凉了」微调一次
 	_apply_streak_dead_layout()
+	_apply_rank_entry_layout()
 
 
-## challenge_only 且每日挑战还锁着时，打卡入口没有意义：隐藏它并让每日入口居中
 func _apply_streak_dead_layout() -> void:
-	var streak_dead: bool = (
-		ABTestManager.daily_streak.is_challenge_only()
-		and DailyEntryState.compute_state() == DailyEntryState.State.LOCKED
-	)
-	# 打卡入口失去意义时隐藏它（见函数说明）
 	if _streak_cell != null:
-		_streak_cell.visible = not streak_dead
+		_streak_cell.visible = true
+
+		_streak_cell.on_show({})
 	if _dc_cell != null:
-		if streak_dead:
-			# 居中：把每日格子的 X 补到布局中点
-			(_dc_cell as Control).position.x = (
-				_streak_layout.size.x * 0.5 - _dc_slot.position.x - _dc_slot.size.x * 0.5
-			)
-		else:
-			(_dc_cell as Control).position.x = 0.0
+		(_dc_cell as Control).position.x = 0.0
+
+
+func _apply_rank_entry_layout() -> void:
+	if not _streak_layout.visible:
+		return
+	var rank_on: bool = RankActivityManager.has_home_entry()
+
+	if _streak_cell != null:
+		_set_streak_cell_visible(_streak_cell, not rank_on)
+	if not rank_on:
+		if _streak_mini_cell != null:
+			_set_streak_cell_visible(_streak_mini_cell, false)
+		if _rank_mini_cell != null:
+			(_rank_mini_cell as Control).visible = false
+		return
+
+	if _streak_mini_cell == null:
+		_streak_mini_cell = create_child(_STREAK_MINI_ENTRY_CELL, {})
+		_mount_into_slot(_streak_mini_cell, _streak_small_slot)
+	if _rank_mini_cell == null:
+		_rank_mini_cell = create_child(_RANK_MINI_ENTRY_CELL, {})
+		_mount_into_slot(_rank_mini_cell, _rank_slot)
+	(_streak_mini_cell as Control).visible = true
+	(_rank_mini_cell as Control).visible = true
+
+	if _dc_cell != null:
+		(_dc_cell as Control).position.x = 0.0
+
+	_streak_mini_cell.on_show({})
+	_rank_mini_cell.on_show({})
+
+
+func _relayout_rank_entries(
+	with_streak_dead: bool = false, with_shape_pos: bool = false, only_when_showing: bool = false
+) -> void:
+	if _rank_layout_locked:
+		return
+	if only_when_showing and not is_showing():
+		return
+	if with_streak_dead:
+		_apply_streak_dead_layout()
+	_apply_rank_entry_layout()
+	if with_shape_pos:
+		_companion.restore_logo_layout()
+		_apply_entry_shape_pos()
+		_companion.refresh_layout()
+
+	_apply_entry_shape_cells()
+
+
+func _on_rank_state_changed(_state: int) -> void:
+	_relayout_rank_entries(false, true, true)
+
+
+func set_rank_layout_locked(locked: bool) -> void:
+	if _rank_layout_locked == locked:
+		return
+	_rank_layout_locked = locked
+	if not locked:
+		_on_rank_state_changed(RankActivityManager.get_state())
+
+
+const _PEEKABOO_POS_TABLE := [
+	Vector2(666.0, 230.0),
+	Vector2(320.0, 71.0),
+	Vector2(874.0, -777.0),
+	Vector2(641.0, -356.0),
+	Vector2(60.0, -587.0),
+]
+
+
+func refresh_peekaboo_cat() -> void:
+	if _companion.has_companion():
+		hide_peekaboo_cat()
+		return
+
+	_apply_peekaboo_soft_protect()
+	var st: Dictionary = PeekabooManager.get_cat_state()
+	if not bool(st.get("present", false)):
+		hide_peekaboo_cat()
+		return
+	var prop_index: int = int(st.get("prop_index", 0))
+
+	var idx: int = posmod(int(st.get("pos_index", 0)), _PEEKABOO_POS_TABLE.size())
+
+	var t: Vector2 = _PEEKABOO_POS_TABLE[idx]
+	var host: Control = _peekaboo_slot.get_parent() as Control
+	var center_y: float = (host.size.y if host != null else 2400.0) * 0.5
+	_peekaboo_slot.position = Vector2(t.x, center_y + t.y)
+	if _peekaboo_cell == null:
+		_peekaboo_cell = create_child(_PEEKABOO_CAT_CELL, {"prop_index": prop_index})
+		_mount_into_slot(_peekaboo_cell, _peekaboo_slot)
+
+		_peekaboo_cell.cat_pressed.connect(_on_peekaboo_cat_pressed)
+	(_peekaboo_cell as Control).visible = true
+
+	_peekaboo_cell.on_show({"prop_index": prop_index})
+
+
+func hide_peekaboo_cat() -> void:
+	if _peekaboo_cell == null:
+		return
+	_peekaboo_cell.disarm()
+	(_peekaboo_cell as Control).visible = false
+
+
+func _on_rank_time_ticked_for_peekaboo(_remaining_sec: int, _expired: bool) -> void:
+	_apply_peekaboo_soft_protect()
+
+
+func _apply_peekaboo_soft_protect() -> void:
+	if not PeekabooRules.is_soft_protected(
+		RankActivityManager.get_state(), RankActivityManager.get_remaining_sec()
+	):
+		return
+
+	PeekabooManager.mark_soft_protected()
+	hide_peekaboo_cat()
+
+
+func get_peekaboo_cell() -> Control:
+	if _peekaboo_cell == null or not is_instance_valid(_peekaboo_cell):
+		return null
+	return _peekaboo_cell as Control
+
+
+func get_peekaboo_center() -> Vector2:
+	var cell: Control = get_peekaboo_cell()
+	if cell == null or not cell.is_inside_tree():
+		return Vector2.ZERO
+	return cell.get_global_rect().get_center()
+
+
+func get_peekaboo_pos_centers() -> PackedVector2Array:
+	var out := PackedVector2Array()
+	var host: Control = _peekaboo_slot.get_parent() as Control
+	if host == null or not host.is_inside_tree():
+		return out
+
+	var center_y: float = host.size.y * 0.5
+
+	var half := Vector2(75.0, 75.0)
+	var cell: Control = get_peekaboo_cell()
+	if cell != null and cell.size != Vector2.ZERO:
+		half = cell.size * 0.5
+	var xf: Transform2D = host.get_global_transform()
+	for t in _PEEKABOO_POS_TABLE:
+		out.append(xf * (Vector2(t.x, center_y + t.y) + half))
+	return out
+
+
+func get_peekaboo_fly_layer() -> Control:
+	return self
+
+
+func enqueue_peekaboo_confirm_popup(body: Callable) -> void:
+	_popup_queue.cancel("peekaboo_confirm")
+	var entry := UIPopupEntry.new()
+	entry.key = "peekaboo_confirm"
+	entry.priority = _find_popup_priority("rank_reward_and_tryopen_popup")
+	entry.callable = body
+	_popup_queue.enqueue(entry)
+	if not _popup_queue.is_running():
+		_popup_queue.flush()
+
+
+func is_peekaboo_confirm_pending() -> bool:
+	return _popup_queue.is_running() or not _popup_queue.is_empty()
+
+
+func _on_peekaboo_cat_pressed() -> void:
+	if _peekaboo_presenting:
+		return
+	if _popup_queue.is_running():
+		refresh_peekaboo_cat()
+		return
+	_peekaboo_presenting = true
+	await PeekabooFlow.run(self)
+	_peekaboo_presenting = false
 
 
 ## 把格子从原父节点摘下、挂进槽位并归零位置
@@ -733,15 +2535,20 @@ func _mount_into_slot(cell: Node, slot: Control) -> void:
 		(cell as Control).position = Vector2.ZERO
 
 
+func _mount_into_container(cell: Node, box: Container) -> void:
+	var c: Control = cell as Control
+	if c != null and c.custom_minimum_size == Vector2.ZERO and c.size != Vector2.ZERO:
+		c.custom_minimum_size = c.size
+	var p: Node = cell.get_parent()
+	if p != null:
+		p.remove_child(cell)
+	box.add_child(cell)
+
+
 # ================= 埋点与诊断 =================
 ## 首页的埋点页面名
 func get_scr_name() -> String:
 	return Tracker.Scr.HOMEPAGE
-
-
-## 空的 _input 覆写：首页不直接处理输入，全部交给控件信号
-func _input(event: InputEvent) -> void:
-	pass
 
 
 ## 诊断函数：点击被别人拦截时 push_error 报出拦截者（当前没有调用点）
@@ -769,30 +2576,23 @@ func _diag_tap(pos: Vector2) -> void:
 	)
 
 
-## 判断悬停控件是否属于「允许盖在首页上的弹窗」或 cheat 面板
 func _is_normal_home_overlay(hovered: Control) -> bool:
 	if hovered == null:
 		return false
 
-	# 白名单：首页会弹出的 9 个窗口
 	var normal_ui: Array[StringName] = [
 		UiName.SETTING,
 		UiName.CONFIRM,
-		UiName.RATE_US,
+		UiName.DC_REPLAY_CONFIRM,
 		UiName.FEEDBACK,
 		UiName.AD_REWARD_RESTORED,
-		UiName.STREAK_SWITCH1,
-		UiName.STREAK_SWITCH2,
-		UiName.STREAK_SWITCH3,
 		UiName.AB_SWITCH_POPUP,
 	]
-	# 逐个检查这些窗口是否可见、且是悬停控件的祖先
 	for ui_name in normal_ui:
 		var win: UIFrameWindow = UIManager.get_ui(ui_name)
 		if win != null and win.visible and (win == hovered or win.is_ancestor_of(hovered)):
 			return true
 
-	# 另外放行名字里含 cheat 的节点（调试面板）
 	var node: Node = hovered
 	while node != null:
 		if node.name.to_lower().contains("cheat"):

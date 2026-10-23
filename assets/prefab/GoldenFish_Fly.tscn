@@ -1,0 +1,1186 @@
+[gd_scene format=3 uid="uid://dh7lru2ws02jc"]
+
+[ext_resource type="Texture2D" uid="uid://cjdmvrcsbavw" path="res://assets/sprites/game/fish_full.png" id="1"]
+[ext_resource type="Script" uid="uid://cxj46vvgi7y2l" path="res://addons/trail_preview/tw.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://40i3neq4gjjm" path="res://assets/effect/texture/trail/et_trail_002.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://dtvd3xi8wfceb" path="res://assets/effect/texture/trail/et_trail_001.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://bmvipmngkvdor" path="res://assets/effect/texture/star/et_star_2.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://kv5mu1mumvs1" path="res://assets/effect/texture/glow/et_glow_002.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://beiukjhnra30e" path="res://assets/effect/texture/shine/et_shine_001.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://dyot72kunnp2l" path="res://assets/effect/texture/ui/et_glodenfish_001.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dl6ni33dwnx13" path="res://assets/effect/texture/glow/et_glow_001_2.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cu3o47f6o6vwy" path="res://assets/effect/texture/glow/et_glow_007.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="11"]
+[ext_resource type="Texture2D" uid="uid://b0gtsclkl27gx" path="res://assets/effect/texture/line/et_line_001.png" id="12"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_i0neo"]
+
+[sub_resource type="Curve" id="Curve_gmw6u"]
+_data = [Vector2(0, 0), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_keb5u"]
+offsets = PackedFloat32Array(0, 0.41982183, 0.85523385)
+colors = PackedColorArray(0.97933334, 1, 0.69, 0, 1, 0.9166667, 0.5, 0.19607843, 1, 0.47058824, 0, 1)
+
+[sub_resource type="Gradient" id="Gradient_5wxuk"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 0.8627451, 0.25490198, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_y6e7d"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_jj35d"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.25427353, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_rk8ui"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cwtmu"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_keb5u"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.14759536, 0.69691086), 0.688986, 0.688986, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_y6e7d"]
+offsets = PackedFloat32Array(0, 0.13628319, 0.5097345, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.97471267, 1, 1, 1, 0)
+
+[sub_resource type="Curve" id="Curve_w5rnp"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, -2.3211966, 0, 0, Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(0.19900498, -0.8336896), 0.0, 0.0, 0, 0, Vector2(0.556701, -0.5681666), 0.09669888, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_hsi4p"]
+_limits = [-200.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0.013745703, 200), 0.0, 0.0, 0, 0, Vector2(0.35967925, -187.06609), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_c32n1"]
+_data = [Vector2(0, 0), 0.0, 13.864465, 0, 0, Vector2(0.16751269, 1), 0.8117804, -0.22606552, 0, 0, Vector2(0.8747885, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_1e3mw"]
+offsets = PackedFloat32Array(0.47131148, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.41085273, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_3imdk"]
+offsets = PackedFloat32Array(0.3079646)
+colors = PackedColorArray(1, 0.7351074, 0.453125, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nifec"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_vlk8q"]
+offsets = PackedFloat32Array(0.47131148, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.41085273, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_fpvbf"]
+offsets = PackedFloat32Array(0.19281437, 0.6802395)
+colors = PackedColorArray(1, 0.7262051, 0.43423486, 1, 1, 0.5751953, 0.3203125, 1)
+
+[sub_resource type="Curve" id="Curve_tfhk3"]
+_data = [Vector2(0, 0), 0.0, 7.584467, 0, 0, Vector2(0.25085908, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_q8wax"]
+offsets = PackedFloat32Array(0.3079646)
+colors = PackedColorArray(1, 0.8547363, 0.453125, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gsjug"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gnnw3"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_rlulg"]
+offsets = PackedFloat32Array(0, 0.704918, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_dfvl2"]
+offsets = PackedFloat32Array(0.3079646)
+colors = PackedColorArray(1, 0.82993704, 0.7060641, 1)
+
+[sub_resource type="Animation" id="Animation_eicyl"]
+resource_name = "Fly"
+length = 2.4333334
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(2, 2, 0, 0, 0),
+"points": PackedFloat32Array(0.3, 0, 0, 0.06666667, 0, 1, -0.06666667, 0, 0.13333336, 0, 1, -0.13333336, 0, 0.055555545, 0, 0.8, -0.055555545, 0, 0.06666666, 0, 2, -0.06666666, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.2, 0.6, 0.73333335, 0.8666667)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(2, 2, 0, 0, 0),
+"points": PackedFloat32Array(0.3, 0, 0, 0.06666667, 0, 1, -0.06666667, 0, 0.13333336, 0, 1, -0.13333336, 0, 0.055555545, 0, 0.8, -0.055555545, 0, 0.06666666, 0, 2, -0.06666666, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.2, 0.6, 0.73333335, 0.8666667)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/ScoreTrail/Stars:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.8333334, 0.8666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/glow:self_modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.3, 0.4666667, 0.8166667, 0.99999994),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Root/glow2:self_modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.3, 0.4666667, 0.8166667, 0.96666664),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Root/glow3:self_modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.3, 0.4666667, 0.8166667, 0.9166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Root/GlodenFishImg:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0.79999983, 0.8666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Root/EffectErupt/GlowAlp:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.73333335, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Root/EffectErupt/StarAlp:emitting")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0.73333335, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Root/EffectErupt/StarAlp2:emitting")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0.73333335, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Root/EffectErupt/GlowAdd:emitting")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0.73333335, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Root/EffectErupt/StarAdd:emitting")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.73333335, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("Root/EffectErupt/StarAdd2:emitting")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0.73333335, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("Root/EffectErupt/LineAdd3:emitting")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(0.73333335, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/14/type = "bezier"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("Fish1:scale:x")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.83333325, 0.9666669, 1.1000001)
+}
+tracks/15/type = "bezier"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("Fish1:scale:y")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.83333325, 0.9666669, 1.1000001)
+}
+tracks/16/type = "bezier"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("Fish2:scale:x")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.76666665, 0.9000002, 1.0333335)
+}
+tracks/17/type = "bezier"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("Fish2:scale:y")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.76666665, 0.9000002, 1.0333335)
+}
+tracks/18/type = "bezier"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("Fish3:scale:x")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.9000002, 1.0333335, 1.166667)
+}
+tracks/19/type = "bezier"
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/path = NodePath("Fish3:scale:y")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.9000002, 1.0333335, 1.166667)
+}
+tracks/20/type = "bezier"
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/path = NodePath("Fish4:scale:x")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.9333336, 1.0666668, 1.2000003)
+}
+tracks/21/type = "bezier"
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/path = NodePath("Fish4:scale:y")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.9333336, 1.0666668, 1.2000003)
+}
+tracks/22/type = "bezier"
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/path = NodePath("Fish5:scale:x")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.96666664, 1.0999999, 1.2333333)
+}
+tracks/23/type = "bezier"
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/path = NodePath("Fish5:scale:y")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.066666685, 0, 1.2, -0.066666685, 0, 0.066666685, 0, 0.8, -0.066666685, 0, 0, 0),
+"times": PackedFloat32Array(0.96666664, 1.0999999, 1.2333333)
+}
+tracks/24/type = "value"
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/path = NodePath("Fish1:modulate")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/keys = {
+"times": PackedFloat32Array(1.3666667, 1.4333335),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/25/type = "value"
+tracks/25/imported = false
+tracks/25/enabled = true
+tracks/25/path = NodePath("Fish3:modulate")
+tracks/25/interp = 1
+tracks/25/loop_wrap = true
+tracks/25/keys = {
+"times": PackedFloat32Array(1.4, 1.4666666),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/26/type = "value"
+tracks/26/imported = false
+tracks/26/enabled = true
+tracks/26/path = NodePath("Fish4:modulate")
+tracks/26/interp = 1
+tracks/26/loop_wrap = true
+tracks/26/keys = {
+"times": PackedFloat32Array(1.6333336, 1.7000002),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/27/type = "value"
+tracks/27/imported = false
+tracks/27/enabled = true
+tracks/27/path = NodePath("Fish5:modulate")
+tracks/27/interp = 1
+tracks/27/loop_wrap = true
+tracks/27/keys = {
+"times": PackedFloat32Array(1.5333333, 1.5999999),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Fish2:modulate")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
+"times": PackedFloat32Array(1.7, 1.7666669),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/29/type = "bezier"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Fish1:position:x")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-45, 0, 0, 0.08888888, 0, -147, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0.8333334, 1.1)
+}
+tracks/30/type = "bezier"
+tracks/30/imported = false
+tracks/30/enabled = true
+tracks/30/path = NodePath("Fish1:position:y")
+tracks/30/interp = 1
+tracks/30/loop_wrap = true
+tracks/30/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-40, 0, 0, 0.07262468, -106.905655, -85, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0.8333334, 1.1)
+}
+tracks/31/type = "bezier"
+tracks/31/imported = false
+tracks/31/enabled = true
+tracks/31/path = NodePath("Fish3:position:x")
+tracks/31/interp = 1
+tracks/31/loop_wrap = true
+tracks/31/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-50.000008, 0, 0, 0.088888906, 0, 38, -0.044444453, -14.666668, 0, 0),
+"times": PackedFloat32Array(0.90000004, 1.1666667)
+}
+tracks/32/type = "bezier"
+tracks/32/imported = false
+tracks/32/enabled = true
+tracks/32/path = NodePath("Fish3:position:y")
+tracks/32/interp = 1
+tracks/32/loop_wrap = true
+tracks/32/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-39, 0, 0, 0.08836168, -61.993706, -17, -0.044444453, -3.6666667, 0, 0),
+"times": PackedFloat32Array(0.90000004, 1.1666667)
+}
+tracks/33/type = "bezier"
+tracks/33/imported = false
+tracks/33/enabled = true
+tracks/33/path = NodePath("Fish4:position:x")
+tracks/33/interp = 1
+tracks/33/loop_wrap = true
+tracks/33/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-50.99994, 0, 0, 0.08888888, 0, -8.999878, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0.9333334, 1.2)
+}
+tracks/34/type = "bezier"
+tracks/34/imported = false
+tracks/34/enabled = true
+tracks/34/path = NodePath("Fish4:position:y")
+tracks/34/interp = 1
+tracks/34/loop_wrap = true
+tracks/34/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-42.999756, 0, 0, 0.08888888, 0, -116.999756, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0.9333334, 1.2)
+}
+tracks/35/type = "bezier"
+tracks/35/imported = false
+tracks/35/enabled = true
+tracks/35/path = NodePath("Fish5:position:x")
+tracks/35/interp = 1
+tracks/35/loop_wrap = true
+tracks/35/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-50.999985, 0, 0, 0.08888888, 0, -68, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0.9666667, 1.2333333)
+}
+tracks/36/type = "bezier"
+tracks/36/imported = false
+tracks/36/enabled = true
+tracks/36/path = NodePath("Fish5:position:y")
+tracks/36/interp = 1
+tracks/36/loop_wrap = true
+tracks/36/keys = {
+"handle_modes": PackedInt32Array(2, 2),
+"points": PackedFloat32Array(-47.999878, 0, 0, 0.08888888, 0, 26, -0.08888888, 0, 0, 0),
+"times": PackedFloat32Array(0.9666667, 1.2333333)
+}
+tracks/37/type = "value"
+tracks/37/imported = false
+tracks/37/enabled = true
+tracks/37/path = NodePath("Root/glow3:rotation")
+tracks/37/interp = 1
+tracks/37/loop_wrap = true
+tracks/37/keys = {
+"times": PackedFloat32Array(0.3, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.3490658503988659]
+}
+tracks/38/type = "value"
+tracks/38/imported = false
+tracks/38/enabled = true
+tracks/38/path = NodePath("Root/ScoreTrail:visible")
+tracks/38/interp = 1
+tracks/38/loop_wrap = true
+tracks/38/keys = {
+"times": PackedFloat32Array(0, 0.033333335),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_jn0ob"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Root/EffectErupt/GlowAlp:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Root/EffectErupt/StarAlp:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Root/EffectErupt/StarAlp2:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Root/EffectErupt/GlowAdd:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Root/EffectErupt/StarAdd:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Root/EffectErupt/StarAdd2:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Root/EffectErupt/LineAdd3:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Fish1:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Fish3:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Fish4:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("Fish5:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(-0.004038831),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("Fish2:modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(-0.004038831),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/12/type = "bezier"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("Fish1:position:x")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(396, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/13/type = "bezier"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("Fish1:position:y")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1134, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/14/type = "bezier"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("Fish3:position:x")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(494, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/15/type = "bezier"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("Fish3:position:y")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1177, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/16/type = "bezier"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("Fish4:position:x")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(522, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/17/type = "bezier"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("Fish4:position:y")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1095, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/18/type = "bezier"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("Fish5:position:x")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(486.99997, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/19/type = "bezier"
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/path = NodePath("Fish5:position:y")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1170.0001, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/20/type = "value"
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/path = NodePath("Root/glow3:rotation")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/21/type = "value"
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/path = NodePath("Root/ScoreTrail:visible")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cwtmu"]
+_data = {
+&"GlodenFishFly": SubResource("Animation_eicyl"),
+&"RESET": SubResource("Animation_jn0ob")
+}
+
+[node name="GlodenFishFly" type="Control" unique_id=442999510]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -846.0
+offset_bottom = -2178.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Fish1" type="TextureRect" parent="." unique_id=1658636602]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 396.0
+offset_top = 1134.0
+offset_right = 516.00085
+offset_bottom = 1254.0001
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.45, 0.42)
+texture = ExtResource("1")
+
+[node name="Fish3" type="TextureRect" parent="." unique_id=311007686]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 494.0
+offset_top = 1177.0
+offset_right = 614.0001
+offset_bottom = 1297.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.45, 0.42)
+texture = ExtResource("1")
+
+[node name="Fish4" type="TextureRect" parent="." unique_id=1184202410]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 522.0
+offset_top = 1095.0
+offset_right = 642.0
+offset_bottom = 1215.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.45, 0.42)
+texture = ExtResource("1")
+
+[node name="Fish5" type="TextureRect" parent="." unique_id=982281068]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 486.99997
+offset_top = 1170.0001
+offset_right = 607.0006
+offset_bottom = 1290.0002
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.45, 0.42)
+texture = ExtResource("1")
+
+[node name="Fish2" type="TextureRect" parent="." unique_id=633625437]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = -53.99994
+offset_top = -50.999756
+offset_right = 66.00006
+offset_bottom = 69.000244
+scale = Vector2(1e-05, 1e-05)
+pivot_offset_ratio = Vector2(0.45, 0.42)
+texture = ExtResource("1")
+
+[node name="Root" type="Control" parent="." unique_id=1152977065]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.000732
+scale = Vector2(0.35185215, 0.35185215)
+
+[node name="ScoreTrail" type="Sprite2D" parent="Root" unique_id=741834351]
+process_mode = 3
+visible = false
+position = Vector2(0, -1)
+script = ExtResource("2")
+trail_duration = 0.2
+fixed_trail_length = 600.0
+min_sample_distance = 8.0
+max_points = 160
+fast_move_fill_limit = 16
+stationary_fill_interval = 0.03
+
+[node name="TrailAlp" type="Line2D" parent="Root/ScoreTrail" unique_id=2112579485]
+modulate = Color(1, 1, 1, 0)
+material = SubResource("CanvasItemMaterial_i0neo")
+width = 200.0
+width_curve = SubResource("Curve_gmw6u")
+gradient = SubResource("Gradient_keb5u")
+texture = ExtResource("3")
+texture_mode = 2
+round_precision = 6
+antialiased = true
+
+[node name="TrailGlow" type="Line2D" parent="Root/ScoreTrail" unique_id=1409682641]
+material = SubResource("CanvasItemMaterial_i0neo")
+width = 200.0
+width_curve = SubResource("Curve_gmw6u")
+gradient = SubResource("Gradient_5wxuk")
+texture = ExtResource("4")
+texture_mode = 2
+joint_mode = 2
+round_precision = 12
+antialiased = true
+
+[node name="TrailAdd" type="Line2D" parent="Root/ScoreTrail" unique_id=492641541]
+modulate = Color(1, 1, 1, 0.39215687)
+material = SubResource("CanvasItemMaterial_y6e7d")
+width = 200.0
+width_curve = SubResource("Curve_gmw6u")
+gradient = SubResource("Gradient_keb5u")
+texture = ExtResource("3")
+texture_mode = 2
+round_precision = 6
+antialiased = true
+
+[node name="Stars" type="CPUParticles2D" parent="Root/ScoreTrail" unique_id=288293790]
+amount = 16
+texture = ExtResource("5")
+lifetime = 0.8
+randomness = 0.1
+emission_shape = 1
+emission_sphere_radius = 100.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 120.0
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_jj35d")
+
+[node name="glow" type="TextureRect" parent="Root" unique_id=2046628821]
+modulate = Color(1, 0.54509807, 0, 0.39215687)
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = -131.0
+offset_top = -130.0
+offset_right = 125.0
+offset_bottom = 126.0
+scale = Vector2(1.8, 1.8)
+pivot_offset_ratio = Vector2(0.45, 0.43)
+texture = ExtResource("6")
+
+[node name="glow2" type="TextureRect" parent="Root" unique_id=1687733149]
+modulate = Color(1, 0.54509807, 0, 0.39215687)
+self_modulate = Color(1, 1, 1, 0)
+material = SubResource("CanvasItemMaterial_rk8ui")
+layout_mode = 0
+offset_left = -131.0
+offset_top = -130.0
+offset_right = 125.0
+offset_bottom = 126.0
+scale = Vector2(1.3, 1.3)
+pivot_offset_ratio = Vector2(0.45, 0.43)
+texture = ExtResource("6")
+
+[node name="glow3" type="TextureRect" parent="Root" unique_id=542033191]
+modulate = Color(1, 0.827451, 0, 0.47058824)
+self_modulate = Color(1, 1, 1, 0)
+material = SubResource("CanvasItemMaterial_cwtmu")
+layout_mode = 0
+offset_left = -258.0
+offset_top = -258.0
+offset_right = 254.0
+offset_bottom = 254.0
+scale = Vector2(0.6, 0.6)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture = ExtResource("7")
+
+[node name="GlodenFishImg" type="TextureRect" parent="Root" unique_id=311413236]
+layout_mode = 0
+offset_left = -105.0
+offset_top = -95.0
+offset_right = 129.0
+offset_bottom = 127.0
+pivot_offset_ratio = Vector2(0.45, 0.43)
+texture = ExtResource("8")
+
+[node name="EffectErupt" type="Control" parent="Root" unique_id=415035377]
+layout_mode = 1
+anchor_top = -0.067
+anchor_bottom = -0.067
+offset_top = 2.6800165
+offset_right = 40.0
+offset_bottom = 42.680016
+
+[node name="GlowAlp" type="CPUParticles2D" parent="Root/EffectErupt" unique_id=1911514627]
+emitting = false
+amount = 2
+texture = ExtResource("6")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_min = 2.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_keb5u")
+color = Color(1, 0.4392157, 0.12156863, 0.11764706)
+color_ramp = SubResource("Gradient_y6e7d")
+
+[node name="StarAlp" type="CPUParticles2D" parent="Root/EffectErupt" unique_id=277804700]
+scale = Vector2(0.75, 0.75)
+emitting = false
+texture = ExtResource("9")
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 12104
+lifetime_randomness = 0.13
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 300.0
+initial_velocity_max = 700.0
+linear_accel_min = 500.0
+linear_accel_max = 2000.0
+linear_accel_curve = SubResource("Curve_w5rnp")
+tangential_accel_curve = SubResource("Curve_hsi4p")
+damping_max = 800.0
+scale_amount_min = 0.5
+scale_amount_curve = SubResource("Curve_c32n1")
+color_ramp = SubResource("Gradient_1e3mw")
+color_initial_ramp = SubResource("Gradient_3imdk")
+
+[node name="StarAdd" type="CPUParticles2D" parent="Root/EffectErupt" unique_id=1930701649]
+material = SubResource("CanvasItemMaterial_nifec")
+scale = Vector2(0.75, 0.75)
+emitting = false
+texture = ExtResource("10")
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 12104
+lifetime_randomness = 0.13
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 300.0
+initial_velocity_max = 700.0
+linear_accel_min = 500.0
+linear_accel_max = 2000.0
+linear_accel_curve = SubResource("Curve_w5rnp")
+tangential_accel_curve = SubResource("Curve_hsi4p")
+damping_max = 800.0
+scale_amount_min = 0.3
+scale_amount_max = 0.5
+scale_amount_curve = SubResource("Curve_c32n1")
+color_ramp = SubResource("Gradient_vlk8q")
+color_initial_ramp = SubResource("Gradient_fpvbf")
+
+[node name="StarAlp2" type="CPUParticles2D" parent="Root/EffectErupt" unique_id=2109387722]
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 3
+texture = ExtResource("5")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 4902
+lifetime_randomness = 0.13
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 300.0
+initial_velocity_max = 600.0
+linear_accel_curve = SubResource("Curve_w5rnp")
+damping_max = 500.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_tfhk3")
+color = Color(1, 0.5803922, 0.1882353, 1)
+color_ramp = SubResource("Gradient_1e3mw")
+color_initial_ramp = SubResource("Gradient_q8wax")
+
+[node name="StarAdd2" type="CPUParticles2D" parent="Root/EffectErupt" unique_id=1899493541]
+material = SubResource("CanvasItemMaterial_gsjug")
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 3
+texture = ExtResource("11")
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 4902
+lifetime_randomness = 0.15
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 300.0
+initial_velocity_max = 600.0
+linear_accel_curve = SubResource("Curve_w5rnp")
+damping_max = 500.0
+scale_amount_min = 0.4
+scale_amount_max = 0.8
+scale_amount_curve = SubResource("Curve_tfhk3")
+color_ramp = SubResource("Gradient_1e3mw")
+color_initial_ramp = SubResource("Gradient_q8wax")
+
+[node name="GlowAdd" type="CPUParticles2D" parent="Root/EffectErupt" unique_id=674338403]
+modulate = Color(1, 1, 1, 0.39215687)
+material = SubResource("CanvasItemMaterial_gnnw3")
+emitting = false
+amount = 2
+texture = ExtResource("6")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+gravity = Vector2(0, 0)
+scale_amount_min = 2.5
+scale_amount_max = 2.5
+scale_amount_curve = SubResource("Curve_keb5u")
+color = Color(1, 0.4392157, 0.12156863, 0.54901963)
+color_ramp = SubResource("Gradient_y6e7d")
+
+[node name="LineAdd3" type="CPUParticles2D" parent="Root/EffectErupt" unique_id=344289323]
+material = SubResource("CanvasItemMaterial_gsjug")
+scale = Vector2(0.75, 0.75)
+emitting = false
+amount = 6
+texture = ExtResource("12")
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 34562
+lifetime_randomness = 0.4
+fixed_fps = 60
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 500.0
+initial_velocity_max = 1200.0
+linear_accel_min = 400.0
+linear_accel_max = 600.0
+linear_accel_curve = SubResource("Curve_w5rnp")
+scale_amount_min = 0.2
+scale_amount_max = 0.4
+scale_amount_curve = SubResource("Curve_tfhk3")
+color_ramp = SubResource("Gradient_rlulg")
+color_initial_ramp = SubResource("Gradient_dfvl2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1449595393]
+libraries/ = SubResource("AnimationLibrary_cwtmu")
+
+[node name="RootFish" type="Control" parent="." unique_id=422496276]
+anchors_preset = 0
+offset_left = 543.0
+offset_top = 1228.0
+offset_right = 583.0
+offset_bottom = 1268.0

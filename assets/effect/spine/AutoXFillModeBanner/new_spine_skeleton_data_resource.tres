@@ -1,0 +1,8 @@
+[gd_resource type="SpineSkeletonDataResource" format=3 uid="uid://blj81otr6lw4e"]
+
+[ext_resource type="SpineAtlasResource" uid="uid://bya28fheky5yw" path="res://assets/effect/spine/AutoXFillModeBanner/AutoXFillModeBanner.atlas" id="1"]
+[ext_resource type="SpineSkeletonFileResource" uid="uid://di8pp40s1gsiu" path="res://assets/effect/spine/AutoXFillModeBanner/AutoXFillModeBanner.skel" id="2"]
+
+[resource]
+atlas_res = ExtResource("1")
+skeleton_file_res = ExtResource("2")

@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://bya28fheky5yw"
+path="res://.godot/imported/AutoXFillModeBanner.atlas-3f043b28d0729907684ff87ce548aa72.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/AutoXFillModeBanner/AutoXFillModeBanner.atlas"
+dest_files=["res://.godot/imported/AutoXFillModeBanner.atlas-3f043b28d0729907684ff87ce548aa72.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

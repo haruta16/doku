@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://cccmpv2vhrenu"]
+
+[ext_resource type="Texture2D" uid="uid://bs5irwv1ofewy" path="res://assets/effect/texture/mask/et_mask_016.png" id="1"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_26wak"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_txhdw"]
+blend_mode = 1
+
+[node name="EffectCollectGlow" type="Control" unique_id=7621486]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="GlowAlp" type="CPUParticles2D" parent="." unique_id=1827046055]
+material = SubResource("CanvasItemMaterial_26wak")
+position = Vector2(50, 46)
+emitting = false
+amount = 1
+texture = ExtResource("1")
+one_shot = true
+local_coords = true
+gravity = Vector2(0, 0)
+scale_amount_min = 0.75
+scale_amount_max = 0.75
+color = Color(1, 0.7058824, 0, 1)
+
+[node name="GlowAdd" type="CPUParticles2D" parent="." unique_id=1474455758]
+material = SubResource("CanvasItemMaterial_txhdw")
+position = Vector2(50, 46)
+emitting = false
+amount = 1
+texture = ExtResource("1")
+one_shot = true
+local_coords = true
+gravity = Vector2(0, 0)
+scale_amount_min = 0.75
+scale_amount_max = 0.75
+color = Color(1, 0.8235294, 0, 0.39215687)

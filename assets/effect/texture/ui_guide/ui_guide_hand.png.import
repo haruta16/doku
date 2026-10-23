@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dnajxw8ybti64"
-path.s3tc="res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.s3tc.ctex"
-path.etc2="res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.etc2.ctex"
+path.bptc="res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.bptc.ctex"
+path.astc="res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://assets/effect/texture/ui_guide/ui_guide_hand.png"
-dest_files=["res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.s3tc.ctex", "res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.etc2.ctex"]
+dest_files=["res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.bptc.ctex", "res://.godot/imported/ui_guide_hand.png-e0f9220e79d68ea813633a61d5963ee8.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

@@ -1,0 +1,230 @@
+[gd_scene format=3 uid="uid://cfc7ppk6fa6rv"]
+
+[ext_resource type="Script" uid="uid://cj1ffuxhaa5tu" path="res://scripts/module/splash/view/privacy_dialog_v3.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://qdo7b6k15jq2" path="res://assets/sprites/privacy/privacy_dialog_v3/popup_frame.png" id="2"]
+[ext_resource type="FontVariation" uid="uid://d16e7a02l2fly" path="res://assets/fonts/Roboto-semibold.tres" id="3"]
+[ext_resource type="Script" uid="uid://o8nbxs6m0yve" path="res://scripts/module/ui/extensions/auto_fit_label.gd" id="4"]
+[ext_resource type="FontFile" uid="uid://bvxeo4fq0ps17" path="res://assets/fonts/Roboto.ttf" id="5"]
+[ext_resource type="FontVariation" uid="uid://c4kdt3xx2mofx" path="res://assets/fonts/Roboto-bold.tres" id="6"]
+[ext_resource type="Texture2D" uid="uid://bav47rwlbnyiv" path="res://assets/sprites/privacy/privacy_dialog_v3/blue_btn.png" id="7"]
+[ext_resource type="Animation" uid="uid://c0cedm524acvo" path="res://assets/animation/GenericPopup.res" id="8"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_shadow"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("2")
+texture_margin_left = 95.0
+texture_margin_top = 91.0
+texture_margin_right = 95.0
+texture_margin_bottom = 99.0
+expand_margin_left = 14.0
+expand_margin_top = 10.0
+expand_margin_right = 14.0
+expand_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_af7mf"]
+bg_color = Color(0.9882353, 0.9882353, 0.99607843, 1)
+corner_radius_top_left = 80
+corner_radius_top_right = 80
+corner_radius_bottom_right = 80
+corner_radius_bottom_left = 80
+corner_detail = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gt57m"]
+bg_color = Color(0.21568628, 0.47843137, 1, 1)
+corner_radius_top_left = 125
+corner_radius_top_right = 125
+corner_radius_bottom_right = 125
+corner_radius_bottom_left = 125
+corner_detail = 18
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_popup"]
+_data = {
+&"GenericPopup": ExtResource("8")
+}
+
+[node name="PrivacyDialogV3" type="Control" unique_id=1809648722]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+play_open_sound = true
+metadata/a2g_semantic_id = "1902:42884"
+
+[node name="Root" type="Control" parent="." unique_id=1786171043]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="Root" unique_id=1140758934]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.3)
+metadata/a2g_semantic_id = "1902:42879"
+
+[node name="Content" type="Control" parent="Root" unique_id=1596254049]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0130696, 1.0130696)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="CenterBox" type="CenterContainer" parent="Root/Content" unique_id=122697928]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PopupFrame" type="PanelContainer" parent="Root/Content/CenterBox" unique_id=1867109112]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_shadow")
+metadata/a2g_semantic_id = "1902:42886"
+
+[node name="Bg" type="PanelContainer" parent="Root/Content/CenterBox/PopupFrame" unique_id=2030226869]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_af7mf")
+metadata/a2g_semantic_id = "1902:42886::shadow_split_bg"
+
+[node name="BgVBox" type="VBoxContainer" parent="Root/Content/CenterBox/PopupFrame/Bg" unique_id=526192166]
+custom_minimum_size = Vector2(900, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TopAdapt" type="Control" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox" unique_id=313457995]
+custom_minimum_size = Vector2(900, 60)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="WelcomeTxt" type="Label" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox" unique_id=1046124452]
+custom_minimum_size = Vector2(900, 78)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+theme_override_constants/line_spacing = -32
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 60
+text = "PRIVACY_DIALOG_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("4")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+metadata/a2g_semantic_id = "I1902:42889;1915:43210"
+
+[node name="TitleGap" type="Control" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox" unique_id=1799490750]
+custom_minimum_size = Vector2(900, 18)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="PopUpTextTxt" type="RichTextLabel" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox" unique_id=2102890745]
+custom_minimum_size = Vector2(720, 190)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/default_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+theme_override_constants/line_separation = 13
+theme_override_fonts/normal_font = ExtResource("5")
+theme_override_fonts/bold_font = ExtResource("6")
+theme_override_font_sizes/normal_font_size = 44
+bbcode_enabled = true
+text = "PRIVACY_DIALOG_DESC_RICH"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/a2g_semantic_id = "I1902:42903;1069:24422"
+
+[node name="BtnGap" type="Control" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox" unique_id=14360687]
+custom_minimum_size = Vector2(900, 44)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Btn" type="Button" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox" unique_id=2108556252]
+custom_minimum_size = Vector2(840, 140)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+flat = true
+metadata/a2g_semantic_id = "352:12260"
+
+[node name="BlueBtn" type="Control" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox/Btn" unique_id=296601399]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/a2g_semantic_id = "1902:42886"
+
+[node name="Shadow" type="NinePatchRect" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox/Btn/BlueBtn" unique_id=294655354]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_top = -10.0
+offset_right = 14.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7")
+patch_margin_left = 84
+patch_margin_top = 80
+patch_margin_right = 84
+patch_margin_bottom = 88
+metadata/a2g_semantic_id = "1902:42886::shadow_split_shadow"
+
+[node name="Bg" type="Panel" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox/Btn/BlueBtn" unique_id=2064413881]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gt57m")
+metadata/a2g_semantic_id = "1902:42886::shadow_split_bg"
+
+[node name="AcceptTxt" type="Label" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox/Btn/BlueBtn" unique_id=1031077542]
+layout_mode = 0
+offset_right = 840.0
+offset_bottom = 140.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = -32
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 60
+text = "PRIVACY_DIALOG_ACCEPT"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("4")
+metadata/_custom_type_script = "uid://o8nbxs6m0yve"
+metadata/a2g_semantic_id = "I1902:42889;1915:43210"
+
+[node name="BottomAdapt" type="Control" parent="Root/Content/CenterBox/PopupFrame/Bg/BgVBox" unique_id=1163094453]
+custom_minimum_size = Vector2(900, 30)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Root" unique_id=960773901]
+libraries/ = SubResource("AnimationLibrary_popup")
+
+[connection signal="pressed" from="Root/Content/CenterBox/PopupFrame/Bg/BgVBox/Btn" to="." method="_on_accept_btn_pressed"]

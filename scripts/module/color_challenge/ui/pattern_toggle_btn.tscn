@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://ckcxlg1sk36sv" path="res://assets/sprites/setting/colorblind_switch/colorblind_off.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cj7rv0j1acvo5" path="res://assets/sprites/setting/colorblind_switch/colorblind_on.png" id="2"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_off"]
+texture = ExtResource("1")
+expand_margin_left = 20.0
+expand_margin_top = 12.0
+expand_margin_right = 20.0
+expand_margin_bottom = 28.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_on"]
+texture = ExtResource("2")
+expand_margin_left = 20.0
+expand_margin_top = 12.0
+expand_margin_right = 20.0
+expand_margin_bottom = 28.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
+
+[node name="PatternToggleBtn" type="Button" unique_id=1400661711]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -135.0
+offset_top = 26.0
+offset_right = -15.0
+offset_bottom = 146.0
+grow_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_off")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_on")
+theme_override_styles/hover = SubResource("StyleBoxTexture_off")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_on")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+toggle_mode = true

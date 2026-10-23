@@ -1,4 +1,4 @@
-## 会话管理（autoload）：维护 sessionId 与前台活跃时长，长后台或局内跨天时重开会话，并驱动 GameState 的日切
+## 运行会话管理器：累计前台活跃时长，后台超过 30 分钟后重建会话并记录冷启动。
 extends Node
 
 ## 后台停留超过 30 分钟就判定为新会话（秒）
@@ -28,11 +28,13 @@ var _active_flush_timer: Timer = null
 var _session_active_sec: int = 0
 
 
-## 节点就绪：开一个新会话、通知 GameState，并启动活跃时长的定时落盘
+## 创建本次会话，记录冷启动和会话开始，并每 60 秒结算一段前台活跃时长。
 func _ready() -> void:
 	_reset_session()
 
 	GameState.on_session_started()
+
+	GameState.record_cold_start_login()
 
 	_active_seg_start_ms = Time.get_ticks_msec()
 	_active_flush_timer = Timer.new()
@@ -56,32 +58,34 @@ func _notification(what: int) -> void:
 			_on_resume()
 
 
-## 把当前这段前台时间结算进 GameState（会写盘）并触发时长埋点；不足 1 秒直接忽略
+## 只结算完整秒数并保留不足一秒的余量，更新存档与本次会话累计后检查时长上报。
 func _flush_active_segment() -> void:
 	if _active_seg_start_ms < 0:
 		return
-	var elapsed_sec: int = (Time.get_ticks_msec() - _active_seg_start_ms) / 1000 # 整数除法，不足 1 秒的部分丢弃
+	@warning_ignore("integer_division")
+	var elapsed_sec: int = (Time.get_ticks_msec() - _active_seg_start_ms) / 1000
 	if elapsed_sec <= 0:
 		return
 	GameState.add_today_active_sec(elapsed_sec)
 	_session_active_sec += elapsed_sec
-	_active_seg_start_ms += elapsed_sec * 1000 # 起点只推进已结算的整数秒，余数留到下次
+	_active_seg_start_ms += elapsed_sec * 1000
 
 	Tracker.try_track_grt_time_window(GameState.get_total_active_sec())
 
 
-## 今日前台活跃秒数：已落盘部分 + 当前这段尚未落盘的时长
+## 把已落盘时长与当前尚未结算的前台段相加，后台不额外累计。
 func get_today_active_sec() -> int:
 	var base: int = GameState.get_today_active_sec()
 	if _active_seg_start_ms < 0:
 		return base
+	@warning_ignore("integer_division")
 	return base + (Time.get_ticks_msec() - _active_seg_start_ms) / 1000
 
 
-## 本会话前台活跃秒数：同样把正在计时的那一段也算进去
 func get_session_active_sec() -> int:
 	if _active_seg_start_ms < 0:
 		return _session_active_sec
+	@warning_ignore("integer_division")
 	return _session_active_sec + (Time.get_ticks_msec() - _active_seg_start_ms) / 1000
 
 

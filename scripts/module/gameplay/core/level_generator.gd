@@ -1,5 +1,4 @@
-## 区域配色器：给每块区域分一个色号，保证相邻区域不同色、且尽量挑视觉差异大的颜色
-## 4 个变体共用同一套贪心挑色，差别只在颜色表、区域处理顺序、是否给图案区域预留暗色
+## 区域配色工具：构建相邻区域关系，以 RGB 或 Lab 色差选择颜色，并支持特殊图案的深浅配色。
 class_name LevelGenerator
 extends RefCounted
 
@@ -333,3 +332,194 @@ static func compute_color_map_for_rgb_with_pattern(
 		color_map[ri] = best_color
 		used_colors[best_color] = true
 	return color_map # 返回值含义同 compute_color_map：区域号 → 色号
+
+
+## 把 0～255 的 sRGB 分量经线性化、XYZ 白点归一化后转换为 Lab。
+static func _srgb_to_lab(r: float, g: float, b: float) -> Array:
+	var rl: float = _srgb_linear(r / 255.0)
+	var gl: float = _srgb_linear(g / 255.0)
+	var bl: float = _srgb_linear(b / 255.0)
+	var x: float = (rl * 0.4124 + gl * 0.3576 + bl * 0.1805) / 0.95047
+	var y: float = (rl * 0.2126 + gl * 0.7152 + bl * 0.0722) / 1.0
+	var z: float = (rl * 0.0193 + gl * 0.1192 + bl * 0.9505) / 1.08883
+	var fx: float = _lab_f(x)
+	var fy: float = _lab_f(y)
+	var fz: float = _lab_f(z)
+	return [116.0 * fy - 16.0, 500.0 * (fx - fy), 200.0 * (fy - fz)]
+
+
+## 对标准化 sRGB 分量执行分段伽马逆变换。
+static func _srgb_linear(c: float) -> float:
+	return pow((c + 0.055) / 1.055, 2.4) if c > 0.04045 else c / 12.92
+
+
+## 执行 XYZ 到 Lab 使用的分段变换，小值使用线性段。
+static func _lab_f(t: float) -> float:
+	return pow(t, 1.0 / 3.0) if t > 0.008856 else 7.787 * t + 16.0 / 116.0
+
+
+## 计算两个 Lab 颜色的欧氏距离，供相邻区域颜色区分。
+static func _lab_dist(a: Array, b: Array) -> float:
+	var dl: float = a[0] - b[0]
+	var da: float = a[1] - b[1]
+	var db2: float = a[2] - b[2]
+	return sqrt(dl * dl + da * da + db2 * db2)
+
+
+## 按邻接关系优先为复杂区域选色，贪心最大化与已着色邻居的最小 Lab 色差。
+static func compute_color_map_for_lab(size: int, regions: Array, rgb: Array) -> Array[int]:
+	var num_colors: int = rgb.size()
+	var lab: Array = []
+	for ci in range(num_colors):
+		lab.append(_srgb_to_lab(rgb[ci][0], rgb[ci][1], rgb[ci][2]))
+	var adj: Array = []
+	for _i in range(size):
+		adj.append({})
+	for r in range(size):
+		for c in range(size):
+			var ri: int = regions[r][c]
+			if c + 1 < size:
+				var rj: int = regions[r][c + 1]
+				if rj != ri:
+					adj[ri][rj] = true
+					adj[rj][ri] = true
+			if r + 1 < size:
+				var rj: int = regions[r + 1][c]
+				if rj != ri:
+					adj[ri][rj] = true
+					adj[rj][ri] = true
+	var order: Array = []
+	for i in range(size):
+		order.append(i)
+	order.sort_custom(
+		func(a: int, b: int) -> bool:
+			var da: int = adj[a].size()
+			var db: int = adj[b].size()
+			return db > da if da != db else a < b
+	)
+	var color_map: Array[int] = []
+	color_map.resize(size)
+	color_map.fill(-1)
+	var used_colors: Dictionary = {}
+	for ri in order:
+		var adj_colors: Dictionary = {}
+		for ni in adj[ri].keys():
+			if color_map[ni] >= 0:
+				adj_colors[color_map[ni]] = true
+		var best_color: int = 0
+		var best_min_dist: float = -1.0
+		for ci in range(num_colors):
+			if used_colors.has(ci):
+				continue
+			var min_dist: float = INF
+			for ac in adj_colors.keys():
+				var dist: float = _lab_dist(lab[ci], lab[ac])
+				if dist < min_dist:
+					min_dist = dist
+			if adj_colors.size() == 0:
+				min_dist = INF
+			if min_dist > best_min_dist:
+				best_min_dist = min_dist
+				best_color = ci
+		color_map[ri] = best_color
+		used_colors[best_color] = true
+	return color_map
+
+
+## 先从较暗色池为图案区域配色，再为其他区域使用较亮色池并拉开邻接色差。
+static func compute_color_map_for_lab_with_pattern(
+	size: int, regions: Array, rgb: Array, pattern_regions: Array
+) -> Array[int]:
+	var num_colors: int = rgb.size()
+	var lab: Array = []
+	for ci in range(num_colors):
+		lab.append(_srgb_to_lab(rgb[ci][0], rgb[ci][1], rgb[ci][2]))
+	var brightness_order: Array = []
+	for ci in range(num_colors):
+		var lum: float = 0.299 * rgb[ci][0] + 0.587 * rgb[ci][1] + 0.114 * rgb[ci][2]
+		brightness_order.append([lum, ci])
+	brightness_order.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
+	var n_pat: int = pattern_regions.size()
+	var dark_pool: Array = []
+	var light_pool: Array = []
+	for i in range(num_colors):
+		if i < n_pat:
+			dark_pool.append(brightness_order[i][1])
+		else:
+			light_pool.append(brightness_order[i][1])
+	var adj: Array = []
+	for _i in range(size):
+		adj.append({})
+	for r in range(size):
+		for c in range(size):
+			var ri: int = regions[r][c]
+			if c + 1 < size:
+				var rj: int = regions[r][c + 1]
+				if rj != ri:
+					adj[ri][rj] = true
+					adj[rj][ri] = true
+			if r + 1 < size:
+				var rj: int = regions[r + 1][c]
+				if rj != ri:
+					adj[ri][rj] = true
+					adj[rj][ri] = true
+	var color_map: Array[int] = []
+	color_map.resize(size)
+	color_map.fill(-1)
+	var used_colors: Dictionary = {}
+	for pat_ri in pattern_regions:
+		var adj_colors: Dictionary = {}
+		for ni in adj[pat_ri].keys():
+			if color_map[ni] >= 0:
+				adj_colors[color_map[ni]] = true
+		var best_color: int = dark_pool[0]
+		var best_score: float = -1.0
+		for ci in dark_pool:
+			if used_colors.has(ci):
+				continue
+			var min_dist: float = INF
+			for ac in adj_colors.keys():
+				var d: float = _lab_dist(lab[ci], lab[ac])
+				if d < min_dist:
+					min_dist = d
+			if adj_colors.size() == 0:
+				min_dist = INF
+			if min_dist > best_score:
+				best_score = min_dist
+				best_color = ci
+		color_map[pat_ri] = best_color
+		used_colors[best_color] = true
+	var remaining: Array = []
+	for ri in range(size):
+		if color_map[ri] < 0:
+			remaining.append(ri)
+	remaining.sort_custom(
+		func(a: int, b: int) -> bool:
+			var da: int = adj[a].size()
+			var db: int = adj[b].size()
+			return db > da if da != db else a < b
+	)
+	for ri in remaining:
+		var adj_colors: Dictionary = {}
+		for ni in adj[ri].keys():
+			if color_map[ni] >= 0:
+				adj_colors[color_map[ni]] = true
+		var best_color: int = 0
+		var best_min_dist: float = -1.0
+		var pool: Array = light_pool if not light_pool.is_empty() else dark_pool
+		for ci in pool:
+			if used_colors.has(ci):
+				continue
+			var min_dist: float = INF
+			for ac in adj_colors.keys():
+				var d: float = _lab_dist(lab[ci], lab[ac])
+				if d < min_dist:
+					min_dist = d
+			if adj_colors.size() == 0:
+				min_dist = INF
+			if min_dist > best_min_dist:
+				best_min_dist = min_dist
+				best_color = ci
+		color_map[ri] = best_color
+		used_colors[best_color] = true
+	return color_map

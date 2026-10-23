@@ -1,5 +1,7 @@
 # Meowdoku 1.8.1 逆向恢复全流程总结
 
+> 历史记录：本文对应 1.8.1 恢复过程。当前工程已升级至 1.22.0，请以 [当前 README](README.md)、[升级记录](UPGRADE_1.22.0.md)和[新版保真审计](RECOVERY_FIDELITY_AUDIT.md)为准。
+
 ## 一、任务目标与最终结论
 
 本次任务的目标，是从 `Meowdoku_+Brain+Puzzle+Games_1.8.1_APKPure.xapk` 中恢复一个能够继续编辑、导入、构建和运行的 Godot 工程，并在 Android 真机上验证核心功能。

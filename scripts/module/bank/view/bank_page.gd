@@ -1,5 +1,4 @@
-## 题库页面：只读浏览 BankData 的六类题库（常规 / LK / LK改 / LK优化 / GC / SP），点关卡直接开局
-## 界面全在代码里现拼；本页不写任何题库文件，只读数据 + 调 UIManager 打开 GamePage
+## 题库浏览窗口：按来源、尺寸和难度构建列表，选择题目后展开紧凑数据并交给游戏页。
 class_name BankPage
 extends UIFrameWindow
 
@@ -149,26 +148,26 @@ const _RANK_COLORS: Dictionary = {
 @onready var _regular_vbox: VBoxContainer = $RegularSizePanel/RegScroll/RegVBox
 
 # ---- 交互状态：当前尺寸/难度、各卡片序号、以及互斥的题库模式开关 ----
-var _selected_size: int = 7  # 当前尺寸，列表页/难度页返回时用来重建
-var _selected_rank: int = 1  # 当前难度（只写不读，保留给返回逻辑）
-var _tier_num: Dictionary = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, "4H": 1, "4N": 1, "5H": 1}  # 难度卡片的序号选择器，键 = 难度号或 "4H"/"4N"/"5H"
-var _tier_num_labels: Dictionary = {}  # 上面那些序号 Label 的引用（键同上），± 键直接改它的 text
-var _lk_num: int = 1  # LK 页序号选择器的当前值，从 1 起
-var _lk_num_label: Label = null  # LK 页序号 Label；null = 序号条还没建出来
-var _lk_style_mode: bool = false  # 正在看 LK 优化题库
-var _gc_mode: bool = false  # 正在看 GC 题库
-var _sp_mode: bool = false  # 正在看 SP 题库
-var _regular_mode: bool = false  # 正在常规题库的尺寸页
-var _lk_modified_mode: bool = false  # LK 页当前展示的是「改题库」而不是原版
+var _selected_size: int = 7 # 当前尺寸，列表页/难度页返回时用来重建
+var _selected_rank: int = 1 # 当前难度（只写不读，保留给返回逻辑）
+var _tier_num: Dictionary = {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, "4H": 1, "4N": 1, "5H": 1} # 难度卡片的序号选择器，键 = 难度号或 "4H"/"4N"/"5H"
+var _tier_num_labels: Dictionary = {} # 上面那些序号 Label 的引用（键同上），± 键直接改它的 text
+var _lk_num: int = 1 # LK 页序号选择器的当前值，从 1 起
+var _lk_num_label: Label = null # LK 页序号 Label；null = 序号条还没建出来
+var _lk_style_mode: bool = false # 正在看 LK 优化题库
+var _gc_mode: bool = false # 正在看 GC 题库
+var _sp_mode: bool = false # 正在看 SP 题库
+var _regular_mode: bool = false # 正在常规题库的尺寸页
+var _lk_modified_mode: bool = false # LK 页当前展示的是「改题库」而不是原版
 
 
 # ================= 生命周期与面板切换 =================
 ## 进场景树：先按实际存在的题库拼首页卡片，再给六个滚动区挂上拖动滚动助手
 func _ready() -> void:
-	_build_size_cards()  # 按 BankData 里实际存在的题库拼首页卡片
-	_show_size_panel()  # 打开时默认停在首页
+	_build_size_cards() # 按 BankData 里实际存在的题库拼首页卡片
+	_show_size_panel() # 打开时默认停在首页
 
-	ScrollDragHelper.attach($SizePanel/SizeScroll)  # 六个滚动区都挂上「按住拖动滚动」助手（含橡皮筋回弹）
+	ScrollDragHelper.attach($SizePanel/SizeScroll) # 六个滚动区都挂上「按住拖动滚动」助手（含橡皮筋回弹）
 	ScrollDragHelper.attach(_tier_scroll)
 	ScrollDragHelper.attach(_list_scroll)
 	ScrollDragHelper.attach(_lk_scroll)
@@ -200,7 +199,7 @@ func _hide_all_panels() -> void:
 
 ## 回最外层「题库入口」页：顺手清掉常规 / GC / SP 模式标记
 func _show_size_panel() -> void:
-	_sp_mode = false  # 回总入口：三个子模式标记一起清掉
+	_sp_mode = false # 回总入口：三个子模式标记一起清掉
 	_regular_mode = false
 	_gc_mode = false
 	_hide_all_panels()
@@ -1109,7 +1108,7 @@ func _build_lk_list(levels: Array) -> void:
 			_lk_list.add_child(sep)
 
 
-## 造 LK 列表一行：序号 + 尺寸 + 日期 + 难度标签，点击直接开局
+## 创建 LK 题目按钮，显示日期、难度及适用的节奏评分，点击后打开对应题目。
 func _make_lk_item(entry: Dictionary, i: int) -> Button:
 	var max_r: int = entry.get("maxR", 1)
 	var rank_color: Color = _RANK_COLORS.get(max_r, _COLOR_GRAY)
@@ -1169,6 +1168,28 @@ func _make_lk_item(entry: Dictionary, i: int) -> Button:
 	date_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(date_lbl)
 
+	var pace_lk_text: String = "-"
+	if _lk_modified_mode:
+		var ab_group_lk: int = ABTestManager.normal_level.get_pace_group()
+		var pace_lk: Dictionary = BankData.get_lkmod_pace_by_original_idx(i)
+		if ab_group_lk == 0:
+			pace_lk_text = "g0=-"
+		elif (
+			pace_lk.is_empty() or not pace_lk.has("r_seq") or (pace_lk["r_seq"] as Array).is_empty()
+		):
+			pace_lk_text = "g%d=NA" % ab_group_lk
+		else:
+			pace_lk_text = "g%d=%.4f" % [ab_group_lk, BankSorter.pick_score(pace_lk, ab_group_lk)]
+	var pace_lk_lbl := Label.new()
+	pace_lk_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pace_lk_lbl.text = pace_lk_text
+	pace_lk_lbl.add_theme_font_size_override("font_size", 22)
+	pace_lk_lbl.add_theme_color_override("font_color", _COLOR_GRAY)
+	pace_lk_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	pace_lk_lbl.custom_minimum_size = Vector2(140, 0)
+	pace_lk_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	hbox.add_child(pace_lk_lbl)
+
 	var rank_lbl := Label.new()
 	rank_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rank_lbl.text = entry.get("label", "R%d" % max_r)
@@ -1214,17 +1235,18 @@ func _on_lk_go() -> void:
 	_play_lk_level(levels, _lk_num - 1, _lk_modified_mode)
 
 
-## 打开 LK 题库第 idx 关：把该关的 regionMap / solution 等预置数据交给 GamePage
+## 校验索引并展开题目字段，将 LK 来源、原始区域和答案交给游戏页。
 func _play_lk_level(levels: Array, idx: int, is_modified: bool = false) -> void:
 	if levels.is_empty() or idx < 0 or idx >= levels.size():
 		return
-	var entry: Dictionary = levels[idx]
+	var entry: Dictionary = BankData.materialize_entry(levels[idx])
 	var sz: int = entry.get("size", 8)
 	(
 		UIManager
 		. show_ui(
 			UiName.GAME,
 			{
+				"from_bank_browser": true,
 				"bank_mode": true,
 				"bank_lk": true,
 				"bank_lk_modified": is_modified,
@@ -1472,9 +1494,8 @@ func _on_tier_plus(key: Variant, count: int) -> void:
 		(_tier_num_labels[key] as Label).text = str(_tier_num[key])
 
 
-## 按当前题库模式 + tier 取关卡数组，跳到序号对应的那一关
+## 按当前来源和难度档位定位题目，展开字段并携带策略步骤统计进入题库试玩。
 func _on_tier_go(sz: int, rank: int, tier: String = "") -> void:
-	# 取数分派：GC 一路，带档位的（H / N）一路，其余按普通难度取
 	var levels: Array
 	if _gc_mode:
 		levels = (
@@ -1496,18 +1517,17 @@ func _on_tier_go(sz: int, rank: int, tier: String = "") -> void:
 		)
 	if levels.is_empty():
 		return
-	# 序号键的算法与 _make_tier_card 保持一致
 	var num_key: Variant = (
 		("%dH" % rank) if tier == "H" else (("%dN" % rank) if tier == "N" else rank)
 	)
-	# 序号夹到合法范围，防止题库变动后越界
 	var idx: int = clampi(_tier_num.get(num_key, 1) - 1, 0, levels.size() - 1)
-	var entry: Dictionary = levels[idx]
+	var entry: Dictionary = BankData.materialize_entry(levels[idx])
 	(
 		UIManager
 		. show_ui(
 			UiName.GAME,
 			{
+				"from_bank_browser": true,
 				"bank_mode": true,
 				"bank_size": sz,
 				"bank_rank": rank,
@@ -1566,11 +1586,10 @@ func _build_level_list(sz: int, rank: int, tier: String = "") -> void:
 			_level_list.add_child(sep)
 
 
-## 造关卡列表一行：序号 + 步数 + 难度标签，点击把这一关的数据交给 GamePage
+## 创建常规题目列表按钮，展示步骤与节奏分数，并在点击时传入该题的区域和答案。
 func _make_level_item(
-	entry: Dictionary, sz: int, rank: int, i: int, levels: Array = [], tier: String = ""
+	entry: Dictionary, sz: int, rank: int, index: int, levels: Array = [], tier: String = ""
 ) -> Button:
-	# 徽章色：H 档查 _RANK_H_INFO，普通档查 _RANK_INFO，越界则用灰色
 	var badge_color: Color
 	if tier == "H" and _RANK_H_INFO.has(rank):
 		badge_color = _RANK_H_INFO[rank]["badge"]
@@ -1592,7 +1611,6 @@ func _make_level_item(
 	btn.add_theme_stylebox_override("pressed", sf_p)
 	btn.add_theme_stylebox_override("hover", sf_n)
 	btn.add_theme_stylebox_override("focus", sf_f)
-	# 闭包捕获这一行的下标 i 与 entry：点哪个开哪个
 	var total: int = levels.size()
 	btn.pressed.connect(
 		func() -> void:
@@ -1601,13 +1619,14 @@ func _make_level_item(
 				. show_ui(
 					UiName.GAME,
 					{
+						"from_bank_browser": true,
 						"bank_mode": true,
 						"bank_size": sz,
 						"bank_rank": rank,
-						"bank_index": i + 1,
+						"bank_index": index + 1,
 						"bank_total": total,
-						"prebuilt_regions": entry.get("regionMap", []),
-						"prebuilt_solution": entry.get("solution", []),
+						"prebuilt_regions": BankData.get_region_map(entry),
+						"prebuilt_solution": BankData.get_solution(entry),
 						"level_seed": entry.get("seed", 0),
 						"r1_steps": entry.get("r1", 0),
 						"r2_steps": entry.get("r2", 0),
@@ -1632,7 +1651,7 @@ func _make_level_item(
 
 	var nl := Label.new()
 	nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	nl.text = "#%d" % (i + 1)
+	nl.text = "#%d" % (index + 1)
 	nl.add_theme_font_size_override("font_size", 40)
 	nl.add_theme_color_override("font_color", _COLOR_TEXT)
 	nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1650,6 +1669,32 @@ func _make_level_item(
 		sl.custom_minimum_size = Vector2(80, 0)
 		sl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		hbox.add_child(sl)
+
+	var pace_group_str: String
+	if _gc_mode:
+		pace_group_str = "gc"
+	elif _lk_style_mode:
+		pace_group_str = "lkstyle"
+	else:
+		pace_group_str = "regular"
+	var ab_group: int = ABTestManager.normal_level.get_pace_group()
+	var pace: Dictionary = BankData.get_pace_entry(pace_group_str, sz, rank, index)
+	var pace_text: String
+	if ab_group == 0:
+		pace_text = "g0=-"
+	elif pace.is_empty() or not pace.has("r_seq") or (pace["r_seq"] as Array).is_empty():
+		pace_text = "g%d=NA" % ab_group
+	else:
+		pace_text = "g%d=%.4f" % [ab_group, BankSorter.pick_score(pace, ab_group)]
+	var pace_lbl := Label.new()
+	pace_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pace_lbl.text = pace_text
+	pace_lbl.add_theme_font_size_override("font_size", 22)
+	pace_lbl.add_theme_color_override("font_color", _COLOR_GRAY)
+	pace_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	pace_lbl.custom_minimum_size = Vector2(140, 0)
+	pace_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	hbox.add_child(pace_lbl)
 
 	var tl := Label.new()
 	tl.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1736,8 +1781,8 @@ func _build_sp_list() -> void:
 			_level_list.add_child(sep)
 
 
-## 造 SP 一行：图案名 + 尺寸/难度 + 难度徽章，点击时额外把 colorMap 传给 GamePage
-func _make_sp_item(entry: Dictionary, i: int) -> Button:
+## 创建特殊图案题按钮，点击时同时传入原始配色、图案区域和解题指标。
+func _make_sp_item(entry: Dictionary, index: int) -> Button:
 	var sz: int = entry.get("size", 9)
 	var rank: int = entry.get("r", 1)
 	var pattern: String = entry.get("pattern", "")
@@ -1760,25 +1805,27 @@ func _make_sp_item(entry: Dictionary, i: int) -> Button:
 	btn.add_theme_stylebox_override("hover", sf_n)
 	btn.add_theme_stylebox_override("focus", sf_f)
 
-	# SP 专用：每关自带配色表，开局时要一起传过去
 	var cm_raw: Array = entry.get("colorMap", [])
 
 	btn.pressed.connect(
 		func() -> void:
-			var raw_sol: Array = entry.get("solution", [])
-			var raw_reg: Array = entry.get("regionMap", [])
+			var raw_sol: Array = BankData.get_solution(entry)
+			var raw_reg: Array = BankData.get_region_map(entry)
 			(
 				UIManager
 				. show_ui(
 					UiName.GAME,
 					{
+						"from_bank_browser": true,
 						"bank_mode": true,
 						"bank_size": sz,
 						"bank_rank": rank,
-						"bank_index": i + 1,
+						"bank_index": index + 1,
 						"bank_total": BankData.get_sp_level_count(),
+						"bank_source": "sp",
 						"prebuilt_regions": raw_reg,
 						"prebuilt_solution": raw_sol,
+						"spRegion": entry.get("spRegion", []),
 						"level_seed": entry.get("id", 0),
 						"r1_steps": entry.get("r1", 0),
 						"r2_steps": entry.get("r2", 0),
@@ -1802,7 +1849,7 @@ func _make_sp_item(entry: Dictionary, i: int) -> Button:
 
 	var num_lbl := Label.new()
 	num_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	num_lbl.text = "#%d" % (i + 1)
+	num_lbl.text = "#%d" % (index + 1)
 	num_lbl.add_theme_font_size_override("font_size", 38)
 	num_lbl.add_theme_color_override("font_color", _COLOR_TEXT)
 	num_lbl.custom_minimum_size = Vector2(80, 0)

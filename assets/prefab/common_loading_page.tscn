@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://b80yudji12k18"]
+
+[ext_resource type="Script" uid="uid://dk1f7xhdamlsu" path="res://scripts/module/ui/common/common_loading_page.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://bdb2xh6xeb1cs" path="res://assets/fonts/Roboto-medium.tres" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tips"]
+content_margin_left = 60.0
+content_margin_top = 20.0
+content_margin_right = 60.0
+content_margin_bottom = 20.0
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[node name="PurchaseLoadingPage" type="Control" unique_id=1296542714]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+show_mask = true
+mask_opacity = 0.75
+
+[node name="Tips" type="PanelContainer" parent="." unique_id=753963399]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tips")
+
+[node name="TipsLabel" type="Label" parent="Tips" unique_id=271028411]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5769231, 0.3522559, 0.3522559, 1)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 50
+text = "COMMON_LOADING"
+vertical_alignment = 1

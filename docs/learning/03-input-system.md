@@ -1,5 +1,7 @@
 # 输入系统精读 — 触摸 → 棋盘操作
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 的实际入口、题库格式和新增系统请先看 [新版导读](08-version-1.22.0.md)，再对照当前源码；旧代码片段不是新版逐行镜像。
+
 > 文件：
 > - [scripts/module/game/input/cell_action.gd](../../scripts/module/game/input/cell_action.gd) — 操作数据包（3 种 Kind + 3 个工厂方法）
 > - [scripts/module/game/input/board_stroke_context.gd](../../scripts/module/game/input/board_stroke_context.gd) — 一次手势的状态

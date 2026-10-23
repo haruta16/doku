@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://bb6k0y71kiuj8"
+path="res://.godot/imported/failure_group_glodenfish.atlas-23233b81a9d5778093747d3d0b6c10b5.spatlas"
+
+[deps]
+
+source_file="res://assets/effect/spine/ui_fail_settlement_glodenfish/failure_group_glodenfish.atlas"
+dest_files=["res://.godot/imported/failure_group_glodenfish.atlas-23233b81a9d5778093747d3d0b6c10b5.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

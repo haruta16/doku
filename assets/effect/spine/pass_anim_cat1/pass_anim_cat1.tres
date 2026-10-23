@@ -1,0 +1,8 @@
+[gd_resource type="SpineSkeletonDataResource" format=3 uid="uid://dt2tj01jqd6es"]
+
+[ext_resource type="SpineAtlasResource" uid="uid://k0c8bvy8ykhc" path="res://assets/effect/spine/pass_anim_cat1/pass_anim_cat1.atlas" id="1"]
+[ext_resource type="SpineSkeletonFileResource" uid="uid://bkk6qkoy6d8ek" path="res://assets/effect/spine/pass_anim_cat1/pass_anim_cat1.skel" id="2"]
+
+[resource]
+atlas_res = ExtResource("1")
+skeleton_file_res = ExtResource("2")

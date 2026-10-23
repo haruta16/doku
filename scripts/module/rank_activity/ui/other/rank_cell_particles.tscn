@@ -1,0 +1,338 @@
+[gd_scene format=3 uid="uid://cfvdmketgxkgj"]
+
+[ext_resource type="Texture2D" uid="uid://bcvitsw44d6q3" path="res://assets/effect/texture/star/et_star_1.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://cv821i33bwwvc" path="res://assets/effect/texture/star/et_star_003.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bo12a1u5itmrt" path="res://assets/effect/texture/mask/et_mask_015.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://ilaik3cifkjq" path="res://assets/effect/texture/ui/et_change_arrow.png" id="4"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_t0n6v"]
+
+[sub_resource type="Curve" id="Curve_q48nm"]
+_limits = [0.0, 5000.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 140.0, 0, 0, Vector2(0.005, 3000), 0.0, 0.0, 0, 0, Vector2(0.3, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_3m16s"]
+_data = [Vector2(0.18376069, 1), 0.0, -0.6101585, 0, 1, Vector2(1, 0.5019646), -0.6101585, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_o2jtx"]
+offsets = PackedFloat32Array(0.5400891, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_84vox"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_55uvh"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nf0bv"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_g6n2x"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_xlcyr"]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_6p82m"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_copa2"]
+offsets = PackedFloat32Array(0.4988864, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_3gbt8"]
+offsets = PackedFloat32Array(0, 0.32293987, 0.7249443)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="Particles" type="Control" unique_id=16635918]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="EffectStars" type="Control" parent="." unique_id=587728033]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StarsAlpT" type="CPUParticles2D" parent="EffectStars" unique_id=649163227]
+material = SubResource("CanvasItemMaterial_t0n6v")
+position = Vector2(485, -2.289)
+emitting = false
+amount = 20
+texture = ExtResource("1")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 2577182765
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(480, 10)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(0.54901963, 0.48235294, 0.27450982, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="StarsAddT2" type="CPUParticles2D" parent="EffectStars" unique_id=895184045]
+material = SubResource("CanvasItemMaterial_84vox")
+position = Vector2(485, -2.289)
+emitting = false
+amount = 20
+texture = ExtResource("2")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 2577182765
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(480, 10)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(1, 0.92156863, 0.2, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="StarsAlpB" type="CPUParticles2D" parent="EffectStars" unique_id=1548093468]
+material = SubResource("CanvasItemMaterial_t0n6v")
+position = Vector2(485, 177.711)
+emitting = false
+amount = 20
+texture = ExtResource("1")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 77513298
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(480, 10)
+direction = Vector2(0, 1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(0.54901963, 0.48235294, 0.27450982, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="StarsAddB2" type="CPUParticles2D" parent="EffectStars" unique_id=343175984]
+material = SubResource("CanvasItemMaterial_55uvh")
+position = Vector2(485, 177.711)
+emitting = false
+amount = 20
+texture = ExtResource("2")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 77513298
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(480, 10)
+direction = Vector2(0, 1)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(1, 0.92156863, 0.2, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="StarsAlpL" type="CPUParticles2D" parent="EffectStars" unique_id=1353628880]
+material = SubResource("CanvasItemMaterial_nf0bv")
+position = Vector2(0, 92.711)
+emitting = false
+amount = 6
+texture = ExtResource("1")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 3644036100
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(10, 90)
+direction = Vector2(-1, 0)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(0.54901963, 0.48235294, 0.27450982, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="StarsAddL2" type="CPUParticles2D" parent="EffectStars" unique_id=431741814]
+material = SubResource("CanvasItemMaterial_g6n2x")
+position = Vector2(0, 92.711)
+emitting = false
+amount = 6
+texture = ExtResource("2")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 3644036100
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(10, 90)
+direction = Vector2(-1, 0)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(1, 0.92156863, 0.2, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="StarsAlpR" type="CPUParticles2D" parent="EffectStars" unique_id=907943610]
+material = SubResource("CanvasItemMaterial_t0n6v")
+position = Vector2(965, 92.711)
+emitting = false
+amount = 6
+texture = ExtResource("1")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 2687669311
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(10, 90)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(0.54901963, 0.48235294, 0.27450982, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="StarsAddR2" type="CPUParticles2D" parent="EffectStars" unique_id=433376826]
+material = SubResource("CanvasItemMaterial_xlcyr")
+position = Vector2(965, 92.711)
+emitting = false
+amount = 6
+texture = ExtResource("2")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 2687669311
+lifetime_randomness = 0.1
+emission_shape = 3
+emission_rect_extents = Vector2(10, 90)
+spread = 20.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 250.0
+initial_velocity_max = 300.0
+damping_min = 1.0
+damping_max = 1.0
+damping_curve = SubResource("Curve_q48nm")
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.1
+scale_amount_max = 0.3
+scale_amount_curve = SubResource("Curve_3m16s")
+color = Color(1, 0.92156863, 0.2, 1)
+color_ramp = SubResource("Gradient_o2jtx")
+
+[node name="EffectGlow" type="Control" parent="." unique_id=224982270]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Glow" type="CPUParticles2D" parent="EffectGlow" unique_id=1610359284]
+material = SubResource("CanvasItemMaterial_6p82m")
+position = Vector2(483, 90)
+emitting = false
+amount = 1
+texture = ExtResource("3")
+lifetime = 0.5
+one_shot = true
+local_coords = true
+gravity = Vector2(0, 0)
+scale_amount_min = 2.2
+scale_amount_max = 2.2
+color = Color(1, 0.92156863, 0.2, 1)
+color_ramp = SubResource("Gradient_copa2")
+
+[node name="Arrow" type="Control" parent="." unique_id=1148840596]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Arrow" type="CPUParticles2D" parent="Arrow" unique_id=2138141766]
+position = Vector2(478, 200)
+emitting = false
+amount = 4
+texture = ExtResource("4")
+use_fixed_seed = true
+seed = 4623782
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(480, 25)
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 300.0
+initial_velocity_max = 300.0
+scale_amount_min = 0.7
+color_ramp = SubResource("Gradient_3gbt8")
