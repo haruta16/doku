@@ -56,6 +56,9 @@ AccountManager="*res://scripts/module/account/account_manager.gd"
 LevelRecManager="*res://scripts/module/level_rec/level_rec_manager.gd"
 PeekabooManager="*res://scripts/module/peekaboo/peekaboo_manager.gd"
 DcProbe="*res://scripts/module/debug/dc_probe.gd"
+MCPScreenshot="*res://addons/godot_mcp/mcp_screenshot_service.gd"
+MCPInputService="*res://addons/godot_mcp/mcp_input_service.gd"
+MCPGameInspector="*res://addons/godot_mcp/mcp_game_inspector_service.gd"
 
 [debug]
 
