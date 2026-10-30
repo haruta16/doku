@@ -1,4 +1,4 @@
-## 生命告警实验：生命快用完时是否弹提醒；0=不提醒 1=提醒
+## 实验配置 warn_life：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name WarnLifeConfig
 
@@ -7,13 +7,7 @@ const VALUE_HIDE: int = 0 # 不提醒
 const VALUE_SHOW: int = 1 # 弹生命告警
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "warn_life"
-	default_value = VALUE_HIDE # 默认档：不提醒
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
-
-
-## 是否显示生命告警
-func should_show_life_warning() -> bool:
-	return value() == VALUE_SHOW
+	default_value = VALUE_HIDE

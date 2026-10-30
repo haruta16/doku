@@ -1,354 +1,70 @@
-## 关卡数据总表：难度曲线（关卡号 → 边长/策略/rank/tier）、题源选择、题库轮询取题、题目查重 ID
+## 选题数据工具：转换策略编码、构建来源题池、执行几何变换，并生成包含方向信息的查重题号。
 class_name LevelData
 extends RefCounted
 
-const MainRules = preload("res://products/meowdoku/gameplay/domain/doku_main_selection_rules.gd")
-const Result = preload("res://scripts/framework/operation_result.gd")
-const SelectionState = preload("res://products/meowdoku/gameplay/application/doku_selection_state.gd")
+# ================= 难度曲线：边长表与难度判定 =================
+const LEVEL_COUNT: int = 0 # 未被任何地方使用的占位常量（值恒为 0）
 
 
-## 无业务写入的选题入口：所有游标/降档变化暂存在私有副本，seed 固定本次随机决策。
-## 题库缓存读取可以发生，但不会保存玩家数据，也不会推进全局随机数生成器。
-static func resolve_level_entry(level_num: int, override_sz: int = 0, seed_value: int = 0) -> Dictionary:
-	if level_num < 1 or not GameState.is_storage_ready():
-		return Result.failure("invalid_selection_context")
-	var expected: Dictionary = _capture_selection_state()
-	var working: SelectionState = SelectionState.new(expected)
-	var policy: Dictionary = _capture_selection_policy()
-	var generation: int = ContentContext.generation()
-	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-	rng.seed = seed_value
-	var entry: Dictionary = get_level_entry(level_num, override_sz, working, policy, rng)
-	var size: int = int(entry.get("size", 0))
-	if size <= 0:
-		size = (entry.get("regionMap", []) as Array).size()
-	if not _selection_entry_valid(entry, size):
-		return Result.failure("no_valid_level")
-	var puzzle_id: String = compute_puzzle_id(size, entry.regionMap)
-	var previous: Dictionary = _find_previous_puzzle(working.profile.get("recent_puzzles", []), puzzle_id)
-	# 只换一次候选，沿用本次已决定的难度与首局降档。特殊关的固定题不重抽。
-	if not previous.is_empty() and int(previous.get("level", -1)) != level_num and str(entry.get("_bank_source", "")) not in ["sp", "lk", "catalog"]:
-		var rank: int = int(entry.get("_bank_rank", 1))
-		var tier: String = str(entry.get("_bank_tier", ""))
-		var hard: bool = is_hard_level_group_j(level_num) if int(policy.rule_normal_rank) == 10 else is_hard_level(level_num)
-		entry = _get_next_entry_with_filter(size, rank, tier, level_num, hard, -1, working, policy)
-		if not _selection_entry_valid(entry, size):
-			return Result.failure("no_valid_level")
-		puzzle_id = compute_puzzle_id(size, entry.regionMap)
-		previous = _find_previous_puzzle(working.profile.get("recent_puzzles", []), puzzle_id)
-	# 第一次开局即消耗当日机会；只有实际降低过策略的分支才标记“降档局”。
-	if working.is_daily_first_easy_available():
-		working.consume_daily_first_easy()
-	var recent: Array = working.profile.get("recent_puzzles", []).duplicate(true)
-	recent.append({
-		"puzzle_id": puzzle_id, "level": level_num,
-		"v": UniKitManager.get_version_name(),
-		"src": entry.get("_bank_source_main", entry.get("_bank_source", "")),
-		"ts": int(Time.get_unix_time_from_system()),
-		"bank_progress": working.profile.get("bank_progress", {}).duplicate(true),
-		"main_bank_progress": working.profile.get("main_bank_progress", {}).duplicate(true),
-		"lkmod_progress": working.profile.get("lkmod_progress", {}).duplicate(true),
-	})
-	while recent.size() > 100:
-		recent.pop_front()
-	working.profile["recent_puzzles"] = recent
-	var identity: String = JSON.stringify({"level": level_num, "seed": seed_value, "expected": expected, "policy": policy, "puzzle_id": puzzle_id, "generation": generation})
-	return {
-		"ok": true, "entry": entry.duplicate(true), "size": size, "level": level_num,
-		"puzzle_id": puzzle_id, "seed": seed_value, "selection_id": identity.sha256_text(),
-		"expected_selection": expected, "next_selection": working.snapshot(),
-		"previous": previous, "content_generation": generation,
-	}
-
-
-## 题面、预置格及残局都准备成功后调用；一次提交游标、降档、查重、重试题面与残局。
-## 只比较选题字段，普通统计/广告到账不使计划失效；重试同 selection_id 不重复推进。
-static func commit_selected(plan: Dictionary, checkpoint: Dictionary = {}, retry_params: Dictionary = {}, auto_mark_variant: int = -1, consume_daily_first: bool = false, new_game_id: String = "") -> Dictionary:
-	if not plan.get("ok", false) or str(plan.get("selection_id", "")).is_empty():
-		return Result.failure("invalid_selection_plan")
-	if not GameState.is_storage_ready():
-		return Result.failure("store_not_open")
-	var candidate: Dictionary = GameState.get_core_candidate()
-	var features: Dictionary = candidate.get("features", {})
-	var committed: Dictionary = features.get("doku_selection", {})
-	if committed.get("selection_id", "") == plan.selection_id:
-		return {"ok": true, "duplicate": true, "selection_id": plan.selection_id}
-	if int(plan.get("content_generation", -1)) != ContentContext.generation():
-		return Result.failure("selection_content_changed")
-	if int(candidate.profile.get("current_level", 1)) != int(plan.get("level", 0)):
-		return Result.failure("selection_level_mismatch")
-	if _capture_selection_state() != plan.get("expected_selection", {}):
-		return Result.failure("selection_conflict")
-	var next: Dictionary = plan.get("next_selection", {})
-	if not next.get("profile") is Dictionary or not next.get("runtime") is Dictionary:
-		return Result.failure("invalid_selection_plan")
-	for field: String in SelectionState.PROFILE_FIELDS:
-		if next.profile.has(field):
-			candidate.profile[field] = next.profile[field]
-	for field: String in SelectionState.RUNTIME_FIELDS:
-		if next.runtime.has(field):
-			candidate.round_runtime[field] = next.runtime[field]
-	candidate.round_runtime["current_level_dirty"] = false
-	if not retry_params.is_empty():
-		candidate.profile["retry_puzzle_level"] = int(plan.level)
-		candidate.profile["retry_puzzle_params"] = retry_params.duplicate(true)
-	# 新题替换旧检查点；本局关闭残局保存时也不能留下上一题的快照。
-	candidate.endgame["snapshot"] = checkpoint.duplicate(true)
-	_stage_entry_metadata(candidate, auto_mark_variant, consume_daily_first, new_game_id)
-	features["doku_selection"] = {"selection_id": plan.selection_id, "level": plan.level, "puzzle_id": plan.puzzle_id}
-	candidate["features"] = features
-	var result: Dictionary = GameState.commit_core_candidate(candidate, GameState.get_core_store().revision())
-	if not result.get("ok", false):
-		return Result.wrap_failure("selection_commit_failed", result)
-	return {"ok": true, "duplicate": false, "selection_id": plan.selection_id}
-
-
-## 恢复/重试不推进题库游标；搭盘成功后才提交当天资格及本局设置。
-static func commit_existing_entry(auto_mark_variant: int, consume_daily_first: bool, clear_dirty: bool = false, new_game_id: String = "") -> Dictionary:
-	if not GameState.is_storage_ready():
-		return Result.failure("store_not_open")
-	var candidate: Dictionary = GameState.get_core_candidate()
-	var before: Dictionary = candidate.duplicate(true)
-	_stage_entry_metadata(candidate, auto_mark_variant, consume_daily_first, new_game_id)
-	if clear_dirty:
-		candidate.round_runtime["current_level_dirty"] = false
-	if candidate == before:
-		return Result.success()
-	var result: Dictionary = GameState.commit_core_candidate(candidate, GameState.get_core_store().revision())
-	return result if result.get("ok", false) else Result.wrap_failure("entry_commit_failed", result)
-
-
-static func _stage_entry_metadata(candidate: Dictionary, auto_mark_variant: int, consume_daily_first: bool, new_game_id: String) -> void:
-	if auto_mark_variant >= 0:
-		candidate.profile["saved_game_auto_mark"] = auto_mark_variant
-	if consume_daily_first:
-		candidate.profile["daily_first_easy_date"] = Time.get_date_string_from_system()
-	if not new_game_id.is_empty():
-		candidate.endgame.stats["main_total"] = {}
-		candidate.endgame.stats["main_round"] = {}
-		candidate.endgame.stats["main_id"] = new_game_id
-
-
-static func _capture_selection_state() -> Dictionary:
-	var candidate: Dictionary = GameState.get_core_candidate()
-	var profile: Dictionary = {}
-	for field: String in SelectionState.PROFILE_FIELDS:
-		if candidate.profile.has(field):
-			profile[field] = candidate.profile[field]
-	var runtime: Dictionary = {}
-	for field: String in SelectionState.RUNTIME_FIELDS:
-		runtime[field] = bool(candidate.get("round_runtime", {}).get(field, false))
-	var today: String = Time.get_date_string_from_system()
-	return {
-		"profile": profile.duplicate(true), "runtime": runtime,
-		"daily_available": GameState.is_daily_first_easy_available() and str(profile.get("daily_first_easy_date", "")) < today,
-		"today": today,
-	}
-
-
-static func _capture_selection_policy() -> Dictionary:
-	return {
-		"rule_normal_rank": ABTestManager.rule_normal_rank.value(),
-		"single_region": ABTestManager.single_region_num.value(),
-		"level10_sp57": ABTestManager.normal_level_10.is_sp57_at_level10(),
-	}
-
-
-static func _single_region_policy(policy: Dictionary) -> int:
-	return int(policy.single_region) if policy.has("single_region") else ABTestManager.single_region_num.value()
-
-
-static func _selection_entry_valid(entry: Dictionary, size: int) -> bool:
-	if entry.is_empty() or size < 1 or size > 32:
-		return false
-	var regions: Variant = entry.get("regionMap")
-	var solution: Variant = entry.get("solution")
-	if not regions is Array or not solution is Array or regions.size() != size or solution.size() != size:
-		return false
-	for row: Variant in regions:
-		if not row is Array or row.size() != size:
-			return false
-		for region: Variant in row:
-			if typeof(region) not in [TYPE_INT, TYPE_FLOAT] or float(region) != floor(float(region)) or int(region) < 0 or int(region) >= size:
-				return false
-	for column: Variant in solution:
-		if typeof(column) not in [TYPE_INT, TYPE_FLOAT] or float(column) != floor(float(column)) or int(column) < 0 or int(column) >= size:
-			return false
-	return QueendokuCore.validate_solution_entry(entry, size)
-
-
-static func _find_previous_puzzle(recent: Array, puzzle_id: String) -> Dictionary:
-	for index in range(recent.size() - 1, -1, -1):
-		if recent[index].get("puzzle_id", "") == puzzle_id:
-			return recent[index].duplicate(true)
-	return {}
-
-# ================= 难度曲线：内容策略与纯选择规则 =================
-## 关卡号 → 棋盘边长：前 100 关查表，之后按 10 关一循环；关卡号非法返回 0
-static func get_size(level_num: int) -> int:
-	return DokuPolicy.cycle_size(-1, level_num)
-
-
-## 同上，但用于规则组 J：分段边界是 21 / 51 / 101
-static func get_size_group_j(level_num: int) -> int:
-	return DokuPolicy.cycle_size(-2, level_num)
-
-
-## 是否难关（Boss 关）：21 关起每逢 10 的倍数，即 30 / 40 / 50…（第 20 关不算）
-static func is_hard_level(level_num: int) -> bool:
-	return MainRules.is_hard(level_num, 0)
-
-
-## 组 J 的难关：29 关起每逢 9 结尾，即 29 / 39 / 49…
-static func is_hard_level_group_j(level_num: int) -> bool:
-	return MainRules.is_hard(level_num, 10)
-
-
-## 是否里程碑特殊关：由当前 DokuPolicy 特殊关配置决定，不走题库轮询
-static func is_special_level(level_num: int) -> bool:
-	return DokuPolicy.special_levels().has(level_num)
+## 按 SpecialProvider 的固定关号表判断是否特殊关。
+static func is_special_level(level_num: int, runtime: DokuSelectionRuntime = null) -> bool:
+	return SpecialProvider.levels_for(runtime).has(level_num)
 
 
 ## 策略号 → 题库 rank：5→4、6→5、7→5，其余原样（策略号是 rank 与 H 档的组合编码）
 static func strategy_to_rank(strategy: int) -> int:
-	return MainRules.rank_for(strategy)
+	match strategy:
+		5:
+			return 4
+		6:
+			return 5
+		7:
+			return 5
+		_:
+			return strategy
 
 
 ## 策略号 → 题库 tier：5 和 7 属于 H 档，其余是 N 档
 static func strategy_to_tier(strategy: int) -> String:
-	return MainRules.tier_for(strategy)
+	match strategy:
+		5:
+			return "H"
+		7:
+			return "H"
+		_:
+			return "N"
 
 
-## 取当前难度策略：前 5 关固定 1；51 关起保底 2。仅显式传入选择状态时暂存提升。
-static func get_strategy(level_num: int, selection_state: Variant = null) -> int:
-	var source: Variant = selection_state if selection_state != null else GameState
-	var current: int = source.get_current_strategy()
-	var strategy: int = MainRules.normal_strategy(level_num, current)
-	if level_num >= 51 and strategy != current and selection_state != null:
-		source.set_current_strategy(strategy)
-	return strategy
+## 把题库层级与普通或困难档组合为统一策略编号。
+static func rank_tier_to_strategy(rank: int, tier: String) -> int:
+	if rank == 4 and tier == "H":
+		return 5
+	if rank == 5:
+		return 7 if tier == "H" else 6
+	return rank
 
 
-# ================= 题库进度推进（都会写存档） =================
-## 取完一题后推进游标：lk_mod 走自己的计数器，其他来源走主进度 idx / since_lk
-static func advance_for_entry(entry: Dictionary, sz: int, selection_state: Variant = null) -> void:
-	var source: Variant = selection_state if selection_state != null else GameState
-	var rank: int = int(entry.get("_bank_rank", 1)) # 题目里带的题库元信息，由 get_next_entry / get_next_entry_main 写入
-	var tier: String = entry.get("_bank_tier", "")
-	var src_main: String = entry.get("_bank_source_main", "")
-	if src_main == "": # 老题库路径：只推进 bank_index
-		source.advance_bank_index(sz, rank, tier)
-		return
-	if src_main == "lk_mod": # LK 改造题：推进它自己的游标，并把主进度的「距上次 LK」清零
-		var lkprog: Dictionary = source.get_lkmod_progress(sz, rank)
-		lkprog["idx"] = lkprog.get("idx", 0) + 1
-		source.set_lkmod_progress(sz, rank, lkprog)
-		var prog: Dictionary = source.get_main_progress(sz, rank, tier)
-		prog["since_lk"] = 0
-		source.set_main_progress(sz, rank, tier, prog)
-	else:
-		var prog: Dictionary = source.get_main_progress(sz, rank, tier) # 其他来源：主进度 idx+1，并累计 since_lk（满 4 就插一道 LK 改造题）
-		prog["idx"] = prog.get("idx", 0) + 1
-		prog["since_lk"] = prog.get("since_lk", 0) + 1
-		source.set_main_progress(sz, rank, tier, prog)
+## 第 51 关起最低策略层级为二，之前为一。
+static func level_min_rank(level_num: int) -> int:
+	return 2 if level_num >= 51 else 1
 
 
-# ================= 取题：老入口（50 关及以前） =================
-## 把 regular / lkstyle / gc 三段拼成一个池，按存档序号取模轮询；tier 为空表示不限档
-## 返回题目字典（带 _bank_source/_bank_idx/_bank_tier/_bank_rank），池子空时返回 {}
-static func get_next_entry(
-	sz: int, rank: int, tier: String = "", remaining_attempts: int = -1,
-	selection_state: Variant = null, selection_policy: Dictionary = {}
-) -> Dictionary:
-	var source_state: Variant = selection_state if selection_state != null else GameState
-	var pools: Dictionary = MainRules.cycling_pools(sz, rank, tier, false,
-		BankData.get_levels(sz, rank), BankData.get_lk_style_levels(sz, rank),
-		BankData.get_gc_levels(sz, rank) if (sz == 10 and rank == 1) or sz == 11 else [])
-	var regular: Array = pools.regular
-	var lkstyle: Array = pools.lkstyle
-	var gc: Array = pools.gc
-	var total_regular: int = regular.size() # 三段加起来就是轮询用的总池
-	var total_lkstyle: int = lkstyle.size()
-	var total_gc: int = gc.size()
-	var total: int = total_regular + total_lkstyle + total_gc
-	if total == 0: # 一题都没有，交给调用方处理
-		return {}
-
-	# 同一调用只构建一次题池；失败重取用循环，调用栈不随题库规模增长。
-	remaining_attempts = maxi(1, total if remaining_attempts < 0 else remaining_attempts)
-	while remaining_attempts > 0:
-		var idx: int = source_state.get_bank_index(sz, rank, tier) # 存档里的池内序号，取模实现循环轮询
-		var real_idx: int = idx % total
-		var entry: Dictionary
-		var source: String
-		var source_idx: int
-		if real_idx < total_regular: # 按 real_idx 落在哪一段决定题源，并算出段内 1-based 序号
-			entry = regular[real_idx].duplicate()
-			source = "regular"
-			source_idx = real_idx + 1
-		elif real_idx < total_regular + total_lkstyle:
-			entry = lkstyle[real_idx - total_regular].duplicate()
-			source = "lkstyle"
-			source_idx = real_idx - total_regular + 1
-		else:
-			entry = gc[real_idx - total_regular - total_lkstyle].duplicate()
-			source = "gc"
-			source_idx = real_idx - total_regular - total_lkstyle + 1
-		entry["_bank_source"] = source # 来源信息写回 entry，供难度统计、查重和推进游标使用
-		entry["_bank_idx"] = source_idx
-		entry["_bank_tier"] = tier
-		entry["_bank_rank"] = rank
-
-		if not QueendokuCore.validate_solution_entry(entry, sz):
-			if remaining_attempts == 1:
-				push_warning("LevelData.get_next_entry: 题池没有合法答案，返回最后候选供入口拒绝")
-				return entry
-			source_state.advance_bank_index(sz, rank, tier)
-			remaining_attempts -= 1
-			continue
-
-		if _single_region_policy(selection_policy) in [1, 2] and _exceeds_single_region_limit(entry.regionMap):
-			if remaining_attempts > 1:
-				source_state.advance_bank_index(sz, rank, tier)
-				remaining_attempts -= 1
-				continue
-			# 保留已有降级策略：没有符合 AB 偏好的题时仍可玩这张合法题。
-			push_warning("LevelData.get_next_entry: 单格区域筛选耗尽，沿用最后合法候选")
-
-		advance_for_entry(entry, sz, source_state)
-		return entry
-	return {}
+const PREFILL_LEVEL_MAX: int = 10
 
 
-## 调用前已验证题面；这里只统计单格区域，两个选题入口共用同一 AB 条件。
-static func _exceeds_single_region_limit(region_map: Array) -> bool:
-	var counts: Dictionary = {}
-	for row: Array in region_map:
-		for region: Variant in row:
-			var id: int = int(region)
-			counts[id] = int(counts.get(id, 0)) + 1
-	var singles: int = 0
-	for count: int in counts.values():
-		if count == 1:
-			singles += 1
-	return singles > 2
-
-
-# ================= 开局送格（仅前 10 关） =================
-## 1~6 关送「所在区域不止一格」的答案格，7~10 关改送「独占一个小区域」的答案格
-## 返回 [行, 列]；不适用或找不到时返回 []（调用方按「不给提示」处理）
+## 前十关选一只答案猫预填：前六关偏好多格区域，七至十关偏好单格区域。
 static func compute_prefill(level_num: int, region_map: Array, solution: Array, sz: int) -> Array:
-	if level_num < 1 or level_num > 10: # 只对第 1~10 关生效
+	if level_num < 1 or level_num > PREFILL_LEVEL_MAX:
 		return []
-	var want_size_one: bool = level_num >= 7 # 7 关起改送独占区域的猫
+	var want_size_one: bool = level_num >= 7
 
-	var region_area: Dictionary = {} # 统计每个区域占几格
+	var region_area: Dictionary = {}
 	for r: int in range(sz):
 		for c: int in range(sz):
 			var rid: int = region_map[r][c]
 			region_area[rid] = region_area.get(rid, 0) + 1
 
-	for r: int in range(sz): # 按行序扫答案，取第一只符合条件的猫
+	for r: int in range(sz):
 		var c: int = solution[r]
 		var rid: int = region_map[r][c]
 		var area: int = region_area.get(rid, 0)
@@ -357,7 +73,7 @@ static func compute_prefill(level_num: int, region_map: Array, solution: Array, 
 		elif not want_size_one and area > 1:
 			return [r, c]
 
-	if sz > 0 and solution.size() > 0: # 兜底：直接送第 0 行的那只猫；连答案都没有就返回空数组
+	if sz > 0 and solution.size() > 0:
 		return [0, solution[0]]
 	return []
 
@@ -426,34 +142,37 @@ const _SUFFIX_NAMES: Array[String] = [
 ]
 
 
-## 题目的稳定查重 ID：8 种对称变换里字典序最小的形态当规范形，取规范形的 sha256 前 16 位
-## 返回 "边长_哈希"；当前朝向不是规范形时再补后缀（r90/h/hr270…）
-## 调用方拿它调 GameState.record_puzzle 判重，近期出现过的题会被换掉
+## 对区域编号归一化后比较八种对称形态，用规范形哈希及当前方向后缀生成题号。
 static func compute_puzzle_id(sz: int, region_map: Array) -> String:
-	var input_norm_str: String = _serialize_region_map(_normalize_region_map(region_map, sz)) # 输入先归一化（重编区域号）再序列化，作为比较基准
+	var input_norm_str: String = _serialize_region_map(_normalize_region_map(region_map, sz))
 
-	var transformed_pre: Array = [] # 8 种变换各算一份归一化串，选最小的当规范形
+	var transformed_pre: Array = []
 	var transformed_str: Array = []
 	for t: int in range(TRANSFORM_COUNT):
 		var rm_t: Array = _apply_region_transform(region_map, sz, t)
 		transformed_pre.append(rm_t)
 		transformed_str.append(_serialize_region_map(_normalize_region_map(rm_t, sz)))
 
-	var canonical_str: String = transformed_str.min() # 规范形本身（下面要用它反推当前朝向）
+	var canonical_str: String = transformed_str.min()
 	var t_input_to_canonical: int = transformed_str.find(canonical_str)
 	var canonical_pre: Array = transformed_pre[t_input_to_canonical]
 
-	var suffix_t: int = 0 # 找出「规范形做第 t 种变换能得到当前输入」的那个 t
+	var suffix_t: int = 0
 	for t: int in range(TRANSFORM_COUNT):
 		var maybe_input: Array = _apply_region_transform(canonical_pre, sz, t)
 		if _serialize_region_map(_normalize_region_map(maybe_input, sz)) == input_norm_str:
 			suffix_t = t
 			break
 
-	var hash16: String = canonical_str.sha256_text().substr(0, 16) # 哈希只吃规范形的内容，所以同一题的任何朝向都得到同一个哈希
-	if suffix_t == 0: # 朝向正好是规范形
+	var hash16: String = canonical_str.sha256_text().substr(0, 16)
+	return compose_puzzle_id(sz, hash16, suffix_t)
+
+
+## 把尺寸、规范形哈希与合法变换后缀拼成题号，规范形省略后缀。
+static func compose_puzzle_id(sz: int, hash16: String, suffix_index: int) -> String:
+	if suffix_index <= 0 or suffix_index >= _SUFFIX_NAMES.size():
 		return "%d_%s" % [sz, hash16]
-	return "%d_%s_%s" % [sz, hash16, _SUFFIX_NAMES[suffix_t]]
+	return "%d_%s_%s" % [sz, hash16, _SUFFIX_NAMES[suffix_index]]
 
 
 ## 只变换区域图、不动 solution 的版本，compute_puzzle_id 算规范形时用
@@ -486,19 +205,19 @@ static func _apply_region_transform(region_map: Array, sz: int, t: int) -> Array
 	return rm
 
 
-## 按行优先首次出现的顺序把区域号重编成 0,1,2…，消除编号命名差异，便于两份区域图比较
+## 按首次出现顺序重编号区域，消除颜色编号不同导致的伪差异。
 static func _normalize_region_map(region_map: Array, sz: int) -> Array:
-	var remap: Dictionary = {}
+	var id_map: Dictionary = {}
 	var next_id: int = 0
 	var result: Array = []
 	for r: int in range(sz):
 		var row: Array = []
 		for c: int in range(sz):
 			var v: int = int(region_map[r][c])
-			if not remap.has(v):
-				remap[v] = next_id
+			if not id_map.has(v):
+				id_map[v] = next_id
 				next_id += 1
-			row.append(remap[v])
+			row.append(id_map[v])
 		result.append(row)
 	return result
 
@@ -512,121 +231,119 @@ static func _serialize_region_map(region_map: Array) -> String:
 	return ",".join(parts)
 
 
-# ================= 取题：主线入口（51 关及以后） =================
-## 四段题源轮询：lk_mod 改造题 + regular + lkstyle + gc；每连取 4 道常规题插一道 LK 改造题
-## 一整池取完就换下一种对称变换重来；进度来自存档里的 idx / since_lk / transform
-static func get_next_entry_main(
-	sz: int, rank: int, tier: String, remaining_attempts: int = -1, strict_rank: bool = false,
-	selection_state: Variant = null, selection_policy: Dictionary = {}
+## 按尺寸、层级、档位与主线路径规则组合常规、LK 风格、GC 和 LK 改题池。
+static func build_pools(
+	sz: int,
+	rank: int,
+	tier: String,
+	strict_rank: bool,
+	include_lk_mod: bool,
+	is_main_path: bool = include_lk_mod,
+	force_include_regular: bool = false
 ) -> Dictionary:
-	var source_state: Variant = selection_state if selection_state != null else GameState
-	var lk_mod: Array = _lk_modified_pool(sz, rank, strict_rank)
+	var regular: Array = (
+		BankData.get_levels_by_tier(sz, rank, tier) if tier != "" else BankData.get_levels(sz, rank)
+	)
+	var lkstyle: Array = (
+		BankData.get_lk_style_levels_by_tier(sz, rank, tier)
+		if tier != ""
+		else BankData.get_lk_style_levels(sz, rank)
+	)
+	if tier != "" and regular.is_empty() and lkstyle.is_empty():
+		regular = BankData.get_levels(sz, rank)
+		lkstyle = BankData.get_lk_style_levels(sz, rank)
 
-	var pools: Dictionary = MainRules.cycling_pools(sz, rank, tier, true,
-		BankData.get_levels(sz, rank), BankData.get_lk_style_levels(sz, rank),
-		BankData.get_gc_levels(sz, rank) if (sz == 10 and rank == 1) or sz == 11 else [])
-	var regular: Array = pools.regular
-	var lkstyle: Array = pools.lkstyle
-	var gc: Array = pools.gc
-	var total_lk_mod: int = lk_mod.size() # 四段池子各自的大小与总大小
+	if (
+		not force_include_regular
+		and (include_lk_mod or is_main_path)
+		and sz == 10
+		and rank in [3, 4]
+	):
+		regular = []
+	var gc: Array = []
+	if (sz == 10 and rank == 1) or sz == 11:
+		gc = (
+			BankData.get_gc_levels_by_tier(sz, rank, tier)
+			if tier != ""
+			else BankData.get_gc_levels(sz, rank)
+		)
+		if tier != "" and gc.is_empty():
+			gc = BankData.get_gc_levels(sz, rank)
+	var lk_mod: Array = []
+	if include_lk_mod:
+		var lk_mod_all: Array = BankData.get_lk_modified_levels()
+		for i: int in range(lk_mod_all.size()):
+			if (i + 1) in LK_MOD_RESERVED:
+				continue
+			var e: Dictionary = lk_mod_all[i]
+			if BankData.get_region_map(e).size() != sz:
+				continue
+			var e_rank: int = (
+				int(e.get("r", 1)) if strict_rank else int(e.get("maxR", e.get("r", 1)))
+			)
+			if e_rank != rank:
+				continue
+			lk_mod.append(e)
+	return {"regular": regular, "lkstyle": lkstyle, "gc": gc, "lk_mod": lk_mod}
+
+
+## 读取完整超难题库并包装成统一题池结构。
+static func build_super_hard_pools() -> Dictionary:
+	return build_super_hard_pools_from(BankData.get_all_super_hard_levels())
+
+
+## 把传入超难题库放进 regular 槽，其余来源留空以复用通用游标。
+static func build_super_hard_pools_from(bank: Array) -> Dictionary:
+	return {
+		"regular": bank,
+		"lkstyle": [],
+		"gc": [],
+		"lk_mod": [],
+	}
+
+
+## 按游标确定来源并展开题目，必要时旋转镜像，再附来源、索引、档位与节奏信息。
+static func pick_at(pools: Dictionary, pos: Dictionary, rank: int, tier: String) -> Dictionary:
+	var idx: int = int(pos.get("idx", 0))
+	var since_lk: int = int(pos.get("since_lk", 0))
+	var transform: int = int(pos.get("transform", 0))
+	var lk_idx: int = int(pos.get("lk_idx", 0))
+	var is_main_path: bool = bool(pos.get("is_main_path", false))
+
+	var regular: Array = pools.get("regular", [])
+	var lkstyle: Array = pools.get("lkstyle", [])
+	var gc: Array = pools.get("gc", [])
+	var lk_mod: Array = pools.get("lk_mod", [])
 	var total_regular: int = regular.size()
 	var total_lkstyle: int = lkstyle.size()
 	var total_gc: int = gc.size()
-	var regular_pool_size: int = total_regular + total_lkstyle + total_gc
-	var total: int = total_lk_mod + regular_pool_size
-	if total == 0:
-		return {}
 
-	remaining_attempts = maxi(1, total * TRANSFORM_COUNT if remaining_attempts < 0 else remaining_attempts)
-	while remaining_attempts > 0:
-		var prog: Dictionary = source_state.get_main_progress(sz, rank, tier) # 主进度：池内序号 idx、距上次 LK 改造题的题数 since_lk、对称变换 transform
-		var transform: int = prog.get("transform", 0)
+	var entry: Dictionary
+	var source: String
+	var source_idx: int
 
-		var idx: int = prog.get("idx", -1)
-		var since_lk: int = prog.get("since_lk", 0)
-
-		if idx < 0: # idx < 0 说明是没写过主进度的旧存档：从老的 bank_index 折算起点再写回
-			var legacy_idx: int = source_state.get_bank_index(sz, rank, tier)
-			var denom: int = total_regular + total_lkstyle
-			idx = legacy_idx % denom if (legacy_idx > 0 and denom > 0) else 0
-			since_lk = 0
-			prog["idx"] = idx
-			prog["since_lk"] = since_lk
-			source_state.set_main_progress(sz, rank, tier, prog)
-
-		var lkprog: Dictionary = source_state.get_lkmod_progress(sz, rank) # LK 改造题有独立游标，与主进度分开记
-		var lk_idx: int = lkprog.get("idx", 0)
-		if regular_pool_size == 0 and lk_idx >= total_lk_mod:
-			return {} # 只有一次性 LK 题源且已用尽，交给调用方报告没有可用题。
-
-		if regular_pool_size > 0 and idx >= regular_pool_size: # idx 超出池子 = 这一轮取完：换下一种对称变换、从头开始
-			transform = (transform + 1) % TRANSFORM_COUNT
-			idx = 0
-			since_lk = 0
-			prog = {"idx": 0, "since_lk": 0, "transform": transform}
-			source_state.set_main_progress(sz, rank, tier, prog)
-
-		var entry: Dictionary
-		var source: String
-		var source_idx: int
-
-		if (since_lk >= 4 or regular_pool_size == 0) and lk_idx < total_lk_mod: # 无常规题时直接使用剩余 LK，否则每 4 道插一道
-			entry = lk_mod[lk_idx].duplicate()
+	if is_main_path:
+		if since_lk >= 4 and lk_idx < lk_mod.size():
+			entry = BankData.materialize_entry(lk_mod[lk_idx])
 			source = "lk_mod"
 			source_idx = lk_idx + 1
-		elif idx < total_regular: # 否则按 idx 落在 regular / lkstyle / gc 哪一段取题
-			entry = regular[idx].duplicate()
+		elif idx < total_regular:
+			entry = BankData.materialize_entry(regular[idx])
 			source = "regular"
 			source_idx = idx + 1
 		elif idx < total_regular + total_lkstyle:
 			var li: int = idx - total_regular
-			entry = lkstyle[li].duplicate()
+			entry = BankData.materialize_entry(lkstyle[li])
 			source = "lkstyle"
 			source_idx = li + 1
 		elif idx < total_regular + total_lkstyle + total_gc:
 			var gi: int = idx - total_regular - total_lkstyle
-			entry = gc[gi].duplicate()
+			entry = BankData.materialize_entry(gc[gi])
 			source = "gc"
 			source_idx = gi + 1
 		else:
-			# 逻辑上到不了这里，兜底取第一道常规题并记错误日志
-			push_error(
-				(
-					"LevelData.get_next_entry_main: unexpected else branch sz=%d rank=%d tier=%s idx=%d"
-					% [sz, rank, tier, idx]
-				)
-			)
-			entry = regular[0].duplicate() if not regular.is_empty() else {}
-			source = "regular"
-			source_idx = 1
-
-		entry["_bank_source"] = source # 写回题库元信息，供难度统计、查重和推进游标使用
-		entry["_bank_source_main"] = source
-		entry["_bank_idx"] = source_idx
-		entry["_bank_tier"] = tier
-		entry["_bank_rank"] = rank
-		entry["_bank_transform"] = transform
-
-		# 原始答案先校验，非法答案不能进入假定每行每列唯一的旋转算法。
-		if not QueendokuCore.validate_solution_entry(entry, sz):
-			if remaining_attempts == 1:
-				push_warning("LevelData.get_next_entry_main: 题池没有合法答案，返回最后候选供入口拒绝")
-				return entry
-			if source == "lk_mod":
-				lkprog["idx"] = lk_idx + 1
-				source_state.set_lkmod_progress(sz, rank, lkprog)
-			else:
-				prog["idx"] = idx + 1
-				source_state.set_main_progress(sz, rank, tier, prog)
-			# 沿用旧非法题回退：后续 LK 改造题允许按 maxR 匹配。
-			if strict_rank:
-				strict_rank = false
-				lk_mod = _lk_modified_pool(sz, rank, false)
-				total_lk_mod = lk_mod.size()
-			remaining_attempts -= 1
-			continue
-
-		if transform > 0 and source != "lk_mod": # 非 LK 改造题按 transform 做对称变形：同一题换朝向，玩家看到的是新题
+			return {}
+		if transform > 0 and source != "lk_mod":
 			var rm: Array = []
 			for row in entry.get("regionMap", []):
 				var int_row: Array = []
@@ -636,149 +353,287 @@ static func get_next_entry_main(
 			var sol: Array = []
 			for v in entry.get("solution", []):
 				sol.append(int(v))
-			var result: Array = apply_transform(rm, sol, sz, transform)
-			entry["regionMap"] = result[0]
-			entry["solution"] = result[1]
+			var _sz: int = rm.size()
+			if _sz > 0:
+				var result: Array = apply_transform(rm, sol, _sz, transform)
+				entry["regionMap"] = result[0]
+				entry["solution"] = result[1]
+		entry["_bank_source"] = source
+		entry["_bank_source_main"] = source
+		entry["_bank_idx"] = source_idx
+		entry["_bank_tier"] = tier
+		entry["_bank_rank"] = rank
 
-		if _single_region_policy(selection_policy) in [1, 2] and source not in ["lk_mod", "sp", "lk"] and _exceeds_single_region_limit(entry.regionMap):
-			if remaining_attempts > 1:
-				prog["idx"] = idx + 1
-				source_state.set_main_progress(sz, rank, tier, prog)
-				remaining_attempts -= 1
-				continue
-			push_warning("LevelData.get_next_entry_main: 单格区域筛选耗尽，沿用最后合法候选")
+		entry["_bank_transform"] = 0 if source == "lk_mod" else transform
+	else:
+		var total: int = total_regular + total_lkstyle + total_gc
+		if total == 0:
+			return {}
+		var real_idx: int = idx % total
+		if real_idx < total_regular:
+			entry = BankData.materialize_entry(regular[real_idx])
+			source = "regular"
+			source_idx = real_idx + 1
+		elif real_idx < total_regular + total_lkstyle:
+			entry = BankData.materialize_entry(lkstyle[real_idx - total_regular])
+			source = "lkstyle"
+			source_idx = real_idx - total_regular + 1
+		else:
+			entry = BankData.materialize_entry(gc[real_idx - total_regular - total_lkstyle])
+			source = "gc"
+			source_idx = real_idx - total_regular - total_lkstyle + 1
+		entry["_bank_source"] = source
+		entry["_bank_idx"] = source_idx
+		entry["_bank_tier"] = tier
+		entry["_bank_rank"] = rank
+		entry["_bank_transform"] = 0
+	PaceEntryStamper.try_stamp(entry, pos)
+	return entry
 
-		advance_for_entry(entry, sz, source_state)
-		return entry
-	return {}
+
+## 固定新手段使用 R1；第 51 关起保证至少 R2，其余保留当前策略。
+static func resolve_strategy(level_num: int, current_strategy: int, fixed_r1_upper: int) -> int:
+	if level_num <= fixed_r1_upper:
+		return 1
+	if level_num >= 51:
+		return maxi(current_strategy, 2)
+	return current_strategy
 
 
-static func _lk_modified_pool(sz: int, rank: int, strict_rank: bool) -> Array:
-	var all: Array = BankData.get_lk_modified_levels()
-	var selected: Array = []
-	for index: int in range(all.size()):
-		if (index + 1) in LK_MOD_RESERVED:
-			continue
-		var entry: Dictionary = all[index]
-		if entry.regionMap.size() != sz:
-			continue
-		var entry_rank: int = int(entry.get("r", 1)) if strict_rank else int(entry.get("maxR", entry.get("r", 1)))
-		if entry_rank == rank:
-			selected.append(entry)
-	return selected
-
-
-# ================= 特殊关表与取题总入口 =================
-## 关卡号 → 关卡数据 entry 的总入口：先查特殊关，再按 AB 规则算边长 / rank / tier，最后交给取题函数
-## override_sz > 0 时强制使用该边长；命中特殊关失败则继续走常规曲线
-static func get_level_entry(
-	level_num: int, override_sz: int = 0, selection_state: Variant = null,
-	selection_policy: Dictionary = {}, rng: RandomNumberGenerator = null
-) -> Dictionary:
+## 保留框架的计划入口；所有 1.22 策略在私有候选运行。
+static func resolve_level_entry(level_num: int, override_sz: int = 0, seed_value: int = 0, options: Dictionary = {}) -> Dictionary:
+	# 固定定义优先于任何调试/AB尺寸覆盖，且不消费普通题池游标。
 	var fixed: Dictionary = DokuLevelCatalog.resolve(level_num)
 	if not fixed.get("ok", false):
-		return {}
+		return fixed
 	if fixed.get("found", false):
-		return fixed.entry
-	var source: Variant = selection_state if selection_state != null else GameState
-	if rng == null:
-		rng = RandomNumberGenerator.new()
-		rng.randomize()
-	var rnr: int = int(selection_policy.get("rule_normal_rank", ABTestManager.rule_normal_rank.value())) # AB 实验里的难度规则编号（1~11），决定曲线怎么裁剪
-
-	var special_levels: Dictionary = DokuPolicy.special_levels() # 当前内容版本的特殊关表，返回独立副本
-	if level_num == 10 and bool(selection_policy.get("level10_sp57", ABTestManager.normal_level_10.is_sp57_at_level10())):
-		special_levels[10] = {"source": "sp", "index": 57}
-
-	if special_levels.has(level_num): # 命中特殊关：直接从 sp / lk 题库取写死的那一题
-		var spec: Dictionary = special_levels[level_num]
-		var idx: int = spec["index"] - 1 # 表里的下标是 1-based
-		if spec["source"] == "sp":
-			var sp_levels: Array = BankData.get_sp_levels()
-			if idx >= 0 and idx < sp_levels.size():
-				var e: Dictionary = sp_levels[idx].duplicate()
-				e["_bank_source"] = "sp"
-				e["_bank_idx"] = idx + 1
-				e["_bank_tier"] = ""
-				e["_bank_rank"] = e.get("r", 1) # sp 题的难度看 r 字段
-				return e
-		elif spec["source"] == "lk":
-			var lk_levels: Array = BankData.get_lk_levels()
-			if idx >= 0 and idx < lk_levels.size():
-				var e: Dictionary = lk_levels[idx].duplicate()
-				e["_bank_source"] = "lk"
-				e["_bank_idx"] = idx + 1
-				e["_bank_tier"] = ""
-				e["_bank_rank"] = e.get("maxR", 1) # lk 题的难度看 maxR
-				return e
-
-	var sz: int # 边长：override 优先；规则组 J 用另一张表
+		return LevelSelector.prepare(level_num, int(options.get("rank_override", 0)), options.get("pre_cat_pend", {}), bool(options.get("ignore_special", false)), seed_value, options.get("context", {}))
 	if override_sz > 0:
-		sz = override_sz
-	elif rnr == 10:
-		sz = get_size_group_j(level_num)
+		var frozen: Dictionary = options.get("context", {})
+		if frozen.is_empty():
+			frozen = LevelSelector.capture_context(seed_value)
+		var special: Dictionary = frozen.get("policy", {}).get("content_policy", {}).get("special_levels", {})
+		if special.has(str(level_num)) or special.has(level_num):
+			return LevelSelector.prepare(level_num, int(options.get("rank_override", 0)), options.get("pre_cat_pend", {}), false, seed_value, frozen)
+	if override_sz > 0:
+		options = options.duplicate(true)
+		options["size_override"] = override_sz
+	if override_sz > 0:
+		var state := LevelSelector.create_entry_state(seed_value)
+		var rank: int = int(options.get("rank_override", state.get_current_strategy()))
+		rank = clampi(strategy_to_rank(rank), 1, 5)
+		var entry: Dictionary = get_next_entry(override_sz, rank, "", -1, state, options.get("selection_policy", {}))
+		if not _selection_entry_valid(entry, override_sz):
+			return OperationResult.failure("no_valid_level")
+		entry["_puzzle_id"] = compute_puzzle_id(override_sz, entry.regionMap)
+		var plan: Dictionary = LevelSelector.prepare_existing_entry(state, level_num, entry)
+		if not plan.get("ok", false):
+			return plan
+		plan["retry_params"] = RetryPuzzleBuilder.build(level_num, entry)
+		return plan
+	return LevelSelector.prepare(level_num, int(options.get("rank_override", 0)), options.get("pre_cat_pend", {}), bool(options.get("ignore_special", false)), seed_value, options.get("context", {}))
+
+
+## 纯候选合并：仅写本次计划真正改变的字段，拒绝这些字段被其他操作改写。
+## 一次性通过全部冲突检查后才修改调用方 candidate，失败不产生部分写入。
+static func stage_selected(candidate: Dictionary, plan: Dictionary, checkpoint: Dictionary = {}, retry_params: Dictionary = {}, auto_mark_variant: int = -1, consume_daily_first: bool = false, new_game_id: String = "") -> Dictionary:
+	if not plan.get("ok", false) or str(plan.get("selection_id", "")).is_empty():
+		return OperationResult.failure("invalid_selection_plan")
+	var features: Dictionary = candidate.get("features", {})
+	if features.get("doku_selection", {}).get("selection_id", "") == plan.selection_id:
+		return {"ok": true, "duplicate": true, "selection_id": plan.selection_id}
+	var expected: Dictionary = plan.get("expected_selection", {})
+	var after: Dictionary = plan.get("next_selection", {})
+	if expected.is_empty() or after.is_empty():
+		return OperationResult.failure("invalid_selection_plan")
+	if not plan.get("existing_entry", false) and int(candidate.get("profile", {}).get("current_level", 1)) != int(plan.get("level", 0)):
+		return OperationResult.failure("selection_level_mismatch")
+	# 所有被策略读取的持久字段都按开局快照校验，包括题库进度与库存压力条件。
+	for mapping: Dictionary in plan.get("read_selection_fields", DokuSelectionState.FIELD_MAP.values()):
+		var before_section: Dictionary = _plan_section(expected, str(mapping.section))
+		var current_section: Dictionary = _plan_section(candidate, str(mapping.section))
+		if before_section.get(mapping.key) != current_section.get(mapping.key):
+			return OperationResult.failure("selection_conflict", str(mapping.key))
+	var before_queue: Dictionary = expected.get("features", {}).get("recommendation", {}).get("queue", {})
+	var after_queue: Dictionary = after.get("features", {}).get("recommendation", {}).get("queue", {})
+	if before_queue != after_queue and before_queue != candidate.get("features", {}).get("recommendation", {}).get("queue", {}):
+		return OperationResult.failure("selection_queue_changed")
+	var staged: Dictionary = candidate.duplicate(true)
+	for section_name: String in ["profile", "inventory", "endgame", "round_runtime"]:
+		var merged: Dictionary = _merge_plan_delta(staged.get(section_name, {}), expected.get(section_name, {}), after.get(section_name, {}), section_name)
+		if not merged.get("ok", false):
+			return merged
+		staged[section_name] = merged.value
+	features = staged.get("features", {})
+	if before_queue != after_queue:
+		var recommendation: Dictionary = features.get("recommendation", {})
+		recommendation["queue"] = after_queue.duplicate(true)
+		features["recommendation"] = recommendation
+	features["doku_selection"] = {"selection_id": plan.selection_id, "level": plan.level, "puzzle_id": plan.get("puzzle_id", ""), "policy": plan.get("selection_policy", {}).duplicate(true)}
+	staged["features"] = features
+	var profile: Dictionary = staged.get("profile", {})
+	var retry: Dictionary = retry_params if not retry_params.is_empty() else plan.get("retry_params", {})
+	if not retry.is_empty() and str(plan.get("mode", "main")) == "main":
+		profile["retry_puzzle_level"] = int(plan.level)
+		profile["retry_puzzle_params"] = retry.duplicate(true)
+	if auto_mark_variant >= 0:
+		profile["saved_game_auto_mark"] = auto_mark_variant
+	if consume_daily_first:
+		profile["daily_first_easy_date"] = str(plan.get("selection_context", {}).get("today", ""))
+	staged["profile"] = profile
+	if str(plan.get("mode", "main")) == "main" and not bool(plan.get("is_restore", false)):
+		staged.get("round_runtime", {})["current_level_dirty"] = false
+	var endgame: Dictionary = staged.get("endgame", {})
+	var mode: String = str(plan.get("mode", "main"))
+	if mode != "preview":
+		endgame["daily_snapshot" if mode == "daily" else "snapshot"] = checkpoint.duplicate(true)
+	if new_game_id.is_empty():
+		new_game_id = str(plan.get("new_game_id", ""))
+	if not new_game_id.is_empty():
+		var stats: Dictionary = endgame.get("stats", {})
+		if not bool(plan.get("is_restore", false)):
+			stats[mode + "_total"] = {}
+			stats[mode + "_round"] = {}
+			stats[mode + "_steps"] = {}
+			stats[mode + "_id"] = new_game_id
+		endgame["stats"] = stats
+	if bool(plan.get("restart", false)):
+		var restart_stats: Dictionary = endgame.get("stats", {})
+		restart_stats[mode + "_round"] = {}
+		var steps: Dictionary = restart_stats.get(mode + "_steps", {}).duplicate(true)
+		steps["round"] = []
+		restart_stats[mode + "_steps"] = steps
+		var total: Dictionary = restart_stats.get(mode + "_total", {})
+		total["restart_count"] = int(total.get("restart_count", 0)) + 1
+		restart_stats[mode + "_total"] = total
+		endgame["stats"] = restart_stats
+	staged["endgame"] = endgame
+	candidate.clear()
+	candidate.merge(staged, true)
+	return {"ok": true, "duplicate": false, "selection_id": plan.selection_id}
+
+
+static func commit_selected(plan: Dictionary, checkpoint: Dictionary = {}, retry_params: Dictionary = {}, auto_mark_variant: int = -1, consume_daily_first: bool = false, new_game_id: String = "") -> Dictionary:
+	if not GameState.is_storage_ready():
+		return OperationResult.failure("store_not_open")
+	if int(plan.get("content_generation", -1)) != ContentContext.generation():
+		return OperationResult.failure("selection_content_changed")
+	var candidate: Dictionary = GameState.get_core_candidate()
+	var result: Dictionary = stage_selected(candidate, plan, checkpoint, retry_params, auto_mark_variant, consume_daily_first, new_game_id)
+	if not result.get("ok", false) or result.get("duplicate", false):
+		return result
+	var guard: Dictionary = GameState.capture_selection_effect_context()
+	var committed: Dictionary = GameState.commit_core_candidate(candidate, GameState.get_core_store().revision())
+	if not committed.get("ok", false):
+		return OperationResult.wrap_failure("selection_commit_failed", committed)
+	GameState.publish_selection_effects(plan, guard)
+	return result
+
+
+static func augment_plan(plan: Dictionary, augment: Callable) -> Dictionary:
+	if not plan.get("ok", false) or not augment.is_valid():
+		return OperationResult.failure("invalid_selection_plan")
+	var context: Dictionary = plan.get("selection_context", {})
+	var state := DokuSelectionState.new(plan.get("next_selection", {}), context)
+	var result: Variant = augment.call(state)
+	if result is Dictionary and not result.get("ok", true):
+		return result
+	plan["next_selection"] = state.export_candidate()
+	return {"ok": true}
+
+
+static func _plan_section(root: Dictionary, path: String) -> Dictionary:
+	var result: Dictionary = root
+	for part: String in path.split("."):
+		result = result.get(part, {})
+	return result
+
+
+static func _plan_copy(value: Variant) -> Variant:
+	return value.duplicate(true) if value is Array or value is Dictionary else value
+
+
+static func get_size(level_num: int) -> int:
+	return SizeModifier.get_size(level_num)
+
+
+static func get_size_group_j(level_num: int) -> int:
+	return get_size(level_num)
+
+
+static func is_hard_level(level_num: int) -> bool:
+	return LevelSelector.is_hard_level(level_num)
+
+
+static func is_hard_level_group_j(level_num: int) -> bool:
+	return is_hard_level(level_num)
+
+
+static func get_level_entry(level_num: int, override_sz: int = 0) -> Dictionary:
+	return resolve_level_entry(level_num, override_sz).get("entry", {})
+
+
+static func _selection_entry_valid(entry: Dictionary, size: int) -> bool:
+	return size > 0 and bool(FinalLevelValidator.validate(entry, 0).get("valid", false))
+
+
+## 深层字段逐项合并：同一个 stats 容器中的无关计数也不被旧入口快照盖掉。
+static func _merge_plan_delta(current: Dictionary, before: Dictionary, after: Dictionary, path: String) -> Dictionary:
+	var result: Dictionary = current.duplicate(true)
+	var keys: Array = after.keys()
+	for key: Variant in before:
+		if not keys.has(key):
+			keys.append(key)
+	for key: Variant in keys:
+		var had_before: bool = before.has(key)
+		var has_after: bool = after.has(key)
+		if had_before == has_after and before.get(key) == after.get(key):
+			continue
+		if had_before and has_after and before[key] is Dictionary and after[key] is Dictionary and current.get(key) is Dictionary:
+			var nested: Dictionary = _merge_plan_delta(current[key], before[key], after[key], path + "." + str(key))
+			if not nested.get("ok", false):
+				return nested
+			result[key] = nested.value
+		else:
+			if current.has(key) != had_before or current.get(key) != before.get(key):
+				return OperationResult.failure("selection_conflict", path + "." + str(key))
+			if has_after:
+				result[key] = _plan_copy(after[key])
+			else:
+				result.erase(key)
+	return {"ok": true, "value": result}
+
+
+## 兼容诊断工具的纯池查询；缺省 size 由真实题面推导。
+static func _lk_modified_pool(sz: int, rank: int, strict_rank: bool) -> Array:
+	return build_pools(sz, rank, "", strict_rank, true).lk_mod
+
+
+## 兼容旧诊断入口；正式对局使用 selection plan 随 RoundService 提交游标。
+static func advance_for_entry(entry: Dictionary, sz: int, selection_state: Variant = null) -> void:
+	var state: Variant = selection_state if selection_state != null else GameState
+	var rank: int = int(entry.get("_bank_rank", 1))
+	var tier: String = str(entry.get("_bank_tier", ""))
+	var source: String = str(entry.get("_bank_source_main", ""))
+	if source.is_empty():
+		state.advance_bank_index(sz, rank, tier)
+	elif source == "lk_mod":
+		var lk: Dictionary = state.get_lkmod_progress(sz, rank)
+		lk["idx"] = int(lk.get("idx", 0)) + 1
+		state.set_lkmod_progress(sz, rank, lk)
+		var progress: Dictionary = state.get_main_progress(sz, rank, tier)
+		progress["since_lk"] = 0
+		state.set_main_progress(sz, rank, tier, progress)
 	else:
-		sz = get_size(level_num)
-	if sz == 0: # 边长 0 = 关卡号非法
-		return {}
-
-	var is_hard: bool = MainRules.is_hard(level_num, rnr)
-	var strategy: int = source.get_current_strategy() if is_hard else get_strategy(level_num, source)
-	var choice: Dictionary = MainRules.select(level_num, rnr, strategy,
-		source.is_daily_first_easy_available(), source.is_rnr_g_prev_was_max(), rng)
-	if choice.next_previous_was_max != null:
-		source.set_rnr_g_prev_was_max(choice.next_previous_was_max)
-	if choice.consume_daily:
-		source.consume_daily_first_easy_and_mark()
-	var rank: int = choice.rank
-	var tier: String = choice.tier
-	if not is_hard:
-		tier = MainRules.normal_tier(tier, BankData.get_levels(sz, rank), BankData.get_lk_style_levels(sz, rank))
-	if choice.mod1:
-		source.mark_rnr_mod1_exempt()
-		return get_next_entry_main(sz, rank, tier, -1, false, source, selection_policy)
-	return _get_next_entry_with_filter(sz, rank, tier, level_num, is_hard, -1, source, selection_policy)
+		var progress: Dictionary = state.get_main_progress(sz, rank, tier)
+		progress["idx"] = int(progress.get("idx", 0)) + 1
+		progress["since_lk"] = int(progress.get("since_lk", 0)) + 1
+		state.set_main_progress(sz, rank, tier, progress)
 
 
+static func get_next_entry(sz: int, rank: int, tier: String = "", remaining_attempts: int = -1, selection_state: Variant = null, selection_policy: Dictionary = {}) -> Dictionary:
+	return LegacySelectionAdapter.get_next_entry(sz, rank, tier, remaining_attempts, selection_state, selection_policy)
 
-## 取题收口：51 关起走四段轮询（get_next_entry_main），前 50 关走老的三段轮询，再叠一层 AB 严格过滤
-static func _get_next_entry_with_filter(
-	sz: int, rank: int, tier: String, level_num: int, is_hard: bool, remaining: int = -1,
-	selection_state: Variant = null, selection_policy: Dictionary = {}
-) -> Dictionary:
-	var source: Variant = selection_state if selection_state != null else GameState
-	var entry: Dictionary # 51 关是分界线：之后才用带对称变换的题库
-	if level_num >= 51:
-		entry = get_next_entry_main(sz, rank, tier, -1, is_hard, source, selection_policy)
-	else:
-		entry = get_next_entry(sz, rank, tier, -1, source, selection_policy)
 
-	if (_single_region_policy(selection_policy) == 2 and level_num >= 21) and not entry.is_empty(): # AB 严格档：单格区域最多 1 个，lk_mod / sp / lk 来源豁免
-		var _src: String = entry.get("_bank_source_main", entry.get("_bank_source", ""))
-		if _src != "lk_mod" and _src != "sp" and _src != "lk":
-			var _rm: Array = entry.get("regionMap", [])
-			if _rm.size() == sz:
-				var _cnt: Dictionary = {}
-				for _r: int in range(sz):
-					for _c: int in range(sz):
-						var _rid: int = int((_rm[_r] as Array)[_c])
-						_cnt[_rid] = _cnt.get(_rid, 0) + 1
-				var _single: int = 0
-				for _v: int in _cnt.values():
-					if _v == 1:
-						_single += 1
-				if _single > 1:
-					if remaining < 0: # 重试上限 = 棋盘格数 × 12
-						remaining = (sz * sz) * 12
-					if remaining <= 1: # 到上限仍不合格就容错返回，避免死循环
-						push_error(
-							(
-								"LevelData: single_region_num=2 过滤后无合格题,容错返回 sz=%d rank=%d lv=%d"
-								% [sz, rank, level_num]
-							)
-						)
-					else:
-						return _get_next_entry_with_filter(
-							sz, rank, tier, level_num, is_hard, remaining - 1, source, selection_policy
-						)
-	return entry
+static func get_next_entry_main(sz: int, rank: int, tier: String, remaining_attempts: int = -1, strict_rank: bool = false, selection_state: Variant = null, selection_policy: Dictionary = {}) -> Dictionary:
+	return LegacySelectionAdapter.get_next_entry_main(sz, rank, tier, remaining_attempts, strict_rank, selection_state, selection_policy)

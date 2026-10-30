@@ -83,7 +83,7 @@ func _test_entry_dates() -> void:
 	game.advance_max_daily_date(yesterday)
 	_check(game.get_max_daily_date() == today and game.get_core_store().revision() == revision, "unchanged and older dates do not write or move the high-water date backwards")
 	_set_profile(21, today, today)
-	_check(entry.compute_state() == entry.State.DONE and entry.done_time_text() == "02:05", "current day's completed state retains its actual elapsed result")
+	_check(entry.compute_state() == entry.State.REPLAY and entry.done_time_text() == "02:05", "current day's completed state retains its actual elapsed result")
 	_set_profile(21, yesterday, tomorrow)
 	_check(entry.compute_state() == entry.State.DONE, "moving local date behind the recorded high-water date keeps the existing anti-replay rule")
 
@@ -101,10 +101,12 @@ func _test_cached_cell() -> void:
 	await create_timer(1.1).timeout
 	_check(cell._state_done.visible and cell._done_time.text == "02:05", "live cached entry refreshes completed state on its managed heartbeat")
 	cell._do_hide()
-	_check(cell._managed_timers[0].paused, "hidden entry pauses its heartbeat")
 	_set_profile(21, yesterday, today)
+	root.get_node("ClockTicker").second_tick.emit()
+	await process_frame
+	_check(cell._state_done.visible and not cell._state_normal.visible, "hidden entry ignores the shared heartbeat and retains no active refresh")
 	cell._do_show()
-	_check(cell._state_normal.visible and not cell._managed_timers[0].paused, "reopening the same cell immediately refreshes date state and resumes its heartbeat")
+	_check(cell._state_normal.visible and not cell._state_done.visible, "reopening the same cell immediately refreshes date state and resumes its heartbeat")
 	_set_profile(20, "", today)
 	cell.on_show()
 	_check(cell._state_locked.visible and not cell._state_normal.visible, "reusing the entry after progress reset refreshes its unlock state")

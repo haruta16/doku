@@ -1,4 +1,4 @@
-## 滑动防误触实验：把滑动坐标吸附到行列上；0=对照组（原手势识别） 1=容差 40% 格宽 2=容差 10% 格宽 3=只在 7 格以上生效且要求滑够 60% 长度
+## 实验配置 swipe_protect：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name SwipeProtectConfig
 
@@ -7,32 +7,58 @@ const VALUE_CONTROL: int = 0 # 对照组，不用防误触判定器
 const VALUE_HOTZONE_40: int = 1 # 吸附容差 40% 格宽
 const VALUE_HOTZONE_10: int = 2 # 吸附容差 10% 格宽
 const VALUE_HOTZONE_RAISED: int = 3 # 容差 40%，但限 7 格以上棋盘且滑动门槛抬高
+const VALUE_HOTZONE_30: int = 4
+const VALUE_HOTZONE_20: int = 5
+const VALUE_HOTZONE_50: int = 6
+const VALUE_DYNAMIC_INTENT: int = 7
+const VALUE_NEXT_CELL: int = 8
+const VALUE_CELL_NEIGHBOR: int = 9
+const VALUE_TARGET_COLOR_20: int = 10
+const VALUE_TARGET_COLOR_0: int = 11
+
+const HOTZONE_TOL_PCT: float = 0.4
+
+const TARGET_COLOR_TOL_PCT_20: float = 0.2
+const TARGET_COLOR_TOL_PCT_0: float = 0.0
+
+static var _dbg_tc_tol_pct_override: float = -1.0
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "swipe_protect"
-	default_value = VALUE_CONTROL # 默认档：不做防误触
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = VALUE_HOTZONE_40
 
 
-## 是否启用滑动保护（档位 1/2/3）
-func is_enabled() -> bool:
-	return value() in [VALUE_HOTZONE_40, VALUE_HOTZONE_10, VALUE_HOTZONE_RAISED]
+func has_target_color_protection() -> bool:
+	return has_target_color_protection_for(int(value()))
 
 
-## 启用保护的最小棋盘尺寸：档位 3 要求 >= 7 格，其余 0（不限）
-func min_size() -> int:
-	return 7 if value() == VALUE_HOTZONE_RAISED else 0
+func target_color_tol_pct() -> float:
+	return target_color_tol_pct_for(int(value()))
 
 
-## 吸附容差占格宽的比例：档位 2 为 0.1，其余 0.4
-func tolerance_pct() -> float:
-	return 0.1 if value() == VALUE_HOTZONE_10 else 0.4
+static func debug_set_tc_tol_pct_override(pct: float) -> void:
+	_dbg_tc_tol_pct_override = pct
 
 
-## 有效滑动需要跨过的格数：档位 3 取 60% 棋盘尺寸向上取整，其余固定 4
-func threshold_for(n: int) -> int:
-	if value() == VALUE_HOTZONE_RAISED:
-		return ceili(n * 0.6)
-	return 4
+static func debug_tc_tol_pct_is_overridden() -> bool:
+	return _dbg_tc_tol_pct_override >= 0.0
+
+
+static func debug_tc_tol_pct_override_value() -> float:
+	return _dbg_tc_tol_pct_override
+
+
+static func has_target_color_protection_for(v: int) -> bool:
+	return v == VALUE_TARGET_COLOR_20 or v == VALUE_TARGET_COLOR_0
+
+
+static func target_color_tol_pct_for(v: int) -> float:
+	if _dbg_tc_tol_pct_override >= 0.0:
+		return _dbg_tc_tol_pct_override
+	match v:
+		VALUE_TARGET_COLOR_0:
+			return TARGET_COLOR_TOL_PCT_0
+		_:
+			return TARGET_COLOR_TOL_PCT_20

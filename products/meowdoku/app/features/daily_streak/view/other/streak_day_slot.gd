@@ -1,5 +1,4 @@
-## 打卡页里的单个星期格子：三种静态形态（未打卡 / 已打卡 / 宝箱）+ 打卡动画
-## @tool 让它在编辑器里也能按 weekday 预览
+## 打卡周进度槽：展示星期、勾选和宝箱，控制签到落点动画与震动。
 @tool
 extends Control
 
@@ -29,6 +28,7 @@ const COLOR_INACTIVE := Color(0.5769231, 0.3522559, 0.3522559, 1) # 未打卡时
 
 # ---- 运行时状态 ----
 var _applying: bool = false # 批量赋值期间置位，抑制 setter 里的重复刷新
+var _checkin_generation: int = 0
 
 
 # ================= 生命周期 =================
@@ -99,8 +99,12 @@ func apply_static(is_checked: bool, is_chest_slot: bool) -> void:
 	_show_static()
 
 
-## 播打卡动画并返回时长（秒）供调用方等待；只改状态不写存档
-func play_checkin(chest: bool) -> float:
+func play_checkin(chest: bool, success_effect: bool = false) -> float:
+	_checkin_generation += 1
+	var pos := (
+		VibrateManager.Pos.STREAK_DAY_CHEST if chest else VibrateManager.Pos.STREAK_DAY_NORMAL
+	)
+	VibrateManager.play_at(pos)
 	_applying = true
 	is_chest = chest
 	checked = true
@@ -108,22 +112,104 @@ func play_checkin(chest: bool) -> float:
 	_refresh_label()
 	if _anim == null:
 		return 0.0
-	# 宝箱格：亮宝箱点并播开奖动画
 	if chest:
 		_set_dots(false, false, true)
 		_anim.play(&"Reward")
 	else:
 		_set_dots(true, true, false)
 
-		# 先 RESET 再播，避免残留上一帧
 		if _anim.has_animation(&"RESET"):
 			_anim.play(&"RESET")
 			_anim.seek(0.0, true)
 		_anim.play(&"CheckIn")
+		if success_effect and not Engine.is_editor_hint():
+			_play_landing_vibrate(_checkin_generation)
+			_finish_checkin_empty_tail(_checkin_generation)
 
 		if not Engine.is_editor_hint():
 			SoundManager.play(SoundManager.Kind.USE_HINT)
 	return _anim.current_animation_length
+
+
+func _get_landing_time(animation: Animation) -> float:
+	var track_index: int = animation.find_track(^"CheckedDot:position:y", Animation.TYPE_BEZIER)
+	if track_index < 0:
+		return -1.0
+	var key_count: int = animation.track_get_key_count(track_index)
+	for key_index: int in range(1, key_count - 1):
+		var position_y: float = animation.bezier_track_get_key_value(track_index, key_index)
+		var previous_y: float = animation.bezier_track_get_key_value(track_index, key_index - 1)
+		var next_y: float = animation.bezier_track_get_key_value(track_index, key_index + 1)
+		if position_y > previous_y and position_y > next_y:
+			return animation.track_get_key_time(track_index, key_index)
+	return -1.0
+
+
+func _is_checkin_current(generation: int) -> bool:
+	return (
+		generation == _checkin_generation
+		and is_visible_in_tree()
+		and _anim != null
+		and _anim.is_playing()
+		and _anim.current_animation == &"CheckIn"
+	)
+
+
+func _play_landing_vibrate(generation: int) -> void:
+	var landing_time: float = _get_landing_time(_anim.get_animation(&"CheckIn"))
+	if landing_time < 0.0:
+		return
+	while _is_checkin_current(generation):
+		if _anim.current_animation_position >= landing_time:
+			VibrateManager.play_at(VibrateManager.Pos.STREAK_DAY_LAND)
+			return
+		await get_tree().process_frame
+
+
+func _finish_checkin_empty_tail(generation: int) -> void:
+	var animation: Animation = _anim.get_animation(&"CheckIn")
+	if animation.loop_mode != Animation.LOOP_NONE:
+		return
+	var last_key_time: float = 0.0
+	var particles: Array[CPUParticles2D] = []
+	for track_index: int in animation.get_track_count():
+		var key_count: int = animation.track_get_key_count(track_index)
+		for key_index: int in key_count:
+			last_key_time = maxf(
+				last_key_time, animation.track_get_key_time(track_index, key_index)
+			)
+		var track_path: NodePath = animation.track_get_path(track_index)
+		if track_path.get_concatenated_subnames() != "emitting":
+			continue
+		var particle_node: CanvasItem = (
+			get_node_or_null(NodePath(track_path.get_concatenated_names())) as CanvasItem
+		)
+		if particle_node == null or not particle_node.is_visible_in_tree():
+			continue
+		if not particle_node is CPUParticles2D:
+			return
+		var particle: CPUParticles2D = particle_node as CPUParticles2D
+		if not particles.has(particle):
+			particles.append(particle)
+	while _is_checkin_current(generation):
+		var particles_finished: bool = true
+		for particle: CPUParticles2D in particles:
+			if (
+				particle.is_visible_in_tree()
+				and (particle.emitting or particle.is_processing_internal())
+			):
+				particles_finished = false
+				break
+		var playing_speed: float = _anim.get_playing_speed()
+		if (
+			particles_finished
+			and playing_speed > 0.0
+			and _anim.current_animation_position >= last_key_time
+		):
+			var remaining: float = maxf(0.0, animation.length - _anim.current_animation_position)
+			_anim.advance(remaining / playing_speed + 1e-05)
+			return
+		await get_tree().process_frame
 
 
 ## 退回「未打卡」形态（开完宝箱后调用）
@@ -131,9 +217,8 @@ func show_unchecked_dot() -> void:
 	_set_dots(true, false, false)
 
 
-# ================= 内部显示 =================
-## 按 checked / is_chest 画成三种静态形态之一，并把动画定格到对应帧
 func _show_static() -> void:
+	_checkin_generation += 1
 	_refresh_label()
 	if checked:
 		_set_dots(false, true, false)

@@ -1,0 +1,83 @@
+[
+  {
+    "height": 1200,
+    "name": "01-home-en",
+    "sampled_colors": 44,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "02-main-en",
+    "sampled_colors": 27,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "03-main-draft",
+    "sampled_colors": 25,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "04-daily-en",
+    "sampled_colors": 29,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "05-tutorial-new-en",
+    "sampled_colors": 18,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "06-home-companion-en",
+    "sampled_colors": 69,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "07-costume-unlock-en",
+    "sampled_colors": 103,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "08-reward-claim-en",
+    "sampled_colors": 44,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  },
+  {
+    "height": 1200,
+    "name": "09-daily-zh",
+    "sampled_colors": 28,
+    "saved": true,
+    "valid": true,
+    "visible": true,
+    "width": 540
+  }
+]

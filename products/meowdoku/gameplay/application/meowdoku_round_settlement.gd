@@ -18,6 +18,8 @@ var beat_percent: float = 0.0
 var legacy_completed: bool = false
 var runtime_snapshot: Dictionary = {}
 var retry_params: Dictionary = {}
+var context: Dictionary = {}
+var progress_stager: Callable = Callable()
 
 
 static func main_round(id: String, level_number: int, result: String, runtime: Dictionary = {}, retry: Dictionary = {}) -> MeowdokuRoundSettlement:
@@ -93,7 +95,9 @@ func stage(candidate: Dictionary, economy: RefCounted, today: String, dda_policy
 		return _failure("stale_level")
 	if mode == "daily" and not str(candidate.profile.get("daily_started_date", "")).is_empty() and candidate.profile.daily_started_date != date:
 		return _failure("stale_daily")
-	_stage_progress(candidate, today, dda_policy)
+	var progress: Dictionary = _stage_progress(candidate, today, dda_policy)
+	if not progress.get("ok", false):
+		return progress
 	var reward := _stage_reward(candidate, economy)
 	if not reward.ok:
 		return reward
@@ -174,7 +178,19 @@ func _stage_legacy(candidate: Dictionary, previous: Dictionary) -> Dictionary:
 	return Result.success({"parent_id": round_id, "attempt": 0})
 
 
-func _stage_progress(candidate: Dictionary, today: String, dda_policy: Dictionary) -> void:
+func _stage_progress(candidate: Dictionary, today: String, dda_policy: Dictionary) -> Dictionary:
+	if mode == "main" and progress_stager.is_valid() and not legacy_completed:
+		var staged: Variant = progress_stager.call(candidate, level, outcome, context.duplicate(true))
+		if not staged is Dictionary or typeof(staged.get("ok")) != TYPE_BOOL:
+			return _failure("invalid_progress_result")
+		if not staged.ok:
+			return staged
+		if outcome == "fail" and not retry_params.is_empty():
+			candidate.profile["retry_puzzle_level"] = level
+			candidate.profile["retry_puzzle_params"] = retry_params.duplicate(true)
+		candidate.endgame["snapshot"] = {}
+		context["committed_effects"] = staged.get("effects", []).duplicate(true)
+		return Result.success()
 	if not legacy_completed:
 		Rules.finish_game(candidate.profile, today)
 	if mode == "main":
@@ -188,7 +204,9 @@ func _stage_progress(candidate: Dictionary, today: String, dda_policy: Dictionar
 			candidate.profile["retry_puzzle_params"] = retry_params.duplicate(true)
 		candidate.endgame["snapshot"] = {}
 	elif mode == "daily" and outcome == "win":
+		candidate.endgame["daily_snapshot"] = {}
 		Rules.daily_win(candidate.profile, date, elapsed_sec, beat_percent)
+	return Result.success()
 
 
 func _stage_reward(candidate: Dictionary, economy: RefCounted) -> Dictionary:

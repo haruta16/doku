@@ -1,0 +1,828 @@
+{
+  "files": 137,
+  "new_comment_lines": 291,
+  "items": [
+    {
+      "file": "scripts/module/cheat/cheat_bus.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "a03c319d5d87a5ea106563bcc4b8c0b446222322fa9c30135b77c12fc2873a3f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/cheat_commands.gd",
+      "new_comment_lines": 8,
+      "code_sha256": "90986fbb0f11eb844c40c9e4a74d9cb89678ba05ab807a1c47fe783c9eca0cbd",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/fixtures/streak_history_fixture_data.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "75f3e197c46c00ee83c6c11a61ae98b37852057bf225b84dccaf3e36f74d7d3b",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/fixtures/streak_history_fixture_session.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "3fe3fced1fa58ed5cacc34cc055dc9df0e9d528c2cf2828d446943a59582ec32",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/model/cheat_command.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "019505b91582633b1b69f22000388ee5ad806c4753e4037d430754a09d024f57",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/remote_console_access.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "72763cae4cc9e21f312a7784e7c6369f980bfe8d13a78f266962074d9f773417",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_ab.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "393cb3ba88b2010f848defdaf739c7ff9d9ab5d6cf35ef117cba68414bf6a5bf",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_activity.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "01c13db7d2e4c21622d1fc5a888281d784065794f5f2c932b86783e2ff08d695",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_ad.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "3599270586a7895eaf0645ab3d61a93318ee12f1ce93803096368234d2201749",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_base.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "80a674adb160c5562b8dad10f7b9f50dd67163224e8a35a17f1aa568d88208e9",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_command.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "e6a77dc66e93c21b020bb199aa43b22d2a1fe0de81185244b7adf334be313545",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_gameplay.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "55844712f1451822ec7de272cc0152e4788b32162d68bc1b11488c0d4b3a5114",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_info.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "29267d560f0c58cf45858cc1eea89a5992d63217cd252a176324c47c9e1ccf9c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_lang.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "2ee90bd1bac0b5009f37fbb0de2d96682203f3abe21741673ae855f8db47e2a2",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_log.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "5385e9f211925f57406b32f674947668bae849a2e5b7918bf7ba1973be364e44",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tab/cheat_tab_puzzle.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "5cb3bd6b6d709539d6b728f15f55ddaae74db1acef2cd2b5bf7f609254e6ad1f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tracking/puzzle_session_tracker.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "65a19e8da7f1aa8c9f6194877cda8f0f3d1ccc776257d49913036f20b5744c25",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/tracking/recent_level_debug_tracker.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "b8b048cc82dd29ba730541fa7251518a67c4fff9dc0a9210891cefb4f94b994b",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/view/cheat_overlay.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "1aea6993174cb3175ed8a466e37d657f9a95d64b10b64fe9c0d9b95c33d26703",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/view/cheat_panel.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "aa6cad0de2e2cd9ea80cc3d49fc6896b1a7e79e1812f5ea993fda60321cc5ad7",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/cheat/view/fps_button.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "9de091687f1e91558f032b31fea7d45b2f830715eb2cfa2f197be192833ddf1d",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/dc_probe.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "0f1af32760c6d796f7db6fc08c83de90b0ae61a0590c3c4a1e7d914085cde25e",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/rec_probe.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "6ae0dec01d1d5f6f1363b6c9969083fed9667399e730ed2578cb920fde135183",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/ab_debug_page.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "55cfc4ec3b00f9c3a4e1639beaada94e2f60f0d34da82eb113c3e3a80f8eb650",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/costume_geom_probe.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "40e98b6847f04b8b847e9f535ec4422d19b10b3d7e323736eb2489e58baf0690",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/dbg_rank_board_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "d4fc17f883a1b59ed06aefa240a1545568792a31b51545845a14d5795ade8628",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/debug_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "d57330abdb013b4f258c08ceb2f7062cba6135ad032abb6b441d04a8ade93fe6",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/generator_page.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "2493f1a015cb64092b6ea839bba81cd0add88fbafd47ee6dd6d5cc4caa3b31dd",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/level_json_input_page.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "cf4c34be00ce5651ec53708bad1f0db32122426f4c13a06c65e0b64d95d703ab",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/level_thumbnail.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "00127984849b987ae36158070180d717e00c9afeb37be4f5965a0a0793b7f5de",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/mock_ad_page.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "b3a283328feb116451468add4d9eb73387ef33c4b2339394eb50d9fb15bd37dc",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/mock_banner_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "577ff03008a91ea88182913403a940779c907cf71b870673cd72dbfa6b473d81",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/debug/view/recent_levels_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "7c37789de54982e7b05766626f5d9f859bd23ded170964ff0f04a64e6a5ee698",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/core/home_companion_interaction.gd",
+      "new_comment_lines": 6,
+      "code_sha256": "de87de662420fda895526f5fdd74ab62b295a10417fa5a6af4f31d3a8504a211",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/core/home_companion_system.gd",
+      "new_comment_lines": 13,
+      "code_sha256": "0a907eb9633645fab9a02346f0613089e8f105f83c30f799bdc886d20bec2d02",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/home_companion_service.gd",
+      "new_comment_lines": 9,
+      "code_sha256": "34b95cd3300bc47ddbb26258d568d3a37352ed35d36a991ba8548f54afca3447",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/model/continue_entry_stats.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "9f2986d183c96df665925fdafd095d6f204c78d787ee4664fdb69577fade1540",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/panel/home_companion_panel.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "4e759965d8bb569d19f2cd8e26a942c424c97fec353e36ed70c0cc567c970a3d",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/home_companion_cat.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "0a325acf8a56467f3f640619822bc3f47af09501189c973135f5949582e14d13",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/home_companion_guide_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "e2568c47510e5d4de146c3075ac31d21c019262eb46fdf3f342fdad1d378817c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/home_companion_reward_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "5c97a423d008323df6625b6a342fbb911ccc2a6d1b4d5f8b7f60c1be9abfb76d",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/home_companion_settle_strip.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "9dd889349882970f7df1cdee4ad252efd45f271489c313d8b7d60fd3e296db30",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/home_companion_speech_bubble.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "b23ecf5f36402bc6cd652eaad1a7b1187a849b8eee5c59116366b67b39535c11",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/home_glow.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "13827130cf638d215cff9639129d57601fc8b78ee986239622bb21086a71d203",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/home_page.gd",
+      "new_comment_lines": 6,
+      "code_sha256": "7a60f07663f5bc3a90ccef35555597e9bde61698bbe40a3a432d09add365c5d2",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/other/home_companion_click_button.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "74717b6a1e5a231edcc19a35e7bdfc6e4873966136b8120f120547c9a9a8e9c1",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/other/home_companion_progress_bar.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "48a397fad4b3fac5bf6ae79f3031da2797f71833e6fb224aaef690376da3d946",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/home/view/other/home_companion_reward_preview.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "40203a9bea03d8482152fdd694539255fdc4457874438ff48da9a6d44f53e709",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/model/daily_endgame_snapshot.gd",
+      "new_comment_lines": 5,
+      "code_sha256": "c96358b873c7510643c870f54d68dc3607f0cd3affa232853a6a4287e6d1c5c5",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/model/daily_entry_state.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "44bcaac1b8b30192975b6367b073afd22524a8ffd0f976989686478c4c7efe78",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/model/daily_stats.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "29120cd0e0988e26a803737c6ed6c84417b8219b78c9c3812e43b8ba8a5de39f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/model/dc_players_count.gd",
+      "new_comment_lines": 5,
+      "code_sha256": "c33cc3ce73e53c887865bbec4e04dcd5a2297e1bcf00f574d8ab05e9b2acce9f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/daily_challenge_entry_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "9d771eeed6d6f17431dbb3a122f1b9d12b171d5c730113918f6812103117c56c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/daily_challenge_entry_left_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "d0105558f6543e88faba7e2c36da5246d096c57c3da87815495d5a3a1a6493c5",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/daily_fail_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "d39ecf8337b5d942adec4d132823ce026c2e087a8157e4e0679ac0e5eeaa95e4",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/daily_game_page.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "5307a2fa6fd67b6673430400b1b329141f4d331daedecd434ae5a07a26211460",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/daily_start_toast.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "e06cd66aa2bdb729fb87a6794577e46eb027c6b4d8a3f7509cb8930f04aa41e8",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/daily_win_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "a6b8ec1501729e722e29899207af32ea5f9e13c281aa6fbc80ca945f2800e454",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/dc_costume_tutorial_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "3db165a68fdadce73a9316a02f9a3b3ea9f04c37aa0e710db7a8bcf320c13ad4",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/dc_costume_unlock_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "bcf6b716a7000476654fe088975b3fc2b7aeb48c39e70847e7afa0b4e5718f0c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/dc_entry_cat_head.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "9aa8c3f53353c7dd8a6f7a60ce639d09bc9aa274f6d93b002b7c99ca9ea6c705",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/dc_players_joined_row.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "50526898cbfa659f53d14703110a11dee248f332dd9c28b0c62162a04e331b59",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/dc_replay_confirm_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "09030bfb2d83c8c31ffc45730eed4ce37845e8890cbbe862dcf5279114ebe97f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/dc_replay_flow.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "503530a1c730dc5e218c09e46b312188f129868e50a0cb0f1503e456f78d8874",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily/view/dc_start_toast_text_pool.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "dd0e3336689154f8540f03000dd32f1d75647f223f8dd428c127815da650d4d1",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/core/feature_daily_streak.gd",
+      "new_comment_lines": 9,
+      "code_sha256": "5d28ed209d4fa870550b2b311b1874e2baf20b040c96007767a9920734d00cdf",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/core/streak_encourage_data.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "8c2a4f4d150d72db421ffd329e2bdd9fa0fe12dba96efdf9a092c54de4df401f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/core/streak_history.gd",
+      "new_comment_lines": 5,
+      "code_sha256": "664ea0b52aad039bf5904ae777fe1e39a8ed8862e5fe0fcda4c2a256fd0af589",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/model/streak_data.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "8a17c4ecaecd6ab117e133a8980dea8d5fafa2ba582c2d795406a15929dd382e",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/daily_streak_success_page.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "5cb6c5ee2024da4c6288850ee86b1bb6935179252d0cb9fd4d7fca5ab23116f3",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/other/streak_calendar_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "056640a63d86ed39e41446062bf23fb34e35615fe15f245b29ae21265f2771d4",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/other/streak_day_slot.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "12b324e247f6c11b20cbb47e78f78872968f9ac8eabc5986f3f8f8afa539d296",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/other/streak_page_layout_refresh.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "8523243d2fc8aaf4ae6d5242bf1e76b279c3bbc32f71fe5d3c1c26254c72d82c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_day_icon.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "118e7225aac5661f56683982e4d90187f17fcaa9fd249f48824987d8c31a11f2",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_encourage_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "8f8ea1b9fa7d10753fa2cc8f240be0defb22cf843a66102670e97b5f1fd65c1d",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_entry_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "ec4e892d582205ead2a71883c4d64b7a0fcb2e73a35518c4ca9dd27b4764c568",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_entry_top_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "b3f6dc1196d0a5c77ac1619d13ad3aa528fd704b63269009d97900a277b24c8e",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_gift_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "0848964da76f3fc3b29b92f5b6dac85d9620dd029f1d700c303ef2ed547c6e2f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_home_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "8274bff52b8ccebdba14214cfbfeea994e2fd93f7fc34ee7847b904e26dbe47a",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_mini_entry_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "cd3b985ae765f7e14d2fdb9cd08e262ad04c6a8777f713aa23760dc7c906f887",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_page.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "598024166c6b1558ec981ea00542224f8286ba781dfa6d7f34be7b523f6a8ee5",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_revive_flow.gd",
+      "new_comment_lines": 6,
+      "code_sha256": "d5fed3c1c1021a9de7e3c46a4c672c9d485a2da6def54780c5c4d36c9593f078",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/daily_streak/view/streak_revive_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "ca2fbd275fcb95e68e10909793d969b7c1790245e42ba95819860928525025b0",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/confirm_dialog.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "6d353bd7c4dff2bb86ea9be924efbdadf8d55604d23b3f14d28710c9ac22e05e",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/end_title_art_style.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "8736c20fc058f0a1dcec793fa0512f45abcf5b1971b1a410094b318fe46623fc",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/i18n_format.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "ddd95c108c0d38a0bd57d6b2e7dc3a26c96e1449d9eab29114755f6f5c0abd5f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/in_app_review_manager.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "1dbe6a47f7657ab94a01e3d8b869e0b2408da415a5d3ea2eb143033c2466c003",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/in_game_log_buffer.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "1360d954d65c104e39cb87d2c9869c8c266be1314c2aa3f57bc0a7f92684b19f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/power_saver.gd",
+      "new_comment_lines": 6,
+      "code_sha256": "953c5e96fcabf99fb40319a35acf1c72b816385bab7ccedd91e5d2a40ba0e407",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/screen_manager.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "6c53c1247924075468932202181c561f0e04af46bdddd2360e6008530661ddd7",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/shortcut_manager.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "ded053e898129d32341d1dd17a501accefb1188c30e409c0061d62dba1f5473a",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/spine_idle_guard.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "5201c73990e66f6c01f8fa8cba34b8c7278d06ae5d422cee33c22d00df64017c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/static_layer_cache.gd",
+      "new_comment_lines": 5,
+      "code_sha256": "827222610495952bd5d36fb162dea633fd811972f29ca8079755d36679403330",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/common/vibrate_manager.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "2500da2d7e463e1dca556f1b2226ec329279e537607e03e4aaf3617a8d9eafb1",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/award_manager.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "8faa0e3fd2ffb78dee316f3cb410a9fcfb74c33e9386e3aef34d3e5e8fd80dba",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/model/award_item.gd",
+      "new_comment_lines": 5,
+      "code_sha256": "2e9c4561a3fb190e4063647b9df5bca111160ae101437b3dda211bc270c887a1",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/render/award_render.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "80c857759afb627a1c72421550a04caa4d7a86847d191a8b86805716eefbf6b3",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/render/award_render_direct.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "c4f51791558464f52a7d477c2443a95b7e31824ba4f2c82ae7157a4ef80474e7",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/render/award_render_rank_gift.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "dc076a2223243a46ab7ed7f28ddafdc513f7d92e0081efb772e96c88226a2fed",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/render/award_render_streak_gift.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "45ad206fb8ea7f8c5f484ee4b6ebec348154e71fbfd659735d10b39e19d87d75",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/view/award_page.gd",
+      "new_comment_lines": 5,
+      "code_sha256": "0902a3198500b7f274b5803a985b177c5f9667efb3e4957e495082432144b3f2",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/view/other/award_cell.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "fc821ee82d92f371b58abc1a818426d71082ad84b02f6308d6a51c6c2662f8a5",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/award/view/reward_claim_popup.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "b4d2025de6402705d33c3e24a3cd5422c3647cf2452b8bbe7a6ac99364b41193",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/comeback/comeback_cheat.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "398cade1f0faf8846b2001f130439a4b3a3a59fbf2f3e1d538ee9f7ea3b4ca48",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/comeback/core/comeback_gate.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "55b863a1d34d72a07c18a197d3f1260efe076e1051324e68b397617f0f43cd5f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/comeback/view/comeback_welcome_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "52bbe260de07485c98846a14056fdb7c1977c7219e256b84887172326a9c87df",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/push_streak/streak_push_scheduler.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "70efdf6dfe1288349b33f2cf7e07ec4f97b8ac00e668863f8d6bcb09a89fef03",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/session/session_manager.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "f7b8d9c8c39200b02b62a53afecc015e5cfbf1d81d979a31df582e0b7c59c331",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/sound/bgm_pause_reason.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "cae25e4b7c778b99330fb0bd8b8530e427590f198fdf17907c63c4c3c3c0b444",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/sound/sound_manager.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "9a9321d74cbc928f147e71b492d5755b570b7e505765037952dc44e20d016ae8",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/splash/core/splash_slogan_picker.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "273bd6719fd256b19ddbd916969f84b1b5979f891c0e4106e943438832b2b015",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/splash/view/pre_att_guide_page.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "057a222fc83d517e39ecad4e8eee492bb7b19bd5e0b3d1cc82de88e65c7f2ab6",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/splash/view/privacy_dialog.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "fe44c67e79c17cb1cd33d49b67baedf1e9249a1004af116297f984fe40002643",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/splash/view/privacy_dialog_v2.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "b19c8b9b43f3d9ccb185e97b739d05e1cfd68a880ffb616b7f66b9ad04f7256a",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/splash/view/privacy_dialog_v3.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "f33582d07c86bffd88295602317cccf5bcd4f603366b37269be82a61f50718af",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/splash/view/splash_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "019863dfda5e13dbe1a2ec995e32c6b4c7b5627d71a8a3f91fba7c0dde0287b8",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/language/language_manager.gd",
+      "new_comment_lines": 4,
+      "code_sha256": "76ea70e4611174683c48b2ab89d5c12e4434a6ef6387e5c04587e13fbd812b4a",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/language/view/language_option.gd",
+      "new_comment_lines": 0,
+      "code_sha256": "7cf74e9d98b6e4485fe8497efe5ddc5b7e691c06cff1081ba75505205d67c31c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/language/view/language_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "a8ab4f41ed14119e62a6af7d629260de390c4e994350dc7ecc567bcd985192a8",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/setting/view/setting_page.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "eaccb630fcbffe25255007a0e9f2f8756b4ea3377415bc979b5540f155bd49d4",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/rate_us/view/rate_us_page_v2.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "0a099a4183ac2ed9d26cac818de102275504ae559b3ea7cd16c229a63853fb10",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/model/fail_cat_progress_plan.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "44d48f11c3f1961e8701c0835e3f145310303c82c84efff6e0d3b819d1694cc0",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/model/fail_text_stats.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "c1c979cee06d04f3a90c98d713788e7a55d6674c8e976d4cf8191f5f1a1cb073",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/model/pass_text_stats.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "6cd84b1274a7d0b39b428ad5200cf4a58cde96a871a972bcdbb247367f837989",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/strategy/pass_text/pass_text_strategy.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "30b06a145b2994d0d37af61e9eca1970e52dbb10aa6bc67787918c31e4e1a2f0",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/strategy/pass_text/pass_text_strategy_v3.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "471163b1c5eff14f96b95468cddea2b31befff6577a0dcd9408c3ded28239d6f",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/strategy/pass_text/pass_text_strategy_v3_g1.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "fc80c526a13dbc1ed155dff818b02d1f28f6323b18e7a6e26b7fb86a4336d06c",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "96218baa307907cffa033a532cc3657e2540471e6441c0ea466d9019562f3a93",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4_g1.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "ba2d451929cbdf281d0e1bca2c0ebc495333e311eaeb45e2079bb2b034d177da",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4_g2.gd",
+      "new_comment_lines": 2,
+      "code_sha256": "df6f0de6757f3ac78d110357a70d7c8c683bad0cb63b2180c19987f5c2769efd",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4_g3.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "1de884df6c7e5564980dfe20d670f8ed596f531b97e3d1989a64d6a930ceb793",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/view/ad_reward_restored_page.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "d97f06fe43f8a20f0232cb3a0fbcba2fe84bae94a3b98a314bcb70c214733de9",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/view/dc_pass_page_board.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "50109fed98ffc4e1e9b119feae6e8f75652fefaaafb0f6cd54d5938c9500ba87",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/view/game_fail_page.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "a32011ac6fced66962d1710047ce9c3c6e1cf6be1624c0c4e9d1a08ed91c1c74",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/view/game_win_page.gd",
+      "new_comment_lines": 3,
+      "code_sha256": "5598e5eea0a4f9fcd545358dad0a7845b60a1f0a4d5aa459709a5a8486551fce",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/view/pass_page_g1_board.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "07d6960be83450b37fafe97ecc2cca634aedbbc180ea75b72f2a5f906a7dbc68",
+      "original_lines_preserved": true
+    },
+    {
+      "file": "scripts/module/result/view/pass_page_g2_board.gd",
+      "new_comment_lines": 1,
+      "code_sha256": "3c9a7488c9b02307b34522ae47a24f90ec2b7853b48bbedcda72ad09e4a7532a",
+      "original_lines_preserved": true
+    }
+  ]
+}

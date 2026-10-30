@@ -9,7 +9,6 @@ var _failures := 0
 
 
 func _initialize() -> void:
-	create_timer(45.0).timeout.connect(func() -> void: quit(99))
 	_run.call_deferred()
 
 
@@ -71,16 +70,18 @@ func _run() -> void:
 	_check(manager._players[sound_kinds.BTN_CLICK].stream is AudioStreamOggVorbis, "unconfigured SFX retains builtin")
 	_check(manager._ensure_bgm_stream("res://products/meowdoku/assets/audio/sfx/mark_cat.ogg"), "BGM resolves published override")
 	_check(manager._bgm_player.stream is AudioStreamWAV and manager._bgm_player.stream.loop_mode == AudioStreamWAV.LOOP_FORWARD, "BGM override keeps looping")
+	_check(manager._players[sound_kinds.MARK_CAT].stream.loop_mode == AudioStreamWAV.LOOP_DISABLED, "BGM looping never changes shared SFX stream")
 	var state := get_root().get_node("GameState")
 	state.set_current_level(21)
-	var experiments := get_root().get_node("ABTestManager")
-	experiments.dc_tag_ui.set_debug_override(1)
 	var scene: PackedScene = load("res://products/meowdoku/app/features/home/ui/home_page.tscn")
 	var home := scene.instantiate()
 	ContentSceneBindings.apply(home)
 	get_root().add_child(home)
-	var logo: TextureRect = home.get_node("Root/LogoImage")
-	_check(logo.texture is ImageTexture, "fixed home scene texture uses content slot before ready")
+	var splash: Node = load("res://products/meowdoku/app/features/splash/ui/splash_page.tscn").instantiate()
+	ContentSceneBindings.apply(splash)
+	get_root().add_child(splash)
+	var logo: TextureRect = splash.get_node("Root/BottomPin/Logo")
+	_check(logo.texture is ImageTexture, "fixed splash scene texture uses the shared logo content slot before ready")
 	var cell_scene: PackedScene = load("res://products/meowdoku/assets/prefab/cell.tscn")
 	var cell: Node = cell_scene.instantiate()
 	get_root().add_child(cell)
@@ -104,9 +105,10 @@ func _run() -> void:
 	manager.queue_free()
 	ContentContext.publish(null)
 	ContentSceneBindings.apply(cell)
-	ContentSceneBindings.apply(home)
+	ContentSceneBindings.apply(splash)
 	_check(cross.texture.resource_path == "res://products/meowdoku/assets/sprites/game/icon_mark_white_2.png" and logo.texture.resource_path == "res://products/meowdoku/assets/sprites/common/logo.png", "removed catalog restores original resources on reused nodes")
 	cell.queue_free()
+	splash.queue_free()
 	print("CONTENT_CONSUMER_TEST checks=%d failures=%d" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 

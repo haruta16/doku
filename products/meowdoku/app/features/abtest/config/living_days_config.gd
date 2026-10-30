@@ -1,4 +1,4 @@
-## 「存活天数」分段配置：把首启以来的天数切成若干段，其它实验按段取不同档位；默认 0~2 / 2~4 / 4~7 / 7+ 共 4 段
+## 实验配置 living_days：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name LivingDaysConfig
 
@@ -9,11 +9,10 @@ const VALUE_NO_SEGMENT: String = "{0,2},{2,4},{4,7},{7,inf}" # 默认分段：4 
 var _seg_regex: RegEx = null # 匹配 {...} 片段的正则
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "living_days"
-	default_value = VALUE_NO_SEGMENT # 默认档：4 段分段
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = VALUE_NO_SEGMENT
 
 
 ## 分段数量；其它实验用它判断自己的方案串段数是否对齐

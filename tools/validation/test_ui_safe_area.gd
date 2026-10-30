@@ -133,7 +133,7 @@ func _check_product_pages() -> void:
 		var fail_origins: Array[Vector2] = []
 		if page_name == "fail":
 			for button: String in ["ReviveBtn", "RestartBtn"]:
-				var c: Control = page.get_node("Root/Ctrl/VBoxContainer/" + button)
+				var c: Control = page.get_node("Root/VBoxContainer/VBoxContainer/" + button.trim_suffix("Btn") + "Ctrl/" + button)
 				fail_sizes.append(c.size)
 				fail_origins.append(_control_to_screen(c).origin)
 		var bounds: Rect2 = _screen_rect()
@@ -150,14 +150,22 @@ func _check_product_pages() -> void:
 				expected += Vector2(top, -bottom)
 			_check(Vector2(c.offset_top, c.offset_bottom).is_equal_approx(expected), "actual page offsets remain stable after layout: %s expected=%s actual=%s transform=%s" % [page_name, expected, Vector2(c.offset_top, c.offset_bottom), _control_to_screen(c)])
 		if page_name == "fail":
-			var box: Container = page.get_node("Root/Ctrl/VBoxContainer")
+			var box: Container = page.get_node("Root/VBoxContainer/VBoxContainer")
+			# 1.22 uses a full-height safe content container; button translation follows its reflow.
+			fail_origins.clear()
+			for button: String in ["ReviveBtn", "RestartBtn"]:
+				var c: Control = box.get_node(button.trim_suffix("Btn") + "Ctrl/" + button)
+				fail_origins.append(_control_to_screen(c).origin)
 			box.queue_sort()
+			(box.get_parent() as Container).queue_sort()
 			await _settle()
 			for index: int in 2:
 				var button: String = ["ReviveBtn", "RestartBtn"][index]
-				var c: Control = box.get_node(button)
+				var c: Control = box.get_node(button.trim_suffix("Btn") + "Ctrl/" + button)
 				_check(c.size.is_equal_approx(fail_sizes[index]), "fail button retains dimensions after safe-area relayout: " + button)
-				_check(is_equal_approx(_control_to_screen(c).origin.y - fail_origins[index].y, -30.0), "fail button retains physical inset after container sort: " + button)
+				_check(_control_to_screen(c).origin.is_equal_approx(fail_origins[index]), "fail button keeps safe layout after repeated container sort: " + button)
+				var rect: Rect2 = _control_to_screen(c) * Rect2(Vector2.ZERO, c.size)
+				_check(rect.position.y >= bounds.position.y + 50.0 and rect.end.y <= bounds.end.y - 30.0, "fail action remains within physical safe height: " + button)
 		ui._apply_safe_area_rect(page_name, page, bounds)
 		await _settle()
 		for index: int in markers.size():

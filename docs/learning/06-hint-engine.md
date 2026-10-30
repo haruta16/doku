@@ -1,5 +1,9 @@
 # Hint Engine — 提示引擎
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 及当前框架的实际调用链见 [新版导读](08-version-1.22.0.md)；下文旧代码片段、行数和实验规则不是当前源码的逐行镜像。
+
+> 当前接口补充：`find_mark_hint(..., include_region=false)` 可选择合并同色区域，新增 `find_region_mark_hint()` 专门处理区域排除。R1–R5 推理入口仍只接收棋盘与区域；`compute_cell_ranks()`、`compute_strategy_sequence()` 等评估辅助函数另接收答案，不能把“不读取答案”推广到整个文件。提示购买、令牌、应用和存档由回合事务负责。
+
 > 文件：[products/meowdoku/gameplay/domain/hint_engine.gd](../../products/meowdoku/gameplay/domain/hint_engine.gd)
 >
 > 这是 Meowdoku 的**解题引擎**——给定当前棋盘，自动推导下一步该放哪只猫或标哪些叉。它是 `QueendokuCore` 最大的消费者，也是「如果玩家点提示按钮，系统怎么算出答案」的全部逻辑。
@@ -12,7 +16,7 @@
 
 提示引擎不是调 `_puzzle["solution"]` 查标准答案——**它是真的在解题**。
 
-只认识四条规则（同行、同列、相邻、同色），全靠逻辑推导。这意味着提示引擎的输出**不依赖预先知道的答案**——即使在题库损坏、解法丢失的极端情况下，它也能独立算出正确结果。
+只认识四条规则（同行、同列、相邻、同色），全靠逻辑推导。这些推理入口不需要预先知道答案，但仍要求棋盘和区域数据有效；题库损坏并不保证可以得到正确结果。
 
 引擎按策略复杂度分层：R1（最简单）→ R2 → R3 → R4 → R5（链式推导，最复杂）。每层都是「穷尽本层所有可能后，才上升到下一层」。
 
@@ -104,7 +108,7 @@ for r in range(size):
             return { found: true, cat_cell: (r,c), unit_cells: to_mark }
 ```
 
-更简单的逻辑：找到第一只猫 → 返回它排除的所有空格（同行、同列、相邻）。同色区域的标叉留给自动标叉系统（`_auto_mark_prefill_cats` 用 `QueendokuCore.cells_excluded_by_cat`）。
+更简单的逻辑：找到第一只猫 → 返回它排除的所有空格（同行、同列、相邻）。旧版主要把同色区域标叉交给自动标叉系统；当前可用 `include_region=true` 合并区域，或调用 `find_region_mark_hint()` 单独生成区域提示。
 
 **为什么不用 `QueendokuCore.cells_excluded_by_cat`？** 因为 Hint Engine 用的是 `_can_place` 判断——只返回 EMPTY 的格子。`cells_excluded_by_cat` 返回所有冲突格子（包括已经有 MARK 的）。Hint 只需要告诉玩家「这些空格可以标叉」，不需要重复标。
 

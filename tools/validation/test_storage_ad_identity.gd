@@ -183,10 +183,10 @@ func _run() -> void:
 	adapter.cheat_show_interstitial = true
 	var legacy := LegacyBridge.new()
 	adapter._plugin = legacy
-	_check(not adapter._has_identified_reward_bridge() and not adapter.is_reward_ready("reward", "p", "legacy") and not adapter.is_reward_valid("reward", "p"), "legacy native bridge consistently reports reward unavailable")
+	_check(not adapter._has_identified_reward_bridge() and not (await adapter.is_reward_ready("reward", "p", "legacy")) and not (await adapter.is_reward_valid("reward", "p")), "legacy native bridge consistently reports reward unavailable")
 	adapter.show_reward("reward", "p", "legacy")
 	_check(legacy.shows == 0 and adapter._reward_active_show_id.is_empty(), "show cannot bypass identity capability guard")
-	_check(adapter.is_interstitial_ready("interstitial", "p", "interstitial"), "legacy native bridge still supports interstitial readiness")
+	_check(await adapter.is_interstitial_ready("interstitial", "p", "interstitial"), "legacy native bridge still supports interstitial readiness")
 	adapter.try_show_interstitial("interstitial", "p", "interstitial")
 	_check(legacy.shows == 1, "identity guard leaves interstitial display available")
 	var bridge := IdentifiedBridge.new()
@@ -194,7 +194,7 @@ func _run() -> void:
 	adapter._connect_identified_reward_callbacks()
 	var synchronous := {"count": 0}
 	adapter.connect_reward_once("synchronous", func(_placement: String) -> void: synchronous.count += 1)
-	_check(adapter.is_reward_ready("reward", "p", "synchronous"), "identified bridge is ready")
+	_check(await adapter.is_reward_ready("reward", "p", "synchronous"), "identified bridge is ready")
 	adapter.show_reward("reward", "p", "synchronous")
 	bridge.ad_rewarded_for_show.emit("reward", "synchronous")
 	_check(synchronous.count == 1 and adapter._reward_active_show_id.is_empty(), "registration precedes synchronous native callbacks and duplicate is ignored")

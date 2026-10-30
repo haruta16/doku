@@ -1,8 +1,12 @@
 # launcher.gd 精读 — 应用启动全流程
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 及当前框架的实际调用链见 [新版导读](08-version-1.22.0.md)；下文旧代码片段、行数和实验规则不是当前源码的逐行镜像。
+
+> 当前入口补充：Autoload 先于 Launcher 初始化。Launcher `_ready()` 首先检查核心存档与内容状态，再串联 SDK、启动同步和页面路由；账号切换使用两段式软重载。调试命令按需挂载，旧片段中的直接预加载方式已改变。
+
 > 文件：[products/meowdoku/app/bootstrap/launcher.gd](../../products/meowdoku/app/bootstrap/launcher.gd)
 >
-> 这是整个 Meowdoku 应用的**大脑**。`_ready()` 是唯一入口，所有初始化逻辑从这里开始。
+> 这是整个 Meowdoku 应用的**大脑**。`_ready()` 是启动场景的协调入口；自动加载服务会更早进入场景树。
 >
 > **前置阅读**：[GDScript 七种根基抽象](00-gdscript-seven-abstractions.md) — 本文中所有「令・名・型・値・注・符・释」分类均基于此框架。
 
@@ -21,7 +25,7 @@ extends Node
 
 **为什么是 `Node`？** 因为 `launcher.tscn` 的根节点就是 `Node` 类型。`extends Node` 意思是「这个脚本只能挂在 Node 类型的节点上」。Node 是 Godot 所有节点的祖宗——它提供了 `_ready()`、`add_child()` 等所有节点都有的基础能力。
 
-> 🧭 **新人关键认知**：在 Godot 里，脚本不是独立运行的。脚本必须**挂在节点上**。`extends` 告诉你这个脚本挂在哪种节点上。
+> 🧭 **新人关键认知**：这个入口脚本继承 `Node`，所以附着在启动节点上。Godot 也支持独立实例化的 `Object` / `RefCounted` 脚本；`extends` 声明的是基类，并非所有脚本都必须挂在节点上。
 
 ---
 

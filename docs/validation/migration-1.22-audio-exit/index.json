@@ -1,0 +1,56 @@
+{
+  "schema": "doku.audio_exit_boundary_archive.v1",
+  "generated_utc": "2026-10-30T12:39:57.633422+00:00",
+  "status": "known_nonblocking_engine_immediate_audio_exit_limitation",
+  "product_autoload_count": 0,
+  "framework_code": false,
+  "added_sleep": false,
+  "gate_waiver": false,
+  "results": {
+    "load_only": {
+      "checks": 3,
+      "failures": 0,
+      "strict_ok": true
+    },
+    "play": {
+      "checks": 3,
+      "failures": 0,
+      "strict_ok": false
+    }
+  },
+  "limits": "Reproduces independently of product/framework on the recorded engine build. Internal mechanism and long-running accumulation are not proven. Failed micro case remains failed; all normal suites retain zero-shutdown-error acceptance.",
+  "same_original_asset_sha256": "c2298bcc2bd242d3e1bdc166625b4001aab0c6fab2539bda085b3078da3eae18",
+  "files": {
+    "assessment.json": {
+      "sha256": "8c253ff1ab551ab8df4d75e3dc61620046f3210c303665a5f6fc74bd9fbe4634",
+      "bytes": 3352
+    },
+    "play.log": {
+      "sha256": "e5c64d3a3fe733a2b3a7c600cad89b9039d7e8b78344412f10db52d0eec8abca",
+      "bytes": 2163
+    },
+    "report.json": {
+      "sha256": "953ad5a7e6ea22a041a3d3dada12fd99fd7744714c5dfd250745471fe17769d9",
+      "bytes": 5682
+    },
+    "load_only.log": {
+      "sha256": "9cc5a1b2168c2328e93c3a841525f2cfa6065f9d9dc63d6569d17b03278482de",
+      "bytes": 1231
+    },
+    "minimal-reproducer.zip": {
+      "sha256": "0581a6d2b5a7e2897f5592b5e6b31974a3efe329d02242fe291198180db299ce",
+      "bytes": 7414
+    }
+  },
+  "original_report_sha256": "953ad5a7e6ea22a041a3d3dada12fd99fd7744714c5dfd250745471fe17769d9",
+  "original_log_sha256": {
+    "load_only": "9cc5a1b2168c2328e93c3a841525f2cfa6065f9d9dc63d6569d17b03278482de",
+    "play": "e5c64d3a3fe733a2b3a7c600cad89b9039d7e8b78344412f10db52d0eec8abca"
+  },
+  "reproducer_entries": [
+    "project.godot",
+    "probe.gd",
+    "dlg_open_1.ogg",
+    "README.md"
+  ]
+}

@@ -21,9 +21,9 @@ func _run() -> void:
 	ui = root.get_node("UIManager")
 	var ab: Node = root.get_node("ABTestManager")
 	ab.normal_endgame_save.set_debug_override(0)
-	ab.warn_life.set_debug_override(1)
 	ab.dc_level.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
+	ab.draft_mode.set_debug_override(5)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	for transition: String in ["back", "reopen", "destroy"]:
 		await _test_cancelled_warning(transition)
 	await _test_current_warning()
@@ -48,9 +48,10 @@ func _open(mode: String = "game") -> Variant:
 	game.set_sound_on(false)
 	game.set_tutorial_done(true)
 	game.set_current_level(50)
+	game.set_tool_count("draft", 5)
 	var page: Variant = ui.show_ui(mode, {"level_index": 50} if mode == "game" else {})
 	var deadline: int = Time.get_ticks_msec() + 8000
-	while (not page._entry_ready or page._entry_anim_playing) and Time.get_ticks_msec() < deadline:
+	while (not page._entry_ready or page._entry_anim_playing or page._tool_btns_locked) and Time.get_ticks_msec() < deadline:
 		await process_frame
 	_check(page._is_round_entry_ready(), "actual page ready")
 	return page
@@ -141,7 +142,11 @@ func _trigger_error(page: Variant, kind: String, lives: int) -> void:
 	if kind == "guess":
 		page._on_wrong_guess(wrong.x, wrong.y)
 	else:
-		page._enter_draft_mode()
+		while page._draft_busy:
+			await process_frame
+		page._on_draft_btn_pressed()
+		while page._draft_busy:
+			await process_frame
 		page._board_view.get_board_state().set_cell_state(wrong.x, wrong.y, CellState.DRAFT_CAT)
 		page._board_view.refresh_from_model()
 		page._on_apply_btn_pressed()
@@ -151,7 +156,7 @@ func _trigger_error(page: Variant, kind: String, lives: int) -> void:
 func _test_covered_error_timers(mode: String, kind: String) -> void:
 	var page: Variant = await _open(mode)
 	var label: String = mode + "/" + kind
-	_trigger_error(page, kind, 3)
+	await _trigger_error(page, kind, 3)
 	var generation: int = page._business_generation
 	page.visible = false
 	await create_timer(0.75).timeout
@@ -160,7 +165,7 @@ func _test_covered_error_timers(mode: String, kind: String) -> void:
 	page.visible = true
 	# 用同一真实页面继续触发最后一条命，覆盖另一条0.6秒路径。
 	page._wrong_guess_pending = false # 独立验证终局计时，即使前一断言失败也能走到真实草稿入口。
-	_trigger_error(page, kind, 1)
+	await _trigger_error(page, kind, 1)
 	page.visible = false
 	await create_timer(0.85).timeout
 	var slot: String = "main" if mode == "game" else "daily"
@@ -173,15 +178,15 @@ func _test_covered_error_timers(mode: String, kind: String) -> void:
 func _test_revived_error_timers(mode: String, kind: String) -> void:
 	var page: Variant = await _open(mode)
 	var label: String = mode + "/" + kind
-	_trigger_error(page, kind, 1)
+	await _trigger_error(page, kind, 1)
 	# 提前完成旧失败并真实复活，再开始下一次尝试；旧计时比新计时早0.25秒。
 	await create_timer(0.25).timeout
-	page._on_game_over()
+	page._on_game_fail()
 	_check(page._is_complete, label + " old attempt is settled before its delayed callback")
 	page._on_revive_requested()
 	_check(not page._is_complete and page._business_attempt_sequence == 1, label + " actual revive advances attempt identity")
 	page._wrong_guess_pending = false # 旧反馈尚未走完，下一次真实错误负责自己的新锁。
-	_trigger_error(page, kind, 1)
+	await _trigger_error(page, kind, 1)
 	await create_timer(0.2).timeout
 	_check(page._wrong_guess_pending, label + " old feedback cannot clear the newer attempt's lock early")
 	await create_timer(0.23).timeout
@@ -193,7 +198,7 @@ func _test_revived_error_timers(mode: String, kind: String) -> void:
 
 func _test_cancelled_error_timers(kind: String, transition: String) -> void:
 	var page: Variant = await _open()
-	_trigger_error(page, kind, 1)
+	await _trigger_error(page, kind, 1)
 	ui.hide_ui("game")
 	if transition == "reopen":
 		ui.show_ui("game", {"level_index": 50})

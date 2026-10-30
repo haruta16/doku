@@ -144,7 +144,7 @@ func _test_existing_rejected(kind: String) -> void:
 		file.close()
 	else:
 		var cfg := ConfigFile.new()
-		cfg.set_value("core", "schema_version", 2 if kind == "future_schema" else 1)
+		cfg.set_value("core", "schema_version", Product.SCHEMA + 1 if kind == "future_schema" else Product.SCHEMA)
 		cfg.set_value("core", "state", {"product": "invalid"} if kind == "invalid_state" else Product.from_legacy(_profile(48), null, {}))
 		cfg.set_value("__save_store", "format_version", 2 if kind == "future_format" else 1)
 		cfg.set_value("__save_store", "revision", 7)

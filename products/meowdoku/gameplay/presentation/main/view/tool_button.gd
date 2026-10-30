@@ -1,17 +1,17 @@
-## @tool 道具按钮：图标/文字/角标随属性变化实时刷新，另带一段「获得」飞入动画
+## 道具按钮：同步数量、锁定、选中和广告状态，转发有效点击并播放获得反馈。
 @tool
 class_name ToolButton
 extends Control
 
 enum State { NO_TOOL, HAS_TOOL, FREE } # 三态：无道具 / 已拥有 / 免费
 
-# ---- @export 属性（setter 里顺手刷新视图） ----
-@export var icon_tex: Texture2D: # 图标贴图
+@export var icon_tex: Texture2D:
 	set(v):
 		icon_tex = v
 		if is_node_ready():
 			$Control/ToolIcon.texture = v
 			$ControlObtain/ToolIcon.texture = v
+			$Locked/ToolIcon.texture = v
 
 @export var label_text: String = "": # 按钮文字
 	set(v):
@@ -38,36 +38,30 @@ enum State { NO_TOOL, HAS_TOOL, FREE } # 三态：无道具 / 已拥有 / 免费
 		if is_node_ready():
 			_refresh()
 
-@export var icon_size: Vector2 = Vector2(100, 110): # 图标尺寸（像素）
-	set(v):
-		icon_size = v
-		if is_node_ready():
-			$Control/ToolIcon.size = v
-			$ControlObtain/ToolIcon.size = v
-
 # ---- 对外信号 ----
 signal pressed # 点击（已过滤掉缩放反馈）
 
 signal obtain_finished # 获得动画播完
 
+var _ad_unavailable: bool = false
+
+var _animate_badge_switch: bool = false
+
+var _locked: bool = false
+
 # ---- 运行时状态 ----
 var _base_scale: Vector2 = Vector2.ONE # 初始缩放，按压与回弹以它为基准
 
 
-# ================= 生命周期 =================
-## 进树：把属性刷到子节点并接上按压缩放反馈
 func _ready() -> void:
-	# 把 @export 的值应用到子节点
 	if icon_tex != null:
 		$Control/ToolIcon.texture = icon_tex
 		$ControlObtain/ToolIcon.texture = icon_tex
+		$Locked/ToolIcon.texture = icon_tex
 	$ToolLabel.text = label_text
 	$ToolLabelObtain.text = label_text
-	$Control/ToolIcon.size = icon_size
-	$ControlObtain/ToolIcon.size = icon_size
 	_refresh()
 	_base_scale = scale
-	# 记下初始缩放，接上按下/回弹动画
 	$Hit.button_down.connect(func() -> void: UIHelper.play_press_scale(self, _base_scale))
 	$Hit.button_up.connect(func() -> void: UIHelper.play_release_scale(self, _base_scale))
 
@@ -88,41 +82,76 @@ func play_obtain() -> void:
 	obtain_finished.emit()
 
 
-# ================= 角标刷新 =================
-## 按 state / badge_count / AB 配置刷新角标
 func _refresh() -> void:
-	# 编辑器里不跑运行期逻辑
 	if Engine.is_editor_hint():
 		return
-	# 外部关掉角标就整体隐藏
+
+	var animate_switch: bool = _animate_badge_switch
+	_animate_badge_switch = false
+
+	$Locked.visible = _locked
+	$Control/ToolIcon.visible = not _locked
+	if _locked:
+		$Badge.visible = false
+		return
 	if not show_badge:
 		$Badge.visible = false
 		return
 	var is_no_tool: bool = state == State.NO_TOOL
 	var is_has_tool: bool = state == State.HAS_TOOL
 	var is_free: bool = state == State.FREE
-	# 是否需要在广告合规地区显示 AD 标
-	var ad_tag: bool = ABTestManager.ad_compliance_ui.should_show_ad_tag()
-
 	$Badge.visible = true
-	# 绿色角标：无道具或免费
 	var green_badge: GameAdBadge = $Badge/Badge
+
+	if _selected:
+		green_badge.visible = true
+		$Badge/RedRoot.visible = false
+		green_badge.show_on()
+		return
 	green_badge.visible = is_no_tool or is_free
-	# 红色角标：显示已拥有数量
 	$Badge/RedRoot.visible = is_has_tool
 	if is_has_tool:
-		# 数量超过 99 显示 99+
 		$Badge/RedRoot/CountLabel.text = "99+" if badge_count > 99 else str(badge_count)
 	elif is_free:
 		green_badge.show_free()
+	elif _ad_unavailable:
+		green_badge.show_no_network(animate_switch)
 	else:
-		# 无道具时按合规配置在 AD 标与 + 号之间切换
-		if ad_tag:
-			green_badge.show_ad()
-		else:
-			green_badge.show_plus()
+		green_badge.show_ad(animate_switch)
 
 
 ## 设置已拥有数量（走属性 setter，自动刷新角标）
 func set_badge_count(count: int) -> void:
 	badge_count = count
+
+
+func set_locked(locked: bool, unlock_level: int = 0) -> void:
+	_locked = locked
+	if locked:
+		$Locked/LockedLv.text = "Lv.%d" % unlock_level
+	if is_node_ready():
+		_refresh()
+
+
+func set_selected(on: bool) -> void:
+	if _selected == on:
+		return
+	_selected = on
+	if is_node_ready():
+		_refresh()
+
+
+func is_selected() -> bool:
+	return _selected
+
+
+func set_ad_unavailable(unavailable: bool) -> void:
+	if _ad_unavailable == unavailable:
+		return
+	_ad_unavailable = unavailable
+	if is_node_ready():
+		_animate_badge_switch = true
+		_refresh()
+
+
+var _selected: bool = false

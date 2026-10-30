@@ -114,8 +114,10 @@ func _play_close_animation() -> void:
 			)
 		)
 		return
+	var revision: int = get_presentation_revision()
 	anim.play(close_anim_name)
-	await anim.animation_finished # 等动画真正播完，UIWindowManager 才会继续后面的隐藏流程
+	if not await wait_presentation_signal(anim.animation_finished, revision):
+		return
 
 
 ## 打断正在播的关闭动画（关到一半又被 show 时由 UIWindowManager 调）

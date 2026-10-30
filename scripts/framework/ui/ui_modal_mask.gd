@@ -139,3 +139,19 @@ func _exit_tree() -> void:
 		_primary.queue_free()
 	if is_instance_valid(_secondary):
 		_secondary.queue_free()
+
+
+func covers_window(window: Control) -> bool:
+	return is_instance_valid(window) and is_instance_valid(_primary) and _primary.visible and _primary.color.a > 0.01 and window.z_index < _primary.z_index
+
+
+func set_opacity(opacity: float, duration: float = 0.0) -> void:
+	if not is_instance_valid(_primary) or not _primary.visible:
+		return
+	_promote_secondary()
+	_stop_primary_tween()
+	if duration <= 0.0:
+		_primary.color.a = clampf(opacity, 0.0, 1.0)
+	else:
+		_primary_tween = create_tween()
+		_primary_tween.tween_property(_primary, "color:a", clampf(opacity, 0.0, 1.0), duration)

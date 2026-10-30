@@ -1,19 +1,14 @@
-## 设置页语言切换入口实验：0=隐藏 1=显示语言切换项
+## 实验配置 settings_language：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name SettingsLanguageConfig
 
 # ---- 分组取值 ----
 const VALUE_HIDE: int = 0 # 隐藏语言切换
-const VALUE_SHOW: int = 1 # 显示语言切换
+const VALUE_POPUP: int = 1
+const VALUE_DROPDOWN: int = 2
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "settings_language"
-	default_value = VALUE_HIDE # 默认档：隐藏
-	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
-
-
-## 是否显示语言切换入口（仅非对局页生效）
-func is_language_switch_enabled() -> bool:
-	return value() == VALUE_SHOW
+	default_value = VALUE_POPUP

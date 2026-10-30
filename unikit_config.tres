@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="UniKitConfig" format=3 uid="uid://d37axbewoxont"]
+
+[ext_resource type="Script" uid="uid://dm7xc4h41fo6o" path="res://addons/unikit/editor/unikit_android_config.gd" id="1"]
+[ext_resource type="Script" uid="uid://dcx5ub20gj61v" path="res://addons/unikit/editor/unikit_ios_config.gd" id="2"]
+[ext_resource type="Script" uid="uid://cg2u5ov8w2r3g" path="res://addons/unikit/editor/unikit_config.gd" id="3"]
+
+[sub_resource type="Resource" id="Android"]
+script = ExtResource("1")
+production_id = "69d62f6f5c0d7f93d27fb89a"
+analyze_key_id = "hqzTGp3LSFyGHE7BR"
+analyze_secret = "42x/=eQ)9uL!;[5"
+analyze_af_dev_key = "qNsTSFixbaPufCv5sQ6yJV"
+push_key_id = "meowdoku-SYqBgXxy80WyhdJ8G"
+push_secret = "ts5FlKJXN8igGGrGSp1hJnmY9mglXSGqcf"
+admob_app_id = "ca-app-pub-4286071012672876~7340286231"
+tiktok_app_id = "7642668344327323668"
+tiktok_secret = "TTAno6Z6GgpVwvvNz684XDbgzIjpjAno"
+
+[sub_resource type="Resource" id="IOS"]
+script = ExtResource("2")
+production_id = "69d62f6de0ea6d0115f091d6"
+analyze_key_id = "D7zvzxZBPKhr7Iah3"
+analyze_secret = "42t5wpH5,hhz}5%"
+push_key_id = "meowdoku-SYqBgXxy80WyhdJ8G"
+push_secret = "ts5FlKJXN8igGGrGSp1hJnmY9mglXSGqcf"
+appsflyer_dev_key = "qNsTSFixbaPufCv5sQ6yJV"
+app_store_id = "6761760135"
+app_store_url = "https://apps.apple.com/app/id6761760135"
+admob_app_id = "ca-app-pub-4286071012672876~9517623945"
+tiktok_app_id = "7642668538454310920"
+tiktok_secret = "TTcFuFTOSRhrePOtjG5Ds6UxflA1cEWF"
+
+[resource]
+script = ExtResource("3")
+android = SubResource("Android")
+ios = SubResource("IOS")

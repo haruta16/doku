@@ -80,7 +80,7 @@ func _schedule_initial_check() -> void:
 
 
 func runtime_id() -> String:
-	return str(ProjectSettings.get_setting("content/runtime_id", "godot-4.6.1-spine-4.2-data-v1"))
+	return str(ProjectSettings.get_setting("content/runtime_id", "godot-4.6.1-spine-4.2-data-v2"))
 
 
 func generation() -> int:

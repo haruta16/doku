@@ -128,7 +128,7 @@ def run(godot: str, args: list[str]) -> None:
             print(line)
     if result.returncode:
         raise RuntimeError(result.stdout)
-    if diagnostics.get("unexpected_errors") or has_reported_failures(result.stdout) or any(
+    if diagnostics.get("unexpected_errors") or diagnostics.get("shutdown_errors") or has_reported_failures(result.stdout) or any(
             marker in result.stdout for marker in ("SCRIPT ERROR:", "Parse Error:", "TEST_FAILED:", "PACK_VALIDATION_FAILED:")):
         raise RuntimeError("Godot reported errors during the export proof:\n" + result.stdout)
     if "--main-pack" in args and not completion_contract(result.stdout, args, "test")["ok"]:

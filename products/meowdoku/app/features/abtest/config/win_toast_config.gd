@@ -1,4 +1,4 @@
-## 过关步数 toast 实验：按步数档位(p5/p10/p20)决定弹不弹；0=对照组（不弹） 1=只弹 p5 档 2=弹到 p10 档 3=弹到 p20 档
+## 实验配置 win_toast：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name WinToastConfig
 
@@ -9,20 +9,8 @@ const VALUE_P10: int = 2 # 覆盖到 p10 档
 const VALUE_P20: int = 3 # 覆盖到 p20 档
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "win_toast"
-	default_value = VALUE_CONTROL # 默认档：不弹
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
 
-
-## 是否启用（非对照组）
-func is_enabled() -> bool:
-	return value() != VALUE_CONTROL
-
-
-## 该步数档位是否在覆盖范围内；tier < 0（未达任何档）一律不弹
-func covers_tier(tier: int) -> bool:
-	if tier < 0:
-		return false
-	return value() >= maxi(1, tier)
+	default_value = VALUE_P10

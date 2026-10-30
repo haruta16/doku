@@ -1,0 +1,73 @@
+Built immutable release: /private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/http
+Built signed channel revision 2: /private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/channel
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+CONTENT_TESTS checks=51 failures=0
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+CONTENT_UPDATE_TESTS checks=58 failures=0
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+CONTENT_BOOT_FAILURE checks=2 failures=0
+WARNING: Not a PNG file
+     at: check_error (drivers/png/png_driver_common.cpp:55)
+     GDScript backtrace (most recent call first):
+         [0] load_image (res://scripts/framework/content/content_catalog.gd:60)
+         [1] validate_registered_media (res://scripts/framework/content/content_catalog.gd:108)
+         [2] begin_cold_start (res://scripts/framework/content/content_store.gd:244)
+         [3] _run (res://boot-failure.gd:55)
+ERROR: Condition "!success" is true. Returning: ERR_FILE_CORRUPT
+   at: png_to_image (drivers/png/png_driver_common.cpp:68)
+   GDScript backtrace (most recent call first):
+       [0] load_image (res://scripts/framework/content/content_catalog.gd:60)
+       [1] validate_registered_media (res://scripts/framework/content/content_catalog.gd:108)
+       [2] begin_cold_start (res://scripts/framework/content/content_store.gd:244)
+       [3] _run (res://boot-failure.gd:55)
+ERROR: Error loading image: 'res://content/test/broken-image/broken.png'.
+   at: load_image (core/io/image_loader.cpp:100)
+   GDScript backtrace (most recent call first):
+       [0] load_image (res://scripts/framework/content/content_catalog.gd:60)
+       [1] validate_registered_media (res://scripts/framework/content/content_catalog.gd:108)
+       [2] begin_cold_start (res://scripts/framework/content/content_store.gd:244)
+       [3] _run (res://boot-failure.gd:55)
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+CONTENT_BOOT_FAILURE_COLD_RECOVERY checks=1 failures=0
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started 项目初始化 (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | 正在扫描文件结构……[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | 正在加载全局类名……[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | 正在校验 GDExtension……[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | 正在创建自动加载脚本……[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | 正在初始化插件……[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | 正在启动文件扫描……[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started 正在注册全局类…… (12 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | ContentCatalog[39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | ContentChannel[39m[0m
+[  23% ] [90m[1mupdate_scripts_classes[22m | ContentContext[39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | ContentDownloader[39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | ContentManifest[39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | ContentMediaMap[39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | ContentRawPack[39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | ContentStore[39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | ContentValidation[39m[0m
+[  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started 正在加载编辑器 (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | 正在加载编辑器布局……[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | 正在加载停靠面板……[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+CONTENT_BOOTSTRAP_TESTS checks=24 failures=0
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+CONTENT_BOOTSTRAP_TESTS checks=4 failures=0
+CONTENT_SUITE {"ok": true, "steps": 8}

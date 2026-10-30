@@ -1,0 +1,32 @@
+--- /var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9x5w3954/project/products/meowdoku/gameplay/presentation/result/view/game_win_page.gd
++++ /var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/products/meowdoku/gameplay/presentation/result/view/game_win_page.gd
+@@ -186,17 +186,27 @@
+ func on_hide() -> void:
+ 	if not visible:
+ 		return
++	var revision: int = get_presentation_revision()
+ 	var owns_companion_reward: bool = _companion_reward_sequence == _show_seq_id
+ 
+ 	_show_seq_id += 1
+ 	var hide_sequence: int = _show_seq_id
+ 	_companion_reward_sequence = -1
+ 	if owns_companion_reward:
+-		await UIManager.hide_ui(UiName.HOME_COMPANION_REWARD)
++		var reward: UIFrameWindow = UIManager.get_ui(UiName.HOME_COMPANION_REWARD)
++		var reward_revision: int = reward.get_presentation_revision() if is_instance_valid(reward) else -1
++		var reward_ref: WeakRef = weakref(reward) if is_instance_valid(reward) else null
++		UIManager.hide_ui(UiName.HOME_COMPANION_REWARD)
++		if not await wait_presentation_until(func() -> bool:
++			var current_reward: UIFrameWindow = reward_ref.get_ref() if reward_ref != null else null
++			return not is_instance_valid(current_reward) or current_reward.get_presentation_revision() != reward_revision or current_reward.is_hidden()
++		, revision):
++			return
+ 		if hide_sequence != _show_seq_id:
+ 			return
+ 	_anim.play("Disappear")
+-	await _anim.animation_finished
++	if not await wait_presentation_signal(_anim.animation_finished, revision):
++		return
+ 	if hide_sequence != _show_seq_id:
+ 		return
+ 

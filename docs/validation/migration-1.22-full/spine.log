@@ -1,0 +1,9 @@
+Built immutable release: /private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/spine
+Built immutable release: /private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/data-next
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+SPINE_CONTENT_TEST checks=5 failures=0
+Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+SPINE_CONTENT_COLD_RESUME checks=1 failures=0
+SPINE_SUITE {"ok": true, "steps": 2}

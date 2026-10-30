@@ -1,0 +1,24 @@
+PRODUCT_PUBLICATION_LOGS=/private/tmp/doku122-final-verification4/publication-report-case-logs
+PRODUCT_PUBLICATION catalog: passed — Fixed level resolves built-in puzzle, prefill, rules and reward before signing
+PRODUCT_PUBLICATION unknown-inherited-media: passed — JSON-only cannot assume that an earlier media release provides a new alias
+PRODUCT_PUBLICATION raw-correct: passed — Original 32×168 game/mark texture and a per-level alias pass the fixed binding contract
+PRODUCT_PUBLICATION per-level-home-slot: passed — Global home slot cannot pass publication as a per-level alias without a consumer
+PRODUCT_PUBLICATION gc-correct: passed — GC publication uses the same levels wrapper and per-entry rank as the actual consumer
+PRODUCT_PUBLICATION gc-wrong-shape: passed — Rank-keyed GC data is rejected instead of silently producing an empty runtime bank
+PRODUCT_PUBLICATION main-first-rank-missing: passed — Valid rank 2 puzzles cannot remove the first main level's rank 1 pool
+PRODUCT_PUBLICATION main-combined-source: passed — Main availability uses the union of eligible bank sources
+PRODUCT_PUBLICATION main-late-policy-missing: passed — An unreachable difficulty in a far-future size segment is rejected before signing
+PRODUCT_PUBLICATION main-ab-size-missing: passed — GamePage's size AB overrides share the publication availability contract
+PRODUCT_PUBLICATION daily-missing-rank: passed — Valid individual puzzles cannot remove a required daily difficulty pool
+PRODUCT_PUBLICATION daily-missing-tier: passed — A legal H tier does not satisfy the daily consumer's required N tier
+PRODUCT_PUBLICATION lk-invalid-date: passed — Consumed LK display metadata rejects wrong types with the exact field path
+PRODUCT_PUBLICATION lk-invalid-label: passed — Consumed LK display metadata rejects wrong types with the exact field path
+PRODUCT_PUBLICATION shortened-special-bank: passed — A bank-only release must preserve references inherited from the builtin policy
+PRODUCT_PUBLICATION special-bank-without-guide: passed — Ordinary SP replacement preserves level references without coupling to the client-owned tutorial
+PRODUCT_PUBLICATION special-valid-prefill: passed — SP prefill with an in-bounds answer coordinate passes the actual publication path
+PRODUCT_PUBLICATION special-malformed-prefill: passed — String prefill cannot be signed and delivered to a typed Array consumer
+PRODUCT_PUBLICATION special-wrong-prefill-answer: passed — A well-shaped SP coordinate that contradicts the answer is rejected before signing
+PRODUCT_PUBLICATION raw-wrong-size: passed — 432×432 replacement for fixed 32×168 game/mark is rejected without final output
+PRODUCT_PUBLICATION spine-correct: passed — Original ui_cat_icon (maomi_fuor) exported to game/cat preserves required animations and skins
+PRODUCT_PUBLICATION spine-wrong-contract: passed — Valid exported ui_logo Spine cannot satisfy game/cat's animation/skin contract; no final output
+PRODUCT_PUBLICATION_TESTS checks=22 failures=0

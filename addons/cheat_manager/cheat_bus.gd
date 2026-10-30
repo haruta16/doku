@@ -1,3 +1,4 @@
+## 调试命令总线：登记命令、实验参数与页签，并把文本命令发布给执行器。
 extends Node
 
 signal command_issued(name: String, args: Array[String])
@@ -45,6 +46,7 @@ func clear_tabs() -> void:
 	_tabs.clear()
 
 
+## 按空格拆出命令名和参数并发出信号；这里只分发，不直接修改游戏状态。
 func issue(raw: String) -> void:
 	if not OS.is_debug_build() or OS.has_feature("rel"):
 		return

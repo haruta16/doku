@@ -14,7 +14,7 @@ static func tap(state: int, draft: bool) -> Dictionary:
 			return {"allowed": false}
 		return {"allowed": true, "target": States.DRAFT_CROSS if state == States.EMPTY else States.EMPTY, "before": state, "pending": false}
 	if state in [States.CAT, States.ERROR, States.LOCKED_MARK]:
-		return {"allowed": false, "pending": true, "target": States.EMPTY}
+		return {"allowed": false, "pending": state == States.CAT, "target": States.EMPTY}
 	return {"allowed": true, "target": States.MARK if States.is_blank(state) else States.EMPTY, "before": States.EMPTY if States.is_blank(state) else state, "pending": false}
 
 
@@ -129,13 +129,28 @@ static func draft_contradiction(board: Array, regions: Array) -> bool:
 
 
 ## 包含顺序、真假猫、统一扣命和最终盘面。UI 不再自行判断草稿答案。
-static func commit_draft(board: Array, solution: Array, lives: int) -> Dictionary:
+static func commit_draft(board: Array, solution: Array, lives: int, lives_inf: bool = false) -> Dictionary:
 	var next: Array = board.duplicate(true)
 	var changes: Array = []
 	var wrong: Array[Vector2i] = []
 	var cells: Array = draft_marks(board).keys()
 	cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
 		return a.y - a.x < b.y - b.x if a.y - a.x != b.y - b.x else a.x > b.x)
+	var wrong_candidates: Array[Vector2i] = []
+	for cell: Vector2i in cells:
+		if int(board[cell.x][cell.y]) == States.DRAFT_CAT and not is_solution_cell(solution, cell.x, cell.y):
+			wrong_candidates.append(cell)
+	if not lives_inf and not wrong_candidates.is_empty() and wrong_candidates.size() >= lives:
+		for cell: Vector2i in cells:
+			next[cell.x][cell.y] = States.EMPTY
+		var shown: Array[Vector2i] = wrong_candidates.slice(0, maxi(lives, 1))
+		for cell: Vector2i in shown:
+			next[cell.x][cell.y] = States.ERROR
+		for cell: Vector2i in cells:
+			changes.append({"row": cell.x, "col": cell.y, "before": board[cell.x][cell.y], "after": next[cell.x][cell.y]})
+		return {"ok": true, "board": next, "changes": changes, "wrong_positions": shown, "lethal": true,
+			"lives": 0, "lost": true, "last_heart": false, "has_cat": false, "has_cross": false,
+			"all_correct": false, "solution_complete": false}
 	var has_cat: bool = false
 	var has_cross: bool = false
 	for cell: Vector2i in cells:
@@ -143,13 +158,13 @@ static func commit_draft(board: Array, solution: Array, lives: int) -> Dictionar
 		var correct: bool = before == States.DRAFT_CAT and is_solution_cell(solution, cell.x, cell.y)
 		var after: int = States.CAT if correct else States.MARK
 		var failed: bool = before == States.DRAFT_CAT and not correct
-		changes.append({"row": cell.x, "col": cell.y, "before": before, "after": after, "wrong": failed})
+		changes.append({"row": cell.x, "col": cell.y, "before": before, "after": States.ERROR if failed else after, "wrong": failed})
 		next[cell.x][cell.y] = States.ERROR if failed else after
 		if failed:
 			wrong.append(cell)
 		has_cat = has_cat or correct
 		has_cross = has_cross or before == States.DRAFT_CROSS
-	var life: Dictionary = lose_lives(lives, wrong.size())
+	var life: Dictionary = lose_lives(lives, 0 if lives_inf else wrong.size())
 	return {"ok": true, "board": next, "changes": changes, "wrong_positions": wrong,
 		"lives": life.lives, "lost": life.lost, "last_heart": life.last_heart,
 		"has_cat": has_cat, "has_cross": has_cross, "all_correct": draft_all_correct(board, solution),

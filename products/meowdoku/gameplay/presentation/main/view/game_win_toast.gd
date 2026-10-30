@@ -1,4 +1,4 @@
-## 胜利 Toast：显示结算文案并把其中的数字染色；入场/退场共用一段动画，靠 Mark 标记切分
+## 通关消息提示：给数字片段着色，管理提示文字的显示与隐藏。
 class_name GameWinToast
 extends CanvasLayer
 
@@ -26,23 +26,50 @@ func set_message(text: String) -> void:
 	_msg_txt.text = _wrap_numbers_with_color(text)
 
 
-# ================= 数字染色 =================
-## 把文本里的数字/百分比包一层 color 标签；highlight_color 为白色时原样返回
 func _wrap_numbers_with_color(text: String) -> String:
 	if highlight_color == Color.WHITE or _NUMBER_RE == null:
 		return text
 	var hex: String = "#" + highlight_color.to_html(false)
-	var out: String = ""
-	# pos 记录上一段已拷贝到的位置
-	var pos: int = 0
-	for m: RegExMatch in _NUMBER_RE.search_all(text):
-		var s: int = m.get_start()
-		var e: int = m.get_end()
-		out += text.substr(pos, s - pos)
-		out += "[color=%s]%s[/color]" % [hex, text.substr(s, e - s)]
-		pos = e
-	out += text.substr(pos)
-	return out
+	var output: String = ""
+	var cursor: int = 0
+	var color_depth: int = 0
+	while cursor < text.length():
+		var tag_start: int = text.find("[", cursor)
+		if tag_start < 0:
+			var tail: String = text.substr(cursor)
+			output += tail if color_depth > 0 else _wrap_plain_numbers(tail, hex)
+			break
+		var visible_text: String = text.substr(cursor, tag_start - cursor)
+		output += visible_text if color_depth > 0 else _wrap_plain_numbers(visible_text, hex)
+		var tag_end: int = text.find("]", tag_start)
+		if tag_end < 0:
+			var remainder: String = text.substr(tag_start)
+			output += remainder if color_depth > 0 else _wrap_plain_numbers(remainder, hex)
+			break
+		var bbcode_tag: String = text.substr(tag_start, tag_end - tag_start + 1)
+		output += bbcode_tag
+		if bbcode_tag.begins_with("[color="):
+			color_depth += 1
+		elif bbcode_tag == "[/color]":
+			color_depth = maxi(0, color_depth - 1)
+		cursor = tag_end + 1
+	return output
+
+
+func _wrap_plain_numbers(visible_text: String, hex_color: String) -> String:
+	var output: String = ""
+	var cursor: int = 0
+	var matches: Array = _NUMBER_RE.search_all(visible_text)
+	for match_result: RegExMatch in matches:
+		var match_start: int = match_result.get_start()
+		var match_end: int = match_result.get_end()
+		output += visible_text.substr(cursor, match_start - cursor)
+		output += (
+			"[color=%s]%s[/color]"
+			% [hex_color, visible_text.substr(match_start, match_end - match_start)]
+		)
+		cursor = match_end
+	return output + visible_text.substr(cursor)
 
 
 ## 显示 Toast；兄弟 Toast 还开着就先关掉它

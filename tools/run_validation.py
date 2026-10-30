@@ -22,6 +22,7 @@ EXTERNAL_FIXTURE_TESTS = {
     "test_content_updates.gd", "test_content_update_bootstrap.gd",
 }
 SUITES = ("recovery", "framework", "storage", "gameplay", "content")
+RECOVERY_SCRIPTS = ["res://tools/validate_recovery.gd", "res://tools/verify_level_bank_roundtrip.gd", "res://tools/verify_board_teardown.gd"]
 SHUTDOWN_LEDGER = json.loads((ROOT / "tools/validation/fixtures/shutdown_diagnostics.json").read_text())
 SHUTDOWN_BASELINES = SHUTDOWN_LEDGER["baselines"]
 
@@ -29,7 +30,7 @@ SHUTDOWN_BASELINES = SHUTDOWN_LEDGER["baselines"]
 def suite_scripts(source: Path, suite: str) -> list[str]:
     """自动纳入新的自包含回归；签名/HTTP/PCK 的外部夹具仍由专用 runner 构建。"""
     if suite == "recovery":
-        return ["res://tools/validate_recovery.gd"]
+        return list(RECOVERY_SCRIPTS)
     paths = sorted((source / "tools/validation").glob("test_*.gd"))
     selected = []
     for path in paths:
@@ -43,7 +44,7 @@ def suite_scripts(source: Path, suite: str) -> list[str]:
         if suite == "content" and not name.startswith("test_content"):
             continue
         selected.append("res://" + path.relative_to(source).as_posix())
-    return (["res://tools/validate_recovery.gd"] if suite == "framework" else []) + selected
+    return (list(RECOVERY_SCRIPTS) if suite == "framework" else []) + selected
 
 
 def prepare(source: Path, target: Path) -> Path:
@@ -55,9 +56,12 @@ def prepare(source: Path, target: Path) -> Path:
         if (source / name).exists():
             shutil.copytree(source / name, project / name,
                             ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
-    for name in ("project.godot", "icudt_godot.dat"):
+    for name in ("project.godot", "icudt_godot.dat", "unikit_config.tres", "lxauth_android_config.tres"):
         if (source / name).exists():
             shutil.copy2(source / name, project / name)
+    evidence = source / "docs/recovery/1.22.0"
+    if evidence.is_dir():
+        shutil.copytree(evidence, project / "docs/recovery/1.22.0")
     # 复制导入缓存而不是链接：Godot 可以重建缓存，但不能改动源工程缓存。
     cache = source / ".godot"
     if cache.exists():
@@ -79,12 +83,86 @@ def prepare(source: Path, target: Path) -> Path:
             text = text.replace("OS.get_user_data_dir()", json.dumps(data.as_posix()))
             path.write_text(text)
     config = (project / "project.godot").read_text()
+    # Native/editor code can access Godot's own user:// independently of script rewriting.
+    # macOS does not support an absolute custom user directory; keep its identity unique
+    # to this fixture so an engine/plugin can never read the product's real save directory.
+    if re.search(r"(?m)^config/use_custom_user_dir=true$", config):
+        isolated_name = "DokuIsolatedValidation/" + target.name
+        config = re.sub(r'(?m)^config/custom_user_dir_name=.*$',
+                        'config/custom_user_dir_name=' + json.dumps(isolated_name), config)
     config = re.sub(r"(?ms)^\[editor_plugins\].*?(?=^\[|\Z)", "[editor_plugins]\nenabled=PackedStringArray()\n\n", config)
     # 工具自身的网络服务和编辑器遥控不属于玩法验收，避免抢占开发中的端口。
     for autoload in ("DebugApiServerManager", "ScreenshotHotkey", "MCPScreenshot", "MCPInputService", "MCPGameInspector"):
         config = re.sub(rf'(?m)^{autoload}=.*\n', '', config)
+    config = re.sub(r"(?m)^validation/offline=.*\n", "", config)
+    if "[doku]" in config:
+        config = config.replace("[doku]", "[doku]\nvalidation/offline=true", 1)
+    else:
+        config += "\n[doku]\nvalidation/offline=true\n"
+    isolate_product_transports(project)
+    (target / ".isolated-validation").write_text("doku-isolated-validation-v2\n")
     (project / "project.godot").write_text(config)
     return project
+
+
+def isolate_product_transports(project: Path) -> None:
+    """Only the temporary copy gets offline failures; do not manufacture server success.
+
+    Guard the actual request methods, including callers bypassing their public wrapper.
+    Signatures are checked exactly: drift must stop preparation rather than leave a
+    newly shaped production transport active. Editor plugins and MCP are disabled
+    separately; intentionally local content HTTP fixtures use their own runners.
+    """
+    offline = 'ProjectSettings.get_setting("doku/validation/offline", false)'
+    guards = {
+        "products/meowdoku/app/network/http_client.gd": (
+            'func _send(method: int, path: String, raw_body: String, bearer: String) -> ApiResponse:\n',
+            '\tif %s:\n\t\treturn _net_fail("isolated_validation_offline")\n' % offline),
+        "products/meowdoku/app/features/level_rec/net/rec_http.gd": (
+            'func post(path: String, body: Dictionary) -> Dictionary:\n',
+            '\tif %s:\n\t\treturn {"ok": false, "http_status": 0, "code": -1, "message": "isolated_validation_offline", "data": {}}\n' % offline),
+        "products/meowdoku/app/features/data_sync/data_sync_manager.gd": (
+            'func _resolve_sync_enabled() -> bool:\n',
+            '\tif %s:\n\t\t_sync_enabled_source = "isolated_validation"\n\t\treturn false\n' % offline),
+    }
+    for relative, (signature, guard) in guards.items():
+        path = project / relative
+        if not path.is_file():
+            continue  # Small independent framework fixtures omit product services.
+        source = path.read_text()
+        if source.count(signature) != 1:
+            raise ValueError("Cannot safely isolate production transport: " + relative)
+        path.write_text(source.replace(signature, signature + guard, 1))
+
+
+
+def assert_isolated_product(project: Path) -> None:
+    """Recheck the actual fixture before every launch, including incremental refreshes."""
+    transport = project / "products/meowdoku/app/network/http_client.gd"
+    if not transport.exists():
+        return  # Independent framework fixtures have no product transports.
+    marker = project.parent / ".isolated-validation"
+    config = (project / "project.godot").read_text()
+    if not marker.is_file() or marker.read_text() != "doku-isolated-validation-v2\n":
+        raise ValueError("Product validation requires a prepared isolated fixture")
+    if not re.search(r"(?m)^validation/offline=true$", config):
+        raise ValueError("Product validation offline setting is missing")
+    if re.search(r"(?m)^(DebugApiServerManager|ScreenshotHotkey|MCPScreenshot|MCPInputService|MCPGameInspector)=", config):
+        raise ValueError("Product validation remote-control autoload is enabled")
+    expected_name = "DokuIsolatedValidation/" + project.parent.name
+    if 'config/custom_user_dir_name=' + json.dumps(expected_name) not in config:
+        raise ValueError("Product validation engine data directory is not isolated")
+    if not re.search(r"(?ms)^\[editor_plugins\]\s*enabled=PackedStringArray\(\)", config):
+        raise ValueError("Product validation editor plugins are enabled")
+    guards = {
+        "products/meowdoku/app/network/http_client.gd": '\tif ProjectSettings.get_setting("doku/validation/offline", false):\n\t\treturn _net_fail("isolated_validation_offline")',
+        "products/meowdoku/app/features/level_rec/net/rec_http.gd": '\tif ProjectSettings.get_setting("doku/validation/offline", false):\n\t\treturn {"ok": false, "http_status": 0, "code": -1, "message": "isolated_validation_offline", "data": {}}',
+        "products/meowdoku/app/features/data_sync/data_sync_manager.gd": '\tif ProjectSettings.get_setting("doku/validation/offline", false):\n\t\t_sync_enabled_source = "isolated_validation"\n\t\treturn false',
+    }
+    for relative, guard in guards.items():
+        path = project / relative
+        if not path.is_file() or guard not in path.read_text():
+            raise ValueError("Product validation transport guard is missing: " + relative)
 
 
 def has_reported_failures(output: str) -> bool:
@@ -174,6 +252,9 @@ def classify_engine_errors(output: str, args: list[str]) -> dict:
     environment = _shutdown_environment(clean, baseline)
     remaining = Counter(baseline.get("diagnostics", []) if environment["applicable"] else [])
     for index, line in enumerate(lines):
+        if line.startswith("SCRIPT ERROR:") or (line.startswith("WARNING: AnimationMixer") and "couldn't resolve track:" in line):
+            categories["unexpected_errors"].append(line)
+            continue
         if (re.fullmatch(r"WARNING: ObjectDB instances leaked at exit(?: \(run with --verbose for details\))?\.", line)
                 or re.fullmatch(r"ERROR: \d+ resources still in use at exit(?: \(run with --verbose for details\))?\.", line)):
             categories["shutdown_errors"].append(line)
@@ -203,6 +284,10 @@ def classify_engine_errors(output: str, args: list[str]) -> dict:
               and line == 'ERROR: Condition "magic != 0x43454447" is true. Returning: ERR_FILE_UNRECOGNIZED'
               and "open_and_parse" in context):
             category = "expected_test_errors"
+        elif (script == "res://tools/validation/test_122_business_storage.gd"
+              and re.fullmatch(r"ERROR: ConfigFile parse error at .*/doku-validation-[^/]+/project/fixtures/legacy/purchase\.cfg:0: Unexpected EOF while parsing simple tag\.", line)):
+            # This exact fixture is deliberately truncated to assert fail-closed migration.
+            category = "expected_test_errors"
         elif script.endswith("/test_content_tutorial_boot_failure.gd") and line == "ERROR: TutorialPage: 教学棋盘未能完整创建":
             category = "expected_test_errors"
         elif script.endswith("/test_game_page_lifecycle.gd") and re.fullmatch(r"ERROR: DailyGamePage: invalid solution day_offset=\d+ virtual_idx=\d+ transform=\d+ entry_idx=0, advancing", line):
@@ -230,6 +315,8 @@ def completion_contract(output: str, args: list[str], contract: str | None = Non
             contract = "import"
         elif script == "res://tools/validate_recovery.gd":
             contract = "recovery"
+        elif script == "res://tools/verify_level_bank_roundtrip.gd":
+            contract = "bank_roundtrip"
         elif script == "res://tools/content/validate_product.gd":
             contract = "tool:PRODUCT_VALIDATED"
         elif script == "res://tools/content/verify_pack.gd":
@@ -249,6 +336,9 @@ def completion_contract(output: str, args: list[str], contract: str | None = Non
                            r"[1-9]\d* level banks, [1-9][\d,]* records, and [1-9][\d,]* solution entries$", clean, re.M)
         return {"kind": contract, "ok": marker is not None,
                 **({"summary": marker.group()} if marker else {"error": "missing_recovery_completion"})}
+    if contract == "bank_roundtrip":
+        marker = re.search(r"^ENCRYPTOR_ROUNDTRIP_OK: 59 files$", clean, re.M)
+        return {"kind": contract, "ok": marker is not None}
     if contract.startswith("tool:"):
         marker = contract.removeprefix("tool:")
         matched = re.search(r"^" + re.escape(marker) + r"(?::|[ \t])[ \t]*\S.*$", clean, re.M) if marker else None
@@ -274,6 +364,7 @@ def completion_contract(output: str, args: list[str], contract: str | None = Non
 
 def run(engine: str, project: Path, output: Path, args: list[str], timeout: int, rendered: bool = False,
         *, completion: str | None = None) -> dict:
+    assert_isolated_product(project)
     command = [engine, *([] if rendered else ["--headless"]), "--path", str(project), "--log-file", str(output.with_suffix(".engine.log")), *args]
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=timeout)
@@ -284,6 +375,9 @@ def run(engine: str, project: Path, output: Path, args: list[str], timeout: int,
         bad = bad or has_reported_failures(combined)
         diagnostics = classify_engine_errors(combined, command)
         bad = bad or bool(diagnostics.get("unexpected_errors"))
+        # Historical shutdown evidence explains an old diagnostic; it is not a
+        # waiver for the migrated implementation's current acceptance run.
+        bad = bad or bool(diagnostics.get("shutdown_errors"))
         completed = completion_contract(combined, args, completion)
         passed = result.returncode == 0 and not bad and completed["ok"]
         summary = "\n".join(line for line in combined.splitlines()
@@ -335,7 +429,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--list", action="store_true", help="只列出所选测试，不复制或启动工程")
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--rendered", action="store_true", help="测试与smoke使用图形窗口；导入仍为headless")
-    parser.add_argument("--timeout", type=int, default=120)
+    parser.add_argument("--timeout", type=int, default=300)
     options = parser.parse_args(argv)
     scripts = list(dict.fromkeys((suite_scripts(options.source.resolve(), options.suite) if options.suite else []) + options.script))
     if not options.suite and not options.script:

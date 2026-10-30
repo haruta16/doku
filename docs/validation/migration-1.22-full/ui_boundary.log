@@ -1,0 +1,48 @@
+UI_FRAMEWORK_WORKSPACE=/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g
+[
+  {
+    "command": [
+      "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+      "--headless",
+      "--path",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/project",
+      "--log-file",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/import.engine.log",
+      "--editor",
+      "--import"
+    ],
+    "exit_code": 0,
+    "ok": true,
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/import.log",
+    "summary": "",
+    "completion": {
+      "kind": "import",
+      "ok": true
+    },
+    "diagnostics_classified": true
+  },
+  {
+    "command": [
+      "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+      "--headless",
+      "--path",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/project",
+      "--log-file",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/test.engine.log",
+      "--script",
+      "res://tools/validation/test_ui_framework.gd"
+    ],
+    "exit_code": 0,
+    "ok": true,
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/test.log",
+    "summary": "UI FRAMEWORK TESTS: 260 assertions, 0 failures (no Autoload)",
+    "completion": {
+      "kind": "test",
+      "ok": true,
+      "checks": 260,
+      "failures": 0,
+      "summary": "UI FRAMEWORK TESTS: 260 assertions, 0 failures (no Autoload)"
+    },
+    "diagnostics_classified": true
+  }
+]

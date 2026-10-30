@@ -1,0 +1,294 @@
+{
+  "source": "/private/tmp/doku122-final-verification4",
+  "read_only": true,
+  "physical_log_paths": 245,
+  "inline_engine_substitutions": [
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/resume.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "spine-report.json",
+          "pointer": "$/steps/1/log",
+          "sha256": "8938c3cc2ff0f69a8d7eafdfda7301c3911c54b6902161b99efea9fa3748d64c",
+          "recorded_inline_sha256": "8938c3cc2ff0f69a8d7eafdfda7301c3911c54b6902161b99efea9fa3748d64c",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/resume.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/project",
+            "--script",
+            "res://test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388",
+            "resume"
+          ],
+          "source_document_sha256": "48496a57528a8bf6d09a0cc20a0c993981f7c62695183d654dfb3cadf640b6ce",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/test.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "spine-report.json",
+          "pointer": "$/steps/0/log",
+          "sha256": "7a0cbd8aa7c3ac34db2d71c679e2a898c432d6be890a21af7420e583564c1de5",
+          "recorded_inline_sha256": "7a0cbd8aa7c3ac34db2d71c679e2a898c432d6be890a21af7420e583564c1de5",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/test.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/project",
+            "--script",
+            "res://test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388"
+          ],
+          "source_document_sha256": "48496a57528a8bf6d09a0cc20a0c993981f7c62695183d654dfb3cadf640b6ce",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-first.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/6/log",
+          "sha256": "afe2930e0bb9221d03ab115f0d72c824a52407115422880d23a4108aa162f582",
+          "recorded_inline_sha256": "afe2930e0bb9221d03ab115f0d72c824a52407115422880d23a4108aa162f582",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-first.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+            "--script",
+            "res://bootstrap-test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-import.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/5/log",
+          "sha256": "4eff2e2e517477f91775b74abd54a9c75182c9cd8018829d8cf809440ebaac89",
+          "recorded_inline_sha256": "4eff2e2e517477f91775b74abd54a9c75182c9cd8018829d8cf809440ebaac89",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-import.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+            "--editor",
+            "--import"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-resume.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/7/log",
+          "sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1",
+          "recorded_inline_sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-resume.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+            "--script",
+            "res://bootstrap-test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264",
+            "resume"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-0.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/1/log",
+          "sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d",
+          "recorded_inline_sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-0.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264/http"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-1.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/2/log",
+          "sha256": "fbc5f56108dec77547326216ed5f4b58018488cd7ac0cd4a0e41ad97ba2476fa",
+          "recorded_inline_sha256": "fbc5f56108dec77547326216ed5f4b58018488cd7ac0cd4a0e41ad97ba2476fa",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-1.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://updates.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-2.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/3/log",
+          "sha256": "672761cc2d6f8dab219d70dc42f2818b05e28ce2a993c046b43d00a053a72868",
+          "recorded_inline_sha256": "672761cc2d6f8dab219d70dc42f2818b05e28ce2a993c046b43d00a053a72868",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-2.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://boot-failure.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 4
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-3.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/4/log",
+          "sha256": "90257417ff23b2152eb3f4fdec8dfd8d2ab64acb748fd06b321da41035a5c90a",
+          "recorded_inline_sha256": "90257417ff23b2152eb3f4fdec8dfd8d2ab64acb748fd06b321da41035a5c90a",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-3.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://boot-failure.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "resume"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    }
+  ],
+  "unresolved_missing_logs": [],
+  "verified_child_reports": {
+    "framework-report.json": "c3bab0ea9e8c9121b3b5aac14af9226e6c6c5071817c0d36d0b3b9363a5a9549",
+    "framework_boundary-report.json": "ff2db5f47022205e3f88ea1054257f5f6b51e4096c994376e08569269513f1ec",
+    "ui_boundary-report.json": "b5c0e2a0614a501e7967809933070f256b04cc5acbee42bd31247c7f7df775cb",
+    "business_boundary-report.json": "660b690cafe888ab680ce7ea4aecd807287e32d82905d24fa2264826b5464758",
+    "block-report.json": "d5b1d82417817a0a8d4e2aa32d8be88b9d76dca166e4d0b1bcab169518b74afb",
+    "development-report.json": "a9c0b89ad019109fea4e5344f784a753bf3543da6bc723ca7f31615446a9babc",
+    "content-report.json": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+    "publication-report.json": "cede525486beaae659ad7c9b51473e1251545aba1edb36d0b7735a33b29c633d",
+    "spine-report.json": "48496a57528a8bf6d09a0cc20a0c993981f7c62695183d654dfb3cadf640b6ce"
+  }
+}

@@ -14,6 +14,8 @@ func _run() -> void:
 		printerr("TEST_FAILED: use tools/run_validation.py")
 		quit(2)
 		return
+	# This suite owns UI timing; audio playback/cleanup is covered by the audio lifecycle suite.
+	root.get_node("GameState").set_sound_on(false)
 	var host := Node.new()
 	root.add_child(host)
 	current_scene = host
@@ -173,6 +175,17 @@ func _run() -> void:
 		var opened: Variant = manager.get_ui(name)
 		_check(opened.is_showing() and opened.visible, "warmup preserves show from created callback: " + name)
 		manager.hide_ui(name)
+	# 动态控件走注入的产品准备端口，不能遗漏 1.22 的跨弹窗按键保护。
+	var dynamic_owner: Variant = manager.show_ui("warm")
+	var dynamic_button := Button.new()
+	dynamic_owner.add_child(dynamic_button)
+	dynamic_owner.initialize_dynamic_widget(dynamic_button)
+	dynamic_owner.initialize_dynamic_widget(dynamic_button)
+	dynamic_button.button_down.emit()
+	_check(manager._guard_held_buttons.count(dynamic_button) == 1, "dynamic button guard is installed once through framework injection")
+	dynamic_button.button_up.emit()
+	_check(not manager._guard_held_buttons.has(dynamic_button), "dynamic button release clears its held ownership")
+	manager.hide_ui("warm")
 	manager.queue_free()
 	await process_frame
 	await process_frame

@@ -56,7 +56,7 @@ func show_ui(ui_name: String, params: Dictionary = {}) -> UIFrameWindow:
 		_apply_safe_area(ui_name, win)
 		if not _is_live_window(ui_name, win):
 			return null
-		win.on_show(params)
+		win._do_refresh(params)
 		return win if _is_live_window(ui_name, win) else null
 	# 关闭完成前始终保留栈占位，包括 visible=false 同步通知中的短暂 HIDDEN。
 	# 这些时点重开仍是同一次显示，不能重复申请遮罩或发 window_shown。
@@ -109,6 +109,7 @@ func hide_ui(ui_name: String) -> void:
 	if win == null or not win.is_showing():
 		return
 	var revision: int = win._show_revision
+	var presentation: int = win.get_presentation_revision()
 	# 先置 CLOSING：关闭动画期间 show_ui 靠这个状态判断能否打断
 	win._window_state = UIBaseWindow.WindowState.CLOSING
 
@@ -118,18 +119,18 @@ func hide_ui(ui_name: String) -> void:
 		_modal_mask.begin_close(next, next.mask_opacity if next != null else 0.0, win.get_hide_anim_duration())
 	# 等关闭动画播完；期间若被 show_ui 打断，状态会被改回 SHOWING，这里就放弃收尾
 	await win._play_close_animation()
-	if not is_instance_valid(win) or win._show_revision != revision or win._window_state != UIBaseWindow.WindowState.CLOSING:
+	if not is_instance_valid(win) or win._show_revision != revision or win.get_presentation_revision() != presentation or win._window_state != UIBaseWindow.WindowState.CLOSING:
 		return
 	# on_hide 钩子：内部还会断开 connect_managed 的连接、暂停托管定时器
 	await win._do_hide()
 
 	# 收尾前再确认一次状态：期间被打断过就什么都不做
-	if not is_instance_valid(win) or win._show_revision != revision or win._window_state != UIBaseWindow.WindowState.HIDDEN:
+	if not is_instance_valid(win) or win._show_revision != revision or win.get_presentation_revision() != presentation or win._window_state != UIBaseWindow.WindowState.HIDDEN:
 		return
 	# 恢复下层时的 visible 回调也可能重开/销毁本窗口；保留占位直到回调完成。
 	# HIDDEN 项不参与遮挡，重开沿用原请求，销毁则由 tree_exiting 正常收尾。
 	_refresh_occlusion()
-	if not is_instance_valid(win) or win._show_revision != revision or win._window_state != UIBaseWindow.WindowState.HIDDEN:
+	if not is_instance_valid(win) or win._show_revision != revision or win.get_presentation_revision() != presentation or win._window_state != UIBaseWindow.WindowState.HIDDEN:
 		return
 	_pop_stack(win.ui_layer, win)
 	var top: UIFrameWindow = _top_mask_window()
@@ -198,14 +199,19 @@ func _get_or_create(ui_name: String) -> UIFrameWindow:
 		var win : UIFrameWindow = cached as UIFrameWindow
 		if win.is_queued_for_deletion() or win.get_window_state() == UIBaseWindow.WindowState.DESTROYED:
 			return null
+		if win.is_hidden() and not win.scene_file_path.is_empty() and ProjectSettings.localize_path(win.scene_file_path) != ProjectSettings.localize_path(_scene_path(ui_name)):
+			_cache.erase(ui_name)
+			win._do_destroy()
+			win.queue_free()
+			return _get_or_create(ui_name)
 		# 父节点没了（例如 current_scene 被换掉）→ 重新挂到当前场景根
 		if win.get_parent() == null:
 			get_tree().current_scene.add_child(win)
 		return win if _is_live_window(ui_name, win) else null
 	# 没缓存才真的 load 场景并实例化
-	var packed: PackedScene = load(_registry[ui_name])
+	var packed: PackedScene = load(_scene_path(ui_name))
 	if packed == null:
-		push_error("UIWindowManager: cannot load '%s'" % _registry[ui_name]) # 加载失败只报错，返回 null
+		push_error("UIWindowManager: cannot load '%s'" % _scene_path(ui_name)) # 加载失败只报错，返回 null
 		return null
 	return _create_and_cache(ui_name, packed)
 
@@ -388,14 +394,14 @@ func block_input_briefly(target: Control, duration: float = 1.5) -> void:
 	blocker.z_index = 4095 # 4095：比常规页面/弹窗高得多，用来压住下面所有控件
 	blocker.z_as_relative = false
 	target.add_child(blocker)
-	# 计时到点自己 queue_free；期间 target 被释放也不会报错
-	var blocker_ref: WeakRef = weakref(blocker)
-	target.get_tree().create_timer(duration).timeout.connect(
-		func() -> void:
-			var current: Control = blocker_ref.get_ref()
-			if is_instance_valid(current):
-				current.queue_free()
-	)
+	# 定时器属于挡板；重入替换或 target 销毁时一起释放，不留下场景树计时器/WeakRef。
+	var timer := Timer.new()
+	timer.one_shot = true
+	timer.wait_time = duration
+	timer.process_mode = Node.PROCESS_MODE_ALWAYS
+	blocker.add_child(timer)
+	timer.timeout.connect(blocker.queue_free, CONNECT_ONE_SHOT)
+	timer.start()
 
 
 # ================= 模态遮罩目标 =================
@@ -475,8 +481,8 @@ func warm_pool_async(ui_name: String) -> void:
 ## 线程加载场景并等到结束；_loading 在整个过程中占位去重
 func _load_scene_async(ui_name: String) -> PackedScene:
 	# 先占位，避免并发重复加载
-	_loading[ui_name] = true
-	var path: String = _registry[ui_name]
+	var path: String = _scene_path(ui_name)
+	_loading[ui_name] = path
 	# 发起线程加载并每帧轮询，直到状态不再是 IN_PROGRESS
 	var requested: Error = ResourceLoader.load_threaded_request(path)
 	if requested != OK:
@@ -598,7 +604,7 @@ func _exit_tree() -> void:
 	# Godot 的线程加载请求没有取消入口，提交后必须 get 才能释放其内部引用。
 	# 仅在管理器退出时等待仍在解析的资源收尾；不会再实例化窗口。
 	for ui_name: String in _loading.keys():
-		var path: String = _registry[ui_name]
+		var path: String = str(_loading[ui_name])
 		var status: ResourceLoader.ThreadLoadStatus = ResourceLoader.load_threaded_get_status(path)
 		if status == ResourceLoader.THREAD_LOAD_IN_PROGRESS or status == ResourceLoader.THREAD_LOAD_LOADED:
 			ResourceLoader.load_threaded_get(path)
@@ -612,3 +618,85 @@ func _exit_tree() -> void:
 	_cache.clear()
 	_stacks.clear()
 	_announced_windows.clear()
+
+
+## 注册表可以由宿主提供延迟路由；当前已显示的窗口不会因配置变化被替换。
+func _scene_path(ui_name: String) -> String:
+	var source: Variant = _registry.get(ui_name, "")
+	return str(source.call()) if source is Callable else str(source)
+
+
+func is_any_loading() -> bool:
+	return not _loading.is_empty()
+
+
+func get_top_window(excluded_ui_name: StringName = &"") -> UIFrameWindow:
+	var ordered: Array[UIFrameWindow] = _ordered_windows()
+	for index in range(ordered.size() - 1, -1, -1):
+		var win: UIFrameWindow = ordered[index]
+		if is_instance_valid(win) and win.visible and win._ui_name != excluded_ui_name:
+			return win
+	return null
+
+
+func get_top_ui_name() -> StringName:
+	var win: UIFrameWindow = get_top_window()
+	return StringName(win._ui_name) if win != null else &""
+
+
+func get_top_ui_name_excluding(excluded_ui_name: StringName) -> String:
+	var win: UIFrameWindow = get_top_window(excluded_ui_name)
+	return win._ui_name if win != null else ""
+
+
+func is_top_of_stack(win: UIFrameWindow) -> bool:
+	return get_top_window() == win
+
+
+func is_covered_by_mask(control: Control) -> bool:
+	var node: Node = control
+	while is_instance_valid(node) and not node is UIFrameWindow:
+		node = node.get_parent()
+	return _modal_mask.covers_window(node as Control) if is_instance_valid(node) else false
+
+
+func set_window_mask_opacity(window: UIFrameWindow, opacity: float, duration: float = 0.0) -> void:
+	if not is_instance_valid(window) or not window.show_mask or not window.is_showing():
+		return
+	window.mask_opacity = clampf(opacity, 0.0, 1.0)
+	if _top_mask_window() == window:
+		_modal_mask.set_opacity(window.mask_opacity, duration)
+
+
+func fade_out_mask_early(duration: float = 0.2) -> void:
+	_modal_mask.set_opacity(0.0, duration)
+func await_hidden(ui_name: StringName) -> void:
+	var win: UIFrameWindow = get_ui(ui_name)
+	if win == null:
+		return
+	var revision: int = win._show_revision
+	while is_inside_tree() and is_instance_valid(win) and get_ui(ui_name) == win and win._show_revision == revision and _ordered_windows().has(win):
+		await get_tree().process_frame
+
+
+func destroy_ui(ui_name: String) -> void:
+	var win: UIFrameWindow = get_ui(ui_name)
+	if win == null:
+		return
+	var revision: int = win._show_revision
+	if win.is_showing():
+		hide_ui(ui_name)
+	await await_hidden(ui_name)
+	if not is_instance_valid(win) or get_ui(ui_name) != win or win._show_revision != revision or not win.is_hidden():
+		return
+	_cache.erase(ui_name)
+	win._do_destroy()
+	if is_instance_valid(win):
+		win.queue_free()
+
+
+func hide_all_showing_except(names: Array) -> void:
+	for ui_name in _cache.keys():
+		var win: UIFrameWindow = get_ui(ui_name)
+		if ui_name not in names and win != null and win.is_showing():
+			await hide_ui(ui_name)

@@ -1,0 +1,47 @@
+[
+  {
+    "command": [
+      "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+      "--headless",
+      "--path",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/project",
+      "--log-file",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/import.engine.log",
+      "--editor",
+      "--import"
+    ],
+    "exit_code": 0,
+    "ok": true,
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/import.log",
+    "summary": "",
+    "completion": {
+      "kind": "import",
+      "ok": true
+    },
+    "diagnostics_classified": true
+  },
+  {
+    "command": [
+      "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+      "--headless",
+      "--path",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/project",
+      "--log-file",
+      "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/example.engine.log",
+      "--script",
+      "res://tools/validation/test_block_example.gd"
+    ],
+    "exit_code": 0,
+    "ok": true,
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/example.log",
+    "summary": "BLOCK EXAMPLE TESTS: 21 assertions, 0 failures",
+    "completion": {
+      "kind": "test",
+      "ok": true,
+      "checks": 21,
+      "failures": 0,
+      "summary": "BLOCK EXAMPLE TESTS: 21 assertions, 0 failures"
+    },
+    "diagnostics_classified": true
+  }
+]

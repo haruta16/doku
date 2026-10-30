@@ -1,0 +1,60 @@
+{
+  "stage": "final verified debug export",
+  "built_at": "2026-10-23T16:23:22.752145+00:00",
+  "apk": "../build/meowdoku-recovered-1.22.0.apk",
+  "size": 221772165,
+  "sha256": "00e2f43d83b953bd9a0a37302a484892ce2aaeaff184c50c01b1b45a4e72947d",
+  "package_name": "com.oakever.meowdoku.recovered",
+  "version_name": "1.22.0",
+  "version_code": 1573,
+  "min_sdk": 24,
+  "target_sdk": 36,
+  "template_compile_sdk": 35,
+  "export_exit_code": 0,
+  "export_log_errors": 0,
+  "export_log_warnings": 0,
+  "signature": {
+    "verified": true,
+    "v2": true,
+    "v3": true,
+    "signers": 1
+  },
+  "package_manifest_sha256": "dbde17f4d46b19f76471c49947886e28565bcfed074c1d132c919318a332d1cf",
+  "level_banks": {
+    "expected": 59,
+    "verified": 59,
+    "hash_mismatches_or_missing": [],
+    "unexpected_files": []
+  },
+  "translations": {
+    "expected": 75,
+    "verified": 75,
+    "hash_mismatches_or_missing": [],
+    "unexpected_files": []
+  },
+  "editor_json_included": [],
+  "tools_included": [],
+  "docs_included": [],
+  "originals_included": [],
+  "compiled_recovery_tools_included": [],
+  "architectures": [
+    "arm64-v8a"
+  ],
+  "zip_entries": 4255,
+  "uncompressed_bytes": 295030947,
+  "zip_crc_verified": true,
+  "initial_export_history": {
+    "target_sdk": 35,
+    "sha256": "4ecc2e79c14ea939b986e746fc51483523b28e2661f0c7f6d3030b2d721f755b",
+    "note": "Superseded by the final target SDK 36 APK above; kept only as historical evidence."
+  },
+  "logs": {
+    "export": "originals/upgrades/1.22.0/logs/android_export_final.log",
+    "aapt": "originals/upgrades/1.22.0/logs/android_final_aapt.txt",
+    "signature": "originals/upgrades/1.22.0/logs/android_final_signature.txt"
+  },
+  "device_test": {
+    "performed": false,
+    "reason": "No Android device connected for this task; package verification is not a device runtime test."
+  }
+}

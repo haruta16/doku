@@ -1,4 +1,4 @@
-## ATT(跟踪授权)弹窗前的自定义引导实验：0=原流程 1=跳过自定义引导直接弹系统框 2=自定义引导换新版样式
+## 实验配置 att_dlg_logic：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name AttDlgLogicConfig
 
@@ -8,11 +8,10 @@ const VALUE_SKIP_CUSTOM_GUIDE: int = 1 # 跳过自定义引导页，直接请求
 const VALUE_RESTYLED_GUIDE: int = 2 # 仍显示自定义引导，但换成新版样式
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "att_dlg_logic"
-	default_value = VALUE_DEFAULT # 默认档：保留原引导流程
-	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
+	default_value = VALUE_SKIP_CUSTOM_GUIDE
 
 
 ## 是否跳过自定义引导页

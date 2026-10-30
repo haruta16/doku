@@ -6,7 +6,7 @@ extends UIFrameWindow
 # ---- 子节点引用（@onready：进场景树后才可用） ----
 @onready var _title_label: Label = $Root/Content/DialogRoot/TitleLabel # 标题文本
 @onready var _content_label: Label = $Root/Content/DialogRoot/ContentLabel # 正文文本
-@onready var _action_btn: Button = $Root/Content/DialogRoot/ActionButton # 主行动按钮（发出 tag_pressed）
+@onready var _action_btn: Control = $Root/Content/DialogRoot/ActionButton # 主行动按钮（发出 tag_pressed）
 @onready var _anim: AnimationPlayer = $Root/AnimationPlayer # GenericPopup 弹窗动画
 
 # ---- 回调与状态 ----
@@ -23,10 +23,11 @@ func _ready() -> void:
 
 ## UIManager 拉起本页时的入口：把 params 里的文案和回调转交给 open()
 func on_show(params: Dictionary = {}) -> void:
+	_apply_action_btn_look(params)
 	open(
 		params.get("title", _title_label.text),
 		params.get("content", _content_label.text),
-		params.get("btn_text", _action_btn.text),
+		params.get("btn_text", _action_btn.btn_text),
 		params.get("on_confirm", Callable()),
 		params.get("on_close", Callable())
 	)
@@ -43,7 +44,7 @@ func open(
 	_presentation_revision += 1
 	_title_label.text = tr(title)
 	_content_label.text = tr(content)
-	_action_btn.text = tr(btn_text)
+	_action_btn.btn_text = tr(btn_text)
 	_on_confirm = on_confirm
 	_on_close = on_close
 	_closing = false
@@ -95,5 +96,9 @@ func on_hide() -> void:
 	_anim.stop()
 
 
-func get_presentation_revision() -> int:
-	return _presentation_revision
+func _apply_action_btn_look(params: Dictionary) -> void:
+	if params.has("btn_bg_color"):
+		_action_btn.bg_color = params["btn_bg_color"]
+		_action_btn.shadow_color = params["btn_bg_color"]
+	if params.has("btn_icon"):
+		_action_btn.btn_icon = params["btn_icon"]

@@ -1,11 +1,10 @@
-## 现有权益与完成状态：真实按钮、写失败、广告迟到回调、完成重试及提交通知重入。
+## 旧权益 API 兼容的候选事务、完成重试及提交通知重入；1.22 已退役自动标叉弹窗。
 extends SceneTree
 
 var checks: int = 0
 var failures: int = 0
 var game: Node
 var ui: Node
-var kit: Node
 var files: RefCounted
 
 
@@ -22,99 +21,77 @@ func _run() -> void:
 	current_scene = host
 	game = root.get_node("GameState")
 	ui = root.get_node("UIManager")
-	kit = root.get_node("UniKitManager")
 	files = game.get_core_store().get("_file_store")
 	game.set_sound_on(false)
-	root.get_node("ABTestManager").game_auto_mark.set_debug_override(5)
 	await _test_free_entitlement()
-	await _test_ad_entitlement()
+	await _test_confirmed_entitlement()
 	await _test_pending_observers()
 	await _test_tutorial_completion()
 	ui.hide_all()
 	await create_timer(0.7).timeout
+	for name: String in ["tutorial", "game", "confirm", "toast"]:
+		ui.destroy_ui(name)
+	await process_frame
 	print("PRODUCT ENTITLEMENT TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
 
 func _test_free_entitlement() -> void:
 	_prepare_auto_mark(false)
-	var popup: Variant = ui.show_ui("daily_auto_mark_popup")
 	var attempts := {"count": 0}
 	files.set_fault_injector_for_tests(func(phase: String) -> bool:
 		if phase == "before_replace":
 			attempts.count += 1
 			return attempts.count == 2
 		return false)
-	popup._primary_btn.pressed.emit()
-	await create_timer(0.5).timeout
-	_check(attempts.count == 1, "免费资格与权益只有一次文件提交")
+	var result: Dictionary = game.activate_daily_auto_mark(true)
+	_check(result.get("ok", false) and attempts.count == 1, "免费资格与权益只有一次文件提交")
 	_check(_saved().profile.daily_auto_mark_free_consumed and _saved().profile.daily_auto_mark_enabled, "不存在第二次失败造成半笔权益")
-	_check(popup.is_hidden(), "免费权益保存成功后关闭")
 	files.set_fault_injector_for_tests(Callable())
 	var revision: int = game.get_core_store().revision()
 	_check(game.activate_daily_auto_mark(true).get("duplicate", false), "当日已激活权益重试返回重复成功")
 	_check(game.get_core_store().revision() == revision, "重复激活不重复写盘")
-
 	_prepare_auto_mark(false)
-	popup = ui.show_ui("daily_auto_mark_popup")
+	var before: Dictionary = game.get_core_candidate()
 	_fail_writes()
-	popup._primary_btn.pressed.emit()
-	_check(popup.is_showing(), "免费保存失败保留弹窗")
-	_check(not _saved().profile.daily_auto_mark_free_consumed and not _saved().profile.daily_auto_mark_enabled, "免费保存失败不消费资格也不发布权益")
+	result = game.activate_daily_auto_mark(true)
+	_check(not result.get("ok", false) and game.get_core_candidate() == before, "免费保存失败不消费资格也不发布权益")
 	files.set_fault_injector_for_tests(Callable())
-	popup._primary_btn.pressed.emit()
-	await create_timer(0.5).timeout
-	_check(popup.is_hidden() and _saved().profile.daily_auto_mark_enabled, "免费按钮原地重试成功")
+	_check(game.activate_daily_auto_mark(true).get("ok", false) and _saved().profile.daily_auto_mark_enabled, "同一次免费资格可直接重试保存")
 	_prepare_auto_mark(true)
 	_check(game.activate_daily_auto_mark(true).get("error") == "daily_auto_mark_free_unavailable", "已消费免费机会不能再次免费激活")
 	_check(not _saved().profile.daily_auto_mark_enabled, "资格拒绝不启用权益")
 
 
-func _test_ad_entitlement() -> void:
+func _test_confirmed_entitlement() -> void:
+	# 仅验证已确认资格进入本地事务；已删除的旧广告界面不属于 1.22 产品。
 	_prepare_auto_mark(true)
-	kit.cheat_show_reward = true # 真实按钮进入项目Mock广告页，再由其按钮发奖/关闭。
-	var popup: Variant = ui.show_ui("daily_auto_mark_popup")
-	var rewards := {"count": 0}
-	var stale_callbacks: Array[Callable] = []
-	var observer := func(_placement: String) -> void:
-		rewards.count += 1
-	kit.ad_rewarded.connect(observer)
-	popup._primary_btn.pressed.emit()
-	for callback: Callable in kit._reward_callbacks.values():
-		if callback.get_object() == popup:
-			stale_callbacks.append(callback)
+	var today: String = Time.get_date_string_from_system()
+	var before: Dictionary = game.get_core_candidate()
 	_fail_writes()
-	var mock_ad: Variant = ui.get_ui("mock_ad")
-	_check(mock_ad != null and mock_ad.is_showing(), "实际按钮已打开Mock广告页")
-	if mock_ad != null:
-		mock_ad.get_node("Root/ButtonRow/RewardButton").pressed.emit()
-	await create_timer(0.1).timeout
-	_check(rewards.count == 1 and popup._ad_requested, "实际广告入口已收到一次发奖")
-	_check(not _saved().profile.daily_auto_mark_enabled and popup.is_showing(), "广告权益保存失败不关闭或假启用")
-	_check(not popup._reward_pending_date.is_empty(), "保留已发奖待保存的重试意图")
-	_check(not popup._ad_icon_box.visible and not popup._primary_badge.visible, "保存重试不再标为需要广告")
-	kit.ad_closed.emit("reward")
-	_check(popup.is_showing(), "迟到SDK关闭不能取消权益保存重试")
-	await ui.hide_ui("daily_auto_mark_popup")
-	popup = ui.show_ui("daily_auto_mark_popup")
-	_check(not popup._reward_pending_date.is_empty(), "缓存窗口重开仍保留同日已发奖意图")
+	var result: Dictionary = game.activate_daily_auto_mark(false, today)
+	_check(not result.get("ok", false) and game.get_core_candidate() == before, "已确认资格写失败不假启用")
 	files.set_fault_injector_for_tests(Callable())
-	popup._primary_btn.pressed.emit()
-	await create_timer(0.5).timeout
-	_check(_saved().profile.daily_auto_mark_enabled and popup.is_hidden(), "广告权益可以直接重试保存")
-	_check(rewards.count == 1, "保存重试没有请求第二次广告奖励")
-
+	_check(game.activate_daily_auto_mark(false, today).get("ok", false) and _saved().profile.daily_auto_mark_enabled, "已确认资格可直接重试保存")
+	var revision: int = game.get_core_store().revision()
+	_check(game.activate_daily_auto_mark(false, today).get("duplicate", false) and game.get_core_store().revision() == revision, "已确认资格重复调用不重写")
 	_prepare_auto_mark(true)
-	popup = ui.show_ui("daily_auto_mark_popup")
-	_check(not stale_callbacks.is_empty(), "捕获了旧显示的真实广告回调")
-	for callback: Callable in stale_callbacks:
-		callback.call("reward")
-	_check(not _saved().profile.daily_auto_mark_enabled and popup.is_showing(), "旧显示的发奖回调不能修改或关闭新弹窗")
-	popup._reward_pending_date = "2000-01-01"
-	ui.show_ui("daily_auto_mark_popup")
-	_check(popup._reward_pending_date.is_empty(), "过期日的未保存广告意图不延续到另一日")
-	kit.ad_rewarded.disconnect(observer)
-	await ui.hide_ui("daily_auto_mark_popup")
+	before = game.get_core_candidate()
+	result = game.activate_daily_auto_mark(false, "2000-01-01")
+	_check(result.get("error") == "daily_auto_mark_date_changed" and game.get_core_candidate() == before, "旧日期资格不会启用新日权益")
+	var old_day: Dictionary = game.get_core_candidate()
+	old_day.profile.today_date = "2000-01-01"
+	old_day.profile.daily_auto_mark_enabled = true
+	_check(game.commit_core_candidate(old_day, game.get_core_store().revision()).get("ok", false), "准备上一日已激活权益")
+	before = game.get_core_candidate()
+	_fail_writes()
+	result = game.activate_daily_auto_mark(false, today)
+	_check(not result.get("ok", false) and game.get_core_candidate() == before, "跨日激活失败不提前单独提交日期轮换")
+	files.set_fault_injector_for_tests(Callable())
+	revision = game.get_core_store().revision()
+	result = game.activate_daily_auto_mark(false, today)
+	_check(result.get("ok", false) and game.get_core_store().revision() == revision + 1, "日期轮换与新日权益同一次提交")
+	_check(_saved().profile.today_date == today and _saved().profile.daily_auto_mark_enabled and _saved().profile.daily_auto_mark_free_consumed, "新日已确认资格保留终身免费消费事实")
 
 
 func _test_pending_observers() -> void:

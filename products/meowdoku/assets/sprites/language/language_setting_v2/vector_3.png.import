@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://clv3rvqt1ljjw"
-path.s3tc="res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.s3tc.ctex"
-path.etc2="res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.etc2.ctex"
+path.bptc="res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.bptc.ctex"
+path.astc="res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/language/language_setting_v2/vector_3.png"
-dest_files=["res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.s3tc.ctex", "res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.etc2.ctex"]
+dest_files=["res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.bptc.ctex", "res://.godot/imported/vector_3.png-e0c539b8c7c769fb43ad816283786c1b.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

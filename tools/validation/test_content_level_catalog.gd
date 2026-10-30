@@ -1,6 +1,8 @@
 ## 精确关卡表必须在候选发布中自洽，且实际入口不能被旧随机选题/查重替换。
 extends SceneTree
 
+const AudioDrain = preload("res://tools/validation/fixtures/audio_shutdown.gd")
+
 var checks: int = 0
 var failures: int = 0
 
@@ -100,7 +102,7 @@ func _run() -> void:
 	game.set_current_level(21)
 	var before: Dictionary = game.get_core_candidate()
 	var plan: Dictionary = levels.resolve_level_entry(21, 9, 17)
-	_check(plan.ok and plan.size == 4 and plan.entry.regionMap == resolved.entry.regionMap, "fixed definition overrides random size selection")
+	_check(plan.ok and plan.size == 4 and _same_json(plan.entry.regionMap, resolved.entry.regionMap), "fixed definition overrides random size selection")
 	_check(plan.next_selection.profile.get("bank_progress", {}) == before.profile.get("bank_progress", {}), "fixed level does not consume ordinary bank cursor")
 	_check(game.get_core_store().snapshot().profile.get("bank_progress", {}) == before.profile.get("bank_progress", {}), "resolution is read-only")
 	var host := Node.new()
@@ -125,6 +127,11 @@ func _run() -> void:
 	_check_generation_cache(definition)
 	_check_large_catalog(directory, definition)
 	ContentContext.publish(null)
+	await ui.destroy_ui("game")
+	page = null
+	var audio_cleanup: Dictionary = await AudioDrain.drain(self, 2000)
+	_check(audio_cleanup.ok, "audio streams and playback objects release before engine shutdown: " + JSON.stringify(audio_cleanup))
+	print("AUDIO_CLEANUP=", JSON.stringify(audio_cleanup))
 	print("LEVEL CATALOG TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 

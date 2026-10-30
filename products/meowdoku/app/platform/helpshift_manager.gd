@@ -1,4 +1,4 @@
-## 客服工单（Helpshift）封装：autoload 名 HelpshiftManager，负责安装插件、打开 FAQ、拉未读数
+## 客服入口：按需初始化 Helpshift、打开帮助页并更新未读消息红点。
 extends Node
 
 ## 未读消息数变化信号（UI 目前实际走 RedDotCenter，本仓暂无订阅者）
@@ -16,9 +16,6 @@ const DOMAIN: String = "arsenal-support.helpshift.com"
 
 ## 活跃窗口 2 天（秒）：距上次打开帮助页超过这个时间就不再预热
 const ACTIVE_WINDOW_SEC: int = 2 * 86400
-
-## 红点 ID，与 setting_page.tscn / settings_btn.tscn 里的 dot_id 对应
-const DOT_HELPSHIFT_UNREAD: String = "helpshift_unread"
 
 # ---- 运行时状态 ----
 ## 插件是否已安装且信号已接好；false 时所有对外接口直接返回
@@ -55,17 +52,16 @@ func preheat() -> void:
 		request_unread()
 
 
-## 打开 FAQ 帮助页：未安装先安装，顺手记录本次打开时间并刷新未读数
+## 按需安装客服插件，记录打开时间，并携带当前用户信息打开帮助页。
 func open_faq() -> void:
-	# 懒安装：真正要用的时候才装
 	if not _is_active:
 		_install()
 	var p: Object = _plugin()
 	if p == null:
 		return
-	# 记录打开时刻并落盘，用于下次判断是否预热
 	GameState.set_help_last_open_time(_now())
-	p.showFAQs("ALWAYS", _build_metadata(), _build_cifs())
+
+	p.showFAQs("ALWAYS", await _build_metadata(), await _build_cifs())
 
 	request_unread()
 
@@ -104,12 +100,12 @@ func _install() -> void:
 	_is_active = true
 
 
-## 原生未读数回调：更新缓存、发信号、同步到红点中心
+## 更新未读消息缓存、发布数量变化，并刷新客服入口红点。
 func _on_native_unread(count: int) -> void:
 	_unread_count = count
 	unread_count_changed.emit(count)
 
-	RedDotCenter.set_count(DOT_HELPSHIFT_UNREAD, count)
+	RedDotCenter.refresh(DotName.HELPSHIFT_UNREAD)
 
 
 ## 原生鉴权失败回调：只打警告，不影响游戏流程
@@ -117,9 +113,9 @@ func _on_native_auth_failure(reason: String) -> void:
 	push_warning("[Helpshift] auth failure: %s" % reason)
 
 
-## 组装随工单上报的用户资料（uuid、关卡数、渠道等）
+## 汇总客服会话需要的版本、设备与游戏进度信息。
 func _build_metadata() -> Dictionary:
-	var inner: Dictionary = UniKitManager.get_inner_tags()
+	var inner: Dictionary = await UniKitManager.get_inner_tags()
 	return {
 		"uuid": UniKitManager.get_uuid(),
 		"luid": UniKitManager.get_luid(),
@@ -135,9 +131,9 @@ func _build_metadata() -> Dictionary:
 	}
 
 
-## 组装自定义工单字段（CIF）：Helpshift 要求每项带 type 和 value
+## 把业务字段组织成 Helpshift 自定义问题字段，随客服界面请求传入。
 func _build_cifs() -> Dictionary:
-	var inner: Dictionary = UniKitManager.get_inner_tags()
+	var inner: Dictionary = await UniKitManager.get_inner_tags()
 	return {
 		"uuid": {"type": "singleline", "value": UniKitManager.get_uuid()},
 		"living_day": {"type": "singleline", "value": str(GameState.get_active_days())},

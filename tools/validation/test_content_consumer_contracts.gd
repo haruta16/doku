@@ -184,7 +184,8 @@ func _test_real_main_consumer() -> void:
 	var levels: Script = load("res://products/meowdoku/gameplay/application/level_data.gd")
 	var state: Node = root.get_node("GameState")
 	var ab: Node = root.get_node("ABTestManager")
-	var page: Node = load("res://products/meowdoku/gameplay/presentation/main/view/game_page.gd").new()
+	var selector: Script = load("res://products/meowdoku/gameplay/application/selection/level_selector.gd")
+	var size_group: int = 2
 	var initial: Dictionary = state.get_core_candidate()
 	initial.profile.current_level = 1
 	initial.profile.current_strategy = 1
@@ -194,11 +195,11 @@ func _test_real_main_consumer() -> void:
 	initial.profile.recent_puzzles = []
 	_check(state.commit_core_candidate(initial, state.get_core_store().revision()).ok, "isolated real selection fixture commits")
 	state.set("_daily_first_easy_available", false)
-	ab.rule_normal_rank.set_debug_override(2)
+	ab.normal_level.set_debug_override(0)
 	ab.single_region_num.set_debug_override(0)
-	page.set("_size_cycle", 2)
+	size_group = 2
 	ContentContext.publish(null)
-	var plan: Dictionary = levels.resolve_level_entry(1, page.call("_get_ab_size", 1), 17)
+	var plan: Dictionary = levels.resolve_level_entry(1, _content_size(selector, 1, size_group), 17)
 	_check(plan.get("ok", false) and plan.get("size") == 4, "builtin content resolves the actual first-level size override")
 	var small: Dictionary = LevelBankIO.builtin_by_id("doku/levels/bankdata4x4").value
 	var values: Dictionary = {"doku/levels/bankdata4x4": {"2": [small["2"][0]]}}
@@ -206,33 +207,33 @@ func _test_real_main_consumer() -> void:
 	_check(candidate.validate_all(DokuContentValidator.validation()).error == "main_pool_missing", "publication refuses the reproduced first-level missing pool")
 	# 故意绕过发布门禁安装反例，证明这确实是实际消费者无法开局的内容。
 	ContentContext.publish(candidate)
-	plan = levels.resolve_level_entry(1, page.call("_get_ab_size", 1), 17)
+	plan = levels.resolve_level_entry(1, _content_size(selector, 1, size_group), 17)
 	_check(plan.get("error") == "no_valid_level", "rejected first-level candidate reproduces the real selection failure")
 	values["doku/levels/bankdatalkstyle4x4"] = {"1": [small["1"][0]]}
 	candidate = _catalog(values)
 	_check(candidate.validate_all(DokuContentValidator.validation()).ok, "eligible supplementary source passes publication")
 	ContentContext.publish(candidate)
-	plan = levels.resolve_level_entry(1, page.call("_get_ab_size", 1), 17)
+	plan = levels.resolve_level_entry(1, _content_size(selector, 1, size_group), 17)
 	_check(plan.get("ok", false) and plan.entry.get("_bank_source") == "lkstyle", "accepted union pool resolves from the actual supplementary source")
 	initial.profile.current_level = 6
 	initial.profile.current_strategy = 2
 	_check(state.commit_core_candidate(initial, state.get_core_store().revision()).ok, "AB size consumer fixture commits")
-	page.set("_size_cycle", 8)
+	size_group = 8
 	values = {"doku/policy": {"schema": 1, "size_cycles": {"8": [{"from": 1, "sizes": [4]}]}},
 		"doku/levels/bankdata4x4": {"1": [small["1"][0]]}}
 	candidate = _catalog(values)
 	_check(candidate.validate_all(DokuContentValidator.validation()).error == "main_pool_missing", "publication refuses an AB size override's missing rank")
 	ContentContext.publish(candidate)
-	plan = levels.resolve_level_entry(6, page.call("_get_ab_size", 6), 17)
+	plan = levels.resolve_level_entry(6, _content_size(selector, 6, size_group), 17, {"rank_override": 2})
 	_check(plan.get("error") == "no_valid_level", "AB override reproduces missing pool at the actual selection entry")
 	values.erase("doku/levels/bankdata4x4")
 	candidate = _catalog(values)
 	_check(candidate.validate_all(DokuContentValidator.validation()).ok, "AB size override may use the complete builtin bank")
 	ContentContext.publish(candidate)
-	plan = levels.resolve_level_entry(6, page.call("_get_ab_size", 6), 17)
+	plan = levels.resolve_level_entry(6, _content_size(selector, 6, size_group), 17, {"rank_override": 2})
 	_check(plan.get("ok", false) and plan.get("size") == 4 and plan.entry.get("_bank_rank") == 2, "accepted AB override resolves the correct size and rank")
 	ContentContext.publish(null)
-	page.free()
+
 
 
 func _test_explicit_callbacks() -> void:
@@ -283,3 +284,12 @@ func _check(condition: bool, message: String) -> void:
 	if not condition:
 		failures += 1
 		printerr("TEST_FAILED: " + message)
+
+
+## 1.22 尺寸由冻结 SelectionRuntime 解释，不再从 GamePage._size_cycle 读取。
+func _content_size(selector: Script, level: int, group: int) -> int:
+	var state: RefCounted = selector.create_entry_state(17)
+	var context: Dictionary = state.selection_context()
+	context.policy.normal_level = group
+	var runtime: RefCounted = selector.make_runtime(state.export_candidate(), context)
+	return SizeModifier.get_size(level, runtime)

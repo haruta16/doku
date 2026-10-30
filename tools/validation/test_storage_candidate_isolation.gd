@@ -22,6 +22,7 @@ func _run() -> void:
 	for reason: String in ["later_ineligible", "overflow", "invalid_request"]:
 		_test_early_rejection(reason)
 	_test_query_ownership()
+	_test_failed_candidate_preserves_presentation_cache()
 	print("STORAGE CANDIDATE ISOLATION TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -142,3 +143,26 @@ func _check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		printerr("TEST_FAILED: " + message)
+
+
+func _test_failed_candidate_preserves_presentation_cache() -> void:
+	_check(game.reset_all(), "reset presentation cache fixture")
+	game.set_start_toast_pct(50, "normal", 82.5)
+	game.set_start_toast_iq_idx(50, 3)
+	game.set_start_toast_variant_idx(50, 3, "normal", 2)
+	game.set_start_toast_variant_pct(50, 3, "normal", 2, 87.5)
+	game.set_dc_start_toast_pct("daily", 2, 77.5)
+	var before: Dictionary = game.get_core_candidate()
+	var durable: Dictionary = game.get_core_store().snapshot()
+	var candidate: Dictionary = before.duplicate(true)
+	candidate.profile["music_on"] = not bool(candidate.profile.get("music_on", true))
+	candidate.round_runtime["current_level_dirty"] = true
+	candidate.round_runtime["start_toast_variant_idx"] = {}
+	var files: RefCounted = game.get_core_store().get("_file_store")
+	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace")
+	var result: Dictionary = game.commit_core_candidate(candidate, game.get_core_store().revision())
+	files.set_fault_injector_for_tests(Callable())
+	_check(not result.ok and game.get_core_store().snapshot() == durable, "failed transaction preserves authoritative file state")
+	_check(game.get_core_candidate() == before, "failed transaction keeps preexisting toast choices but never publishes candidate dirty or settings")
+	_check(game.reset_all(), "reset still clears presentation caches after failure")
+	_check(game.get_start_toast_variant_idx(50, 3, "normal") == -1 and game.get_dc_start_toast_pct("daily", 2) == -1.0, "successful reset does not keep previous player's presentation cache")

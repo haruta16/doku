@@ -1,0 +1,996 @@
+{
+	"bank_api": {
+		"gc": {
+			"counts": {
+				"10/1": 100,
+				"10/2": 300,
+				"10/3": 418,
+				"10/4": 135,
+				"10/5": 210,
+				"11/2": 100,
+				"11/3": 500,
+				"11/4": 500,
+				"11/5": 400,
+				"12/2": 100,
+				"12/3": 100,
+				"12/4": 400,
+				"12/5": 302,
+				"6/1": 10,
+				"6/2": 6,
+				"6/3": 5,
+				"6/4": 100,
+				"8/1": 28,
+				"8/2": 300,
+				"8/3": 300,
+				"8/4": 150,
+				"8/5": 100,
+				"9/1": 30,
+				"9/2": 301,
+				"9/3": 300,
+				"9/4": 110,
+				"9/5": 20
+			},
+			"sizes": [
+				6,
+				8,
+				9,
+				10,
+				11,
+				12
+			]
+		},
+		"get_all_color_challenge_levels": 1801,
+		"get_all_super_hard_levels": 275,
+		"get_all_super_hard_r4_levels": 2996,
+		"get_climax_filter_levels": 6000,
+		"get_digit_sp_levels": 30,
+		"get_hard_r4_levels": 3000,
+		"get_lk_levels": 169,
+		"get_lk_modified_levels": 169,
+		"get_single_region_levels": 6196,
+		"get_sp_levels": 57,
+		"get_sp_tt_levels": 432,
+		"lk_style": {
+			"counts": {
+				"10/2": 500,
+				"10/3": 500,
+				"10/4": 809,
+				"10/5": 597,
+				"11/1": 10,
+				"11/2": 10,
+				"11/3": 10,
+				"11/4": 20,
+				"11/5": 20,
+				"12/2": 4,
+				"12/3": 5,
+				"12/4": 700,
+				"12/5": 17,
+				"7/2": 481,
+				"7/3": 488,
+				"7/4": 493,
+				"7/5": 10,
+				"8/2": 500,
+				"8/3": 500,
+				"8/4": 868,
+				"8/5": 500,
+				"9/2": 500,
+				"9/3": 500,
+				"9/4": 1002,
+				"9/5": 500
+			},
+			"sizes": [
+				7,
+				8,
+				9,
+				10,
+				11,
+				12
+			]
+		},
+		"onefish": {
+			"counts": {
+				"10/3": 300,
+				"10/4": 300,
+				"10/5": 421,
+				"7/3": 1,
+				"7/4": 1,
+				"7/5": 1,
+				"8/3": 300,
+				"8/4": 300,
+				"8/5": 588,
+				"9/3": 300,
+				"9/4": 300,
+				"9/5": 584
+			},
+			"sizes": [
+				7,
+				8,
+				9,
+				10
+			]
+		},
+		"regular": {
+			"counts": {
+				"10/1": 14,
+				"10/2": 199,
+				"10/3": 198,
+				"10/4": 300,
+				"10/5": 200,
+				"12/2": 200,
+				"12/3": 200,
+				"12/4": 200,
+				"12/5": 200,
+				"4/1": 10,
+				"4/2": 8,
+				"4/3": 8,
+				"4/4": 7,
+				"4/5": 3,
+				"5/1": 10,
+				"5/2": 9,
+				"5/3": 10,
+				"5/4": 10,
+				"5/5": 10,
+				"6/1": 199,
+				"6/2": 196,
+				"6/3": 193,
+				"6/4": 167,
+				"6/5": 158,
+				"7/1": 200,
+				"7/2": 199,
+				"7/3": 200,
+				"7/4": 198,
+				"7/5": 193,
+				"8/1": 200,
+				"8/2": 200,
+				"8/3": 200,
+				"8/4": 300,
+				"8/5": 200,
+				"9/1": 110,
+				"9/2": 150,
+				"9/3": 199,
+				"9/4": 300,
+				"9/5": 150
+			},
+			"sizes": [
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				12
+			]
+		}
+	},
+	"banks": [
+		{
+			"editor_path": "assets/editor/levels/bankData10x10.json",
+			"editor_sha256": "e8907fc65902b118e6ca810f13000be6756323aac3a4fab7aacbe1f683da4c6d",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 2.0,
+				"max_float_delta": 1.1102230246251563e-16
+			},
+			"records": 911.0,
+			"runtime_path": "assets/resources/levels/bankData10x10.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "811d4a45e212f939084507ea1ca32dc368d53251694524c7764d58b783efcb23",
+			"solution_entries": 911.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData10x10.pace.json",
+			"editor_sha256": "b138c153472d2f7676785bd354763bfaeb4e63782ff381dca3c7b23b36b481ed",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 911.0,
+			"runtime_path": "assets/resources/levels/bankData10x10.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "2bb34a7c753ac3e14659a9965401bae922bc4d652ff239e6ffe7303fea1e85aa",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData12x12.json",
+			"editor_sha256": "eaf665eb5c728e70922b55f4051a3722fd9e0bf2edda0a5b5cf6ad70c599665a",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 800.0,
+			"runtime_path": "assets/resources/levels/bankData12x12.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "893e2ef446f19c3ff7a0f8ca831e34c6ebb166ca441dc713f8b10d1e989c6c0c",
+			"solution_entries": 800.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData12x12.pace.json",
+			"editor_sha256": "c6349600b96e39202fa8c93b06339b98f4262c2c052489899bad5bb49b4217ca",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 800.0,
+			"runtime_path": "assets/resources/levels/bankData12x12.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "71edae094c9df2dfee5361d3f11bd75494f64ff0e7a550bce63898aecbce97a3",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData4x4.json",
+			"editor_sha256": "1226776a35a8eddae908e138b4c7def2cace9cb507eccd02754975c86888793c",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 36.0,
+			"runtime_path": "assets/resources/levels/bankData4x4.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "558aa68d2f580eb905a265a8c8604aa20f1e4fca83cb728e9865602340673541",
+			"solution_entries": 36.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData4x4.pace.json",
+			"editor_sha256": "58a0e055eabfa41b7dbbcc41582deb1db1e22ad396658bc02c1454d95ab35d40",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 36.0,
+			"runtime_path": "assets/resources/levels/bankData4x4.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "7a9889c9278d0b346da756346f4ec74c2417578810a71b9a41191b93245a111f",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData5x5.json",
+			"editor_sha256": "af553eafd7cfed328f160f61bf3235c4906cf4acd42d8e3637c103b93bd0bbbb",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 49.0,
+			"runtime_path": "assets/resources/levels/bankData5x5.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "6b038aeb5fd4e863b9836d33fdf5a671c6211026061b9d5ee2b3f29415ec7c68",
+			"solution_entries": 49.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData5x5.pace.json",
+			"editor_sha256": "c95dc0ea15dda413daa30b5a2dc50df22fad79f1e5f4e63fa569442d1683d81f",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 49.0,
+			"runtime_path": "assets/resources/levels/bankData5x5.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "ed7c4e0e14018f510384b5de2040457b0e0f598a3d415e4126b1db282a298bb8",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData6x6.json",
+			"editor_sha256": "240556c2cfce67880666d95635828e0344215f0815bc60f123f8918bee355f6a",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 913.0,
+			"runtime_path": "assets/resources/levels/bankData6x6.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "cf0e0c9542e87cc533ea697aa39c619aa143a5ee79c9bd8dea201a7c91d63b2b",
+			"solution_entries": 913.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData6x6.pace.json",
+			"editor_sha256": "dccb15e7ecf60d0485b208260aefcbbba465a47baca5e5434dc9f74bf9f9500d",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 913.0,
+			"runtime_path": "assets/resources/levels/bankData6x6.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "a656ac94fb6c83bdf74d3a651711c6b08dbc4979bea1b78b21ed364fb7f5ed27",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData7x7.json",
+			"editor_sha256": "dd8dc53ff8cbae0e3b5ff5ac29cc3be00d571913e41f94aa3a110ef543e5e0fe",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 990.0,
+			"runtime_path": "assets/resources/levels/bankData7x7.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "93736eafb1e66d845b5de06ebdeed7a1694abb209942eede0d8a8a1d2a61ce2a",
+			"solution_entries": 990.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData7x7.pace.json",
+			"editor_sha256": "573b4c5d687790db0461acbfd63e466c9f5f63429bb0a19b6f7f113823ede5cb",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 990.0,
+			"runtime_path": "assets/resources/levels/bankData7x7.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "942c11ffa90c02f53a36cad010da7576e9e5e4cd0a4c3e4abc07204afa185277",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData8x8.json",
+			"editor_sha256": "41c7fe7384f192cf7a3cb7d56d5e4830206e531842a1fae77e0da3d642d1f51e",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1100.0,
+			"runtime_path": "assets/resources/levels/bankData8x8.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "625e4538e9732c8c67d4e261c8e6d69041a422708f454ceb1a52487d98f59c64",
+			"solution_entries": 1100.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData8x8.pace.json",
+			"editor_sha256": "32ce4f8c87d53d35dcfaaf8d5fc3ec2ccd5985f01253d9bfe785c66ef6b34e22",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1100.0,
+			"runtime_path": "assets/resources/levels/bankData8x8.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "a112e53a860ed3ae7327517ba7467edf5e870067bdcf9d10bd50a4641f7f0b60",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData9x9.json",
+			"editor_sha256": "ac226be66881878bdd4f7c020423328677e7bce7d2d1bc1477b43e6075881bdb",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 4.0,
+				"max_float_delta": 1.1102230246251563e-16
+			},
+			"records": 909.0,
+			"runtime_path": "assets/resources/levels/bankData9x9.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "bc98559a86441c313ad5981c2c6be6b448d240481a8242cc9d96431a67eb55e6",
+			"solution_entries": 909.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankData9x9.pace.json",
+			"editor_sha256": "82fb5a11e0542264c1071b4287de9095ee992c1db6b1f0f3d97a6768ae5ed2ff",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 909.0,
+			"runtime_path": "assets/resources/levels/bankData9x9.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "9f258c68db1184827ad7ce8383d04fb7c387703125b7352b391ebd564709ed6b",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataClimaxFilters.json",
+			"editor_sha256": "cf0ad0eda6d7f90b13fd8a163a9c4bcebf491197a47ccbfcd873c8772adaa165",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 5.0,
+				"max_float_delta": 1.1102230246251563e-16
+			},
+			"records": 6000.0,
+			"runtime_path": "assets/resources/levels/bankDataClimaxFilters.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "c804c026bf9c974b58b86db01f6c898ea0eadbdf2f00a54741020d890a43d8ea",
+			"solution_entries": 6000.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataColorChallenge.json",
+			"editor_sha256": "b4ebd1797547fca762ad06be52f06586e249e6e2a7bfc3d86cdb173fa49cd497",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1801.0,
+			"runtime_path": "assets/resources/levels/bankDataColorChallenge.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "296f2e946fd3cdcd7f522695d03574c9ce8dabcc6d6b93ed20552d3b32b2f72b",
+			"solution_entries": 1801.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataDigitsSP.json",
+			"editor_sha256": "d57781ed650c0bf7e747d876c58477adf435b56e984950733481fc0a17a8dd6b",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 30.0,
+			"runtime_path": "assets/resources/levels/bankDataDigitsSP.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "d024e24ba086e729641c559f343d8f2647560e2d11e541c6be7293a698706329",
+			"solution_entries": 30.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC10x10.json",
+			"editor_sha256": "434661f72a7f75a5f555e46d0e17d1cf059dede04cd65a015d5795dfe87a7e48",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1163.0,
+			"runtime_path": "assets/resources/levels/bankDataGC10x10.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "fca1892b207447bfaae8692f631d352e3d05f7d8e98a1cc4ea507e429bb81a66",
+			"solution_entries": 1163.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC10x10.pace.json",
+			"editor_sha256": "8e171955261519060a6fdabc53f83b6f8a6cd1f89c169f232bfa31f86ced671a",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1163.0,
+			"runtime_path": "assets/resources/levels/bankDataGC10x10.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "2da598927778946bda9dd77b85f88c29d87a20dc0fa51ab6fa0f77c5077aab2b",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC11x11.json",
+			"editor_sha256": "be17151da4ad235e047645a232d8978d0e7eebbcfcf61f75feaa9974a4213f83",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1500.0,
+			"runtime_path": "assets/resources/levels/bankDataGC11x11.bin",
+			"runtime_rejected_solutions": 55.0,
+			"runtime_sha256": "a45167892c23e6c3098f738623582b8fd912bb84ba827e44cda6ab585020ff92",
+			"solution_entries": 1500.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC11x11.pace.json",
+			"editor_sha256": "aff44fa6fbbc68d14d654604c387ebeeaf823441d9052063f5b7de48c14f6671",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1500.0,
+			"runtime_path": "assets/resources/levels/bankDataGC11x11.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "c127042eb3fc224df6c1d76bdfbe75ee55e1d7e5c58ab5423c873a6864281de0",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC12x12.json",
+			"editor_sha256": "fc39bb28d8ea592564493646adaa3353f0f5921173eee25632edccdd18949e5d",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 902.0,
+			"runtime_path": "assets/resources/levels/bankDataGC12x12.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "fd116ea481ad23b4ed01ad0d056f122b28f0381f30ea0e89f246f107b4a84487",
+			"solution_entries": 903.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC12x12.pace.json",
+			"editor_sha256": "04db55bcd6f88f95f987e6af06d746eb8585de870b03c34d640b7efa4058ff93",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 902.0,
+			"runtime_path": "assets/resources/levels/bankDataGC12x12.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "73b46e09711a2994ca6b57b7b05039b9b313638d845d03aa5a87c2178e2461a9",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC6x6.json",
+			"editor_sha256": "8c93d68c7c49d1be4944279d83e5d77c5102d714a5b9f133e54409d32421c49a",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 121.0,
+			"runtime_path": "assets/resources/levels/bankDataGC6x6.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "f62772d69c045132faa103b8145c09ad233d2bb37cfc3335030fe5e00fbfc56e",
+			"solution_entries": 121.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC6x6.pace.json",
+			"editor_sha256": "17ed82c1c44ad7b2618cd3a5f5ee4a7bee6561e8d289a4e2efad9068c12db6d4",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 121.0,
+			"runtime_path": "assets/resources/levels/bankDataGC6x6.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "256194833bb59509dd8d5782b8050bc492f1e15094328e05aeb4f83043871329",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC8x8.json",
+			"editor_sha256": "28d0acd057af66e1f7078b9400fdb5e734e15a2d543d0e4cf3f4e1b2184a2e1c",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 878.0,
+			"runtime_path": "assets/resources/levels/bankDataGC8x8.bin",
+			"runtime_rejected_solutions": 8.0,
+			"runtime_sha256": "30d8d1b9ebecfa65f9abf478d102abad7c6c335295d6790a5adc776aec39db57",
+			"solution_entries": 878.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC8x8.pace.json",
+			"editor_sha256": "7e539baf9695efd60b10fbfdac6c4b332b8b2f05ff3e62d6583f4eb4d83e2cc0",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 878.0,
+			"runtime_path": "assets/resources/levels/bankDataGC8x8.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "583ec099af0e677439825f34e50e88c9ad688db5f7052a4ef8669d0736c392a8",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC9x9.json",
+			"editor_sha256": "bc18d276acb38c7a26888a5a714cca85b0916f715f3de13dbeee5b96313ed04f",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 761.0,
+			"runtime_path": "assets/resources/levels/bankDataGC9x9.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "b7d95d18d86ac809c60552acf181273ab91eab53aec6b7d268a593e6ac5bb80e",
+			"solution_entries": 761.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGC9x9.pace.json",
+			"editor_sha256": "6d0d67845aaa04fdb2bbfe331a5a11d249b79842dc971732fdffc1de416091a4",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 761.0,
+			"runtime_path": "assets/resources/levels/bankDataGC9x9.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "45a22d25793b5b1492d3bea368150a626dc412587407be633e5c5d8389322fa2",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGCSample6x6.json",
+			"editor_sha256": "7421b525f736b03f1f74e6a27f4cb3f1f450df31c5bf5b43d938da0e21c5cae0",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 23.0,
+			"runtime_path": "assets/resources/levels/bankDataGCSample6x6.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "809a208c4ea99493d943c2f783ec8a9b7fb343d0ebb87f7a76a1b158acf7eee3",
+			"solution_entries": 23.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataGCSample7x7.json",
+			"editor_sha256": "1642a43fa7a5f010addc49fbde10333356afb599440d1846e668010d3324e9cf",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 11.0,
+			"runtime_path": "assets/resources/levels/bankDataGCSample7x7.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "986214fd8ff3bd63c993e940e6242626e391682eecd1706eaf94ce4db8038fa2",
+			"solution_entries": 11.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataHardR4.json",
+			"editor_sha256": "ae05228aadcd992dc1e479debcbbde744202ae5b645c1b552906878478ac2b31",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 3000.0,
+			"runtime_path": "assets/resources/levels/bankDataHardR4.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "b614979fd22550d80b8b9b2456ad682bf095bdf2ddc4bbb0277c0e8f10aeab09",
+			"solution_entries": 3000.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLK.json",
+			"editor_sha256": "c2faa2a30cb2e5399f2ef95916aab1650211704cdee1bc9ba10d8418b3a88cb3",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 169.0,
+			"runtime_path": "assets/resources/levels/bankDataLK.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "10fcdb3faa997a9c3317ab5f97f2b3eeae5474a41f9109813e671bb2478a1efc",
+			"solution_entries": 169.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKModified.json",
+			"editor_sha256": "966012b190a40eeb30b95b49f3254563c18d40c4dc826eec22f297d3aa37f0f5",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 2.0,
+				"max_float_delta": 1.1102230246251563e-16
+			},
+			"records": 169.0,
+			"runtime_path": "assets/resources/levels/bankDataLKModified.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "24a19fb922b42d29f90cd7ef0c99c65aaee25d636c4340eb3b6d2beadd0d6f8a",
+			"solution_entries": 169.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKModified.pace.json",
+			"editor_sha256": "08cbb30076d7a66ceb917c745e2b19c7ec0e6c38f365d9a5fa8b1e1b007aae41",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 169.0,
+			"runtime_path": "assets/resources/levels/bankDataLKModified.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "26c7aa8f6944a9f818fcb2161ad32d275c9ed30b1c2ede3932e75c4a4e8d3234",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle10x10.json",
+			"editor_sha256": "41e62965fef354629ee7af63f3bc5792fdb8dd8b1387c56122475cb8bc585034",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 1.0,
+				"max_float_delta": 1.1102230246251563e-16
+			},
+			"records": 2406.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle10x10.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "39195888671b3e53bf5c3a15836bdc4c475a7c1de93765b81f6d0ab7a75b5941",
+			"solution_entries": 2406.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle10x10.pace.json",
+			"editor_sha256": "baa770b663c64a4060a92def079fa4bb91e72b5dbdf4f96a055ff03b545a9912",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 2406.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle10x10.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "a0fc27c40dfadbb26a6f518b11d4465386431db316e58b4b9fd2f939f7e34a26",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle11x11.json",
+			"editor_sha256": "4943522ce2ed4ebe00d5fcb3686e85daf3844093892b3a7477e96825f2c39ec5",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 70.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle11x11.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "77cb0bbc6ff93716b78a53d118680d47578f833f1d153e64be93cbfe30011d78",
+			"solution_entries": 70.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle11x11.pace.json",
+			"editor_sha256": "fff1f05f1bb05da4daa76dc90c0556036749288a7a9c8edff83f3f77d14f724d",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 70.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle11x11.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "e18b2cf74ebb946783b82656e756f439d9ef16063e57bac22fa4ea81b2d6fe20",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle12x12.json",
+			"editor_sha256": "34278793cc4f06a6157c6cd749216d0ca7d4c60466f052b10a7e1dd545fd6335",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 726.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle12x12.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "3aa9a7f5bfdd8de6c419b5bd63a990557149cf24071143602a73d73210f68444",
+			"solution_entries": 726.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle12x12.pace.json",
+			"editor_sha256": "8da2d3c2e2d062a7658cb9d0fdda6d02407dccf8d1b7f4cb378525ed6e8f8ff2",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 726.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle12x12.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "48dababfbfa11bd943738d8176bc093179087c819b51d5bd0de0e8c36a6ba778",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle7x7.json",
+			"editor_sha256": "e3db18b3e1add8f5f73be7d3297af40da099093a12a23645d47d5a2e6b7ecc64",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1472.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle7x7.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "8c911be6ece4be12153324d1ff98cf45bfabf29a1d6cd9a388447052b2ff735b",
+			"solution_entries": 1472.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle7x7.pace.json",
+			"editor_sha256": "3f7a6b88b028dcee88e9dd00b42b20c10fe81ed5a05287c656252316fbf4dbfb",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1472.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle7x7.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "cd51cb2fab0592601e67b9355c5176f5fb8831bf7e8b3137d079c82db5789a7d",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle8x8.json",
+			"editor_sha256": "eec27d52556d15980726fb7d5db2fe4821c40e8b7d0d9aa01452bcdf18cdbc65",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 1.0,
+				"max_float_delta": 4.930380657631324e-32
+			},
+			"records": 2368.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle8x8.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "36a676d93d55c0e6d84d620624f4c44afc8a48998b2fb3d40126f82f11c0f256",
+			"solution_entries": 2368.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle8x8.pace.json",
+			"editor_sha256": "5e312bbc9a2c948ed5995ca4543c1c27887b823688f6da5ed7d594cb81500383",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 2368.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle8x8.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "932e918140e3763911cad5cd6137407d8b381c18a0e6bef62b13352bef318c2a",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle9x9.json",
+			"editor_sha256": "6ca0aaf34e95f8527ed45727a4c16901388de5a60d34c388f809893a63edc9ba",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 2502.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle9x9.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "cf6ce656e732bce13adf20d0f4554b2350303b4abbb26cccebfb12d446299ebb",
+			"solution_entries": 2502.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataLKStyle9x9.pace.json",
+			"editor_sha256": "bd69c74fed22ff9372ebfbc6fda75a2efcecd17ae923555bf6deb411138b07fe",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 2502.0,
+			"runtime_path": "assets/resources/levels/bankDataLKStyle9x9.pace.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "cf41f088e4b277588ec15783d0e350f612df063d1489cb62a7379ca01d83c6f8",
+			"solution_entries": 0.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataOneFish10x10.json",
+			"editor_sha256": "6c6a246b7783166ad0ef136ebe4a14c863555411e249acda3f4ac79977ca3e18",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1021.0,
+			"runtime_path": "assets/resources/levels/bankDataOneFish10x10.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "f264282804932f678d5942d5433b6ab96d844e9266c5a0c54ae235fd585617cc",
+			"solution_entries": 1021.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataOneFish7x7.json",
+			"editor_sha256": "28cabe39e77942af079cd59c18ed56c1960e5e2d772a0d216dcbcb0511892c88",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 3.0,
+			"runtime_path": "assets/resources/levels/bankDataOneFish7x7.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "026541c45849fbb39031d458b743a56b551d481d984fef3933e35365f40fc250",
+			"solution_entries": 3.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataOneFish8x8.json",
+			"editor_sha256": "ba8b233ffee52f5aa5f95f4ef395fa433f7b94d576b75037d90adb3e40f62d2a",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1188.0,
+			"runtime_path": "assets/resources/levels/bankDataOneFish8x8.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "d2d92200f7be15664f4d2c133657b10644a5c2fef1fe660c3034dd85aca7d123",
+			"solution_entries": 1188.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataOneFish9x9.json",
+			"editor_sha256": "5807278a4cd61e03379697e3421ce40daf78765748f8386d183cfd5be92d64af",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 1184.0,
+			"runtime_path": "assets/resources/levels/bankDataOneFish9x9.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "d7967ac6b652d520000aeda21bb20c28ba4000f524481a6c7bd8f9a3c50034f3",
+			"solution_entries": 1184.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataSP.json",
+			"editor_sha256": "5778c4197b0ba5c268498ce07225168adbefb998433f75511efeb3b1626783b5",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 57.0,
+			"runtime_path": "assets/resources/levels/bankDataSP.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "46efa14e815f3add21911761a99ef917d9bdb04732184d5b48987d37dfc1a27b",
+			"solution_entries": 57.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataSP_TT.json",
+			"editor_sha256": "a1d725e9db86278ffe18fe7c8c0a482afa6d7475e78e71f2a5fd545ec45470ed",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 432.0,
+			"runtime_path": "assets/resources/levels/bankDataSP_TT.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "4a0c4a9c4e78bc0c21db3dd7da992ed1e447d03cd4a18452b6083675d129542b",
+			"solution_entries": 432.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataSingleRegion.json",
+			"editor_sha256": "e551ef7ee83eeb612c66a95cf762a918dc837adbb51c7d7c3ef8350d6d33f5e6",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 13.0,
+				"max_float_delta": 1.1102230246251563e-16
+			},
+			"records": 6196.0,
+			"runtime_path": "assets/resources/levels/bankDataSingleRegion.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "70384fada9fbd45437393761f124e6fdd7aa490f0e2af842ac5852353a89c329",
+			"solution_entries": 6196.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataSuperHard.json",
+			"editor_sha256": "cdcfd3c13eed387590cbb374d7c6639612235c5d0d826f098cdb64cdec18a211",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 275.0,
+			"runtime_path": "assets/resources/levels/bankDataSuperHard.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "f63fd7461e36c725503310db6e9b715e73986b91392f68b09e2ea603da75fd18",
+			"solution_entries": 275.0
+		},
+		{
+			"editor_path": "assets/editor/levels/bankDataSuperHardR4.json",
+			"editor_sha256": "6a59915c00d47023525c1c32420ee3011a313efc8b0bce6a27925b3ae6f89972",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 8.0,
+				"max_float_delta": 1.1102230246251563e-16
+			},
+			"records": 2996.0,
+			"runtime_path": "assets/resources/levels/bankDataSuperHardR4.bin",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "d39c1e3baa9de613a18e8d8020368f99851f1a637b81f725f246f85bb315aaa6",
+			"solution_entries": 2996.0
+		},
+		{
+			"editor_path": "assets/editor/levels/levels-7x7.json",
+			"editor_sha256": "c96ee43b444b327bb6b67d43d63b41542b58f4f3b3af7a1195bf1741c847330f",
+			"json_roundtrip": {
+				"equal": true,
+				"float_rounding_count": 0.0,
+				"max_float_delta": 0.0
+			},
+			"records": 37.0,
+			"runtime_path": "assets/resources/levels/levels-7x7.json",
+			"runtime_rejected_solutions": 0.0,
+			"runtime_sha256": "25b73881ca04a533b3ec68093fc5938e5c85240b08747dc2f7d6ead1d054b951",
+			"solution_entries": 0.0
+		}
+	],
+	"package_sha256": "f6664607878fc45cce3e16269425ac8bfaff63a90438e42b8453aad72d466326",
+	"schema": 1.0
+}

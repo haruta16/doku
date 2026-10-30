@@ -1,4 +1,4 @@
-## 清空按钮实验：对局页是否显示「清空」按钮；0=隐藏 1=显示（当前代码里没有调用点，属预留实验）
+## 实验配置 function_clear：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name FunctionClearConfig
 
@@ -7,13 +7,7 @@ const VALUE_HIDE: int = 0 # 不显示清空按钮
 const VALUE_SHOW: int = 1 # 显示清空按钮
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "function_clear"
-	default_value = VALUE_HIDE # 默认档：隐藏
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
-
-
-## 是否显示清空按钮（当前无调用点）
-func should_show_clear_btn() -> bool:
-	return value() == VALUE_SHOW
+	default_value = VALUE_HIDE

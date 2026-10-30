@@ -1,0 +1,46 @@
+{
+  "status": "fixed_applied_to_stage_by_root",
+  "paths": {
+    "products/meowdoku/app/features/home/view/home_page.gd": {
+      "fixed_sha256": "8ae2b78e07824edab2266075275075bca8d2fbb7a47de38e7d54e4784ea6bae1",
+      "baseline_stage_sha256": "6e2be601f4a985bda2256d62153ca94822e016df8ff84a482f333ac7cccdcb76",
+      "applied_stage_sha256": "8ae2b78e07824edab2266075275075bca8d2fbb7a47de38e7d54e4784ea6bae1"
+    },
+    "tools/validation/test_ui_popup_results.gd": {
+      "fixed_sha256": "3ffe13a2c63de021a46019c756ff66bd843ce9b24074cefa4633ab400c7bed59",
+      "baseline_stage_sha256": "02f9a52be4ff31e7ff174862def83bc91a3a15b374cd499f89713cabdf971ba8",
+      "applied_stage_sha256": "3ffe13a2c63de021a46019c756ff66bd843ce9b24074cefa4633ab400c7bed59"
+    }
+  },
+  "patch": "/tmp/doku122-home-popup-final.patch",
+  "cause": "Rank popup initial SceneTreeTimer wait outlived Home and left parent GDScriptFunctionState; Home-owned tick signal synchronously unwinds delay and popup parent awaits after generation invalidation and pending-queue removal.",
+  "clock": "The 0.1s visible-entry wait now uses monotonic real UI time, independent of Engine.time_scale.",
+  "evidence": [
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-reward-home-cancel-delay-1793361660763567000.log",
+      "ok": true,
+      "checks": 10,
+      "failures": 0
+    },
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-reward-home-fixed-1793361810918917000.log",
+      "ok": true,
+      "checks": 567,
+      "failures": 0
+    },
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-home-popup-regression-1793361952540070000.log",
+      "ok": true,
+      "checks": 77,
+      "failures": 0
+    }
+  ],
+  "negative_control": {
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-home-popup-negative-1793362030187582000.log",
+    "checks": 77,
+    "failures": 12,
+    "shutdown_leak": true,
+    "use_after_free_errors": 3,
+    "meaning": "Same new regression on the original Home fails immediate-parent completion and replacement isolation in all six scenarios; fixed Home has 77/0 and no strict errors."
+  }
+}

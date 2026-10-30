@@ -1,4 +1,4 @@
-## 新手引导反馈实验：0=现有引导 1=打勾式引导 2=IQ 式引导
+## 实验配置 guide_feedback：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name GuideFeedbackConfig
 
@@ -8,18 +8,7 @@ const VALUE_CHECK: int = 1 # 打勾式引导
 const VALUE_IQ: int = 2 # IQ 式引导
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "guide_feedback"
-	default_value = VALUE_CURRENT # 默认档：现有引导
-	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
-
-
-## 是否用打勾式引导
-func is_check_guide() -> bool:
-	return value() == VALUE_CHECK
-
-
-## 是否用 IQ 式引导
-func is_iq_guide() -> bool:
-	return value() == VALUE_IQ
+	default_value = VALUE_CURRENT

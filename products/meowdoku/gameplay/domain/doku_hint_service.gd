@@ -7,13 +7,13 @@ const EngineRules = preload("res://products/meowdoku/gameplay/domain/hint_engine
 const States = preload("res://products/meowdoku/gameplay/domain/cell_state.gd")
 
 
-static func find_hint(raw_board: Array, regions: Array, solution: Array) -> Dictionary:
+static func find_hint(raw_board: Array, regions: Array, solution: Array, policy: Dictionary = {}) -> Dictionary:
 	var model: BoardState = BoardState.new()
 	if not model.restore_board(raw_board):
 		return {"found": false}
 	var size: int = raw_board.size()
 	var board: Array = model.get_folded_board()
-	var hint: Dictionary = EngineRules.find_mark_hint(board, size, regions)
+	var hint: Dictionary = EngineRules.find_mark_hint(board, size, regions, int(policy.get("hint_func", 0)) in [1, 3])
 	if not hint.get("found", false):
 		for row in range(size):
 			for col in range(size):
@@ -31,7 +31,7 @@ static func find_hint(raw_board: Array, regions: Array, solution: Array) -> Dict
 	if not hint.get("found", false):
 		hint = EngineRules.find_r2_hint(board, size, regions)
 	if not hint.get("found", false):
-		hint = EngineRules.find_r3_r4_hint(board, size, regions)
+		hint = EngineRules.find_r3_r4_hint(board, size, regions, int(policy.get("hint_func", 0)) in [2, 3])
 	if not hint.get("found", false):
 		hint = EngineRules.find_chain_hint(board, size, regions)
 	if not hint.get("found", false):
@@ -39,7 +39,7 @@ static func find_hint(raw_board: Array, regions: Array, solution: Array) -> Dict
 	var strategy: String = str(hint.get("strategy", "R1"))
 	hint["strategy"] = strategy
 	var cell: Vector2i = hint.get("cell", Vector2i(-1, -1))
-	if cell.x >= 0 and strategy not in ["R1_mark", "R2", "R3", "R4"]:
+	if cell.x >= 0 and strategy not in ["R1_mark", "R2", "R3", "R4", "R3b", "R4b"]:
 		if raw_board[cell.x][cell.y] in [States.MARK, States.DRAFT_CROSS]:
 			hint["wrong_mark"] = true
 			hint["description_key"] = "HINT_WRONG_MARK"
@@ -76,6 +76,17 @@ static func apply_hint(raw_board: Array, regions: Array, hint: Dictionary) -> Di
 			for row in range(size):
 				if regions[row][col] not in included_regions and States.is_blank(model.get_cell_state(row, col)):
 					_add_change(model, changes, row, col, States.MARK, States.EMPTY)
+	elif strategy in ["R3b", "R4b"]:
+		var included_regions: Array = hint.get("regions", [])
+		var rows: Array = hint.get("locked_rows", [])
+		var cols: Array = hint.get("locked_cols", [])
+		for row in range(size):
+			for col in range(size):
+				if regions[row][col] not in included_regions or not States.is_blank(model.get_cell_state(row, col)):
+					continue
+				if (not rows.is_empty() and not rows.has(row)) or (not cols.is_empty() and not cols.has(col)):
+					_add_change(model, changes, row, col, States.MARK, States.EMPTY)
+
 	else:
 		var position: Vector2i = hint.get("cell", Vector2i(-1, -1))
 		if not model.contains(position.x, position.y):

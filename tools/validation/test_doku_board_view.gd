@@ -24,6 +24,9 @@ func _run() -> void:
 	var board: Variant = board_script.new()
 	var cell_scene: PackedScene = load("res://products/meowdoku/assets/prefab/cell.tscn")
 	root.add_child(board)
+	await board.prewarm_cells(2)
+	_check(board.get_node_or_null("Cell_1_1") != null, "prewarm constructs presentation cells before any board model exists")
+	_check(board.get_board().is_empty(), "prewarm leaves uninitialized business board untouched")
 	var regions: Array = [[0, 1], [1, 0]]
 	var colors: Array[int] = [0, 1]
 	_check(board.setup(2, regions, colors), "valid setup reports complete board construction")
@@ -68,6 +71,10 @@ func _run() -> void:
 	_check(model.is_input_locked(0, 0) and board.get_cell_view(0, 0).is_auto_mark_locked(), "lock has one source")
 	board.get_cell_view(0, 0).set_auto_mark_locked(false)
 	_check(not board.is_cell_input_locked(0, 0), "direct CellView unlock reaches shared model")
+	board.set_cell_input_locked(0, 0, true)
+	var locked_cells: Array = board.get_board()
+	board.clear_input_locks()
+	_check(not board.is_cell_input_locked(0, 0) and board.get_board() == locked_cells, "lifecycle clearing releases transient locks without changing the board")
 	model.transition_cell(1, 1, CellState.CAT, 100)
 	var revision: int = model.get_revision()
 	var notifications: int = _notifications.size()

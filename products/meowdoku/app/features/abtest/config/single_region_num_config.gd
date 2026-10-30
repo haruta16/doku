@@ -1,4 +1,4 @@
-## 单格区域数量实验：限制「只含 1 格」的区域个数，超限就换题；0=不限制 1=超过 2 个换题 2=同 1，且 21 关起收紧到超过 1 个就换题
+## 实验配置 single_region_num：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name SingleRegionNumConfig
 
@@ -6,20 +6,19 @@ class_name SingleRegionNumConfig
 const VALUE_DEFAULT: int = 0 # 不限制
 const VALUE_LIMITED: int = 1 # 单格区域超过 2 个就换题
 const VALUE_STRICT: int = 2 # 基础限制 + 21 关起超过 1 个就换题（lk/sp 题库除外）
+const VALUE_ALL_ONE: int = 3
+const VALUE_ZERO_51: int = 4
+const VALUE_ZERO_101: int = 5
+
+const SINGLE_LIMIT_BASELINE: int = 1
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "single_region_num"
-	default_value = VALUE_DEFAULT # 默认档：不限制
-	timing = ABTestManager.TIMING_GAME_START_NORMAL # 染色时机：普通模式开局时
+
+	default_value = VALUE_ALL_ONE
 
 
-## 是否启用基础限制（档位 1）
-func is_single_region_limited() -> bool:
-	return value() == VALUE_LIMITED
-
-
-## 该关卡是否启用严格限制（档位 2 且关卡 >= 21）
-func is_strict_limited_at(level_num: int) -> bool:
-	return value() == VALUE_STRICT and level_num >= 21
+func single_limit_at(_level_num: int, _rank: int) -> int:
+	return SINGLE_LIMIT_BASELINE

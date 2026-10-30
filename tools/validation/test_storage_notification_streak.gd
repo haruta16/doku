@@ -118,11 +118,12 @@ func _test_inventory_nested_preference() -> void:
 	_check(events == [["locate", int(next.inventory.locate)], ["hint", int(next.inventory.hint)]], "nested preference commit still publishes the outer not-yet-notified balance once")
 
 
+## 1.22 跨日保留断签历史供补签选择；watch 只刷新展示，不能预先清掉资格。
 func _test_continuity_watch_retry() -> void:
 	_prepare_streak(-2)
 	streak._last_seen_jdn = 0
-	streak._next_continuity_retry_msec = 0
-	streak._pending_show_uid = 0
+	var before: Dictionary = game.get_core_store().snapshot()
+	var revision: int = game.get_core_store().revision()
 	var writes := {"count": 0}
 	files.set_fault_injector_for_tests(func(phase: String) -> bool:
 		if phase == "before_replace":
@@ -130,20 +131,13 @@ func _test_continuity_watch_retry() -> void:
 			return true
 		return false)
 	streak._on_day_watch_tick()
-	_check(streak._last_seen_jdn == 0 and streak._pending_show_uid == 0, "failed day watch preserves the retry date and pending presentation")
-	_check(game.get_streak_data().current_streak == 6, "failed day watch does not publish an unsaved continuity reset")
+	_check(streak._last_seen_jdn == streak._today_jdn(), "day watch publishes the new calendar date")
+	_check(game.get_streak_data().current_streak == 6 and game.get_streak_data().best_streak == 6, "1.22 retains broken streak and best streak for the revive decision")
+	_check(streak.is_broken() and streak.get_display_reward_cycle() == 0, "broken history is retained while current display correctly shows an empty cycle")
 	streak._on_day_watch_tick()
 	streak._on_day_watch_tick()
-	_check(writes.count == 1 and streak._next_continuity_retry_msec > Time.get_ticks_msec(), "failed background reset cools down instead of writing on each heartbeat")
+	_check(writes.count == 0 and game.get_core_store().revision() == revision and game.get_core_store().snapshot() == before, "readonly day watch never consumes revival eligibility or writes on every heartbeat")
 	files.set_fault_injector_for_tests(Callable())
-	streak._next_continuity_retry_msec = Time.get_ticks_msec() - 1
-	streak._on_day_watch_tick()
-	_check(streak._last_seen_jdn == streak._today_jdn() and streak._pending_show_uid == -1, "next successful day watch completes and consumes its reset")
-	_check(game.get_streak_data().current_streak == 0 and game.get_streak_data().best_streak == 6, "day watch reset preserves historical best")
-	var revision: int = game.get_core_store().revision()
-	streak._on_day_watch_tick()
-	streak._check_continuity()
-	_check(game.get_core_store().revision() == revision, "completed continuity reset does not keep rewriting the same state")
 
 
 func _test_direct_checkin_dates() -> void:
@@ -177,7 +171,6 @@ func _test_switch_consumption() -> void:
 func _test_notify_win_retry() -> void:
 	_prepare_streak(-1)
 	_check(game.set_tutorial_done(true), "win-triggered checkin fixture is unlocked")
-	streak._next_continuity_retry_msec = Time.get_ticks_msec() + 30_000
 	var skipped: Dictionary = streak.notify_win(&"unrelated")
 	_check(skipped.get("ok", false) and skipped.get("skipped", false), "unqualified win explicitly succeeds without a checkin")
 	var before: Dictionary = game.get_core_store().snapshot()
@@ -188,7 +181,6 @@ func _test_notify_win_retry() -> void:
 	files.set_fault_injector_for_tests(Callable())
 	var retried: Dictionary = streak.notify_win(&"main")
 	_check(retried.get("ok", false) and retried.get("has_reward", false), "win-triggered checkin can retry and earn its award")
-	_check(streak._next_continuity_retry_msec == 0, "explicit checkin bypasses and clears background retry cooldown")
 	var revision: int = game.get_core_store().revision()
 	_check(streak.notify_win(&"main").get("duplicate", false) and game.get_core_store().revision() == revision, "successful win-triggered checkin remains idempotent")
 

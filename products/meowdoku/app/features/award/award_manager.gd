@@ -5,6 +5,7 @@ extends Node
 enum DisplayType {
 	DIRECT, # 直接入账，不弹界面
 	STREAK_GIFT, # 弹签到宝箱页，玩家操作后才入账
+	RANK_GIFT,
 }
 
 # ---- 渲染实现（按形态 preload，dispatch 时 new 出实例） ----
@@ -12,6 +13,8 @@ const _RENDER_DIRECT: Script = preload("res://products/meowdoku/app/features/awa
 const _RENDER_STREAK_GIFT: Script = preload(
 	"res://products/meowdoku/app/features/award/render/award_render_streak_gift.gd"
 )
+
+const _RENDER_RANK_GIFT: Script = preload("res://products/meowdoku/app/features/award/render/award_render_rank_gift.gd")
 
 # ---- 运行时状态 ----
 var _renders: Dictionary = {} # uid → AwardRender 实例；入账后从这里移除
@@ -116,7 +119,10 @@ func _persist_award(uid: int) -> bool:
 		push_error("[AwardManager] 奖励尚未入账，保留待领取记录: " + str(result))
 		return false
 	for grant: Dictionary in result.get("grants", []):
-		Tracker.track_prop_get(str(grant.kind), str(grant.reason), int(grant.count), int(grant.balance))
+		if int(grant.get("category", 0)) == AwardItem.Category.FRAME:
+			Tracker.track_frame_get(int(grant.frame_id), str(grant.reason))
+		else:
+			Tracker.track_prop_get(str(grant.kind), str(grant.reason), int(grant.count), int(grant.balance))
 	_renders.erase(uid)
 	return true
 
@@ -128,6 +134,8 @@ func _make_render(display_type: int) -> AwardRender:
 			return _RENDER_DIRECT.new() as AwardRender
 		DisplayType.STREAK_GIFT:
 			return _RENDER_STREAK_GIFT.new() as AwardRender
+		DisplayType.RANK_GIFT:
+			return _RENDER_RANK_GIFT.new() as AwardRender
 		_:
 			push_error("AwardManager._make_render: 未知 display_type=%d,默认 DIRECT" % display_type)
 			return _RENDER_DIRECT.new() as AwardRender

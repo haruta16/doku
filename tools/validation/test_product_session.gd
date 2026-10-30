@@ -49,6 +49,17 @@ class MemoryProductState extends RefCounted:
 		committed.emit(_revision)
 		return Result.success()
 
+## 内容版本来源由装配端注入；最小工程不读取真实题库或全局内容服务。
+class PlannedProductState extends MemoryProductState:
+	var content_generation: int = 7
+
+	func stage_round_selection(candidate: Dictionary, plan: Dictionary, _checkpoint: Dictionary) -> Dictionary:
+		if plan.get("content_generation") != content_generation:
+			return Result.failure("selection_content_changed")
+		candidate.profile["normal_level_cursor"] = int(plan.get("cursor", 0))
+		return Result.success()
+
+
 var checks: int = 0
 var failures: int = 0
 
@@ -113,9 +124,30 @@ func _run() -> void:
 	var repeated: Dictionary = request.stage(candidate, economy, TODAY, POLICY)
 	_check(repeated.ok and repeated.duplicate and candidate == settled, "settlement retry cannot duplicate frozen reward")
 	_check(not resumed.execute("request_hint", {}, {}).ok, "settled session rejects delayed gameplay actions")
+	_test_selection_port()
 	_test_reentrant_receipts(false)
 	_test_reentrant_receipts(true)
 	_finish()
+
+
+func _test_selection_port() -> void:
+	var plan := {"content_generation": 7, "cursor": 9}
+	var unsupported := MemoryProductState.new(_fixture())
+	var before := unsupported.get_core_candidate()
+	var result: Dictionary = Session.new(unsupported, "main").ensure_started(_context(), "", {}, plan)
+	_check(not result.ok and result.get("cause", {}).get("error") == "selection_adapter_unavailable" and unsupported.value == before, "a plan cannot bypass a missing content adapter")
+	var state := PlannedProductState.new(_fixture())
+	var session := Session.new(state, "main")
+	before = state.get_core_candidate()
+	state.content_generation = 8
+	result = session.ensure_started(_context(), "", {}, plan)
+	_check(not result.ok and result.get("cause", {}).get("error") == "selection_content_changed" and state.value == before, "injected content generation rejects a stale plan before publication")
+	state.content_generation = 7
+	state.fail_next = true
+	result = session.ensure_started(_context(), "", {}, plan)
+	_check(not result.ok and state.value == before, "a staged selection rolls back with a failed round commit")
+	result = session.ensure_started(_context(), "", {}, plan)
+	_check(result.ok and state.value.profile.get("normal_level_cursor") == 9 and state.value.round_services.has("doku/main"), "selection and round publish together after the same request retries")
 
 
 ## 提交通知先取得重复回执，再完成另一合法动作；最外层响应最后才返回。

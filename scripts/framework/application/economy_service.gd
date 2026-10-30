@@ -5,10 +5,12 @@ extends RefCounted
 const Result = preload("res://scripts/framework/operation_result.gd")
 
 var _store: RefCounted
+var _item_policy: RefCounted
 
 
-func _init(core_store: RefCounted) -> void:
+func _init(core_store: RefCounted, item_policy: RefCounted = null) -> void:
 	_store = core_store
+	_item_policy = item_policy
 
 
 ## claim_key 是业务身份，重试必须复用；空字符串表示每次都是新的一笔。
@@ -28,7 +30,7 @@ func stage_award(candidate: Dictionary, items: Array, display_type: int, reason:
 	if not _store.is_open():
 		return _failure("not_open", "核心存档不可用")
 	var inventory: Dictionary = candidate.get("inventory", {})
-	var error := validate_items(items, inventory)
+	var error := _validate_award_items(items, candidate)
 	if not error.is_empty() or reason.is_empty():
 		return _failure("invalid_award", error if not error.is_empty() else "奖励来源不能为空")
 	var claims: Dictionary = candidate.get("claims", {})
@@ -74,7 +76,7 @@ func stage_claim(candidate: Dictionary, uid: int) -> Dictionary:
 	var entry: Dictionary = pending[index]
 	var inventory: Dictionary = candidate.get("inventory", {})
 	var items: Array = entry.get("items", [])
-	var error := validate_items(items, inventory)
+	var error := _validate_award_items(items, candidate)
 	if not error.is_empty():
 		return _failure("invalid_award", error)
 	var grants: Array = []
@@ -84,6 +86,14 @@ func stage_claim(candidate: Dictionary, uid: int) -> Dictionary:
 		if copy_index == 1 and not str(entry.get("bonus_reason", "")).is_empty():
 			reason = str(entry.bonus_reason)
 		for item: Dictionary in items:
+			if _item_policy != null:
+				if copy_index == 1 and not _item_policy.can_double(item):
+					continue
+				var applied: Dictionary = _item_policy.stage_item(candidate, item, reason)
+				if not applied.get("ok", false):
+					return applied
+				grants.append(applied.grant)
+				continue
 			var kind: String = item.kind
 			var amount: int = item.count
 			var current: int = inventory.get(kind, 0)
@@ -135,3 +145,10 @@ func _find(entries: Array, uid: int) -> int:
 
 func _failure(status: String, message: String) -> Dictionary:
 	return Result.failure(status, message, {"status": status})
+
+
+## 产品策略只处理候选数据，不允许从此接口执行 UI、SDK 或文件副作用。
+func _validate_award_items(items: Array, candidate: Dictionary) -> String:
+	if _item_policy != null:
+		return _item_policy.validate_award(items, candidate)
+	return validate_items(items, candidate.get("inventory", {}))

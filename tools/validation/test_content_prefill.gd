@@ -20,7 +20,7 @@ func _run() -> void:
 	var validator: Script = load("res://products/meowdoku/gameplay/content/doku_content_validator.gd")
 	var ui: Node = root.get_node("UIManager")
 	root.get_node("GameState").set_sound_on(false)
-	var special: Array = bank.get_sp_levels().duplicate(true)
+	var special: Array = bank.get_sp_levels().map(func(entry: Dictionary) -> Dictionary: return bank.materialize_entry(entry, true))
 	for entry: Dictionary in special:
 		for field: String in entry.keys():
 			if field.begins_with("_"):
@@ -39,7 +39,7 @@ func _run() -> void:
 	var catalog: ContentCatalog = _catalog(special)
 	_check(catalog.validate_all(validator.validation()).ok, "JSON integral coordinates pass catalog validation")
 	ContentContext.publish(catalog)
-	var loaded: Dictionary = bank.get_sp_levels()[0]
+	var loaded: Dictionary = bank.materialize_entry(bank.get_sp_levels()[0], true)
 	var params: Dictionary = _params(loaded)
 	var page: Variant = ui.show_ui("game", params)
 	await create_timer(0.15).timeout

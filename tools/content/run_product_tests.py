@@ -7,12 +7,44 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+from run_validation import classify_engine_errors, has_reported_failures
+
+
+def evaluate_publication_result(exit_code: int, log: str, *, rejection: str,
+                                artifact_exists: bool, signature_exists: bool) -> dict:
+    """An expected business rejection never excuses an engine failure alongside it."""
+    # A nested validator may forward the first engine line as RuntimeError's
+    # message. Preserve the raw log but classify that line as engine output too.
+    diagnostic_log = re.sub(r"(?m)^(?:RuntimeError|ValueError): (?=(?:ERROR|SCRIPT ERROR|WARNING):)", "", log)
+    diagnostics = classify_engine_errors(diagnostic_log, [])
+    engine_failed = (bool(diagnostics.get("unexpected_errors"))
+                     or bool(diagnostics.get("shutdown_errors"))
+                     or has_reported_failures(log)
+                     or any(marker in log for marker in ("SCRIPT ERROR:", "Parse Error:")))
+    completed = (exit_code != 0 and rejection in log and not artifact_exists) if rejection else (
+        exit_code == 0 and "PRODUCT_VALIDATED:" in log and signature_exists)
+    return {"ok": bool(completed and not engine_failed),
+            "diagnostics_classified": True, **diagnostics}
+
+
+def persist_case_log(directory: Path, name: str, log: str, report: Path | None = None) -> dict:
+    """Keep raw case output outside the publisher's disposable project directory."""
+    directory = directory.resolve()
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / (name + ".log")
+    path.write_text(log, encoding="utf-8")
+    record = {"log": str(path), "log_sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    if report is not None:
+        record["log_relative"] = os.path.relpath(path, report.resolve().parent)
+    return record
 
 
 def merge_publication_checks(report: dict, checks: list[dict]) -> dict:
@@ -30,6 +62,10 @@ def main() -> None:
     parser.add_argument("--report", type=Path, help="Append product_publication_checks to a JSON report")
     args = parser.parse_args()
     checks = []
+    case_logs = (args.report.resolve().with_name(args.report.stem + "-case-logs")
+                 if args.report else Path(tempfile.mkdtemp(prefix="doku-product-publication-case-logs-")))
+    case_logs.mkdir(parents=True, exist_ok=True)
+    print("PRODUCT_PUBLICATION_LOGS=" + str(case_logs), flush=True)
     with tempfile.TemporaryDirectory(prefix="doku-product-publication-") as directory:
         work = Path(directory).resolve()
         key = work / "private.pem"
@@ -54,7 +90,7 @@ def main() -> None:
             command = [sys.executable, str(ROOT / "tools/content/build_release.py"),
                        "--source", str(source), "--output", str(output),
                        "--product", "meowdoku", "--release", name,
-                       "--runtime", "godot-4.6.1-spine-4.2-data-v1", "--key", str(key),
+                       "--runtime", "godot-4.6.1-spine-4.2-data-v2", "--key", str(key),
                        "--godot", args.godot]
             if raw_assets is not None:
                 command += ["--raw-assets", str(raw_assets)]
@@ -62,12 +98,14 @@ def main() -> None:
                 command += ["--spine-assets", str(spine_assets)]
             result = subprocess.run(command, capture_output=True, text=True, timeout=240)
             log = result.stdout + result.stderr
-            valid = (result.returncode != 0 and rejection in log and not output.exists()) if rejection else (
-                result.returncode == 0 and "PRODUCT_VALIDATED:" in log and (output / "manifest.sig").is_file())
+            verdict = evaluate_publication_result(result.returncode, log, rejection=rejection,
+                                                 artifact_exists=output.exists(),
+                                                 signature_exists=(output / "manifest.sig").is_file())
+            valid = verdict["ok"]
             checks.append({"case": name, "command": command, "exit_code": result.returncode,
-                           "ok": valid, "expected_rejection": rejection or None,
+                           **verdict, "expected_rejection": rejection or None,
                            "artifact_exists": output.exists(), "summary": description,
-                           "log_sha256": hashlib.sha256(log.encode()).hexdigest()})
+                           **persist_case_log(case_logs, name, log, args.report)})
             print(f"PRODUCT_PUBLICATION {name}: {'passed' if valid else 'FAILED'} — {description}", flush=True)
             if not valid:
                 print(log[-12000:], file=sys.stderr)

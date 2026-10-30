@@ -17,6 +17,20 @@ import verify
 
 
 class VerifyTests(unittest.TestCase):
+    def test_fingerprints_include_native_root_configs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            names = ["unikit_config.tres", "lxauth_android_config.tres"]
+            for name in names:
+                (root / name).write_text("[resource]\nvalue = 1\n")
+            with patch.object(verify, "ROOT", root):
+                before = verify.fingerprints()
+                self.assertEqual(set(names), set(before))
+                for name in names:
+                    (root / name).write_text("[resource]\nvalue = 2\n")
+                after = verify.fingerprints()
+            self.assertEqual(set(names), {name for name in before if before[name] != after[name]})
+
     def _step(self, name):
         return next(step for step in verify.steps_for("all", "engine", Path("evidence")) if step["name"] == name)
 

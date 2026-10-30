@@ -27,16 +27,19 @@ func _run() -> void:
 	ab.normal_endgame_save.set_debug_override(0)
 	ab.daily_first_level_difficulty.set_debug_override(0)
 	ab.reward_unlock_level.set_debug_override(0)
-	ab.undo_btn.set_debug_override(1)
+	ab.draft_mode.set_debug_override(5)
 	ab.dc_level.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
-	ab.prop_highlight.set_debug_override(0) # 产品默认：使用道具后不再显示首次道具引导。
+	ab.auto_x_fill_mode.set_debug_override(0)
+	ab.prop_highlight.set_debug_override(0) # 1.22 的引导按本局播放次数，不由全局付费历史关闭。
 	for mode: String in ["game", "daily_game"]:
-		for scenario: String in ["hint", "locate", "locate_empty", "undo"]:
+		for scenario: String in ["hint", "locate", "locate_empty", "draft"]:
 			await _exercise(mode, scenario)
 	files.set_fault_injector_for_tests(Callable())
 	ui.hide_all()
 	await create_timer(0.5).timeout
+	for name: String in ["game", "daily_game", "confirm"]:
+		await ui.destroy_ui(name)
+	await process_frame
 	print("GAME PRODUCT TOOL FLAG TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -53,13 +56,13 @@ func _exercise(mode: String, scenario: String) -> void:
 	game.set_tool_count(kind, 10) # 只增加库存，不能预先污染 has_used_tool。
 	var page: Variant = ui.show_ui(mode, {"level_index": 50} if mode == "game" else {})
 	var deadline: int = Time.get_ticks_msec() + 8000
-	while (not page._entry_ready or page._entry_anim_playing) and Time.get_ticks_msec() < deadline:
+	while (not page._entry_ready or page._entry_anim_playing or page._tool_btns_locked) and Time.get_ticks_msec() < deadline:
 		await process_frame
-	_check(page._is_round_entry_ready() and not page._entry_anim_playing, label + " actual page is ready")
+	_check(page._is_round_entry_ready() and not page._entry_anim_playing and not page._tool_btns_locked, label + " actual page is ready")
 	_check(not game.has_used_tool() and page._can_show_idle_hint(), label + " unused player retains the default first-tool guidance")
-	if not page._is_round_entry_ready() or page._entry_anim_playing:
+	if not page._is_round_entry_ready() or page._entry_anim_playing or page._tool_btns_locked:
 		return
-	# 空定位仍收费；撤销选中未改变的 MARK 步骤仍收费，保留原版产品规则。
+	# 空定位仍收费；草稿按 1.22 的激活入口验证，同一轮已激活时不再扣费。
 	if scenario == "locate_empty":
 		var size: int = page._level_config.size
 		for row: int in size:
@@ -69,50 +72,55 @@ func _exercise(mode: String, scenario: String) -> void:
 		page._is_complete = false
 	_prepare_attempt(page, kind)
 	_check(page._ensure_business_round().get("ok", false), label + " durable round exists before injected action failures")
-	var button: Variant = page.get("_tool_" + kind + "_btn")
+	var button: Variant = page._bt._get_btn(kind)
 	var balance: int = game.get_tool_count(kind)
-	page.debug_force_free_tool = kind
-	page._sync_tools_from_state()
-	button.pressed.emit()
-	await process_frame
-	_dismiss_hint(page, kind)
-	var key: String = "doku/" + ("main" if mode == "game" else "daily")
-	var free_receipt: Dictionary = game.get_core_store().snapshot().round_services[key].last_receipt
-	_check(free_receipt.kind == ("request_hint" if kind == "hint" else kind) and free_receipt.result.get("cost", -1) == 0, label + " free button actually commits an accepted zero-price action")
-	_check(game.get_tool_count(kind) == balance and not game.has_used_tool(), label + " accepted free use neither debits nor records a paid use")
-	_check(page._can_show_idle_hint(), label + " free use keeps original default guidance eligibility")
-	page.debug_force_free_tool = ""
-	page._sync_tools_from_state()
+	var tracks_legacy_tool: bool = kind in ["hint", "locate", "undo"]
+	if kind in ["hint", "locate"]:
+		page.debug_force_free_tool = kind
+		page._sync_tools_from_state()
+		button.pressed.emit()
+		await create_timer(1.1).timeout
+		_dismiss_hint(page, kind)
+		var key: String = "doku/" + ("main" if mode == "game" else "daily")
+		var free_receipt: Dictionary = game.get_core_store().snapshot().round_services[key].last_receipt
+		_check(free_receipt.get("kind") == ("request_hint" if kind == "hint" else kind) and free_receipt.result.get("cost", -1) == 0, label + " free button actually commits an accepted zero-price action")
+		_check(game.get_tool_count(kind) == balance and not game.has_used_tool(), label + " accepted free use neither debits nor records a paid use")
+		_check(page._can_show_idle_hint(), label + " free use keeps original default guidance eligibility")
+		page.debug_force_free_tool = ""
+		page._sync_tools_from_state()
 	_prepare_attempt(page, kind)
 	var before: Dictionary = game.get_core_store().snapshot()
 	fault_hits = 0
 	files.set_fault_injector_for_tests(_reject_commit)
 	button.pressed.emit()
-	await process_frame
+	await create_timer(0.4).timeout
 	_check(fault_hits > 0, label + " paid action reaches the actual pre-replace fault boundary")
 	_check(not game.has_used_tool() and game.get_tool_count(kind) == balance and game.get_core_store().snapshot() == before, label + " failed save changes neither live flag, inventory nor persisted core")
 	_check(page._can_show_idle_hint(), label + " failed paid action retains guidance eligibility")
 	files.set_fault_injector_for_tests(Callable())
 	button.pressed.emit()
-	await process_frame
+	await create_timer(1.1).timeout
 	_dismiss_hint(page, kind)
-	_check(game.get_tool_count(kind) == balance - 1 and game.has_used_tool(), label + " successful retry debits once and sets paid-use flag")
-	_check(game.get_core_store().snapshot().profile.has_used_tool, label + " paid-use flag is in the committed core")
+	_check(game.get_tool_count(kind) == balance - 1 and game.has_used_tool() == tracks_legacy_tool, label + " successful retry debits once and records the 1.22 legacy-tool flag")
+	_check(game.get_core_store().snapshot().profile.has_used_tool == tracks_legacy_tool, label + " 1.22 legacy-tool flag is in the committed core")
 	var disk: Dictionary = files.load_result()
 	var saved: Dictionary = disk.config.get_value("core", "state", {}) if disk.get("ok", false) else {}
-	_check(saved.get("profile", {}).get("has_used_tool", false), label + " reading actual save slots recovers paid-use flag")
-	_check(not page._can_show_idle_hint(), label + " accepted paid use ends the default first-tool guidance")
+	_check(saved.get("profile", {}).get("has_used_tool", false) == tracks_legacy_tool, label + " reading actual save slots recovers 1.22 legacy-tool flag")
+	_check(page._can_show_idle_hint(), label + " 1.22 paid use preserves this round's unused hint presentation quota")
+	page._idle_hint_round_count = 1
+	_check(not page._can_show_idle_hint(), label + " this round's consumed hint quota prevents another presentation")
 
 
 func _prepare_attempt(page: Variant, kind: String) -> void:
 	page._last_tool_deplete_ms = -10000
-	if kind == "undo":
-		page._step_history.deserialize([{ "cells": [[0, 0, CellState.EMPTY, CellState.MARK]], "cat": false, "wrong": false }])
+	page._hint_cooldown = false
+	if kind == "draft":
+		page._draft_busy = false
 
 
 func _dismiss_hint(page: Variant, kind: String) -> void:
 	if kind == "hint" and page._hint_overlay.visible:
-		page._hint_overlay._on_close_btn_pressed()
+		page._hint_overlay._on_dismiss_btn_pressed()
 
 
 func _reject_commit(phase: String) -> bool:

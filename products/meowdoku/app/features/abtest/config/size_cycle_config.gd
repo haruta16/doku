@@ -1,4 +1,4 @@
-## 普通关尺寸循环实验：0/1 未使用，2=对照组（原尺寸曲线） 3~8=六套棋盘尺寸表；GamePage 按该值决定查哪张尺寸表
+## 实验配置 size_cycle：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name SizeCycleConfig
 
@@ -12,13 +12,7 @@ const VALUE_CYCLE_V3_E: int = 7 # 尺寸循环方案 E
 const VALUE_CYCLE_V3_F: int = 8 # 尺寸循环方案 F
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "size_cycle"
-	default_value = VALUE_CONTROL # 默认档：对照组
-	timing = ABTestManager.TIMING_GAME_START_NORMAL # 染色时机：普通模式开局时
-
-
-## 是否启用实验尺寸循环（非对照组）
-func is_cycle_enabled() -> bool:
-	return value() != VALUE_CONTROL
+	default_value = VALUE_CYCLE_V3_D

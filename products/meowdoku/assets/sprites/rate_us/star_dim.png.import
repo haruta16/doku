@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2vd2rjcdqaif"
-path.s3tc="res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.s3tc.ctex"
-path.etc2="res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.etc2.ctex"
+path.bptc="res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.bptc.ctex"
+path.astc="res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rate_us/star_dim.png"
-dest_files=["res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.s3tc.ctex", "res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.etc2.ctex"]
+dest_files=["res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.bptc.ctex", "res://.godot/imported/star_dim.png-bdf64992fb27a9fccc9e18b885ebe23c.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

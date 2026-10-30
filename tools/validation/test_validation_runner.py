@@ -337,6 +337,26 @@ class ValidationRunnerTests(unittest.TestCase):
         self.assertFalse(result["ok"])
         self.assertEqual(result["unexpected_errors"], result["shutdown_errors"])
 
+    def test_historical_shutdown_evidence_does_not_waive_current_acceptance(self):
+        output = (KNOWN_ENGINE_BANNER + "TESTS: 1 assertions, 0 failures\n"
+                  "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            with patch("run_validation.platform.system", return_value="Darwin"), \
+                 patch("run_validation.platform.machine", return_value="arm64"), \
+                 patch("run_validation.subprocess.run", return_value=subprocess.CompletedProcess([], 0, output, "")):
+                result = run("godot", path, path / "run.log", ["--script", "res://tools/validation/test_game_page_lifecycle.gd"], 1)
+        self.assertTrue(result["completion"]["ok"])
+        self.assertTrue(result["known_shutdown_errors"])
+        self.assertFalse(result["ok"])
+
+    def test_script_errors_and_missing_animation_tracks_remain_visible(self):
+        for message in ("SCRIPT ERROR: Invalid access to a removed property.",
+                        "WARNING: AnimationMixer (at: popup.tscn): 'GenericPopup', couldn't resolve track: 'Overlay:self_modulate'."):
+            with self.subTest(message=message):
+                result = classify_engine_errors(message, ["--script", "res://tools/validation/test_ui_framework.gd"])
+                self.assertEqual(result["unexpected_errors"], [message])
+
     def test_corrupt_storage_header_exception_requires_known_test_and_call_site(self):
         message = 'ERROR: Condition "magic != 0x43454447" is true. Returning: ERR_FILE_UNRECOGNIZED\n   at: open_and_parse (core/io/file_access_encrypted.cpp:99)'
         for script in ("test_storage.gd", "test_storage_initialization.gd"):

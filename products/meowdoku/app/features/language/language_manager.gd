@@ -1,6 +1,41 @@
-## 语言管理器（autoload 单例）：维护支持语言表、把系统语言归一化、并切换 TranslationServer 的 locale
-## 翻译资源本身由 project.godot 的 locale/translations 列表在启动时全部加载，这里只负责选哪个 locale
+## 语言管理器：优先恢复用户选择，否则解析系统语言，并在切换时更新共享字体。
 extends Node
+
+const LocalizedResourceTranslation = preload("res://products/meowdoku/app/features/language/localized_resource_translation.gd")
+var _resource_translations: Array[Translation] = []
+var _original_translations: Array[Translation] = []
+
+
+func _ready() -> void:
+	_register_resource_translations()
+
+
+func _register_resource_translations() -> void:
+	if not _resource_translations.is_empty():
+		return
+	for path: String in ProjectSettings.get_setting("internationalization/locale/translations", PackedStringArray()):
+		if not path.ends_with(".translation"):
+			continue
+		var original: Translation = load(path) as Translation
+		if original == null:
+			continue
+		var localized: Translation = LocalizedResourceTranslation.new(original)
+		TranslationServer.remove_translation(original)
+		TranslationServer.add_translation(localized)
+		_resource_translations.append(localized)
+		_original_translations.append(original)
+
+
+func _exit_tree() -> void:
+	# TranslationServer outlives the script language during engine shutdown. Remove script
+	# wrappers while GDScript is still alive; retain native originals for remaining nodes.
+	for localized: Translation in _resource_translations:
+		TranslationServer.remove_translation(localized)
+	for original: Translation in _original_translations:
+		TranslationServer.add_translation(original)
+	_resource_translations.clear()
+	_original_translations.clear()
+
 
 # ---- 支持语言白名单 ----
 ## 系统语言的主语言码必须在表内才认；表中含 tl/in/iw/no 这些旧码，见下面的别名表
@@ -81,6 +116,7 @@ const FALLBACK_LOCALE: String = "en"
 
 
 # ================= 对外接口 =================
+## 优先使用存档中的主动选择，只有未选择时才跟随受支持的系统语言。
 func apply_system_locale() -> void:
 	# 启动时调一次：优先用玩家上次选的语言，没选过才跟随系统
 	var apply_loc: String = GameState.get_apply_locale()
@@ -101,11 +137,24 @@ func resolve_system_locale() -> String:
 	return FALLBACK_LOCALE
 
 
-## 切换 locale：TranslationServer 会广播 NOTIFICATION_TRANSLATION_CHANGED，各页面即时刷新，不用重启
+## 切换翻译语言后立即更新共享字体，确保语言与字形资源同步。
 func set_locale(locale: String) -> void:
 	TranslationServer.set_locale(locale)
+	FontSwapManager.apply()
 
 
 ## 当前生效的 locale
 func get_locale() -> String:
 	return TranslationServer.get_locale()
+
+
+## 仅将英文、中文、日文归入字体实验语言族，其余语言返回空族名。
+func resolve_language_family() -> String:
+	var locale: String = TranslationServer.get_locale()
+	if locale == "en" or locale.begins_with("en_"):
+		return "en"
+	if locale == "zh" or locale.begins_with("zh_"):
+		return "zh"
+	if locale == "ja" or locale.begins_with("ja_"):
+		return "jp"
+	return ""

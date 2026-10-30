@@ -1,30 +1,46 @@
-## 普通对局页面：入口参数 → 关卡配置/题面 → 棋盘 → 残局快照 → 通关/失败结算
-## 输入链路：BoardView 拖拽信号 → 父类 BaseGamePage 消费 CellAction → _validate_board 调 QueendokuCore 判通关
+## 普通关页面：连接 GameState 的题目与进度，处理开局、难度显示、排行反馈和通关流转。
 class_name GamePage
 extends BaseGamePage
 
-var _terminal_started_ms: int = 0 # 同一次终局保存重试不延长上报时长。
-
 enum EntryMode { NORMAL, BANK, BANK_SP, DEBUG_CONFIG, DEBUG_PREBUILT } # 入口模式：普通关卡 / 题库 / SP 题库 / 调试配置 / 调试预置
+var _elo_v2_formal_main: bool = false
+
+signal bubble_tutorial_finished
 
 # ================= 成员变量 =================
 # ---- 子节点引用（@onready：进场景树后才可用） ----
 @onready var _level_label: Label = $Root/VBoxContainer/Header/LevelLabel # 顶部关卡标题
-@onready var _level_display_value: Label = $Root/VBoxContainer/Header/LevelDisplay/Value # 标题里的关卡数字
+
+var _level_value_num: int = -1
 @onready var _coin_label: Label = $Root/VBoxContainer/Header/CoinLabel # 顶部金币数字（本页只显示，不结算）
 @onready var _prev_btn: Button = $Root/VBoxContainer/Header/PrevBtn # 题库内上一题（题量 > 1 才显示）
 @onready var _next_btn: Button = $Root/VBoxContainer/Header/NextBtn # 题库内下一题
+
+@onready var _return_bank_btn: Button = $Root/ReturnBankBtn
 @onready var _normal_toast: GameNormalToast = $Root/NormalToast # 普通难度开场提示条
 @onready var _hard_toast: GameHardToast = $Root/HardToast # 困难难度开场提示条
+
+@onready var _golden_fish_toast: GoldenFishToast = $Root/GoldenFishToast
+
+@onready var _golden_fish_tutorial_card: GoldenFishTutorialCard = $Root/GoldenFishTutorialCard
+
+@onready var _golden_fish_fly: Control = $Root/GlodenFishFly
+
+const _GF_FLY_ANIM: StringName = &"GlodenFishFly"
+
+const _GF_FLY_TOTAL_SEC: float = 0.4
+const _GF_FLY_BUMP_SEC: float = 0.1
+const _GF_FLY_BUMP_X: float = 45.0
+
+var _gf_home_pos: Vector2 = Vector2.ZERO
+var _gf_home_cached: bool = false
+var _gf_fly_tw_x: Tween = null
+var _gf_fly_tw_y: Tween = null
 
 # ---- 开场提示条与入口按钮锁 ----
 var _active_toast: BaseGameToast = null # 当前挂着的提示条，没有则为 null
 
-## 入场动画期间先屏蔽的按钮（设置 / 返回主页）
-@onready var _entry_locked_buttons: Array[Button] = [
-	$Root/VBoxContainer/Header/SettingsBtn,
-	$Root/VBoxContainer/Header/GearBtn,
-]
+@onready var _back_setting_header: BackAndSettingHeader = $Root/VBoxContainer/Header
 
 var _entry_btn_lock_seq: int = 0 # 入口按钮锁序号：解锁回调靠它判断自己是否已过期
 
@@ -33,63 +49,146 @@ var _entry_btn_lock_seq: int = 0 # 入口按钮锁序号：解锁回调靠它判
 @onready var _warn_tips: Control = $Root/VBoxContainer/CatHeartRow/Tips # 预警气泡根节点
 @onready var _warn_bubble: Control = $Root/VBoxContainer/CatHeartRow/Tips/Bubble # 预警气泡
 @onready var _warn_tail: Sprite2D = $Root/VBoxContainer/CatHeartRow/Tips/Bubble/Tail # 指向红心的小尾巴
+
+@onready var _warn_label: Label = $Root/VBoxContainer/CatHeartRow/Tips/Bubble/Label
 @onready var _warn_overlay: ColorRect = $Root/Overlay # 预警期间的全屏遮罩
+
 @onready var _warn_mask: Sprite2D = $Root/VBoxContainer/CatHeartRow/HeartBg/EtMask007 # 被预警红心的遮罩贴图
-@onready var _idle_guide_overlay: Control = $Root/IdleGuideOverlay # 挂机引导整层
-@onready var _idle_guide_hand: Control = $Root/IdleGuideOverlay/HandHint # 引导手指
-@onready var _idle_guide_spine: Node = $Root/IdleGuideOverlay/HandHint/ui_guide_hand # 手指的 Spine 动画节点
-@onready var _idle_guide_msg_panel: Panel = $Root/IdleGuideOverlay/MsgPanel # 引导文字面板
-@onready var _idle_guide_msg_rich: RichTextLabel = $Root/IdleGuideOverlay/MsgPanel/MsgRich # 引导文字（富文本）
-@onready var _idle_mask_layer: Control = $Root/IdleMaskLayer # 目标格高亮遮罩层
+
+@onready var _life_bar_mul: HealthBarBase = $Root/VBoxContainer/CatHeartRow/HeartBgMul
+
+const RANK_COLLECTOR_SCENE: PackedScene = preload(
+	"res://products/meowdoku/app/features/rank_activity/ui/rank_collector_cell.tscn"
+)
+@onready var _rank_collector_anchor: Control = $Root/VBoxContainer/BoardContainer/RankCollectorAnchor
+var _rank_collector: RankCollectorCell = null
+
+@onready var _board_adapt_holder: Control = $Root/VBoxContainer/BoardAdaptHolder
+
+@onready var _rank_collector_anchor_base_top: float = _rank_collector_anchor.offset_top
+@onready var _rank_collector_anchor_base_bottom: float = _rank_collector_anchor.offset_bottom
+
+const _RANK_COLLECTOR_MIN_BOARD_GAP: float = 0.0
+
+const _RANK_FLIGHT_TRAIL_SCENE: PackedScene = preload("res://products/meowdoku/assets/prefab/effect_score_trail.tscn")
+
+const _RANK_FLIGHT_TRAIL_Z: int = 2
+const _CENTER_RELAY_FISH_FLY_COLLECTOR_Z: int = 4
+
+const _GF_FLIGHT_TRAIL_Z: int = 4
+const _RANK_COLLECTOR_ICON_Z: int = 5
+
+var _rank_flight_trails: Array = []
+
+var _rank_win_presentation_active: bool = false
+
+
+func _finish_rank_win_presentation(aborted: bool = false) -> void:
+	if aborted and _rank_collector != null and is_instance_valid(_rank_collector):
+		_rank_collector.cancel_deferred_win_reveal()
+	if not _rank_win_presentation_active:
+		return
+	_rank_win_presentation_active = false
+	RankActivityManager.end_rank_win_presentation(aborted)
+
+
+@export_group("排行榜局内飞入")
+
+@export var rank_fly_start: float = 1.25
+
+@export var rank_fly_interval: float = 0.05
+
+@export var rank_fly_dur: float = 0.5
+
+@export var rank_fly_trail_fade: float = 0.3
+
+@export var rank_fish_fly_start: float = 1.1
+
+@export var rank_fish_fly_interval: float = 0.083
+
+@export var rank_fish_fly_dur: float = 0.4
+
+@export var golden_fish_split_collect_at: float = 1.35
+
+const _GF_SPLIT_FADE_START: Array[float] = [
+	1.3666667,
+	1.7,
+	1.4,
+	1.6333336,
+	1.5333333,
+]
+
+@export var rank_fish_collect_lead: float = 0.2
+
+const _RANK_FISH_BEZIER_X: Vector4 = Vector4(0.125, 0.0, 0.875, 1.0)
+const _RANK_FISH_BEZIER_Y: Vector4 = Vector4(0.0, 0.141343, 0.7, 1.0)
+
+const _RANK_FISH_DIP_BEZIER_Y: Vector4 = Vector4(0.25, -0.3, 1.0, 1.0)
+
+const _FISH_FLY_SCENE: PackedScene = preload("res://products/meowdoku/assets/prefab/fish_fly.tscn")
+
+const _CC_PATTERN_BTN_SCENE: PackedScene = preload(
+	"res://products/meowdoku/gameplay/application/color_challenge/ui/pattern_toggle_btn.tscn"
+)
+
+const _CC_TOAST_SCENE_PATH: String = "res://products/meowdoku/gameplay/application/color_challenge/ui/color_challenge_toast.tscn"
+
+@export var rank_center_relay_to_center_dur: float = 0.4
+
+@export var rank_center_relay_bump_x: float = 45.0
+@export var rank_center_relay_bump_sec: float = 0.1
+
+@export var rank_center_relay_hold: float = 0.5
+
+@export var rank_center_relay_spacing: float = 150.0
+
+@export var rank_center_relay_triangle_radius: float = 75.0
+
+var _center_relay_fish_nodes: Array = []
+
+var _center_relay_fish_count: int = 0
 
 # ---- 运行时状态 ----
 var _nav_index: int = 0 # 题库内当前题号（从 1 开始）
 var _nav_total: int = 0 # 题库总题数，0 表示不可翻页
 var _is_hard_level: bool = false # 当前关是否 Hard
+
+var _is_super_hard_level: bool = false
 var _revive_count: int = 0 # 本局复活次数
 var _restart_count: int = 0 # 本局重开次数
+
+var _pre_type: String = PreCatDecider.PRE_TYPE_NONE
+
+var _pre_cat_positions_at_start: String = "[]"
+
+var _pre_cat_position: Vector2i = Vector2i(-1, -1)
+
+var _pre_cat_pend_snapshot: Dictionary = {}
+
+var _golden_fish_pre_cat: GoldenFishPreCat = GoldenFishPreCat.new()
+
+var _pre_cat_fx: PreCatFxDirector = null
+
+static var debug_force_pre_cat: bool = false
 var _coins: int = 40 # 顶部显示的金币数（本文件内不增减）
-var _size_cycle: int = 0 # AB 下发的尺寸表分组值，决定 _get_ab_size 查哪张表
 
 var _toast_first_try_hint: bool = false # 开场提示条是否按「首次挑战」文案
 
 var _entry_handlers: Dictionary = {} # 入口模式 → 初始化函数 的派发表
 
-# ---- 本次进入的选题候选；搭盘成功后一次提交，隐藏/复用后旧流程失效 ----
-var _selection_plan: Dictionary = {}
-var _selection_retry_params: Dictionary = {}
-var _entry_error: Dictionary = {}
-var _entry_preparing: bool = false # 为 true 时禁止检查点把旧盘面写成新局
-
 # ---- 残局快照落盘（防抖） ----
 var _endgame_persist_timer: Timer = null # 残局快照防抖定时器
+const ENDGAME_PERSIST_DEBOUNCE_SEC: float = 0.5 # 防抖窗口：0.5 秒内的多次改动合并成一次写档
+const ENDGAME_RETRY_LIMIT: int = 3
 var _endgame_save_failed: bool = false
 var _endgame_retry_count: int = 0
 var _endgame_closing: bool = false
-const ENDGAME_RETRY_LIMIT: int = 3
-const ENDGAME_PERSIST_DEBOUNCE_SEC: float = 0.5 # 防抖窗口：0.5 秒内的多次改动合并成一次写档
 
 var _is_endgame_restore_session: bool = false # 本次 on_show 是否来自残局快照复原
 
-## 自动标叉新手引导浮层的场景
-const _AUTO_MARK_TUTORIAL_SCENE: PackedScene = preload(
-	"res://products/meowdoku/gameplay/presentation/main/ui/auto_mark_tutorial_overlay.tscn"
-)
-var _auto_mark_tutorial_overlay: AutoMarkTutorialOverlay = null # 教学浮层实例（同一时间至多一个）
+var _is_direct_open_session: bool = false
 
-const _AUTO_MARK_TUTORIAL_COL: int = 2 # 演示用的列号（第 3 列）
-
-# ---- 挂机引导（仅第 1 关） ----
-var _idle_guide_shown: bool = false # 本局是否已经弹过挂机引导
-var _idle_guide_tween: Tween = null # 文字面板的弹出补间
-var _idle_mask_tween: Tween = null # 高亮遮罩的淡入补间
-var _idle_mask_cell: CellView = null # 高亮用的临时格子实例
-
-var _idle_guide_block_buttons: Array[Button] = [] # 引导显示期间要先拦下的按钮
-const IDLE_GUIDE_DELAY_SEC: float = 10.0 # 挂机多少秒后弹引导（秒）
-
-# ---- 步骤触发的挂机引导 ----
-var _step_trigger_had_cat: bool = false # 本局是否已由玩家亲手放下过猫
+var _is_from_tutorial: bool = false
 
 # ---- 入口动画与插屏广告等待 ----
 var _entry_anim_pending_state: Variant = null # 等插屏广告时的占位状态，null 表示没有在等
@@ -97,18 +196,60 @@ var _entry_anim_ad_error_cb: Callable = Callable() # 广告失败回调（留着
 var _entry_anim_ad_closed_cb: Callable = Callable() # 广告关闭回调（留着用于断开）
 var _entry_anim_schedule_ts: int = 0 # 排定入口动画时的毫秒时间戳
 
+const ENTRY_AD_SHOW_CONFIRM_SEC: float = 2.0
+var _entry_anim_ad_impression_cb: Callable = Callable()
+var _entry_anim_show_confirm_timer: Timer = null
+
+const LATE_AD_LOCK_TIMEOUT_SEC: float = 3.0
+var _late_ad_impression_cb: Callable = Callable()
+var _late_ad_closed_cb: Callable = Callable()
+var _late_ad_lock_active: bool = false
+var _late_ad_lock_timer: Timer = null
+const _BOARD_PATTERN_SWEEP_OVERLAY_SCRIPT: Script = preload(
+	"res://products/meowdoku/gameplay/presentation/main/view/board_pattern_sweep_overlay.gd"
+)
+
+var _pattern_sweep_overlay = null
+var _pattern_sweep_prepared: bool = false
+
+var _entry_sp_region_ids: Array = []
+
+var _entry_anim_await_stack_top: bool = false
+
+var _entry_anim_waiting_ad: bool = false
+
+var _entry_ad_resume: Callable = Callable()
+
+var _inter_timing_tail_state: Dictionary = {}
+
+var _entry_anim_skipped: bool = false
+
+const _INTER_DELAY_AFTER_BOARD_SEC: float = 0.4
+
 # ---- 生命预警动画状态 ----
-var _warn_revision: int = 0 # 重置/再次展示使旧计时回调失效
 var _warn_phase: int = 0 # 预警阶段：0 未触发 / 1 展示中（等点击）/ 2 收尾
 var _warn_click_allowed: bool = false # 是否已过保护时间、允许点击关闭
 
+var _gf_guide_start_ms: int = 0
 
-# ================= 顶部标题与难度图标 =================
-## 设置顶部关卡标题，可选同步标题里的关卡数字
+var _last_fail_end_params: Dictionary = {}
+
+
 func _set_level_text(text: String, level_num: int = -1) -> void:
 	_level_label.text = text
-	if _level_display_value != null and level_num >= 0:
-		_level_display_value.text = "%d" % level_num
+	_level_value_num = level_num
+
+
+func _apply_difficulty_level_text(lv: int) -> void:
+	_is_super_hard_level = LevelSelector.is_super_hard_level(lv)
+	_is_hard_level = LevelSelector.is_hard_level(lv)
+	if _is_super_hard_level:
+		_set_level_text(tr("GAME_LEVEL_SUPER_HARD") % lv, lv)
+	elif _is_hard_level:
+		_set_level_text(tr("GAME_LEVEL_HARD") % lv, lv)
+	else:
+		_set_level_text(tr("GAME_LEVEL_TITLE") % lv, lv)
+	_set_hard_fire_visible(_is_hard_level)
 
 
 ## 切换标题旁的 Hard 火焰图标，并同步标题的四个 offset（有无图标宽度不同）
@@ -147,10 +288,8 @@ func _align_hard_fire_icon() -> void:
 	icon.offset_left = icon.offset_right - icon_width
 
 
-# ================= 生命周期与入口流程 =================
-## 场景就绪：填入口派发表、接棋盘输入/变更信号、建残局快照防抖定时器
 func _ready() -> void:
-	# 入口模式 → 初始化函数
+	super._ready()
 	_entry_handlers = {
 		EntryMode.NORMAL: _setup_entry_normal,
 		EntryMode.BANK: _setup_entry_bank,
@@ -158,46 +297,32 @@ func _ready() -> void:
 		EntryMode.DEBUG_CONFIG: _setup_entry_debug_config,
 		EntryMode.DEBUG_PREBUILT: _setup_entry_debug_prebuilt,
 	}
-	_refresh_hearts()
-	# 棋盘手势三段：按下 / 划动 / 抬起，父类据此产出并消费 CellAction
-	_board_view.cell_drag_start.connect(_on_board_cell_drag_start)
-	_board_view.cell_drag_over.connect(_on_board_cell_drag_over)
-	_board_view.cell_drag_end.connect(_on_board_cell_drag_end)
+	_refresh_life_bar_display()
 
-	# 格子变更 → 按剩余猫数决定是否弹「自动完成」按钮
-	_board_view.cell_state_changed.connect(_on_board_changed_for_auto_complete)
-
-	# 格子变更 → 放猫后自动带出周围的叉
-	_board_view.cell_state_changed.connect(_on_cell_changed_for_auto_mark)
-
-	# 格子变更 → LOCK_X 玩法把新画的叉锁住
-	_board_view.cell_state_changed.connect(_on_cell_changed_for_lock_x)
-
-	# 格子变更 → 判断挂机引导的步骤触发条件
-	_board_view.cell_state_changed.connect(_on_cell_changed_for_step_trigger)
-	# 提示浮层的「查看详情」按钮
 	_hint_overlay.hint_detail_requested.connect(_on_chain_detail_requested)
 	_hint_overlay.layer = 10
 
-	# 生命预警动画播完的回调
 	_anim_tips.animation_finished.connect(_on_warn_anim_finished)
-	# 构建规则策略浮层（仅非 release 包可见）
 	_build_strategy_overlay()
 
-	# 让设置按钮走统一的按钮音效申请
-	claim_button_sound($Root/VBoxContainer/Header/SettingsBtn)
+	_pre_cat_fx = PreCatFxDirector.new(self, _board_view)
 
-	# 挂机引导显示期间要先拦下的按钮
-	_idle_guide_block_buttons = [
-		$Root/VBoxContainer/Header/GearBtn,
-		$Root/VBoxContainer/Header/SettingsBtn,
-	]
-	# 残局快照防抖定时器：短时间内多次改动只写一次档
+	claim_button_sound($Root/VBoxContainer/Header/SettingsBtn)
 	_endgame_persist_timer = Timer.new()
 	_endgame_persist_timer.one_shot = true
 	_endgame_persist_timer.wait_time = ENDGAME_PERSIST_DEBOUNCE_SEC
 	_endgame_persist_timer.timeout.connect(_flush_endgame_snapshot)
 	add_child(_endgame_persist_timer)
+
+	_board_adapt_holder.resized.connect(_align_rank_collector_y)
+
+	var cat_heart_row: Control = get_node_or_null("Root/VBoxContainer/CatHeartRow") as Control
+	if cat_heart_row != null:
+		cat_heart_row.resized.connect(_on_cat_heart_row_resized)
+
+
+func _on_cat_heart_row_resized() -> void:
+	_apply_heart_bg_position_for_progress(ABTestManager.normal_top_ui.is_cat_progress_bar())
 
 
 ## 场景里 ClockTimer(0.5 秒) 的 tick 回调：本页不处理，游戏时长由父类 _process 累计
@@ -216,49 +341,735 @@ func _resolve_entry_mode(params: Dictionary) -> EntryMode:
 	return EntryMode.NORMAL
 
 
-## 页面显示总入口：恢复或选题 → 冻结策略 → 复位与搭盘 → 提交 → 入场。
-## 两次布局等待和代次校验保留在这里；下面的准备方法都是同步步骤。
+func _resolve_entry_level(params: Dictionary) -> int:
+	var entry_mode: EntryMode = _resolve_entry_mode(params)
+	match entry_mode:
+		EntryMode.NORMAL:
+			return maxi(1, int(params.get("level_index", 1)))
+		EntryMode.BANK, EntryMode.BANK_SP:
+			return int(params.get("retry_level", 0))
+		EntryMode.DEBUG_CONFIG:
+			var config: Dictionary = params["debug_config"]
+			return int(config.get("level", 0))
+		_:
+			return 0
+
+
+func _dye_game_start_normal(level_num: int) -> void:
+	ABTestManager.dye_at_game_start_normal()
+	if level_num >= 10:
+		ABTestManager.dye_at_game_start_normal_10()
+	if level_num >= 11:
+		ABTestManager.dye_at_game_start_normal_11()
+	if level_num >= 21:
+		ABTestManager.dye_at_game_start_normal_21()
+	if level_num >= 34:
+		ABTestManager.dye_at_game_start_normal_34()
+
+
+func _dye_game_win_end() -> void:
+	ABTestManager.dye_at_game_win_end()
+	if _level_config.get("level", 0) >= 20:
+		ABTestManager.dye_at_game_end_normal_20()
+	if _level_config.get("level", 0) >= 11:
+		ABTestManager.dye_at_game_end_normal_11()
+	if _level_config.get("level", 0) >= 10:
+		ABTestManager.dye_at_game_end_normal_10()
+	if _level_config.get("level", 0) >= 1:
+		ABTestManager.dye_at_game_end_normal_1()
+
+
+func _is_game_barrage_supported_entry(entry_mode: EntryMode) -> bool:
+	return (
+		entry_mode == EntryMode.NORMAL
+		or (entry_mode == EntryMode.BANK and int(_level_config.get("level", 0)) > 0)
+	)
+
+
+func _is_settle_page_flight_active() -> bool:
+	if LevelKind.is_golden_fish(_level_kind):
+		return false
+	return ABTestManager.leaderboard_collection_levelwin.is_settle_page_flight()
+
+
+func _is_center_relay_flight_active() -> bool:
+	if LevelKind.is_golden_fish(_level_kind):
+		return false
+	return ABTestManager.leaderboard_collection_levelwin.is_center_relay_flight()
+
+
+func _should_keep_life_fish_active() -> bool:
+	if LevelKind.is_golden_fish(_level_kind):
+		return false
+	return ABTestManager.leaderboard_collection_levelwin.should_keep_life_fish()
+
+
+func _should_play_collect_before_trail_active() -> bool:
+	if LevelKind.is_golden_fish(_level_kind):
+		return false
+	return ABTestManager.leaderboard_collection_levelwin.should_play_collect_before_trail()
+
+
+func _update_rank_collector() -> void:
+	if _rank_collector_anchor == null:
+		return
+	_align_rank_collector_y()
+	var is_gf: bool = LevelKind.is_golden_fish(_level_kind)
+
+	if _rank_collector != null and is_instance_valid(_rank_collector):
+		_rank_collector.set_golden_fish(is_gf)
+
+	if _is_settle_page_flight_active():
+		if _rank_collector != null and is_instance_valid(_rank_collector):
+			_rank_collector.hide_and_reset()
+		return
+
+	if not (RankActivityManager.is_running() and RankActivityManager.is_joined()):
+		if _rank_collector != null and is_instance_valid(_rank_collector):
+			_rank_collector.hide_and_reset()
+		return
+
+	if _rank_collector == null or not is_instance_valid(_rank_collector):
+		_rank_collector = create_child(RANK_COLLECTOR_SCENE) as RankCollectorCell
+		var prev: Node = _rank_collector.get_parent()
+		if prev != null:
+			prev.remove_child(_rank_collector)
+
+		var board_intro := $Root as BoardContainerCell_01
+		if board_intro != null:
+			board_intro.set_auto_trigger(false)
+		_rank_collector_anchor.add_child(_rank_collector)
+		if board_intro != null:
+			board_intro.set_auto_trigger(true)
+		_rank_collector.position = Vector2.ZERO
+
+		_rank_collector.set_collect_icon_above_z(_RANK_COLLECTOR_ICON_Z)
+
+		_rank_collector.set_golden_fish(is_gf)
+
+	_rank_collector.hide_and_reset()
+
+	_reset_flight_trails()
+
+
+func _align_rank_collector_y() -> void:
+	if _rank_collector_anchor == null or _board_adapt_holder == null or _board_view == null:
+		return
+
+	var rule_bar := get_node_or_null("Root/VBoxContainer/RuleBar") as Control
+	var vbox := _board_adapt_holder.get_parent() as Control
+	if rule_bar == null or vbox == null:
+		return
+	var pill_h: float = _rank_collector_anchor_base_bottom - _rank_collector_anchor_base_top
+
+	var separation: float = float(vbox.get_theme_constant("separation"))
+
+	var rule_bottom: float = rule_bar.position.y + rule_bar.size.y
+	var rule_inner := rule_bar.get_node_or_null("Control") as Control
+	var rules_bg := rule_bar.get_node_or_null("Control/RulesBg") as Control
+	if rule_inner != null and rules_bg != null:
+		rule_bottom = (
+			rule_bar.position.y + rule_inner.position.y + rules_bg.position.y + rules_bg.size.y
+		)
+	var board_container_top: float = (
+		_board_adapt_holder.position.y + _board_adapt_holder.size.y + separation
+	)
+
+	var board_inset: float = _board_view.position.y
+	var gap_h: float = board_container_top - rule_bottom
+	var centered_top: float = (board_inset - gap_h - pill_h) * 0.5
+
+	var lowest_top: float = board_inset - _RANK_COLLECTOR_MIN_BOARD_GAP - pill_h
+
+	var top: float = minf(centered_top, lowest_top)
+	_rank_collector_anchor.offset_top = top
+	_rank_collector_anchor.offset_bottom = top + pill_h
+
+
+func _on_board_container_resized() -> void:
+	super()
+	_align_rank_collector_y.call_deferred()
+
+
+func _play_rank_collect_flight() -> bool:
+	if _is_settle_page_flight_active():
+		return false
+
+	if not RankActivityManager.is_joined():
+		return false
+	var st: int = RankActivityManager.get_state()
+	if st != RankActivityData.State.OPEN_JOINED and st != RankActivityData.State.SETTLING:
+		return false
+	if not RankActivityManager.did_last_win_score():
+		return false
+	if _rank_collector == null or not is_instance_valid(_rank_collector):
+		return false
+	return await _play_rank_flight_fish()
+
+
+func _play_rank_flight_fish() -> bool:
+	if LevelKind.is_golden_fish(_level_kind):
+		return await _play_golden_fish_split_flight()
+	var slots: Array = _life_bar.slots()
+	var fish: Array = []
+	for i in range(mini(_lives, slots.size())):
+		var slot: Control = slots[i] as Control
+		if slot != null and is_instance_valid(slot):
+			fish.append({"slot": slot, "from": slot.get_global_rect().get_center()})
+	if fish.is_empty():
+		return false
+	_center_relay_fish_count = fish.size()
+	for k in fish.size():
+		var launch_at: float = rank_fish_fly_start + rank_fish_fly_interval * k
+
+		if _should_play_collect_before_trail_active():
+			get_tree().create_timer(maxf(0.0, launch_at - rank_fish_collect_lead)).timeout.connect(
+				_on_fish_collect_anim.bind(fish[k]["slot"])
+			)
+		get_tree().create_timer(launch_at).timeout.connect(
+			_on_fish_flight_launch.bind(fish[k]["slot"], fish[k]["from"], k)
+		)
+
+	var per_fish_dur: float = rank_fish_fly_dur
+	if _is_center_relay_flight_active():
+		per_fish_dur = rank_center_relay_to_center_dur + rank_center_relay_hold + rank_fish_fly_dur
+	var total: float = (
+		rank_fish_fly_start + rank_fish_fly_interval * maxi(0, fish.size() - 1) + per_fish_dur
+	)
+	await get_tree().create_timer(total).timeout
+
+	if _rank_collector != null and is_instance_valid(_rank_collector):
+		_rank_collector.settle_count_to_actual()
+	return true
+
+
+func _play_golden_fish_split_flight() -> bool:
+	if _golden_fish_fly == null or not is_instance_valid(_golden_fish_fly):
+		return false
+	var anim: AnimationPlayer = (
+		_golden_fish_fly.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	)
+	if anim == null or not anim.has_animation(_GF_FLY_ANIM):
+		push_error("GamePage: GoldenFish_Fly 缺动画 '%s'" % _GF_FLY_ANIM)
+		return false
+
+	await get_tree().create_timer(rank_fish_fly_start).timeout
+	if not is_showing():
+		return false
+
+	_life_bar.mark_slot_lost_for_flight(_life_bar.slot_at(0), true)
+	_golden_fish_fly.visible = true
+	_start_golden_fish_fly_move()
+	anim.play(_GF_FLY_ANIM)
+	await get_tree().create_timer(golden_fish_split_collect_at).timeout
+
+	if not is_showing() or _rank_collector == null or not is_instance_valid(_rank_collector):
+		_reset_golden_fish_fly()
+		return false
+
+	var plans: Array = []
+	for i in RankActivityConfig.GOLDEN_FISH_COLLECT_RATIO:
+		var f: Control = _golden_fish_fly.get_node_or_null("Fish%d" % (i + 1)) as Control
+		if f == null or not is_instance_valid(f):
+			continue
+		var delay: float = (
+			maxf(0.0, _GF_SPLIT_FADE_START[i] - golden_fish_split_collect_at)
+			if i < _GF_SPLIT_FADE_START.size()
+			else 0.0
+		)
+
+		var bez_y: Vector4 = _RANK_FISH_DIP_BEZIER_Y if (i == 0 or i == 4) else _RANK_FISH_BEZIER_Y
+		plans.append(
+			{"from": f.get_global_transform() * (f.size * 0.5), "delay": delay, "bez_y": bez_y}
+		)
+	plans.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["delay"] < b["delay"])
+	for order in plans.size():
+		var p: Dictionary = plans[order]
+
+		get_tree().create_timer(p["delay"]).timeout.connect(
+			_on_fish_flight_launch.bind(null, p["from"], order, p["bez_y"])
+		)
+	var launched: int = plans.size()
+	var last_delay: float = plans[plans.size() - 1]["delay"] if not plans.is_empty() else 0.0
+	if launched == 0:
+		push_error(
+			(
+				"GamePage: GoldenFish_Fly 找不到 Fish1~%d 节点"
+				% RankActivityConfig.GOLDEN_FISH_COLLECT_RATIO
+			)
+		)
+		_reset_golden_fish_fly()
+		return false
+
+	var fly_done: float = last_delay + rank_fish_fly_dur
+	var anim_left: float = maxf(
+		0.0, anim.get_animation(_GF_FLY_ANIM).length - golden_fish_split_collect_at
+	)
+	await get_tree().create_timer(maxf(fly_done, anim_left)).timeout
+	_reset_golden_fish_fly()
+	return true
+
+
+func _start_golden_fish_fly_move() -> void:
+	var img: Control = _golden_fish_fly.get_node_or_null("Root/GlodenFishImg") as Control
+	var holder: CanvasItem = _golden_fish_fly.get_parent() as CanvasItem
+	var heart_slot: Control = _life_bar.slot_at(0)
+	if img == null or holder == null or heart_slot == null or not is_instance_valid(heart_slot):
+		return
+	if not _gf_home_cached:
+		_gf_home_pos = _golden_fish_fly.position
+		_gf_home_cached = true
+	_golden_fish_fly.position = _gf_home_pos
+
+	var to_holder: Transform2D = holder.get_global_transform().affine_inverse()
+	var rest: Vector2 = to_holder * (img.get_global_transform() * (img.size * 0.5))
+	var start: Vector2 = to_holder * (heart_slot.get_global_transform() * (heart_slot.size * 0.5))
+	var end: Vector2 = to_holder * (get_global_transform() * (size * 0.5))
+	var start_pos: Vector2 = _gf_home_pos + (start - rest)
+	var end_pos: Vector2 = _gf_home_pos + (end - rest)
+	_golden_fish_fly.position = start_pos
+
+	var trail: Node = _golden_fish_fly.get_node_or_null("Root/ScoreTrail")
+	if trail != null and trail.has_method(&"clear_trail"):
+		trail.call(&"clear_trail")
+	_kill_golden_fish_fly_tweens()
+
+	_gf_fly_tw_x = create_tween()
+	(
+		_gf_fly_tw_x
+		. tween_property(
+			_golden_fish_fly, "position:x", start_pos.x + _GF_FLY_BUMP_X, _GF_FLY_BUMP_SEC
+		)
+		. set_trans(Tween.TRANS_CUBIC)
+		. set_ease(Tween.EASE_IN_OUT)
+	)
+	(
+		_gf_fly_tw_x
+		. tween_property(
+			_golden_fish_fly, "position:x", end_pos.x, _GF_FLY_TOTAL_SEC - _GF_FLY_BUMP_SEC
+		)
+		. set_trans(Tween.TRANS_CUBIC)
+		. set_ease(Tween.EASE_IN_OUT)
+	)
+
+	_gf_fly_tw_y = create_tween()
+	(
+		_gf_fly_tw_y
+		. tween_property(_golden_fish_fly, "position:y", end_pos.y, _GF_FLY_TOTAL_SEC)
+		. set_trans(Tween.TRANS_CUBIC)
+		. set_ease(Tween.EASE_IN_OUT)
+	)
+
+
+func _kill_golden_fish_fly_tweens() -> void:
+	for tw: Tween in [_gf_fly_tw_x, _gf_fly_tw_y]:
+		if tw != null and tw.is_valid():
+			tw.kill()
+	_gf_fly_tw_x = null
+	_gf_fly_tw_y = null
+
+
+func _reset_golden_fish_fly() -> void:
+	if _golden_fish_fly == null or not is_instance_valid(_golden_fish_fly):
+		return
+	var anim: AnimationPlayer = (
+		_golden_fish_fly.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	)
+	_kill_golden_fish_fly_tweens()
+	if _gf_home_cached:
+		_golden_fish_fly.position = _gf_home_pos
+
+	var trail: Node = _golden_fish_fly.get_node_or_null("Root/ScoreTrail")
+	if trail != null and trail.has_method(&"clear_trail"):
+		trail.call(&"clear_trail")
+	if anim != null:
+		anim.stop()
+
+		if anim.has_animation(&"RESET"):
+			anim.play(&"RESET")
+			anim.advance(0.0)
+	_golden_fish_fly.visible = false
+
+
+func _on_fish_collect_anim(slot: Control) -> void:
+	if not is_showing():
+		return
+	if is_instance_valid(slot) and slot is LifeSlot:
+		(slot as LifeSlot).play_collect()
+
+
+func _on_fish_flight_launch(
+	slot: Control, from: Vector2, order: int = 0, bez_y: Vector4 = _RANK_FISH_BEZIER_Y
+) -> void:
+	if not is_showing() or _rank_collector == null or not is_instance_valid(_rank_collector):
+		return
+	var fish_kinds: Array = [
+		SoundManager.Kind.RANK_FISH_COLLECT_1,
+		SoundManager.Kind.RANK_FISH_COLLECT_2,
+		SoundManager.Kind.RANK_FISH_COLLECT_3,
+	]
+	SoundManager.play(fish_kinds[clampi(order, 0, fish_kinds.size() - 1)])
+
+	if not _should_keep_life_fish_active():
+		_life_bar.mark_slot_lost_for_flight(slot, true)
+
+	if _is_center_relay_flight_active():
+		_play_center_relay(from, order)
+	else:
+		_spawn_flight_trail(
+			from,
+			_rank_collector.get_collect_target_global(),
+			rank_fish_fly_dur,
+			_RANK_FISH_BEZIER_X,
+			bez_y
+		)
+
+
+func _play_center_relay(from: Vector2, index: int) -> void:
+	if _rank_collector == null or not is_instance_valid(_rank_collector):
+		return
+
+	var n: int = maxi(1, _center_relay_fish_count)
+	var screen_center: Vector2 = get_viewport_rect().get_center()
+	var target: Vector2
+	if n == 3:
+		var r: float = rank_center_relay_triangle_radius
+		var tri: Array[Vector2] = [
+			Vector2(-0.8660254 * r, 0.5 * r),
+			Vector2(0.0, -r),
+			Vector2(0.8660254 * r + 15.0, 0.5 * r),
+		]
+		target = screen_center + tri[clampi(index, 0, 2)]
+	else:
+		target = (
+			screen_center
+			+ Vector2((float(index) - float(n - 1) / 2.0) * rank_center_relay_spacing, 0.0)
+		)
+	var fx: Node = _FISH_FLY_SCENE.instantiate()
+	add_child(fx)
+	(fx as CanvasItem).z_index = 45
+	_center_relay_fish_nodes.append(fx)
+	var root: Control = fx.get_node_or_null("Root") as Control
+	if root == null:
+		_center_relay_fish_nodes.erase(fx)
+		fx.queue_free()
+		_spawn_flight_trail(
+			from,
+			_rank_collector.get_collect_target_global(),
+			rank_fish_fly_dur,
+			_RANK_FISH_BEZIER_X,
+			_RANK_FISH_BEZIER_Y
+		)
+		return
+	root.global_position = from
+	var anim: AnimationPlayer = fx.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if anim != null and anim.has_animation("FishFly"):
+		anim.play("FishFly")
+	var collector_target: Vector2 = _rank_collector.get_collect_target_global()
+
+	var tw: Tween = fx.create_tween()
+
+	var bump_x: float = from.x + rank_center_relay_bump_x
+	var seg2_dur: float = rank_center_relay_to_center_dur - rank_center_relay_bump_sec
+	var to_center := func(elapsed: float) -> void:
+		if not is_instance_valid(root):
+			return
+		var px: float
+		if elapsed <= rank_center_relay_bump_sec:
+			px = Tween.interpolate_value(
+				from.x,
+				rank_center_relay_bump_x,
+				elapsed,
+				rank_center_relay_bump_sec,
+				Tween.TRANS_CUBIC,
+				Tween.EASE_IN_OUT
+			)
+		else:
+			px = Tween.interpolate_value(
+				bump_x,
+				target.x - bump_x,
+				elapsed - rank_center_relay_bump_sec,
+				seg2_dur,
+				Tween.TRANS_CUBIC,
+				Tween.EASE_IN_OUT
+			)
+		var py: float = Tween.interpolate_value(
+			from.y,
+			target.y - from.y,
+			elapsed,
+			rank_center_relay_to_center_dur,
+			Tween.TRANS_CUBIC,
+			Tween.EASE_IN_OUT
+		)
+		root.global_position = Vector2(px, py)
+	tw.tween_method(
+		to_center, 0.0, rank_center_relay_to_center_dur, rank_center_relay_to_center_dur
+	)
+	tw.tween_interval(rank_center_relay_hold)
+
+	tw.tween_callback(
+		func() -> void:
+			if (
+				is_instance_valid(fx)
+				and _rank_collector != null
+				and is_instance_valid(_rank_collector)
+				and fx.get_parent() != _rank_collector
+			):
+				fx.get_parent().remove_child(fx)
+				_rank_collector.add_child(fx)
+				(fx as CanvasItem).z_index = _CENTER_RELAY_FISH_FLY_COLLECTOR_Z
+				if is_instance_valid(root):
+					root.global_position = target
+	)
+
+	var bez_y: Vector4 = _RANK_FISH_BEZIER_Y
+	if n == 3:
+		if index == 0:
+			bez_y = _RANK_FISH_DIP_BEZIER_Y
+		elif index == 2:
+			bez_y = _RANK_FISH_BEZIER_X
+	elif n == 2:
+		if index == 0:
+			bez_y = _RANK_FISH_DIP_BEZIER_Y
+	elif index == 0 or index == n - 1:
+		bez_y = _RANK_FISH_DIP_BEZIER_Y
+	var mover := func(t: float) -> void:
+		if not is_instance_valid(root):
+			return
+		var ex: float = ComboFeedbackView._cubic_bezier_ease(
+			t,
+			_RANK_FISH_BEZIER_X.x,
+			_RANK_FISH_BEZIER_X.y,
+			_RANK_FISH_BEZIER_X.z,
+			_RANK_FISH_BEZIER_X.w
+		)
+		var ey: float = ComboFeedbackView._cubic_bezier_ease(t, bez_y.x, bez_y.y, bez_y.z, bez_y.w)
+		root.global_position = Vector2(
+			lerpf(target.x, collector_target.x, ex), lerpf(target.y, collector_target.y, ey)
+		)
+	tw.tween_method(mover, 0.0, 1.0, rank_fish_fly_dur)
+
+	tw.tween_callback(
+		func() -> void:
+			if is_showing() and _rank_collector != null and is_instance_valid(_rank_collector):
+				_rank_collector.on_item_collected()
+	)
+	tw.tween_interval(rank_fly_trail_fade)
+	tw.tween_callback(
+		func() -> void:
+			_center_relay_fish_nodes.erase(fx)
+			if is_instance_valid(fx):
+				fx.queue_free()
+	)
+
+
+func _spawn_flight_trail(
+	from: Vector2, to: Vector2, dur: float, bez_x: Vector4, bez_y: Vector4
+) -> void:
+	if _rank_collector == null or not is_instance_valid(_rank_collector):
+		return
+	var trail: Node = _RANK_FLIGHT_TRAIL_SCENE.instantiate()
+	_rank_collector.add_child(trail)
+
+	(trail as CanvasItem).z_index = (
+		_GF_FLIGHT_TRAIL_Z if LevelKind.is_golden_fish(_level_kind) else _RANK_FLIGHT_TRAIL_Z
+	)
+	var sprite: Node2D = trail.get_node_or_null("ScoreTrail")
+	if sprite == null:
+		trail.queue_free()
+		return
+	sprite.global_position = from
+
+	var fly_target := Node2D.new()
+	fly_target.name = "FlyTarget"
+	fly_target.global_position = from
+	trail.add_child(fly_target)
+	sprite.target_path = sprite.get_path_to(fly_target)
+	sprite.use_self_when_no_target = false
+	for child: Node in sprite.get_children():
+		if child is CPUParticles2D:
+			var p := child as CPUParticles2D
+			sprite.remove_child(p)
+			fly_target.add_child(p)
+			p.visible = true
+			p.emitting = true
+	_rank_flight_trails.append(trail)
+
+	var tw: Tween = trail.create_tween()
+
+	var mover := func(t: float) -> void:
+		if not (is_instance_valid(fly_target) and is_instance_valid(sprite)):
+			return
+		var ex: float = ComboFeedbackView._cubic_bezier_ease(t, bez_x.x, bez_x.y, bez_x.z, bez_x.w)
+		var ey: float = ComboFeedbackView._cubic_bezier_ease(t, bez_y.x, bez_y.y, bez_y.z, bez_y.w)
+		fly_target.global_position = Vector2(lerpf(from.x, to.x, ex), lerpf(from.y, to.y, ey))
+		sprite.notify_target_moved()
+	tw.tween_method(mover, 0.0, 1.0, dur)
+	tw.tween_callback(_on_flight_arrived.bind(trail))
+
+
+func _on_flight_arrived(trail: Node) -> void:
+	if _rank_collector != null and is_instance_valid(_rank_collector):
+		_rank_collector.on_item_collected()
+	if not is_instance_valid(trail):
+		return
+	_set_trail_emitting(trail, false)
+
+	var linger: Tween = trail.create_tween()
+	linger.tween_interval(rank_fly_trail_fade)
+	linger.tween_callback(_free_flight_trail.bind(trail))
+
+
+func _free_flight_trail(trail: Node) -> void:
+	_rank_flight_trails.erase(trail)
+	if is_instance_valid(trail):
+		trail.queue_free()
+
+
+func _set_trail_emitting(trail: Node, on: bool) -> void:
+	for p: Node in trail.find_children("*", "CPUParticles2D", true, false):
+		var particle := p as CPUParticles2D
+		if particle != null:
+			particle.emitting = on
+
+
+func _reset_flight_trails() -> void:
+	for trail: Variant in _rank_flight_trails:
+		if is_instance_valid(trail):
+			(trail as Node).queue_free()
+	_rank_flight_trails.clear()
+
+	for fx: Variant in _center_relay_fish_nodes:
+		if is_instance_valid(fx):
+			(fx as Node).queue_free()
+	_center_relay_fish_nodes.clear()
+
+
+## 整理普通关及活动关入口参数，区分残局恢复、直接开局和教程，初始化本局反馈与模式。
 func on_show(params: Dictionary = {}) -> void:
-	_cancel_pending_entry_animation_wait()
-	_terminal_started_ms = 0
-	_endgame_closing = false
+	var entry_presentation: int = get_presentation_revision()
 	_endgame_save_failed = false
 	_endgame_retry_count = 0
-	_entry_preparing = true
-	if _endgame_persist_timer != null:
-		_endgame_persist_timer.stop()
-	if _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
-		_board_view.cell_state_changed.disconnect(_persist_endgame_snapshot)
-	# 埋点：本页的对局类型固定为普通
+	_endgame_closing = false
+	_elo_v2_formal_main = false
+	_finish_rank_win_presentation(true)
+	_reset_game_barrages()
+
 	Tracker.set_active_game_type(Tracker.GameType.NORMAL)
 
-	# 开局染色；完成实际关卡的策略冻结后保存自动标叉组。
+	_life_bar.restore_hidden_slots()
+	_life_bar_mul.restore_hidden_slots()
+
 	ABTestManager.dye_at_game_start()
-	# 父类 on_show：规则条、生命条、撤销系统等公共初始化
+
+	_prepare_entry_dyes(params)
+	if entry_presentation != get_presentation_revision():
+		return
 	super.on_show(params)
-	_selection_plan = {}
-	_selection_retry_params = {}
-	_entry_error = {}
+	if entry_presentation != get_presentation_revision():
+		return
 	var entry_generation: int = _business_generation
 
-	# 清掉上一局草稿死锁留下的临时状态
-	_clear_draft_deadlock_state()
+	_start_cc_pattern_btn_entry_fade()
 
-	# 收起当前还挂着的提示条
+	_return_bank_btn.visible = params.get("from_bank_browser", false)
+
 	if _active_toast != null:
 		_active_toast.hide_toast()
 
-	# 记录本次是否由残局快照复原而来
 	_is_endgame_restore_session = params.get("endgame_restore", false)
 
-	ABTestManager.dye_at_game_start_normal()
+	_cat_progress_rotate_override = int(params.get("restore_cat_progress_rotate", -1))
 
-	# 每日首局降档：AB 开启时评估今天这局是否该用简单题
-	if ABTestManager.daily_first_level_difficulty.is_enabled():
-		GameState.evaluate_daily_first_easy()
-	var consume_daily_first: bool = ABTestManager.daily_first_level_difficulty.is_enabled() or GameState.is_daily_first_easy_available()
+	_level_value_num = -1
 
-	# 参与降档的前提：有关卡号、且不是题库/调试入口
+	_is_direct_open_session = params.get("from_direct_open", false)
+
+	_is_from_tutorial = params.get("from_tutorial", false)
+
+	_dye_game_start_normal(_resolve_entry_level(params))
+	_golden_fish_pre_cat = GoldenFishPreCat.new(ABTestManager.golden_fish_precat, _entry_state, _entry_seed)
+
+	if ColorChallengeGate.is_unlocked(_page_state().get_golden_fish_career_count()):
+		ABTestManager.dye_at_game_start_pass4_goldenfish()
+	_try_begin_returnee_event(params)
+
+	var kind_level: int = int(params.get("level_index", params.get("retry_level", 0)))
+	_level_kind = GoldenFishGate.resolve_kind(
+		kind_level,
+		_page_state().get_available_golden_fish_pending(),
+		ABTestManager.golden_fish_func.is_enabled(),
+		ABTestManager.golden_fish_timing.unlock_min_level()
+	)
+
+	if _level_kind == LevelKind.MAIN:
+		_level_kind = ColorChallengeGate.resolve_kind(
+			kind_level,
+			_page_state().get_color_challenge_pending(),
+			ABTestManager.color_challenge_func.group_value()
+		)
+
+	if not OS.has_feature("rel"):
+		print(
+			(
+				"[GoldenFish] game_page kind: 关号=%d pending=%s enabled=%s → 算出=%d%s"
+				% [
+					kind_level,
+					str(_page_state().get_golden_fish_pending()),
+					str(ABTestManager.golden_fish_func.is_enabled()),
+					_level_kind,
+					(
+						(", 残局覆盖为 kind=%d" % int(params["restore_kind"]))
+						if params.has("restore_kind")
+						else ""
+					)
+				]
+			)
+		)
+
+	if params.has("restore_kind"):
+		_level_kind = int(params["restore_kind"])
+	_discard_level_on_digit_group_switch(params)
+	_golden_fish_pre_cat.prepare_entry(_resolve_entry_level(params), _level_kind)
+
+	if LevelKind.is_insert_golden_fish(_level_kind):
+		ABTestManager.dye_at_game_start_onefish()
+
+		if not OS.has_feature("rel"):
+			print(
+				(
+					"[GoldenFish] 已染色(GAME_START_ONEFISH,取题之前) → 取题策略组=%d"
+					% ABTestManager.golden_fish_func.current_group()
+				)
+			)
+
+	if LevelKind.is_color_challenge(_level_kind):
+		_page_state().begin_color_challenge_pattern_mode()
+		_apply_pattern_mode()
+
+	var _skip_dfld: bool = (
+		params.get("_stale_new_easier", false)
+		or params.get("_returnee_fresh", false)
+		or _will_discard_stale_endgame_snapshot(params)
+		or LevelKind.is_golden_fish(_level_kind)
+		or LevelKind.is_color_challenge(_level_kind)
+	)
+
+	if not _skip_dfld:
+		_page_state().evaluate_daily_first_easy()
+
+	elif ABTestManager.normal_level.is_onefish_dfld_fix() and LevelKind.is_golden_fish(_level_kind):
+		_page_state().evaluate_daily_first_easy()
+		if _page_state().is_daily_first_easy_available():
+			_page_state().consume_daily_first_easy()
+			print("[DailyFirstEasy] 一命关消耗当日机会 (onefish_dfld_fix)")
+
+	elif LevelKind.is_color_challenge(_level_kind):
+		_page_state().evaluate_daily_first_easy()
+		if _page_state().is_daily_first_easy_available():
+			_page_state().consume_daily_first_easy()
+			print("[DailyFirstEasy] 颜色挑战消耗当日机会")
+
 	var _dfe_lv: int = params.get("level_index", 0)
 	var _dfe_is_normal_entry: bool = (
 		_dfe_lv > 0
@@ -266,202 +1077,109 @@ func on_show(params: Dictionary = {}) -> void:
 		and not params.has("debug_config")
 		and not params.has("debug_prebuilt")
 	)
-	var prefer_fresh_daily: bool = false
-	if _dfe_is_normal_entry and GameState.is_daily_first_easy_available():
-		var _dfe_is_hard: bool = (
-			LevelData.is_hard_level_group_j(_dfe_lv)
-			if ABTestManager.rule_normal_rank.is_group_j()
-			else LevelData.is_hard_level(_dfe_lv)
-		)
-		prefer_fresh_daily = not _dfe_is_hard and not LevelData.is_special_level(_dfe_lv) and not _has_user_progress_in_endgame_snapshot(_dfe_lv)
-	# 未操作的旧题可以被每日降档新题替换，但直到新题提交成功都保留旧存档。
+	if not _skip_dfld and _dfe_is_normal_entry and _page_state().is_daily_first_easy_available():
+		var _dfe_is_hard: bool = LevelSelector.is_hard_level(_dfe_lv)
+		if _dfe_is_hard or LevelData.is_special_level(_dfe_lv):
+			_page_state().consume_daily_first_easy()
+			print("[DailyFirstEasy] 特殊/Hard关 level=%d, 不降档, 机会消耗" % _dfe_lv)
+		elif _has_user_progress_in_endgame_snapshot(_dfe_lv):
+			_page_state().consume_daily_first_easy()
+			print("[DailyFirstEasy] 有操作残局,残局复原优先,机会消耗 (level=%d)" % _dfe_lv)
+		elif _is_locked_puzzle_hard_neighbor_eased(_dfe_lv):
+			_page_state().consume_daily_first_easy()
+			print("[DailyFirstEasy] 本关已由难关邻居规则降档,不再降档,机会消耗 (level=%d)" % _dfe_lv)
+		else:
+			_page_state().clear_endgame_snapshot()
+			if not _page_state().get_retry_puzzle(_dfe_lv).is_empty():
+				_page_state().clear_retry_puzzle()
+			print("[DailyFirstEasy] 清除缓存,准备取降档新题 (level=%d)" % _dfe_lv)
 
-	# 有可用残局快照就直接复原并 return，不再走新题流程
-	if not prefer_fresh_daily and _try_consume_endgame_snapshot(params):
+	if not _skip_dfld and not _page_state().is_daily_first_easy_available():
+		_page_state().advance_daily_first_easy_date()
+
+	if _try_consume_endgame_snapshot(params):
 		return
 
-	# 没有残局时，尝试取该关缓存的题面（重开/退出再进能回到同一题）
 	var _entry_lv_for_cached: int = params.get("level_index", 0)
 	if (
-		not prefer_fresh_daily
-		and _entry_lv_for_cached > 0
+		_entry_lv_for_cached > 0
 		and not params.get("bank_mode", false)
 		and not params.has("debug_config")
 		and not params.has("debug_prebuilt")
 	):
-		var _cached: Dictionary = GameState.get_retry_puzzle(_entry_lv_for_cached)
-		if not _cached.is_empty():
-			# 递归 on_show：把缓存题面当题库入口用，埋点状态标成「续玩」
-			var _cached_params: Dictionary = _cached.duplicate()
+		var _cached: Dictionary = _page_state().get_retry_puzzle(_entry_lv_for_cached)
+		if not _cached.is_empty() and _retry_cache_matches_kind(_cached):
+			_page_state().clear_current_level_dirty()
+
+			var _cached_params: Dictionary = _cached.duplicate(true)
 			_cached_params["_tracker_status"] = Tracker.GameStatus.CONTINUE
-			on_show(_cached_params)
+
+			_cached_params["from_direct_open"] = _is_direct_open_session
+
+			_cached_params["from_tutorial"] = _is_from_tutorial
+			_reenter_prepared(_cached_params)
 			return
 
-	# 判断开场提示条是否该用「首次挑战」文案
 	var _entry_lv_idx: int = params.get("level_index", 0)
 	_toast_first_try_hint = (
 		_entry_lv_idx > 0
 		and not params.get("bank_mode", false)
 		and not params.has("debug_config")
 		and not params.has("debug_prebuilt")
-		and (prefer_fresh_daily or GameState.get_retry_puzzle(_entry_lv_idx).is_empty())
+		and _page_state().get_retry_puzzle(_entry_lv_idx).is_empty()
 	)
-	# 记下本局的尺寸表分组（_get_ab_size 用它选表）
-	_size_cycle = ABTestManager.size_cycle.value()
 
-	# 入场动画前先藏棋盘
 	_board_view.visible = false
 
-	# 埋点状态（NEW/RESTART/CONTINUE）决定 game_start 的上报类型
 	_stat_status = params.get("_tracker_status", Tracker.GameStatus.NEW)
-	# 本局计时起点（毫秒）
 	_stat_start_ms = Time.get_ticks_msec()
 
-	# 订阅调试命令总线
-	if not CheatBus.command_issued.is_connected(_on_cheat_command):
+	if OS.is_debug_build() and not OS.has_feature("rel") and not CheatBus.command_issued.is_connected(_on_cheat_command):
 		CheatBus.command_issued.connect(_on_cheat_command)
 
-	# 按入口模式载入 _level_config 与 _puzzle
-	# 页面会复用：本次入口必须重新交付题面，不能借用上次的完整盘面蒙混通过。
-	_level_config = {}
-	_puzzle = {}
+	_pre_cat_pend_snapshot = {}
+
 	var _entry_mode: EntryMode = _resolve_entry_mode(params)
-	_entry_handlers[_entry_mode].call(params)
-	if params.get("level_definition") is Dictionary:
-		_level_config["level_definition"] = params.level_definition.duplicate(true)
-	var definition: Dictionary = _level_config.get("level_definition", {})
-	var level_rules: Dictionary = definition.get("rules", {})
+	var _entry_setup_result: Variant = _entry_handlers[_entry_mode].call(params)
+	if _entry_mode == EntryMode.NORMAL and _entry_setup_result != true:
+		_fail_business_entry(OperationResult.failure("no_valid_level"))
+		return
+	if not _entry_error.is_empty():
+		_fail_business_entry(_entry_error)
+		return
+	var shape_error: String = _prepared_puzzle_error()
+	if not shape_error.is_empty():
+		_fail_business_entry(OperationResult.failure("invalid_board", shape_error))
+		return
+	for metadata: String in ["level_definition", "selection_policy", "content_provenance", "content_release"]:
+		if params.has(metadata):
+			_level_config[metadata] = params[metadata]
+	var level_rules: Dictionary = _level_config.get("level_definition", {}).get("rules", {})
 	if level_rules.has("draft_unlock_level"):
 		_round_policy["draft_unlock_level"] = int(level_rules.draft_unlock_level)
-	if not ContentContext.content_error().is_empty() and not params.get("endgame_restore", false):
-		_entry_error = ContentContext.content_error()
-	if not _entry_error.is_empty():
-		_fail_entry(_entry_error)
-		return
-	if not _has_entry_puzzle_shape():
-		_fail_entry(OperationResult.failure("invalid_entry_puzzle"))
-		return
-	# 在搭盘和初始快照之前完成本局规则染色，之后恢复始终使用保存的策略。
-	if int(_level_config.get("level", 0)) >= 11:
-		ABTestManager.dye_at_game_start_normal_11()
-	if int(_level_config.get("level", 0)) >= 21:
-		ABTestManager.dye_at_game_start_normal_21()
-	_freeze_gameplay_policy(params)
+	_begin_elo_v2_attempt_for_entry(_is_game_barrage_supported_entry(_entry_mode))
 
-	_reset_round_for_entry(params, level_rules)
+	_resolve_pre_cat()
 
-	# 等一帧，让容器完成排序后再摆棋盘
-	await get_tree().process_frame
-	if entry_generation != _business_generation:
-		return
-
-	if not _setup_entry_board(definition):
-		_fail_entry(OperationResult.failure("entry_board_setup_failed"))
-		return
-	if not _commit_entry_selection(consume_daily_first):
-		return
-	if entry_generation != _business_generation:
-		return
-
-	_entry_preparing = false
-	_entry_ready = true
-	Tracker.accept_game_start(Tracker.GameType.NORMAL)
-	if not _selection_plan.is_empty():
-		PuzzleSessionTracker.record(str(_selection_plan.puzzle_id), int(_selection_plan.level))
-
-	# 手感统计：把盘面上已有的猫当作「刚放下的第一只」
-	_seed_like_hand_first_cat_from_board()
-
-	# 普通主线才挂「格子变更 → 残局快照」
-	_setup_endgame_persist_for_normal_entry(params)
-	if _combo_feedback_view == null:
-		_combo_feedback_view = get_node_or_null("Root/VBoxContainer/ComboFeedback")
-	if _combo_feedback_view != null:
-		_combo_feedback_view.reset(_combo_score)
-		_combo_feedback_view.set_hard(_is_hard_level)
-	_connect_combo_signal()
-
-	# 刷新剩余猫数显示
-	_update_remaining()
-
-	# 入场动画期间：藏棋盘、屏蔽输入、锁入口按钮
-	_entry_anim_playing = true
-	_board_view.visible = false
-	_board_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	_lock_entry_buttons()
-
-	# 打断可能还在播的旧入场动画
-	var board_intro := $Root as BoardContainerCell_01
-	if _anim_player.is_playing():
-		_anim_player.stop()
-
-		if (
-			board_intro != null
-			and board_intro.animation_finished.is_connected(_on_appear_animation_finished)
-		):
-			board_intro.animation_finished.disconnect(_on_appear_animation_finished)
-	# 按关卡号调整规则条/目标格的强调轨道
-	_apply_goal_emphasis_tracks(_level_config.get("level", 0))
-
-	# 按关卡号决定规则条是否折叠
-	_apply_rule_swipe_collapse(_level_config.get("level", 0))
-
-	# 复位挂机计时
-	_reset_idle_hint()
-
-	# 上报对局开始（题目 id、旋转、难度、关卡号）
-	(
-		Tracker
-		. track_game_start(
-			_build_qid(),
-			Tracker.transform_to_qrotate(_level_config.get("bank_transform", 0)),
-			_stat_status,
-			Tracker.GameType.NORMAL,
-			_get_diffi(),
+	if _pre_cat_fx != null:
+		var fx_cell: Vector2i = _pre_cat_position
+		if fx_cell.x < 0 and _entry_mode == EntryMode.NORMAL:
+			fx_cell = _self_prefill_cell()
+		_pre_cat_fx.prepare(
 			_level_config.get("level", 0),
-			_level_config.get("rank", 0),
-			_level_config.get("size", 0),
+			fx_cell,
+			_is_endgame_restore_session,
+			_golden_fish_pre_cat.fx_kind(_level_kind)
 		)
-	)
 
-	# 插屏广告位：新局 / 重开 / 续玩各一个
-	var ad_pos: String = Tracker.AdPos.NORMAL_START
-	if _stat_status == Tracker.GameStatus.RESTART:
-		ad_pos = Tracker.AdPos.NORMAL_RESTART
-	elif _stat_status == Tracker.GameStatus.CONTINUE:
-		ad_pos = Tracker.AdPos.NORMAL_CONTINUE
-	# 评估本次是否该出插屏（评估结果内部缓存）
-	var inter_elig: Dictionary = _eval_start_interstitial(params, ad_pos)
+	_log_cat_rank()
 
-	# 先让容器重排一帧，再排定「入场动画还是插屏」
-	var board_intro_pre := $Root as BoardContainerCell_01
-	if board_intro_pre != null:
-		board_intro_pre.set_process(false)
-	($Root/VBoxContainer as Container).queue_sort()
-	await get_tree().process_frame
-	if entry_generation != _business_generation:
-		return
-	_schedule_entry_animation_after_interstitial(ad_pos, inter_elig)
+	if not LevelKind.is_golden_fish(_level_kind) and _page_state().is_daily_first_easy_available():
+		_page_state().consume_daily_first_easy()
+		print("[DailyFirstEasy] 兜底消耗 (strategy<=1 或其他路径未消耗)")
 
-	# 首局/回访的横幅广告
-	_show_banner_if_eligible("game")
-
-	# 第 21 关起才有草稿功能
-	if _level_config.get("level", 0) >= 21:
-		if _draft_btn != null:
-			_draft_btn.visible = _is_draft_unlocked()
-
-	# 残局复原时把快照里的草稿标记补回来
-	_try_restore_draft_marks_from_snapshot()
-
-
-## 复位本局状态和 HUD；恢复生命/复活次数仍取入口参数，尚未铺盘或提交。
-func _reset_round_for_entry(params: Dictionary, level_rules: Dictionary) -> void:
-	# 策略层按钮只在非 release 包显示
 	_strategy_btn.visible = OS.is_debug_build() and not OS.has_feature("rel")
 
-	# 题库题量 > 1 时才显示左右翻页
 	var _nav_enabled := _nav_total > 1
 	_prev_btn.visible = _nav_enabled
 	_next_btn.visible = _nav_enabled
@@ -469,16 +1187,38 @@ func _reset_round_for_entry(params: Dictionary, level_rules: Dictionary) -> void
 		_prev_btn.text = "‹"
 		_next_btn.text = "›"
 
-	# 命数复位；restore_lives 表示承接残局剩余的命
-	_lives = int(level_rules.get("initial_lives", 3))
+	var life_rule: Dictionary = {"lives": 3, "inf": false}
+	if not LevelKind.is_golden_fish(_level_kind):
+		life_rule = HealthPointsRuleConfig.lives_for_rule(str(_gameplay_policy.get("health_points_rule", "{1,end,3}")),
+			int(_level_config.get("level", 0)), int(_level_config.get("size", 0)))
+		if level_rules.has("initial_lives"):
+			life_rule = {"lives": int(level_rules.initial_lives), "inf": false}
+	_lives_inf = (not LevelKind.is_golden_fish(_level_kind)) and life_rule.inf
+	var life_cap: int = 1 if LevelKind.is_golden_fish(_level_kind) else int(life_rule.lives)
+	if params.has("restore_life_cap"):
+		life_cap = int(params.restore_life_cap)
+		_lives_inf = bool(params.get("restore_lives_inf", false))
+	_life_cap = life_cap
+
+	_level_config["life_cap"] = life_cap
+	_lives = life_cap
+
+	var use_mul_bar: bool = (
+		(not LevelKind.is_golden_fish(_level_kind)) and (life_cap > 3 or _lives_inf)
+	)
+	_life_bar_progress.visible = not use_mul_bar
+	_life_bar_mul.visible = use_mul_bar
+	_life_bar = _life_bar_mul if use_mul_bar else _life_bar_progress
+	_refresh_life_bar_display()
+
+	_life_bar.apply_kind(LevelKind.is_golden_fish(_level_kind))
 
 	if params.has("restore_lives"):
-		_lives = clampi(int(params["restore_lives"]), 0, 3)
-		if _lives < 3:
-			_ac_had_wrong_cat = true
-	# 本局瞬时状态与提示数据复位
+		_lives = clampi(int(params["restore_lives"]), 0, life_cap)
 	_is_complete = false
+
 	_mistake_count = 0
+
 	_revive_count = params.get("restore_revive_count", 0)
 	if _stat_status == Tracker.GameStatus.RESTART:
 		_restart_count += 1
@@ -488,130 +1228,253 @@ func _reset_round_for_entry(params: Dictionary, level_rules: Dictionary) -> void
 		_restart_count = 0
 	_wrong_guess_pending = false
 	_hint_data = {}
-	_idle_guide_shown = false
-	_step_trigger_had_cat = false
-	_stop_idle_guide()
 	_last_placed_count = -1
 
-	# 手感/节奏统计：本局从零开始
 	_like_hand_state = {
 		"in_game_sec": 0.0,
 		"last_cat_sec": 0.0,
-		"triggered_count": 0,
+		"triggered_count": int(params.get("restore_like_hand_triggered_count", 0)),
 		"clock_paused": false,
 		"has_seen_first_cat": false,
-		"wrong_cat_events": [],
-		"missed_cat_candidates": {},
-		"missed_cat_prev": {},
+		"cat_place_times": {},
+		"missed_cross_triggered_cats": {},
+		"latest_cat_key": "",
+		"manually_x_marked_cells": {},
+		"hint_marked_x_cells": {},
 	}
-	# 启动计时器并复位失败/胜利/提示层
-	_clock_timer.start()
-	UIManager.hide_ui(UiName.FAIL)
-	UIManager.hide_ui(UiName.WIN)
+
+	var _restore_in_game_sec: float = float(params.get("restore_in_game_sec", 0.0))
+	if _restore_in_game_sec > 0.0:
+		_like_hand_state["in_game_sec"] = _restore_in_game_sec
+		_like_hand_state["last_cat_sec"] = _restore_in_game_sec
+		print("[Endgame] restore in_game_sec=%.1fs (Time 指标续接杀端前时长)" % _restore_in_game_sec)
+
+	_continue_play_sec = float(params.get("restore_continue_play_sec", 0.0))
+	_continue_clock_started = bool(params.get("restore_continue_clock_started", false))
+
+	for _mc_key in params.get("restore_missed_cross_triggered_cats", []):
+		_like_hand_state["missed_cross_triggered_cats"][_mc_key] = true
+
+	for _xm_key in params.get("restore_manually_x_marked_cells", []):
+		_like_hand_state["manually_x_marked_cells"][_xm_key] = true
+	_start_gameplay_timing(_is_game_barrage_supported_entry(_entry_mode))
+	get_tree().create_timer(0.1).timeout.connect(
+		func() -> void:
+			if not _is_current_entry(entry_generation):
+				return
+			UIManager.hide_ui(UiName.FAIL)
+			UIManager.hide_ui(UiName.WIN)
+	)
 	_hint_overlay.visible = false
 	if _strategy_overlay != null:
 		_strategy_overlay.visible = false
 
-	# 复位生命预警的视觉与锁
 	_reset_life_warning()
 
-	# 刷新顶部金币与红心
+	_golden_fish_tutorial_card.reset_card()
+
+	_reset_golden_fish_fly()
+
 	_coin_label.text = str(_coins)
-	_refresh_hearts()
-	# 把道具数量同步成存档里的值
+	_refresh_life_bar_display()
 	_sync_tools_from_state()
 
+	await get_tree().process_frame
+	if not _is_current_entry(entry_generation):
+		return
 
-## 布局完成后搭盘；预置与恢复都先完成，再交给选题事务保存初始状态。
-func _setup_entry_board(definition: Dictionary) -> bool:
-	if not _has_entry_puzzle_shape():
-		return false
 	_relayout_board()
 
-	# 取棋盘边长并接管棋盘的鼠标事件
+	_apply_top_gap_for_short_screen()
+
 	var sz: int = _level_config["size"]
 	_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	_disconnect_combo_signal()
 
-	# 棋盘入场动画期间关掉容器自动触发，避免和入场动画打架
 	var _pat_regions: Array = _level_config.get("patternRegions", [])
+	var _sp_regions: Array = _level_config.get("spRegion", [])
 	var _board_intro_setup := $Root as BoardContainerCell_01
+	_entry_sp_region_ids = []
 	if _board_intro_setup != null:
 		_board_intro_setup.set_auto_trigger(false)
-	# 初始化棋盘：尺寸 / 区域图 / 颜色映射 / 图案区域，并复用已有格子
-	var setup_ok: bool = _board_view.setup(
-		sz, _puzzle["regions"], _compute_color_map_for_current(sz), _pat_regions, true
-	)
-	if _board_intro_setup != null:
-		_board_intro_setup.set_auto_trigger(true)
-	if not setup_ok:
-		return false
-	ContentSceneBindings.apply(_board_view, definition.get("media", {}))
+	var color_map_for_setup: Array[int] = _compute_color_map_for_current(sz)
 
-	# 写入预置猫（教程关或固定开局）
+	if params.has("restore_cc_delivery_index"):
+		_level_config["_cc_delivery_index"] = int(params["restore_cc_delivery_index"])
+
+	refresh_companion_costume_override()
+	_level_config["companion_costume_override"] = _companion_costume_override
+	_apply_in_game_costume()
+
+	_apply_color_challenge_palette(sz, color_map_for_setup)
+	if not _board_view.setup(sz, _puzzle.get("regions", []), color_map_for_setup, _pat_regions, true):
+		_fail_business_entry(OperationResult.failure("invalid_board"))
+		return
+
+	_refresh_color_challenge_pattern_btn()
+	_board_view.set_solution(_puzzle_sol_1d())
+
+	if _pre_cat_fx != null and _pre_cat_fx.is_pending():
+		_board_view.set_region_dim_enabled(false)
+	else:
+		_apply_cat_found_grid_dim()
+	if _board_intro_setup != null:
+		var use_special_intro: bool = not _sp_regions.is_empty()
+		if use_special_intro and ABTestManager.normal_level.is_lk_mod_freq_boost_active():
+			var _bank_src: String = str(
+				_level_config.get("bank_source_main", _level_config.get("bank_source", ""))
+			)
+			if _bank_src == "lk_mod":
+				use_special_intro = false
+		_entry_sp_region_ids = _sp_regions.duplicate() if use_special_intro else []
+		(
+			_board_intro_setup
+			. configure_special_regions(
+				_puzzle["regions"],
+				_entry_sp_region_ids,
+			)
+		)
+		_board_intro_setup.set_auto_trigger(true)
+
 	_prefill_hints()
 
-	# 复原存档里的部分盘面（残局或重开）
 	_restore_partial_board()
 
-	# 复原局补齐：给盘面上已有的猫补出该有的叉
-	if not _level_config.get("restore_state", {}).is_empty():
-		complete_auto_mark_for_restore()
-	return true
+	_seed_like_hand_first_cat_from_board()
 
+	_seed_full_mark_fired_units_from_board()
 
-## 每个入口都要交付完整二维题面；避免入口子函数中断后，外层仍提交一个空盘。
-func _has_entry_puzzle_shape() -> bool:
-	var size_value: Variant = _level_config.get("size")
-	if typeof(size_value) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(size_value)):
-		return false
-	var size: int = int(size_value)
-	if size <= 0 or size_value != size:
-		return false
-	for key: String in ["regions", "solution"]:
-		var rows: Variant = _puzzle.get(key)
-		if not rows is Array or rows.size() != size:
-			return false
-		for row: Variant in rows:
-			if not row is Array or row.size() != size:
-				return false
-	return true
+	if not _commit_prepared_round(params, _entry_selection_plan):
+		return
+	_golden_fish_pre_cat.set_state(GameState)
+	_setup_endgame_persist_for_normal_entry(params)
+	if _combo_feedback_view == null:
+		_combo_feedback_view = get_node_or_null("Root/VBoxContainer/ComboFeedback")
+	if _combo_feedback_view != null:
+		_combo_feedback_view.reset(_score_model.score)
 
+		_combo_feedback_view.set_inserted_level(not LevelKind.occupies_level_number(_level_kind))
+		_combo_feedback_view.set_level_value(_level_value_num)
 
-## 所有失败入口共用同一收尾；保留旧存档，页面不再接受棋盘/道具动作。
-func _fail_entry(result: Dictionary) -> void:
-	_entry_error = result
-	_block_round_entry()
-	_cancel_pending_entry_animation_wait()
-	_unlock_entry_buttons()
-	_report_business_failure(result)
+		_combo_feedback_view.set_super_hard(_is_super_hard_level)
+		_combo_feedback_view.set_hard(_is_hard_level)
+	_connect_combo_signal()
 
+	_update_remaining(true)
 
-## 搭盘成功后提交入场状态；新题同时提交游标、重试缓存与初始检查点。
-func _commit_entry_selection(consume_daily_first: bool) -> bool:
-	var auto_mark_variant: int = int(_gameplay_policy.get("auto_mark_variant", 0))
-	var new_game_id: String = Tracker.create_game_id() if _stat_status == Tracker.GameStatus.NEW else ""
-	var selected: Dictionary
-	if _selection_plan.is_empty():
-		var clear_dirty: bool = _stat_status == Tracker.GameStatus.CONTINUE and not _is_endgame_restore_session
-		selected = LevelData.commit_existing_entry(auto_mark_variant, consume_daily_first, clear_dirty, new_game_id)
+	RankActivityManager.notify_level_start()
+	if not _is_current_entry(entry_generation):
+		return
+
+	_update_rank_collector()
+	if not _is_current_entry(entry_generation):
+		return
+
+	_cancel_pattern_sweep_effect()
+	_entry_anim_playing = true
+	_board_view.visible = false
+	_board_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	_lock_entry_buttons()
+
+	var board_intro := $Root as BoardContainerCell_01
+	_disconnect_entry_animation_callbacks(board_intro)
+	if _anim_player.is_playing():
+		_anim_player.stop()
+
+	_reset_idle_hint()
+
+	_idle_hint_round_count = 0
+
+	var main_level: int = int(_level_config.get("level", 0))
+	(
+		NormalLevelGroupTag
+		. update_at_level_start(
+			main_level,
+			_entry_mode == EntryMode.NORMAL,
+			_level_kind,
+		)
+	)
+	if not _is_current_entry(entry_generation):
+		return
+
+	(
+		Tracker
+		. track_game_start(
+			_build_qid(),
+			Tracker.transform_to_qrotate(_level_config.get("bank_transform", 0)),
+			_stat_status,
+			_tracker_game_type(),
+			_get_diffi(),
+			_level_config.get("level", 0),
+			_level_config.get("rank", 0),
+			_level_config.get("size", 0),
+			1 if (RankActivityManager.is_running() and RankActivityManager.is_joined()) else 0,
+			_pre_type,
+			0,
+			0.0,
+			_level_config.get("rating", 0.0),
+			_build_rec_extra().merged(_build_elo_start_extra()),
+		)
+	)
+
+	if QueendokuCore.is_complete(_board_view.get_board(), sz, _puzzle["regions"]):
+		_board_view.visible = true
+		_on_game_win()
+		return
+
+	var ad_pos: String = Tracker.AdPos.NORMAL_START
+	if _stat_status == Tracker.GameStatus.RESTART:
+		ad_pos = Tracker.AdPos.NORMAL_RESTART
+	elif _stat_status == Tracker.GameStatus.CONTINUE:
+		ad_pos = Tracker.AdPos.NORMAL_CONTINUE
+
+	var delay_start_interstitial: bool = (
+		ABTestManager.inter_timing.should_delay_start_interstitial()
+	)
+	var inter_elig: Dictionary = {}
+	_entry_anim_skipped = false
+	if not delay_start_interstitial:
+		inter_elig = await _eval_start_interstitial(params, ad_pos)
+		if not _is_current_entry(entry_generation):
+			return
+
+	var board_intro_pre := $Root as BoardContainerCell_01
+	if board_intro_pre != null:
+		board_intro_pre.set_process(false)
+	($Root/VBoxContainer as Container).queue_sort()
+	await get_tree().process_frame
+	if not _is_current_entry(entry_generation):
+		return
+	_prepare_start_interstitial_flow()
+	if delay_start_interstitial:
+		_show_deferred_start_interstitial(params, ad_pos)
 	else:
-		selected = LevelData.commit_selected(_selection_plan, _business_checkpoint(), _selection_retry_params, auto_mark_variant, consume_daily_first, new_game_id)
-	if not selected.get("ok", false):
-		_fail_entry(selected)
-		return false
-	return true
+		_show_immediate_start_interstitial(ad_pos, inter_elig)
+
+	_show_banner_if_eligible("game")
+
+	if is_instance_valid(_elo_debug_overlay):
+		_refresh_elo_debug_panel()
 
 
-## 题库入口：用外部传入的 regionMap/solution 直接组题面
 func _setup_entry_bank(params: Dictionary) -> void:
 	var bank_sz: int = params["bank_size"]
 	var rank: int = params["bank_rank"]
 	var idx: int = params["bank_index"]
+	var is_elo_delivery: bool = bool(params.get("is_elo_delivery", false))
+	if ABTestManager.normal_level.is_elo_v2_active():
+		is_elo_delivery = is_elo_delivery and _has_valid_elo_v2_rating(params)
 
-	# solution 每行只存一个列号，这里还原成二维布尔盘
 	var raw_sol: Array = params.get("prebuilt_solution", [])
+	if bank_sz < 1 or bank_sz > 32 or raw_sol.size() != bank_sz:
+		_fail_business_entry(OperationResult.failure("invalid_board", "invalid bank solution dimensions"))
+		return
+	for column: Variant in raw_sol:
+		if typeof(column) not in [TYPE_INT, TYPE_FLOAT] or float(column) != float(int(column)) or int(column) < 0 or int(column) >= bank_sz:
+			_fail_business_entry(OperationResult.failure("invalid_board", "invalid bank solution coordinate"))
+			return
 	var solution_2d: Array = []
 	for r: int in range(bank_sz):
 		var row: Array = []
@@ -620,7 +1483,6 @@ func _setup_entry_bank(params: Dictionary) -> void:
 		if r < raw_sol.size():
 			row[int(raw_sol[r])] = true
 		solution_2d.append(row)
-	# retry_level > 0 说明是从某关跳进题库的题
 	var retry_lv: int = params.get("retry_level", 0)
 	_level_config = {
 		"level": retry_lv,
@@ -634,12 +1496,28 @@ func _setup_entry_bank(params: Dictionary) -> void:
 		"bank_source": params.get("bank_source", ""),
 		"bank_source_main": params.get("bank_source_main", ""),
 		"bank_tier": params.get("bank_tier", ""),
+		"_cc_delivery_index": params.get("_cc_delivery_index", -1),
+		"rating": params.get("rating", 0.0),
+		"is_elo_delivery": is_elo_delivery,
+		"eloRating": params.get("eloRating", -1.0) if is_elo_delivery else -1.0,
+		"_elo_e": params.get("_elo_e", -1.0) if is_elo_delivery else -1.0,
+		"_elo_k": params.get("_elo_k", -1.0) if is_elo_delivery else -1.0,
+		"_elo_player_rating": params.get("_elo_player_rating", -1.0) if is_elo_delivery else -1.0,
+		"_puzzle_id": params.get("_puzzle_id", ""),
+		"style_vector": params.get("style_vector", {}),
 		"restore_state": params.get("restore_state", {}),
 		"patternRegions":
 		params.get("patternRegions", params.get("bank_params", {}).get("patternRegions", [])),
+		"spRegion": _resolve_sp_regions(params),
+		"kind": _level_kind,
 	}
 
-	# 区域号统一转 int（题库 JSON 里可能是浮点）
+	if int(params.get("_cc_delivery_index", -1)) >= 0:
+		_level_config["_cc_delivery_index"] = int(params["_cc_delivery_index"])
+
+	_level_config["pace_group"] = params.get("_bank_pace_group", 0)
+	_level_config["pace_score"] = params.get("_bank_pace_score", 0.0)
+
 	var raw_regions: Array = params.get("prebuilt_regions", [])
 	var int_regions: Array = []
 	for row_arr in raw_regions:
@@ -651,24 +1529,13 @@ func _setup_entry_bank(params: Dictionary) -> void:
 		"regions": int_regions,
 		"solution": solution_2d,
 	}
-	# 有关卡号时标题按关卡显示（可能带 Hard）
 	if retry_lv > 0:
-		_is_hard_level = (
-			LevelData.is_hard_level_group_j(retry_lv)
-			if ABTestManager.rule_normal_rank.is_group_j()
-			else LevelData.is_hard_level(retry_lv)
-		)
-		if _is_hard_level:
-			_set_level_text(tr("GAME_LEVEL_HARD") % retry_lv, retry_lv)
-			_set_hard_fire_visible(true)
-		else:
-			_set_level_text(tr("GAME_LEVEL_TITLE") % retry_lv, retry_lv)
-			_set_hard_fire_visible(false)
+		_apply_difficulty_level_text(retry_lv)
 	else:
 		_is_hard_level = false
+		_is_super_hard_level = false
 		_set_level_text("%d×%d  R%d  #%d" % [bank_sz, bank_sz, rank, idx])
 		_set_hard_fire_visible(false)
-	# 策略层步数 R1~R5
 	_strategy_steps = [
 		params.get("r1_steps", 0),
 		params.get("r2_steps", 0),
@@ -676,12 +1543,10 @@ func _setup_entry_bank(params: Dictionary) -> void:
 		params.get("r4_steps", 0),
 		params.get("r5_steps", 0),
 	]
-	# 翻页信息：题库内第几题 / 共几题
 	_nav_index = params.get("bank_index", 1)
 	_nav_total = params.get("bank_total", 1)
 
 
-## SP 题库入口：组题面，并从 BankData 补上该题的图案名与预置点位
 func _setup_entry_bank_sp(params: Dictionary) -> void:
 	# 页面参数和表内元数据都可能来自旧缓存；先完成校验，再生成二维盘面。
 	_puzzle = {}
@@ -697,7 +1562,7 @@ func _setup_entry_bank_sp(params: Dictionary) -> void:
 	if bank_sz < 4 or bank_sz > 12 or rank < 1 or rank > 5 or idx < 1 or idx > sp_all.size() or not sp_all[idx - 1] is Dictionary:
 		_entry_error = OperationResult.failure("invalid_sp_entry")
 		return
-	var sp_entry: Dictionary = sp_all[idx - 1]
+	var sp_entry: Dictionary = BankData.materialize_entry(sp_all[idx - 1], true)
 	if not DokuContentValidator.validate("doku/levels/bankdatasp", {"levels": [sp_entry]}):
 		_entry_error = OperationResult.failure("invalid_sp_entry")
 		return
@@ -727,9 +1592,37 @@ func _setup_entry_bank_sp(params: Dictionary) -> void:
 		"bank_source": params.get("bank_source", ""),
 		"bank_source_main": params.get("bank_source_main", ""),
 		"bank_tier": params.get("bank_tier", ""),
+		"_cc_delivery_index": params.get("_cc_delivery_index", -1),
+		"rating": params.get("rating", 0.0),
 		"patternRegions":
 		params.get("patternRegions", params.get("bank_params", {}).get("patternRegions", [])),
+		"spRegion": _resolve_sp_regions(params),
+		"kind": _level_kind,
 	}
+
+	_level_config["pace_group"] = params.get("_bank_pace_group", 0)
+	_level_config["pace_score"] = params.get("_bank_pace_score", 0.0)
+	if not OS.has_feature("rel"):
+		var _seq: Dictionary = PaceLogSeqLookup.lookup(
+			_level_config["bank_source"], bank_sz, rank, idx
+		)
+		print(
+			(
+				"[Level] lv=%d route=BANK_SP src=%s idx=%d sz=%d rank=%d pace_group=%d pace_score=%.4f r_seq=%s hint_click_seq=%s(len=%d)"
+				% [
+					retry_lv,
+					_level_config["bank_source"],
+					idx,
+					bank_sz,
+					rank,
+					_level_config["pace_group"],
+					_level_config["pace_score"],
+					str(_seq["r_seq"]),
+					str(_seq["hint_click_seq"]),
+					(_seq["hint_click_seq"] as Array).size(),
+				]
+			)
+		)
 
 	var raw_regions: Array = params.get("prebuilt_regions", [])
 	var int_regions: Array = []
@@ -743,14 +1636,14 @@ func _setup_entry_bank_sp(params: Dictionary) -> void:
 		"solution": solution_2d,
 	}
 
-	# SP 记录里带 pattern 和 prefill，优先用表里的
-	var pattern: String = sp_entry.get("pattern", "SP")
-	var raw_prefill: Array = sp_entry.get("prefill_positions", [])
-	var int_prefill: Array = []
-	for pos: Array in raw_prefill:
-		int_prefill.append([int(pos[0]), int(pos[1])])
-	_level_config["prefill_positions"] = int_prefill
-	# 标题带 SP 图案名
+	var pattern: String = "SP"
+	if idx - 1 < sp_all.size():
+		pattern = sp_entry.get("pattern", "SP")
+		var raw_prefill: Array = sp_entry.get("prefill_positions", [])
+		var int_prefill: Array = []
+		for pos in raw_prefill:
+			int_prefill.append([int(pos[0]), int(pos[1])])
+		_level_config["prefill_positions"] = int_prefill
 	_set_level_text("SP  %d×%d  #%d  [%s]" % [bank_sz, bank_sz, idx, pattern])
 	_strategy_steps = [
 		params.get("r1_steps", 0),
@@ -763,31 +1656,48 @@ func _setup_entry_bank_sp(params: Dictionary) -> void:
 	_nav_total = params.get("bank_total", 1)
 
 
-## 调试入口：用编辑器配置现场生成题目（仅编辑器/调试包可用）
+func _resolve_sp_regions(params: Dictionary) -> Array:
+	var direct: Array = params.get("spRegion", params.get("bank_params", {}).get("spRegion", []))
+	if not direct.is_empty():
+		return direct
+
+	var levels: Array = []
+	match params.get("bank_source", ""):
+		"sp":
+			levels = BankData.get_sp_levels()
+		"lk":
+			levels = BankData.get_lk_levels()
+		_:
+			return []
+	var index: int = int(params.get("bank_index", 0)) - 1
+	if index < 0 or index >= levels.size():
+		return []
+	return (levels[index] as Dictionary).get("spRegion", [])
+
+
 func _setup_entry_debug_config(params: Dictionary) -> void:
 	var dc: Dictionary = params["debug_config"]
 	_level_config = dc.duplicate()
-	# 补齐生成器需要的字段
 	if not _level_config.has("prefill_count"):
 		_level_config["prefill_count"] = 0
 	if not _level_config.has("prefill_positions"):
 		_level_config["prefill_positions"] = []
-	# 关卡生成器脚本，release 包里通常不存在
-	const _LGE_PATH := "res://products/meowdoku/editor/queendoku/level_generator_editor.gd"
-	var lge: GDScript = load(_LGE_PATH) if ResourceLoader.exists(_LGE_PATH) else null
-	# 生成器不可用：报错并保持 _puzzle 为空
-	if lge == null:
-		push_error("[GamePage] debug_config 入口不可用：LevelGeneratorEditor 不在当前包内")
+
+	_level_config["kind"] = LevelKind.MAIN
+	const _PUZZLE_GENERATOR_PATH := "res://products/meowdoku/gameplay/domain/puzzle_generator.gd"
+	var generator_script: GDScript = (
+		load(_PUZZLE_GENERATOR_PATH) if ResourceLoader.exists(_PUZZLE_GENERATOR_PATH) else null
+	)
+	if generator_script == null:
+		push_error("[GamePage] debug_config 入口不可用：PuzzleGenerator 不在当前包内")
 		return
-	# 现场生成题面
-	_puzzle = lge.generate_puzzle(_level_config)
+	_puzzle = generator_script.generate_puzzle(_level_config)
 	_set_level_text(dc.get("label", "Debug"))
 	_strategy_steps = [0, 0, 0, 0, 0]
 	_nav_index = 0
 	_nav_total = 0
 
 
-## 调试入口：直接用调用方给的 regions/solution 摆一局（不计关卡进度）
 func _setup_entry_debug_prebuilt(params: Dictionary) -> void:
 	var dp: Dictionary = params["debug_prebuilt"]
 	var dp_sz: int = dp["size"]
@@ -797,6 +1707,7 @@ func _setup_entry_debug_prebuilt(params: Dictionary) -> void:
 		"seed": 0,
 		"prefill_count": 0,
 		"prefill_positions": [],
+		"kind": _level_kind,
 	}
 	_puzzle = {"regions": dp["regions"], "solution": dp["solution"]}
 	_set_level_text(dp.get("label", "Debug"))
@@ -805,26 +1716,85 @@ func _setup_entry_debug_prebuilt(params: Dictionary) -> void:
 	_nav_total = 0
 
 
-## 普通入口：从 LevelData 取题面/难度/预置猫，并处理查重与缓存
-func _setup_entry_normal(params: Dictionary) -> void:
-	var level_index: int = params.get("level_index", 1)
-	# 关卡号至少为 1
-	level_index = max(1, level_index)
-	_selection_plan = LevelData.resolve_level_entry(level_index, _get_ab_size(level_index), randi())
-	if not _selection_plan.get("ok", false):
-		_entry_error = _selection_plan
-		return
-	var lv_entry: Dictionary = _selection_plan.entry
-	_round_content_provenance = {"table": lv_entry.get("_content_provenance", {}).duplicate(true), "policy": DokuPolicy.provenance(), "definition": lv_entry.get("_definition_provenance", {}).duplicate(true)}
+func _select_entry_for_level(
+	level_index: int,
+	rank_override: int,
+	pre_cat_pend: Dictionary = {},
+	ignore_special: bool = false,
+	cc_stale: Dictionary = {}
+) -> Dictionary:
+	var group: int = ABTestManager.normal_level.value()
+	var use_returnee: bool = _page_state().get_returnee_remaining(group) > 0 or ignore_special
+	if use_returnee:
+		var selection_pending: Dictionary = _golden_fish_pre_cat.selector_pending(
+			_level_kind, pre_cat_pend
+		)
+		var entry: Dictionary = LevelSelector.select(
+			level_index, rank_override, selection_pending, ignore_special, _entry_state
+		)
+		if not entry.is_empty() and LevelKind.is_color_challenge(_level_kind):
+			var delivery_index: int = _page_state().get_color_challenge_delivered()
+			entry["_cc_delivery_index"] = delivery_index
+			var retry: Dictionary = _page_state().get_retry_puzzle(level_index).duplicate(true)
+			retry["_cc_delivery_index"] = delivery_index
+			retry["_returnee_color_override"] = true
+			_page_state().set_retry_puzzle(level_index, retry)
+			_page_state().commit_color_challenge_override_delivery()
+		return entry
 
-	# 选题计划已按题面推导并校验尺寸；可选字段缺省时不能再回退普通 AB 尺寸。
-	var lv_sz: int = int(_selection_plan.size)
-	# 难度档 rank：题库记录优先，否则由策略层换算
-	var lv_rank: int = lv_entry.get(
-		"_bank_rank", LevelData.strategy_to_rank(LevelData.get_strategy(level_index))
+	if LevelKind.is_color_challenge(_level_kind):
+		var cc_entry: Dictionary = ColorChallengeSelector.select(
+			level_index, int(cc_stale.get("rank", 0)), int(cc_stale.get("size", 0)), _entry_state
+		)
+		if not cc_entry.is_empty():
+			return cc_entry
+		push_error("[ColorChallenge] level unavailable, fallback to main level=%d" % level_index)
+		_level_kind = LevelKind.MAIN
+		_page_state().on_color_challenge_settled()
+		return LevelSelector.select(level_index, rank_override, pre_cat_pend, false, _entry_state)
+	if not LevelKind.is_insert_golden_fish(_level_kind):
+		return LevelSelector.select(level_index, rank_override, pre_cat_pend, false, _entry_state)
+	var gf_entry: Dictionary = GoldenFishSelector.select(level_index, _entry_state)
+	if not gf_entry.is_empty():
+		return gf_entry
+	push_error("[GoldenFish] insert level unavailable, fallback to main level=%d" % level_index)
+	_level_kind = LevelKind.MAIN
+
+	_page_state().on_golden_fish_settled(false)
+
+	_pre_cat_pend_snapshot = _golden_fish_pre_cat.fallback_pending(level_index, pre_cat_pend)
+	return LevelSelector.select(level_index, rank_override, _pre_cat_pend_snapshot, false, _entry_state)
+
+
+func _setup_entry_normal(params: Dictionary) -> bool:
+	var level_index: int = params.get("level_index", 1)
+	level_index = max(1, level_index)
+
+	var rank_override: int = int(params.get("rank_override", 0))
+
+	_pre_cat_pend_snapshot = _golden_fish_pre_cat.consume_pending(level_index, _level_kind)
+	var lv_entry: Dictionary = _select_entry_for_level(
+		level_index,
+		rank_override,
+		_pre_cat_pend_snapshot,
+		bool(params.get("_returnee_ignore_special", false)),
+		params.get("_cc_stale", {})
 	)
-	# solution 一维列号 → 二维布尔盘
+	if lv_entry.is_empty():
+		push_warning("GamePage: LevelSelector failed to deliver entry, level=%d" % level_index)
+		return false
+
+	_entry_selection_plan = (lv_entry.get("_selection_plan", {}) as Dictionary).duplicate(true)
+	var lv_sz: int = int(lv_entry.get("size", 0))
+	if lv_sz == 0:
+		lv_sz = (lv_entry.get("regionMap", []) as Array).size()
+	var lv_rank: int = int(lv_entry.get("_delivery_rank", lv_entry.get("_bank_rank", 1)))
 	var lv_sol_1d: Array = lv_entry.get("solution", [])
+	if lv_sz < 1 or lv_sol_1d.size() != lv_sz:
+		return false
+	for solution_col: Variant in lv_sol_1d:
+		if not (solution_col is int or solution_col is float) or int(solution_col) < 0 or int(solution_col) >= lv_sz:
+			return false
 	var lv_sol_2d: Array = []
 	for r: int in range(lv_sz):
 		var row: Array = []
@@ -833,7 +1803,6 @@ func _setup_entry_normal(params: Dictionary) -> void:
 		if r < lv_sol_1d.size():
 			row[int(lv_sol_1d[r])] = true
 		lv_sol_2d.append(row)
-	# regionMap 统一转 int
 	var lv_raw_regions: Array = lv_entry.get("regionMap", [])
 	var lv_int_regions: Array = []
 	for row_arr: Array in lv_raw_regions:
@@ -842,35 +1811,91 @@ func _setup_entry_normal(params: Dictionary) -> void:
 			int_row.append(int(v))
 		lv_int_regions.append(int_row)
 
-	# 算出这一关的预置猫位置（最多 1 只）
-	var lv_prefill_pos: Array = LevelData.compute_prefill(
-		level_index, lv_int_regions, lv_sol_1d, lv_sz
-	)
-	var definition: Dictionary = lv_entry.get("_level_definition", {})
-	var prefill: Array = definition.get("prefill", [lv_prefill_pos] if not lv_prefill_pos.is_empty() else []).duplicate(true)
+	var lv_prefill_positions: Array = lv_entry.get("_prefill_positions", [])
+
+	var is_elo_delivery: bool = bool(lv_entry.get("is_elo_delivery", false))
+	if ABTestManager.normal_level.is_elo_v2_active():
+		is_elo_delivery = is_elo_delivery and _has_valid_elo_v2_rating(lv_entry)
 	_level_config = {
 		"level": level_index,
 		"size": lv_sz,
 		"rank": lv_rank,
 		"seed": lv_entry.get("seed", 0),
-		"prefill_count": prefill.size(),
-		"prefill_positions": prefill,
-		"level_definition": definition.duplicate(true),
+		"prefill_count": 1 if not lv_prefill_positions.is_empty() else 0,
+		"prefill_positions": lv_prefill_positions.duplicate(true),
 		"bank_source": lv_entry.get("_bank_source", "regular"),
 		"bank_source_main": lv_entry.get("_bank_source_main", ""),
 		"bank_idx": lv_entry.get("_bank_idx", 0),
 		"bank_tier": lv_entry.get("_bank_tier", ""),
 		"bank_transform": lv_entry.get("_bank_transform", 0),
+		"rating": lv_entry.get("rating", 0.0),
+		"is_elo_delivery": is_elo_delivery,
+		"eloRating": lv_entry.get("eloRating", -1.0) if is_elo_delivery else -1.0,
+		"_elo_e": lv_entry.get("_elo_e", -1.0) if is_elo_delivery else -1.0,
+		"_elo_k": lv_entry.get("_elo_k", -1.0) if is_elo_delivery else -1.0,
+		"_elo_player_rating": lv_entry.get("_elo_player_rating", -1.0) if is_elo_delivery else -1.0,
+		"_puzzle_id": lv_entry.get("_puzzle_id", ""),
+		"style_vector":
+		lv_entry.get(
+			"elo_v2_style_vector",
+			{"stepHist": lv_entry.get("stepHist", {}), "stepOrderZ": lv_entry.get("stepOrderZ", [])}
+		),
 		"custom_color_map": lv_entry.get("colorMap", []),
 		"patternRegions": lv_entry.get("patternRegions", []),
+		"spRegion": lv_entry.get("spRegion", []),
+		"kind": _level_kind,
+		"_rec_qid": lv_entry.get("_rec_qid", ""),
+		"_rec_decision_id": lv_entry.get("_rec_decision_id", ""),
+		"_rec_slot_index": lv_entry.get("_rec_slot_index", -1),
+		"_rec_rhythm_state": lv_entry.get("_rec_rhythm_state", ""),
+		"_rec_selection_status": lv_entry.get("_rec_selection_status", ""),
+		"_rec_fallback_reason": lv_entry.get("_rec_fallback_reason", ""),
+		"_cc_delivery_index": lv_entry.get("_cc_delivery_index", -1),
+		"_rec_intended_optimal_qid": lv_entry.get("_rec_intended_optimal_qid", ""),
+		"_rec_is_explore": lv_entry.get("_rec_is_explore", false),
 	}
-	# 当前难度与本题实际难度（首局降档时两者会不同）
-	var _gs_strategy: int = GameState.get_current_strategy()
+
+	_level_config["level_definition"] = lv_entry.get("_level_definition", {}).duplicate(true)
+	_level_config["content_provenance"] = lv_entry.get("_content_provenance", {}).duplicate(true)
+	if not _level_config.content_provenance.is_empty():
+		_round_content_provenance = _level_config.content_provenance.duplicate(true)
+		_round_content_release = str(_round_content_provenance.get("release", _round_content_release))
+	_level_config["content_release"] = _round_content_release
+	_level_config["pace_group"] = lv_entry.get("_bank_pace_group", 0)
+	_level_config["pace_score"] = lv_entry.get("_bank_pace_score", 0.0)
+
+	_level_config["pre_cat_swap_type"] = lv_entry.get(
+		"_pre_cat_swap_type", PreCatDecider.PRE_TYPE_NONE
+	)
+
+	var _gs_strategy: int = _page_state().get_current_strategy()
 	var _gs_rank: int = LevelData.strategy_to_rank(_gs_strategy)
 	var _qid: String = (
 		"%s_%d" % [lv_entry.get("_bank_source", "regular"), lv_entry.get("_bank_idx", 0)]
 	)
-	if bool(_selection_plan.next_selection.runtime.get("is_daily_first_easy_level", false)):
+	var _daily_v2_group: int = ABTestManager.normal_level.value()
+	if (
+		_daily_v2_group
+		in [
+			NormalLevelConfig.VALUE_DAILY_FIRST_CEILING_MINUS_ONE,
+			NormalLevelConfig.VALUE_DAILY_FIRST_R4,
+			NormalLevelConfig.VALUE_DAILY_FIRST_COMBINED
+		]
+	):
+		print(
+			(
+				"[DailyFirstEasyV2] group=%d level=%d current=R%d delivered=R%d qid=%s settlement_exempt=%s"
+				% [
+					_daily_v2_group,
+					level_index,
+					_gs_rank,
+					lv_rank,
+					_qid,
+					str(_page_state().is_current_level_daily_first_easy())
+				]
+			)
+		)
+	elif _page_state().is_current_level_daily_first_easy():
 		print(
 			(
 				"[DailyFirstEasy] level=%d 当前难度R%d, 触发首局降档: 实际难度R%d, qid=%s"
@@ -880,108 +1905,266 @@ func _setup_entry_normal(params: Dictionary) -> void:
 	else:
 		print("[DailyFirstEasy] level=%d 当前难度R%d, qid=%s" % [level_index, lv_rank, _qid])
 
-	# 策略层步数 R1~R5
-	_strategy_steps[0] = int(lv_entry.get("r1", 0))
-	_strategy_steps[1] = int(lv_entry.get("r2", 0))
-	_strategy_steps[2] = int(lv_entry.get("r3", 0))
-	_strategy_steps[3] = int(lv_entry.get("r4", 0))
-	_strategy_steps[4] = int(lv_entry.get("r5", 0))
-
-	# 老数据没有 r1~r5 时，按 r/steps 兜底
-	if _strategy_steps.all(func(v: int) -> bool: return v == 0):
-		var fallback_r: int = int(lv_entry.get("r", lv_entry.get("maxR", 0)))
-		if fallback_r >= 1 and fallback_r <= 5:
-			_strategy_steps[fallback_r - 1] = int(lv_entry.get("steps", 1))
-	# 题面汇总成 regions + solution
+	var strategy_steps: Array = lv_entry.get("_strategy_steps", [0, 0, 0, 0, 0])
+	for i in range(5):
+		_strategy_steps[i] = int(strategy_steps[i])
 	_puzzle = {"regions": lv_int_regions, "solution": lv_sol_2d}
 
-	# 查重在私有选择候选中完成；仅提交成功后记入玩家与会话历史。
-	var previous: Dictionary = _selection_plan.get("previous", {})
-	if not previous.is_empty() and int(previous.get("level", -1)) != level_index:
-		push_warning("[LevelSelection] duplicate puzzle %s at level %d (previous %s)" % [_selection_plan.puzzle_id, level_index, previous.get("level", -1)])
-	# Hard 判定（J 分组用另一套标准）
-	_is_hard_level = (
-		LevelData.is_hard_level_group_j(level_index)
-		if ABTestManager.rule_normal_rank.is_group_j()
-		else LevelData.is_hard_level(level_index)
+	var puzzle_id: String = str(lv_entry.get("_puzzle_id", ""))
+	if puzzle_id.is_empty():
+		push_error(
+			"GamePage: LevelSelector returned entry without _puzzle_id, level=%d" % level_index
+		)
+		return false
+	PuzzleSessionTracker.record(puzzle_id, level_index)
+	RecentLevelDebugTracker.record(
+		level_index,
+		lv_sz,
+		lv_rank,
+		lv_entry.get("regionMap", []),
+		_level_config["bank_source"],
+		str(lv_entry.get("_iso_check", ""))
 	)
-	# 标题区分 Hard / 普通，并切换火焰图标
-	if _is_hard_level:
-		_set_level_text(tr("GAME_LEVEL_HARD") % level_index, level_index)
-		_set_hard_fire_visible(true)
-	else:
-		_set_level_text(tr("GAME_LEVEL_TITLE") % level_index, level_index)
-		_set_hard_fire_visible(false)
+	_apply_difficulty_level_text(level_index)
 
-	# 已解析题面先留在候选；棋盘建好后与游标、残局一起提交。
-	_selection_retry_params = {
-		"bank_mode": true,
-		"bank_size": lv_sz,
-		"bank_rank": lv_rank,
-		"bank_index": lv_entry.get("_bank_idx", 0),
-		"prebuilt_regions": lv_int_regions,
-		"prebuilt_solution": lv_sol_1d,
-		"level_seed": lv_entry.get("seed", 0),
-		"prefill_positions": prefill.duplicate(true),
-		"level_definition": definition.duplicate(true),
-		"custom_color_map": lv_entry.get("colorMap", []),
-		"retry_level": level_index,
-		"bank_source": lv_entry.get("_bank_source", "regular"),
-		"bank_source_main": lv_entry.get("_bank_source_main", ""),
-		"bank_tier": lv_entry.get("_bank_tier", ""),
-		"r1_steps": _strategy_steps[0],
-		"r2_steps": _strategy_steps[1],
-		"r3_steps": _strategy_steps[2],
-		"r4_steps": _strategy_steps[3],
-		"r5_steps": _strategy_steps[4],
-	}
-	# 普通入口没有题库翻页
+	_page_state().clear_current_level_dirty()
 	_nav_index = level_index
 	_nav_total = 0
+	return true
 
 
-## 页面隐藏：取消入场等待、停表、落盘残局快照
+func _nl1170x_debug_tail(lv_entry: Dictionary, sz: int, _level_index: int) -> String:
+	var nl: int = ABTestManager.normal_level.value()
+	var hf: int = ABTestManager.hint_func.value()
+	var r: int = int(lv_entry.get("r", 0))
+	var steps: int = int(lv_entry.get("steps", 0))
+	var baked: String = str(int(lv_entry["leadR1"])) if lv_entry.has("leadR1") else "-"
+
+	var sol_grid: Array = _solution_to_bool_grid(lv_entry.get("solution", []), sz)
+	if sol_grid.is_empty():
+		return (
+			" | dbg nl=%d hf=%d hint_steps=<no solution> leadR1_baked=%s r=%d r4/steps=%d/%d"
+			% [nl, hf, baked, r, int(lv_entry.get("r4", 0)), steps]
+		)
+
+	var regions: Array = []
+	for row in lv_entry.get("regionMap", []):
+		var int_row: Array = []
+		for v in row:
+			int_row.append(int(v))
+		regions.append(int_row)
+
+	var kinds: Array[String] = HintEngine.replay_hint_steps(sz, regions, sol_grid, false)
+	var lead: int = 0
+	for k in kinds:
+		if k == "M" or k == "1":
+			lead += 1
+		else:
+			break
+	return (
+		" | dbg nl=%d hf=%d hint_steps=%s(n=%d) lead_M1=%d/sz%d leadR1_baked=%s r=%d r4/steps=%d/%d"
+		% [
+			nl,
+			hf,
+			",".join(kinds),
+			kinds.size(),
+			lead,
+			sz,
+			baked,
+			r,
+			int(lv_entry.get("r4", 0)),
+			steps,
+		]
+	)
+
+
+func _solution_to_bool_grid(sol: Array, sz: int) -> Array:
+	if sz <= 0 or sol.size() != sz:
+		return []
+	var grid: Array = []
+	for r in range(sz):
+		var row: Array = []
+		row.resize(sz)
+		row.fill(false)
+		grid.append(row)
+	if sol[0] is Array:
+		for r in range(sz):
+			for c in range(sz):
+				grid[r][c] = bool((sol[r] as Array)[c])
+	else:
+		for r in range(sz):
+			var col: int = int(sol[r])
+			if col < 0 or col >= sz:
+				return []
+			grid[r][col] = true
+	return grid
+
+
 func on_hide() -> void:
+	# 最后一帧的标记必须在失效展示会话前同步。
+	var generation: int = _business_generation
 	_endgame_closing = true
+	_flush_endgame_snapshot()
+	if generation != _business_generation:
+		return
+	_finish_rank_win_presentation(true)
+	if generation != _business_generation:
+		return
 	super.on_hide()
+	if _business_generation != generation + 1:
+		return
 
-	# 清草稿死锁的临时状态
-	_clear_draft_deadlock_state()
+	_reset_flight_trails()
 
-	# 取消还在等插屏广告的入场动画
+	_stop_cc_pattern_btn_entry_fade()
+
 	_cancel_pending_entry_animation_wait()
 
+	_cancel_late_ad_watch()
+
 	var board_intro := $Root as BoardContainerCell_01
-	if (
-		board_intro != null
-		and board_intro.animation_finished.is_connected(_on_appear_animation_finished)
-	):
-		board_intro.animation_finished.disconnect(_on_appear_animation_finished)
-	# 停掉入场动画
+	_disconnect_entry_animation_callbacks(board_intro)
+	_cancel_pattern_sweep_effect()
+
+	if _pre_cat_fx != null:
+		_pre_cat_fx.cancel()
 	if _anim_player.is_playing():
 		_anim_player.stop()
 	if _active_toast != null:
 		_active_toast.hide_toast()
-	_stop_idle_guide()
-	# 隐藏后不再监听格子变更（避免继续写档）
+
+	if _endgame_persist_timer != null:
+		_endgame_persist_timer.stop()
 	if _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
 		_board_view.cell_state_changed.disconnect(_persist_endgame_snapshot)
 
-	# 有没落盘的改动就先冲一次档
-	if _endgame_persist_timer != null and (_endgame_persist_timer.time_left > 0.0 or _endgame_save_failed):
-		_endgame_persist_timer.stop()
-		_flush_endgame_snapshot()
-
 	_reset_life_warning()
 
-	# 释放自动标叉教学浮层
-	_free_auto_mark_tutorial_overlay()
+	_golden_fish_tutorial_card.reset_card()
+
+	_reset_golden_fish_fly()
 
 
-# ================= 残局快照：复原与落盘 =================
-## 若存档里有本关的残局快照就原地复原；返回 true 表示已接管本次 on_show
+func _discard_level_on_digit_group_switch(params: Dictionary) -> void:
+	var level_num: int = int(params.get("level_index", 0))
+	if (
+		level_num <= 0
+		or params.get("bank_mode", false)
+		or params.has("debug_config")
+		or params.has("debug_prebuilt")
+		or _level_kind != LevelKind.MAIN
+	):
+		return
+	var current_group: int = ABTestManager.normal_level.value()
+	var previous_group: int = _page_state().get_latest_selected_normal_level_group(level_num)
+	if (
+		previous_group < 0
+		or previous_group == current_group
+		or (previous_group != 12004 and current_group != 12004)
+	):
+		return
+	var snapshot: Dictionary = _page_state().get_endgame_snapshot()
+	var has_snapshot: bool = int(snapshot.get("level", -1)) == level_num
+	var has_retry: bool = not _page_state().get_retry_puzzle(level_num).is_empty()
+	if not has_snapshot and not has_retry:
+		return
+	if has_snapshot and _validate_endgame_snapshot(snapshot):
+		var snapshot_size: int = int(snapshot.get("size", 0))
+		if (
+			snapshot_size > 0
+			and QueendokuCore.is_complete(
+				_reconstruct_board_for_check(snapshot, snapshot_size),
+				snapshot_size,
+				snapshot.get("regionMap", [])
+			)
+		):
+			return
+	if has_snapshot:
+		_page_state().clear_endgame_snapshot()
+	if has_retry:
+		_page_state().clear_retry_puzzle()
+	_page_state().clear_current_level_dirty()
+	params["_tracker_status"] = Tracker.GameStatus.NEW
+
+
+func _try_begin_returnee_event(params: Dictionary) -> void:
+	var level_num: int = int(params.get("level_index", 0))
+	if (
+		level_num <= 30
+		or params.get("bank_mode", false)
+		or params.has("debug_config")
+		or params.has("debug_prebuilt")
+	):
+		return
+	var group: int = ABTestManager.normal_level.value()
+	if not _page_state().should_begin_returnee_event(group):
+		return
+	var snapshot: Dictionary = _page_state().get_endgame_snapshot()
+	if (
+		_snapshot_endgame_enabled(snapshot)
+		and not snapshot.is_empty()
+		and int(snapshot.get("level", -1)) == level_num
+		and _validate_endgame_snapshot(snapshot)
+	):
+		var size: int = int(snapshot.get("size", 0))
+		if (
+			size > 0
+			and QueendokuCore.is_complete(
+				_reconstruct_board_for_check(snapshot, size), size, snapshot.get("regionMap", [])
+			)
+		):
+			return
+	var lower: int = LevelData.level_min_rank(level_num)
+	var upper: int = LevelData.resolve_strategy(level_num, _page_state().get_current_strategy(), 5)
+	upper = mini(upper, 4 if level_num >= 51 else (3 if level_num >= 21 else 2))
+	_page_state().begin_returnee_event(group, lower, upper)
+	_page_state().mark_stale_endgame_discarded()
+	_page_state().clear_endgame_snapshot()
+	_page_state().clear_retry_puzzle()
+	_page_state().clear_current_level_dirty()
+	params["_tracker_status"] = Tracker.GameStatus.NEW
+	var special_runtime := LevelSelector.make_runtime(_entry_state.export_candidate(), _entry_state.selection_context())
+	if SpecialProvider.levels_for(special_runtime).has(level_num):
+		params["_returnee_ignore_special"] = true
+
+
+func _will_discard_stale_endgame_snapshot(params: Dictionary) -> bool:
+	if not StaleEndgameGate.is_pending_stale_discard():
+		return false
+	var lv: int = params.get("level_index", 0)
+	if (
+		lv <= 0
+		or params.get("bank_mode", false)
+		or params.has("debug_config")
+		or params.has("debug_prebuilt")
+	):
+		return false
+	var snap: Dictionary = _page_state().get_endgame_snapshot()
+	return (
+		not snap.is_empty()
+		and int(snap.get("level", -1)) == lv
+		and not _is_unplayed_color_challenge_snapshot(snap)
+	)
+
+
+func _is_unplayed_color_challenge_snapshot(snapshot: Dictionary) -> bool:
+	if not LevelKind.is_color_challenge(_level_kind):
+		return false
+	if not LevelKind.is_color_challenge(int(snapshot.get("kind", LevelKind.default_kind()))):
+		return false
+
+	return not bool(snapshot.get("continue_clock_started", true))
+
+
+## 已开始对局沿用保存时的功能开关；没有冻结策略的旧存档才读当前实验。
+func _snapshot_endgame_enabled(snapshot: Dictionary) -> bool:
+	var policy: Variant = snapshot.get("gameplay_policy_snapshot", {})
+	if policy is Dictionary and typeof(policy.get("normal_endgame_save")) == TYPE_BOOL:
+		return bool(policy.normal_endgame_save)
+	return ABTestManager.normal_endgame_save.is_enabled()
+
+
 func _try_consume_endgame_snapshot(params: Dictionary) -> bool:
-	# 只有普通入口（非题库/调试）才吃快照
 	var lv_idx: int = params.get("level_index", 0)
 	if (
 		lv_idx <= 0
@@ -991,86 +2174,143 @@ func _try_consume_endgame_snapshot(params: Dictionary) -> bool:
 	):
 		return false
 
-	var snapshot: Dictionary = GameState.get_endgame_snapshot()
+	var snapshot: Dictionary = _page_state().get_endgame_snapshot()
+	if not _snapshot_endgame_enabled(snapshot):
+		if not snapshot.is_empty():
+			_page_state().clear_endgame_snapshot()
+		return false
 	if snapshot.is_empty():
 		return false
-	# 快照结构校验不通过：丢弃
 	if not _validate_endgame_snapshot(snapshot):
-		push_warning("[Endgame] snapshot validation failed, clearing")
-		GameState.clear_endgame_snapshot()
+		_page_state().clear_endgame_snapshot()
 		return false
-	# 已存对局沿用自己的保存策略；旧残局没有该字段时才兼容本次启动值。
-	var saved_policy: Variant = snapshot.get("gameplay_policy_snapshot", {})
-	var save_enabled: bool = bool(_gameplay_policy.get("normal_endgame_save", true))
-	if saved_policy is Dictionary and MeowdokuGameplayPolicy.validate(saved_policy) and saved_policy.has("normal_endgame_save"):
-		save_enabled = bool(saved_policy.normal_endgame_save)
-	if not save_enabled:
-		GameState.clear_endgame_snapshot()
-		return false
-	# 快照的关卡必须与当前关、入口关号都一致
 	var snap_level: int = int(snapshot["level"])
-	if snap_level != GameState.get_current_level() or snap_level != lv_idx:
-		push_warning(
-			(
-				"[Endgame] snapshot level=%d mismatch (current_level=%d, entry=%d), clearing"
-				% [snap_level, GameState.get_current_level(), lv_idx]
+	if snap_level != _page_state().get_current_level() or snap_level != lv_idx:
+		var snap_app_version: Variant = snapshot.get("app_version", null)
+		if (
+			OS.has_feature("rel")
+			and snap_app_version != null
+			and _version_at_least(str(snap_app_version), "1.12.0")
+		):
+			push_error(
+				(
+					"[Endgame] snapshot level=%d mismatch (current_level=%d, entry=%d), clearing"
+					% [snap_level, _page_state().get_current_level(), lv_idx]
+				)
 			)
-		)
-		GameState.clear_endgame_snapshot()
+		_page_state().clear_endgame_snapshot()
 		return false
-	# 命已耗尽：交给正常失败/重试流程
 	var lives_left: int = int(snapshot["lives"])
 	var sz: int = int(snapshot["size"])
 	if lives_left <= 0:
 		print("[Endgame] lives==0, clear snapshot and fall through to retry/fresh")
-		GameState.clear_endgame_snapshot()
+		_page_state().reset_game_round_stats(Tracker.GameType.NORMAL)
+		_page_state().clear_endgame_snapshot()
 		return false
-	# 复原出来的盘面其实已经通关：直接结算并进入下一关
+
+	var data_err: String = _validate_snapshot_data(snapshot, sz, snap_level)
+	if not data_err.is_empty():
+		push_error("[Endgame] snapshot data integrity error: " + data_err)
+		_page_state().clear_endgame_snapshot()
+		return false
 	var board: Array = _reconstruct_board_for_check(snapshot, sz)
-	if QueendokuCore.is_complete(board, sz, snapshot["regionMap"]):
-		print("[Endgame] snapshot is_complete, advancing level=%d and re-entering" % snap_level)
-		var business_id: String = str(snapshot.get("business_round_id", ""))
-		var generation: int = _business_generation
-		var settled: Dictionary
-		if business_id.is_empty():
-			settled = GameState.settle_legacy_completed_main(snap_level)
-		else:
-			var attempt_id: String = business_id + "/attempt#" + str(snapshot.get("business_attempt_sequence", 0))
-			settled = GameState.settle_main_round(attempt_id, snap_level, "win", {"board": board, "lives": lives_left, "history": snapshot.get("step_history", []), "life_plus_used": snapshot.get("life_plus_used", false)})
-		if generation != _business_generation or is_queued_for_deletion():
-			return true
-		if not settled.get("ok", false):
-			_report_business_failure(settled)
-			return true
-		var new_params: Dictionary = params.duplicate()
-		new_params["level_index"] = GameState.get_current_level()
-		new_params["_tracker_status"] = Tracker.GameStatus.NEW
-		on_show(new_params)
+	# A completed checkpoint is restored first, then settled through the same idempotent round service.
+	var _nes: NormalEndgameSaveConfig = ABTestManager.normal_endgame_save
+	# 长时间未登录可以重选未完成难题，不能丢弃杀端前已完成、尚未结算的胜利。
+	var _pending_stale: bool = not QueendokuCore.is_complete(board, sz, snapshot["regionMap"]) and StaleEndgameGate.is_pending_stale_discard()
+	if _pending_stale and _is_unplayed_color_challenge_snapshot(snapshot):
+		_page_state().mark_stale_endgame_discarded()
+		print(
+			(
+				"[Endgame] stale: color challenge snapshot never played, restore as-is level=%d"
+				% snap_level
+			)
+		)
+	elif _pending_stale:
+		_page_state().clear_endgame_snapshot()
+
+		_page_state().mark_stale_endgame_discarded()
+
+		if _nes.is_stale_new_easier():
+			_page_state().consume_daily_first_easy()
+		var _snap_kind: int = int(snapshot.get("kind", LevelKind.default_kind()))
+		var _snap_is_cc: bool = LevelKind.is_color_challenge(_snap_kind)
+		if _nes.is_stale_restart_current():
+			print(
+				(
+					"[Endgame] nes group2 stale-restart: discard snapshot, restart level=%d"
+					% snap_level
+				)
+			)
+			return false
+
+		var _super_hard_rank: int = StaleEndgameGate.super_hard_stale_rank(snap_level, _snap_kind)
+		if (
+			_super_hard_rank <= 0
+			and not _snap_is_cc
+			and LevelData.is_special_level(snap_level)
+			and _nes.value() != NormalEndgameSaveConfig.VALUE_STALE_NEW_EASIER_TWO_DAYS
+		):
+			print(
+				(
+					"[Endgame] nes group3 special level=%d: no downgrade, restart same as group2"
+					% snap_level
+				)
+			)
+			return false
+
+		var _snap_rank: int = int(snapshot["r"])
+		var _target_rank: int = (
+			_super_hard_rank
+			if _super_hard_rank > 0
+			else max(LevelData.level_min_rank(snap_level), _snap_rank - 1)
+		)
+		if ABTestManager.normal_level.is_elo_v2_active() and not _snap_is_cc:
+			_page_state().abandon_elo_v2_attempt(snap_level)
+		_page_state().clear_retry_puzzle()
+		print(
+			(
+				"[Endgame] nes group3 stale-new-easier: discard snapshot, new puzzle level=%d rank=%d (from r=%d)"
+				% [snap_level, _target_rank, _snap_rank]
+			)
+		)
+		var new_params3: Dictionary = params.duplicate()
+		if _nes.value() == NormalEndgameSaveConfig.VALUE_STALE_NEW_EASIER_TWO_DAYS:
+			_page_state().begin_stale_new_easier_level(snap_level)
+			new_params3["_returnee_fresh"] = true
+			new_params3["_returnee_ignore_special"] = true
+		if _super_hard_rank > 0:
+			new_params3["_returnee_ignore_special"] = true
+		new_params3["level_index"] = snap_level
+		new_params3["rank_override"] = _target_rank
+
+		if _snap_is_cc:
+			new_params3["_cc_stale"] = {
+				"size": sz, "rank": ColorChallengeGate.stale_easier_rank(_snap_rank)
+			}
+		new_params3["_stale_new_easier"] = true
+		new_params3["_tracker_status"] = Tracker.GameStatus.NEW
+		new_params3.erase("bank_mode")
+		_reenter_prepared(new_params3)
 		return true
-	# 否则按快照重建入口参数，用题库入口复原这一局
 	print(
 		(
-			"[Endgame] restoring in-progress snapshot level=%d lives=%d cats=%d marks=%d errors=%d locked=%d"
+			"[Endgame] restoring in-progress snapshot level=%d lives=%d cats=%d marks=%d errors=%d"
 			% [
 				snap_level,
 				lives_left,
 				(snapshot.get("placed_cats", []) as Array).size(),
 				(snapshot.get("marks", []) as Array).size(),
 				(snapshot.get("errors", []) as Array).size(),
-				(snapshot.get("locked_marks", []) as Array).size(),
 			]
 		)
 	)
-	# 沿用已保存的题面、策略和业务身份，不重新选择或把已操作的局当成干净局。
-	on_show(_build_endgame_restore_params(snapshot))
-	return true
-
-
-## 已校验快照 → 现有题库入口参数；这里只做字段映射，不开局、不写档。
-func _build_endgame_restore_params(snapshot: Dictionary) -> Dictionary:
-	return {
+	var is_elo_delivery: bool = bool(snapshot.get("is_elo_delivery", false))
+	if ABTestManager.normal_level.is_elo_v2_active():
+		is_elo_delivery = is_elo_delivery and _has_valid_elo_v2_rating(snapshot)
+	var restore_params: Dictionary = {
 		"bank_mode": true,
-		"bank_size": int(snapshot["size"]),
+		"bank_size": sz,
 		"bank_rank": int(snapshot["r"]),
 		"bank_index": int(snapshot["id"]),
 		"bank_total": 1,
@@ -1081,52 +2321,117 @@ func _build_endgame_restore_params(snapshot: Dictionary) -> Dictionary:
 		"bank_source": snapshot.get("bank_source", ""),
 		"bank_source_main": snapshot.get("bank_source_main", ""),
 		"bank_tier": snapshot.get("bank_tier", ""),
-		"retry_level": int(snapshot["level"]),
+		"is_elo_delivery": is_elo_delivery,
+		"eloRating": snapshot.get("eloRating", -1.0),
+		"_elo_e": snapshot.get("_elo_e", -1.0),
+		"_elo_k": snapshot.get("_elo_k", -1.0),
+		"_elo_player_rating": snapshot.get("_elo_player_rating", -1.0),
+		"_puzzle_id": snapshot.get("_puzzle_id", ""),
+		"style_vector": snapshot.get("style_vector", {}),
+		"spRegion": snapshot.get("spRegion", []),
+		"retry_level": snap_level,
 		"restore_state":
 		{
 			"placed_cats": snapshot.get("placed_cats", []),
 			"marks": snapshot.get("marks", []),
 			"errors": snapshot.get("errors", []),
-			"locked_marks": snapshot.get("locked_marks", []),
+			"pre_type": str(snapshot.get("pre_type", PreCatDecider.PRE_TYPE_NONE)),
 		},
-		"restore_lives": int(snapshot["lives"]),
-		"content_release": snapshot.get("content_release", "builtin"),
-		"business_round_id": snapshot.get("business_round_id", ""),
-		"content_provenance": snapshot.get("content_provenance", {}),
-		"business_attempt_sequence": snapshot.get("business_attempt_sequence", 0),
-		"policy_snapshot": snapshot.policy_snapshot if snapshot.has("policy_snapshot") else DokuPolicy.snapshot(),
-		"gameplay_policy_snapshot": snapshot.get("gameplay_policy_snapshot", {}),
-		"level_definition": snapshot.get("level_definition", {}),
+		"restore_lives": lives_left,
+		"restore_life_cap": int(snapshot.get("life_cap", 1 if LevelKind.is_golden_fish(int(snapshot.get("kind", 0))) else 3)),
+		"restore_lives_inf": bool(snapshot.get("lives_inf", false)),
+		"restore_kind": int(snapshot.get("kind", LevelKind.default_kind())),
+		"restore_cc_delivery_index": int(snapshot.get("cc_delivery_index", 0)),
 		"endgame_restore": true,
-		"restore_step_history": snapshot.get("step_history", []),
-		"restore_highlight_cursor": snapshot.get("highlight_cursor", -1),
-		"restore_combo_count": int(snapshot.get("combo_count", 0)),
-		"restore_combo_score": int(snapshot.get("combo_score", 0)),
+		"restore_score":
+		int(
+			snapshot.get(
+				"score",
+				(
+					snapshot.get("se_score", 0)
+					if bool(snapshot.get("se_enabled", false))
+					else snapshot.get("combo_score", 0)
+				)
+			)
+		),
+		"restore_combo": int(snapshot.get("combo", snapshot.get("combo_count", 0))),
+		"restore_max_combo": int(snapshot.get("max_combo", snapshot.get("combo_count", 0))),
+		"restore_se_count": int(snapshot.get("se_count", 0)),
+		"restore_se_last_step": int(snapshot.get("se_last_step", -1)),
+		"restore_cat_streak": int(snapshot.get("cat_streak", 0)),
+		"restore_cross_at_first_cat": int(snapshot.get("cross_at_first_cat", -1)),
 		"restore_restart_count": int(snapshot.get("restart_count", 0)),
 		"restore_revive_count": int(snapshot.get("revive_count", 0)),
-		"restore_life_plus_used": bool(snapshot.get("life_plus_used", false)),
+		"restore_in_game_sec": float(snapshot.get("in_game_sec", 0.0)),
+		"restore_continue_play_sec": float(snapshot.get("continue_play_sec", 0.0)),
+		"restore_continue_clock_started": bool(snapshot.get("continue_clock_started", false)),
+		"restore_operable_sec": float(snapshot.get("operable_sec", 0.0)),
+		"restore_cat_toast": snapshot.get("cat_toast", {}),
+		"restore_near_death_fired": bool(snapshot.get("near_death_fired", false)),
+		"restore_near_death_level_key": str(snapshot.get("near_death_level_key", "")),
+		"restore_near_death_blocked": bool(snapshot.get("near_death_blocked", false)),
+		"restore_wrong_zone": snapshot.get("wrong_zone", {}),
+		"restore_cat_progress_rotate": int(snapshot.get("cat_progress_rotate_start", -1)),
+		"restore_like_hand_triggered_count": int(snapshot.get("like_hand_triggered_count", 0)),
+		"restore_missed_cross_triggered_cats": snapshot.get("missed_cross_triggered_cats", []),
+		"restore_manually_x_marked_cells": snapshot.get("manually_x_marked_cells", []),
 		"_tracker_status": Tracker.GameStatus.CONTINUE,
+		"from_direct_open": _is_direct_open_session,
+		"from_tutorial": _is_from_tutorial,
 	}
+	for field: String in ["business_round_id", "business_attempt_sequence", "gameplay_policy_snapshot", "selection_policy", "content_release", "content_provenance", "policy_snapshot", "level_definition"]:
+		if snapshot.has(field):
+			restore_params[field] = snapshot[field]
+	_reenter_prepared(restore_params)
+	return true
 
-## 快照里除了系统预置猫之外，玩家是否真的动过手
+
+func _version_at_least(a: String, b: String) -> bool:
+	var pa: PackedStringArray = a.split(".")
+	var pb: PackedStringArray = b.split(".")
+	var n: int = max(pa.size(), pb.size())
+	for i in range(n):
+		var va: int = int(pa[i]) if i < pa.size() else 0
+		var vb: int = int(pb[i]) if i < pb.size() else 0
+		if va != vb:
+			return va > vb
+	return true
+
+
+func _is_locked_puzzle_hard_neighbor_eased(level: int) -> bool:
+	var locked: Dictionary = _page_state().get_retry_puzzle(level)
+	return bool(locked.get(RetryPuzzleBuilder.KEY_HARD_NEIGHBOR_EASED, false))
+
+
 func _has_user_progress_in_endgame_snapshot(level: int) -> bool:
-	var snapshot: Dictionary = GameState.get_endgame_snapshot()
+	var snapshot: Dictionary = _page_state().get_endgame_snapshot()
 	if snapshot.is_empty():
 		return false
 	if int(snapshot.get("level", 0)) != level:
 		return false
 	if int(snapshot.get("lives", 0)) <= 0:
 		return false
-	var prefill_count: int = (snapshot.get("prefill_positions", []) as Array).size()
+
+	var prefill_positions: Array = snapshot.get("prefill_positions", [])
+	if not prefill_positions.is_empty():
+		var sol_1d: Array = snapshot.get("solution", [])
+		if not sol_1d.is_empty():
+			var all_valid: bool = true
+			for pos: Variant in prefill_positions:
+				var r: int = int((pos as Array)[0])
+				var c: int = int((pos as Array)[1])
+				if not (r >= 0 and r < sol_1d.size() and int(sol_1d[r]) == c):
+					all_valid = false
+					break
+			if all_valid:
+				return true
+	var prefill_count: int = prefill_positions.size()
 	var user_cats: int = (snapshot.get("placed_cats", []) as Array).size() - prefill_count
 	var user_marks: int = (snapshot.get("marks", []) as Array).size()
 	var user_errors: int = (snapshot.get("errors", []) as Array).size()
-
-	var user_locked: int = (snapshot.get("locked_marks", []) as Array).size()
-	return user_cats > 0 or user_marks > 0 or user_errors > 0 or user_locked > 0
+	return user_cats > 0 or user_marks > 0 or user_errors > 0
 
 
-## 校验快照版本号与必备字段/尺寸（防旧档、坏档）
 func _validate_endgame_snapshot(snapshot: Dictionary) -> bool:
 	if int(snapshot.get("version", 0)) != GameState.ENDGAME_SNAPSHOT_VERSION:
 		return false
@@ -1150,14 +2455,41 @@ func _validate_endgame_snapshot(snapshot: Dictionary) -> bool:
 		return false
 	var rm = snapshot["regionMap"]
 	if not (rm is Array) or (rm as Array).size() != sz:
+		push_error(
+			(
+				"[Endgame] snapshot regionMap size mismatch: expected sz=%d got %d"
+				% [sz, (rm as Array).size() if rm is Array else -1]
+			)
+		)
 		return false
 	for row in rm as Array:
 		if not (row is Array) or (row as Array).size() != sz:
+			push_error("[Endgame] snapshot regionMap row size mismatch: expected sz=%d" % sz)
 			return false
 	var sol = snapshot["solution"]
 	if not (sol is Array) or (sol as Array).size() != sz:
+		push_error(
+			(
+				"[Endgame] snapshot solution size mismatch: expected sz=%d got %d"
+				% [sz, (sol as Array).size() if sol is Array else -1]
+			)
+		)
 		return false
 	return true
+
+
+func _validate_snapshot_data(snapshot: Dictionary, sz: int, snap_level: int) -> String:
+	var sol_arr: Array = snapshot["solution"] as Array
+	for r: int in range(sz):
+		var c: int = int(sol_arr[r])
+		if c < 0 or c >= sz:
+			return "solution col OOB: r=%d c=%d sz=%d level=%d" % [r, c, sz, snap_level]
+	for pos: Variant in snapshot.get("placed_cats", []):
+		var r: int = int((pos as Array)[0])
+		var c: int = int((pos as Array)[1])
+		if r < 0 or r >= sz or c < 0 or c >= sz or int(sol_arr[r]) != c:
+			return "cat at non-solution cell (%d,%d) level=%d" % [r, c, snap_level]
+	return ""
 
 
 ## 用快照里的猫位还原一张棋盘数组，交给 QueendokuCore 判是否已通关
@@ -1181,7 +2513,7 @@ func _setup_endgame_persist_for_normal_entry(params: Dictionary) -> void:
 	if _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
 		_board_view.cell_state_changed.disconnect(_persist_endgame_snapshot)
 
-	if not bool(_gameplay_policy.get("normal_endgame_save", true)):
+	if not bool(_gameplay_policy.get("normal_endgame_save", ABTestManager.normal_endgame_save.is_enabled())):
 		return
 	var lv_idx: int = params.get("level_index", 0)
 	var retry_lv: int = params.get("retry_level", 0)
@@ -1194,45 +2526,149 @@ func _setup_endgame_persist_for_normal_entry(params: Dictionary) -> void:
 		_board_view.cell_state_changed.connect(_persist_endgame_snapshot)
 
 
-## 排定入场动画：先看插屏出不出，再决定直接播还是挂广告回调等
-func _schedule_entry_animation_after_interstitial(ad_position: String, elig: Dictionary) -> void:
+func _prepare_start_interstitial_flow() -> void:
 	_entry_anim_schedule_ts = Time.get_ticks_msec()
 
 	_cancel_pending_entry_animation_wait()
-	# 没有插屏：直接播入场动画
-	if not _try_show_start_interstitial(ad_position, elig):
-		var board_intro := $Root as BoardContainerCell_01
-		if board_intro != null:
-			board_intro.play()
-		_play_entry_animation()
-		return
 
-	# 有插屏：入场动画先停在第一帧等广告结束
-	_anim_player.play(_appear_anim_name())
+	_cancel_late_ad_watch()
+
+
+func _show_immediate_start_interstitial(ad_position: String, elig: Dictionary) -> void:
+	var effective_elig: Dictionary = elig
+	if elig.get("replace_with_subscription", false):
+		if _show_subscription_instead_of_interstitial(ad_position, elig):
+			_pause_entry_anim_for_fullscreen()
+			return
+		effective_elig = elig_without_replace_flag(elig)
+	if not _try_show_start_interstitial(ad_position, effective_elig):
+		_start_entry_animation()
+		return
+	_pause_entry_anim_for_fullscreen()
+	_install_entry_anim_ad_wait()
+
+
+func _pause_entry_anim_for_fullscreen() -> void:
+	_anim_player.play("Appear")
 	_anim_player.seek(0.0, true)
 	_anim_player.pause()
-
 	_entry_anim_pending_state = {"done": false}
+
+
+func _install_entry_anim_ad_wait() -> void:
+	if _entry_anim_pending_state == null:
+		_entry_anim_pending_state = {"done": false}
+
+	_entry_anim_waiting_ad = true
 	_entry_anim_ad_error_cb = func(pid: String, msg: String) -> void:
-		if pid != "interstitial":
+		if pid != AdPlacement.INTERSTITIAL:
 			return
-		_fire_entry_anim("ad_error")
+		_invoke_entry_ad_resume("ad_error")
 	UniKitManager.ad_error_occurred.connect(_entry_anim_ad_error_cb)
 
-	# iOS/编辑器里广告可能不回调关闭，额外监听 ad_closed
-	if OS.has_feature("ios") or OS.has_feature("editor"):
-		_entry_anim_ad_closed_cb = func(pid: String) -> void:
-			if pid != "interstitial":
-				return
-			_fire_entry_anim("ad_closed")
-		UniKitManager.ad_closed.connect(_entry_anim_ad_closed_cb)
+	_entry_anim_ad_closed_cb = func(pid: String) -> void:
+		if pid != AdPlacement.INTERSTITIAL:
+			return
+		_invoke_entry_ad_resume("ad_closed")
+	UniKitManager.ad_closed.connect(_entry_anim_ad_closed_cb)
+	_arm_entry_ad_show_confirm()
 
 
-## 广告结束（或回到前台）后真正开播入场动画，只生效一次
+func _invoke_entry_ad_resume(source: String) -> void:
+	if _entry_ad_resume.is_null():
+		_fire_entry_anim(source)
+		return
+	var resume: Callable = _entry_ad_resume
+	_entry_ad_resume = Callable()
+	resume.call(source)
+
+
+func _show_deferred_start_interstitial(params: Dictionary, ad_position: String) -> void:
+	var generation: int = _business_generation
+	_entry_anim_pending_state = {"done": false}
+	var elig: Dictionary = await _eval_start_interstitial(params, ad_position)
+	if not _is_current_entry(generation):
+		return
+
+	if elig.get("replace_with_subscription", false):
+		_cancel_pending_entry_animation_wait()
+		_show_immediate_start_interstitial(ad_position, elig)
+		return
+	if not elig.get("eligible", false):
+		_cancel_pending_entry_animation_wait()
+		_start_entry_animation()
+		return
+
+	_place_board_without_intro()
+	_prepare_pattern_sweep_effect()
+
+	_anim_player.play("Appear")
+
+	await get_tree().create_timer(_INTER_DELAY_AFTER_BOARD_SEC).timeout
+	if not _is_current_entry(generation):
+		return
+	if not _try_show_start_interstitial(ad_position, elig):
+		_cancel_pending_entry_animation_wait()
+		_on_board_intro_pattern_ready()
+		return
+	_install_entry_anim_ad_wait()
+	var state := {"done": false}
+	_inter_timing_tail_state = state
+	_entry_ad_resume = func(_source: String) -> void: _cancel_pending_entry_animation_wait()
+	var lock_seq_at_skip: int = _entry_btn_lock_seq
+
+	while not state.done and _is_current_entry(generation):
+		await get_tree().process_frame
+
+	if lock_seq_at_skip != _entry_btn_lock_seq or not _is_current_entry(generation):
+		return
+
+	_on_board_intro_pattern_ready()
+
+
+func _place_board_without_intro() -> void:
+	_entry_anim_skipped = true
+	_board_view.visible = true
+	_board_view.on_board_entry_started(0.0)
+	var board_intro := $Root as BoardContainerCell_01
+	if board_intro != null:
+		board_intro.set_auto_trigger(false)
+		_disconnect_entry_animation_callbacks(board_intro)
+		_reveal_board_container(board_intro)
+
+
+func _reveal_board_container(board_intro: BoardContainerCell_01) -> void:
+	if not (board_intro.board_view is CanvasItem):
+		return
+	var board_container: CanvasItem = board_intro.board_view as CanvasItem
+	var col: Color = board_container.modulate
+	col.a = 1.0
+	board_container.modulate = col
+
+
+func _on_interstitial_subscription_closed(
+	ad_position: String, elig: Dictionary, should_play_interstitial: bool
+) -> bool:
+	var shown: bool = super._on_interstitial_subscription_closed(
+		ad_position, elig, should_play_interstitial
+	)
+	if shown:
+		_install_entry_anim_ad_wait()
+	else:
+		_entry_anim_await_stack_top = true
+	return shown
+
+
+func on_stack_top() -> void:
+	super.on_stack_top()
+	if not _entry_anim_await_stack_top:
+		return
+	_entry_anim_await_stack_top = false
+	_invoke_entry_ad_resume("interstitial_sub_closed")
+
+
 func _fire_entry_anim(source: String) -> void:
 	var generation: int = _business_generation
-	if not _is_current_business_generation(generation):
-		return
 	if _entry_anim_pending_state == null:
 		return
 	if _entry_anim_pending_state.get("done", false):
@@ -1245,22 +2681,51 @@ func _fire_entry_anim(source: String) -> void:
 		board_intro.set_process(false)
 	($Root/VBoxContainer as Container).queue_sort()
 	await get_tree().process_frame
-	if not _is_current_business_generation(generation):
+	if not _is_current_entry(generation) or not _is_round_entry_ready():
 		return
-	if board_intro != null:
-		board_intro.play()
-	_play_entry_animation()
+	_start_entry_animation()
 
 
-## 回到前台：如果还卡在等广告，就当作广告已结束继续播
 func _on_application_focus_in() -> void:
 	super._on_application_focus_in()
-	if _entry_anim_pending_state != null:
-		_fire_entry_anim("focus_in")
+	if _entry_anim_pending_state == null:
+		if _late_ad_lock_active:
+			_release_late_ad_lock("focus_in")
+		return
+
+	if not _entry_anim_waiting_ad:
+		print("[Game] focus_in 忽略：本次入场动画不在等广告（组2 订阅页那条链由 on_stack_top 收尾）")
+		return
+	_invoke_entry_ad_resume("focus_in")
 
 
-## 取消等待：断开广告回调并清掉占位状态
+func _on_application_focus_out() -> void:
+	super._on_application_focus_out()
+
+	if _board_view == null:
+		return
+	if not _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
+		return
+	if _endgame_persist_timer != null:
+		_endgame_persist_timer.stop()
+	_flush_endgame_snapshot()
+	print(
+		(
+			"[Endgame] focus_out flush snapshot, in_game_sec=%.1fs (切后台落盘,防杀端丢时长)"
+			% float(_like_hand_state.get("in_game_sec", 0.0))
+		)
+	)
+
+
 func _cancel_pending_entry_animation_wait() -> void:
+	_entry_anim_await_stack_top = false
+	_entry_anim_waiting_ad = false
+	_entry_ad_resume = Callable()
+
+	if not _inter_timing_tail_state.is_empty():
+		_inter_timing_tail_state["done"] = true
+		_inter_timing_tail_state = {}
+
 	if _entry_anim_pending_state != null:
 		_entry_anim_pending_state["done"] = true
 		_entry_anim_pending_state = null
@@ -1272,486 +2737,444 @@ func _cancel_pending_entry_animation_wait() -> void:
 		if UniKitManager.ad_closed.is_connected(_entry_anim_ad_closed_cb):
 			UniKitManager.ad_closed.disconnect(_entry_anim_ad_closed_cb)
 		_entry_anim_ad_closed_cb = Callable()
+	_disarm_entry_ad_show_confirm()
 
 
-## 播入场动画：显示棋盘、播音效、挂一次性结束回调
+func _arm_entry_ad_show_confirm() -> void:
+	if not UniKitManager.is_ad_impression_signal_available():
+		return
+	_disarm_entry_ad_show_confirm()
+	_entry_anim_ad_impression_cb = func(data: Dictionary) -> void:
+		if String(data.get("placement_id", "")) != AdPlacement.INTERSTITIAL:
+			return
+
+		_disarm_entry_ad_show_confirm()
+	UniKitManager.ad_impression_received.connect(_entry_anim_ad_impression_cb)
+	_entry_anim_show_confirm_timer = create_countdown(
+		ENTRY_AD_SHOW_CONFIRM_SEC, _on_entry_ad_show_confirm_timeout
+	)
+
+
+func _on_entry_ad_show_confirm_timeout() -> void:
+	_entry_anim_show_confirm_timer = null
+	if _entry_anim_pending_state == null or _entry_anim_pending_state.get("done", false):
+		return
+	print("[Inter] %.1fs 内未收到 ad impression → 判定插屏未上屏,主动恢复进关流程(防卡死)" % ENTRY_AD_SHOW_CONFIRM_SEC)
+	_invoke_entry_ad_resume("no_ad_impression")
+
+	_arm_late_ad_watch()
+
+
+func _disarm_entry_ad_show_confirm() -> void:
+	if not _entry_anim_ad_impression_cb.is_null():
+		if UniKitManager.ad_impression_received.is_connected(_entry_anim_ad_impression_cb):
+			UniKitManager.ad_impression_received.disconnect(_entry_anim_ad_impression_cb)
+		_entry_anim_ad_impression_cb = Callable()
+	if _entry_anim_show_confirm_timer != null:
+		remove_timer(_entry_anim_show_confirm_timer)
+		_entry_anim_show_confirm_timer = null
+
+
+func _arm_late_ad_watch() -> void:
+	if not UniKitManager.is_ad_impression_signal_available():
+		return
+	_cancel_late_ad_watch()
+	_late_ad_impression_cb = func(data: Dictionary) -> void:
+		if String(data.get("placement_id", "")) != AdPlacement.INTERSTITIAL:
+			return
+		_on_late_ad_impression()
+	UniKitManager.ad_impression_received.connect(_late_ad_impression_cb)
+
+
+func _on_late_ad_impression() -> void:
+	if _late_ad_lock_active:
+		return
+	_late_ad_lock_active = true
+	print("[Inter] 迟到的 ad impression 到达(超时判定后广告仍上屏)→ 重新锁交互,等广告关闭")
+	_set_late_ad_interaction_locked(true)
+	_late_ad_closed_cb = func(pid: String) -> void:
+		if pid != AdPlacement.INTERSTITIAL:
+			return
+		_release_late_ad_lock("ad_closed")
+	UniKitManager.ad_closed.connect(_late_ad_closed_cb)
+	_late_ad_lock_timer = create_countdown(LATE_AD_LOCK_TIMEOUT_SEC, _on_late_ad_lock_timeout)
+
+
+func _on_late_ad_lock_timeout() -> void:
+	_late_ad_lock_timer = null
+	_release_late_ad_lock("timeout")
+
+
+func _release_late_ad_lock(source: String) -> void:
+	if not _late_ad_lock_active:
+		return
+	_late_ad_lock_active = false
+	print("[Inter] 迟到锁解除(source=%s)" % source)
+	_set_late_ad_interaction_locked(false)
+	_cancel_late_ad_watch()
+
+
+func _cancel_late_ad_watch() -> void:
+	if _late_ad_lock_active:
+		_late_ad_lock_active = false
+		_set_late_ad_interaction_locked(false)
+	if not _late_ad_impression_cb.is_null():
+		if UniKitManager.ad_impression_received.is_connected(_late_ad_impression_cb):
+			UniKitManager.ad_impression_received.disconnect(_late_ad_impression_cb)
+		_late_ad_impression_cb = Callable()
+	if not _late_ad_closed_cb.is_null():
+		if UniKitManager.ad_closed.is_connected(_late_ad_closed_cb):
+			UniKitManager.ad_closed.disconnect(_late_ad_closed_cb)
+		_late_ad_closed_cb = Callable()
+	if _late_ad_lock_timer != null:
+		remove_timer(_late_ad_lock_timer)
+		_late_ad_lock_timer = null
+
+
+func _set_late_ad_interaction_locked(locked: bool) -> void:
+	if _entry_anim_playing:
+		return
+	if _board_view != null:
+		_board_view.set_touch_enabled(not locked)
+	if locked:
+		_lock_entry_buttons()
+	else:
+		_unlock_entry_buttons()
+
+
+func _prepare_pattern_sweep_effect() -> void:
+	_pattern_sweep_prepared = false
+	if not ABTestManager.board_intro.is_pattern_sweep():
+		return
+	if _entry_sp_region_ids.is_empty() or _puzzle.get("regions", []).is_empty():
+		return
+	if _pattern_sweep_overlay == null:
+		_pattern_sweep_overlay = _BOARD_PATTERN_SWEEP_OVERLAY_SCRIPT.new()
+		_pattern_sweep_overlay.name = "BoardPatternSweepOverlay"
+		add_child(_pattern_sweep_overlay)
+	_pattern_sweep_prepared = _pattern_sweep_overlay.configure(
+		_board_view, _puzzle["regions"], _entry_sp_region_ids
+	)
+
+
+func _on_board_intro_pattern_ready() -> void:
+	if not _pattern_sweep_prepared or _pattern_sweep_overlay == null:
+		_on_appear_animation_finished()
+		return
+	if not _pattern_sweep_overlay.effect_finished.is_connected(_on_appear_animation_finished):
+		_pattern_sweep_overlay.effect_finished.connect(
+			_on_appear_animation_finished, CONNECT_ONE_SHOT
+		)
+	_pattern_sweep_overlay.play()
+
+
+func _disconnect_entry_animation_callbacks(board_intro: BoardContainerCell_01) -> void:
+	if board_intro != null:
+		if board_intro.animation_finished.is_connected(_on_appear_animation_finished):
+			board_intro.animation_finished.disconnect(_on_appear_animation_finished)
+		if board_intro.animation_finished.is_connected(_on_board_intro_pattern_ready):
+			board_intro.animation_finished.disconnect(_on_board_intro_pattern_ready)
+	if (
+		_pattern_sweep_overlay != null
+		and _pattern_sweep_overlay.effect_finished.is_connected(_on_appear_animation_finished)
+	):
+		_pattern_sweep_overlay.effect_finished.disconnect(_on_appear_animation_finished)
+
+
+func _cancel_pattern_sweep_effect() -> void:
+	_pattern_sweep_prepared = false
+	if _pattern_sweep_overlay == null:
+		return
+	if _pattern_sweep_overlay.effect_finished.is_connected(_on_appear_animation_finished):
+		_pattern_sweep_overlay.effect_finished.disconnect(_on_appear_animation_finished)
+	_pattern_sweep_overlay.cancel()
+
+
+func _start_entry_animation() -> void:
+	var board_intro := $Root as BoardContainerCell_01
+	if board_intro != null:
+		_apply_grid_ui_entry_anim(board_intro)
+		_prepare_pattern_sweep_effect()
+		board_intro.play()
+	_play_entry_animation()
+
+
 func _play_entry_animation() -> void:
 	_board_view.visible = true
 	var board_intro := $Root as BoardContainerCell_01
-	_anim_player.play(_appear_anim_name())
-
+	_board_view.on_board_entry_started(_grid_intro_sync_total(board_intro))
+	_anim_player.play("Appear")
 	SoundManager.play(SoundManager.Kind.BOARD_ENTER)
 	if board_intro != null:
-		if not board_intro.animation_finished.is_connected(_on_appear_animation_finished):
+		if _pattern_sweep_prepared:
+			if not board_intro.animation_finished.is_connected(_on_board_intro_pattern_ready):
+				board_intro.animation_finished.connect(
+					_on_board_intro_pattern_ready, CONNECT_ONE_SHOT
+				)
+		elif not board_intro.animation_finished.is_connected(_on_appear_animation_finished):
 			board_intro.animation_finished.connect(_on_appear_animation_finished, CONNECT_ONE_SHOT)
 
 
-## 入场动画播完：解锁入口按钮、补自动标叉和草稿引导
 func _on_appear_animation_finished() -> void:
 	if not _is_round_entry_ready():
 		return
-	# 要不要弹草稿引导，决定棋盘是否继续锁着
-	var will_show_onboarding: bool = _should_show_draft_onboarding_now()
 	super._on_appear_animation_finished()
-	if will_show_onboarding and _board_view != null:
-		_board_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# 开场提示条
+
+	if not _entry_anim_skipped:
+		VibrateManager.play_at(VibrateManager.Pos.BOARD_INTRO)
+
+	var lock_seq: int = _entry_btn_lock_seq
+
+	if _try_show_golden_fish_life_tutorial():
+		await bubble_tutorial_finished
+
+		if lock_seq != _entry_btn_lock_seq or not is_showing():
+			return
+
+		_golden_fish_tutorial_card.show_card()
+		await _golden_fish_tutorial_card.dismissed
+		if lock_seq != _entry_btn_lock_seq or not is_showing():
+			return
+
+		Tracker.track_golden_fish_guide_end(
+			int(_level_config.get("level", 0)),
+			float(Time.get_ticks_msec() - _gf_guide_start_ms) / 1000.0
+		)
+
 	_try_show_start_toast()
 
-	_unlock_entry_buttons_after_toast(_entry_btn_lock_seq)
-	if will_show_onboarding:
-		_try_show_draft_onboarding_after_appear()
+	if _pre_cat_fx != null and _pre_cat_fx.is_pending():
+		await _wait_start_toast_hidden_if_any()
 
-	# 给预置猫补自动叉
-	_auto_mark_prefill_cats()
-
-	# 自动标叉的首次教学
-	_maybe_show_auto_mark_tutorial()
-
-
-# ================= 挂机引导 =================
-## 每帧：处理挂机引导的两种触发（纯挂机开小差 / 走了几步没放猫）
-func _process(delta: float) -> void:
-	super._process(delta)
-	if _idle_guide_shown or _level_config.get("level", 0) != 1 or _entry_anim_playing:
-		return
-
-	# 模式一：纯挂机计时
-	if ABTestManager.idle_guide.is_idle_guide_enabled():
-		if not _is_endgame_restore_session and _can_show_idle_hint():
-			if _idle_time >= IDLE_GUIDE_DELAY_SEC:
-				_show_idle_guide()
-
-	# 模式二：已经操作过若干步但一只猫都没放
-	elif ABTestManager.idle_guide.is_step_trigger_enabled():
-		if not _step_trigger_had_cat:
-			var sz: int = _level_config.get("size", 0)
-			var prefill: Array = _level_config.get("prefill_positions", [])
-			var prefill_set: Dictionary = {}
-			for pos: Variant in prefill:
-				prefill_set[Vector2i(int((pos as Array)[0]), int((pos as Array)[1]))] = true
-			if sz > 0:
-				for r: int in range(sz):
-					for c: int in range(sz):
-						var st: int = _board_view.get_cell_state(r, c)
-						if st == CellState.CAT and not prefill_set.has(Vector2i(r, c)):
-							_step_trigger_had_cat = true
-							break
-					if _step_trigger_had_cat:
-						break
-
-		# 双击窗口内不算挂机，避免误判
-		var _in_double_tap_window: bool = (
-			_gesture_recognizer != null and _gesture_recognizer._last_tap_cell != Vector2i(-1, -1)
-		)
-
-		# 弹引导的前置条件
-		var step_trigger_can_show: bool = (
-			visible
-			and not _is_complete
-			and not _wrong_guess_pending
-			and not _hint_overlay.visible
-			and _lives > 0
-		)
-		if (
-			_step_history.size() >= 3
-			and not _in_double_tap_window
-			and not _step_trigger_had_cat
-			and step_trigger_can_show
-		):
-			_show_idle_guide()
-
-
-## 只认玩家亲手放下的猫（复原/预置不算），用来关掉步骤触发
-func _on_cell_changed_for_step_trigger(r: int, c: int, state: int, source: int) -> void:
-	if _step_trigger_had_cat:
-		return
-	if source == BoardView.ChangeSource.RESTORE or source == BoardView.ChangeSource.PREFILL:
-		return
-	if state != CellState.CAT:
-		return
-	var prefill: Array = _level_config.get("prefill_positions", [])
-	for pos: Variant in prefill:
-		if int((pos as Array)[0]) == r and int((pos as Array)[1]) == c:
+		if lock_seq != _entry_btn_lock_seq or not is_showing():
 			return
-	_step_trigger_had_cat = true
+		await _pre_cat_fx.run()
+		if lock_seq != _entry_btn_lock_seq or not is_showing():
+			return
+
+		_apply_cat_found_grid_dim(true)
+
+	_unlock_entry_buttons_after_toast(lock_seq)
+
+	if _late_ad_lock_active:
+		_set_late_ad_interaction_locked(true)
 
 
-## 弹挂机引导：找「独占一格」的区域当目标，把手和文字面板摆过去
-func _show_idle_guide() -> void:
-	# 同一时间只允许一个提示类浮层
-	if not _hint_mutex.try_acquire("idle_guide"):
-		_idle_time = 0.0
-		return
-	_idle_guide_shown = true
-
-	# 目标格：区域内只有一格的那些格子最容易放猫
-	var regions: Array = _puzzle.get("regions", [])
-	var sz: int = _level_config.get("size", 0)
-	if sz == 0 or regions.is_empty():
-		return
-	var area_count: Dictionary = {}
-	for r: int in range(sz):
-		for c: int in range(sz):
-			var rid: int = regions[r][c]
-			area_count[rid] = area_count.get(rid, 0) + 1
-	var target: Vector2i = Vector2i(-1, -1)
-	for r: int in range(sz):
-		if target.x >= 0:
-			break
-		for c: int in range(sz):
-			var rid: int = regions[r][c]
-			if area_count.get(rid, 0) == 1:
-				target = Vector2i(r, c)
-				break
-	if target.x < 0:
-		return
-
-	# 手指基准：以第 1 行第 3 列为原点，按格宽换算偏移
-	const BASE_ROW: int = 0
-	const BASE_COL: int = 2
-	const BASE_OFFSET_LEFT: float = 111.0
-	const BASE_OFFSET_TOP: float = -316.0
-	var board_scale: float = _board_view.scale.x
-	var slot_screen: float = BoardView.SLOT_PX * board_scale
-	_idle_guide_hand.offset_left = BASE_OFFSET_LEFT + (target.y - BASE_COL) * slot_screen
-	_idle_guide_hand.offset_top = BASE_OFFSET_TOP + (target.x - BASE_ROW) * slot_screen
-	_idle_guide_hand.offset_right = _idle_guide_hand.offset_left + 110.0
-	_idle_guide_hand.offset_bottom = _idle_guide_hand.offset_top + 120.0
-
-	# 文字面板：水平居中、贴在目标格上方
-	var csf: float = get_tree().root.content_scale_factor
-	var cell_local_y: float = (
-		(BoardView.BOARD_PADDING + target.x * BoardView.SLOT_PX) * _board_view.scale.y
-	)
-	var cell_top_px: float = (_board_view.global_position.y + cell_local_y) / csf
-	var vp_w_px: float = get_viewport_rect().size.x
-	var panel_w: float = minf(930.0 / csf, vp_w_px - 60.0 / csf)
-	var panel_h: float = 190.0 / csf
-	var panel_gap: float = 30.0 / csf
-	_idle_guide_msg_panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	_idle_guide_msg_panel.size = Vector2(panel_w, panel_h)
-	_idle_guide_msg_panel.position = Vector2(
-		(vp_w_px - panel_w) / 2.0, cell_top_px - panel_h - panel_gap
-	)
-
-	# 文案：把关键字染红并加呼吸效果
-	var hl: String = tr("TUTORIAL_STEP1_HIGHLIGHT")
-	var breath_seg: String = (
-		"[breath amp=0.03 freq=5 group=1 count=%d][color=#d94848]%s[/color][/breath]"
-		% [hl.length(), hl]
-	)
-	_idle_guide_msg_rich.text = (
-		"[center]" + tr("TUTORIAL_STEP1_RICH").format({"breath": breath_seg}) + "[/center]"
-	)
-	_idle_guide_msg_rich.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_idle_guide_msg_rich.offset_left = 30.0 / csf
-	_idle_guide_msg_rich.offset_top = 0.0
-	_idle_guide_msg_rich.offset_right = -30.0 / csf
-	_idle_guide_msg_rich.offset_bottom = 0.0
-	_idle_guide_msg_rich.add_theme_font_size_override("normal_font_size", int(48.0 / csf))
-
-	# 高亮遮罩：复制一个格子视图盖在目标格上
-	var local_rect: Rect2 = _board_view.cell_to_local_rect(target.x, target.y)
-	var board_global: Vector2 = _board_view.global_position
-	var cell_top_left: Vector2 = (
-		board_global + local_rect.position * board_scale - _idle_mask_layer.global_position
-	)
-	if _idle_mask_cell != null:
-		_idle_mask_cell.queue_free()
-		_idle_mask_cell = null
-	var src: CellView = _board_view.get_cell_view(target.x, target.y)
-	_idle_mask_cell = _CELL_SCENE.instantiate() as CellView
-	_idle_mask_cell.pivot_offset_ratio = Vector2.ZERO
-	_idle_mask_cell.pivot_offset = Vector2.ZERO
-	_idle_mask_cell.position = cell_top_left
-
-	const _HIGHLIGHT_GROW_PX: float = 2.0
-	var grow_scale: float = board_scale + _HIGHLIGHT_GROW_PX / BoardView.CELL_PX
-	_idle_mask_cell.scale = Vector2(grow_scale, grow_scale)
-	_idle_mask_cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_idle_mask_layer.add_child(_idle_mask_cell)
-
-	_idle_mask_cell.set_corner_radius_compensated(grow_scale)
-	if src != null:
-		_idle_mask_cell.set_region_color(src.get_region_color())
-	_idle_mask_cell.play_hint()
-	_idle_mask_layer.modulate.a = 0.0
-	_idle_mask_layer.visible = true
-	# 遮罩淡入
-	if _idle_mask_tween != null and _idle_mask_tween.is_valid():
-		_idle_mask_tween.kill()
-	_idle_mask_tween = create_tween()
-	_idle_mask_tween.tween_property(_idle_mask_layer, "modulate:a", 1.0, 0.12)
-
-	# 手指与面板一起弹出
-	_idle_guide_overlay.visible = true
-	if _idle_guide_spine.has_method("get_animation_state"):
-		_idle_guide_spine.get_animation_state().set_animation("click", true, 0)
-	_idle_guide_msg_panel.modulate.a = 0.0
-	_idle_guide_msg_panel.scale = Vector2(0.6, 0.6)
-	if _idle_guide_tween != null and _idle_guide_tween.is_valid():
-		_idle_guide_tween.kill()
-	_idle_guide_tween = create_tween().set_parallel(true)
-	_idle_guide_tween.tween_property(_idle_guide_msg_panel, "modulate:a", 1.0, 0.25)
-	(
-		_idle_guide_tween
-		. tween_property(_idle_guide_msg_panel, "scale", Vector2(1.0, 1.0), 0.25)
-		. set_trans(Tween.TRANS_BACK)
-	)
+func _is_board_all_empty() -> bool:
+	var sz: int = _board_view.get_puzzle_size()
+	return sz > 0 and _board_view.count_empty_cells() == sz * sz
 
 
-## 收掉挂机引导：补间、遮罩、浮层全清，并释放提示锁
-func _stop_idle_guide() -> void:
-	_hint_mutex.release("idle_guide")
-	if _idle_guide_tween != null and _idle_guide_tween.is_valid():
-		_idle_guide_tween.kill()
-	_idle_guide_tween = null
-	if _idle_mask_tween != null and _idle_mask_tween.is_valid():
-		_idle_mask_tween.kill()
-	_idle_mask_tween = null
-	if _idle_mask_cell != null:
-		_idle_mask_cell.queue_free()
-		_idle_mask_cell = null
-	if _idle_mask_layer != null:
-		_idle_mask_layer.visible = false
-	if _idle_guide_overlay != null:
-		_idle_guide_overlay.visible = false
+func _is_hard_style_level(lv: int) -> bool:
+	return LevelSelector.is_hard_level(lv) or LevelSelector.is_super_hard_level(lv)
 
 
-## 复位挂机计时（顺带收掉引导层）
-func _reset_idle_hint() -> void:
-	super._reset_idle_hint()
-	_stop_idle_guide()
-
-
-## 挂机引导模式下第 1 关不出道具提示
-func _play_idle_tool_hint() -> void:
-	if (
-		ABTestManager.idle_guide.suppresses_tool_hint_at_level1()
-		and _level_config.get("level", 0) == 1
-	):
-		return
-	super._play_idle_tool_hint()
-
-
-# ================= 开场提示条 =================
-## 开场提示条：优先 IQ 文案，否则给「首次挑战/继续挑战」百分比
 func _try_show_start_toast() -> void:
-	if _is_endgame_restore_session:
+	var level_num: int = _level_config.get("level", 0)
+	if level_num <= 0 or bool(_level_config.get("is_daily", false)):
 		return
-	var lv: int = _level_config.get("level", 0)
-	if not ABTestManager.normal_start_toast.should_show_toast():
-		return
-	# 第 11 关起才显示
-	if lv < 11:
-		return
-	var is_hard: bool = (
-		LevelData.is_hard_level_group_j(lv)
-		if ABTestManager.rule_normal_rank.is_group_j()
-		else LevelData.is_hard_level(lv)
-	)
-	# IQ 文案的前提：开关 + 非 Hard + 上局干净 + 首次挑战
-	var is_first_try: bool = _toast_first_try_hint
-	var last_clean: bool = GameState.was_last_level_clean_win()
-	var iq_eligible: bool = (
-		ABTestManager.normal_start_toast.should_show_iq_text()
-		and not is_hard
-		and last_clean
-		and is_first_try
-	)
 
-	if iq_eligible:
-		var iq_idx: int = _resolve_iq_text_idx(lv)
-		_active_toast = _normal_toast
-		(
-			_active_toast
-			. show_toast(
-				{
-					"iq_text_key": "GAME_TOAST_IQ_%d" % iq_idx,
-				}
+	if _is_from_tutorial:
+		_show_start_toast_exclusive(_normal_toast, {"text_key": "GAME_TOAST_TUTORIAL_PASSED"})
+		return
+
+	var daily_first_config: DailyFirstWinEncourageConfig = ABTestManager.daily_first_win_encourage
+	var main_win_today: bool = _page_state().has_main_win_today()
+	var entry_seen_today: bool = _page_state().has_daily_first_win_entry_seen_today()
+	var is_first_entry: bool = daily_first_config.is_first_eligible_entry(
+		level_num, _level_kind, main_win_today, entry_seen_today
+	)
+	var show_goal: bool = daily_first_config.has_goal_toast()
+	if not OS.has_feature("rel"):
+		print(
+			(
+				"[DailyFirstWin] entry lv=%d kind=%d group=%d won_today=%s seen_today=%s eligible=%s goal=%s"
+				% [
+					level_num,
+					_level_kind,
+					int(daily_first_config.value()),
+					str(main_win_today),
+					str(entry_seen_today),
+					str(is_first_entry),
+					str(show_goal)
+				]
 			)
 		)
+	if level_num > 1 and not main_win_today and not entry_seen_today:
+		_page_state().mark_daily_first_win_entry_seen_today()
+
+	var is_comeback_entry: bool = false
+	if LevelKind.is_golden_fish(_level_kind) or LevelKind.is_color_challenge(_level_kind):
+		_page_state().consume_comeback_main_win()
+	else:
+		is_comeback_entry = _page_state().claim_comeback_start_level(level_num)
+	var board_all_empty: bool = _is_board_all_empty()
+	if not _is_direct_open_session and (not board_all_empty or level_num < 11):
 		return
 
-	# 普通文案：按难度和是否首次挑战取一个区间内的百分比
-	var pct: float = _resolve_start_toast_pct(lv, is_hard, is_first_try)
-	var text_key: String = "GAME_TOAST_FIRST_TRY" if is_first_try else "GAME_TOAST_KEEP_GOING"
-	var params := {
-		"text_key": text_key,
-		"pct_str": I18nFormat.percent(pct, 1),
-	}
-	_active_toast = _hard_toast if is_hard else _normal_toast
+	if level_num >= 11 and board_all_empty:
+		if LevelKind.is_golden_fish(_level_kind):
+			_show_start_toast_exclusive(_golden_fish_toast, {})
+			return
+		if LevelKind.is_color_challenge(_level_kind):
+			var special_toast: BaseGameToast = _ensure_color_challenge_toast() as BaseGameToast
+			if special_toast != null:
+				_show_start_toast_exclusive(special_toast, {})
+			return
+	if is_comeback_entry:
+		var comeback_key: StringName = ABTestManager.comeback_func.get_start_text_key()
+		if not comeback_key.is_empty():
+			_show_start_toast_exclusive(
+				_hard_toast if _is_hard_style_level(level_num) else _normal_toast,
+				{
+					"text_key": comeback_key,
+					"fallback_text": "Ready for a comeback? You've got this!",
+				}
+			)
+			return
+	if is_first_entry and show_goal:
+		var goal_text_key: StringName = daily_first_config.pick_goal_text_key()
+		_show_start_toast_exclusive(
+			_hard_toast if _is_hard_style_level(level_num) else _normal_toast,
+			{"text_key": goal_text_key}
+		)
+		if not OS.has_feature("rel"):
+			print("[DailyFirstWin] goal shown key=%s" % goal_text_key)
+		return
+
+	if _is_direct_open_session:
+		_show_start_toast_exclusive(
+			_hard_toast if _is_hard_style_level(level_num) else _normal_toast,
+			{"text_key": "GAME_TOAST_CONTINUE_UNFINISHED"}
+		)
+		return
+	var is_hard: bool = _is_hard_style_level(level_num)
+	var is_first_try: bool = _toast_first_try_hint
+	var last_clean: bool = _page_state().was_last_level_clean_win()
+
+	var is_special_trigger: bool = (not is_hard) and last_clean and is_first_try
+	var group: int = NormalStartToastTextConfig.VALUE_G2_SOCIAL_PROOF
+	var kind: String
+	if is_special_trigger:
+		kind = "special"
+	elif is_first_try:
+		kind = "first"
+	else:
+		kind = "retry"
+	var pick: Dictionary = StartToastTextPool.resolve(group, kind, is_hard, level_num)
+	_show_start_toast_exclusive(
+		_hard_toast if is_hard else _normal_toast,
+		{
+			"text_key": pick.text_key,
+			"pct_str": pick.pct_str,
+		}
+	)
+
+
+func _show_start_toast_exclusive(target: BaseGameToast, params: Dictionary) -> void:
+	if target == null:
+		return
+
+	if target == _hard_toast:
+		params = params.duplicate()
+		params["super_hard"] = LevelSelector.is_super_hard_level(_level_config.get("level", 0))
+	for t: BaseGameToast in [_normal_toast, _hard_toast, _golden_fish_toast]:
+		if t != target and t != null and t.visible:
+			t.hide_toast()
+	_active_toast = target
 	_active_toast.show_toast(params)
 
 
-## IQ 文案序号：每关只随机一次并缓存
-func _resolve_iq_text_idx(lv: int) -> int:
-	var cached: int = GameState.get_start_toast_iq_idx(lv)
-	if cached > 0:
-		return cached
-	var idx: int = randi_range(1, 6)
-	GameState.set_start_toast_iq_idx(lv, idx)
-	return idx
-
-
-## 百分比文案同理：每关每种类型只随机一次（存 GameState）
-func _resolve_start_toast_pct(lv: int, is_hard: bool, is_first_try: bool) -> float:
-	var kind: String = "first_try" if is_first_try else "keep_going"
-	var cached: float = GameState.get_start_toast_pct(lv, kind)
-	if cached >= 0.0:
-		return cached
-	var lo: float
-	var hi: float
-	if is_first_try:
-		lo = 40.0 if is_hard else 60.0
-		hi = 60.0 if is_hard else 80.0
-	else:
-		lo = 50.0 if is_hard else 70.0
-		hi = 70.0 if is_hard else 90.0
-	var pct: float = lo + randf() * (hi - lo)
-	GameState.set_start_toast_pct(lv, kind, pct)
-	return pct
-
-
-# ================= 按钮与输入事件 =================
-## 返回主页：关计时、标脏，切到 HOME 界面
-func _on_gear_btn_pressed() -> void:
-	if _is_complete:
-		return
-	Tracker.track_btn_click(Tracker.Btn.BACK, self)
-	_clock_timer.stop()
-
-	var lv: int = _level_config.get("level", 0)
-	var generation: int = _business_generation
-	if lv > 0:
-		GameState.mark_current_level_dirty()
-	if not _is_current_business_generation(generation):
-		return
-	UIManager.show_ui(UiName.HOME)
+func _on_return_bank_btn_pressed() -> void:
+	_reset_game_barrages()
+	UIManager.show_ui(UiName.BANK)
 	UIManager.hide_ui(UiName.GAME)
 
 
-## 设置里点重开：清草稿/连击/横幅，按原题重开一局
+func _on_gear_btn_pressed() -> void:
+	if _is_complete:
+		return
+	_reset_game_barrages()
+	Tracker.track_btn_click(Tracker.Btn.BACK, self)
+	_clock_timer.stop()
+
+	_exit_draft_mode_and_clear()
+	_clear_draft_rollback_state()
+
+	var lv: int = _level_config.get("level", 0)
+	if lv > 0:
+		GameState.mark_current_level_dirty()
+
+	RankActivityManager.notify_level_exit()
+	UIManager.hide_all_except([UiName.HOME])
+	UIManager.show_ui(UiName.HOME)
+
+
 func _on_restart_requested() -> void:
 	await _run_round_transition(_restart_round)
 
 
-func _restart_round(context: Dictionary) -> void:
-	var settlement_id: String = _business_settlement_id()
-	if not _is_current_round_transition(context):
-		return
-	var settled: bool = not settlement_id.is_empty() and LevelOps.confirm_level_failed_main(_build_game_end_params(Tracker.GameResult.QUIT), int(_level_config.get("level", 0)), settlement_id, _business_runtime())
-	if not _is_current_round_transition(context):
-		return
-	if not settled:
-		_report_business_failure({"error": "settlement_failed"})
-		return
-	_combo_count = 0
-	_combo_score = 0
-	_hide_auto_complete_btn()
-	_exit_draft_mode_and_clear()
-	if not _is_current_round_transition(context):
-		return
 
-	_destroy_banner()
-	if not _is_current_round_transition(context):
-		return
+var _warn_revision: int = 0
 
-	# 停掉待写的残局快照：重开不沿用旧档
-	if _endgame_persist_timer != null and _endgame_persist_timer.time_left > 0.0:
-		_endgame_persist_timer.stop()
+const _WARN_LIFE_TEXT_KEY: String = "WARN_LIFE_LAST_CHANCE"
 
-	var lv: int = _level_config.get("level", 0)
-	# 本局以「放弃」上报结束，并按失败结算这条关卡
-	LevelOps.on_restart_click()
-	if not _is_current_round_transition(context):
-		return
-	if lv > 0:
-		# 关卡局：solution 二维转一维列号，用题库入口重开同一题
-		var sol_1d: Array = []
-		for row: Array in _puzzle.get("solution", []) as Array:
-			var found: bool = false
-			for c: int in range(row.size()):
-				if row[c]:
-					sol_1d.append(c)
-					found = true
-					break
-			if not found:
-				sol_1d.append(0)
-		on_show(
-			{
-				"bank_mode": true,
-				"bank_size": _level_config.get("size", 4),
-				"bank_rank": _level_config.get("rank", 1),
-				"bank_index": _level_config.get("bank_idx", 0),
-				"prebuilt_regions": _puzzle.get("regions", []),
-				"prebuilt_solution": sol_1d,
-				"level_seed": _level_config.get("seed", 0),
-				"prefill_positions": _level_config.get("prefill_positions", []),
-				"custom_color_map": _level_config.get("custom_color_map", []),
-				"retry_level": lv,
-				"bank_source_main": _level_config.get("bank_source_main", ""),
-				"bank_tier": _level_config.get("bank_tier", ""),
-				"r1_steps": _strategy_steps[0],
-				"r2_steps": _strategy_steps[1],
-				"r3_steps": _strategy_steps[2],
-				"r4_steps": _strategy_steps[3],
-				"r5_steps": _strategy_steps[4],
-				"_tracker_status": Tracker.GameStatus.RESTART,
-			}
-		)
-	# 非关卡局（题库/调试）直接用原入参重开
-	else:
-		var bp: Dictionary = _level_config.get("bank_params", {})
-		if not bp.is_empty():
-			bp["_tracker_status"] = Tracker.GameStatus.RESTART
-			on_show(bp)
-		else:
-			on_show({"_tracker_status": Tracker.GameStatus.RESTART})
+const _GF_TUT_LIFE_KEY: String = "GOLDEN_FISH_TUTORIAL_LIFE"
+
+const _GF_TUT_LIFE_FALLBACK: String = "Only Golden Fish - Be careful!"
 
 
-## 错标后：只剩最后一条命时短暂锁棋盘，随后弹生命预警
-func _on_wrong_guess(r: int, c: int) -> void:
+func _on_wrong_guess(
+	r: int, c: int, skip_other_cats: bool = false, from_draft_apply: bool = false, committed: bool = false, committed_lost_index: int = -1
+) -> void:
+	super._on_wrong_guess(r, c, skip_other_cats, from_draft_apply, committed, committed_lost_index)
+
+	if from_draft_apply:
+		return
+
+	_try_show_last_chance_warning()
+
+
+func _try_show_last_chance_warning() -> void:
+	if _lives != 1 or GameState.has_shown_warn_life() or not _is_round_entry_ready() or _is_complete:
+		return
 	var generation: int = _business_generation
-	super._on_wrong_guess(r, c)
-	if not _is_current_business_generation(generation) or not _is_round_entry_ready():
-		return
-
-	if _lives == 1:
-		var revision: int = _warn_revision
-		_board_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		get_tree().create_timer(1.2).timeout.connect(
-			func() -> void:
-				if generation != _business_generation or revision != _warn_revision or not _is_round_entry_ready() or _is_complete or _settlement_pending or is_queued_for_deletion():
-					return
-				_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
-				if _lives == 1:
-					_maybe_show_life_warning()
-		)
+	var attempt: int = _business_attempt_sequence
+	var revision: int = _warn_revision
+	_board_view.disable_touch_for(1.2)
+	get_tree().create_timer(1.2).timeout.connect(func() -> void:
+		if generation != _business_generation or attempt != _business_attempt_sequence or revision != _warn_revision or not _is_round_entry_ready() or _is_complete or _settlement_pending or is_queued_for_deletion():
+			return
+		if _lives == 1:
+			_maybe_show_life_warning()
+	)
 
 
-## 生命预警的一次性判定：AB 开关 + 全局只弹一次
+func _on_draft_apply_wrong_batch_done() -> void:
+	_try_show_last_chance_warning()
+
+
 func _maybe_show_life_warning() -> void:
-	if not _is_current_business_generation(_business_generation) or not _is_round_entry_ready() or _is_complete:
+	if not _is_current_entry(_business_generation) or not is_visible_in_tree() or not _is_round_entry_ready() or _is_complete or _settlement_pending or GameState.has_shown_warn_life():
 		return
-	if not ABTestManager.warn_life.should_show_life_warning():
-		return
-	if GameState.has_shown_warn_life():
-		return
-
 	var generation: int = _business_generation
-	GameState.mark_warn_life_shown()
-	if _is_current_business_generation(generation) and _is_round_entry_ready() and not _is_complete:
+	if not GameState.mark_warn_life_shown():
+		return
+	if _is_current_entry(generation) and _is_round_entry_ready() and not _is_complete:
 		_show_life_warning()
 
 
-## 播生命预警：全屏遮罩 + 气泡动画，0.5 秒后才允许点击关闭
 func _show_life_warning() -> void:
+	_show_bubble_tutorial(_WARN_LIFE_TEXT_KEY)
+
+
+func _show_bubble_tutorial(text_key: String) -> void:
 	if _anim_tips == null:
 		return
 	if not _hint_mutex.try_acquire("warn_life"):
 		return
+	if _warn_label != null:
+		_warn_label.text = text_key
 	_warn_revision += 1
 	var revision: int = _warn_revision
 	var generation: int = _business_generation
@@ -1772,16 +3195,42 @@ func _show_life_warning() -> void:
 	)
 
 
-## 把气泡尾巴对齐到第 1 颗红心的水平中心
+func _try_show_golden_fish_life_tutorial() -> bool:
+	if not LevelKind.is_golden_fish(_level_kind):
+		return false
+	if _page_state().has_golden_fish_tutorial_shown():
+		return false
+
+	_page_state().mark_golden_fish_tutorial_shown()
+	_gf_guide_start_ms = Time.get_ticks_msec()
+	Tracker.track_golden_fish_guide_show(int(_level_config.get("level", 0)))
+	_show_bubble_tutorial(_gf_tutorial_life_text())
+	return true
+
+
+func _gf_tutorial_life_text() -> String:
+	var t: String = TranslationServer.translate(_GF_TUT_LIFE_KEY)
+	return _GF_TUT_LIFE_FALLBACK if t == _GF_TUT_LIFE_KEY else t
+
+
 func _align_warn_tail_to_heart() -> void:
-	if _warn_tail == null or _heart1 == null:
+	var heart_slot: Control = _life_bar.slot_at(0)
+	if _warn_tail == null or heart_slot == null:
+		return
+	if not is_instance_valid(_warn_tail) or not is_instance_valid(heart_slot):
+		return
+	var bubble: Control = _warn_tail.get_parent() as Control
+	if bubble == null:
+		return
+	var bubble_parent: Control = bubble.get_parent() as Control
+	if bubble_parent == null:
 		return
 
-	var heart_center_x: float = _heart1.get_global_rect().get_center().x
-	_warn_tail.global_position.x = heart_center_x
+	var heart_center_x: float = heart_slot.get_global_rect().get_center().x
+	var settled_origin_x: float = bubble_parent.global_position.x + bubble.position.x
+	_warn_tail.position.x = heart_center_x - settled_origin_x
 
 
-## 预警收尾动画播完：解除输入遮挡并释放提示锁
 func _on_warn_anim_finished(anim_name: StringName) -> void:
 	if anim_name != "GenericPopup" or _warn_phase != 2:
 		return
@@ -1789,59 +3238,65 @@ func _on_warn_anim_finished(anim_name: StringName) -> void:
 	_hint_mutex.release("warn_life")
 	if _warn_overlay != null:
 		_warn_overlay.mouse_filter = Control.MOUSE_FILTER_PASS
+	bubble_tutorial_finished.emit()
 
 
-## 全局输入：引导层拦按钮；预警展示期间任意点击进入收尾
-func _input(event: InputEvent) -> void:
-	if not _is_current_business_generation(_business_generation) or not _is_round_entry_ready():
-		return
-	# 挂机引导显示时，先吞掉落在被屏蔽按钮上的按下事件
-	if _idle_guide_overlay != null and _idle_guide_overlay.visible:
-		var is_guide_press: bool = (
-			(event is InputEventScreenTouch and event.pressed)
-			or (event is InputEventMouseButton and event.pressed)
-		)
-		if is_guide_press and _is_press_on_idle_blocked_button(event.position):
-			get_viewport().set_input_as_handled()
-			return
-	# 只处理「预警展示中」这一阶段
-	if _warn_phase != 1:
-		return
-	var is_press: bool = (
-		(event is InputEventScreenTouch and event.pressed)
-		or (event is InputEventMouseButton and event.pressed)
-	)
-	if not is_press:
-		return
-
-	# 保护时间内点击无效，防误触
-	if not _warn_click_allowed:
-		get_viewport().set_input_as_handled()
-		return
-	_warn_phase = 2
-	_anim_tips.play_section_with_markers("GenericPopup", "Mark", "")
-	get_viewport().set_input_as_handled()
+func _is_pre_cat_fx_playing() -> bool:
+	return _pre_cat_fx != null and _pre_cat_fx.is_playing()
 
 
-## 判断点击是否落在引导期间被屏蔽的按钮上
-func _is_press_on_idle_blocked_button(screen_pos: Vector2) -> bool:
-	for btn in _idle_guide_block_buttons:
-		if (
-			btn != null
-			and btn.visible
-			and not btn.disabled
-			and btn.get_global_rect().has_point(screen_pos)
-		):
-			return true
+func _should_skip_board_input() -> bool:
+	if super._should_skip_board_input():
+		return true
+
+	if _pre_cat_fx != null and _pre_cat_fx.is_playing():
+		return true
+
+	if (
+		_warn_overlay != null
+		and is_instance_valid(_warn_overlay)
+		and not is_zero_approx(_warn_overlay.color.a)
+	):
+		return true
+
+	if (
+		_golden_fish_tutorial_card != null
+		and is_instance_valid(_golden_fish_tutorial_card)
+		and _golden_fish_tutorial_card.visible
+	):
+		return true
 	return false
 
 
-## 复位生命预警的全部视觉与状态
+func _input(event: InputEvent) -> void:
+	if not _is_round_entry_ready() or not is_visible_in_tree() or is_queued_for_deletion() or not _is_app_foreground:
+		return
+	if _warn_phase == 1:
+		var is_press: bool = (
+			(event is InputEventScreenTouch and event.pressed)
+			or (event is InputEventMouseButton and event.pressed)
+		)
+		if is_press:
+			if not _warn_click_allowed:
+				get_viewport().set_input_as_handled()
+				return
+			_warn_phase = 2
+			_anim_tips.play_section_with_markers("GenericPopup", "Mark", "")
+			get_viewport().set_input_as_handled()
+			return
+
+	super._input(event)
+
+
 func _reset_life_warning() -> void:
 	_warn_revision += 1
 	_warn_click_allowed = false
+	var was_active: bool = _warn_phase != 0
 	_hint_mutex.release("warn_life")
 	_warn_phase = 0
+
+	if _board_view != null and is_instance_valid(_board_view):
+		_board_view.set_touch_enabled(true)
 	if _anim_tips != null and _anim_tips.is_playing():
 		_anim_tips.stop()
 	if _warn_overlay != null:
@@ -1851,220 +3306,124 @@ func _reset_life_warning() -> void:
 		_warn_bubble.modulate.a = 0.0
 	if _warn_mask != null:
 		_warn_mask.modulate.a = 0.0
+	if was_active:
+		bubble_tutorial_finished.emit()
 
 
-# ================= 结算：失败 / 复活 / 通关 =================
-## 三条命耗尽：上报失败、写重试缓存、拉起 FAIL 界面
-func _on_game_over() -> void:
-	if _is_complete or _settlement_pending:
+func _on_game_fail() -> void:
+	if _is_complete:
 		return
-	await _run_round_transition(_finish_game_over)
+	await _run_round_transition(_finish_game_fail)
 
-
-func _finish_game_over(context: Dictionary) -> void:
-	if _is_complete or _settlement_pending:
-		return
-	if _terminal_started_ms == 0:
-		_terminal_started_ms = Time.get_ticks_msec()
-	ABTestManager.dye_at_game_fail_end()
-	var settlement_id: String = _business_settlement_id()
-	if not _is_current_round_transition(context):
-		return
-	if settlement_id.is_empty():
-		_retry_round_transition(context, OperationResult.failure("round_not_ready"), _on_game_over)
-		return
-	var retry_params: Dictionary = _build_failed_retry_params()
-	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.FAIL)
-	var settled: Dictionary = _settle_current_main_or_preview(settlement_id, "fail", retry_params)
-	_publish_round_end(settled, end_params)
-	if not _is_current_round_transition(context):
-		return
-	if not settled.get("ok", false):
-		_retry_round_transition(context, settled, _on_game_over)
-		return
-	# 收起自动完成按钮
-	_hide_auto_complete_btn()
-	_exit_draft_mode_and_clear()
-	if not _is_current_round_transition(context):
-		return
-	_is_complete = true
-	_clock_timer.stop()
-	_stop_idle_tool_hint()
-	_destroy_banner()
-	if not _is_current_round_transition(context):
-		return
-	# 棋盘上所有猫进入哭泣循环，并震动
-	_board_view.play_cat_cry_loop_all()
-	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL4)
-	var lv: int = _level_config.get("level", 0)
-
-	# 统计还差几只猫，给失败界面用
-	var _sz: int = _level_config.get("size", 4)
-	var _placed: int = 0
-	# 草稿死锁回滚过的局，以回滚后的盘面统计
-	if _draft_deadlock_pending:
-		_placed = (_draft_deadlock_real_marks.get("placed_cats", []) as Array).size()
-	else:
-		for _r in range(_sz):
-			for _c in range(_sz):
-				if _board_view.get_cell_state(_r, _c) == CellState.CAT:
-					_placed += 1
-	var remaining_cats: int = _sz - _placed
-	# 拉起失败界面，并接上复活的「开始看广告 / 复活成功」回调
-	var fail := (
-		UIManager
-		. show_ui(
-			UiName.FAIL,
-			{
-				"level_config": _level_config,
-				"retry_params": retry_params,
-				"remaining_cats": remaining_cats,
-				"gameplay_policy_snapshot": _gameplay_policy_snapshot(),
-				"gameplay_level": _current_level(),
-			}
-		)
-	)
-	if not _is_current_round_transition(context):
-		return
-	if is_instance_valid(fail) and not fail.revive_requested.is_connected(_on_revive_requested):
-		fail.revive_requested.connect(_on_revive_requested)
-	if is_instance_valid(fail) and not fail.revive_ad_started.is_connected(_on_revive_ad_started):
-		fail.revive_ad_started.connect(_on_revive_ad_started)
-
-
-## 复活广告开始播放：先把猫恢复成待机动作
 func _on_revive_ad_started() -> void:
 	_board_view.revive_all_cat_to_idle()
 
 
-## 看广告复活成功：补命、关失败界面、继续本局
-func _on_revive_requested(revive_context: Dictionary = {}) -> void:
-	if not _is_complete or not _is_round_entry_ready():
+func _on_revive_requested(context: Dictionary = {}) -> void:
+	var restored_board: Array = _board_view.get_board().duplicate(true)
+	for cell: Vector2i in _draft_lethal_wrong_cells:
+		if cell.x >= 0 and cell.x < restored_board.size() and cell.y >= 0 and cell.y < restored_board[cell.x].size():
+			restored_board[cell.x][cell.y] = CellState.EMPTY
+	_request_revive(context, {"board": restored_board}, _present_revive)
+
+
+
+func _refresh_life_bar_display() -> void:
+	_life_bar.refresh(_display_lives())
+
+
+func _allows_near_death_feedback() -> bool:
+	return _level_kind == LevelKind.MAIN
+
+
+func _allows_wrong_zone_feedback() -> bool:
+	return _level_kind != LevelKind.COLOR_CHALLENGE
+
+
+func _on_wrong_zone_state_changed() -> void:
+	if (
+		_board_view != null
+		and _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot)
+	):
+		_flush_endgame_snapshot()
+
+
+func _life_bar_nodes() -> Array[Control]:
+	var out: Array[Control] = super._life_bar_nodes()
+	if _life_bar_mul != null:
+		out.append(_life_bar_mul)
+	return out
+
+
+func _cat_progress_adjacent_path() -> String:
+	return "Root/VBoxContainer/BoardContainer/CatProgressBar"
+
+
+func _cat_progress_adjacent_holder_path() -> String:
+	return "Root/VBoxContainer/AdjacentBoardBarHolder"
+
+
+func _record_normal_pass_time(time_total: int) -> void:
+	if _level_kind != LevelKind.MAIN:
 		return
-	var rollback: Dictionary = {}
-	if _draft_deadlock_pending:
-		rollback["board"] = _board_from_saved_marks(_draft_deadlock_real_marks)
-	_request_revive(revive_context, rollback, _present_revive)
-
-
-## 事务成功后的产品统计和演出；生命、尝试序号及失败状态已同步。
-func _present_revive() -> void:
-	var generation: int = _business_generation
-	_terminal_started_ms = 0
-	_like_hand_state["clock_paused"] = false
-	_revive_count += 1
-	# 复活次数统计（两套埋点字段）
-	GameState.inc_game_total_stat(Tracker.GameType.NORMAL, "revive_count")
-	GameState.inc_game_total_stat(Tracker.GameType.NORMAL, "rv_count")
-	UIManager.hide_ui(UiName.FAIL)
-	if generation != _business_generation or not _is_round_entry_ready() or _is_complete:
+	var lv: int = int(_level_config.get("level", 0))
+	if lv <= 0 or LevelSelector.is_hard_level(lv) or LevelSelector.is_super_hard_level(lv):
 		return
-
-	# 加命：按 AB 配置补，最多 3 条
-	_refresh_hearts()
-
-	# 一次补满 3 条命时播红心复活特效
-	if int(_gameplay_policy_snapshot().get("revive_lives", 3)) >= 3:
-		for slot: LifeSlot in [_heart1, _heart2, _heart3]:
-			if slot != null:
-				slot.play_revive()
-
-	# 草稿死锁的局要回滚到进草稿前的正式标记
-	if _draft_deadlock_pending:
-		_rollback_draft_deadlock()
-		_clear_draft_deadlock_state()
-
-	# 复活命数、尝试序号与恢复盘面已由用例一起保存。
-
-	# 手感统计：把「上一只猫」的时间戳推到当前
-	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
-
-	_board_view.revive_all_cat_to_idle()
-
-	_show_banner_if_eligible("game")
-
-	# 复活后重新评估步骤触发的挂机引导
-	if ABTestManager.idle_guide.is_step_trigger_enabled() and _level_config.get("level", 0) == 1:
-		if (
-			_step_history.size() >= 3
-			and not _step_trigger_had_cat
-			and not _is_complete
-			and not _hint_overlay.visible
-		):
-			_idle_guide_shown = false
-			_show_idle_guide()
-
-
-## 通关：结算、上报、写关卡进度，再拉起胜利界面
-func _on_game_complete() -> void:
-	if _is_complete or _settlement_pending:
+	var source: String = str(_level_config.get("bank_source_main", ""))
+	if source.is_empty():
+		source = str(_level_config.get("bank_source", ""))
+	if not PassTimeDda.is_normal_level_source(source):
 		return
-	await _run_round_transition(_finish_game_complete)
-
-
-func _finish_game_complete(context: Dictionary) -> void:
-	if _is_complete or _settlement_pending:
-		return
-	if _terminal_started_ms == 0:
-		_terminal_started_ms = Time.get_ticks_msec()
-	var settlement_id: String = _business_settlement_id()
-	if not _is_current_round_transition(context):
-		return
-	if settlement_id.is_empty():
-		_retry_round_transition(context, OperationResult.failure("round_not_ready"), _on_game_complete)
-		return
-	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.WIN)
-	var settled: Dictionary = _settle_current_main_or_preview(settlement_id, "win")
-	_publish_round_end(settled, end_params)
-	if not _is_current_round_transition(context):
-		return
-	if not settled.get("ok", false):
-		_retry_round_transition(context, settled, _on_game_complete)
-		return
-	_hide_auto_complete_btn()
-
-	# 退出草稿模式（是否保留草稿叉由 AB 决定）
-	_exit_draft_mode_and_clear(_get_draft_variant() == DraftModeConfig.VALUE_AUTO_WIN_PERSIST)
-	if not _is_current_round_transition(context):
-		return
-	_is_complete = true
-	_clock_timer.stop()
-	_stop_idle_tool_hint()
-	_destroy_banner()
-	if not _is_current_round_transition(context):
-		return
-
-	# 停掉标记音效并重播猫的出现动画
-	SoundManager.stop(SoundManager.Kind.MARK_CAT)
-	_board_view.replay_all_cat_appear()
-	VibrateManager.play_vibrate(VibrateManager.Level.LEVEL5)
-	# 收掉提示相关高亮
-	_cleanup_hint()
-	await get_tree().process_frame
-	if not _is_current_round_transition(context):
-		return
-
-	# 把本局统计塞进胜利界面要用的配置
-	_level_config["restart_count"] = _restart_count
-	_level_config["revive_count"] = _revive_count
-	_level_config["mistake_count"] = _mistake_count
-
-	_level_config["elapsed_sec"] = _like_hand_state.get("in_game_sec", 0.0)
-
-	# 等胜利提示条播完
-	var toast_was_shown: bool = await _play_win_toast_and_wait()
-	if not _is_current_round_transition(context):
-		return
-	_level_config["toast_was_shown"] = toast_was_shown
-	# 连胜流程可能自己占掉出场延迟
-	var streak_consumed_appear_delay: bool = await _try_run_streak_flow_after_win(
-		&"main", toast_was_shown
+	GameState.record_normal_pass_time(
+		lv, int(_level_config.get("size", 0)), int(_level_config.get("rank", 0)), time_total
 	)
-	if not _is_current_round_transition(context):
+
+
+func _on_game_win() -> void:
+	if _is_complete:
 		return
-	_level_config["skip_appear_delay"] = streak_consumed_appear_delay
-	# 拉起胜利界面
-	UIManager.show_ui(_win_ui_name(), {"level_config": _level_config, "board_view": _board_view})
+	await _run_round_transition(_finish_game_win)
+
+
+
+func _commit_rank_win() -> void:
+	if RankActivityManager.is_joined():
+		_rank_win_presentation_active = true
+		RankActivityManager.begin_rank_win_presentation()
+
+
+
+func _persist_win_progress(_level_num: int, _session_rank: int, _session_diffi: int) -> void:
+	# Kept for recovered callers; all progress is committed by the terminal transition.
+	_on_game_win()
+
+
+
+func _capture_daily_first_main_win(level_num: int) -> void:
+	var is_main_win: bool = level_num > 0 and not bool(_level_config.get("is_daily", false))
+
+	if not _level_config.has("companion_before_win"):
+		_level_config["companion_before_win"] = GameState.get_home_companion_data()
+	if not _level_config.has("is_comeback_main_win"):
+		var is_comeback_win: bool = is_main_win and GameState.consume_comeback_main_win()
+		_level_config["is_comeback_main_win"] = is_comeback_win and _level_kind == LevelKind.MAIN
+	if _level_config.has("is_daily_first_main_win"):
+		return
+	_level_config["is_daily_first_main_win"] = (
+		is_main_win and level_num > 1 and not GameState.has_main_win_today()
+	)
+	if not OS.has_feature("rel"):
+		print(
+			(
+				"[DailyFirstWin] settle lv=%d kind=%d won_today=%s first=%s"
+				% [
+					level_num,
+					_level_kind,
+					str(GameState.has_main_win_today()),
+					str(_level_config["is_daily_first_main_win"])
+				]
+			)
+		)
 
 
 ## 胜利界面名（普通对局固定 WIN）
@@ -2072,148 +3431,492 @@ func _win_ui_name() -> StringName:
 	return UiName.WIN
 
 
-## 连胜流程：通知连胜管理器，需要展示就等它关掉再返回
-func _try_run_streak_flow_after_win(source: StringName, skip_cat_appear: bool = false) -> bool:
-	var generation: int = _business_generation
-	if not _is_current_business_generation(generation):
-		return false
-	if not await _check_in_streak_after_win(source):
-		return false
-	if not StreakManager.has_pending_show():
-		return false
-	if not skip_cat_appear:
-		await get_tree().create_timer(GameWinPage.APPEAR_DELAY).timeout
-	if not _is_current_business_generation(generation):
-		return false
-	var streak_page: StreakPage
+func _is_no_mistake_level() -> bool:
+	if LevelKind.is_insert_golden_fish(_level_kind):
+		return not GameState.has_insert_golden_fish_wrong_cat()
+	return not GameState.has_wrong_cat_current_level()
 
-	if StreakManager.get_data().current_streak == 1 and not StreakManager.should_skip_lit():
-		streak_page = StreakPage.open_lit()
-	else:
-		streak_page = StreakPage.open_settle()
-	while is_instance_valid(streak_page) and streak_page.visible:
-		await streak_page.visibility_changed
-		if not _is_current_business_generation(generation):
+
+func _try_run_streak_flow_after_win(_source: StringName, skip_cat_appear: bool = false) -> bool:
+	var generation: int = _business_generation
+	var has_revive: bool = StreakManager.has_pending_revive_decision()
+	if not has_revive and not StreakManager.has_pending_show():
+		return false
+
+	if not skip_cat_appear:
+		var deadline: int = Time.get_ticks_msec() + int(GameWinPage.APPEAR_DELAY * 1000.0)
+		while Time.get_ticks_msec() < deadline and _is_current_entry(generation):
+			await get_tree().process_frame
+		if not _is_current_entry(generation):
+			return false
+	if has_revive:
+		await StreakReviveFlow.run(self, func() -> bool: return _is_current_entry(generation))
+		if not _is_current_entry(generation):
+			return false
+	if StreakManager.has_pending_show():
+		await StreakPage.open_after_win(func() -> bool: return _is_current_entry(generation))
+		if not _is_current_entry(generation):
 			return false
 	return true
 
 
-# ================= 尺寸表 AB：按关卡段查棋盘边长 =================
-# 尺寸曲线已提取为可验证配表；保留 AB 分组和原分段行为。
-func _get_ab_size(level_num: int) -> int:
-	return DokuPolicy.cycle_size(_size_cycle if _size_cycle in [3, 4, 5, 6, 7, 8] else 2, level_num)
+func _try_run_rank_flow_after_win(skip_cat_appear: bool) -> bool:
+	var generation: int = _business_generation
+	if not RankActivityManager.is_joined():
+		return false
 
+	if not UniKitManager.is_online():
+		return false
 
-# ================= 规则提示与自动标叉教学 =================
-## 踩规则时闪一下对应的规则图标（受 AB 与关卡范围限制）
-func _on_rule_violated(rule: int) -> void:
-	var cfg := ABTestManager.rule_highlight
-	if not cfg.is_highlight_violated():
-		return
-	if not cfg.is_all_levels():
-		if not GameState.is_tutorial_done():
-			return
-		if GameState.get_current_level() > 5:
-			return
+	var st: int = RankActivityManager.get_state()
+	if st != RankActivityData.State.OPEN_JOINED and st != RankActivityData.State.SETTLING:
+		return false
+	var will_change: bool = RankActivityManager.did_last_win_score()
+	var settling: bool = st == RankActivityData.State.SETTLING
 
-	_play_rule_highlight(rule)
+	var podium: bool = _is_rank_podium_eligible()
+	if not will_change and not settling and not podium:
+		return false
+	if podium:
+		UIManager.warm_pool_async(UiName.RANK_ACTIVITY_PODIUM)
 
+	if will_change and ABTestManager.podium_per_game.is_list_podium_style():
+		UIManager.warm_pool_async(UiName.RANK_ACTIVITY_CHANGE_V2)
+	if not skip_cat_appear:
+		await _wait_business_delay(GameWinPage.APPEAR_DELAY, generation)
+		if not _is_current_entry(generation):
+			return false
 
-## 把预置猫写进棋盘（来源标 PREFILL，不算玩家操作）
-func _prefill_hints() -> void:
-	var positions: Array = _level_config.get("prefill_positions", [])
-	for pos in positions:
-		var r: int = pos[0]
-		var c: int = pos[1]
+	if will_change:
+		var advance: int = RankActivityManager.get_last_win_advance()
 
-		_board_view.set_cell_state(r, c, CellState.CAT, false, true, BoardView.ChangeSource.PREFILL)
+		var change_ui: StringName = (
+			UiName.RANK_ACTIVITY_CHANGE_V2
+			if ABTestManager.podium_per_game.is_list_podium_style()
+			else UiName.RANK_ACTIVITY_CHANGE
+		)
 
-
-## 开局给预置猫补自动叉（残局复原局跳过）
-func _auto_mark_prefill_cats() -> void:
-	if _is_endgame_restore_session:
-		return
-	if not MeowdokuGameplayPolicy.auto_mark_prefill(_gameplay_policy, _current_level()):
-		return
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return
-	for pos in _level_config.get("prefill_positions", []):
-		var cat := Vector2i(pos[0], pos[1])
-		if _board_view.get_cell_state(cat.x, cat.y) == CellState.CAT:
-			_spread_auto_cross(
-				cat, 0.0, DokuActionRules.auto_marks(_board_view.get_board(), _puzzle["regions"], cat, true)
+		var rank_like_result: Dictionary = {}
+		if ABTestManager.rank_like_func.is_like_enabled():
+			rank_like_result = RankActivityManager.prepare_rank_like_settlement(
+				ABTestManager.rank_like_func.has_barrage()
 			)
 
+		(
+			UIManager
+			. show_ui(
+				change_ui,
+				{
+					"advance_places": advance,
+					"lives": _lives,
+					"is_golden_fish": LevelKind.is_golden_fish(_level_kind),
+					"rank_like_result": rank_like_result,
+				}
+			)
+		)
+		if not await _await_business_window(change_ui, generation):
+			return false
 
-## 自动标叉的首次教学：演示点一下列头，再自动收回
-func _maybe_show_auto_mark_tutorial() -> void:
+	if podium and RankActivityManager.get_state() == RankActivityData.State.OPEN_JOINED:
+		await _try_run_rank_podium_after_win()
+		if not _is_current_entry(generation):
+			return false
+
+	_finish_rank_win_presentation()
+
+	if RankActivityManager.get_state() == RankActivityData.State.SETTLING:
+		if not RankActivityManager.get_pending_reward().is_empty():
+			RankActivityManager.claim_reward(false)
+			await get_tree().process_frame
+			if not _is_current_entry(generation):
+				return false
+			if not await _await_business_window(UiName.AWARD, generation):
+				return false
+		else:
+			var solo_shown: bool = await _try_run_end_solo_podium()
+			if not _is_current_entry(generation):
+				return false
+			if not solo_shown:
+				RankActivityManager.notify_settlement_done()
+	return true
+
+
+func _try_run_end_solo_podium() -> bool:
 	var generation: int = _business_generation
-	if _auto_mark_tutorial_overlay != null:
-		return
-	if not MeowdokuGameplayPolicy.dot_toggle(_gameplay_policy, _current_level()):
-		return
-	if GameState.is_auto_mark_tutorial_done():
-		return
-	if _board_view == null or _board_view.get_puzzle_size() <= _AUTO_MARK_TUTORIAL_COL:
-		return
-
-	# 等开场提示条消失再弹
-	await _wait_start_toast_hidden_if_any()
-	if not _is_current_business_generation(generation):
-		return
-
-	if _entry_anim_playing:
-		return
-	if not visible or _is_complete or _wrong_guess_pending:
-		return
-	if _auto_mark_tutorial_overlay != null or GameState.is_auto_mark_tutorial_done():
-		return
-	if _board_view == null or not is_instance_valid(_board_view):
-		return
-	# 实例化教学浮层，并演示把目标列全打上叉
-	_auto_mark_tutorial_overlay = _AUTO_MARK_TUTORIAL_SCENE.instantiate() as AutoMarkTutorialOverlay
-	add_child(_auto_mark_tutorial_overlay)
-	_auto_mark_tutorial_overlay.closed.connect(_on_auto_mark_tutorial_closed)
-	_auto_mark_tutorial_overlay.setup(_board_view, _AUTO_MARK_TUTORIAL_COL)
-
-	var _is_marked_before: bool = _board_view.is_axis_auto_mark_marked(1, _AUTO_MARK_TUTORIAL_COL)
-	_on_axis_auto_mark_pressed(1, _AUTO_MARK_TUTORIAL_COL, _is_marked_before)
+	var pending: Dictionary = RankActivityManager.get_pending_end_solo_podium()
+	if pending.is_empty():
+		return false
+	if not ABTestManager.podium_per_leaderboard.has_end_solo_podium():
+		return false
+	if not RankActivityManager.begin_end_solo_podium():
+		return false
+	UIManager.show_ui(UiName.RANK_ACTIVITY_SOLO_PODIUM, {"rank": int(pending.get("rank", 4))})
+	if not await _await_business_window(UiName.RANK_ACTIVITY_SOLO_PODIUM, generation):
+		return false
+	RankActivityManager.complete_end_solo_podium(false)
+	return true
 
 
-## 教学浮层关闭：记已完成，并把演示用的叉收回去
-func _on_auto_mark_tutorial_closed(_hit_btn: bool) -> void:
+func _is_rank_podium_eligible() -> bool:
+	var _pg: PodiumPerGameConfig = ABTestManager.podium_per_game
+	var _d_limit: int = _pg.podium_rank_limit()
+	var _d_win: int = RankActivityManager.get_last_win_advance()
+	var _d_online: int = RankActivityManager.get_last_online_advance()
+	var _d_rank: int = RankActivityManager.get_player_rank()
+	var _d_why: String = "PASS(会登台)"
+	if not _pg.has_per_game_podium():
+		_d_why = "拦:AB未命中登台组(需 podium_per_game=1)"
+	elif _d_limit <= 0:
+		_d_why = "拦:limit<=0"
+	elif _d_win <= 0 and _d_online <= 0:
+		_d_why = "拦:两个 advance 都为 0(名次未上升,且离线补偿也为 0)"
+	elif _d_rank < 1 or _d_rank > _d_limit:
+		_d_why = "拦:名次 %d 超出前 %d" % [_d_rank, _d_limit]
+	print(
+		(
+			"[PodiumDiag] eligible? %s | pg=%d ab_loaded=%s limit=%d win_adv=%d online_adv=%d rank=%d"
+			% [
+				_d_why,
+				int(_pg.value()),
+				str(_pg.is_value_loaded()),
+				_d_limit,
+				_d_win,
+				_d_online,
+				_d_rank
+			]
+		)
+	)
+
+	if not ABTestManager.podium_per_game.has_per_game_podium():
+		return false
+	var limit: int = ABTestManager.podium_per_game.podium_rank_limit()
+	if limit <= 0:
+		return false
+	if (
+		RankActivityManager.get_last_win_advance() <= 0
+		and RankActivityManager.get_last_online_advance() <= 0
+	):
+		return false
+	var rank: int = RankActivityManager.get_player_rank()
+	return rank >= 1 and rank <= limit
+
+
+func _try_run_rank_podium_after_win() -> void:
 	var generation: int = _business_generation
-	GameState.mark_auto_mark_tutorial_done()
-	_free_auto_mark_tutorial_overlay()
-	await _wait_axis_idle_for_tutorial_uncross(_AUTO_MARK_TUTORIAL_COL)
-	if not _is_current_business_generation(generation):
+	var rank: int = RankActivityManager.get_player_rank()
+	var top3: Array = []
+	var rank_infos: Array = RankActivityManager.get_rank_infos().slice(0, 3)
+	for info in rank_infos:
+		if info != null:
+			top3.append(info.player_info)
+	(
+		UIManager
+		. show_ui(
+			UiName.RANK_ACTIVITY_PODIUM,
+			{
+				"rank": rank,
+				"top3_infos": top3,
+			}
+		)
+	)
+	if not await _await_business_window(UiName.RANK_ACTIVITY_PODIUM, generation):
 		return
 
-	if not is_inside_tree() or not visible or not is_instance_valid(_board_view):
-		return
-	if not _board_view.is_axis_auto_mark_marked(1, _AUTO_MARK_TUTORIAL_COL):
-		return
-	_on_axis_auto_mark_pressed(1, _AUTO_MARK_TUTORIAL_COL, true)
+
+func _on_rule_violated(rule: int, additive: bool = false) -> void:
+	_play_rule_highlight(rule, additive)
 
 
-## 等该列的自动标叉动画跑完再收叉（token 变了就放弃）
-func _wait_axis_idle_for_tutorial_uncross(col: int) -> void:
-	var token: int = _auto_mark_token
-	var key: String = _axis_key(1, col)
-	while _axis_busy_set.has(key):
-		await get_tree().process_frame
-		if token != _auto_mark_token or not is_inside_tree():
+func _retry_cache_matches_kind(cached: Dictionary) -> bool:
+	var source: String = str(cached.get("bank_source", ""))
+	var level: int = int(cached.get("retry_level", 0))
+	if (
+		ABTestManager.normal_level.value() == 11900
+		and (source == "digit_sp" or (source == "sp" and level in [44, 104]))
+	):
+		return false
+	var is_cc_lock: bool = (
+		str(cached.get("bank_source", "")) == ColorChallengeGate.BANK_SOURCE
+		or bool(cached.get("_returnee_color_override", false))
+	)
+	var is_cc_level: bool = LevelKind.is_color_challenge(_level_kind)
+	if is_cc_lock != is_cc_level:
+		print(
+			(
+				"[ColorChallenge] 锁题与本局类型不匹配,忽略该锁 (lock_is_cc=%s level_is_cc=%s)"
+				% [str(is_cc_lock), str(is_cc_level)]
+			)
+		)
+		return false
+	return true
+
+
+func _resolve_pre_cat() -> void:
+	_pre_type = PreCatDecider.PRE_TYPE_NONE
+	_pre_cat_position = Vector2i(-1, -1)
+
+	if LevelKind.is_golden_fish(_level_kind):
+		if LevelKind.is_insert_golden_fish(_level_kind):
+			var decision: Dictionary = _golden_fish_pre_cat.resolve_insert(_level_config, _puzzle)
+			_pre_type = str(decision.get("pre_type", PreCatDecider.PRE_TYPE_NONE))
+			if not (_level_config.get("restore_state", {}) as Dictionary).is_empty():
+				_pre_cat_position = decision.get("position", Vector2i(-1, -1))
+			else:
+				_append_pre_cat_prefill(decision.get("position", Vector2i(-1, -1)))
+		return
+
+	if LevelKind.is_color_challenge(_level_kind):
+		print("[pre_cat] color challenge level, skip (pending 保留给下一个主线关)")
+		return
+	var lv: int = _level_config.get("level", 0)
+	print(
+		(
+			"[pre_cat] resolve lv=%d rank=%d size=%d"
+			% [lv, _level_config.get("rank", 0), _level_config.get("size", 0)]
+		)
+	)
+	if lv <= 0:
+		return
+
+	if _page_state().is_g4_pressure_level(lv):
+		print("[pre_cat] g4 pressure level lv=%d, skip (pending 保留给下一个主线关)" % lv)
+		return
+
+	var restore_state: Dictionary = _level_config.get("restore_state", {})
+	if not restore_state.is_empty():
+		_pre_type = str(restore_state.get("pre_type", PreCatDecider.PRE_TYPE_NONE))
+
+		var restored_prefills: Array = _level_config.get("prefill_positions", [])
+		if (
+			lv >= 21
+			and _pre_type != PreCatDecider.PRE_TYPE_NONE
+			and not restored_prefills.is_empty()
+		):
+			_pre_cat_position = Vector2i(int(restored_prefills[0][0]), int(restored_prefills[0][1]))
+		print("[pre_cat] restore branch pre_type=%s" % _pre_type)
+		return
+
+	var pend: Dictionary = _golden_fish_pre_cat.main_pending(lv, _pre_cat_pend_snapshot)
+	print("[pre_cat] pend=%s fail_count=%d" % [str(pend), _page_state().get_pre_cat_fail_count(lv)])
+
+	if debug_force_pre_cat:
+		var forced_size: int = _level_config.get("size", 0)
+		var forced_solution: Array = _puzzle.get("solution", [])
+		var forced_pos: Vector2i = PreCatDecider.pick_prefill_cell(
+			forced_size, _puzzle.get("regions", []), forced_solution
+		)
+		if forced_pos.x < 0:
+			forced_pos = _pick_any_solution_cell(forced_size, forced_solution)
+			if forced_pos.x < 0:
+				print("[pre_cat] cheat 强制预放失败:本题连一个真解格都读不到(solution 为空?)")
+				return
+			print("[pre_cat] cheat 无 rank>=R3 解格,降级随机挑真解格")
+		var forced_scenes: Array[int] = [PreCatDecider.SCENE_CONSECUTIVE_FAIL]
+		_pre_type = PreCatDecider.scenes_to_pre_type(forced_scenes)
+		_append_pre_cat_prefill(forced_pos)
+		_page_state().set_pre_cat_lock(lv, _pre_type, forced_pos, pend)
+		print(
+			(
+				"[pre_cat] cheat 强制预放 pos=%s pre_type=%s(借用场景2 的值,仅为让埋点字段合法)"
+				% [str(forced_pos), _pre_type]
+			)
+		)
+		return
+	if ABTestManager.normal_level.is_server_rec_active():
+		print(
+			(
+				"[pre_cat] normal_level=%s(服务端推荐组) skip, pre_type=0"
+				% str(ABTestManager.normal_level.value())
+			)
+		)
+		return
+
+	if lv <= 20:
+		print("[pre_cat] lv<=20 skip, pre_type=0")
+		return
+
+	var high_rank_mode: bool = ABTestManager.normal_level.is_pre_cat_high_rank_active()
+
+	var lock: Dictionary = _page_state().get_pre_cat_lock(lv, pend)
+	print("[pre_cat] lock=%s" % str(lock))
+	if bool(lock.get("locked", false)):
+		_pre_type = str(lock.get("pre_type", PreCatDecider.PRE_TYPE_NONE))
+		var locked_pos: Vector2i = lock.get("position", Vector2i(-1, -1))
+
+		if locked_pos.x >= 0:
+			var sol: Array = _puzzle.get("solution", [])
+			var is_valid: bool = (
+				locked_pos.x < sol.size()
+				and locked_pos.y < (sol[locked_pos.x] as Array).size()
+				and bool((sol[locked_pos.x] as Array)[locked_pos.y])
+			)
+			if not is_valid:
+				var sz: int = _level_config.get("size", 0)
+				var regions: Array = _puzzle.get("regions", [])
+				var new_pos: Vector2i = (
+					PreCatDecider.pick_prefill_cell_highest_rank(sz, regions, sol)
+					if high_rank_mode
+					else PreCatDecider.pick_prefill_cell(sz, regions, sol)
+				)
+				print(
+					(
+						"[pre_cat] lock pos %s invalid for current puzzle → re-pick %s"
+						% [str(locked_pos), str(new_pos)]
+					)
+				)
+				if new_pos.x >= 0:
+					var restats: Dictionary = PreCatDecider.rank_stats(sz, regions, sol, new_pos)
+					var r_sel: int = int(restats["selected_rank"])
+					var r_max: int = int(restats["max_rank"])
+
+					var verdict: String = (
+						(" %s" % ("✅一致" if r_sel == r_max else "⚠️不一致")) if high_rank_mode else ""
+					)
+					print(
+						(
+							"[pre_cat] 难度校验(re-pick) 高难模式=%s 选中格rank=%d 全盘最高rank=%d%s"
+							% [str(high_rank_mode), r_sel, r_max, verdict]
+						)
+					)
+				locked_pos = new_pos
+				_page_state().set_pre_cat_lock(lv, _pre_type, locked_pos, pend)
+		_append_pre_cat_prefill(locked_pos)
+		print("[pre_cat] sustain lock pre_type=%s pos=%s" % [_pre_type, str(_pre_cat_position)])
+		return
+
+	if ABTestManager.normal_level.is_pre_cat_level_swap_active():
+		var swap_type: String = str(
+			_level_config.get("pre_cat_swap_type", PreCatDecider.PRE_TYPE_NONE)
+		)
+		if swap_type != PreCatDecider.PRE_TYPE_NONE:
+			_pre_type = swap_type
+			_page_state().set_pre_cat_lock(lv, _pre_type, Vector2i(-1, -1), pend)
+			print("[pre_cat] level_swap decided pre_type=%s" % _pre_type)
 			return
+		print("[pre_cat] level_swap miss, fallback to control-style decide()+prefill")
 
-
-## 释放教学浮层实例
-func _free_auto_mark_tutorial_overlay() -> void:
-	if _auto_mark_tutorial_overlay == null:
+	var scenes: Array[int] = PreCatDecider.hit_scenarios(
+		bool(pend.get("hard", false)),
+		_level_config.get("rank", 0),
+		bool(pend.get("struggle", false)),
+		bool(pend.get("demote", false))
+	)
+	print("[pre_cat] scenes=%s" % str(scenes))
+	if scenes.is_empty():
+		if _page_state().has_golden_fish_pre_cat_followup(lv):
+			_page_state().set_pre_cat_lock(lv, _pre_type, Vector2i(-1, -1), pend)
 		return
-	if is_instance_valid(_auto_mark_tutorial_overlay):
-		_auto_mark_tutorial_overlay.queue_free()
-	_auto_mark_tutorial_overlay = null
+	var res: Dictionary = PreCatDecider.decide(
+		scenes,
+		_level_config.get("size", 0),
+		_puzzle.get("regions", []),
+		_puzzle.get("solution", []),
+		high_rank_mode
+	)
+	print(
+		(
+			"[pre_cat] decide res=%s regions_empty=%s solution_empty=%s"
+			% [
+				str(res),
+				str((_puzzle.get("regions", []) as Array).is_empty()),
+				str((_puzzle.get("solution", []) as Array).is_empty())
+			]
+		)
+	)
+	if res.has("selected_rank"):
+		var r_sel: int = int(res["selected_rank"])
+		var r_max: int = int(res["max_rank"])
+
+		var verdict: String = (
+			(" %s" % ("✅一致" if r_sel == r_max else "⚠️不一致")) if high_rank_mode else ""
+		)
+		print(
+			(
+				"[pre_cat] 难度校验 高难模式=%s 选中格rank=%d 全盘最高rank=%d%s"
+				% [str(high_rank_mode), r_sel, r_max, verdict]
+			)
+		)
+	_pre_type = str(res.get("pre_type", PreCatDecider.PRE_TYPE_NONE))
+	var pos: Vector2i = res.get("position", Vector2i(-1, -1))
+	_append_pre_cat_prefill(pos)
+
+	_page_state().set_pre_cat_lock(lv, _pre_type, pos, pend)
+	print("[pre_cat] decided pre_type=%s pos=%s" % [_pre_type, str(pos)])
+
+
+func _pick_any_solution_cell(size: int, solution_2d: Array) -> Vector2i:
+	var cells: Array[Vector2i] = []
+	for r: int in range(size):
+		if r >= solution_2d.size():
+			break
+		var row: Array = solution_2d[r]
+		for c: int in range(size):
+			if c < row.size() and bool(row[c]):
+				cells.append(Vector2i(r, c))
+	if cells.is_empty():
+		return Vector2i(-1, -1)
+	return cells[randi() % cells.size()]
+
+
+func _append_pre_cat_prefill(pos: Vector2i) -> void:
+	if pos.x < 0:
+		return
+	_pre_cat_position = pos
+	var pp: Array = _level_config.get("prefill_positions", [])
+	pp.append([pos.x, pos.y])
+	_level_config["prefill_positions"] = pp
+
+
+func _prefill_positions_without_pre_cat() -> Array:
+	var src: Array = _level_config.get("prefill_positions", [])
+	if _pre_cat_position.x < 0:
+		return src.duplicate()
+	var out: Array = []
+	for p in src:
+		if int(p[0]) == _pre_cat_position.x and int(p[1]) == _pre_cat_position.y:
+			continue
+		out.append(p)
+	return out
+
+
+func _self_prefill_cell() -> Vector2i:
+	var arr: Array = _level_config.get("prefill_positions", [])
+	if arr.is_empty():
+		return Vector2i(-1, -1)
+	var p: Variant = arr[0]
+	if p is Array and (p as Array).size() >= 2:
+		return Vector2i(int((p as Array)[0]), int((p as Array)[1]))
+	return Vector2i(-1, -1)
+
+
+func _prefill_hints() -> void:
+	var positions: Array = _level_config.get("prefill_positions", [])
+	var pre_cat_positions: Array = []
+
+	var hide_cell: Vector2i = Vector2i(-1, -1)
+	if _pre_cat_fx != null and _pre_cat_fx.wants_cat_hidden():
+		hide_cell = _pre_cat_fx.cat_cell()
+	for position: Array in positions:
+		var row: int = int(position[0])
+		var column: int = int(position[1])
+		var show_cat: bool = not (row == hide_cell.x and column == hide_cell.y)
+
+		_board_view.set_cell_state(
+			row, column, CellState.CAT, false, show_cat, BoardView.ChangeSource.PREFILL
+		)
+		pre_cat_positions.append([row, column])
+
+	_pre_cat_positions_at_start = JSON.stringify(pre_cat_positions)
+	_record_prefill_solution_step(positions)
+
+
+func _record_prefill_solution_step(positions: Array) -> void:
+	if positions.is_empty() or _stat_status == Tracker.GameStatus.CONTINUE:
+		return
+	var cells: Array = []
+	for pos in positions:
+		cells.append(_step_cell(int(pos[0]), int(pos[1]), Tracker.StepResult.CORRECT))
+	Tracker.record_solution_step(Tracker.StepAction.PREFILL_SIGN, cells)
 
 
 # ================= 盘面复原与草稿回滚 =================
@@ -2222,7 +3925,6 @@ func _restore_partial_board() -> void:
 	_restore_partial_board_from(_level_config.get("restore_state", {}))
 
 
-## 按类别复原：猫 / 叉 / 错误叉 / 锁定叉
 func _restore_partial_board_from(data: Dictionary) -> void:
 	if data.is_empty():
 		return
@@ -2235,7 +3937,6 @@ func _restore_partial_board_from(data: Dictionary) -> void:
 			int(pos[0]), int(pos[1]), CellState.MARK, false, true, BoardView.ChangeSource.RESTORE
 		)
 
-	# 错误格：先补叉再打错误标记
 	for pos in data.get("errors", []):
 		var r: int = int(pos[0])
 		var c: int = int(pos[1])
@@ -2244,16 +3945,199 @@ func _restore_partial_board_from(data: Dictionary) -> void:
 		)
 		_board_view.mark_cell_error(r, c, BoardView.ChangeSource.RESTORE)
 
-	# 锁定叉只有开了 LOCK_X 玩法才补锁定状态
-	var lock_x_on: bool = int(_gameplay_policy.get("auto_mark_variant", 0)) == GameAutoMarkConfig.VALUE_LOCK_X
-	for pos in data.get("locked_marks", []):
-		var lr: int = int(pos[0])
-		var lc: int = int(pos[1])
-		_board_view.set_cell_state(
-			lr, lc, CellState.MARK, false, true, BoardView.ChangeSource.RESTORE
+
+var _cc_pattern_btn: Button = null
+
+var _cc_toast: CanvasLayer = null
+
+
+func _ensure_color_challenge_toast() -> CanvasLayer:
+	if _cc_toast != null and is_instance_valid(_cc_toast):
+		return _cc_toast
+	var scene: PackedScene = load(_CC_TOAST_SCENE_PATH) as PackedScene
+	if scene == null:
+		push_error("[ColorChallenge] 横幅场景加载失败: %s" % _CC_TOAST_SCENE_PATH)
+		return null
+	var toast: CanvasLayer = scene.instantiate() as CanvasLayer
+	if toast == null:
+		push_error("[ColorChallenge] 横幅根节点不是 CanvasLayer")
+		return null
+	var host: Node = get_node_or_null("Root")
+	if host == null:
+		push_error("[ColorChallenge] Root 未找到,横幅无法挂载")
+		return null
+	host.add_child(toast)
+	_cc_toast = toast
+	return _cc_toast
+
+
+func _refresh_color_challenge_pattern_btn() -> void:
+	var want: bool = LevelKind.is_color_challenge(_level_kind)
+	if not want:
+		_stop_cc_pattern_btn_entry_fade()
+		if _cc_pattern_btn != null and is_instance_valid(_cc_pattern_btn):
+			_cc_pattern_btn.queue_free()
+		_cc_pattern_btn = null
+		return
+	if _cc_pattern_btn == null or not is_instance_valid(_cc_pattern_btn):
+		var host: Node = find_node_by_name("FunctionArea")
+		if host == null:
+			push_error("[ColorChallenge] FunctionArea 未找到,色盲快捷开关无法挂载")
+			return
+		var btn: Button = _CC_PATTERN_BTN_SCENE.instantiate() as Button
+		if btn == null:
+			return
+		btn.name = "ColorChallengePatternBtn"
+		btn.toggled.connect(_on_cc_pattern_btn_toggled)
+
+		btn.modulate.a = 0.0
+		host.add_child(btn)
+		bind_press_release_scale(btn)
+
+		UIManager._attach_product_button_guard(btn)
+		_cc_pattern_btn = btn
+
+	_cc_pattern_btn.set_pressed_no_signal(_page_state().is_pattern_mode_on())
+	_align_cc_pattern_btn_to_board()
+	_start_cc_pattern_btn_entry_fade()
+
+
+func _start_cc_pattern_btn_entry_fade() -> void:
+	if _cc_pattern_btn == null or not is_instance_valid(_cc_pattern_btn):
+		return
+
+	_cc_pattern_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	if not RenderingServer.frame_pre_draw.is_connected(_sync_cc_pattern_btn_alpha):
+		RenderingServer.frame_pre_draw.connect(_sync_cc_pattern_btn_alpha)
+
+
+func _sync_cc_pattern_btn_alpha() -> void:
+	if _cc_pattern_btn == null or not is_instance_valid(_cc_pattern_btn):
+		_stop_cc_pattern_btn_entry_fade()
+		return
+	var ref: CanvasItem = get_node_or_null(_CC_PATTERN_BTN_FADE_REF) as CanvasItem
+	if ref == null:
+		_stop_cc_pattern_btn_entry_fade()
+		return
+	_cc_pattern_btn.modulate.a = ref.modulate.a
+	if ref.modulate.a >= 1.0 and not _entry_anim_playing:
+		_stop_cc_pattern_btn_entry_fade()
+
+
+func _stop_cc_pattern_btn_entry_fade() -> void:
+	if RenderingServer.frame_pre_draw.is_connected(_sync_cc_pattern_btn_alpha):
+		RenderingServer.frame_pre_draw.disconnect(_sync_cc_pattern_btn_alpha)
+	if _cc_pattern_btn != null and is_instance_valid(_cc_pattern_btn):
+		_cc_pattern_btn.modulate.a = 1.0
+		_cc_pattern_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+
+
+const _CC_PATTERN_BTN_FADE_REF: NodePath = ^"Root/VBoxContainer/ToolsRow/BottomTools/HintCtrl/HintBtn"
+
+
+func _apply_pattern_mode() -> void:
+	super._apply_pattern_mode()
+	if _cc_pattern_btn != null and is_instance_valid(_cc_pattern_btn):
+		_cc_pattern_btn.set_pressed_no_signal(_page_state().is_pattern_mode_on())
+
+
+func _align_cc_pattern_btn_to_board() -> void:
+	if _cc_pattern_btn == null or not is_instance_valid(_cc_pattern_btn):
+		return
+	if _board_view == null:
+		return
+	var visible_w: float = (
+		BoardView.intrinsic_size_for(int(_level_config.get("size", 0))).x * _board_view.scale.x
+	)
+	var board_right: float = _board_view.position.x + visible_w
+	_cc_pattern_btn.position.x = board_right - _cc_pattern_btn.size.x
+
+
+func _on_cc_pattern_btn_toggled(new_value: bool) -> void:
+	GameState.set_pattern_mode_on(new_value)
+	_apply_pattern_mode()
+	VibrateManager.play_at(VibrateManager.Pos.BLIND_MOD_BTN)
+
+	Tracker.track_btn_click(
+		Tracker.Btn.PATTERN_MODE_ON if new_value else Tracker.Btn.PATTERN_MODE_OFF, self
+	)
+	print("[ColorChallenge] 局内色盲开关 → %s" % ("开" if new_value else "关"))
+
+
+func _current_color_challenge_hues() -> Array:
+	var delivery_index: int = _resolve_cc_delivery_index()
+	var group: int = ABTestManager.color_challenge_func.group_value()
+	if ColorChallengeGate.is_dual_color(group):
+		return ColorChallengePalette.dual_hues(delivery_index)
+	return [ColorChallengePalette.single_hue(delivery_index)]
+
+
+func _hint_color_name_override(color: Color) -> String:
+	if not LevelKind.is_color_challenge(_level_kind):
+		return ""
+	var key: StringName = ColorChallengePalette.nearest_color_name_key(
+		color, _current_color_challenge_hues()
+	)
+	return tr(key)
+
+
+func _resolve_cc_delivery_index() -> int:
+	var raw: int = int(_level_config.get("_cc_delivery_index", -1))
+	if raw >= 0:
+		return raw
+	push_error(
+		(
+			"[ColorChallenge] _cc_delivery_index 缺失(kind=%d lv=%s) —— entry → _level_config 的透传断了,配色会退化成恒红"
+			% [_level_kind, str(_level_config.get("level", "?"))]
 		)
-		if lock_x_on:
-			_board_view.lock_mark(lr, lc, "StatusLock", false, BoardView.ChangeSource.RESTORE)
+	)
+	return 0
+
+
+func _apply_color_challenge_palette(sz: int, color_map: Array[int]) -> void:
+	if not LevelKind.is_color_challenge(_level_kind):
+		_board_view.clear_palette_override()
+		return
+	var group: int = ABTestManager.color_challenge_func.group_value()
+	var hues: Array = _current_color_challenge_hues()
+	var delivery_index: int = _resolve_cc_delivery_index()
+	var groups_of_region: Array = []
+	var slot_colors: PackedColorArray = PackedColorArray()
+	var gradient_used: bool = false
+	if delivery_index <= 0:
+		var gradient: Dictionary = ColorChallengePalette.build_first_level_gradient(
+			_puzzle["regions"], sz, hues
+		)
+		if not gradient.is_empty():
+			color_map.assign(gradient["color_map"])
+			slot_colors = gradient["colors"]
+			gradient_used = true
+	if not gradient_used:
+		if ColorChallengeGate.is_dual_color(group):
+			groups_of_region = ColorChallengePalette.split_regions_into_two(_puzzle["regions"], sz)
+		slot_colors = ColorChallengePalette.build_slot_colors(color_map, groups_of_region, hues)
+	if slot_colors.is_empty():
+		push_error(
+			"[ColorChallenge] palette empty, fallback to default (sz=%d group=%d)" % [sz, group]
+		)
+		_board_view.clear_palette_override()
+		return
+	_board_view.set_palette_override(slot_colors)
+	if not OS.has_feature("rel"):
+		print(
+			(
+				"[ColorChallenge] 配色: 交付序号=%d 分组=%d 色系=%s 槽位数=%d%s%s"
+				% [
+					delivery_index,
+					group,
+					str(hues),
+					slot_colors.size(),
+					" 首关对角渐变(左下→右上,深→浅)" if gradient_used else "",
+					(" 双色二分=%s" % str(groups_of_region)) if not groups_of_region.is_empty() else ""
+				]
+			)
+		)
 
 
 ## 颜色映射：优先用题目自带色表，否则按区域和种子现算
@@ -2274,77 +4158,346 @@ func _compute_color_map_for_current(sz: int) -> Array[int]:
 	return color_map
 
 
-## 草稿死锁回滚：重摆棋盘，并复原进草稿前的正式标记
-func _rollback_draft_deadlock() -> void:
-	if _board_view == null:
-		return
-	var sz: int = _level_config.get("size", 0)
-	if sz <= 0:
-		return
-	var _pat_regions_rb: Array = _level_config.get("patternRegions", [])
-	if not _board_view.setup(
-		sz, _puzzle["regions"], _compute_color_map_for_current(sz), _pat_regions_rb, true
-	):
-		_block_round_entry()
-		_report_business_failure(OperationResult.failure("board_setup_failed"))
-		return
-	_prefill_hints()
-	_restore_partial_board_from(_draft_deadlock_real_marks)
-	_seed_like_hand_first_cat_from_board()
-	_board_view.visible = true
-	_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
-	_update_remaining()
+const _ELO_DEBUG_RANKS: Array = [3, 4, 5]
+const _ELO_DEBUG_TOOLS_ROW_HEIGHT: float = 200.0
+const _ELO_DEBUG_PANEL_HEIGHT: float = 120.0
+const _ELO_DEBUG_PANEL_WIDTH: float = 220.0
+const _ELO_DEBUG_FONT_SIZE: int = 26
+const _ELO_DEBUG_ROLL_SEC: float = 0.5
+const _ELO_DEBUG_DELTA_HOLD_SEC: float = 1.2
+const _ELO_DEBUG_COLOR_ACTIVE: Color = Color(0.95, 0.25, 0.2, 1.0)
+const _ELO_DEBUG_COLOR_IDLE: Color = Color(0.5, 0.5, 0.5, 1.0)
+const _ELO_DEBUG_COLOR_DELTA: Color = Color(1.0, 0.85, 0.2, 1.0)
+var _elo_debug_overlay: CanvasLayer = null
+var _elo_debug_labels: Dictionary = {}
+var _elo_debug_delta_labels: Dictionary = {}
+var _elo_debug_shown_values: Dictionary = {}
 
 
-# ================= 调试命令与快照组装 =================
-## 调试命令分发（由 CheatBus 触发，仅调试包）
 func _on_cheat_command(cmd_name: String, args: Array[String]) -> void:
 	match cmd_name:
 		"win":
 			_cmd_win(args)
-		"draft_win":
-			_cmd_draft_win(args)
+		"gf_fx":
+			_cmd_gf_fx(args)
 		"level":
 			_cmd_level(args)
 		"lives":
 			_cmd_lives(args)
-		"lifeplus":
-			_cmd_lifeplus(args)
+		"elo_debug":
+			_cmd_elo_debug(args)
 		"dumpjson":
 			_cmd_dumpjson(args)
+		"score":
+			_cmd_score(args)
+		"time":
+			_cmd_time(args)
+		"thumb_reset":
+			_cmd_thumb_reset()
+		"thumb_r4":
+			_cmd_thumb_r4()
+		"draft":
+			_cmd_draft()
+		"draft_win":
+			_cmd_draft_win()
+		"test_err_page":
+			_cmd_test_err_page()
 
 
-## cheat：播一次加命特效（参数 0 表示不带引导动画）
-func _cmd_lifeplus(args: Array[String]) -> void:
-	var first: bool = args.is_empty() or args[0] != "0"
-	_play_life_plus_fx(first)
+func _cmd_test_err_page() -> void:
+	push_error("[fold-test] error B from game_page.gd")
 
 
-## cheat：直接按答案自动完成本局
+func _cmd_elo_debug(args: Array[String]) -> void:
+	var on: bool = (int(args[0]) if args.size() > 0 else 1) != 0
+	if not on:
+		if is_instance_valid(_elo_debug_overlay):
+			_elo_debug_overlay.visible = false
+		return
+	_ensure_elo_debug_panel()
+	_elo_debug_overlay.visible = true
+	_refresh_elo_debug_panel()
+
+
+func _ensure_elo_debug_panel() -> void:
+	if is_instance_valid(_elo_debug_overlay):
+		return
+	_elo_debug_overlay = CanvasLayer.new()
+	_elo_debug_overlay.layer = 15
+	_elo_debug_overlay.visible = false
+	get_tree().current_scene.add_child(_elo_debug_overlay)
+
+	var panel := VBoxContainer.new()
+	panel.name = "EloDebugPanel"
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.alignment = BoxContainer.ALIGNMENT_CENTER
+
+	panel.anchor_left = 0.0
+	panel.anchor_right = 0.0
+	panel.anchor_top = 1.0
+	panel.anchor_bottom = 1.0
+	panel.offset_left = 16.0
+	panel.offset_right = 16.0 + _ELO_DEBUG_PANEL_WIDTH
+	panel.offset_top = -(_ELO_DEBUG_TOOLS_ROW_HEIGHT + _ELO_DEBUG_PANEL_HEIGHT)
+	panel.offset_bottom = -_ELO_DEBUG_TOOLS_ROW_HEIGHT
+	_elo_debug_overlay.add_child(panel)
+
+	var font: FontVariation = load("res://products/meowdoku/assets/fonts/Roboto-bold.tres")
+	for r: int in _ELO_DEBUG_RANKS:
+		var row := HBoxContainer.new()
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+		var rating_label := Label.new()
+		rating_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		rating_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rating_label.add_theme_font_override("font", font)
+		rating_label.add_theme_font_size_override("font_size", _ELO_DEBUG_FONT_SIZE)
+		rating_label.add_theme_color_override("font_color", _ELO_DEBUG_COLOR_IDLE)
+		row.add_child(rating_label)
+		_elo_debug_labels[r] = rating_label
+
+		var delta_label := Label.new()
+		delta_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		delta_label.add_theme_font_override("font", font)
+		delta_label.add_theme_font_size_override("font_size", _ELO_DEBUG_FONT_SIZE)
+		delta_label.add_theme_color_override("font_color", _ELO_DEBUG_COLOR_DELTA)
+		delta_label.visible = false
+		row.add_child(delta_label)
+		_elo_debug_delta_labels[r] = delta_label
+
+		panel.add_child(row)
+	if not GameState.elo_rating_committed.is_connected(_on_elo_debug_rating_committed):
+		GameState.elo_rating_committed.connect(_on_elo_debug_rating_committed)
+
+
+func _refresh_elo_debug_panel() -> void:
+	var active_rank: int = _page_state().get_elo_active_rank()
+	for r: int in _ELO_DEBUG_RANKS:
+		var label: Label = _elo_debug_labels.get(r)
+		if label == null:
+			continue
+		var value: float = _page_state().get_elo_rating(r)
+		_elo_debug_shown_values[r] = value
+		label.text = "R%d ELO: %.1f" % [r, value]
+		label.add_theme_color_override(
+			"font_color", _ELO_DEBUG_COLOR_ACTIVE if r == active_rank else _ELO_DEBUG_COLOR_IDLE
+		)
+		var delta_label: Label = _elo_debug_delta_labels.get(r)
+		if delta_label != null:
+			delta_label.visible = false
+
+
+func _on_elo_debug_rating_committed(rank: int, new_value: float) -> void:
+	if not is_instance_valid(_elo_debug_overlay):
+		return
+	var rating_label: Label = _elo_debug_labels.get(rank)
+	var delta_label: Label = _elo_debug_delta_labels.get(rank)
+	if rating_label == null or delta_label == null:
+		return
+	var old_value: float = _elo_debug_shown_values.get(rank, new_value)
+	var delta: float = new_value - old_value
+	delta_label.text = "%+.1f" % delta
+	delta_label.visible = true
+	var tw: Tween = _tween_elo_rating_label(rating_label, old_value, new_value, rank)
+	_elo_debug_shown_values[rank] = new_value
+	if tw != null:
+		tw.finished.connect(
+			func() -> void:
+				if is_instance_valid(delta_label):
+					delta_label.visible = false
+		)
+	else:
+		get_tree().create_timer(_ELO_DEBUG_DELTA_HOLD_SEC).timeout.connect(
+			func() -> void:
+				if is_instance_valid(delta_label):
+					delta_label.visible = false
+		)
+
+
+const _ELO_DEBUG_TWEEN_META: StringName = &"_elo_debug_tween"
+
+
+func _tween_elo_rating_label(label: Label, from_value: float, to_value: float, rank: int) -> Tween:
+	if label.has_meta(_ELO_DEBUG_TWEEN_META):
+		var old_tw: Tween = label.get_meta(_ELO_DEBUG_TWEEN_META) as Tween
+		if old_tw != null and old_tw.is_valid():
+			old_tw.kill()
+		label.remove_meta(_ELO_DEBUG_TWEEN_META)
+	if is_equal_approx(from_value, to_value):
+		label.text = "R%d ELO: %.1f" % [rank, to_value]
+		return null
+	label.text = "R%d ELO: %.1f" % [rank, from_value]
+	var tw: Tween = label.create_tween()
+	(
+		tw
+		. tween_method(
+			func(v: float) -> void: label.text = "R%d ELO: %.1f" % [rank, v],
+			from_value,
+			to_value,
+			_ELO_DEBUG_ROLL_SEC
+		)
+		. set_ease(Tween.EASE_OUT)
+		. set_trans(Tween.TRANS_QUAD)
+	)
+	label.set_meta(_ELO_DEBUG_TWEEN_META, tw)
+	tw.finished.connect(
+		func() -> void:
+			if is_instance_valid(label) and label.get_meta(_ELO_DEBUG_TWEEN_META, null) == tw:
+				label.remove_meta(_ELO_DEBUG_TWEEN_META)
+	)
+	return tw
+
+
+func _log_cat_rank() -> void:
+	var msg: String = _build_cat_rank_text()
+	if msg.is_empty():
+		return
+	print("[rank_cat]\n" + msg + "\n————————————————————————————————————————")
+
+
+func _build_cat_rank_text() -> String:
+	if _puzzle.is_empty() or not _puzzle.has("solution") or not _puzzle.has("regions"):
+		return ""
+	var sz: int = _level_config.get("size", 0)
+	var regions: Array = _puzzle.get("regions", [])
+	var solution: Array = _puzzle.get("solution", [])
+	if sz <= 0 or regions.is_empty() or solution.is_empty():
+		return ""
+
+	var board: Array = []
+	for r: int in range(sz):
+		var row: Array = []
+		row.resize(sz)
+		row.fill(CellState.EMPTY)
+		board.append(row)
+
+	var fallback_strategy: int = _level_config.get("rank", 1)
+	var tier: String = _level_config.get("bank_tier", "N")
+	if tier == "H":
+		if fallback_strategy == 4:
+			fallback_strategy = 5
+		elif fallback_strategy == 5:
+			fallback_strategy = 7
+	else:
+		if fallback_strategy == 5:
+			fallback_strategy = 6
+	var ranks: Dictionary = HintEngine.compute_cell_ranks(
+		board, sz, regions, solution, fallback_strategy
+	)
+
+	var labels: Dictionary = {1: "R1", 2: "R2", 3: "R3", 4: "R4", 5: "R4H", 6: "R5", 7: "R5H"}
+	var counts: Dictionary = {}
+	for cell: Vector2i in ranks:
+		var code: int = int(ranks[cell])
+		counts[code] = counts.get(code, 0) + 1
+	var lines: Array[String] = []
+	lines.append(
+		(
+			"Lv%d (rank=%d tier=%s size=%d)"
+			% [_level_config.get("level", 0), _level_config.get("rank", 0), tier, sz]
+		)
+	)
+	lines.append("── 各 R 级猫数量 ──")
+	var total: int = 0
+	for code: int in [1, 2, 3, 4, 5, 6, 7]:
+		if counts.has(code):
+			var c: int = counts[code]
+			total += c
+			lines.append("%-4s : %d 只" % [labels[code], c])
+	lines.append("合计 : %d 只" % total)
+
+	lines.append("── 预填猫 ──")
+	if _pre_cat_position.x >= 0 and ranks.has(_pre_cat_position):
+		var pcode: int = int(ranks[_pre_cat_position])
+		lines.append(
+			(
+				"位置(%d,%d) 难度 %s (pre_type=%s)"
+				% [_pre_cat_position.x, _pre_cat_position.y, labels.get(pcode, "R?"), _pre_type]
+			)
+		)
+	else:
+		lines.append("无 (pre_type=%s)" % _pre_type)
+	return "\n".join(lines)
+
+
+func _cmd_thumb_reset() -> void:
+	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"] - 60.0
+	_like_hand_state["triggered_count"] = 0
+	_like_hand_state["has_seen_first_cat"] = true
+	Toast.popup("LIKE 计时已重置(间隔 60s / 次数 0)", self)
+
+
+func _cmd_thumb_r4() -> void:
+	if _r4_plus_cells.is_empty():
+		Toast.popup("当前无 R4+ 解格", self)
+		return
+	var coords: PackedStringArray = []
+	for cell: Vector2i in _r4_plus_cells:
+		coords.append("(%d,%d)" % [cell.x, cell.y])
+	var msg: String = "R4+ 解格 %d 个: %s" % [coords.size(), ", ".join(coords)]
+	print("[Cheat] " + msg)
+	Toast.popup(msg, self)
+
+
+func _cmd_score(args: Array[String]) -> void:
+	var val: int = int(args[0]) if not args.is_empty() else 8888
+	val = maxi(0, val)
+	_score_model.score = val
+	Toast.popup("当前分数已设为 %d" % val, self)
+
+
+func _cmd_time(args: Array[String]) -> void:
+	var sec: float = float(args[0]) if not args.is_empty() else 90.0
+	sec = maxf(0.0, sec)
+	_like_hand_state["in_game_sec"] = sec
+	Toast.popup("当前时间已设为 %.1fs" % sec, self)
+
+
 func _cmd_win(_args: Array[String]) -> void:
-	if not _is_round_entry_ready() or _entry_anim_playing or _is_complete or _settlement_pending or _wrong_guess_pending or _auto_completing:
+	if not _is_round_entry_ready() or _settlement_pending or _entry_anim_playing or _is_complete or _wrong_guess_pending or _auto_completing:
 		return
 	if _puzzle.is_empty() or not _puzzle.has("solution"):
 		return
-	_start_auto_complete()
+	_auto_completing = true
+	_auto_complete_token += 1
+	var token: int = _auto_complete_token
+	_reset_idle_hint()
+	UIMask.acquire()
+	_auto_complete_mask_owned = true
+	# 演出自己在正常完成时释放资源；销毁由展示所有权清理，不保留跨销毁父子 await。
+	_run_auto_complete(token)
 
 
-## cheat：把答案写进草稿再一次性提交（验证草稿流程）
-func _cmd_draft_win(_args: Array[String]) -> void:
-	if _is_complete:
+func _cmd_gf_fx(_args: Array[String]) -> void:
+	if (
+		_entry_anim_playing
+		or _is_complete
+		or _wrong_guess_pending
+		or _auto_completing
+		or _puzzle.is_empty()
+		or not _puzzle.has("solution")
+	):
+		print("[Cheat] gf_fx:此刻不能自动通关(入场动画中 / 本局已结束 / 正在自动完成),稍后再点")
 		return
-	if not _draft_mode:
-		_enter_draft_mode()
-	var sz: int = _level_config.get("size", 0)
-	var sol: Array = _puzzle.get("solution", [])
-	for r: int in range(sz):
-		for c: int in range(sz):
-			if not bool(sol[r][c]):
-				continue
-			if _board_view.get_cell_state(r, c) == CellState.CAT:
-				continue
-			_set_cell_draft(r, c, CellState.DRAFT_CAT)
-	_apply_draft_commit()
+	_cmd_win([])
+	await GameState.level_settled
+
+	await get_tree().process_frame
+	GameState.cheat_force_golden_fish_pending()
+	var next_lv: int = GameState.get_current_level()
+	var tip: String = ""
+	if not ABTestManager.golden_fish_func.is_enabled():
+		tip = "但 golden_fish_func=0(对照组)→ 压根不出一命关。先去「AB测」页把它切成 1"
+	elif next_lv < GoldenFishGate.INSERT_MODE_MIN_LEVEL:
+		tip = (
+			"但第 %d 关 < %d 关下限 → 插入式不生效(通关一次还会被清掉)。先 `level %d`"
+			% [next_lv, GoldenFishGate.INSERT_MODE_MIN_LEVEL, GoldenFishGate.INSERT_MODE_MIN_LEVEL]
+		)
+	else:
+		tip = "下一关(第 %d 关)就是插入式一命关,进去看完动效再点一次本命令即可循环" % next_lv
+	print("[Cheat] gf_fx:已自动通关 + 置 pending。%s" % tip)
+	if not RankActivityManager.is_joined():
+		print("[Cheat] gf_fx ⚠️ 排名活动未参与 —— 通关动效挂在排名飞入链上,不参与不会播。先去第 1 页点 `rank_open` 并参与")
 
 
 ## cheat：预留的跳关命令，目前不做事
@@ -2390,19 +4543,21 @@ func _build_puzzle_base() -> Dictionary:
 	}
 
 
-## 组装残局快照：题面 + 盘面各类格子 + 统计与历史
-func _build_endgame_snapshot() -> Dictionary:
+func _build_endgame_snapshot(override: Dictionary = {}) -> Dictionary:
 	var base: Dictionary = _build_puzzle_base()
 	var sz: int = int(base["size"])
 	var board: Array = _board_view.get_board()
+	var cells_override: Dictionary = _snapshot_cell_overrides(override.get("cells", {}))
 	var placed_cats: Array = []
 	var marks: Array = []
 	var errors: Array = []
-	var locked_marks: Array = []
-	# 扫全盘，按格子状态归类
 	for r: int in range(sz):
 		for c: int in range(sz):
 			var st: int = board[r][c]
+
+			var cell_key := Vector2i(r, c)
+			if cells_override.has(cell_key):
+				st = int(cells_override[cell_key])
 			match st:
 				CellState.CAT:
 					placed_cats.append([r, c])
@@ -2410,235 +4565,206 @@ func _build_endgame_snapshot() -> Dictionary:
 					marks.append([r, c])
 				CellState.ERROR:
 					errors.append([r, c])
-				CellState.LOCKED_MARK:
-					locked_marks.append([r, c])
 
-	# 快照带版本号，读档时按版本校验
-	var snapshot: Dictionary = {"version": GameState.ENDGAME_SNAPSHOT_VERSION, "content_release": _round_content_release, "policy_snapshot": _round_policy.duplicate(true), "gameplay_policy_snapshot": _gameplay_policy_snapshot()}
+	var snapshot: Dictionary = {"version": GameState.ENDGAME_SNAPSHOT_VERSION}
 	snapshot.merge(base)
-	snapshot["business_round_id"] = _business_session.round_id() if _business_session != null else _business_restored_id
-	snapshot["business_attempt_sequence"] = _business_attempt_sequence
-	snapshot["content_provenance"] = _round_content_provenance.duplicate(true)
-	snapshot["level_definition"] = _level_config.get("level_definition", {}).duplicate(true)
 
 	snapshot["level"] = int(_level_config.get("level", 0))
+
+	snapshot["last_action_local_date"] = GameState.current_local_date()
 	snapshot["bank_source"] = _level_config.get("bank_source", "")
 	snapshot["bank_source_main"] = _level_config.get("bank_source_main", "")
 	snapshot["bank_tier"] = _level_config.get("bank_tier", "")
 	snapshot["prefill_positions"] = _level_config.get("prefill_positions", [])
-	snapshot["lives"] = _lives
+
+	var is_elo_delivery: bool = bool(_level_config.get("is_elo_delivery", false))
+	snapshot["is_elo_delivery"] = is_elo_delivery
+	snapshot["eloRating"] = _level_config.get("eloRating", -1.0) if is_elo_delivery else -1.0
+	snapshot["_elo_e"] = _level_config.get("_elo_e", -1.0) if is_elo_delivery else -1.0
+	snapshot["_elo_k"] = _level_config.get("_elo_k", -1.0) if is_elo_delivery else -1.0
+	snapshot["_elo_player_rating"] = (
+		_level_config.get("_elo_player_rating", -1.0) if is_elo_delivery else -1.0
+	)
+	snapshot["_puzzle_id"] = _level_config.get("_puzzle_id", "")
+	snapshot["style_vector"] = _level_config.get("style_vector", {}).duplicate(true)
+
+	snapshot["spRegion"] = _level_config.get("spRegion", [])
+
+	snapshot["kind"] = _level_kind
+
+	snapshot["cc_delivery_index"] = int(_level_config.get("_cc_delivery_index", 0))
+
+	snapshot["diffi"] = _get_diffi()
+	snapshot["pre_type"] = _pre_type
+
+	snapshot["lives"] = int(override.get("lives", _lives))
 	snapshot["placed_cats"] = placed_cats
 	snapshot["marks"] = marks
 	snapshot["errors"] = errors
+	snapshot["score"] = int(override.get("score", _score_model.score))
+	snapshot["combo"] = int(override.get("combo", _score_model.combo))
+	snapshot["max_combo"] = int(override.get("max_combo", _score_model.max_combo))
+	snapshot["se_count"] = int(override.get("se_count", _se_count))
 
-	snapshot["locked_marks"] = locked_marks
+	snapshot["se_last_step"] = int(override.get("se_last_step", _se_last_step))
 
-	snapshot["draft_marks"] = _serialize_draft_marks()
+	snapshot["se_enabled"] = true
 
-	snapshot["step_history"] = _step_history.serialize()
-	snapshot["highlight_cursor"] = _highlight_cursor
-	snapshot["combo_count"] = _combo_count
-	snapshot["combo_score"] = _combo_score
+	snapshot["cat_streak"] = _cat_streak
+	snapshot["cross_at_first_cat"] = _cross_at_first_cat
 	snapshot["restart_count"] = _restart_count
 	snapshot["revive_count"] = _revive_count
 
-	snapshot["life_plus_used"] = _life_plus_used_this_game
+	snapshot["in_game_sec"] = float(_like_hand_state.get("in_game_sec", 0.0))
+
+	snapshot["continue_play_sec"] = _continue_play_sec
+	snapshot["continue_clock_started"] = _continue_clock_started
+
+	snapshot["operable_sec"] = _operable_sec
+	snapshot["cat_toast"] = _cat_toast_tracker.export_state()
+
+	snapshot["near_death_fired"] = _near_death_fired
+	snapshot["near_death_level_key"] = _near_death_level_key
+
+	snapshot["near_death_blocked"] = _near_death_blocked
+
+	snapshot["wrong_zone"] = _wrong_zone_tracker.export_state()
+
+	snapshot["cat_progress_rotate_start"] = _cat_progress_rotate_start
+
+	snapshot["like_hand_triggered_count"] = int(_like_hand_state.get("triggered_count", 0))
+
+	snapshot["missed_cross_triggered_cats"] = (
+		_like_hand_state.get("missed_cross_triggered_cats", {}).keys()
+	)
+
+	snapshot["manually_x_marked_cells"] = _like_hand_state.get("manually_x_marked_cells", {}).keys()
+	snapshot["business_round_id"] = _business_session.round_id() if _business_session != null else _business_restored_id
+	snapshot["business_attempt_sequence"] = _business_attempt_sequence
+	snapshot["gameplay_policy_snapshot"] = _gameplay_policy_snapshot()
+	snapshot["selection_policy"] = _level_config.get("selection_policy", _entry_selection_plan.get("selection_policy", {})).duplicate(true)
+	snapshot["content_release"] = _round_content_release
+	snapshot["content_provenance"] = _round_content_provenance.duplicate(true)
+	snapshot["policy_snapshot"] = _round_policy.duplicate(true)
+	snapshot["level_definition"] = _level_config.get("level_definition", {}).duplicate(true)
+	snapshot["life_cap"] = _life_cap
+	snapshot["lives_inf"] = _lives_inf
 	return snapshot
-
-
-# ================= 存档落盘与引导开关 =================
-## 自动叉已经预置到棋盘（动画还没播）就先落一次档
-func _on_auto_mark_preset_done() -> void:
-	if _endgame_persist_timer == null:
-		return
-	if not _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
-		return
-	_endgame_persist_timer.stop()
-	_flush_endgame_snapshot()
-
-
-## 草稿改动落盘：只有 AUTO_WIN_PERSIST 变体需要
-func _on_draft_changed_for_persist(immediate: bool = false) -> void:
-	if _get_draft_variant() != DraftModeConfig.VALUE_AUTO_WIN_PERSIST:
-		return
-	if not _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
-		return
-	if immediate:
-		_endgame_persist_timer.stop()
-		_flush_endgame_snapshot()
-	else:
-		_endgame_persist_timer.start(ENDGAME_PERSIST_DEBOUNCE_SEC)
-
-
-## 残局复原后，把快照里的草稿标记补回棋盘
-func _try_restore_draft_marks_from_snapshot() -> void:
-	if _get_draft_variant() != DraftModeConfig.VALUE_AUTO_WIN_PERSIST:
-		return
-
-	if not _is_endgame_restore_session:
-		return
-	var snapshot: Dictionary = GameState.get_endgame_snapshot()
-	if snapshot.is_empty():
-		return
-	var data: Array = snapshot.get("draft_marks", []) as Array
-	if data.is_empty():
-		return
-	_restore_draft_marks_from_snapshot(data)
-
-
-## 是否该弹草稿功能新手引导（第 21 关起、没弹过才弹）
-func _should_show_draft_onboarding_now() -> bool:
-	return (
-		_level_config.get("level", 0) >= 21
-		and _is_draft_unlocked()
-		and not GameState.has_shown_draft_onboarding()
-	)
-
-
-## 入场动画后弹草稿引导；任何一步不满足都要把棋盘解锁
-func _try_show_draft_onboarding_after_appear() -> void:
-	var generation: int = _business_generation
-	await _wait_start_toast_hidden_if_any()
-	if not _is_current_business_generation(generation):
-		return
-
-	if _entry_anim_playing:
-		return
-
-	if not visible or _is_complete or _wrong_guess_pending:
-		_unlock_board_after_onboarding_skipped()
-		return
-	if GameState.has_shown_draft_onboarding():
-		_unlock_board_after_onboarding_skipped()
-		return
-	var tooltip: DraftOnboardingTooltip = _show_draft_onboarding()
-	if tooltip == null:
-		_unlock_board_after_onboarding_skipped()
-		return
-
-	tooltip.tree_exited.connect(func() -> void:
-		if _is_current_business_generation(generation):
-			_unlock_board_after_onboarding_skipped()
-	)
 
 
 ## 等到当前开场提示条自己收起
 func _wait_start_toast_hidden_if_any() -> void:
 	var active: BaseGameToast = _active_toast
-	while is_instance_valid(active) and active.visible:
-		await active.visibility_changed
+	var generation: int = _business_generation
+	while _is_current_entry(generation) and is_instance_valid(active) and active.visible:
+		await get_tree().process_frame
 
 
-## 锁入口按钮（序号 +1，供解锁回调判断时效）
+
 func _lock_entry_buttons() -> void:
 	_entry_btn_lock_seq += 1
-	for b in _entry_locked_buttons:
-		if is_instance_valid(b):
-			b.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_back_setting_header.lock_buttons()
+	_tool_btns_locked = true
 
 
-## 解锁入口按钮
 func _unlock_entry_buttons() -> void:
-	for b in _entry_locked_buttons:
-		if is_instance_valid(b):
-			b.mouse_filter = Control.MOUSE_FILTER_STOP
+	_back_setting_header.unlock_buttons()
+	_tool_btns_locked = false
 
 
 ## 提示条收起后解锁入口按钮（序号变了就不再解锁）
 func _unlock_entry_buttons_after_toast(seq: int) -> void:
 	var generation: int = _business_generation
 	await _wait_start_toast_hidden_if_any()
-	if seq != _entry_btn_lock_seq or not _is_current_business_generation(generation):
+	if seq != _entry_btn_lock_seq or not _is_current_entry(generation):
 		return
 	_unlock_entry_buttons()
 
 
-## 没弹引导时把棋盘输入还回来
-func _unlock_board_after_onboarding_skipped() -> void:
-	if _board_view != null and is_instance_valid(_board_view):
-		_board_view.mouse_filter = Control.MOUSE_FILTER_STOP
-
-
-## 草稿引导浮层的场景
-const _DRAFT_ONBOARDING_TOOLTIP_SCENE: PackedScene = preload(
-	"res://products/meowdoku/gameplay/presentation/main/ui/draft_onboarding_tooltip.tscn"
-)
-
-
-## 实例化草稿引导并对齐到草稿按钮
-func _show_draft_onboarding() -> DraftOnboardingTooltip:
-	if _draft_btn == null:
-		return null
-	var tooltip: DraftOnboardingTooltip = (
-		_DRAFT_ONBOARDING_TOOLTIP_SCENE.instantiate() as DraftOnboardingTooltip
-	)
-
-	get_tree().root.add_child(tooltip)
-
-	var btn_xform: Transform2D = _draft_btn.get_global_transform()
-	var visual_tl: Vector2 = btn_xform * Vector2.ZERO
-	var visual_br: Vector2 = btn_xform * _draft_btn.size
-	var visual_rect: Rect2 = Rect2(visual_tl, visual_br - visual_tl)
-	tooltip.show_at(visual_rect)
-
-	tooltip.hit_draft_btn.connect(_on_draft_btn_pressed, CONNECT_ONE_SHOT)
-	return tooltip
-
-
 ## 格子变更 → 残局快照：关键状态立刻写，其余延迟 0.5 秒写
 func _persist_endgame_snapshot(_r: int, _c: int, state: int, _source: int = 0) -> void:
+	if not _is_round_entry_ready() or _settlement_pending:
+		return
 	_endgame_retry_count = 0
 	if state == CellState.CAT or state == CellState.ERROR:
 		_endgame_persist_timer.stop()
 
-		_flush_endgame_for_generation.call_deferred(_business_generation)
+		call_deferred("_flush_endgame_for_generation", _business_generation)
 	else:
 		_endgame_persist_timer.start(ENDGAME_PERSIST_DEBOUNCE_SEC)
 
 
-func _flush_endgame_for_generation(generation: int) -> void:
-	if generation == _business_generation:
-		_flush_endgame_snapshot()
-
-
-## 真正写档：GameState.set_endgame_snapshot
 func _flush_endgame_snapshot() -> void:
-	if _entry_preparing or not _entry_error.is_empty():
+	if _is_complete or not _entry_ready or _settlement_pending:
 		return
-	if _is_complete or int(_level_config.get("level", 0)) < GameState.get_current_level():
+	var generation: int = _business_generation
+	var result: Dictionary = _execute_business_action("sync", {}, {}, {}, _endgame_closing)
+	_accept_checkpoint_write(result, generation)
+
+
+func _accept_checkpoint_write(result: Dictionary, generation: int) -> void:
+	if generation != _business_generation:
 		return
-	if GameState.set_endgame_snapshot(_build_endgame_snapshot()):
+	if result.get("ok", false):
 		_endgame_save_failed = false
 		_endgame_retry_count = 0
 		return
+	if result.get("error") in ["entry_not_ready", "action_in_flight", "stale_presentation"]:
+		return
 	if not _endgame_save_failed:
-		_report_business_failure({"error": "checkpoint_save_failed"})
+		_report_business_failure(result)
 	_endgame_save_failed = true
-	# 保留活棋盘，有限重试时重新捕获最新状态；不把旧快照排队覆盖后续动作。
-	if not _endgame_closing and _endgame_retry_count < ENDGAME_RETRY_LIMIT:
+	# 重试重新捕获活棋盘，绝不排队重写失败时的旧盘面。
+	if not _endgame_closing and _is_current_entry(generation) and _endgame_retry_count < ENDGAME_RETRY_LIMIT:
 		_endgame_retry_count += 1
 		_endgame_persist_timer.start(float(_endgame_retry_count))
 
 
-# ================= 题库翻页 =================
-## 上一题（先退草稿再翻页）
+func save_endgame_snapshot(override: Dictionary = {}) -> void:
+	if _is_complete or not _is_round_entry_ready() or _settlement_pending:
+		return
+	var generation: int = _business_generation
+	var runtime: Dictionary = _business_runtime()
+	var cells: Dictionary = _snapshot_cell_overrides(override.get("cells", {}))
+	for pos: Vector2i in cells:
+		if pos.x >= 0 and pos.x < runtime.board.size() and pos.y >= 0 and pos.y < runtime.board[pos.x].size():
+			runtime.board[pos.x][pos.y] = int(cells[pos])
+	if override.has("lives"):
+		runtime.lives = int(override.lives)
+	for key: String in ["score", "combo", "max_combo", "se_count", "se_last_step"]:
+		if override.has(key):
+			runtime.performance[key] = int(override[key])
+	var result: Dictionary = _execute_business_action("sync", {}, {}, runtime)
+	_accept_checkpoint_write(result, generation)
+
+
+func _save_endgame_for_pending_wrong_guess(r: int, c: int) -> void:
+	if not _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
+		return
+
+	var override: Dictionary = {
+		"cells": {Vector2i(r, c): CellState.ERROR},
+		"lives": _lives,
+		"combo": 0,
+		"se_count": 0,
+	}
+
+	if _endgame_persist_timer != null:
+		_endgame_persist_timer.stop()
+	save_endgame_snapshot(override)
+
+
 func _on_prev_btn_pressed() -> void:
-	_exit_draft_mode_and_clear()
 	_nav_to(_nav_index - 1)
 
 
-## 下一题
 func _on_next_btn_pressed() -> void:
-	_exit_draft_mode_and_clear()
 	_nav_to(_nav_index + 1)
 
 
-## 题库翻页：按题库来源取目标题，重新走 GAME 入口
 func _nav_to(new_index: int) -> void:
-	# 不可翻页
 	if _nav_total <= 0:
 		return
-	# 环形取模，题号从 1 开始
 	var idx: int = ((new_index - 1) % _nav_total + _nav_total) % _nav_total + 1
 
 	var bp: Dictionary = _level_config.get("bank_params", {})
@@ -2646,14 +4772,12 @@ func _nav_to(new_index: int) -> void:
 		UIManager.show_ui(UiName.GAME, {"level_index": idx})
 		return
 
-	# 判断题库属于哪条线，取对应的题表
 	var is_lk: bool = bp.get("bank_lk", false)
 	var is_lk_style: bool = bp.get("bank_lk_style", false)
 	var is_sp: bool = bp.get("bank_sp", false)
 	var sz: int = bp.get("bank_size", 7)
 	var rank: int = bp.get("bank_rank", 1)
 
-	var is_tier_h: bool = bp.get("bank_tier_h", false)
 	var bank_tier: String = bp.get("bank_tier", "")
 	var is_gc: bool = bp.get("bank_gc", false)
 	var levels: Array
@@ -2678,20 +4802,17 @@ func _nav_to(new_index: int) -> void:
 		else:
 			levels = BankData.get_levels(sz, rank)
 
-	# 目标题不存在就不跳
 	if levels.is_empty() or idx - 1 >= levels.size():
 		return
 
-	# 复制入口参数，替换题面与种子
 	var entry: Dictionary = levels[idx - 1]
 	var new_params: Dictionary = bp.duplicate()
 	new_params["bank_index"] = idx
-	new_params["prebuilt_regions"] = entry.get("regionMap", [])
-	new_params["prebuilt_solution"] = entry.get("solution", [])
+	new_params["prebuilt_regions"] = BankData.get_region_map(entry)
+	new_params["prebuilt_solution"] = BankData.get_solution(entry)
 
-	# 混合尺寸题库允许省略 size，不能沿用上一题尺寸或固定默认值。
 	if is_sp:
-		new_params["bank_size"] = entry.regionMap.size()
+		new_params["bank_size"] = BankData.get_region_map(entry).size()
 		new_params["bank_rank"] = int(entry.get("r", 1))
 		new_params["level_seed"] = entry.get("id", 0)
 		new_params["custom_color_map"] = entry.get("colorMap", [])
@@ -2701,8 +4822,8 @@ func _nav_to(new_index: int) -> void:
 		new_params["r4_steps"] = entry.get("r4", 0)
 		new_params["r5_steps"] = entry.get("r5", 0)
 	elif is_lk:
-		new_params["bank_size"] = entry.regionMap.size()
-		new_params["bank_rank"] = entry.get("maxR", 1)
+		new_params["bank_size"] = BankData.get_region_map(entry).size()
+		new_params["bank_rank"] = int(entry.get("maxR", 1))
 		new_params["level_seed"] = entry.get("id", 0)
 	else:
 		new_params["level_seed"] = entry.get("seed", 0)
@@ -2715,29 +4836,40 @@ func _nav_to(new_index: int) -> void:
 	UIManager.show_ui(UiName.GAME, new_params)
 
 
-# ================= 埋点与上报 =================
-## 埋点用的页面名
 func get_scr_name() -> String:
+	if LevelKind.is_golden_fish(_level_kind):
+		return Tracker.Scr.GOLDEN_FISH_GAME
+	if LevelKind.is_color_challenge(_level_kind):
+		return Tracker.Scr.COLOR_CHALLENGE_GAME
 	return Tracker.Scr.NORMAL_GAME
 
 
-## 组装对局结束上报参数（时长、道具、步数、失误等一揽子统计）
+func _tracker_game_type() -> String:
+	if LevelKind.is_golden_fish(_level_kind):
+		return Tracker.GameType.GOLDEN_FISH
+	if LevelKind.is_color_challenge(_level_kind):
+		return Tracker.GameType.COLOR_CHALLENGE
+	return Tracker.GameType.NORMAL
+
+
 func _build_game_end_params(result: String) -> Dictionary:
-	var end_ms: int = _terminal_started_ms if _terminal_started_ms > 0 else Time.get_ticks_msec()
-	var time_sec: int = (end_ms - _stat_start_ms) / 1000 # 组装参数只读；成功发布时才累计。
+	var time_sec: int = _current_round_time_sec()
 
 	var sz: int = _level_config.get("size", 0)
 	var cat_n: int = _board_view.count_cat_cells()
-	return {
+	var params: Dictionary = {
 		"qid": _build_qid(),
 		"qrotate": Tracker.transform_to_qrotate(_level_config.get("bank_transform", 0)),
 		"result": result,
-		"game_type": Tracker.GameType.NORMAL,
-		"game_id": GameState.get_persisted_game_id(Tracker.GameType.NORMAL),
+		"game_type": _tracker_game_type(),
+		"game_id": GameState.get_persisted_game_id(_game_type()),
 		"diffi": _get_diffi(),
 		"level": _level_config.get("level", 0),
 		"strategy_layer": _level_config.get("rank", 0),
 		"scale": sz,
+		"pre_type": _pre_type,
+		"pre_cat_positions": _pre_cat_positions_at_start,
+		"rating": _level_config.get("rating", 0.0),
 		"hint": GameState.get_tool_count("hint"),
 		"locate": GameState.get_tool_count("locate"),
 		"hint_used": Tracker.get_stat("hint_used"),
@@ -2746,6 +4878,10 @@ func _build_game_end_params(result: String) -> Dictionary:
 		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "hint_used_total"),
 		"locate_used_total":
 		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "locate_used_total"),
+		"mouse": GameState.get_tool_count(ToolKind.MOUSE),
+		"mouse_used": Tracker.get_stat("mouse_used"),
+		"mouse_used_total":
+		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "mouse_used_total"),
 		"hint_apply_used": Tracker.get_stat("hint_apply_used"),
 		"hint_stop_used": Tracker.get_stat("hint_stop_used"),
 		"hint_detail_used": Tracker.get_stat("hint_detail_used"),
@@ -2760,14 +4896,23 @@ func _build_game_end_params(result: String) -> Dictionary:
 		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "draft_error_total"),
 		"draft_correct_total":
 		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "draft_correct_total"),
+		"draft_apply_used_total":
+		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "draft_apply_used_total"),
+		"draft_stop_used_total":
+		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "draft_stop_used_total"),
 		"coord_count": Tracker.get_stat("coord_count"),
 		"step_used": Tracker.get_stat("step_used"),
 		"step_total": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "step_total"),
+		"cat_click_num": Tracker.get_stat("cat_click_num"),
 		"gamedie_count": Tracker.get_stat("gamedie_count"),
 		"restart_count": Tracker.get_stat("restart_count"),
 		"time": time_sec,
-		"time_total": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "time_total"),
+		"game_time_sec": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "time_total") + time_sec,
+		"normal_pass_time": _normal_pass_time_context(),
 		"cross_count": _board_view.count_mark_cells(),
+		"correct_cross_count": _count_correct_crosses(),
+		"false_cross_count": _count_false_crosses(),
+		"hint_cross_count": Tracker.get_stat("hint_cross_count"),
 		"invalid_sign": _board_view.count_error_cells(),
 		"invalid_sign_total":
 		GameState.get_game_total_stat(Tracker.GameType.NORMAL, "invalid_sign_total"),
@@ -2776,35 +4921,523 @@ func _build_game_end_params(result: String) -> Dictionary:
 		"revive_count": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "revive_count"),
 		"rv_count": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "rv_count"),
 		"hp_count": _lives,
+		"se_score": _score_model.score,
+		"is_tap_cat_at_last": _last_cat_at_last_flag(),
+	}
+	print(
+		(
+			"[GamePage] game_end cross: correct=%d false=%d hint=%d | cross_count=%d invalid_sign=%d"
+			% [
+				params["correct_cross_count"],
+				params["false_cross_count"],
+				params["hint_cross_count"],
+				params["cross_count"],
+				params["invalid_sign"]
+			]
+		)
+	)
+	print(
+		(
+			"[GamePage] game_end step: step_used=%d step_total=%d | locate_used=%d hint_apply_used=%d"
+			% [
+				params["step_used"],
+				params["step_total"],
+				params["locate_used"],
+				params["hint_apply_used"]
+			]
+		)
+	)
+	print(
+		(
+			"[GamePage] game_end last_cat: is_tap_cat_at_last=%d | streak=%d/%d cross@1st=%d/阈%d"
+			% [
+				params["is_tap_cat_at_last"],
+				_cat_streak,
+				sz,
+				_cross_at_first_cat,
+				LastCatJudge.cross_threshold(sz)
+			]
+		)
+	)
+	params.merge(_build_rec_extra())
+	params.merge(_build_elo_end_extra(result))
+	params.merge(_companion_game_end_fields(result == Tracker.GameResult.WIN))
+	return params
+
+
+func _build_elo_start_extra() -> Dictionary:
+	if not bool(_level_config.get("is_elo_delivery", false)):
+		return {"eloRating": -1.0, "eValue": -1.0, "kValue": -1.0, "playerRating": -1.0}
+	return {
+		"eloRating": float(_level_config.get("eloRating", -1.0)),
+		"eValue": float(_level_config.get("_elo_e", -1.0)),
+		"kValue": float(_level_config.get("_elo_k", -1.0)),
+		"playerRating": float(_level_config.get("_elo_player_rating", -1.0)),
 	}
 
 
-## 保持原残局 AB 的开关；用例端口将可恢复的主线快照与消费一起提交。
+func _build_elo_end_extra(result: String) -> Dictionary:
+	var extra: Dictionary = _build_elo_start_extra()
+	if not bool(_level_config.get("is_elo_delivery", false)) or result != Tracker.GameResult.WIN:
+		extra["sValue"] = -1.0
+		extra["playerRatingNew"] = -1.0
+		return extra
+	var rank: int = int(_level_config.get("rank", 0))
+	var puzzle_rating: float = float(_level_config.get("eloRating", 0.0))
+	var player_rating: float = GameState.get_elo_rating(rank)
+	var k_factor: float = float(
+		_level_config.get("_elo_k", EloRatingMath.k_for_games(GameState.get_elo_games(rank)))
+	)
+	var expected_score: float = EloRatingMath.e_from_ratings(puzzle_rating, player_rating)
+	var performance_score: float = EloRatingMath.s_from_fish(
+		GameState.get_elo_fish_consumed(), GameState.is_dda_tool_or_revive_used()
+	)
+	if ABTestManager.normal_level.is_elo_v2_active():
+		_capture_elo_v2_win_facts()
+		var facts: Dictionary = GameState.get_elo_v2_attempt()
+		performance_score = (
+			LevelSelector.elo_v2_performance_score(facts) if _has_current_elo_v2_attempt() else -1.0
+		)
+		if performance_score < 0.0:
+			extra["sValue"] = -1.0
+			extra["playerRatingNew"] = -1.0
+			return extra
+		k_factor = EloV2Performance.k_for_games(GameState.get_elo_games(rank))
+	extra["sValue"] = performance_score
+	extra["playerRatingNew"] = EloRatingMath.new_player_rating(
+		player_rating, k_factor, performance_score, expected_score
+	)
+	return extra
+
+
+func _has_valid_elo_v2_rating(data: Dictionary) -> bool:
+	var rating_value: Variant = data.get("eloRating", null)
+	return (rating_value is float or rating_value is int) and is_finite(float(rating_value))
+
+
+func _begin_elo_v2_attempt_for_entry(formal_entry: bool) -> void:
+	_elo_v2_formal_main = (
+		formal_entry and _level_kind == LevelKind.MAIN and int(_level_config.get("level", 0)) > 0
+	)
+	if not _elo_v2_formal_main or not ABTestManager.normal_level.is_elo_v2_active():
+		return
+	var size: int = int(_level_config.get("size", 0))
+	var puzzle_id: String = str(_level_config.get("_puzzle_id", ""))
+	if puzzle_id.is_empty():
+		var regions: Array = _puzzle.get("regions", [])
+		if regions.is_empty() or size <= 0:
+			return
+		puzzle_id = LevelData.compute_puzzle_id(size, regions)
+		_level_config["_puzzle_id"] = puzzle_id
+	var vector: Dictionary = _level_config.get("style_vector", {}).duplicate(true)
+	vector["style_size"] = size
+	_level_config["style_vector"] = vector
+	var level: int = int(_level_config.get("level", 0))
+	var rank: int = int(_level_config.get("rank", 0))
+	var rating_value: Variant = _level_config.get("eloRating", null)
+	var has_rating: bool = rating_value is float or rating_value is int
+	var puzzle_rating: float = float(rating_value) if has_rating else -1.0
+	has_rating = has_rating and is_finite(puzzle_rating)
+	if not has_rating:
+		puzzle_rating = -1.0
+	var eligible: bool = (
+		level >= 21
+		and rank in [3, 4, 5]
+		and not _is_super_hard_level
+		and bool(_level_config.get("is_elo_delivery", false))
+		and has_rating
+	)
+	var previous: Dictionary = _page_state().get_elo_v2_attempt()
+	_page_state().begin_elo_v2_attempt(level, puzzle_id, rank, puzzle_rating, vector, eligible)
+	if eligible:
+		var player_rating: float = _page_state().get_elo_rating(rank)
+		_level_config["_elo_player_rating"] = player_rating
+		_level_config["_elo_e"] = EloRatingMath.e_from_ratings(puzzle_rating, player_rating)
+		_level_config["_elo_k"] = EloV2Performance.k_for_games(_page_state().get_elo_games(rank))
+		if previous.is_empty() and _stat_status != Tracker.GameStatus.NEW:
+			var round_stats: Dictionary = _page_state().get_game_round_stats(Tracker.GameType.NORMAL)
+			var restarts: int = int(round_stats.get("restart_count", 0))
+			if _stat_status == Tracker.GameStatus.RESTART:
+				restarts = maxi(0, restarts - 1)
+			_page_state().merge_elo_v2_resume_facts(
+				restarts,
+				_page_state().is_dda_tool_or_revive_used(),
+				_page_state().get_elo_fish_consumed(),
+				int(round_stats.get("gamedie_count", 0))
+			)
+	if _stat_status == Tracker.GameStatus.RESTART:
+		_record_elo_v2_action("restart")
+
+
+func _has_current_elo_v2_attempt() -> bool:
+	if not _elo_v2_formal_main or not ABTestManager.normal_level.is_elo_v2_active():
+		return false
+	if _level_kind != LevelKind.MAIN:
+		return false
+	var facts: Dictionary = _page_state().get_elo_v2_attempt()
+	return (
+		int(facts.get("level", 0)) == int(_level_config.get("level", 0))
+		and str(facts.get("puzzle_id", "")) == str(_level_config.get("_puzzle_id", ""))
+	)
+
+
+func _record_elo_v2_action(action: String) -> void:
+	if _has_current_elo_v2_attempt():
+		_page_state().record_elo_v2_action(action)
+
+
+func _capture_elo_v2_win_facts() -> void:
+	if _has_current_elo_v2_attempt():
+		GameState.set_elo_v2_win_facts(
+			GameState.get_game_total_stat(Tracker.GameType.NORMAL, "time_total"), is_full_hp_win()
+		)
+
+
+func _capture_elo_v2_completed_snapshot_facts(snapshot: Dictionary) -> void:
+	if (
+		not ABTestManager.normal_level.is_elo_v2_active()
+		or int(snapshot.get("kind", LevelKind.default_kind())) != LevelKind.MAIN
+	):
+		return
+	var level: int = int(snapshot.get("level", 0))
+	var size: int = int(snapshot.get("size", 0))
+	var rank: int = int(snapshot.get("r", 0))
+	var vector: Dictionary = snapshot.get("style_vector", {}).duplicate(true)
+	vector["style_size"] = size
+	var puzzle_id: String = str(snapshot.get("_puzzle_id", ""))
+	if puzzle_id.is_empty():
+		puzzle_id = LevelData.compute_puzzle_id(size, snapshot["regionMap"])
+	var previous: Dictionary = _page_state().get_elo_v2_attempt()
+	var rating_value: Variant = snapshot.get("eloRating", null)
+	var has_rating: bool = rating_value is float or rating_value is int
+	var puzzle_rating: float = float(rating_value) if has_rating else -1.0
+	has_rating = has_rating and is_finite(puzzle_rating)
+	if not has_rating:
+		puzzle_rating = -1.0
+	var eligible: bool = (
+		level >= 21
+		and rank in [3, 4, 5]
+		and int(snapshot.get("diffi", 0)) != 2
+		and bool(snapshot.get("is_elo_delivery", false))
+		and has_rating
+	)
+	_page_state().begin_elo_v2_attempt(level, puzzle_id, rank, puzzle_rating, vector, eligible)
+	if eligible:
+		if previous.is_empty():
+			var round_stats: Dictionary = _page_state().get_game_round_stats(Tracker.GameType.NORMAL)
+			_page_state().merge_elo_v2_resume_facts(
+				int(round_stats.get("restart_count", 0)),
+				_page_state().is_dda_tool_or_revive_used(),
+				_page_state().get_elo_fish_consumed(),
+				int(round_stats.get("gamedie_count", 0))
+			)
+	_page_state().set_elo_v2_win_facts(-1, int(snapshot.get("lives", 0)) == _life_cap)
+
+
+func _record_rec_history(end_params: Dictionary, progress_state: String = "") -> void:
+	var pre_cat_positions: Array = _level_config.get("prefill_positions", [])
+	var record: Dictionary = LevelOps._extract_rec_history(
+		end_params, progress_state, pre_cat_positions
+	)
+	if record.is_empty():
+		return
+	LevelRecManager.record_level_history(record)
+
+
+func _on_golden_fish_skipped() -> void:
+	RankActivityManager.notify_level_fail_abandon()
+	if _last_fail_end_params.is_empty():
+		return
+	_record_rec_history(_last_fail_end_params, LevelOps.RecProgress.SKIP)
+
+
+func _build_rec_extra() -> Dictionary:
+	var d: Dictionary = {}
+	var rec_qid: String = str(_level_config.get("_rec_qid", ""))
+	if rec_qid.is_empty():
+		return d
+	d["decision_id"] = str(_level_config.get("_rec_decision_id", ""))
+	d["user_id"] = RecApi._user_id()
+
+	d["ts"] = int(Time.get_unix_time_from_system())
+	d["slot_index"] = int(_level_config.get("_rec_slot_index", -1))
+	d["served_qid"] = rec_qid
+	d["rhythm_state"] = str(_level_config.get("_rec_rhythm_state", ""))
+	d["selection_status"] = str(_level_config.get("_rec_selection_status", ""))
+	d["fallback_reason"] = str(_level_config.get("_rec_fallback_reason", ""))
+	d["intended_optimal_qid"] = str(_level_config.get("_rec_intended_optimal_qid", ""))
+
+	d["is_explore"] = 1 if bool(_level_config.get("_rec_is_explore", false)) else 0
+	return d
+
+
+const _TOP_GAP_FLOOR: float = 0.0
+
+const _AD_GAP_SQUEEZED: float = 13.0
+
+
+func _apply_top_gap_for_short_screen() -> void:
+	var vbox: Control = get_node_or_null(^"Root/VBoxContainer") as Control
+	if vbox == null:
+		return
+	var cat_holder: Control = vbox.get_node_or_null(^"CatAdaptHolder") as Control
+	var ad_holder: Control = vbox.get_node_or_null(^"AdAdaptHolder") as Control
+	if cat_holder == null or ad_holder == null:
+		return
+
+	var base_min_h: float = vbox.get_combined_minimum_size().y
+	var raised_min_h: float = (
+		base_min_h + maxf(0.0, _TOP_GAP_FLOOR - cat_holder.custom_minimum_size.y)
+	)
+	cat_holder.custom_minimum_size.y = maxf(cat_holder.custom_minimum_size.y, _TOP_GAP_FLOOR)
+	var parent: Control = vbox.get_parent() as Control
+	if parent == null:
+		return
+
+	var avail_h: float = (
+		parent.size.y * (vbox.anchor_bottom - vbox.anchor_top)
+		+ vbox.offset_bottom
+		- vbox.offset_top
+	)
+
+	if avail_h <= 0.0:
+		avail_h = get_viewport_rect().size.y
+	if raised_min_h <= avail_h:
+		return
+	ad_holder.custom_minimum_size.y = minf(ad_holder.custom_minimum_size.y, _AD_GAP_SQUEEZED)
+
+func _reenter_prepared(params: Dictionary) -> void:
+	params = params.duplicate(true)
+	params["_entry_candidate"] = _entry_state
+	on_show(params)
+
 func _business_checkpoint() -> Dictionary:
 	if not bool(_gameplay_policy.get("normal_endgame_save", true)) or int(_level_config.get("level", 0)) <= 0:
 		return {}
 	return _build_endgame_snapshot()
 
+func _flush_endgame_for_generation(generation: int) -> void:
+	if _is_current_entry(generation):
+		_flush_endgame_snapshot()
 
-func _settle_current_main_or_preview(attempt_id: String, outcome: String, retry_params: Dictionary = {}) -> Dictionary:
-	var level: int = int(_level_config.get("level", 0))
-	return GameState.settle_main_round(attempt_id, level, outcome, _business_runtime(), retry_params) if level > 0 else GameState.settle_preview_round(attempt_id, outcome, _business_runtime())
+func _finish_game_win(transition: Dictionary) -> void:
+	var attempt_id: String = _business_settlement_id()
+	if attempt_id.is_empty() or not _is_current_round_transition(transition):
+		return
+	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.WIN)
+	var settled: Dictionary = _settle_current_main_or_preview(attempt_id, "win")
+	_publish_round_end(settled, end_params)
+	if not _is_current_round_transition(transition):
+		return
+	if not settled.get("ok", false):
+		_retry_round_transition(transition, settled, _on_game_win)
+		return
+	_accept_win_bonus(settled)
+	_level_config.merge(settled.get("presentation", {}), true)
+	# 杀端前已经落下最后一只猫的快照：统一结算所有1.22事实后直接进入新关，
+	# 保留框架既有恢复语义，不重播上一局尚未开始的奖励演出。
+	if _is_endgame_restore_session:
+		_is_complete = true
+		on_show({"level_index": GameState.get_current_level(), "_tracker_status": Tracker.GameStatus.NEW, "from_direct_open": _is_direct_open_session})
+		return
+	PowerSaver.wake(_WIN_REPLAY_FULL_FPS_SEC)
+	_reset_game_barrage_session_state()
+	_is_complete = true
+
+	_exit_draft_mode_and_clear()
+	_clock_timer.stop()
+	_stop_idle_tool_hint()
+	_destroy_banner()
+
+	_dye_game_win_end()
+
+	var _win_end_params: Dictionary = end_params.duplicate(true)
+
+	if LevelKind.is_golden_fish(_level_kind):
+		_record_rec_history(_win_end_params, LevelOps.RecProgress.FINISH)
+	else:
+		_record_rec_history(_win_end_params)
+	var lv: int = _level_config.get("level", 0)
+	var this_session_rank: int = int(_level_config.get("rank", 0))
+	var this_session_diffi: int = _get_diffi()
+	var rank_win_committed_early: bool = false
+
+	if _mouse_completion_pending:
+		if _rank_collector != null and is_instance_valid(_rank_collector):
+			_rank_collector.set_win_reveal_deferred(true)
+		_commit_rank_win()
+		rank_win_committed_early = true
+	if not await _await_mouse_completion_anim_if_needed():
+		return
+
+	SoundManager.stop(SoundManager.Kind.MARK_CAT)
+
+	PowerSaver.wake(_WIN_REPLAY_FULL_FPS_SEC)
+	_board_view.replay_all_cat_appear(ABTestManager.found_cat_animation.win_replay_anim_name())
+
+	if not rank_win_committed_early:
+		_commit_rank_win()
+	elif _rank_collector != null and is_instance_valid(_rank_collector):
+		_rank_collector.set_win_reveal_deferred(false)
+	VibrateManager.play_at(VibrateManager.Pos.GAME_WIN)
+	_cleanup_hint()
+	await get_tree().process_frame
+	if not _is_current_round_transition(transition):
+		return
+
+	if _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
+		_board_view.cell_state_changed.disconnect(_persist_endgame_snapshot)
+	if _endgame_persist_timer != null:
+		_endgame_persist_timer.stop()
 
 
-func _board_from_saved_marks(saved: Dictionary) -> Array:
-	var size: int = int(_level_config.get("size", 0))
-	var board: Array = []
-	for row in size:
-		var line: Array = []
-		line.resize(size)
-		line.fill(CellState.EMPTY)
-		board.append(line)
-	var fields: Dictionary = {"placed_cats": CellState.CAT, "marks": CellState.MARK, "errors": CellState.ERROR, "locked_marks": CellState.LOCKED_MARK}
-	for field: String in fields:
-		for position: Array in saved.get(field, []):
-			board[int(position[0])][int(position[1])] = fields[field]
-	return board
+	await _play_auto_cross_bonus_sequence()
+	if not _is_current_round_transition(transition):
+		return
 
+	await await_se_fly_settled()
+	if not _is_current_round_transition(transition):
+		return
+
+	var flight_shown: bool = await _play_rank_collect_flight()
+	if not _is_current_round_transition(transition):
+		return
+
+	if flight_shown:
+		await _wait_business_delay(0.0667, int(transition.generation))
+		if not _is_current_round_transition(transition):
+			return
+
+	_level_config["restart_count"] = _restart_count
+	_level_config["revive_count"] = _revive_count
+	_level_config["mistake_count"] = _mistake_count
+	_level_config["final_score"] = _score_model.score
+	_level_config["max_combo"] = _score_model.max_combo
+
+	_level_config["elapsed_sec"] = _like_hand_state.get("in_game_sec", 0.0)
+
+	var _pp_size: int = int(_level_config.get("size", 0))
+	var _pp_total: int = maxi(_pp_size * _pp_size, 1)
+	var _pp_empty: int = _board_view.count_empty_cells() if _board_view != null else 0
+	_level_config["completion_rate"] = int(
+		round((1.0 - float(_pp_empty) / float(_pp_total)) * 100.0)
+	)
+	_level_config["tools_used"] = (
+		int(Tracker.get_stat("hint_used")) + int(Tracker.get_stat("locate_used"))
+	)
+
+
+	var toast_was_shown: bool = await _play_win_toast_and_wait()
+	if not _is_current_round_transition(transition):
+		return
+	_level_config["toast_was_shown"] = toast_was_shown
+
+	var rank_flow_shown: bool = await _try_run_rank_flow_after_win(toast_was_shown or flight_shown)
+	if not _is_current_round_transition(transition):
+		return
+
+	_finish_rank_win_presentation(true)
+
+	var streak_consumed_appear_delay: bool = false
+	if not ABTestManager.daily_streak.is_settle_reorder():
+		streak_consumed_appear_delay = await _try_run_streak_flow_after_win(
+			&"main", toast_was_shown or rank_flow_shown or flight_shown
+		)
+		if not _is_current_round_transition(transition):
+			return
+	_level_config["skip_appear_delay"] = (
+		streak_consumed_appear_delay or rank_flow_shown or flight_shown
+	)
+	if (
+		not toast_was_shown
+		and not streak_consumed_appear_delay
+		and not rank_flow_shown
+		and not flight_shown
+	):
+		await _wait_business_delay(GameWinPage.APPEAR_DELAY, int(transition.generation))
+		if not _is_current_round_transition(transition):
+			return
+
+	_level_config["lives"] = _lives
+
+	_level_config["diffi"] = this_session_diffi if lv > 0 else 0
+	UIManager.show_ui(_win_ui_name(), {"level_config": _level_config, "board_view": _board_view})
+
+func _finish_game_fail(transition: Dictionary) -> void:
+	var attempt_id: String = _business_settlement_id()
+	if attempt_id.is_empty() or not _is_current_round_transition(transition):
+		return
+	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.FAIL)
+	var settled: Dictionary = _settle_current_main_or_preview(attempt_id, "fail", _build_failed_retry_params())
+	_publish_round_end(settled, end_params)
+	if not _is_current_round_transition(transition):
+		return
+	if not settled.get("ok", false):
+		_retry_round_transition(transition, settled, _on_game_fail)
+		return
+	_is_complete = true
+
+	_reset_game_barrage_session_state()
+
+	_exit_draft_mode_and_clear()
+	_clock_timer.stop()
+
+	pause_like_hand_clock()
+	_stop_idle_tool_hint()
+	_destroy_banner()
+
+
+	ABTestManager.dye_at_game_fail_end()
+
+	var _fail_end_params: Dictionary = _build_game_end_params(Tracker.GameResult.FAIL)
+
+	_last_fail_end_params = _fail_end_params
+
+	_board_view.play_cat_cry_loop_all()
+	VibrateManager.play_at(VibrateManager.Pos.GAME_FAIL)
+	var lv: int = _level_config.get("level", 0)
+
+	var retry_params: Dictionary = {}
+	if lv > 0:
+		retry_params = GameState.get_retry_puzzle(lv).duplicate(true)
+	else:
+		var bp: Dictionary = _level_config.get("bank_params", {})
+		if not bp.is_empty():
+			retry_params = bp.duplicate()
+		else:
+			retry_params = {"level_index": 1}
+
+	var _sz: int = _level_config.get("size", 4)
+	var _placed: int = 0
+
+	for _r in range(_sz):
+		for _c in range(_sz):
+			if _board_view.get_cell_state(_r, _c) == CellState.CAT:
+				_placed += 1
+	var remaining_cats: int = _sz - _placed
+	var fail := (
+		UIManager
+		. show_ui(
+			UiName.FAIL,
+			{
+				"level_config": _level_config,
+				"retry_params": retry_params,
+				"remaining_cats": remaining_cats,
+				"cat_progress": build_cat_progress_snapshot(),
+				"gameplay_policy_snapshot": _gameplay_policy_snapshot(),
+				"gameplay_level": int(_level_config.get("level", 0)),
+			}
+		)
+	)
+	if fail != null and not fail.revive_requested.is_connected(_on_revive_requested):
+		fail.revive_requested.connect(_on_revive_requested)
+	if fail != null and not fail.revive_ad_started.is_connected(_on_revive_ad_started):
+		fail.revive_ad_started.connect(_on_revive_ad_started)
+	if fail != null and not fail.golden_fish_skipped.is_connected(_on_golden_fish_skipped):
+		fail.golden_fish_skipped.connect(_on_golden_fish_skipped)
+
+
+## 复活广告开始播放：先把猫恢复成待机动作
 
 func _build_failed_retry_params() -> Dictionary:
 	var lv: int = int(_level_config.get("level", 0))
@@ -2854,4 +5487,115 @@ func _build_failed_retry_params() -> Dictionary:
 		else:
 			retry_params = {"level_index": 1}
 
+	for field: String in ["kind", "selection_policy", "is_elo_delivery", "eloRating", "_elo_e", "_elo_k", "_elo_player_rating", "_puzzle_id", "style_vector", "spRegion", "bank_source", "_cc_delivery_index"]:
+		if _level_config.has(field):
+			retry_params[field] = _level_config[field]
+	retry_params["restore_kind"] = _level_kind
 	return retry_params
+
+func _settle_current_main_or_preview(attempt_id: String, outcome: String, retry_params: Dictionary = {}, extra_context: Dictionary = {}) -> Dictionary:
+	var level: int = int(_level_config.get("level", 0))
+	var context: Dictionary = {
+		"kind": _level_kind, "rank": int(_level_config.get("rank", 0)), "diffi": _get_diffi(),
+		"full_hp": is_full_hp_win(), "win_date": GameState.current_local_date(),
+		"game_id": GameState.get_persisted_game_id(_game_type()),
+		"selection_policy": _level_config.get("selection_policy", {}).duplicate(true),
+		"today_cat_delta": _board_view.count_cat_cells(), "today_mark_delta": today_mark_cell_count(),
+		"pass_text_group": int(_gameplay_policy.get("pass_text", 0)),
+		"rank_collect": RankActivityConfig.map_collect(int(_level_config.get("size", 0)), _lives, LevelKind.is_golden_fish(_level_kind), _lives_inf),
+		"game_time_sec": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "time_total") + _current_round_time_sec(),
+		"elapsed_sec": _current_round_time_sec(), "normal_pass_time": _normal_pass_time_context(),
+	}
+	context.merge(extra_context, true)
+	return GameState.settle_main_round(attempt_id, level, outcome, _win_business_runtime() if outcome == "win" else _business_runtime(), retry_params, context) if level > 0 else GameState.settle_preview_round(attempt_id, outcome, _win_business_runtime() if outcome == "win" else _business_runtime(), context)
+
+func _present_revive() -> void:
+	_stat_start_ms = Time.get_ticks_msec() # 新尝试从恢复交互起计时；失败弹窗与广告不重复入账。
+	UIManager.hide_ui(UiName.FAIL)
+
+
+	_board_view.set_touch_enabled(true)
+	_revive_count += 1
+
+	_block_near_death_for_current_level()
+
+	_refresh_life_bar_display()
+
+	if not LevelKind.is_golden_fish(_level_kind):
+		_life_bar.revive_all()
+
+
+	_like_hand_state["last_cat_sec"] = _like_hand_state["in_game_sec"]
+
+	resume_like_hand_clock()
+
+	_board_view.revive_all_cat_to_idle()
+
+	_rollback_draft_lethal_cells()
+
+	_show_banner_if_eligible("game")
+	_restart_game_barrages_after_continue()
+
+func _normal_pass_time_context() -> Dictionary:
+	if _level_kind != LevelKind.MAIN:
+		return {}
+	var lv: int = int(_level_config.get("level", 0))
+	if lv <= 0 or LevelSelector.is_hard_level(lv) or LevelSelector.is_super_hard_level(lv):
+		return {}
+	var source: String = str(_level_config.get("bank_source_main", ""))
+	if source.is_empty():
+		source = str(_level_config.get("bank_source", ""))
+	if not PassTimeDda.is_normal_level_source(source):
+		return {}
+	return {"level": lv, "size": int(_level_config.get("size", 0)), "rank": int(_level_config.get("rank", 0)), "sec": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "time_total") + _current_round_time_sec()}
+
+func _restart_round(transition: Dictionary) -> void:
+	var attempt_id: String = _business_settlement_id()
+	if attempt_id.is_empty() or not _is_current_round_transition(transition):
+		return
+	var params: Dictionary = _build_failed_retry_params()
+	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.QUIT)
+	var settled: Dictionary = _settle_current_main_or_preview(attempt_id, "quit", params, {"restart": true})
+	_publish_round_end(settled, end_params)
+	if not _is_current_round_transition(transition):
+		return
+	if not settled.get("ok", false):
+		_retry_round_transition(transition, settled, _on_restart_requested)
+		return
+	_reset_game_barrages()
+	_destroy_banner()
+	if _endgame_persist_timer != null:
+		_endgame_persist_timer.stop()
+	params["prefill_positions"] = _prefill_positions_without_pre_cat()
+	params["patternRegions"] = _level_config.get("patternRegions", []).duplicate(true)
+	params["_tracker_status"] = Tracker.GameStatus.RESTART
+	on_show(params)
+
+## Complete entry-time AB assignment before taking the independent selection snapshot.
+func _prepare_entry_dyes(params: Dictionary) -> void:
+	_dye_game_start_normal(_resolve_entry_level(params))
+	var state: Object = params.get("_entry_candidate", GameState)
+	if ColorChallengeGate.is_unlocked(state.get_golden_fish_career_count()):
+		ABTestManager.dye_at_game_start_pass4_goldenfish()
+	var level: int = int(params.get("level_index", params.get("retry_level", 0)))
+	var kind: int = GoldenFishGate.resolve_kind(level, state.get_available_golden_fish_pending(), ABTestManager.golden_fish_func.is_enabled(), ABTestManager.golden_fish_timing.unlock_min_level())
+	if kind == LevelKind.MAIN:
+		kind = ColorChallengeGate.resolve_kind(level, state.get_color_challenge_pending(), ABTestManager.color_challenge_func.group_value())
+	kind = int(params.get("restore_kind", kind))
+	if LevelKind.is_insert_golden_fish(kind):
+		ABTestManager.dye_at_game_start_onefish()
+
+
+## 任何预填、提示分析、配色或布局之前，先用同一个纯规则模块验收完整题面。
+func _prepared_puzzle_error() -> String:
+	var size_value: Variant = _level_config.get("size")
+	if typeof(size_value) != TYPE_INT or int(size_value) < 1 or int(size_value) > 32:
+		return "invalid puzzle size"
+	var board: Array = []
+	for _row: int in int(size_value):
+		var line: Array = []
+		line.resize(int(size_value))
+		line.fill(CellState.EMPTY)
+		board.append(line)
+	var checked: Dictionary = DokuRoundModule.new().create_snapshot({"board": board, "regions": _puzzle.get("regions"), "solution": _puzzle.get("solution")})
+	return "" if checked.get("ok", false) else str(checked.get("detail", "invalid puzzle"))

@@ -1,5 +1,4 @@
-## 关卡 JSON 粘贴页：把一段含 regionMap / solution 的 JSON 直接灌进 GAME 页开局，用来复现线上题目与残局
-## 只在非 rel 的构建里注册（UIRegistry._DEV_PAGES）；由作弊面板的 level_json 命令打开
+## 关卡 JSON 输入页：校验手工输入的题目数据，通过后打开调试关卡。
 extends UIFrameWindow
 
 # ---- 子节点引用 ----
@@ -18,39 +17,34 @@ func _on_close_pressed() -> void:
 	UIManager.hide_ui(UiName.LEVEL_JSON_INPUT)
 
 
-## StartBtn：解析并校验 JSON，通过就带 prebuilt / restore_state 打开 GAME 页
+## 解析并规范化输入数值，再以题库模式传入预建盘面和可选操作状态。
 func _on_start_pressed() -> void:
 	var raw: String = _input.text.strip_edges()
 	if raw.is_empty():
 		_show_error("输入为空")
 		return
 
-	# 只接受单个 JSON object
 	var parsed: Variant = JSON.parse_string(raw)
 	if parsed == null or not parsed is Dictionary:
-		_show_error("JSON 解析失败,请确认格式正确(应为单个 object)") # 数组或 null 都算失败
+		_show_error("JSON 解析失败,请确认格式正确(应为单个 object)")
 		return
 
-	# 走到这里 parsed 一定是 Dictionary，转成带类型的局部变量
 	var entry: Dictionary = parsed
 	var err: String = _validate(entry)
 	if not err.is_empty():
 		_show_error(err)
 		return
 
-	# size 缺省时取 regionMap 行数；r=关卡序号、id=题库下标
 	var sz: int = (
 		int(entry["size"]) if entry.has("size") else int((entry["regionMap"] as Array).size())
 	)
-	var rank: int = int(entry.get("r", 0)) # 难度档 rank，缺省 0
-	var idx: int = int(entry.get("id", 0)) # 题库下标，缺省 0
+	var rank: int = int(entry.get("r", 0))
+	var idx: int = int(entry.get("id", 0))
 
-	# solution 是「每行猫所在列」的一维数组，逐项转 int
 	var sol_1d: Array = []
 	for v in entry["solution"]:
 		sol_1d.append(int(v))
 
-	# regionMap 转成纯 int 的二维数组
 	var int_regions: Array = []
 	for row_arr in entry["regionMap"]:
 		var int_row: Array = []
@@ -58,7 +52,6 @@ func _on_start_pressed() -> void:
 			int_row.append(int(v))
 		int_regions.append(int_row)
 
-	# 可选的初始棋盘状态：已放的猫 / 叉 / 错标，用于复现残局
 	var placed_cats: Array = []
 	for pos in entry.get("placed_cats", []):
 		placed_cats.append([int(pos[0]), int(pos[1])])
@@ -69,16 +62,13 @@ func _on_start_pressed() -> void:
 	for pos in entry.get("errors", []):
 		errors.append([int(pos[0]), int(pos[1])])
 
-	# 打一行日志，方便和线上反馈对照
 	print(
 		(
 			"[level_json] start sz=%d rank=%d id=%d cats=%d marks=%d errors=%d"
 			% [sz, rank, idx, placed_cats.size(), marks.size(), errors.size()]
 		)
 	)
-	# 先关掉本页再开游戏页
 	UIManager.hide_ui(UiName.LEVEL_JSON_INPUT)
-	# bank_mode 加 prebuilt_* 是 GAME 页现成的题库入口，正好复用
 	var params: Dictionary = {
 		"bank_mode": true,
 		"bank_size": sz,
@@ -89,7 +79,6 @@ func _on_start_pressed() -> void:
 		"prebuilt_solution": sol_1d,
 		"level_seed": int(entry.get("seed", idx)),
 	}
-	# 只有提供了棋盘状态才带 restore_state
 	if not placed_cats.is_empty() or not marks.is_empty() or not errors.is_empty():
 		params["restore_state"] = {
 			"placed_cats": placed_cats,
@@ -97,6 +86,8 @@ func _on_start_pressed() -> void:
 			"errors": errors,
 		}
 	UIManager.show_ui(UiName.GAME, params)
+
+	UIManager.hide_ui(UiName.HOME)
 
 
 ## 同时把错误写到界面和 warning 日志

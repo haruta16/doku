@@ -1,0 +1,160 @@
+{
+  "checked_at": "2026-10-23T16:20:53.288915+00:00",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "import",
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--editor",
+        "--path",
+        "/Users/haruta16/workspace/doku",
+        "--import"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "errors": [],
+      "warnings": [],
+      "log": "originals/upgrades/1.22.0/logs/final_import.log",
+      "log_sha256": "f59895567de1806c6c60d687173a18feb0a80bf469cfada907b111849504b9e4"
+    },
+    {
+      "name": "validation",
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/Users/haruta16/workspace/doku",
+        "--script",
+        "res://tools/validate_recovery.gd"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "errors": [],
+      "warnings": [
+        "WARNING: NativeUtilPlugin not available (editor / 非移动端)",
+        "WARNING: ProfileService: frame_form=0 与 wins=0 不匹配(老云存档缺键/脏档)，clamp 到 0",
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details)."
+      ],
+      "log": "originals/upgrades/1.22.0/logs/final_validation.log",
+      "log_sha256": "d3544bd55e132e8330e8d41de0b31b44c336179ec954f77c32d9678d14fc0851"
+    },
+    {
+      "name": "level_roundtrip",
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/Users/haruta16/workspace/doku",
+        "--script",
+        "res://tools/verify_level_bank_roundtrip.gd"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "errors": [],
+      "warnings": [
+        "WARNING: NativeUtilPlugin not available (editor / 非移动端)",
+        "WARNING: ProfileService: frame_form=0 与 wins=0 不匹配(老云存档缺键/脏档)，clamp 到 0",
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details)."
+      ],
+      "log": "originals/upgrades/1.22.0/logs/final_level_roundtrip.log",
+      "log_sha256": "0f54c323db0ea39ebb1f980fc8b807151267f7bc26221908c874e8a5a61e8596"
+    },
+    {
+      "name": "board_teardown",
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/Users/haruta16/workspace/doku",
+        "--script",
+        "res://tools/verify_board_teardown.gd"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "errors": [],
+      "warnings": [
+        "WARNING: NativeUtilPlugin not available (editor / 非移动端)",
+        "WARNING: ProfileService: frame_form=0 与 wins=0 不匹配(老云存档缺键/脏档)，clamp 到 0",
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details)."
+      ],
+      "log": "originals/upgrades/1.22.0/logs/final_board_teardown.log",
+      "log_sha256": "697f926d983119cf2be580331cbe7959dc7677bea0874ff10000c16d085ca20d"
+    },
+    {
+      "name": "inventory",
+      "command": [
+        "python3",
+        "tools/audit_recovery.py",
+        "verify",
+        ".",
+        "docs/recovery/1.22.0/package_manifest.json"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "errors": [],
+      "warnings": [],
+      "log": "originals/upgrades/1.22.0/logs/final_inventory.log",
+      "log_sha256": "501a20be6860353531fefc99dbf63e4e4a9419ec72f062a55df783c34bca345d"
+    },
+    {
+      "name": "comment_regressions",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "errors": [],
+      "warnings": [],
+      "log": "originals/upgrades/1.22.0/logs/final_comment_regressions.log",
+      "log_sha256": "38eeff1237d74275801617a271eced659e08b1cad8069897d18e659ae40641d8"
+    }
+  ],
+  "desktop_acceptance": {
+    "tutorial_and_level_1": "passed",
+    "daily_checkin_and_result_animation": "passed",
+    "settings_and_home": "passed",
+    "cold_restart_and_level_2_resume": "passed",
+    "renderer": "Metal (original project setting)",
+    "clean_exit_code": 0,
+    "errors_or_leaks": [],
+    "warnings": [
+      "WARNING: NativeUtilPlugin not available (editor / 非移动端)",
+      "WARNING: ProfileService: frame_form=0 与 wins=0 不匹配(老云存档缺键/脏档)，clamp 到 0"
+    ],
+    "screenshot": "docs/recovery/1.22.0/screenshots/resume-level-2.jpg",
+    "final_log": "originals/upgrades/1.22.0/logs/desktop_teardown_fixed.log",
+    "final_log_sha256": "cf4c58488aecab4cc763ff4d51118d1faea528e039b89b22ada764a529379b45"
+  },
+  "android_device_test": "not performed: no connected device",
+  "whitespace_check": {
+    "status": "passed for code and documentation",
+    "exception": ".assets/assets/localization/translations.csv retains intentional trailing spaces inside original translation values"
+  },
+  "user_changes_preserved": {
+    "docs/learning/README.md": "391c62629e7eb74da09252163271f1b5c8349ea4fe32b43cfa533bc0252c05df",
+    "docs/learning/07-naming.md": "b4e745a63a069f743febecdd7c20239a5e8ef34df1c899bdd8cbd8e6a3c08065"
+  },
+  "android_export_report": "docs/recovery/1.22.0/android_build_report.json",
+  "android_export": {
+    "apk": "../build/meowdoku-recovered-1.22.0.apk",
+    "sha256": "00e2f43d83b953bd9a0a37302a484892ce2aaeaff184c50c01b1b45a4e72947d",
+    "size": 221772165,
+    "package_name": "com.oakever.meowdoku.recovered",
+    "version_name": "1.22.0",
+    "version_code": 1573,
+    "min_sdk": 24,
+    "target_sdk": 36,
+    "architectures": [
+      "arm64-v8a"
+    ]
+  }
+}

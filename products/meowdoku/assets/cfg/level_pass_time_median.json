@@ -1,0 +1,14 @@
+{
+  "metric": "game_end.time_total(首次胜利)",
+  "default_sec": 117,
+  "sizes": {
+    "4": {"default_sec": 27},
+    "5": {"default_sec": 48},
+    "6": {"default_sec": 53},
+    "7": {"default_sec": 94},
+    "8": {"default_sec": 81, "ranks": {"2": 78, "3": 80, "4": 84}},
+    "9": {"default_sec": 109, "ranks": {"2": 92, "3": 108, "4": 134}},
+    "10": {"default_sec": 129, "ranks": {"1": 111, "2": 104, "3": 126, "4": 156, "5": 181}},
+    "11": {"default_sec": 226, "ranks": {"1": 98, "2": 124, "3": 171, "4": 267, "5": 282}}
+  }
+}

@@ -1,4 +1,4 @@
-## 插屏内存门槛：设备物理内存低于该值就不展示插屏，避免低端机被广告拖垮
+## 实验配置 inter_unlock_memory：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name InterUnlockMemoryConfig
 
@@ -6,17 +6,16 @@ class_name InterUnlockMemoryConfig
 const DEFAULT_UNLOCK_MEMORY_MB: int = 300 # 默认门槛：300MB
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "inter_unlock_memory"
-	default_value = DEFAULT_UNLOCK_MEMORY_MB # 默认档：300MB
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = DEFAULT_UNLOCK_MEMORY_MB
 
 
-## 设备内存是否达标；读不到物理内存时按达标处理（放行）
 func is_unlocked_for_device() -> bool:
 	var physical_bytes: int = int(OS.get_memory_info().get("physical", -1))
 	if physical_bytes <= 0:
 		return true
+	@warning_ignore("integer_division")
 	var ram_mb: int = physical_bytes / (1024 * 1024)
 	return ram_mb >= value()

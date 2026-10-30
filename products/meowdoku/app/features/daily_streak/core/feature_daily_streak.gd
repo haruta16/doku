@@ -1,9 +1,9 @@
-## 连续打卡（每日连胜）的核心逻辑，注册为自动加载单例 StreakManager
-## 负责打卡判定、连续天数累计与断签清零、每 7 天一份宝箱奖励，数据由统一核心存档保存
+## 连续打卡管理器：维护日期历史、断签补签、周期奖励及存档同步，并通知界面刷新。
 extends Node
 
+const SAVE_PATH := "user://streak.cfg" # 存档路径（ConfigFile 格式，只有 [streak] 一段）
 const CYCLE_LENGTH: int = 7 # 奖励周期长度：每满 7 天发一次宝箱
-const CONTINUITY_RETRY_DELAY_MSEC: int = 30_000 # 后台日切失败后冷却；玩家主动打卡不受影响。
+const StreakHistory: GDScript = preload("res://products/meowdoku/app/features/daily_streak/core/streak_history.gd")
 
 # ---- 信号 ----
 signal streak_updated(data: StreakData) # 打卡数据有变化（打卡 / 断签 / 重置 / 领奖），UI 据此重刷
@@ -12,32 +12,37 @@ signal reward_claimed(reward: Dictionary) # 领奖信号（目前没有地方 em
 
 # ---- 运行时状态（_data 会被整份写进存档） ----
 var _data: StreakData = StreakData.new() # 内存里的打卡数据，读写存档都以它为准
+var _stage_candidate: Dictionary = {}
+var _stage_error: Dictionary = {}
+var _feature_saving: bool = false
+var _reset_generation: int = 0
 
-var _reset_generation: int = 0 # 清档回调会撤销尚未发布的签到结果
 var _pending_show_uid: int = -1 # 待展示奖励 uid：-1 无 / 0 只打了卡没奖励 / >0 有奖励待展示
+
+var _revive_anim: Dictionary = {}
 
 var _pending_switch_eligible: bool = false # 本次启动是否允许弹切组说明页；消费后置 false
 
 var _last_seen_jdn: int = 0 # 上次看到的「今天」的儒略日序号，用于跨天检测
-var _next_continuity_retry_msec: int = 0
 
 
-# ================= 生命周期与跨天检测 =================
-## 读存档、补一次断签检查，并挂 1 秒心跳来发现跨天
+## 恢复并修正打卡历史，结清上次未决胜利，再注册云同步和每秒跨日检查。
 func _ready() -> void:
-	_load_data()
+	GameState.feature_state_changed.connect(_on_feature_state_changed)
+	var history_changed: bool = _load_data()
+	var had_pending_win: bool = has_pending_revive_decision()
 
-	# 启动时先看存档里有没有上次留下的切组说明页
+	_resolve_pending_win_checkin()
+	if history_changed and not had_pending_win:
+		_save_data()
+
 	_pending_switch_eligible = _data.pending_switch_page > 0
-	var continuity_saved: bool = _check_continuity()
-	# 账号数据被重置时一起清空打卡数据
-	GameState.all_data_reset.connect(_on_all_data_reset)
-	GameState.get_core_store().committed.connect(_on_core_committed)
 
-	# 挂一个 1 秒轮询的 Timer：跨天时立刻重算连续天数并发信号
-	_last_seen_jdn = _today_jdn() if continuity_saved else 0
-	if not continuity_saved:
-		_next_continuity_retry_msec = Time.get_ticks_msec() + CONTINUITY_RETRY_DELAY_MSEC
+	GameState.all_data_reset.connect(reset)
+
+	DataSyncRegistry.register(self)
+
+	_last_seen_jdn = _today_jdn()
 	var watch := Timer.new()
 	watch.wait_time = 1.0
 	watch.one_shot = false
@@ -46,17 +51,10 @@ func _ready() -> void:
 	add_child(watch)
 
 
-## 心跳：日期没变直接返回，变了才做断签检查并发 streak_updated
 func _on_day_watch_tick() -> void:
 	var today_jdn: int = _today_jdn()
 	if today_jdn == _last_seen_jdn:
 		return
-	if Time.get_ticks_msec() < _next_continuity_retry_msec:
-		return
-	if not _check_continuity():
-		_next_continuity_retry_msec = Time.get_ticks_msec() + CONTINUITY_RETRY_DELAY_MSEC
-		return # 写失败不消费这次日切，冷却后再尝试，避免每秒重复写失败。
-	_next_continuity_retry_msec = 0
 	_last_seen_jdn = today_jdn
 	streak_updated.emit(_data)
 
@@ -67,31 +65,13 @@ func get_ab_group() -> int:
 	return ABTestManager.daily_streak.value()
 
 
-## 实验是否开启（非控制组）
-func is_enabled() -> bool:
-	return ABTestManager.daily_streak.is_enabled()
-
-
-## 本分组是否发第 7 天宝箱
-func has_reward() -> bool:
-	return ABTestManager.daily_streak.has_reward()
-
-
-## 本分组是否跳过「首次点亮」那一屏
-func should_skip_lit() -> bool:
-	return ABTestManager.daily_streak.is_skip_lit()
-
-
-## 功能对玩家是否可见：实验开启且新手引导已完成
 func is_unlocked() -> bool:
-	if not is_enabled():
-		return false
-	return GameState.is_tutorial_done()
+	return bool(_stage_candidate.profile.get("tutorial_done", false)) if not _stage_candidate.is_empty() else GameState.is_tutorial_done()
 
 
 # ================= 分组切换说明页 =================
 ## 启动染色后由主页调用：比对存档里的旧分组与当前分组，映射出要弹的说明页
-func notify_group_dyed() -> void:
+func _mut_notify_group_dyed() -> void:
 	var cur: int = get_ab_group()
 	# 每次判定都打日志，方便排查为什么弹 / 不弹
 	print(
@@ -116,6 +96,8 @@ func notify_group_dyed() -> void:
 	var page: int = _map_switch_page(_data.last_group, cur)
 	if page > 0:
 		_data.pending_switch_page = page
+		if page == 1 and not _stage_candidate.is_empty():
+			_stage_switch_award()
 
 		_pending_switch_eligible = true
 	print(
@@ -133,20 +115,31 @@ func notify_group_dyed() -> void:
 
 	# 记录本次分组；控制组记成 -1，下次启动才不会误判成切组
 	_data.last_group = cur if cur != 0 else -1
-	if page == 1:
-		var items: Array = []
-		for item: AwardItem in _build_reward_items():
-			items.append(item.to_dict())
-		var result := GameState.commit_streak_transition(_data.to_dict(), items, Tracker.PropSource.SWITCH_GROUP)
-		if not result.get("ok", false):
-			_load_data()
-			_pending_switch_eligible = _data.pending_switch_page > 0
-	else:
+	_save_data()
+
+
+## 把图标实验组按日期锁入本地存档，避免同一天内远端实验刷新使入口造型跳变。
+func get_effective_icon_group() -> int:
+	var today: String = _today_str()
+	if _data.icon_group < 0 or _data.icon_group_date != today:
+		if not ABTestManager.is_app_start_dyed():
+			return int(ABTestManager.dailystreak_icon.value())
+		_data.icon_group = int(ABTestManager.dailystreak_icon.value())
+		_data.icon_group_date = today
 		_save_data()
+	return _data.icon_group
 
 
-## 分组变化 → 说明页编号的映射；返回 0 表示不用弹
+func cheat_reset_icon_group() -> void:
+	_data.icon_group = -1
+	_data.icon_group_date = ""
+	_save_data()
+	streak_updated.emit(_data)
+
+
 func _map_switch_page(old_group: int, new_group: int) -> int:
+	old_group = 1 if old_group in [1, 6, 7] else old_group
+	new_group = 1 if new_group in [1, 6, 7] else new_group
 	if (old_group == 1 or old_group == 2 or old_group == 4) and (new_group == 0 or new_group == 3):
 		return 1
 	if old_group == 3 and new_group == 0:
@@ -162,87 +155,197 @@ func get_pending_switch_page() -> int:
 
 
 ## 消费掉待弹说明页并写存档（主页弹完就调）
-func consume_pending_switch() -> bool:
+func _mut_consume_pending_switch() -> void:
 	_data.pending_switch_page = 0
-	if not _save_data():
-		return false
 	_pending_switch_eligible = false
-	return true
+	_save_data()
 
 
 ## 补发切组礼包：直接进背包（DIRECT 展示），不走宝箱动画
 func grant_switch_gift() -> bool:
-	var uid: int = int(GameState.get_streak_data().get("switch_award_uid", 0))
-	if uid > 0:
-		return AwardManager._persist_award(uid)
-	return true
-
-
-# ================= 打卡 =================
-## 今天还能不能打卡：最近打卡日期不是今天就还能打
-func can_checkin_today() -> bool:
-	return _data.last_checkin_date != _today_str()
-
-
-## 哪种胜利算打卡：默认主线与每日挑战都算，「仅挑战」档只算每日挑战
-func is_win_qualifies(source: StringName) -> bool:
-	if not is_enabled():
+	var uid: int = int(GameState.get_feature_state("streak").get("switch_award_uid", 0))
+	if uid <= 0:
 		return false
-	if ABTestManager.daily_streak.is_challenge_only():
-		return source == &"challenge"
+	return bool(AwardManager._persist_award(uid))
+
+
+func can_checkin_today() -> bool:
+	if _data.last_checkin_date.is_empty():
+		return true
+
+	return _today_jdn() > _date_str_to_jdn(_data.last_checkin_date)
+
+
+func is_win_qualifies(source: StringName) -> bool:
 	return source == &"main" or source == &"challenge"
 
 
 ## 游戏胜利时的入口：未解锁 / 今天已打卡 / 胜利类型不符都直接返回，否则打卡
-func notify_win(source: StringName) -> Dictionary:
-	if not is_unlocked():
+func _mut_notify_win(source: StringName) -> Dictionary:
+	if not is_unlocked() or not is_win_qualifies(source):
 		return {"ok": true, "skipped": true, "has_reward": false}
 	if not can_checkin_today():
 		return {"ok": true, "duplicate": true, "has_reward": false}
-	if not is_win_qualifies(source):
-		return {"ok": true, "skipped": true, "has_reward": false}
 	return do_checkin()
 
 
-## 真正打卡：记日期、连续天数与周期天数各 +1，满 7 天发奖励，然后写存档并发信号
-func do_checkin() -> Dictionary:
+## 记录今日历史，推进或重置连签与奖励周期，写盘后发出完成和刷新信号。
+func _mut_do_checkin() -> Dictionary:
 	if not can_checkin_today():
-		return {"ok": true, "duplicate": true, "has_reward": false}
-	var next := StreakData.from_dict(_data.to_dict())
-	# 心跳可能尚未运行，或此前断签保存失败；资格必须按本次日期重新计算。
-	_reset_broken_streak(next, _today_jdn())
-	next.last_checkin_date = _today_str()
-	next.current_streak += 1
-	next.reward_cycle_day += 1
-	next.best_streak = maxi(next.best_streak, next.current_streak)
-	if next.streak_start_weekday < 0:
-		next.streak_start_weekday = _today_weekday()
-	var has_reward: bool = next.reward_cycle_day > 0 and next.reward_cycle_day % CYCLE_LENGTH == 0 and ABTestManager.daily_streak.has_reward()
-	var items: Array = []
-	if has_reward:
-		for item: AwardItem in _build_reward_items():
-			items.append(item.to_dict())
-	var generation: int = _reset_generation
-	var committed := GameState.commit_streak_checkin(next.to_dict(), items, Tracker.PropSource.STREAK_CHEST, Tracker.PropSource.STREAK_REWARD_AD)
-	if generation != _reset_generation:
-		return {"ok": true, "skipped": true, "has_reward": false}
-	if not committed.get("ok", false):
-		_load_data()
-		committed["has_reward"] = false
-		return committed
-	_load_data()
-	_next_continuity_retry_msec = 0
-	_last_seen_jdn = _today_jdn()
-	_pending_show_uid = int(committed.get("uid", 0))
-	if _pending_show_uid > 0:
-		AwardManager.attach_award(_pending_show_uid)
-	if committed.get("duplicate", false):
-		return {"ok": true, "duplicate": true, "has_reward": false}
-	Tracker.track_spark_streak(_data.current_streak, _data.best_streak)
-	var result := {"ok": true, "streak": _data.current_streak, "best_streak": _data.best_streak, "has_reward": has_reward, "is_new_streak": _data.current_streak == 1}
+		return {"ok": true, "duplicate": true}
+	var was_broken: bool = is_broken()
+
+	_revive_anim = {}
+	_data.pending_win_checkin_date = ""
+	var today: String = _today_str()
+	_data.last_checkin_date = today
+	var today_jdn: int = StreakData.history_date_to_jdn(today)
+	_record_history_range(today_jdn, today_jdn)
+
+	_data.last_checkin_minute = _now_minute_of_day()
+
+	if was_broken:
+		_data.current_streak = 1
+		_data.reward_cycle_day = 1
+		_data.streak_start_weekday = _today_weekday()
+	else:
+		_data.current_streak += 1
+		_data.reward_cycle_day += 1
+		if _data.streak_start_weekday < 0:
+			_data.streak_start_weekday = _today_weekday()
+
+	if _data.current_streak > _data.best_streak:
+		_data.best_streak = _data.current_streak
+
+	_pending_show_uid = 0
+
+	var has_reward := false
+	if _data.reward_cycle_day > 0 and _data.reward_cycle_day % CYCLE_LENGTH == 0:
+		has_reward = true
+		_pending_show_uid = _dispatch_streak_chest()
+
+	_save_data()
+
+	if _stage_candidate.is_empty():
+		Tracker.track_spark_streak(_data.current_streak, _data.best_streak)
+
+	var result := {
+		"streak": _data.current_streak,
+		"best_streak": _data.best_streak,
+		"has_reward": has_reward,
+		"is_new_streak": _data.current_streak == 1,
+	}
 	checkin_completed.emit(result)
 	streak_updated.emit(_data)
 	return result
+
+
+func should_offer_revive(source: StringName) -> bool:
+	if not is_unlocked():
+		return false
+	if not can_checkin_today():
+		return false
+	if not is_win_qualifies(source):
+		return false
+	if not is_broken():
+		return false
+	if _data.current_streak < 2:
+		return false
+	return missed_days() <= StreakProtectConfig.REVIVE_MAX_DAYS_BASELINE
+
+
+## 胜利满足补签条件时先保存待决日期，否则直接按普通打卡结算。
+func _mut_settle_win(source: StringName) -> void:
+	if should_offer_revive(source):
+		mark_pending_win_checkin()
+	else:
+		notify_win(source)
+
+
+func has_pending_revive_decision() -> bool:
+	return _data.pending_win_checkin_date != ""
+
+
+func _mut_mark_pending_win_checkin() -> void:
+	_data.pending_win_checkin_date = _today_str()
+	_save_data()
+
+
+func get_revive_info() -> Dictionary:
+	return {
+		"broken_streak": _data.current_streak,
+		"missed_days": missed_days(),
+	}
+
+
+## 补齐漏签天数和今天，跨奖励周期时派发宝箱，保存后请求同步并通知界面。
+func _mut_revive_streak() -> Dictionary:
+	if not can_checkin_today():
+		return {"ok": true, "duplicate": true}
+	if _data.pending_win_checkin_date != _today_str() or missed_days() <= 0 or missed_days() > StreakProtectConfig.REVIVE_MAX_DAYS_BASELINE:
+		return {"ok": false, "error": "stale_streak_revive"}
+	var missed: int = missed_days()
+	var previous_jdn: int = StreakData.history_date_to_jdn(_data.last_checkin_date)
+	var today: String = _today_str()
+	var today_jdn: int = StreakData.history_date_to_jdn(today)
+	var has_reward: bool = false
+	_pending_show_uid = 0
+
+	var add: int = missed + 1
+	var before_cycle: int = _data.reward_cycle_day
+	_data.current_streak += add
+	_data.reward_cycle_day += add
+	if _data.streak_start_weekday < 0:
+		_data.streak_start_weekday = _today_weekday()
+
+	if (_data.reward_cycle_day / CYCLE_LENGTH) > (before_cycle / CYCLE_LENGTH):
+		has_reward = true
+		_pending_show_uid = _dispatch_streak_chest()
+
+	_revive_anim = {"kind": "backfill", "pre_cycle": before_cycle, "gained": add}
+
+	_record_history_range(previous_jdn + 1, today_jdn)
+	_data.last_checkin_date = today
+
+	_data.last_checkin_minute = _now_minute_of_day()
+
+	_data.pending_win_checkin_date = ""
+	if _data.current_streak > _data.best_streak:
+		_data.best_streak = _data.current_streak
+	_save_data()
+
+	if _stage_candidate.is_empty():
+		DataSyncManager.request_sync("streak_revive")
+
+	if _stage_candidate.is_empty():
+		Tracker.track_spark_streak(_data.current_streak, _data.best_streak)
+
+	var result := {
+		"streak": _data.current_streak,
+		"best_streak": _data.best_streak,
+		"has_reward": has_reward,
+		"missed_days": missed,
+	}
+	streak_updated.emit(_data)
+	return result
+
+
+## 放弃补签仍结算今天的胜利，按普通打卡规则重新开始连续天数。
+func _mut_give_up_revive() -> Dictionary:
+	return do_checkin()
+
+
+func get_revive_anim() -> Dictionary:
+	return _revive_anim
+
+
+func get_last_checkin_minute() -> int:
+	if _data.last_checkin_date != _today_str():
+		return -1
+	var m: int = _data.last_checkin_minute
+	if m < 0 or m > 1439:
+		return -1
+	return m
 
 
 # ================= 对外数据 =================
@@ -251,24 +354,41 @@ func get_data() -> StreakData:
 	return _data
 
 
-## 7 个格子的展示数据，每项是 {weekday: 0~6, checked: bool}
-## 点亮格数 = reward_cycle_day % 7；刚好满 7 天且今天打过卡时 7 格全亮
+func get_display_streak() -> int:
+	return 0 if is_broken() else _data.current_streak
+
+
+func get_history_month(year: int, month: int) -> Array[bool]:
+	return StreakHistory.build_month(_data.history_ranges, year, month)
+
+
+func get_today_date() -> Dictionary:
+	return StreakHistory.jdn_to_date(_today_jdn())
+
+
+func get_history_month_range() -> Dictionary:
+	var today: Dictionary = StreakHistory.jdn_to_date(_today_jdn())
+	return StreakHistory.month_range(_data.history_ranges, today["year"], today["month"])
+
+
+func get_display_reward_cycle() -> int:
+	return 0 if is_broken() else maxi(0, _data.reward_cycle_day)
+
+
 func get_week_slots() -> Array[Dictionary]:
 	var slots: Array[Dictionary] = []
-	# 本轮还没开始时以今天为起点（只影响显示，不写存档）
 	var start_wd: int = (
 		_data.streak_start_weekday if _data.streak_start_weekday >= 0 else _today_weekday()
 	)
-	# 点亮格数：周期天数为 0 时是 0；模 7 为 0 且今天已打卡时是满格
 	var filled: int = 0
-	if _data.reward_cycle_day > 0:
+
+	if not is_broken() and _data.reward_cycle_day > 0:
 		var mod: int = _data.reward_cycle_day % CYCLE_LENGTH
 		if mod == 0:
-			if _data.last_checkin_date == _today_str():
+			if not can_checkin_today():
 				filled = CYCLE_LENGTH
 		else:
 			filled = mod
-	# 从起点星期开始依次排 7 格，前 filled 格点亮
 	for i: int in range(CYCLE_LENGTH):
 		var wd: int = (start_wd + i) % 7
 		var checked: bool = i < filled
@@ -297,42 +417,144 @@ func claim_reward(_double: bool = false) -> Dictionary:
 	return {}
 
 
-## 清掉待展示标记（打卡页演完动画后调用）
 func consume_pending_show() -> void:
 	_pending_show_uid = -1
+	_revive_anim = {}
+	_save_data()
 
 
-# ================= 重置与断签 =================
-## 整份重置；账号数据被清空时调用，并写存档、发信号
 func reset() -> void:
-	_data = StreakData.new()
-	_pending_show_uid = -1
+	_reset_generation += 1
+	_apply_state(GameState.get_feature_state("streak"))
 	_pending_switch_eligible = false
+	streak_updated.emit(_data)
+
+
+func cloud_save_id() -> String:
+	return "streak"
+
+
+func export_cloud_data() -> Dictionary:
+	return {
+		"current_streak": _data.current_streak,
+		"best_streak": _data.best_streak,
+		"last_checkin_date": _data.last_checkin_date,
+		"last_checkin_minute": _data.last_checkin_minute,
+		"streak_start_weekday": _data.streak_start_weekday,
+		"reward_cycle_day": _data.reward_cycle_day,
+	}
+
+
+## 玩家明确选云档时采用云进度，否则按日期和最大计数合并，并补全本地历史覆盖。
+func _mut_merge_cloud_data(cloud_data: Dictionary, ctx: MergeContext = null) -> void:
+	if cloud_data.is_empty():
+		return
+
+	if ctx != null and ctx.by_player_choice:
+		if not ctx.use_cloud:
+			return
+		_data.current_streak = int(cloud_data.get("current_streak", _data.current_streak))
+		_data.best_streak = int(cloud_data.get("best_streak", _data.best_streak))
+		_data.last_checkin_date = str(cloud_data.get("last_checkin_date", _data.last_checkin_date))
+		_data.last_checkin_minute = int(
+			cloud_data.get("last_checkin_minute", _data.last_checkin_minute)
+		)
+		_data.streak_start_weekday = int(
+			cloud_data.get("streak_start_weekday", _data.streak_start_weekday)
+		)
+		_data.reward_cycle_day = int(cloud_data.get("reward_cycle_day", _data.reward_cycle_day))
+		_realign_start_weekday()
+		_ensure_history_covers_current()
+		_save_data()
+
+		streak_updated.emit(_data)
+		return
+	var local: Dictionary = {
+		"current_streak": _data.current_streak,
+		"best_streak": _data.best_streak,
+		"last_checkin_date": _data.last_checkin_date,
+		"last_checkin_minute": _data.last_checkin_minute,
+		"streak_start_weekday": _data.streak_start_weekday,
+		"reward_cycle_day": _data.reward_cycle_day,
+	}
+	var cloud_date: String = str(cloud_data.get("last_checkin_date", ""))
+	var local_jdn: int = (
+		_date_str_to_jdn(_data.last_checkin_date) if not _data.last_checkin_date.is_empty() else 0
+	)
+	var cloud_jdn: int = _date_str_to_jdn(cloud_date) if not cloud_date.is_empty() else 0
+	var merged: Dictionary = StreakData.resolve_merge(local, cloud_data, local_jdn, cloud_jdn)
+	_data.current_streak = int(merged["current_streak"])
+	_data.best_streak = int(merged["best_streak"])
+	_data.last_checkin_date = str(merged["last_checkin_date"])
+
+	_data.last_checkin_minute = int(merged["last_checkin_minute"])
+	_data.streak_start_weekday = int(merged["streak_start_weekday"])
+	_data.reward_cycle_day = int(merged["reward_cycle_day"])
+	_ensure_history_covers_current()
 	_save_data()
 	streak_updated.emit(_data)
 
 
-## 断签检查：距上次打卡超过 1 天就清零（连续天数、周期天数、本轮起点、待展示奖励）
-func _check_continuity() -> bool:
-	var next := StreakData.from_dict(_data.to_dict())
-	if not _reset_broken_streak(next, _today_jdn()):
-		return true
-	if not GameState.commit_streak_data(next.to_dict()):
+func is_broken() -> bool:
+	if _data.last_checkin_date.is_empty():
 		return false
-	_load_data()
-	_pending_show_uid = -1
+	return _today_jdn() - _date_str_to_jdn(_data.last_checkin_date) > 1
+
+
+func missed_days() -> int:
+	if _data.last_checkin_date.is_empty():
+		return 0
+	return maxi(0, _today_jdn() - _date_str_to_jdn(_data.last_checkin_date) - 1)
+
+
+## 冷启动遇到未完成的补签选择时，将当时胜利记为新一轮第 1 天，避免胜利丢失。
+func _resolve_pending_win_checkin() -> void:
+	var victory_date: String = _data.pending_win_checkin_date
+	if victory_date == "":
+		return
+	_data.pending_win_checkin_date = ""
+
+	_data.current_streak = 1
+	_data.reward_cycle_day = 1
+	_data.last_checkin_date = victory_date
+	var victory_jdn: int = StreakData.history_date_to_jdn(victory_date)
+	_record_history_range(victory_jdn, victory_jdn)
+	var weekday: int = _weekday_of_date(victory_date)
+	_data.streak_start_weekday = weekday if weekday >= 0 else _today_weekday()
+	if _data.best_streak < 1:
+		_data.best_streak = 1
+	_save_data()
+
+	if _stage_candidate.is_empty():
+		Tracker.track_spark_streak(_data.current_streak, _data.best_streak)
+
+
+func _record_history_range(start_jdn: int, end_jdn: int) -> void:
+	_data.history_ranges = StreakHistory.add_range(
+		_data.history_ranges, start_jdn, end_jdn, end_jdn
+	)
+
+
+func _realign_start_weekday() -> bool:
+	var last_jdn: int = StreakData.history_date_to_jdn(_data.last_checkin_date)
+	var derived: int = StreakData.derive_start_weekday(
+		last_jdn, _data.reward_cycle_day, _data.streak_start_weekday
+	)
+	if derived == _data.streak_start_weekday:
+		return false
+	_data.streak_start_weekday = derived
 	return true
 
 
-## 只修改待提交数据；检查和签到共用断签规则，不依赖心跳先写盘成功。
-static func _reset_broken_streak(data: StreakData, today_jdn: int) -> bool:
-	if data.last_checkin_date.is_empty() or today_jdn - _date_str_to_jdn(data.last_checkin_date) <= 1:
+func _ensure_history_covers_current() -> bool:
+	var last_jdn: int = StreakData.history_date_to_jdn(_data.last_checkin_date)
+	var covered: Array = StreakHistory.ensure_covers_current(
+		_data.history_ranges, last_jdn, _data.current_streak
+	)
+	if covered == _data.history_ranges:
 		return false
-	var changed: bool = data.current_streak != 0 or data.reward_cycle_day != 0 or data.streak_start_weekday != -1
-	data.current_streak = 0
-	data.reward_cycle_day = 0
-	data.streak_start_weekday = -1
-	return changed
+	_data.history_ranges = covered
+	return true
 
 
 # ================= 奖励构建 =================
@@ -351,76 +573,224 @@ func _build_reward_items() -> Array:
 	return items
 
 
-# ================= 存档读写 =================
-## 提交核心档的 features.streak；失败恢复到已保存数据。
+func _dispatch_streak_chest() -> int:
+	if _stage_candidate.is_empty():
+		return -1
+	var items: Array = []
+	for kind: String in StreakData.REWARD_BASE:
+		items.append({"kind": kind, "count": int(StreakData.REWARD_BASE[kind])})
+	var result: Dictionary = GameState.get_economy_service().stage_award(_stage_candidate, items, AwardManager.DisplayType.STREAK_GIFT, Tracker.PropSource.STREAK_CHEST, Tracker.PropSource.STREAK_REWARD_AD, "streak/checkin/" + _today_str())
+	if not result.ok:
+		_stage_error = result
+		return -1
+	return int(result.uid)
+
+
 func _save_data() -> bool:
-	if not GameState.commit_streak_data(_data.to_dict()):
+	var data: Dictionary = (_stage_candidate.features.get("streak", {}) if not _stage_candidate.is_empty() else GameState.get_feature_state("streak")).duplicate(true)
+	data.merge(_data.to_dict(), true)
+	data["pending_show_uid"] = _pending_show_uid
+	data["revive_anim"] = _revive_anim.duplicate(true)
+	if not _stage_candidate.is_empty():
+		_stage_candidate.features["streak"] = data
+		return _stage_error.is_empty()
+	_feature_saving = true
+	var result: Dictionary = GameState.commit_feature_state("streak", data)
+	_feature_saving = false
+	if not result.ok:
 		_load_data()
+	return result.ok
+
+
+func _load_data() -> bool:
+	var serialized: Dictionary = GameState.get_feature_state("streak")
+	_apply_state(serialized)
+	_ensure_history_covers_current()
+	var weekday_changed: bool = _realign_start_weekday()
+	return weekday_changed or serialized.get("history_ranges", []) != _data.history_ranges
+
+
+func cheat_capture_history_state() -> Dictionary:
+	if OS.has_feature("rel"):
+		return {}
+	return {
+		"data": _data.to_dict(),
+		"pending_uid": _pending_show_uid,
+		"revive_anim": _revive_anim.duplicate(true),
+		"switch_eligible": _pending_switch_eligible,
+		"last_seen_jdn": _last_seen_jdn
+	}
+
+
+func cheat_history_today() -> String:
+	return _today_str()
+
+
+func cheat_apply_history_fixture(serialized: Dictionary, preserve_ab_state: bool = true) -> bool:
+	if OS.has_feature("rel"):
+		return false
+	var fixture: Dictionary = (
+		cheat_preserve_local_ab_fields(serialized) if preserve_ab_state else serialized
+	)
+	return _cheat_apply_state(fixture, not preserve_ab_state)
+
+
+func _cheat_can_prepare_state() -> bool:
+	if OS.has_feature("rel"):
+		return false
+	if has_pending_show() or has_pending_revive_decision():
+		push_warning("[StreakCheat] 请先完成当前打卡、补签或领奖流程")
 		return false
 	return true
 
 
-## 从统一核心快照刷新签到投影。
-func _load_data() -> void:
-	_data = StreakData.from_dict(GameState.get_streak_data())
-
-
-func _on_core_committed(_revision: int) -> void:
-	_load_data()
-
-
-func _on_all_data_reset() -> void:
-	_reset_generation += 1
-	_load_data()
-	_next_continuity_retry_msec = 0
-	_pending_show_uid = -1
-	_pending_switch_eligible = false
+func _cheat_apply_state(fixture: Dictionary, clear_switch_eligible: bool = false) -> bool:
+	if not _cheat_can_prepare_state():
+		return false
+	var result: Dictionary = GameState.commit_feature_state("streak", fixture)
+	if not result.ok:
+		return false
+	_apply_state(fixture)
+	if clear_switch_eligible:
+		_pending_switch_eligible = false
+	_last_seen_jdn = _today_jdn()
 	streak_updated.emit(_data)
+	return true
 
 
-# ================= 调试作弊接口（CheatBus 调用） =================
-## 造出「已连续 6 天」的存档，方便测第 7 天开箱
-func cheat_setup_six_days() -> void:
-	_data.current_streak = 6
-	_data.reward_cycle_day = 6
-	_data.best_streak = max(_data.best_streak, 6)
-	_data.last_checkin_date = _date_offset_str(-1)
-	_data.streak_start_weekday = (_today_weekday() - 6 + 7) % 7
-	_pending_show_uid = -1
-	_save_data()
+func cheat_preserve_local_ab_fields(serialized: Dictionary) -> Dictionary:
+	if OS.has_feature("rel"):
+		return {}
+	var result: Dictionary = serialized.duplicate(true)
+	var current: Dictionary = _data.to_dict()
+	var fields: Array[String] = [
+		"last_group", "pending_switch_page", "icon_group", "icon_group_date"
+	]
+	for field: String in fields:
+		result[field] = current[field]
+	return result
+
+
+func cheat_reload_history_fixture() -> bool:
+	if not _cheat_can_prepare_state():
+		return false
+	var history_changed: bool = _load_data()
+	if history_changed:
+		_save_data()
 	streak_updated.emit(_data)
+	return true
 
 
-## 撤回今天的打卡（日期改成昨天、天数各减 1），用于反复测打卡流程
-func cheat_clear_today() -> void:
-	if _data.last_checkin_date != _today_str():
+func _cheat_continuous_fixture(days: int, last_date: String) -> Dictionary:
+	var fixture: Dictionary = _data.to_dict()
+	var last_jdn: int = StreakData.history_date_to_jdn(last_date)
+	fixture["current_streak"] = days
+	fixture["reward_cycle_day"] = days
+	fixture["best_streak"] = maxi(_data.best_streak, days)
+	fixture["last_checkin_date"] = last_date
+	fixture["last_checkin_minute"] = -1
+	fixture["pending_win_checkin_date"] = ""
+	fixture["streak_start_weekday"] = posmod(last_jdn + 1 - (days - 1), 7)
+	fixture["history_ranges"] = StreakHistory.ensure_covers_current([], last_jdn, days)
+	return fixture
+
+
+func cheat_setup_six_days() -> bool:
+	var last_date: String = _date_offset_str(-1)
+	return _cheat_apply_state(_cheat_continuous_fixture(6, last_date))
+
+
+func cheat_set_days(days: int = 1) -> bool:
+	days = maxi(1, days)
+	return _cheat_apply_state(_cheat_continuous_fixture(days, _today_str()))
+
+
+func cheat_clear_today() -> bool:
+	if not _cheat_can_prepare_state():
+		return false
+	var today: String = _today_str()
+	if _data.last_checkin_date != today:
 		push_warning("[StreakCheat] 今天本来就没打卡,clear no-op")
-		return
-	_data.last_checkin_date = _date_offset_str(-1)
-	_data.current_streak = max(0, _data.current_streak - 1)
-	_data.reward_cycle_day = max(0, _data.reward_cycle_day - 1)
-	if _data.current_streak == 0:
-		_data.streak_start_weekday = -1
-	_pending_show_uid = -1
+		return true
+	var fixture: Dictionary = _data.to_dict()
+	var today_jdn: int = StreakData.history_date_to_jdn(today)
+	var retained_ranges: Array = []
+	for interval: Array in _data.history_ranges:
+		if interval[0] > today_jdn or interval[1] < today_jdn:
+			retained_ranges.append(interval.duplicate())
+			continue
+		if interval[0] < today_jdn:
+			retained_ranges.append([interval[0], today_jdn - 1])
+		if interval[1] > today_jdn:
+			retained_ranges.append([today_jdn + 1, interval[1]])
+	var remaining_days: int = maxi(0, _data.current_streak - 1)
+	fixture["last_checkin_date"] = _date_offset_str_from(today, -1)
+	fixture["last_checkin_minute"] = -1
+	fixture["pending_win_checkin_date"] = ""
+	fixture["current_streak"] = remaining_days
+	fixture["reward_cycle_day"] = maxi(0, _data.reward_cycle_day - 1)
+	fixture["history_ranges"] = StreakHistory.ensure_covers_current(
+		retained_ranges, today_jdn - 1, remaining_days
+	)
+	if remaining_days == 0:
+		fixture["streak_start_weekday"] = -1
+	return _cheat_apply_state(fixture)
+
+
+func cheat_checkin_at(minute_of_day: int) -> Dictionary:
+	if not _cheat_can_prepare_state():
+		return {}
+	var checkin_minute: int = clampi(minute_of_day, 0, 1439)
+	if not can_checkin_today() and not cheat_clear_today():
+		return {}
+	if not can_checkin_today():
+		push_warning("[StreakCheat] 当前日期早于上次打卡日，不能执行指定时刻打卡")
+		return {}
+	var result: Dictionary = do_checkin()
+
+	_data.last_checkin_minute = checkin_minute
 	_save_data()
 	streak_updated.emit(_data)
+	return result
 
 
-## 把上次打卡日期再往前挪一天，用来触发断签
-func cheat_skip_day() -> void:
+func cheat_skip_day() -> bool:
+	if not _cheat_can_prepare_state():
+		return false
 	if _data.last_checkin_date.is_empty():
 		push_warning("[StreakCheat] last_checkin_date 空,跳过 skip")
-		return
-	_data.last_checkin_date = _date_offset_str_from(_data.last_checkin_date, -1)
-	_check_continuity()
-	streak_updated.emit(_data)
+		return true
+	var fixture: Dictionary = _data.to_dict()
+	var shifted_ranges: Array = []
+	for interval: Array in _data.history_ranges:
+		shifted_ranges.append([interval[0] - 1, interval[1] - 1])
+	var last_date: String = _date_offset_str_from(_data.last_checkin_date, -1)
+	var last_jdn: int = StreakData.history_date_to_jdn(last_date)
+	fixture["last_checkin_date"] = last_date
+	fixture["last_checkin_minute"] = -1
+	fixture["pending_win_checkin_date"] = ""
+	fixture["history_ranges"] = StreakHistory.ensure_covers_current(
+		shifted_ranges, last_jdn, _data.current_streak
+	)
+	if _data.streak_start_weekday >= 0:
+		fixture["streak_start_weekday"] = posmod(_data.streak_start_weekday - 1, 7)
+	fixture["icon_group"] = -1
+	fixture["icon_group_date"] = ""
+	return _cheat_apply_state(fixture)
 
 
-# ================= 日期工具（纯 static，不碰状态） =================
-## 今天往前 / 后偏移若干天的日期串
-static func _date_offset_str(days: int) -> String:
-	var dt: Dictionary = Time.get_date_dict_from_system(false)
-	return _date_offset_str_from("%d-%02d-%02d" % [dt.year, dt.month, dt.day], days)
+func cheat_setup_broken(missed: int = 1, streak: int = 5) -> bool:
+	missed = maxi(1, missed)
+	streak = maxi(2, streak)
+	var last_date: String = _date_offset_str(-(missed + 1))
+	return _cheat_apply_state(_cheat_continuous_fixture(streak, last_date))
+
+
+func _date_offset_str(days: int) -> String:
+	var local_date: Dictionary = Time.get_date_dict_from_system(false)
+	return _date_offset_str_from(
+		"%d-%02d-%02d" % [local_date.year, local_date.month, local_date.day], days
+	)
 
 
 ## 把日期串偏移若干天：先转 Unix 时间戳，加减天数后再格式化
@@ -445,22 +815,44 @@ static func _date_offset_str_from(base_date_str: String, days: int) -> String:
 	return "%d-%02d-%02d" % [off.year, off.month, off.day]
 
 
-## 今天的日期串 yyyy-mm-dd（本地时间）
-static func _today_str() -> String:
-	var dt: Dictionary = Time.get_date_dict_from_system(false)
-	return "%d-%02d-%02d" % [dt.year, dt.month, dt.day]
+func _today_str() -> String:
+	var local_date: Dictionary = Time.get_date_dict_from_system(false)
+	return "%d-%02d-%02d" % [local_date.year, local_date.month, local_date.day]
 
 
-## 今天是星期几（0 = 周日）
-static func _today_weekday() -> int:
-	var dt: Dictionary = Time.get_date_dict_from_system(false)
-	return dt.weekday as int
+func _now_minute_of_day() -> int:
+	var local_time: Dictionary = Time.get_time_dict_from_system(false)
+	return int(local_time["hour"]) * 60 + int(local_time["minute"])
 
 
-## 今天的儒略日序号，用于比较两个日期差几天
-static func _today_jdn() -> int:
-	var dt: Dictionary = Time.get_date_dict_from_system(false)
-	return _local_date_to_jdn(dt.year, dt.month, dt.day)
+func _today_weekday() -> int:
+	var local_date: Dictionary = Time.get_date_dict_from_system(false)
+	return local_date.weekday as int
+
+
+static func _weekday_of_date(date_str: String) -> int:
+	var parts: PackedStringArray = date_str.split("-")
+	if parts.size() < 3:
+		return -1
+	var unix: int = (
+		Time
+		. get_unix_time_from_datetime_dict(
+			{
+				"year": parts[0].to_int(),
+				"month": parts[1].to_int(),
+				"day": parts[2].to_int(),
+				"hour": 0,
+				"minute": 0,
+				"second": 0,
+			}
+		)
+	)
+	return int(Time.get_datetime_dict_from_unix_time(unix).weekday)
+
+
+func _today_jdn() -> int:
+	var local_date: Dictionary = Time.get_date_dict_from_system(false)
+	return _local_date_to_jdn(local_date.year, local_date.month, local_date.day)
 
 
 ## 日期串 → 儒略日序号（格式不对时返回 0）
@@ -477,3 +869,175 @@ static func _local_date_to_jdn(year: int, month: int, day: int) -> int:
 	var y: int = year + 4800 - a
 	var m: int = month + 12 * a - 3
 	return day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045
+
+
+func do_checkin() -> Dictionary:
+	if not _stage_candidate.is_empty():
+		return _mut_do_checkin()
+	return _commit_operation("_mut_do_checkin", [])
+
+
+func revive_streak() -> Dictionary:
+	if not _stage_candidate.is_empty():
+		return _mut_revive_streak()
+	return _commit_operation("_mut_revive_streak", [])
+
+
+func give_up_revive() -> Dictionary:
+	if not _stage_candidate.is_empty():
+		return _mut_give_up_revive()
+	return _commit_operation("_mut_give_up_revive", [])
+
+
+func settle_win(source: StringName) -> void:
+	if not _stage_candidate.is_empty():
+		_mut_settle_win(source)
+		return
+	_commit_operation("_mut_settle_win", [source])
+
+
+func notify_win(source: StringName) -> Dictionary:
+	if not _stage_candidate.is_empty():
+		return _mut_notify_win(source)
+	return _commit_operation("_mut_notify_win", [source])
+
+
+func mark_pending_win_checkin() -> void:
+	if not _stage_candidate.is_empty():
+		_mut_mark_pending_win_checkin()
+		return
+	_commit_operation("_mut_mark_pending_win_checkin", [])
+
+
+func notify_group_dyed() -> void:
+	if not _stage_candidate.is_empty():
+		_mut_notify_group_dyed()
+		return
+	_commit_operation("_mut_notify_group_dyed", [])
+
+
+func consume_pending_switch() -> bool:
+	if not _stage_candidate.is_empty():
+		_mut_consume_pending_switch()
+		return _stage_error.is_empty()
+	return _commit_operation("_mut_consume_pending_switch", []).get("ok", false)
+
+
+func merge_cloud_data(cloud_data: Dictionary, ctx: MergeContext = null) -> void:
+	if not _stage_candidate.is_empty():
+		_mut_merge_cloud_data(cloud_data, ctx)
+		return
+	_commit_operation("_mut_merge_cloud_data", [cloud_data, ctx])
+
+func _apply_state(data: Dictionary) -> void:
+	_data = StreakData.from_dict(data)
+	_pending_show_uid = int(data.get("pending_show_uid", -1))
+	_revive_anim = data.get("revive_anim", {}).duplicate(true)
+
+
+func _on_feature_state_changed(id: String, data: Dictionary) -> void:
+	if id == "streak" and not _feature_saving:
+		_apply_state(data)
+		streak_updated.emit(_data)
+
+
+func _make_worker(candidate: Dictionary) -> Node:
+	var worker: Node = get_script().new()
+	worker._stage_candidate = candidate
+	worker._apply_state(candidate.features.get("streak", {}))
+	worker._pending_switch_eligible = _pending_switch_eligible
+	return worker
+
+
+func _commit_operation(method: String, args: Array) -> Dictionary:
+	var candidate: Dictionary = GameState.get_core_candidate()
+	var revision: int = GameState.get_core_store().revision()
+	var generation: int = _reset_generation
+	var worker: Node = _make_worker(candidate)
+	var value: Variant = worker.callv(method, args)
+	if value is Dictionary and (not value.get("ok", true) or value.get("duplicate", false) or value.get("skipped", false)):
+		worker.free()
+		return value
+	worker._save_data()
+	var result: Dictionary = worker._stage_error.duplicate(true)
+	var eligible: bool = worker._pending_switch_eligible
+	worker.free()
+	if not result.is_empty():
+		result["has_reward"] = false
+		return result
+	_feature_saving = true
+	result = GameState.commit_core_candidate(candidate, revision)
+	_feature_saving = false
+	if not result.ok:
+		result["has_reward"] = false
+		return result
+	# 同步监听可以清档或提交较新的状态；旧事务返回不能覆盖新权威。
+	_apply_state(GameState.get_feature_state("streak"))
+	if generation != _reset_generation or GameState.get_core_store().revision() != int(result.get("revision", revision + 1)):
+		return result
+	_pending_switch_eligible = eligible
+	if _pending_show_uid > 0:
+		AwardManager.attach_award(_pending_show_uid)
+	streak_updated.emit(_data)
+	if value is Dictionary:
+		result.merge(value, true)
+	if method in ["_mut_do_checkin", "_mut_revive_streak", "_mut_give_up_revive"]:
+		checkin_completed.emit(result)
+	return result
+
+
+func stage_round_win(candidate: Dictionary, source: StringName) -> Dictionary:
+	var worker: Node = _make_worker(candidate)
+	worker._mut_settle_win(source)
+	worker._save_data()
+	var result: Dictionary = worker._stage_error.duplicate(true)
+	var uid: int = worker._pending_show_uid
+	worker.free()
+	return result if not result.is_empty() else {"ok": true, "pending_show_uid": uid}
+
+
+func publish_round_win() -> void:
+	if _pending_show_uid > 0:
+		AwardManager.attach_award(_pending_show_uid)
+	streak_updated.emit(_data)
+
+func stage_cloud_merge(candidate: Dictionary, data: Dictionary, context: MergeContext) -> Dictionary:
+	var worker: Node = _make_worker(candidate)
+	worker._mut_merge_cloud_data(data, context)
+	worker._save_data()
+	var result: Dictionary = worker._stage_error.duplicate(true)
+	worker.free()
+	return {"ok": true} if result.is_empty() else result
+
+## 旧页面兼容入口；1.22 的历史与补签保留连续天数，展示是否断签由 is_broken 决定。
+func is_enabled() -> bool:
+	return get_ab_group() != 0
+
+func has_reward() -> bool:
+	return get_ab_group() not in [0, 3]
+
+func should_skip_lit() -> bool:
+	return get_ab_group() == 4
+
+func _check_continuity() -> bool:
+	return _save_data() if _ensure_history_covers_current() else true
+
+func _on_all_data_reset() -> void:
+	reset()
+
+func _on_core_committed(snapshot: Dictionary, _revision: int) -> void:
+	_apply_state(snapshot.get("features", {}).get("streak", {}))
+
+func _stage_switch_award() -> void:
+	var data: Dictionary = _stage_candidate.features.get("streak", {}).duplicate(true)
+	var sequence: int = int(data.get("switch_sequence", 0)) + 1
+	var items: Array = []
+	for kind: String in StreakData.REWARD_BASE:
+		items.append({"kind": kind, "count": int(StreakData.REWARD_BASE[kind])})
+	var result: Dictionary = GameState.get_economy_service().stage_award(_stage_candidate, items, AwardManager.DisplayType.DIRECT, Tracker.PropSource.SWITCH_GROUP, "", "streak_switch/" + str(sequence))
+	if not result.ok:
+		_stage_error = result
+		return
+	data["switch_sequence"] = sequence
+	data["switch_award_uid"] = int(result.uid)
+	_stage_candidate.features["streak"] = data

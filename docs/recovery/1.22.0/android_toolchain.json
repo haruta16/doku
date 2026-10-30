@@ -1,0 +1,50 @@
+[
+  {
+    "filename": "build-tools.zip",
+    "url": "https://dl.google.com/android/repository/build-tools_r35.0.1_macosx.zip",
+    "sha256": "c01e4b763da96ae5ef67e8bdf2abc94fb6cb3e73a42209581feb6a7019a51b9c",
+    "size": 76857925
+  },
+  {
+    "filename": "platform-35.zip",
+    "url": "https://dl.google.com/android/repository/platform-35_r02.zip",
+    "sha256": "0988cacad01b38a18a47bac14a0695f246bc76c1b06c0eeb8eb0dc825ab0c8e0",
+    "size": 64273788
+  },
+  {
+    "filename": "platform-tools.zip",
+    "url": "https://dl.google.com/android/repository/platform-tools_r37.0.1-darwin.zip",
+    "sha256": "ee39ad5967e95c2a07f04dbcbde96b1a0c916ba376096db5d2f498b7727a5d1d",
+    "size": 16110554
+  },
+  {
+    "filename": "jdk17.tar.gz",
+    "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.21%2B9/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.21_9.tar.gz",
+    "sha256": "78b08c7f5a0598242d5719c022e19479cb4a3aa45c37c19726a757a469ed1c15",
+    "size": 186192554
+  },
+  {
+    "name": "android_debug.apk",
+    "source_url": "https://spine-godot.s3.eu-central-1.amazonaws.com/4.2/4.6.1-stable/spine-godot-templates-4.2-4.6.1-stable.tpz",
+    "source_etag": "d64ac09faed1066fc12ea3d6aa6b66cc-98",
+    "size": 62228936,
+    "sha256": "baa643871863728113b0d3b7c7eb0b04b30201053840e142e152e7b1be2d1b33",
+    "zip_crc32": "7efba865"
+  },
+  {
+    "name": "android_release.apk",
+    "source_url": "https://spine-godot.s3.eu-central-1.amazonaws.com/4.2/4.6.1-stable/spine-godot-templates-4.2-4.6.1-stable.tpz",
+    "source_etag": "d64ac09faed1066fc12ea3d6aa6b66cc-98",
+    "size": 51526588,
+    "sha256": "b32bd156b53a5507bbc27bff5dd076bfcdd1fe38be7f8a0cbf2683d92806af0d",
+    "zip_crc32": "a4588e9a"
+  },
+  {
+    "name": "version.txt",
+    "source_url": "https://spine-godot.s3.eu-central-1.amazonaws.com/4.2/4.6.1-stable/spine-godot-templates-4.2-4.6.1-stable.tpz",
+    "source_etag": "d64ac09faed1066fc12ea3d6aa6b66cc-98",
+    "size": 13,
+    "sha256": "b2f62cedd5022ad3372bd6d98daddb394f11e3df2e3904741f9633232b61ff57",
+    "zip_crc32": "bc957fb8"
+  }
+]

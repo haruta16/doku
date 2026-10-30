@@ -1,3 +1,4 @@
+## 帧率调试悬浮按钮：显示运行指标，支持拖动吸边并记住位置。
 class_name FpsButton
 extends Button
 
@@ -7,7 +8,17 @@ const DRAG_THRESHOLD: float = 10.0
 
 const SAVE_PATH: String = "user://cheat_prefs.cfg"
 
+var _last_fps: int = -1
+var _last_highest: int = -1
+
 signal toggle_panel_requested
+
+const DC_LABEL_GAP: float = 8.0
+
+static var dc_visible: bool = false
+
+var _dc_label: Label = null
+var _last_dc_text: String = ""
 
 var _dragging: bool = false
 var _drag_start_pos: Vector2 = Vector2.ZERO
@@ -30,20 +41,27 @@ func _ready() -> void:
 	var pressed_style: StyleBoxFlat = style.duplicate()
 	pressed_style.bg_color = Color(0.25, 0.25, 0.25, 0.9)
 	add_theme_stylebox_override("pressed", pressed_style)
+	_build_dc_label()
 	_load_position()
 
 
 func _process(_delta: float) -> void:
-	text = "%d" % Engine.get_frames_per_second()
+	var fps: int = Engine.get_frames_per_second()
+	if fps != _last_fps:
+		_last_fps = fps
+		text = "%d" % fps
+	_update_dc_label()
 	var buf: InGameLogBuffer = InGameLogBuffer.instance
-	if buf != null:
-		var highest: int = buf.get_highest_level()
-		if highest == InGameLogBuffer.Level.ERROR:
-			add_theme_color_override("font_color", Color.RED)
-		elif highest == InGameLogBuffer.Level.WARN:
-			add_theme_color_override("font_color", Color.YELLOW)
-		else:
-			remove_theme_color_override("font_color")
+	var highest: int = buf.get_highest_level() if buf != null else InGameLogBuffer.Level.INFO
+	if highest == _last_highest:
+		return
+	_last_highest = highest
+	if highest == InGameLogBuffer.Level.ERROR:
+		add_theme_color_override("font_color", Color.RED)
+	elif highest == InGameLogBuffer.Level.WARN:
+		add_theme_color_override("font_color", Color.YELLOW)
+	else:
+		remove_theme_color_override("font_color")
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -73,6 +91,43 @@ func _gui_input(event: InputEvent) -> void:
 		position.x = clamp(position.x, SNAP_MARGIN, vp_size.x - size.x - SNAP_MARGIN)
 		position.y = clamp(position.y, SNAP_MARGIN, vp_size.y - size.y - SNAP_MARGIN)
 		get_viewport().set_input_as_handled()
+
+
+func _build_dc_label() -> void:
+	_dc_label = Label.new()
+	_dc_label.name = "DcLabel"
+	_dc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dc_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_dc_label.add_theme_font_size_override("font_size", 36)
+	_dc_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	_dc_label.add_theme_constant_override("outline_size", 8)
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(0.15, 0.15, 0.15, 0.85)
+	bg.set_corner_radius_all(12)
+	bg.content_margin_left = 10.0
+	bg.content_margin_right = 10.0
+	_dc_label.add_theme_stylebox_override("normal", bg)
+	_dc_label.visible = false
+	add_child(_dc_label)
+
+
+func _update_dc_label() -> void:
+	if _dc_label == null:
+		return
+	if _dc_label.visible != dc_visible:
+		_dc_label.visible = dc_visible
+		_last_dc_text = ""
+	if not dc_visible:
+		return
+	var t: String = (
+		"DC %d" % int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+	)
+	if t == _last_dc_text:
+		return
+	_last_dc_text = t
+	_dc_label.text = t
+	_dc_label.reset_size()
+	_dc_label.position = Vector2((size.x - _dc_label.size.x) * 0.5, size.y + DC_LABEL_GAP)
 
 
 func _snap_to_edge() -> void:

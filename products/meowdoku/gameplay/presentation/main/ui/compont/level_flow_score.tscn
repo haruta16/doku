@@ -44,6 +44,134 @@ tracks/2/keys = {
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_7rrxq"]
+resource_name = "Appear2"
+length = 1.0166667
+step = 0.016666668
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HBox:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, 0, 0, 0.06666667, 0.531551, 1.15, -0.06666668, 0, 0.06666668, 0, 0.98, -0.06666668, 0, 0.027777772, 0, 1, -0.027777772, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.4000001, 0.48333335)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HBox:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, 0, 0, 0.06666667, 0.5291426, 1.15, -0.06666668, 0, 0.06666668, 0, 0.98, -0.06666668, 0, 0.027777772, 0, 1, -0.027777772, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.4000001, 0.48333335)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HBox:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.050000012, 0.6166667, 0.7, 1.0166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HBox:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, 0, 0, 0.10555558, 0, -35, -0.10555558, 0, 0, 0),
+"times": PackedFloat32Array(0.6666667, 1.0166668)
+}
+
+[sub_resource type="Animation" id="Animation_4kyyj"]
+resource_name = "Appear3"
+length = 1.5
+step = 0.016666668
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HBox:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, 0, 0, 0.06666667, 0.531551, 1.15, -0.06666668, 0, 0.06666668, 0, 0.98, -0.06666668, 0, 0.027777772, 0, 1, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.40000004, 0.48333335, 0.8500001, 1.0833333, 1.1833334, 1.3500001)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HBox:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, 0, 0, 0.06666667, 0.5291426, 1.15, -0.06666668, 0, 0.06666668, 0, 0.98, -0.06666668, 0, 0.027777772, 0, 1, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.40000004, 0.48333335, 0.8500001, 1.0833333, 1.1833334, 1.3500001)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HBox:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.6166667, 1.1500003, 1.4666669),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_e4cbr"]
+resource_name = "Appear4"
+length = 1.7333333
+step = 0.016666668
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HBox:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, 0, 0, 0.06666667, 0.531551, 1.15, -0.06666668, 0, 0.06666668, 0, 0.98, -0.06666668, 0, 0.027777772, 0, 1, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.40000004, 0.48333335, 0.85, 1.0333333, 1.1333334, 1.3000002)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HBox:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(0.4, 0, 0, 0.06666667, 0.5291426, 1.15, -0.06666668, 0, 0.06666668, 0, 0.98, -0.06666668, 0, 0.027777772, 0, 1, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1.2, -0.027777772, 0, 0, 0, 1, -0.027777772, 0, 0, 0),
+"times": PackedFloat32Array(0, 0.20000002, 0.40000004, 0.48333335, 0.85, 1.0333333, 1.1333334, 1.3000002)
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HBox:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.050000004, 0.6166667, 1.3, 1.6166666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_bvhv2"]
 length = 0.001
 tracks/0/type = "value"
@@ -62,6 +190,9 @@ tracks/0/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7rrxq"]
 _data = {
 &"Appear": SubResource("Animation_5resu"),
+&"Appear2": SubResource("Animation_7rrxq"),
+&"Appear3": SubResource("Animation_4kyyj"),
+&"Appear4": SubResource("Animation_e4cbr"),
 &"RESET": SubResource("Animation_bvhv2")
 }
 

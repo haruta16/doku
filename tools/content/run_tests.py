@@ -97,6 +97,7 @@ def run_step(command: list[str], log: Path, timeout: int = 90) -> dict:
     passed = (result.returncode == 0 and not has_reported_failures(output)
               and completed["ok"]
               and not diagnostics.get("unexpected_errors")
+              and not diagnostics.get("shutdown_errors")
               and not any(token in output for token in ("SCRIPT ERROR:", "Parse Error:", "TEST_FAILED:", "PACK_VALIDATION_FAILED:")))
     summary = [line for line in output.splitlines() if re.search(r"CONTENT_.*(checks=|passed:)|PACK_VALIDATED", line)]
     return {"command": command, "exit_code": result.returncode, "ok": passed,

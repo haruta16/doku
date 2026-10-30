@@ -44,6 +44,7 @@ func _run() -> void:
 	_test_core_store()
 	_test_core_refuses_unknown_data()
 	_test_last_result()
+	_test_float_serialization_verification()
 
 
 func _test_last_result() -> void:
@@ -276,3 +277,34 @@ func _check(condition: bool, label: String) -> void:
 	if not condition:
 		_failures += 1
 		printerr("[FAIL] " + label)
+
+
+## Godot parse 后浮点末位可重编码为另一字符串；仍须精确校验原文且拒绝实际篡改。
+func _test_float_serialization_verification() -> void:
+	for plain: bool in [false, true]:
+		var dir: String = _test_root.path_join("float-plain" if plain else "float-encrypted")
+		DirAccess.make_dir_recursive_absolute(dir)
+		var path: String = dir.path_join("state.cfg")
+		var store: RefCounted = FileStore.new(PASSWORD, dir, false, path, "", "", "", plain)
+		var cfg := ConfigFile.new()
+		cfg.set_value("state", "in_game_sec", 2.0080965555555514)
+		_check(store.commit_config(cfg, 0).ok, "浮点计时可提交，不以重编码末位变化误判损坏")
+		var loaded: Dictionary = store.load_result()
+		_check(loaded.ok and is_equal_approx(float(loaded.config.get_value("state", "in_game_sec")), 2.0080965555555514), "回读配置可解析并保留计时精度")
+		var original: String = FileAccess.get_sha256(path)
+		store.set_fault_injector_for_tests(func(phase: String) -> bool:
+			if phase == "after_temp_write":
+				var altered := ConfigFile.new()
+				if plain:
+					altered.load(path + ".tmp")
+				else:
+					altered.load_encrypted_pass(path + ".tmp", PASSWORD)
+				altered.set_value("state", "in_game_sec", 10.0)
+				if plain:
+					altered.save(path + ".tmp")
+				else:
+					altered.save_encrypted_pass(path + ".tmp", PASSWORD)
+			return false)
+		var rejected: Dictionary = store.commit_config(cfg, 1)
+		_check(not rejected.ok and rejected.detail == "临时存档回读不一致", "完整且可解析但内容已变的临时配置仍被逐字节拒绝")
+		_check(FileAccess.get_sha256(path) == original and store.load_result().revision == 1, "拒绝篡改不发布 revision 或覆盖已有槽")

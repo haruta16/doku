@@ -1,7 +1,9 @@
 ## 弹窗队列：按优先级排队、串行弹出——一次只弹一个，等它关掉（window_hidden）再弹下一个
-## 本仓暂无调用点；flush 需要业务侧主动调用来推进队列
+## 业务任务可使用 callable；窗口任务使用事件交接，保留同步取消与缓存刷新语义。
 class_name UIPopupQueue
 extends RefCounted
+
+signal drained
 
 var _queue: Array[UIPopupEntry] = [] # 待弹队列，按优先级从高到低
 var _shown_this_session: Array[String] = [] # 本次运行已弹过的 ui_name，配合 entry.once_per_session 去重
@@ -35,7 +37,7 @@ func insert_next(entry: UIPopupEntry) -> void:
 
 ## 把队列里指定 ui_name 的条目全部剔除（不影响正在弹的那条）
 func cancel(ui_name: String) -> void:
-	_queue = _queue.filter(func(e: UIPopupEntry) -> bool: return e.ui_name != ui_name)
+	_queue = _queue.filter(func(e: UIPopupEntry) -> bool: return e.ui_name != ui_name and e.key != ui_name)
 
 
 ## 清空待弹队列（不影响正在弹的那条）
@@ -55,6 +57,8 @@ func flush() -> void:
 			break
 		_show_entry(entry)
 	_draining = false
+	if not _is_showing:
+		drained.emit()
 
 
 ## 从队首扫到队尾，跳过「本会话已弹过」和「条件不满足」的，弹出第一条合格的并把它移出队列
@@ -74,6 +78,9 @@ func _take_next() -> UIPopupEntry:
 
 ## 先监听再显示；取消显示可能没有 hidden，返回后还要核对实际生命周期。
 func _show_entry(entry: UIPopupEntry) -> void:
+	if entry.callable.is_valid():
+		_show_callable(entry.callable)
+		return
 	_is_showing = true
 	_current_ui_name = entry.ui_name
 	var request := {"name": entry.ui_name, "once": entry.once_per_session}
@@ -141,3 +148,28 @@ func _finish_current(request: Dictionary) -> void:
 	_current = {}
 	_is_showing = false
 	_current_ui_name = ""
+
+
+func _show_callable(task: Callable) -> void:
+	_is_showing = true
+	var request := {"callable": true}
+	_current = request
+	await task.call()
+	if not is_same(_current, request):
+		return
+	_current = {}
+	_is_showing = false
+	if not _draining:
+		flush()
+
+func is_running() -> bool:
+	return _is_showing or _draining
+
+func is_empty() -> bool:
+	return _queue.is_empty()
+
+func pending_keys() -> Array[String]:
+	var result: Array[String] = []
+	for entry: UIPopupEntry in _queue:
+		result.append(entry.key)
+	return result

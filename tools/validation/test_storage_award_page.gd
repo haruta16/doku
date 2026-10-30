@@ -37,7 +37,7 @@ func _run() -> void:
 	if page == null:
 		quit(1)
 		return
-	await process_frame
+	await _wait_gift_ready(page)
 	_check(page.is_showing() and page.visible, "奖励页已显示")
 	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace")
 	page.get_node("AwardPanel/DoubleBtnGroup/CollectBtn").emit_signal("tag_pressed")
@@ -53,7 +53,7 @@ func _run() -> void:
 
 	var bonus_uid: int = award.dispatch([{"kind": "hint", "count": 2}], 1, "page_bonus_test", "page_bonus")
 	award.show_award(bonus_uid)
-	await process_frame
+	await _wait_gift_ready(page)
 	_check(page == ui.get_ui("award") and page.is_showing(), "复用实际页面展示下一笔奖励")
 	var before_bonus: int = game.get_tool_count("hint")
 	# 原生桥的逐次身份回调，业务注册与真实广告按钮一致。
@@ -85,6 +85,9 @@ func _run() -> void:
 	var cfg: ConfigFile = persisted.config
 	var saved: Dictionary = cfg.get_value("core", "state")
 	_check(saved.inventory.hint == before_bonus + 4 and saved.pending_awards.is_empty(), "实际磁盘最终保存翻倍余额且清除待领奖")
+	await ui.destroy_ui("award")
+	await process_frame
+	await process_frame
 	print("STORAGE AWARD PAGE TESTS: %d assertions, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 
@@ -94,3 +97,10 @@ func _check(condition: bool, label: String) -> void:
 	if not condition:
 		_failures += 1
 		printerr("TEST_FAILED: " + label)
+
+
+func _wait_gift_ready(page: Variant) -> void:
+	var deadline: int = Time.get_ticks_msec() + 5000
+	while page.is_showing() and page._buttons_locked and Time.get_ticks_msec() < deadline:
+		await process_frame
+	_check(page.is_showing() and not page._buttons_locked, "1.22 礼盒入场完成，真实按钮可操作")

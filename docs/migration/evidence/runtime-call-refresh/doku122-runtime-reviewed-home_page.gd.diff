@@ -1,0 +1,106 @@
+--- /var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9x5w3954/project/products/meowdoku/app/features/home/view/home_page.gd
++++ /var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/products/meowdoku/app/features/home/view/home_page.gd
+@@ -164,6 +164,9 @@
+ var _restore_offer: Dictionary = {}
+ var _exit_finished: Callable
+ var _home_dye_timer: Timer
++signal _home_popup_wait_tick
++
++var _home_popup_waiters: int = 0
+ var _home_generation: int = 0
+ 
+ func _ready() -> void:
+@@ -394,6 +397,7 @@
+ 	_peekaboo_presenting = false
+ 	_rank_popup_pending = false
+ 	_home_generation += 1
++	_cancel_home_popup_waits()
+ 	UniKitManager.destroy_ad(AdPlacement.BANNER)
+ 
+ 	_fire_home_10s_dye()
+@@ -1629,13 +1633,13 @@
+ 		return
+ 	_rank_popup_pending = true
+ 
+-	await get_tree().create_timer(0.1).timeout
++	await _await_home_delay(0.1, home_generation)
+ 	if not _home_flow_valid(home_generation):
+ 		return
+ 	for _i in range(60):
+ 		if _is_exiting or visible:
+ 			break
+-		await get_tree().process_frame
++		await _await_home_delay(0.0, home_generation)
+ 		if not _home_flow_valid(home_generation):
+ 			return
+ 	if _is_exiting or not visible:
+@@ -1754,6 +1758,7 @@
+ 	_peekaboo_presenting = false
+ 	_rank_popup_pending = false
+ 	_home_generation += 1
++	_cancel_home_popup_waits()
+ 	PeekabooFlow.cancel(self)
+ 	_companion.cat.set_sound_enabled(false)
+ 	_companion_entry_generation += 1
+@@ -2753,6 +2758,7 @@
+ 	_cancel_exit()
+ 	_cancel_restore_offer()
+ 	_home_generation += 1
++	_cancel_home_popup_waits()
+ 	PeekabooFlow.cancel(self)
+ 	_popup_queue.clear()
+ 
+@@ -2762,6 +2768,7 @@
+ 	_cancel_exit()
+ 	_cancel_restore_offer()
+ 	_home_generation += 1
++	_cancel_home_popup_waits()
+ 	PeekabooFlow.cancel(self)
+ 	_popup_queue.clear()
+ 
+@@ -2789,8 +2796,43 @@
+ ## 首页失效即交还队列，不能一直等另一个仍显示的窗口。
+ func _await_home_popup(name: StringName, generation: int) -> void:
+ 	var window: UIFrameWindow = UIManager.get_ui(name)
+-	if window == null:
++	if window == null or not _home_flow_valid(generation):
+ 		return
+ 	var revision: int = window.get_presentation_revision()
++	var tree: SceneTree = get_tree()
++	_home_popup_waiters += 1
++	if not tree.process_frame.is_connected(_on_home_popup_wait_frame):
++		tree.process_frame.connect(_on_home_popup_wait_frame)
+ 	while _home_flow_valid(generation) and is_instance_valid(window) and window.get_presentation_revision() == revision and not window.is_hidden():
+-		await get_tree().process_frame
++		await _home_popup_wait_tick
++	_home_popup_waiters -= 1
++	if _home_popup_waiters == 0 and tree.process_frame.is_connected(_on_home_popup_wait_frame):
++		tree.process_frame.disconnect(_on_home_popup_wait_frame)
++
++
++func _on_home_popup_wait_frame() -> void:
++	_home_popup_wait_tick.emit()
++
++
++## 先作废旧代次和待排队任务，再同步展开等待中的父协程；不能等页面销毁后的下一帧。
++func _cancel_home_popup_waits() -> void:
++	_popup_queue.clear()
++	_home_popup_wait_tick.emit()
++
++
++## 0 秒仍让出一帧；归属结束时同步取消，让调用它的父流程先于页面销毁退出。
++func _await_home_delay(seconds: float, generation: int) -> void:
++	if not _home_flow_valid(generation):
++		return
++	var tree: SceneTree = get_tree()
++	var deadline: int = Time.get_ticks_msec() + int(maxf(0.0, seconds) * 1000.0)
++	_home_popup_waiters += 1
++	if not tree.process_frame.is_connected(_on_home_popup_wait_frame):
++		tree.process_frame.connect(_on_home_popup_wait_frame)
++	while _home_flow_valid(generation):
++		await _home_popup_wait_tick
++		if Time.get_ticks_msec() >= deadline:
++			break
++	_home_popup_waiters -= 1
++	if _home_popup_waiters == 0 and tree.process_frame.is_connected(_on_home_popup_wait_frame):
++		tree.process_frame.disconnect(_on_home_popup_wait_frame)

@@ -1,0 +1,198 @@
+{
+  "source_changes": [
+    {
+      "path": "scripts/framework/ui/ui_window_manager.gd",
+      "previous_sha256": "8a7bc4a11c5e1bf5163f3d49308558c0ed1aa91766b6a5c741997b7c53d10667",
+      "current_sha256": "8c3e2921ffb3e95699c52c24021082bf09c438e907362e453c5260a55f0da13f"
+    },
+    {
+      "path": "scripts/framework/ui/base/ui_frame_window.gd",
+      "previous_sha256": "fb7c4e64134ea3d522a731fcf733cd9378d67f63d7eb15c0afda61408c2c7785",
+      "current_sha256": "b22fbdda6346d5b772ffd2c6af95951f152fc0f0e69993c13fa06838c3b2625b"
+    },
+    {
+      "path": "scripts/framework/ui/base/ui_base_window.gd",
+      "previous_sha256": "629b6b8901dfc0b810d3b3536592dc8fde25fbb02fdad15774f4e3a5337e7efa",
+      "current_sha256": "f84229356c294578191101692a0b724dcb72b6261ad5b6a3e1b594131d3e7fdd"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/dc_costume_tutorial_page.gd",
+      "previous_sha256": "60aea2c757eb8bf57545efc6109127b753d996b2b5c4013232f179fbcaedde55",
+      "current_sha256": "dd6c6e23219527aa32c20b99f43984a1a4b64b605bd3a9bb8aaf89cd955cb4da"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/dc_costume_unlock_page.gd",
+      "previous_sha256": "ab11c2d2bd49f1abf1679b891197ffe817593a1b00235d2bc38f7993734ff0a4",
+      "current_sha256": "547b6507ea0e5ca7c065f28b85a359ddbdf9f32b89d8a2c4fadafa0268884d9d"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/daily_game_page.gd",
+      "previous_sha256": "26dd573e6886c0abcc27623c46930ac5d6c951561c852f2699da9ba6f3b3b45a",
+      "current_sha256": "ed5cbb8b066a2c2592ee9e4fcbba4b3a4287bfb7d2886f22e099da8b55c24f82"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/dc_replay_confirm_page.gd",
+      "previous_sha256": "928dd3f764398a9ca7b8567e7313c69ec65941a631cb745b8f3448ae7668627b",
+      "current_sha256": "fde5e0739839e3fd04fa6eb6c67f426d12880ec51207796b17c6206859c2d9dd"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd",
+      "previous_sha256": "01b555e6344ac37c7038c08be246b9af37dd03586499e5eed35c68be985314e6",
+      "current_sha256": "0d844c1861732500d1ba6cf839dd6ee6020bc3f73b7e512a14f652e24b6c892e"
+    },
+    {
+      "path": "products/meowdoku/app/features/daily_streak/view/streak_revive_page.gd",
+      "previous_sha256": "ca3e0fb9c841ecbfdebdef69687ab29ea4070513577053cebfc6a450fd255104",
+      "current_sha256": "1b05d5085fd935466cfc41adffaf885895ca75d78104e64fce76e0ea45c5faba"
+    },
+    {
+      "path": "products/meowdoku/app/features/setting/view/setting_page.gd",
+      "previous_sha256": "a492881a350133a889df9b82af46824987250f860054235f24463ca24ee2e5e9",
+      "current_sha256": "63acfa904f082c45a3d2db1b95535dbf03c7156ae9808208abaf632664965e3d"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/account_result_page.gd",
+      "previous_sha256": "882930fea718af63b0791d0c3ae6b4944b81c1767a5d7fc75a9fee583619fc67",
+      "current_sha256": "7b66095506cfa3b1a47d04bf23de220e04712d80c6488395670a63864bafa709"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/no_connection_page.gd",
+      "previous_sha256": "0ca711e7b8a0c03b02ecf9cf6f67c5390958869b6b901fe6e2da3c454ff3b187",
+      "current_sha256": "da5c903a3604b1a29a1ac5f3d6c7846b8ea1435604acd2b880e6984f3bc3151e"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/sign_out_confirm_page.gd",
+      "previous_sha256": "de761114a5effe3f4e8e85c1052fe0f334fb1d7fb4bc04de54548d86e80b4fe5",
+      "current_sha256": "22fbce35eb03bd42aa88543dc4aca387d0119e3ff4843e0b4499bba1071c1fd2"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/login_page.gd",
+      "previous_sha256": "5adc7d49c8824be71b114b9b6dbd48287f16296ff8ac1375ee78923a98e230e0",
+      "current_sha256": "9309e0306fa80b140996039640869efe60cf9bb5baaca3acd6c0601973bb84ab"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/delete_account_confirm_page.gd",
+      "previous_sha256": "055f0f25c5ec3a35aa47b0940b260c9de9bd13e4345bab89531d07c7a6d9e621",
+      "current_sha256": "0c91fba6065beb8c3e2eeaf43481ab1b52a59944420d073071053df06feee77c"
+    },
+    {
+      "path": "products/meowdoku/app/features/purchase/view/purchase_success_page.gd",
+      "previous_sha256": "b0c449e12620374aeca9e409fbf9082c40364d0454e42b2db0358b539dab3d67",
+      "current_sha256": "91f7b52fecc490993f4a393ab927d7c39845a2b6c6dd59b83933a17fbe2dcad0"
+    },
+    {
+      "path": "products/meowdoku/app/features/language/view/language_page.gd",
+      "previous_sha256": "e542d94bbec2b88d6190007bcf79f3ba3a79ea0cf03f9ff36533a1b8f4e777df",
+      "current_sha256": "a9dbc528d863190c7522ffd8c7424c99b46ed4079e267c62184e64178b013519"
+    },
+    {
+      "path": "products/meowdoku/app/features/home/view/home_page.gd",
+      "previous_sha256": "6e2be601f4a985bda2256d62153ca94822e016df8ff84a482f333ac7cccdcb76",
+      "current_sha256": "8ae2b78e07824edab2266075275075bca8d2fbb7a47de38e7d54e4784ea6bae1"
+    },
+    {
+      "path": "products/meowdoku/app/features/home/view/home_companion_reward_page.gd",
+      "previous_sha256": "0796a48f9c9b71ad92225ea6d94aafee2de7c155ec843aa7e2ced12af712c8f9",
+      "current_sha256": "103dfc3294d994a96ed7f3bcd3e835f6d74bda96b21ecc942416210aa7d79f5e"
+    }
+  ],
+  "line_moves": [
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_hard_level"
+      ],
+      "path": "products/meowdoku/app/features/home/view/home_page.gd",
+      "expression": "LevelSelector.is_hard_level(lv)",
+      "old_line": 290,
+      "new_line": 293
+    },
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_hard_level"
+      ],
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd",
+      "expression": "LevelSelector.is_hard_level(_next_level_index())",
+      "old_line": 409,
+      "new_line": 419
+    },
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_hard_level"
+      ],
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd",
+      "expression": "LevelSelector.is_hard_level(lv)",
+      "old_line": 753,
+      "new_line": 763
+    },
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_hard_level"
+      ],
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd",
+      "expression": "LevelSelector.is_hard_level(next_lv)",
+      "old_line": 777,
+      "new_line": 787
+    },
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_super_hard_level"
+      ],
+      "path": "products/meowdoku/app/features/home/view/home_page.gd",
+      "expression": "LevelSelector.is_super_hard_level(lv)",
+      "old_line": 288,
+      "new_line": 291
+    },
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_super_hard_level"
+      ],
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd",
+      "expression": "LevelSelector.is_super_hard_level(_next_level_index())",
+      "old_line": 407,
+      "new_line": 417
+    },
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_super_hard_level"
+      ],
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd",
+      "expression": "LevelSelector.is_super_hard_level(lv)",
+      "old_line": 753,
+      "new_line": 763
+    },
+    {
+      "api": [
+        "products/meowdoku/gameplay/application/selection/level_selector.gd",
+        "is_super_hard_level"
+      ],
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd",
+      "expression": "LevelSelector.is_super_hard_level(next_lv)",
+      "old_line": 775,
+      "new_line": 785
+    }
+  ],
+  "semantic_call_multisets_equal": true,
+  "approved_previous_report_sha256": "63dae92b421adc7b1bb5e84e36d65145cfc07089df561e3e22d8859eca12012d",
+  "reviewed_api_implementation_files_unchanged": true,
+  "review_evidence": [
+    {
+      "diff": "docs/migration/evidence/runtime-call-refresh/doku122-runtime-reviewed-home_page.gd.diff",
+      "sha256": "7e5d975bcad191eb0b08220bf2ad38e15389a56d1215a9802c9c99fb3bfce0b6",
+      "baseline_fixture": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9x5w3954/project",
+      "reason": "Known lifecycle cancellation changes only; runtime invocation expressions/arguments and all 103 runtime API implementation files remain identical. Home adds 3 lines before the two calls; Win adds 10 lines before the six calls."
+    },
+    {
+      "diff": "docs/migration/evidence/runtime-call-refresh/doku122-runtime-reviewed-game_win_page.gd.diff",
+      "sha256": "654e1fd70ad4b14cc00f7b316990e710054882fefce56ca3969b4309c80418c6",
+      "baseline_fixture": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9x5w3954/project",
+      "reason": "Known lifecycle cancellation changes only; runtime invocation expressions/arguments and all 103 runtime API implementation files remain identical. Home adds 3 lines before the two calls; Win adds 10 lines before the six calls."
+    }
+  ]
+}

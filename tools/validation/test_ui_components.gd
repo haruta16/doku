@@ -22,6 +22,7 @@ func _run() -> void:
 	await _test_language()
 	await _test_popup_queue()
 	await _test_font_group(host)
+	await _test_real_hide_wait_cancellation()
 	ui.hide_all()
 	await create_timer(0.7).timeout
 	print("UI COMPONENT TESTS: %d assertions, %d failures" % [checks, failures])
@@ -159,6 +160,43 @@ func _test_popup_queue() -> void:
 	_check(queue._is_showing and "queue_next" in queue._shown_this_session, "queue can take ownership of a refreshed visible page")
 	await ui.hide_ui("queue_next")
 	_check(not queue._is_showing, "refreshed existing page releases queue on close")
+
+
+## 真页面的关闭等待必须在重开/销毁时同步取消，不能只保护测试夹具。
+func _test_real_hide_wait_cancellation() -> void:
+	for name: String in ["account_result", "no_connection", "sign_out_confirm", "login", "delete_account_confirm", "subscription_success", "streak_backfill", "setting", "language", "home_companion_reward"]:
+		var close_calls: Array[int] = [0]
+		var params: Dictionary = {"channel": "google", "channels": [], "reward_tier": 2, "from_streak": 3, "to_streak": 4, "info_days": 3}
+		if name == "setting":
+			params["on_close"] = func() -> void: close_calls[0] += 1
+		var page: Variant = ui.show_ui(name, params)
+		_check(page != null and page.is_showing(), name + " real page shows for cancellation contract")
+		if page == null:
+			continue
+		await process_frame
+		ui.hide_ui(name)
+		_check(page.get_window_state() == UIBaseWindow.WindowState.CLOSING, name + " enters asynchronous close")
+		_check(ui.show_ui(name, params) == page and page.is_showing(), name + " cancels close and reuses the page")
+		await process_frame
+		_check(page.is_showing() and page.visible, name + " old hide continuation cannot hide reopened page")
+		if name == "setting":
+			_check(close_calls[0] == 0, "cancelled setting hide cannot invoke old callback")
+		ui.hide_ui(name)
+		_check(page.get_window_state() == UIBaseWindow.WindowState.CLOSING, name + " can close again after cancellation")
+		page.queue_free()
+		await process_frame
+		await process_frame
+		_check(not is_instance_valid(page), name + " direct free during close releases the page")
+		if name == "setting":
+			_check(close_calls[0] == 0, "destroyed setting hide cannot invoke callback")
+		page = ui.show_ui(name, params)
+		_check(page != null and page.is_showing(), name + " recreates after cancelled destruction")
+		await ui.hide_ui(name)
+		_check(page.is_hidden(), name + " ordinary close still completes")
+		if name == "setting":
+			_check(close_calls[0] == 1, "successful setting close invokes its current callback exactly once")
+		page.queue_free()
+		await process_frame
 
 
 func _test_font_group(host: Node) -> void:

@@ -1,5 +1,9 @@
 # Level Data — 难度曲线与关卡分配
 
+> 版本说明：本篇保留 1.8.1 学习记录，对应升级前提交 `7af200c`。1.22.0 及当前框架的实际调用链见 [新版导读](08-version-1.22.0.md)；下文旧代码片段、行数和实验规则不是当前源码的逐行镜像。
+
+> 当前入口补充：尺寸、难关与选题策略已拆到 `gameplay/application/selection/`。`LevelSelector.prepare()` 在候选状态上生成计划；`MeowdokuRoundSession` 开局时经 `GameState.stage_round_selection()` 校验内容代次并调用 `LevelData.stage_selected()`，与残局一起提交。下文直接推进 `GameState` 游标的片段只说明旧版设计。
+
 > 文件：[products/meowdoku/gameplay/application/level_data.gd](../../products/meowdoku/gameplay/application/level_data.gd)
 >
 > 这是 Meowdoku 的**关卡系统**——棋盘大小怎么随关卡增长、哪些是特殊关卡、怎么从题库里取题。它连接了 `QueendokuCore`（题库验证）和 `BankData`（题库读取），也是 `GamePage._setup_entry_normal` 的核心依赖。
@@ -10,7 +14,7 @@
 
 ## 阅读范围
 
-`level_data.gd` 共 944 行，本文聚焦最能体现**难度曲线设计**的 5 个核心函数和 3 个辅助函数。题库选择逻辑（`get_next_entry` / `get_next_entry_main`）仅概述其设计思路。
+本篇所读的旧版 `level_data.gd` 共 944 行，本文聚焦最能体现**难度曲线设计**的 5 个核心函数和 3 个辅助函数。题库选择逻辑（`get_next_entry` / `get_next_entry_main`）仅概述其设计思路。
 
 ---
 
@@ -79,7 +83,7 @@ static func is_hard_level(level_num: int) -> bool:
     return level_num >= 21 and level_num % 10 == 0
 ```
 
-Hard 关 = 从第 20 关开始，每 10 关一次的「Boss 关」：20、30、40、50…
+这段旧规则中的 Hard 关从第 30 关开始：30、40、50…；条件是 `>= 21` 且能被 10 整除。
 
 **两个条件**：
 - `>= 21`：前 20 关没有 Hard 关（新手保护期）
@@ -90,7 +94,7 @@ static func is_hard_level_group_j(level_num: int) -> bool:
     return level_num >= 29 and level_num % 10 == 9
 ```
 
-J 组的 Hard 关是 29、39、49… —— 延迟了 9 关入场（新手保护更长）。
+J 组的 Hard 关是 29、39、49… —— 相比这段默认规则的第 30 关，首次出现提前 1 关。
 
 **Hard 关和普通关的区别**：Hard 关给更难的题目（rank 更高或 tier = "H"），有火焰特效和 "HARD" 标题。Game Page 里 `_is_hard_level` 这个 flag 控制了很多行为。
 
@@ -192,7 +196,7 @@ static func get_next_entry(sz, rank, tier, remaining_attempts = -1) -> Dictionar
 
 **索引轮询**：`idx % total` 确保题库里的每道题都会被用到。不是在题库里随机挑——那样有的题永远用不到，有的题反复出现。
 
-**递归重试 + `remaining_attempts` 上限**：如果当前这道题不合法（被过滤规则毙掉），`advance_bank_index` 跳过它，递归再取下一道。`remaining_attempts` 递减——防止无限递归。跌到 1 时直接返回当前题（不管合不合法），避免死循环。
+**递归重试 + `remaining_attempts` 上限**：如果当前这道题不合法（被过滤规则毙掉），`advance_bank_index` 跳过它，递归再取下一道。`remaining_attempts` 递减——防止无限递归。这描述的是旧版的重试预算机制。当前候选管线在预算耗尽或无法取得合法题目时返回失败，不能把“不合法也交付”当成当前约定。
 
 **三个题库来源**：
 

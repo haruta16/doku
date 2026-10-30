@@ -1,0 +1,319 @@
+{
+  "ok": true,
+  "suite": "all",
+  "planned": 12,
+  "executed": 12,
+  "passed": 12,
+  "excluded": [],
+  "not_executed": [],
+  "interrupted": false,
+  "changed_inputs": [],
+  "inputs": "inputs.json",
+  "limits": [
+    "No APK/native SDK/mobile-device or production CDN/TLS acceptance.",
+    "Development release checks simulate the build predicate; they do not export a release binary.",
+    "PCK proof checks content/UID behavior, not a production mobile package.",
+    "Historical shutdown evidence remains visible; current runs reject all reported shutdown leaks."
+  ],
+  "steps": [
+    {
+      "name": "architecture",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/check_architecture.py"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 0.506,
+      "log": "/private/tmp/doku122-final-verification4/architecture.log",
+      "log_sha256": "287fdd66d5f3c7eb15fa1fbb4f1343408a4b450ffebdbe07c038251e62085455",
+      "completion": {
+        "ok": true
+      }
+    },
+    {
+      "name": "python",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/validation",
+        "-p",
+        "test_*.py"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 2.148,
+      "log": "/private/tmp/doku122-final-verification4/python.log",
+      "log_sha256": "b4dc4cc99230b58363cdcf8ee15fb2b5e39613c482d6f08ecd61433cc86bab8c",
+      "completion": {
+        "ok": true,
+        "tests": 111,
+        "executed": 111,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "framework",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/run_validation.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--suite",
+        "framework",
+        "--smoke"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 1255.65,
+      "log": "/private/tmp/doku122-final-verification4/framework.log",
+      "log_sha256": "5acee3b345b7bda0deb90a7980e66ed920000a56d4a9b101f8200e80f0825ebb",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/framework-report.json",
+        "sha256": "c3bab0ea9e8c9121b3b5aac14af9226e6c6c5071817c0d36d0b3b9363a5a9549"
+      }
+    },
+    {
+      "name": "framework_boundary",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/run_framework_boundary_tests.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 2.234,
+      "log": "/private/tmp/doku122-final-verification4/framework_boundary.log",
+      "log_sha256": "6ba19cd1e6888c9c561c3adc0e3ed96d80842ee89d2cb065cb1d8e6aa9df0043",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/framework_boundary-report.json",
+        "sha256": "ff2db5f47022205e3f88ea1054257f5f6b51e4096c994376e08569269513f1ec"
+      }
+    },
+    {
+      "name": "ui_boundary",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/run_ui_framework_tests.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 2.887,
+      "log": "/private/tmp/doku122-final-verification4/ui_boundary.log",
+      "log_sha256": "b70aadd657b9dd9e8e1cb76f78a2f27be420e76cf69a75f729a23573e114f8e6",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/ui_boundary-report.json",
+        "sha256": "b5c0e2a0614a501e7967809933070f256b04cc5acbee42bd31247c7f7df775cb"
+      }
+    },
+    {
+      "name": "business_boundary",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/run_business_boundary_tests.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 2.412,
+      "log": "/private/tmp/doku122-final-verification4/business_boundary.log",
+      "log_sha256": "84f7643a96e7ba2d736534e048d29eb027f6d6791d88eec49b57bf1e9d467ba8",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/business_boundary-report.json",
+        "sha256": "660b690cafe888ab680ce7ea4aecd807287e32d82905d24fa2264826b5464758"
+      }
+    },
+    {
+      "name": "block",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/run_block_example.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--test"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 2.097,
+      "log": "/private/tmp/doku122-final-verification4/block.log",
+      "log_sha256": "9fa99bf3ac44ec1011c4c249c468daff6c6b188d334ebaf394ce058556f74766",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/block-report.json",
+        "sha256": "d5b1d82417817a0a8d4e2aa32d8be88b9d76dca166e4d0b1bcab169518b74afb"
+      }
+    },
+    {
+      "name": "development",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/run_development_boundary_tests.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 223.111,
+      "log": "/private/tmp/doku122-final-verification4/development.log",
+      "log_sha256": "b82554f60ca48f81b5785475fb79d3abc70b333b8867611edec4a4b58ab37ce6",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/development-report.json",
+        "sha256": "a9c0b89ad019109fea4e5344f784a753bf3543da6bc723ca7f31615446a9babc"
+      }
+    },
+    {
+      "name": "content",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/content/run_tests.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--report",
+        "/private/tmp/doku122-final-verification4/content-report.json"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 6.256,
+      "log": "/private/tmp/doku122-final-verification4/content.log",
+      "log_sha256": "863b16908516c31095979ef558cd9f37376344010055319f280f0935fb5ec5af",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/content-report.json",
+        "sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281"
+      }
+    },
+    {
+      "name": "publication",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/content/run_product_tests.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--report",
+        "/private/tmp/doku122-final-verification4/publication-report.json"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 185.218,
+      "log": "/private/tmp/doku122-final-verification4/publication.log",
+      "log_sha256": "ccd5e97a4cf102487a6b68db3f86af07ff2e533410d868a2ccb3ee88bb28c471",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/publication-report.json",
+        "sha256": "cede525486beaae659ad7c9b51473e1251545aba1edb36d0b7735a33b29c633d"
+      }
+    },
+    {
+      "name": "spine",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/content/run_spine_test.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--report",
+        "/private/tmp/doku122-final-verification4/spine-report.json"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 11.414,
+      "log": "/private/tmp/doku122-final-verification4/spine.log",
+      "log_sha256": "21f31ea36fd2389c39da32886c95625c13052989f0c2a412fb0c05ab9accf425",
+      "completion": {
+        "ok": true,
+        "report": "/private/tmp/doku122-final-verification4/spine-report.json",
+        "sha256": "48496a57528a8bf6d09a0cc20a0c993981f7c62695183d654dfb3cadf640b6ce"
+      }
+    },
+    {
+      "name": "pck",
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-u",
+        "tools/content/verify_exported_resources.py",
+        "--godot",
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot"
+      ],
+      "ok": true,
+      "exit_code": 0,
+      "error": "",
+      "elapsed_seconds": 21.433,
+      "log": "/private/tmp/doku122-final-verification4/pck.log",
+      "log_sha256": "1434de2138edcc45da957e068d51cdfb565f55a56f27780803ad86289a8d1f6d",
+      "completion": {
+        "ok": true
+      }
+    }
+  ],
+  "environment": {
+    "observed_at": "2026-10-30T13:10:03.316005+00:00",
+    "system": "Darwin",
+    "machine": "arm64",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "python_version": "3.9.6",
+    "python_executable": "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "engine": {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--version"
+      ],
+      "path": "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+      "version": "4.6.1.stable.custom_build.14d19694e",
+      "versions": [
+        "4.6.1.stable.custom_build.14d19694e"
+      ],
+      "exit_code": 0,
+      "error": "",
+      "log": "engine-version.log",
+      "log_sha256": "6f4d42c350a11ec5404e5eddb10cbb0cb490b7cb81888cac0a368d0ecb821362"
+    }
+  },
+  "archive_summary": "summary.json",
+  "inputs_sha256": "0eb62accf6f38c546620b5ae76a8ddc581476fc82ec3da9df45bd8a733b97867"
+}

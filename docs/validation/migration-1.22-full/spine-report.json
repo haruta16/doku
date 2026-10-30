@@ -1,0 +1,65 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/test.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/project",
+        "--script",
+        "res://test.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 5,
+        "failures": 0,
+        "summary": "SPINE_CONTENT_TEST checks=5 failures=0"
+      },
+      "summary": [
+        "SPINE_CONTENT_TEST checks=5 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nSPINE_CONTENT_TEST checks=5 failures=0\n",
+      "diagnostics_classified": true,
+      "log_sha256": "7a0cbd8aa7c3ac34db2d71c679e2a898c432d6be890a21af7420e583564c1de5"
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/resume.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/project",
+        "--script",
+        "res://test.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388",
+        "resume"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 1,
+        "failures": 0,
+        "summary": "SPINE_CONTENT_COLD_RESUME checks=1 failures=0"
+      },
+      "summary": [
+        "SPINE_CONTENT_COLD_RESUME checks=1 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nSPINE_CONTENT_COLD_RESUME checks=1 failures=0\n",
+      "diagnostics_classified": true,
+      "log_sha256": "8938c3cc2ff0f69a8d7eafdfda7301c3911c54b6902161b99efea9fa3748d64c"
+    }
+  ],
+  "scope": "Isolated signed Spine publication and two-process cold-start validation; no production game or mobile runtime."
+}

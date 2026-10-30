@@ -1,4 +1,4 @@
-## 道具高亮引导实验：开局高亮哪个道具；0=对照组 1=只高亮一次「定位」 2=只高亮一次「提示」 3=不做高亮 4=随机道具且可重复高亮
+## 实验配置 prop_highlight：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name PropHighlightConfig
 
@@ -8,36 +8,43 @@ const VALUE_LOCATE_ONCE: int = 1 # 只高亮「定位」道具一次
 const VALUE_HINT_ONCE: int = 2 # 只高亮「提示」道具一次
 const VALUE_NONE: int = 3 # 不做高亮
 const VALUE_CONTROL_REPEATABLE: int = 4 # 对照组逻辑，但允许重复高亮
+const VALUE_HINT_10S: int = 5
+const VALUE_HINT_FIRST3DAYS: int = 6
+const VALUE_RANDOM_ONCE_PER_ROUND: int = 7
+const VALUE_DEAD_BOARD: int = 8
+const VALUE_OPENING_QUIET: int = 9
+
+const DEAD_BOARD_VISIBLE_WAIT_SEC: float = 5.0
+
+const DEAD_BOARD_HARD_HINT_WAIT_SEC: float = 20.0
+
+const OPENING_QUIET_MEDIAN_FRACTION: float = 0.25
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "prop_highlight"
-	default_value = VALUE_CONTROL # 默认档：对照组
-
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
+	default_value = VALUE_RANDOM_ONCE_PER_ROUND
 
 
-## 该档位要引导的道具名：locate / hint / none / random / control
-func target_prop() -> String:
-	match value():
-		VALUE_LOCATE_ONCE:
-			return "locate"
-		VALUE_HINT_ONCE:
-			return "hint"
-		VALUE_NONE:
-			return "none"
-		VALUE_CONTROL_REPEATABLE:
-			return "random"
-		_:
-			return "control"
+func triggers_on_dead_board() -> bool:
+	return value() == VALUE_DEAD_BOARD
 
 
-## 是否一辈子只高亮一次（档位 1/2）
-func is_once_per_lifetime() -> bool:
-	return value() == VALUE_LOCATE_ONCE or value() == VALUE_HINT_ONCE
+func has_opening_quiet_window() -> bool:
+	return value() == VALUE_OPENING_QUIET
 
 
-## 是否可重复高亮（档位 4）
-func is_repeatable() -> bool:
-	return value() == VALUE_CONTROL_REPEATABLE
+static func opening_quiet_window_sec(size: int, rank: int) -> float:
+	return LevelPassTimeMedian.median_sec(size, rank) * OPENING_QUIET_MEDIAN_FRACTION
+
+
+static func pick_dead_board_tool(
+	candidates: Array[String], stocked: Array[String], ad_unavailable: bool
+) -> String:
+	if candidates.is_empty():
+		return ""
+	if stocked.is_empty() and ad_unavailable:
+		return ""
+	var pool: Array[String] = candidates if stocked.is_empty() else stocked
+	return pool[randi() % pool.size()]

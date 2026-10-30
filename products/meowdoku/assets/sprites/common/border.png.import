@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cf7sfyysdw0xh"
-path.s3tc="res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.s3tc.ctex"
-path.etc2="res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.etc2.ctex"
+path.bptc="res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.bptc.ctex"
+path.astc="res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/common/border.png"
-dest_files=["res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.s3tc.ctex", "res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.etc2.ctex"]
+dest_files=["res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.bptc.ctex", "res://.godot/imported/border.png-7fdc1f2eb876d0f97ecae06e2e7e55b0.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

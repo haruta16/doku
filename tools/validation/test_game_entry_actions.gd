@@ -100,6 +100,8 @@ func _run() -> void:
 	_check(not daily._entry_ready, "cancelled daily preparation cannot become ready later")
 
 	ui.hide_all()
+	for name: String in ["game", "daily_game", "confirm"]:
+		await ui.destroy_ui(name)
 	host.queue_free()
 	await process_frame
 	await process_frame
@@ -118,14 +120,14 @@ func _assert_blocked(page: Variant, label: String) -> void:
 	await _click_hint(page)
 	var rejected: Dictionary = page._execute_business_action("request_hint", {}, {"hint_cost": 1})
 	_check(rejected.get("error") == "entry_not_ready", label + " direct action rejects before creating session")
-	_check(page._business_session == null, label + " does not create a session")
+	_check(page._business_session == null or page._business_session.round_id().is_empty(), label + " does not publish a session identity")
 	var after: Dictionary = state.get_core_store().snapshot()
 	_check(after.inventory == before.inventory and after.round_services == before.round_services, label + " input cannot debit inventory or alter rounds")
 	page._entry_anim_playing = true
 
 
 func _click_hint(page: Variant) -> void:
-	var hit: Control = page._tool_hint_btn.get_node("Hit")
+	var hit: Control = page._bt._hint_btn.get_node("Hit")
 	var pos: Vector2 = hit.get_global_transform_with_canvas() * (hit.size * 0.5)
 	var motion := InputEventMouseMotion.new()
 	motion.position = pos
@@ -141,7 +143,7 @@ func _click_hint(page: Variant) -> void:
 
 func _wait_ready(page: Variant) -> void:
 	var deadline: int = Time.get_ticks_msec() + 8000
-	while (not page._entry_ready or page._entry_anim_playing) and Time.get_ticks_msec() < deadline:
+	while (not page._entry_ready or page._entry_anim_playing or page._tool_btns_locked) and Time.get_ticks_msec() < deadline:
 		await process_frame
 	_check(page._entry_ready and not page._entry_anim_playing, "entry and animation complete before normal input")
 

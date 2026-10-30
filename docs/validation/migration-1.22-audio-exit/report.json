@@ -1,0 +1,97 @@
+{
+  "project": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/project",
+  "engine": "/opt/homebrew/bin/godot-4.6.1",
+  "product_autoloads": 0,
+  "frame_count": 4,
+  "added_sleep": false,
+  "results": [
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/project",
+        "--log-file",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/load_only.engine.log",
+        "--verbose",
+        "--script",
+        "res://probe.gd",
+        "--",
+        "load_only"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/load_only.log",
+      "summary": "PURE_AUDIO_EXIT checks=3 failures=0 mode=load_only",
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 3,
+        "failures": 0,
+        "summary": "PURE_AUDIO_EXIT checks=3 failures=0 mode=load_only"
+      },
+      "diagnostics_classified": true,
+      "case": "load_only",
+      "log_sha256": "9cc5a1b2168c2328e93c3a841525f2cfa6065f9d9dc63d6569d17b03278482de"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/project",
+        "--log-file",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/play.engine.log",
+        "--verbose",
+        "--script",
+        "res://probe.gd",
+        "--",
+        "play"
+      ],
+      "exit_code": 0,
+      "ok": false,
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/play.log",
+      "summary": "WorkerThreadPool: 15 threads, 4 max low-priority.\nGodot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\nTextServer: Added interface \"Dummy\"\nTextServer: Added interface \"ICU / HarfBuzz / Graphite (Built-in)\"\nUnrecognized output string \"misc2\" in mapping:\n030000007e0500006920000001010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Mac OS X,\nSDL: Init OK!\nUsing \"default\" pen tablet driver...\n\nTextServer: Primary interface set to: \"ICU / HarfBuzz / Graphite (Built-in)\".\nCORE API HASH: 3217158889\nEDITOR API HASH: 3912318596\nLoading resource: res://probe.gd\nSceneTreeFTI: traversal method DEFAULT\nLoaded system CA certificates\nLoading resource: res://dlg_open_1.ogg\nLoading resource: res://.godot/imported/dlg_open_1.ogg-1bfc31ad253fc4a706521066874fd81c.oggvorbisstr\nPURE_AUDIO_EXIT checks=3 failures=0 mode=play\nXR: Clearing primary interface\nXR: Removed interface \"Native mobile\"\nXR: Removed interface \"OpenXR\"\nLeaked instance: AudioStreamPlaybackOggVorbis:9223372063731877341 - Reference count: 1\nLeaked instance: OggPacketSequencePlayback:9223372063748654558 - Reference count: 1\nLeaked instance: OggPacketSequence:9223372063647991263 - Reference count: 3\nLeaked instance: AudioStreamOggVorbis:9223372063664768480 - Reference count: 1\nHint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).\nResource still in use: res://dlg_open_1.ogg::OggPacketSequence_r0bcj (OggPacketSequence)\nResource still in use: res://dlg_open_1.ogg (AudioStreamOggVorbis)\nOrphan StringName: Master (static: 0, total: 1)\nStringName: 1 unclaimed string names at exit.\nWARNING: ObjectDB instances leaked at exit (run with --verbose for details).\n     at: cleanup (core/object/object.cpp:2641)\nERROR: 2 resources still in use at exit.\n   at: clear (core/io/resource.cpp:805)\n",
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 3,
+        "failures": 0,
+        "summary": "PURE_AUDIO_EXIT checks=3 failures=0 mode=play"
+      },
+      "diagnostics_classified": true,
+      "unexpected_errors": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit."
+      ],
+      "shutdown_errors": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit."
+      ],
+      "shutdown_baseline_environment": {
+        "applicable": false,
+        "reason": "unregistered_scope",
+        "expected": {
+          "system": "Darwin",
+          "machine": "arm64",
+          "godot_version": "4.6.1.stable.custom_build.14d19694e"
+        },
+        "observed": {
+          "system": "Darwin",
+          "machine": "arm64",
+          "godot_version": "4.6.1.stable.custom_build.14d19694e"
+        },
+        "mismatched_fields": []
+      },
+      "case": "play",
+      "log_sha256": "e5c64d3a3fe733a2b3a7c600cad89b9039d7e8b78344412f10db52d0eec8abca"
+    }
+  ],
+  "inputs": {
+    "probe.gd": "629e10007d81d24d068bf34209a7bec6f68fc7764a62dc2ad8fa8e78ebf7073d",
+    "dlg_open_1.ogg": "c2298bcc2bd242d3e1bdc166625b4001aab0c6fab2539bda085b3078da3eae18",
+    "project.godot": "326f2473b332266ccd7bec155511bc1c4b2eb872e53d43ccba1205c3c5ee98e7",
+    "probe.gd.uid": "d0825f454a85b3cb0ab3b5f4fc098f6c92823d13bf6b5d3456d617d27576acfc",
+    "dlg_open_1.ogg.import": "56fe90816c6bd12e32d24ccb5edb8806d8f9ee2cc037222df22398c6f69812b9"
+  }
+}

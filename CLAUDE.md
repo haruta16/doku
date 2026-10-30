@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-本项目是 Meowdoku 1.8.1 的逆向恢复工程，**仅用于学习 Godot 引擎和 GDScript**。
+本项目是 Meowdoku 1.22.0 的逆向恢复工程，**仅用于学习 Godot 引擎和 GDScript**。
 
 ## 核心约束
 

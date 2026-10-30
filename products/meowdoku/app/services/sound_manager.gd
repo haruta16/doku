@@ -1,9 +1,6 @@
-## 音频总控（autoload 名 SoundManager）：启动时预加载全部音效、各建一个常驻播放器，并统一管理 BGM 的播放/暂停
+## 声音管理器：统一音效播放器、播放节流与背景音乐，合并多个暂停原因后决定是否恢复。
 extends Node
 
-# ---- 音效种类 ----
-# 音效编号：每个 Kind 对应 _SOUND_PATHS 里的一条 ogg；顺序即枚举值，插到中间会挪动后面的映射
-# 大致分四类：棋盘与按钮音、结算胜负音、CLAP/BLOW_TRUMPET 鼓励音、COMBO* 连击音
 enum Kind {
 	BOARD_ENTER,
 	MARK_X,
@@ -22,11 +19,110 @@ enum Kind {
 	COMBO_VOICE,
 	MARK_WRONG_LOW,
 	LEVEL_FAIL_LOW,
+	MARK_X_SOFT_1,
+	MARK_X_SOFT_2,
+	RANK_CAT_COLLECT,
+	RANK_FISH_COLLECT_1,
+	RANK_FISH_COLLECT_2,
+	RANK_FISH_COLLECT_3,
+	RANK_SCORE_COUNT,
+	RANK_RISE_UP,
+	RANK_RISE_DOWN,
+	RANK_BOX_OPEN,
+	RANK_BOX_APPEAR,
+	PASS_PAGE_SETTLE,
+	AUTO_X_MARK,
+	AUTO_X_BANNER_APPEAR,
+	VOICE_NICE_S6,
+	VOICE_GREAT_S6,
+	VOICE_PERFECT_S6,
+	VOICE_EXCELLENT_S6,
+	VOICE_AMAZING_S6,
+	VOICE_UNBELIEVABLE_S6,
+	VOICE_INCREDIBLE_S9,
+	VOICE_PHENOMENAL_S9,
+	VOICE_SPECTACULAR_S9,
+	VOICE_LEGENDARY_S9,
+	VOICE_UNREAL_S10,
+	VOICE_INSANE_S10,
+	VOICE_EPIC_S10,
+	VOICE_BREATHTAKING_S10,
+	VOICE_NICE_MEOW_S11,
+	VOICE_GREAT_KITTY_S11,
+	VOICE_PURR_FECT_S11,
+	VOICE_EXCELLENT_KITTEN_S11,
+	VOICE_AMAZING_MEW_S11,
+	VOICE_PAW_SOME_S11,
+	VOICE_INCREDIBLE_WHISKERS_S11,
+	VOICE_CATNIP_LEVEL_S11,
+	VOICE_EPIC_POUNCE_S11,
+	VOICE_LEGENDARY_FURBALL_S11,
+	MEOW_SINGLE,
+	MEOW_CRESC_1,
+	MEOW_CRESC_2,
+	MEOW_CRESC_3,
+	MEOW_CRESC_4,
+	MEOW_CRESC_5,
+	MEOW_CRESC_6,
+	MEOW_CRESC_7,
+	MEOW_RAND_1,
+	MEOW_RAND_2,
+	MEOW_RAND_3,
+	MEOW_RAND_4,
+	MEOW_RAND_5,
+	MEOW_RAND_6,
+	MEOW_RAND_7,
+	PASS_ANIM_CAT_WIN_1,
+	PASS_ANIM_CAT_WIN_2,
+	PASS_ANIM_CAT_WIN_3,
+	VOICE_COMBO_03_JP,
+	VOICE_COMBO_04_JP,
+	VOICE_COMBO_05_JP,
+	VOICE_COMBO_06_JP,
+	VOICE_COMBO_07_JP,
+	VOICE_COMBO_08_JP,
+	VOICE_COMBO_09_JP,
+	VOICE_COMBO_10_JP,
+	VOICE_COMBO_11_JP,
+	VOICE_COMBO_12_JP,
+	VOICE_COMBO_03_EN_AI_CAT,
+	VOICE_COMBO_04_EN_AI_CAT,
+	VOICE_COMBO_05_EN_AI_CAT,
+	VOICE_COMBO_06_EN_AI_CAT,
+	VOICE_COMBO_07_EN_AI_CAT,
+	VOICE_COMBO_08_EN_AI_CAT,
+	VOICE_COMBO_09_EN_AI_CAT,
+	VOICE_COMBO_10_EN_AI_CAT,
+	VOICE_COMBO_11_EN_AI_CAT,
+	VOICE_COMBO_12_EN_AI_CAT,
+	COMPANION_WAVE,
+	COMPANION_SURPRISE,
+	COMPANION_EAT,
+	COMPANION_HUNGRY,
+	COMPANION_IDLE,
 }
 
-# ---- 资源与配置表 ----
-## 音效种类 → ogg 资源路径；_ready() 按这张表逐个建播放器
 const _SOUND_PATHS: Dictionary = {
+	Kind.VOICE_COMBO_03_JP: "res://products/meowdoku/assets/audio/sfx/combo_03_jp.ogg",
+	Kind.VOICE_COMBO_04_JP: "res://products/meowdoku/assets/audio/sfx/combo_04_jp.ogg",
+	Kind.VOICE_COMBO_05_JP: "res://products/meowdoku/assets/audio/sfx/combo_05_jp.ogg",
+	Kind.VOICE_COMBO_06_JP: "res://products/meowdoku/assets/audio/sfx/combo_06_jp.ogg",
+	Kind.VOICE_COMBO_07_JP: "res://products/meowdoku/assets/audio/sfx/combo_07_jp.ogg",
+	Kind.VOICE_COMBO_08_JP: "res://products/meowdoku/assets/audio/sfx/combo_08_jp.ogg",
+	Kind.VOICE_COMBO_09_JP: "res://products/meowdoku/assets/audio/sfx/combo_09_jp.ogg",
+	Kind.VOICE_COMBO_10_JP: "res://products/meowdoku/assets/audio/sfx/combo_10_jp.ogg",
+	Kind.VOICE_COMBO_11_JP: "res://products/meowdoku/assets/audio/sfx/combo_11_jp.ogg",
+	Kind.VOICE_COMBO_12_JP: "res://products/meowdoku/assets/audio/sfx/combo_12_jp.ogg",
+	Kind.VOICE_COMBO_03_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_03_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_04_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_04_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_05_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_05_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_06_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_06_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_07_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_07_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_08_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_08_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_09_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_09_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_10_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_10_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_11_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_11_en_ai_cat.ogg",
+	Kind.VOICE_COMBO_12_EN_AI_CAT: "res://products/meowdoku/assets/audio/sfx/combo_12_en_ai_cat.ogg",
 	Kind.BOARD_ENTER: "res://products/meowdoku/assets/audio/sfx/board_enter_1.ogg",
 	Kind.MARK_X: "res://products/meowdoku/assets/audio/sfx/mark_x_2.ogg",
 	Kind.UNMARK_X: "res://products/meowdoku/assets/audio/sfx/unmark_x_2.ogg",
@@ -42,11 +138,37 @@ const _SOUND_PATHS: Dictionary = {
 	Kind.BLOW_TRUMPET: "res://products/meowdoku/assets/audio/sfx/tile_handlike_genius.ogg",
 	Kind.COMBO: "res://products/meowdoku/assets/audio/sfx/combo_encourage.ogg",
 	Kind.COMBO_VOICE: "res://products/meowdoku/assets/audio/sfx/combo_voice.ogg",
-	Kind.MARK_WRONG_LOW: "res://products/meowdoku/assets/audio/sfx/mark_wrong_low.ogg",
-	Kind.LEVEL_FAIL_LOW: "res://products/meowdoku/assets/audio/sfx/level_fail_low.ogg",
+	Kind.RANK_FISH_COLLECT_1: "res://products/meowdoku/assets/audio/sfx/rank_fish_collect_1.ogg",
+	Kind.RANK_FISH_COLLECT_2: "res://products/meowdoku/assets/audio/sfx/rank_fish_collect_2.ogg",
+	Kind.RANK_FISH_COLLECT_3: "res://products/meowdoku/assets/audio/sfx/rank_fish_collect_3.ogg",
+	Kind.RANK_SCORE_COUNT: "res://products/meowdoku/assets/audio/sfx/rank_score_count.ogg",
+	Kind.RANK_RISE_UP: "res://products/meowdoku/assets/audio/sfx/rank_rise_up.ogg",
+	Kind.RANK_RISE_DOWN: "res://products/meowdoku/assets/audio/sfx/rank_rise_down.ogg",
+	Kind.RANK_BOX_OPEN: "res://products/meowdoku/assets/audio/sfx/rank_box_open.ogg",
+	Kind.RANK_BOX_APPEAR: "res://products/meowdoku/assets/audio/sfx/rank_box_appear.ogg",
+	Kind.PASS_PAGE_SETTLE: "res://products/meowdoku/assets/audio/sfx/pass_page_settle.ogg",
+	Kind.AUTO_X_MARK: "res://products/meowdoku/assets/audio/sfx/auto_x_mark.ogg",
+	Kind.AUTO_X_BANNER_APPEAR: "res://products/meowdoku/assets/audio/sfx/auto_x_banner_appear.ogg",
+	Kind.VOICE_NICE_S6: "res://products/meowdoku/assets/audio/sfx/combo_nice_s6.ogg",
+	Kind.VOICE_GREAT_S6: "res://products/meowdoku/assets/audio/sfx/combo_great_s6.ogg",
+	Kind.VOICE_PERFECT_S6: "res://products/meowdoku/assets/audio/sfx/combo_perfect_s6.ogg",
+	Kind.VOICE_EXCELLENT_S6: "res://products/meowdoku/assets/audio/sfx/combo_excellent_s6.ogg",
+	Kind.VOICE_AMAZING_S6: "res://products/meowdoku/assets/audio/sfx/combo_amazing_s6.ogg",
+	Kind.VOICE_UNBELIEVABLE_S6: "res://products/meowdoku/assets/audio/sfx/combo_unbelievable_s6.ogg",
+	Kind.VOICE_UNREAL_S10: "res://products/meowdoku/assets/audio/sfx/combo_unreal_s10.ogg",
+	Kind.VOICE_INSANE_S10: "res://products/meowdoku/assets/audio/sfx/combo_insane_s10.ogg",
+	Kind.VOICE_EPIC_S10: "res://products/meowdoku/assets/audio/sfx/combo_epic_s10.ogg",
+	Kind.VOICE_BREATHTAKING_S10: "res://products/meowdoku/assets/audio/sfx/combo_breathtaking_s10.ogg",
+	Kind.PASS_ANIM_CAT_WIN_1: "res://products/meowdoku/assets/audio/sfx/pass_anim_cat_win_1.ogg",
+	Kind.PASS_ANIM_CAT_WIN_2: "res://products/meowdoku/assets/audio/sfx/pass_anim_cat_win_2.ogg",
+	Kind.PASS_ANIM_CAT_WIN_3: "res://products/meowdoku/assets/audio/sfx/pass_anim_cat_win_3.ogg",
+	Kind.COMPANION_WAVE: "res://products/meowdoku/assets/audio/sfx/companion_wave.ogg",
+	Kind.COMPANION_SURPRISE: "res://products/meowdoku/assets/audio/sfx/companion_surprise.ogg",
+	Kind.COMPANION_EAT: "res://products/meowdoku/assets/audio/sfx/companion_eat.ogg",
+	Kind.COMPANION_HUNGRY: "res://products/meowdoku/assets/audio/sfx/companion_hungry.ogg",
+	Kind.COMPANION_IDLE: "res://products/meowdoku/assets/audio/sfx/companion_idle.ogg",
 }
 
-## 同时发声上限（表里没写的默认 1）：点得快的音效给多路，免得连点时被自己截断
 const _POLYPHONY: Dictionary = {
 	Kind.MARK_X: 4,
 	Kind.UNMARK_X: 4,
@@ -57,216 +179,211 @@ const _POLYPHONY: Dictionary = {
 	Kind.BLOW_TRUMPET: 2,
 	Kind.COMBO: 2,
 	Kind.COMBO_VOICE: 2,
-	Kind.MARK_WRONG_LOW: 2,
 }
 
 # ---- 音效播放器（_ready 里一次建好，常驻复用） ----
 ## Kind → AudioStreamPlayer；播放就是 play() 复用同一个节点
 var _players: Dictionary = {}
 ## 临时静音：教学演示等场景压制音效，不写存档、也不影响 BGM
-var _silence_scopes: Array[WeakRef] = [] # 句柄仍被持有的短暂静音；互不取消
 var _silent: bool = false
+
+var _last_play_usec: Dictionary = {}
+
+const _WARMUP_KINDS: Array = [
+	Kind.MARK_X,
+	Kind.MARK_CAT,
+]
+
+const _WARMUP_VOLUME_DB: float = -80.0
 
 # ---- BGM 播放器与状态 ----
 ## 唯一的 BGM 播放器，stream 懒加载（见 _ensure_bgm_stream）
 var _bgm_player: AudioStreamPlayer
 ## 是否已由 start_bgm() 打开总闸；false 时 _apply_bgm_playback 一律停播
 var _bgm_started: bool = false
-## 结算弹窗要求暂停（失败页等调用 set_bgm_paused）
-var _bgm_paused_for_dialog: bool = false
-## 闪避标志：播 BOARD_ENTER / LEVEL_WIN 期间压低 BGM（实现上是整段暂停）
-var _bgm_ducking: bool = false
-var _ducking_players: Array[AudioStreamPlayer] = [] # 每个仍在播放的闪避音效独立持有暂停权
-## 广告展示中暂停（由 UniKitManager 的广告信号驱动）
-var _bgm_paused_for_ad: bool = false
 ## 当前已加载的 BGM 路径，用来判断要不要重新 load
 var _bgm_stream_path: String = ""
 
-## 需要闪避 BGM 的音效：进入棋盘、通关
-const _BGM_DUCK_KINDS: Array = [Kind.BOARD_ENTER, Kind.LEVEL_WIN]
+var _bgm_pause_reasons: Dictionary = {}
 
-# ---- 连击人声资源（内置，按连击数分级） ----
-## 3~8 连击 → 男声 ogg；key 同时是封顶档位，超过 8 连击按 8 播
-const _COMBO_VOICE_PATHS: Dictionary = {
-	3: "res://products/meowdoku/assets/audio/sfx/combo_nice.ogg",
-	4: "res://products/meowdoku/assets/audio/sfx/combo_great.ogg",
-	5: "res://products/meowdoku/assets/audio/sfx/combo_perfect.ogg",
-	6: "res://products/meowdoku/assets/audio/sfx/combo_excellent.ogg",
-	7: "res://products/meowdoku/assets/audio/sfx/combo_amazing.ogg",
-	8: "res://products/meowdoku/assets/audio/sfx/combo_unbelievable.ogg",
-}
+var _bgm_sfx_pause_pending: Dictionary = {}
 
-## 同上，女声版（资源名多 _a 后缀）
-const _COMBO_VOICE_FEMALE_PATHS: Dictionary = {
-	3: "res://products/meowdoku/assets/audio/sfx/combo_nice_a.ogg",
-	4: "res://products/meowdoku/assets/audio/sfx/combo_great_a.ogg",
-	5: "res://products/meowdoku/assets/audio/sfx/combo_perfect_a.ogg",
-	6: "res://products/meowdoku/assets/audio/sfx/combo_excellent_a.ogg",
-	7: "res://products/meowdoku/assets/audio/sfx/combo_amazing_a.ogg",
-	8: "res://products/meowdoku/assets/audio/sfx/combo_unbelievable_a.ogg",
-}
-## 连击数 → 男声播放器
-var _combo_voice_players: Dictionary = {}
-## 连击数 → 女声播放器
-var _combo_voice_female_players: Dictionary = {}
-
-## AB 实验给的自定义音频路径 → 播放器（首次用到才建，加载失败会缓存 null）
-var _combo_voice_path_players: Dictionary = {}
+const _BGM_PAUSE_SFX_KINDS: Array = [
+	Kind.BOARD_ENTER,
+	Kind.LEVEL_WIN,
+	Kind.PASS_ANIM_CAT_WIN_1,
+	Kind.PASS_ANIM_CAT_WIN_2,
+	Kind.PASS_ANIM_CAT_WIN_3,
+]
 
 
-# ================= 生命周期 =================
-## autoload 启动：把全部音效和连击人声预加载成播放器子节点，再延迟连接广告信号
 func _ready() -> void:
-	# 每个音效一个独立播放器，之后一直复用
 	for kind in _SOUND_PATHS.keys():
 		var path: String = _SOUND_PATHS[kind]
-		var stream: AudioStream = ContentContext.load_audio("sfx/" + str(Kind.keys()[kind]).to_lower(), load(path) as AudioStream)
-		# 资源缺失只报错跳过，不影响其它音效
+		var stream: AudioStream = ContentContext.load_audio("sfx/" + str(Kind.keys()[kind]).to_lower(), load(path) as AudioStream) as AudioStream
 		if stream == null:
 			push_error("SoundManager: failed to load %s" % path)
 			continue
 		var player := AudioStreamPlayer.new()
 		player.stream = stream
-		player.bus = "Master" # 所有播放器都挂 Master 总线，项目没有自定义音频总线布局，音量由总线统一决定
+		player.bus = "Master"
 		player.max_polyphony = _POLYPHONY.get(kind, 1)
 		add_child(player)
 		_players[kind] = player
-		if kind in _BGM_DUCK_KINDS:
-			player.finished.connect(_on_duck_sfx_finished.bind(player))
-	# 连击人声：每个连击等级各一个播放器
-	for level: int in _COMBO_VOICE_PATHS.keys():
-		var path: String = _COMBO_VOICE_PATHS[level]
-		var stream: AudioStream = ContentContext.load_audio("voice/combo_male_%d" % level, load(path) as AudioStream)
-		if stream == null:
-			continue
-		var player := AudioStreamPlayer.new()
-		player.stream = stream
-		player.bus = "Master"
-		add_child(player)
-		_combo_voice_players[level] = player
-	# 女声版同理
-	for level: int in _COMBO_VOICE_FEMALE_PATHS.keys():
-		var path: String = _COMBO_VOICE_FEMALE_PATHS[level]
-		var stream: AudioStream = ContentContext.load_audio("voice/combo_female_%d" % level, load(path) as AudioStream)
-		if stream == null:
-			continue
-		var player := AudioStreamPlayer.new()
-		player.stream = stream
-		player.bus = "Master"
-		add_child(player)
-		_combo_voice_female_players[level] = player
 
-	# BGM 播放器最后建，stream 等到真要播时才加载
 	_bgm_player = AudioStreamPlayer.new()
 	_bgm_player.bus = "Master"
 	add_child(_bgm_player)
 
-	# 延迟一帧：_ready 阶段 UniKitManager 这个 autoload 可能还没准备好
 	_connect_ad_signals.call_deferred()
 
+	var bgm_log_timer := Timer.new()
+	bgm_log_timer.wait_time = 1.0
+	bgm_log_timer.one_shot = false
+	bgm_log_timer.timeout.connect(_log_bgm_status)
+	add_child(bgm_log_timer)
+	bgm_log_timer.start()
 
-# ================= 音效播放 =================
-## 播一个音效：先过临时静音和存档里的「音效」开关；BOARD_ENTER / LEVEL_WIN 会先闪避 BGM
-func play(kind: int) -> void:
+
+func _exit_tree() -> void:
+	for player: AudioStreamPlayer in _players.values():
+		if is_instance_valid(player):
+			player.stop()
+			player.stream = null
+	_players.clear()
+	if is_instance_valid(_bgm_player):
+		_bgm_player.stop()
+		_bgm_player.stream = null
+
+
+func _log_bgm_status() -> void:
+	if _bgm_player == null or _bgm_player.stream == null:
+		return
+	if not _bgm_player.playing or _bgm_player.stream_paused:
+		return
+	var total: float = _bgm_player.stream.get_length()
+	var pos: float = _bgm_player.get_playback_position()
+	var group: int = (
+		int(ABTestManager.bgm_test.value())
+		if ABTestManager != null and ABTestManager.bgm_test != null
+		else -1
+	)
+	print(
+		(
+			"[BGM] 组=%d 曲目=%s 时长=%.1fs 当前=%.1fs (第 %d 秒)"
+			% [group, _bgm_stream_path, total, pos, int(pos)]
+		)
+	)
+
+
+## 检查静音与音效开关，按微秒时钟限制同类音效频率，特殊音效播放时暂时持有 BGM 暂停原因。
+func play(kind: int, min_interval_sec: float = 0.0) -> void:
 	if is_silent():
 		return
-	# 存档中的音效总开关
 	if not GameState.is_sound_on():
 		return
-	# 没注册过的 kind 视为无音效，静默忽略
 	var player: AudioStreamPlayer = _players.get(kind, null)
 	if player == null:
+		_emit_sound(kind, "", "no_player")
 		return
+	var now: int = Time.get_ticks_usec()
+	if min_interval_sec > 0.0:
+		var last: int = _last_play_usec.get(kind, -1)
+		if last >= 0 and now - last < int(min_interval_sec * 1000000.0):
+			return
 
-	# 这两类音效和 BGM 频段重叠，先压低 BGM 再播
-	if kind in _BGM_DUCK_KINDS:
-		_duck_bgm_during(player)
+	_last_play_usec[kind] = now
+
+	if kind in _BGM_PAUSE_SFX_KINDS:
+		_pause_bgm_during(kind, player)
 	player.play()
+	_emit_sound(kind, "", "")
 
 
-## 设置临时静音（教学、切歌等场景用）：只挡音效，不落存档、不影响 BGM
-func set_silent(value: bool) -> void:
-	_silent = value
-
-
-## 保存返回的句柄即可静音；离开作用域、取消演出或页面释放后自动结束。
-## 用弱引用观察生命期，旧流程结束不会解除新流程或教学的静音。
-func hold_silence() -> RefCounted:
-	is_silent() # 新申请时顺便清理已结束的句柄，列表大小只随并发作用域增长。
-	var scope := RefCounted.new()
-	_silence_scopes.append(weakref(scope))
-	return scope
-
-
-func is_silent() -> bool:
-	for index: int in range(_silence_scopes.size() - 1, -1, -1):
-		if _silence_scopes[index].get_ref() == null:
-			_silence_scopes.remove_at(index)
-	return _silent or not _silence_scopes.is_empty()
-
-
-## 播内置连击人声：连击数封顶 8，female 决定用男声表还是女声表；受「音效」开关控制
-func play_combo_voice(combo_count: int, female: bool = false) -> void:
-	if is_silent() or not GameState.is_sound_on():
-		return
-	# 超过 8 连击按最高档播
-	var level: int = mini(combo_count, 8)
-	var players: Dictionary = _combo_voice_female_players if female else _combo_voice_players
-	var player: AudioStreamPlayer = players.get(level, null)
-	if player != null:
+func warmup_sfx() -> void:
+	for kind: int in _WARMUP_KINDS:
+		var player: AudioStreamPlayer = _players.get(kind, null)
+		if player == null:
+			continue
+		var original_db: float = player.volume_db
+		player.volume_db = _WARMUP_VOLUME_DB
 		player.play()
+		await get_tree().process_frame
+
+		player.stop()
+		player.volume_db = original_db
 
 
-## 播 AB 实验指定的连击人声文件（按路径）；受「人声」开关而非音效开关控制
-func play_combo_voice_by_path(path: String) -> void:
+func get_sound_length(kind: int) -> float:
+	var player: AudioStreamPlayer = _players.get(kind, null)
+	if player == null or player.stream == null:
+		return 0.0
+	return player.stream.get_length()
+
+
+func play_people_voice(kind: int) -> void:
 	if is_silent():
 		return
-	# 人声是独立开关（is_people_on）
 	if not GameState.is_people_on():
 		return
-	# AB 分组没配路径就不播
-	if path.is_empty():
+	var player: AudioStreamPlayer = _players.get(kind, null)
+	if player == null:
+		_emit_sound(kind, "voice", "no_player")
 		return
-	var player: AudioStreamPlayer = _ensure_combo_voice_player(path)
-	if player != null:
-		player.play()
+	player.play()
+	_emit_sound(kind, "voice", "")
 
 
-## 按需创建并缓存自定义人声的播放器；路径不存在时也缓存 null，避免每次重复探测
-func _ensure_combo_voice_player(path: String) -> AudioStreamPlayer:
-	if _combo_voice_path_players.has(path):
-		return _combo_voice_path_players[path]
-	var player: AudioStreamPlayer = null
-	if ResourceLoader.exists(path):
-		var stream: AudioStream = load(path) as AudioStream
-		if stream != null:
-			player = AudioStreamPlayer.new()
-			player.stream = stream
-			player.bus = "Master"
-			add_child(player)
-	# 失败也写进缓存：null 表示这条路径已经试过且拿不到
-	_combo_voice_path_players[path] = player
-	return player
+func set_silent(value: bool) -> void:
+	var changed: bool = _silent != value
+	_silent = value
+	if changed and is_instance_valid(EventBus):
+		EventBus.emit_event(EventName.SOUND_SILENT, {"on": value})
 
 
-## 掐断某个音效的当前播放（例：撤销落子时立刻停掉 MARK_CAT）
 func stop(kind: int) -> void:
 	var player: AudioStreamPlayer = _players.get(kind, null)
 	if player != null:
 		player.stop()
-		_on_duck_sfx_finished(player)
+		if _bgm_sfx_pause_pending.erase(kind):
+			var finished_callback: Callable = _on_pause_sfx_finished.bind(kind)
+			if player.finished.is_connected(finished_callback):
+				player.finished.disconnect(finished_callback)
+			set_bgm_paused(false, _sfx_pause_key(kind))
+		if is_instance_valid(EventBus):
+			EventBus.emit_event(EventName.SOUND_STOP, {"kind": _kind_name(kind)})
 
 
-# ================= BGM 与播放控制 =================
-## 打开 BGM 总闸（首页、游戏页进入时调用），真正的播放交给 _apply_bgm_playback
 func start_bgm() -> void:
 	_bgm_started = true
+
+	if (
+		ABTestManager != null
+		and ABTestManager.bgm_test != null
+		and ABTestManager.bgm_test.has_music_switch()
+	):
+		GameState.apply_music_switch(ABTestManager.bgm_test.default_music_on())
 	_apply_bgm_playback()
 
 
-## 结算弹窗暂停 / 恢复 BGM（失败页调用），只改标志位、不直接停流
-func set_bgm_paused(paused: bool) -> void:
-	_bgm_paused_for_dialog = paused
+## 按来源键增删暂停原因；某一来源解除暂停不代表其他来源也已结束。
+func set_bgm_paused(paused: bool, key: String = "legacy") -> void:
+	if paused:
+		_bgm_pause_reasons[key] = true
+	else:
+		_bgm_pause_reasons.erase(key)
+	if is_instance_valid(EventBus):
+		(
+			EventBus
+			. emit_event(
+				EventName.SOUND_BGM,
+				{
+					"action": "pause" if paused else "resume",
+					"key": key,
+					"reasons": _bgm_pause_reasons.size(),
+				}
+			)
+		)
 	_apply_bgm_playback()
 
 
@@ -286,60 +403,65 @@ func _connect_ad_signals() -> void:
 		push_error("SoundManager: failed to connect UniKitManager.ad_closed")
 
 
-## 广告展示回调：置暂停标志并立即生效（_placement_id 参数未使用）
-func _on_ad_shown_pause_bgm(_placement_id: String) -> void:
-	_bgm_paused_for_ad = true
-	_apply_bgm_playback()
+func _on_ad_shown_pause_bgm(placement_id: String) -> void:
+	if placement_id == AdPlacement.BANNER:
+		return
+	set_bgm_paused(true, BgmPauseReason.AD)
 
 
-## 广告关闭回调：清暂停标志；是否真的继续播由 _should_play_bgm 决定
-func _on_ad_closed_resume_bgm(_placement_id: String) -> void:
-	_bgm_paused_for_ad = false
-	_apply_bgm_playback()
+func _on_ad_closed_resume_bgm(placement_id: String) -> void:
+	if placement_id == AdPlacement.BANNER:
+		return
+	set_bgm_paused(false, BgmPauseReason.AD)
 
 
-# ================= BGM 内部实现 =================
-## 闪避：每个音效独立持有，重播同一个播放器不重复登记。
-func _duck_bgm_during(sfx_player: AudioStreamPlayer) -> void:
+func _sfx_pause_key(kind: int) -> String:
+	var kind_name: Variant = Kind.find_key(kind)
+	return BgmPauseReason.SFX_PREFIX + (str(kind_name) if kind_name != null else str(kind))
+
+
+func _pause_bgm_during(kind: int, sfx_player: AudioStreamPlayer) -> void:
 	if not _bgm_started:
 		return
-	if not _ducking_players.has(sfx_player):
-		_ducking_players.append(sfx_player)
-	_bgm_ducking = true
-	_apply_bgm_playback()
+	set_bgm_paused(true, _sfx_pause_key(kind))
 
-
-## 自然结束和显式 stop 都释放；其它闪避音效或暂停理由继续生效。
-func _on_duck_sfx_finished(sfx_player: AudioStreamPlayer) -> void:
-	if sfx_player.playing or not _ducking_players.has(sfx_player):
+	if _bgm_sfx_pause_pending.has(kind):
 		return
-	_ducking_players.erase(sfx_player)
-	_bgm_ducking = not _ducking_players.is_empty()
-	_apply_bgm_playback()
+	_bgm_sfx_pause_pending[kind] = true
+	sfx_player.finished.connect(_on_pause_sfx_finished.bind(kind), CONNECT_ONE_SHOT)
 
 
-## 应用 BGM 的唯一出口：决定停播、换曲、续播和暂停状态
+func _on_pause_sfx_finished(kind: int) -> void:
+	_bgm_sfx_pause_pending.erase(kind)
+	set_bgm_paused(false, _sfx_pause_key(kind))
+
+
 func _apply_bgm_playback() -> void:
-	# 三个条件（总闸、AB 开关、音乐开关）任一不满足就彻底停掉并清空当前曲
 	if not _should_play_bgm():
 		_bgm_player.stop()
 		return
 
-	# BGM 放哪首由 AB 实验决定；空路径表示该分组不放 BGM
-	var path: String = ABTestManager.bgm_test.bgm_path()
+	var path: String = (
+		ABTestManager.bgm_test.get_music_path()
+		if ABTestManager != null and ABTestManager.bgm_test != null
+		else ""
+	)
 	if path == "" or not _ensure_bgm_stream(path):
 		return
 
-	# 先让流跑起来
 	_resume_or_start_bgm()
 
-	# 结算弹窗 / 音效闪避 / 广告，任一成立就暂停
-	_bgm_player.stream_paused = _bgm_paused_for_dialog or _bgm_ducking or _bgm_paused_for_ad
+	_bgm_player.stream_paused = not _bgm_pause_reasons.is_empty()
 
 
-## BGM 该不该响：总闸开过 + AB 分组启用了 BGM + 存档音乐开关为开
 func _should_play_bgm() -> bool:
-	return _bgm_started and ABTestManager.bgm_test.is_enabled() and GameState.is_music_on()
+	if not _bgm_started:
+		return false
+	if ABTestManager == null or ABTestManager.bgm_test == null:
+		return false
+	if not ABTestManager.bgm_test.has_music_switch():
+		return false
+	return GameState.is_music_on()
 
 
 ## 续播：只有在既没在播、也没被暂停时才 play()，避免暂停中被重置播放进度
@@ -352,18 +474,53 @@ func _resume_or_start_bgm() -> void:
 func _ensure_bgm_stream(path: String) -> bool:
 	if _bgm_stream_path == path and _bgm_player.stream != null:
 		return true
-	var fallback: AudioStream = ResourceLoader.load(path) as AudioStream if ResourceLoader.exists(path) else null
-	var stream: AudioStream = ContentContext.load_audio("bgm/default", fallback)
+	if not ResourceLoader.exists(path):
+		return false
+	var stream: AudioStream = ContentContext.load_audio("bgm/default", ResourceLoader.load(path) as AudioStream)
 	if stream == null:
 		return false
 
-	# BGM 必须无缝循环
+	# 循环只作用于 BGM 副本，不能改变同资源的短音效。
+	stream = stream.duplicate() as AudioStream
 	if stream is AudioStreamWAV:
 		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		stream.loop_begin = 0
-		stream.loop_end = int(stream.get_length() * stream.mix_rate)
 	elif "loop" in stream:
 		stream.set("loop", true)
 	_bgm_player.stream = stream
 	_bgm_stream_path = path
 	return true
+
+
+func _emit_sound(kind: int, channel: String, miss: String) -> void:
+	if not is_instance_valid(EventBus):
+		return
+	var payload: Dictionary = {"kind": _kind_name(kind)}
+	if not channel.is_empty():
+		payload["ch"] = channel
+	if not miss.is_empty():
+		payload["miss"] = miss
+	EventBus.emit_event(EventName.SOUND_PLAY, payload)
+
+
+func _kind_name(kind: int) -> String:
+	var keys: Array = Kind.keys()
+	if kind >= 0 and kind < keys.size():
+		return String(keys[kind])
+	return "unknown(%d)" % kind
+
+var _silence_scopes: Array[WeakRef] = []
+
+func hold_silence() -> RefCounted:
+	is_silent() # 新申请时顺便清理已结束的句柄，列表大小只随并发作用域增长。
+	var scope := RefCounted.new()
+	_silence_scopes.append(weakref(scope))
+	return scope
+
+func is_silent() -> bool:
+	for index: int in range(_silence_scopes.size() - 1, -1, -1):
+		if _silence_scopes[index].get_ref() == null:
+			_silence_scopes.remove_at(index)
+	return _silent or not _silence_scopes.is_empty()
+
+
+## 播内置连击人声：连击数封顶 8，female 决定用男声表还是女声表；受「音效」开关控制

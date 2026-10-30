@@ -29,9 +29,8 @@ func _run() -> void:
 	ab.normal_endgame_save.set_debug_override(0)
 	ab.common_rewardad_logic.set_debug_override(1)
 	ab.reward_unlock_level.set_debug_override(0)
-	ab.revive_free_logic.set_debug_override(0)
 	ab.dc_level.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	kit.cheat_show_reward = true
 	for different_tool: bool in [false, true]:
 		for reverse: bool in [false, true]:
@@ -54,7 +53,10 @@ func _run() -> void:
 		await _test_revive_cancelled_retry(mode, true)
 	await _test_covered_daily_revive()
 	ui.hide_all()
-	await create_timer(0.7).timeout
+	for name: String in ["game", "daily_game", "fail", "daily_fail", "mock_ad", "home"]:
+		await ui.destroy_ui(name)
+	await process_frame
+	await process_frame
 	print("GAME REWARD REQUEST TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -82,8 +84,11 @@ func _wait_ready(page: Variant) -> void:
 
 
 func _request_tool(page: Variant, kind: String) -> String:
-	var button: Variant = page.get("_tool_" + kind + "_btn")
-	button.pressed.emit()
+	page._last_tool_deplete_ms = -10000
+	page._tool_btns_locked = false
+	page._hint_cooldown = false
+	page.call("_on_" + kind + "_btn_pressed")
+	await process_frame
 	var id: String = kit._reward_active_show_id
 	_check(not id.is_empty() and kit._reward_callbacks.has(id), "actual " + kind + " button registers and starts its reward")
 	return id
@@ -107,9 +112,9 @@ func _reward(id: String) -> void:
 func _test_tool_requests(different_tool: bool, reverse: bool) -> void:
 	var page: Variant = await _open()
 	var generation: int = page._business_generation
-	var a: String = _request_tool(page, "hint")
+	var a: String = await _request_tool(page, "hint")
 	await _close_mock()
-	var b: String = _request_tool(page, "locate" if different_tool else "hint")
+	var b: String = await _request_tool(page, "locate" if different_tool else "hint")
 	await _close_mock()
 	_check(a != b and page._business_generation == generation, "two shows belong to one real page generation")
 	_check(kit._reward_callbacks.has(a) and kit._reward_callbacks.has(b), "request B retains unresolved A consumer")
@@ -126,7 +131,7 @@ func _test_tool_requests(different_tool: bool, reverse: bool) -> void:
 
 func _test_covered_page() -> void:
 	var page: Variant = await _open()
-	var id: String = _request_tool(page, "hint")
+	var id: String = await _request_tool(page, "hint")
 	await _close_mock()
 	var cover: Variant = ui.show_ui("home")
 	# 通过真实管理器施加全屏遮挡；产品首页默认没有开启该窗口能力。
@@ -141,7 +146,7 @@ func _test_covered_page() -> void:
 
 func _test_tool_generation(transition: String) -> void:
 	var page: Variant = await _open()
-	var id: String = _request_tool(page, "hint")
+	var id: String = await _request_tool(page, "hint")
 	await _close_mock()
 	var callback: Callable = kit._reward_callbacks[id]
 	var generation: int = page._business_generation
@@ -169,12 +174,13 @@ func _test_daily_cached_observer() -> void:
 	await _wait_ready(page)
 	_check(kit.ad_closed.is_connected(page._on_ad_closed), "cached daily hide/reopen retains the lifetime close observer")
 	page._ad_show_unix = Time.get_unix_time_from_system() - 5.0
+	page._start_unix = Time.get_unix_time_from_system() - 20.0
 	var before: float = page._start_unix
 	kit.ad_closed.emit("reward")
 	_check(page._start_unix - before >= 5.0 and page._start_unix - before < 6.0 and page._ad_show_unix == 0.0, "cached daily close removes the observed ad duration from play time")
-	var a: String = _request_tool(page, "hint")
+	var a: String = await _request_tool(page, "hint")
 	await _close_mock()
-	var b: String = _request_tool(page, "locate")
+	var b: String = await _request_tool(page, "locate")
 	await _close_mock()
 	_reward(b)
 	_reward(a)
@@ -186,20 +192,20 @@ func _test_revive_requests(mode: String, fail_first: bool, reentrant: bool = fal
 	var page: Variant = await _open(mode)
 	_check(page._ensure_business_round().get("ok", false), mode + " durable round before failure")
 	page._lives = 0
-	page._on_game_over()
+	await page._on_game_fail()
 	var fail: Variant = ui.get_ui("fail" if mode == "game" else "daily_fail")
 	_check(page._is_complete and fail != null and fail.is_showing(), mode + " real failure opens revive page")
 	if fail == null:
 		return
-	_check(not fail._revive_offer().free, mode + " fixture requires an ad")
-	var stats: String = "normal" if mode == "game" else "daily"
+	_check(not fail._is_free_revive(), mode + " fixture requires an ad")
+	var stats: String = "main" if mode == "game" else "daily"
 	var count_before: int = game.get_game_total_stat(stats, "revive_count")
 	var attempt_before: int = page._business_attempt_sequence
 	var local_before: int = int(page._revive_count) if mode == "game" else 0
-	fail._on_revive_btn_pressed()
+	await fail._on_revive_btn_pressed()
 	var a: String = kit._reward_active_show_id
 	await _close_mock()
-	fail._on_revive_btn_pressed()
+	await fail._on_revive_btn_pressed()
 	var b: String = kit._reward_active_show_id
 	await _close_mock()
 	_check(not a.is_empty() and a != b and kit._reward_callbacks.has(a) and kit._reward_callbacks.has(b), mode + " failure retains both unresolved shows")
@@ -248,12 +254,12 @@ func _test_revive_requests(mode: String, fail_first: bool, reentrant: bool = fal
 ## 三笔以上同时在第一笔提交的通知内回奖，随后继续真实业务，而非只看复活动画。
 func _test_revive_burst(mode: String, show_count: int, failed_commits: int) -> void:
 	var page: Variant = await _open(mode)
-	var fail: Variant = _fail_round(page, mode)
+	var fail: Variant = await _fail_round(page, mode)
 	if fail == null:
 		return
 	var ids: Array[String] = await _request_revives(fail, show_count)
 	var state_key: String = "doku/main" if mode == "game" else "doku/daily"
-	var stats: String = "normal" if mode == "game" else "daily"
+	var stats: String = "main" if mode == "game" else "daily"
 	var before: int = page._business_attempt_sequence
 	var count_before: int = game.get_game_total_stat(stats, "revive_count")
 	var entered := {"done": false}
@@ -325,7 +331,7 @@ func _test_revive_burst(mode: String, show_count: int, failed_commits: int) -> v
 	_check(located.get("ok", false) and not located.get("duplicate", false), label + "next distinct business action has no sequence collision")
 	_check(game.get_core_store().snapshot().round_services[state_key].snapshot.attempt_sequence == before + 1, label + "following tool does not change the revive attempt")
 	await create_timer(0.4).timeout
-	fail = _fail_round(page, mode)
+	fail = await _fail_round(page, mode)
 	if fail == null:
 		return
 	_check(not fail._earned_revive, label + "the next failure cannot reuse an old earned right")
@@ -341,7 +347,7 @@ func _test_revive_burst(mode: String, show_count: int, failed_commits: int) -> v
 func _fail_round(page: Variant, mode: String) -> Variant:
 	_check(page._ensure_business_round().get("ok", false), mode + " has a durable round before failing")
 	page._lives = 0
-	page._on_game_over()
+	await page._on_game_fail()
 	var fail: Variant = ui.get_ui("fail" if mode == "game" else "daily_fail")
 	_check(page._is_complete and fail != null and fail.is_showing(), mode + " failure opens its real revive page")
 	return fail
@@ -350,7 +356,7 @@ func _fail_round(page: Variant, mode: String) -> Variant:
 func _request_revives(fail: Variant, count: int) -> Array[String]:
 	var ids: Array[String] = []
 	for index: int in count:
-		fail._on_revive_btn_pressed()
+		await fail._on_revive_btn_pressed()
 		var id: String = kit._reward_active_show_id
 		_check(not id.is_empty() and not ids.has(id) and kit._reward_callbacks.has(id), "real revive button creates a distinct unresolved ad")
 		ids.append(id)
@@ -361,7 +367,7 @@ func _request_revives(fail: Variant, count: int) -> Array[String]:
 ## A 写失败的通知先送达 B/C，再立即离页；排队的旧权益不能复活已关闭的对局。
 func _test_revive_cancelled_retry(mode: String, refresh: bool) -> void:
 	var page: Variant = await _open(mode)
-	var fail: Variant = _fail_round(page, mode)
+	var fail: Variant = await _fail_round(page, mode)
 	if fail == null:
 		return
 	var ids: Array[String] = await _request_revives(fail, 3)
@@ -399,7 +405,7 @@ func _test_revive_cancelled_retry(mode: String, refresh: bool) -> void:
 
 func _test_covered_daily_revive() -> void:
 	var page: Variant = await _open("daily_game")
-	var fail: Variant = _fail_round(page, "daily_game")
+	var fail: Variant = await _fail_round(page, "daily_game")
 	if fail == null:
 		return
 	var ids: Array[String] = await _request_revives(fail, 1)

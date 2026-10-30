@@ -1,135 +1,86 @@
-# Meowdoku 1.8.1 源码还原精度审计
+# Meowdoku 1.22.0 恢复保真审计
 
-## 1. 审计口径
+## 审计对象
 
-本次审计只评价 APK/XAPK 中可观察到的程序和数据是否被准确还原。原注释、Git 历史以及从未进入发布包的源码不计入核心业务代码还原率，也不对无法从发布包证明的内容作“原版实现”声明。
+输入为 `Meowdoku-1.22.0-arm64-v8a.xapk`，版本 `1.22.0 (1573)`，SHA-256：
 
-原始输入：
+```
+f6664607878fc45cce3e16269425ac8bfaff63a90438e42b8453aad72d466326
+```
 
-- `originals/Meowdoku_+Brain+Puzzle+Games_1.8.1_APKPure.xapk`
-- SHA-256：`f8b3dd5460adacfe0232eb23c783da991545951ade268c528de5fdf5d86cf179`
-- Godot：`4.6.1.stable.custom_build`
-- GDScript 字节码版本：`ebc36a7`（4.5.0-stable 起沿用到 4.6.1）
+本文评价发布包中可观察的程序与资源。作者原注释、Git 历史、未发布的编辑器源码及服务器实现不在可恢复范围内。[1.8.1 审计](recovery/1.8.1/RECOVERY_FIDELITY_AUDIT.md)独立保留，旧版数字不用于新版验收。
 
-## 2. 核心脚本同一性
+## 源码同一性
 
-安装时资源包内有 257 个 `.gdc`，工程的 `.autoconverted` 目录完整保留这 257 个原始字节码，每个字节码均有一份对应的 `.gd`。
+原资源包共有 853 份 `.gdc`，全部对应恢复源码，原字节码保留于 `.autoconverted/`。GDRETools `v2.5.0-beta.5` 使用字节码版本 `ebc36a7` 回编译未经格式化的源码：
 
-在统一格式化之前，使用 GDRETools v2.5.0-beta.5 将 257 份恢复源码重新编译为同一字节码版本，再与 APK 中的 `.gdc` 逐文件比较：
-
-| 结果 | 数量 | 说明 |
+| 状态 | 数量 | 证据含义 |
 | --- | ---: | --- |
-| 字节完全一致 | 255 | 重新编译结果与 APK 原字节码 SHA/内容完全一致 |
-| 有意保留的环境差异 | 2 | 不改变核心业务逻辑 |
-| 无法编译或无法对应 | 0 | 所有 APK 脚本均有对应源码 |
+| 原始反编译文本直接回编译一致 | 845 | 与原 `.gdc` 逐字节相同 |
+| 精确还原浮点常量后完全一致 | 2 | 修正反编译器十进制打印精度损失 |
+| 仅 Variant 字符串对齐填充不同 | 6 | 解析字节码结构后确认共 50 字节均位于 padding，不在 token、常量值或名称内 |
+| 未解释的源码差异 | 0 | 本次原始恢复层全部差异都有证据 |
 
-两处环境差异为：
+两处精度修复：
 
-1. `scripts/common/unikit_manager.gd`：非 Android 环境下的一条告警输出改为普通日志，离线适配行为不变。
-2. `addons/unikit_ios_exporter/export_plugin.gd`：增加 iOS feature 判断，阻止 iOS 导出插件在 Android/其他平台导出时执行。
+- `puzzle_generator.gd`：`4294967300.0` → `4294967296.0`，对应原 float32 `0x4f800000`。
+- `final_level_validator.gd`：`±9.223372e+18` → `±9223372036854775808.0`，恢复原常量 ±2^63。
 
-没有发现 `var_0`、`local_0`、`func_1` 等合成标识符。现有类名、函数名、参数名、成员名和局部变量名均直接来自可恢复的 GDScript token，不做“易读化”重命名。这里的“变量名已还原”指 APK 字节码实际保存的名称；无法证明它们是否等于更早、混淆前或未发布仓库中的名称。
+847/853 的逐字节一致结论适用于**格式化和学习加工之前**。不能拿插入了注释、沿用了显式类型的当前源码直接套用原始行号和字节哈希。
 
-## 3. 格式损失修复
+机器证据：[回编译逐文件结果](recovery/1.22.0/bytecode_roundtrip.json)、[差异分类](recovery/1.22.0/bytecode_fidelity_report.json)、[浮点修复](recovery/1.22.0/float_precision_fixes.json)。没有重命名恢复出的原始业务标识符。
 
-257 份 APK 对应脚本已统一经过 GDScript 格式化，修复反编译输出中的空行、缩进、续行、运算符间距、类型推断间距和长表达式排版。格式化只调整语法布局，不改标识符和业务表达式。
+## 格式与学习加工
 
-格式器在两个包含深层嵌套 lambda 的文件中产生了错误缩进，已按反编译 token 的原始调用结构人工排回，并由匹配的 Godot 编译器验证：
+使用 `gdtoolkit 4.5.0`，Tab 缩进、100 字符目标行宽。整理空行、续行、间距和长表达式；保留原标识符与业务表达式。包装工具修复了格式器处理单行 lambda 裸 `return` 时访问空节点的问题，并执行语法树/注释检查。
 
-- `scripts/module/gameplay/view/cell_view.gd`
-- `scripts/module/debug/view/generator_page.gd`
+Godot 编译器发现五个函数的嵌套 lambda 关闭缩进仍不合法，故按原始调用结构保留布局；这些位置允许长行，不能再次盲目全局格式化。清单见 [lambda 布局修复](recovery/1.22.0/lambda_layout_repairs.json)。`streak_page.gd` 的三个含数字开头节点名的路径改用合法的 `$".../2Txt"` 形式。
 
-另修复一处反编译器输出的非法 NodePath 简写：
+43 份新旧原字节码完全相同的脚本沿用既有学习源码。其余中文注释按声明和完整函数匹配迁移；变化函数的旧说明进入复核，随后补充新版模块职责、数据流和关键函数说明。注释阶段以修改前的新版本为参照验证，不与旧 Git HEAD 的业务代码混比。声明使用 `##`，分段和函数体说明使用 `#`。[注释报告](recovery/1.22.0/comment_migration.json)记录迁移范围；[学习说明统计](recovery/1.22.0/learning_annotation_summary.json)记录 3,114 行迁移与 4,001 行新增说明，797 份业务脚本均有职责首注。关键链路补充函数与状态说明，不代表每个声明都逐一新增注释。
 
-- `scripts/module/daily_streak/view/streak_page.gd`
-- `$StreakContent / StreakPanel / "2Txt"` 改为 `$"StreakContent/StreakPanel/2Txt"`
-- 场景中确有该节点，改动恢复的是原 token 所表达的节点路径，不是业务重写。
+注释迁移工具另经多行 lambda 缩进、嵌套类继承等 10 项回归验证；重建 164 份迁移输入并重放后，3,114 行迁移结果没有变化。[迁移安全审计](recovery/1.22.0/comment_migration_safety_audit.json)包含证据。
 
-将原字节码重新反编译并使用相同格式规则生成规范参照后，257 份源码中有 251 份文本完全一致；其余 6 份由上述 2 个环境适配、2 个 lambda 排版、1 个 NodePath 语法修复和 1 个纯缩进风格差异构成。最后一项忽略空白后完全一致。
+## 图像、场景和翻译
 
-## 4. 数据同一性
+GDRE 首轮转换 1,618/1,944 个导入资源，剩余 326 个为 `atlas_packer.member`。恢复过程加载原包 AtlasTexture，使用导出区域从 17 张图集中裁切成员图，保留源图尺寸与 UID，并改为标准无损纹理导入。
 
-- 26 份运行时 XOR 关卡库均已解密为编辑用 JSON。
-- 编辑 JSON 与运行时文件逐份解密后进行结构比较，结果为 `26/26` 相同。
-- 总计 20,746 条顶层关卡记录，其中 20,710 条包含 `solution` 与 `regionMap`。
-- 原始数据内有 63 条 solution 会被原运行时 `QueendokuCore.validate_solution_entry` 拒绝；这些脏数据来自原包，当前工程忠实保留，业务加载逻辑也保留原有跳过行为。
-- 75 份编译后的运行时翻译资源全部保留。反编译生成的源 CSV 不完整，因此没有用 CSV 覆盖运行时翻译资源。
+- 326/326 个成员 PNG 回读像素一致，没有旋转或额外 margin。
+- 390/390 张其它已恢复 PNG 与原 `.ctex` 的基础图像逐像素一致。
+- 8 张小型打卡贴图的 ASTC mipmap 警告经清除 mipmap 后核验基础图像一致，无需猜绘或替换图片。
+- 187 个发布场景全部加载。排行打卡两个纹理的三处旧 UID 引用已更新为真实 `.import` UID。
+- 75 份运行时翻译哈希与原包完全一致。CSV 仅恢复 1,184/2,255 个键，保留为部分参考，不作为运行翻译输入。
 
-## 5. 没有进入 APK 的代码
+证据：[图集恢复](recovery/1.22.0/atlas_recovery_report.json)、[全部普通纹理核验](recovery/1.22.0/all_texture_audit_report.json)。
 
-原始 `global_script_class_cache.cfg` 记录了 241 个全局类。与资源包实际脚本逐项核对后，有 29 个类路径没有对应字节码：
+## 关卡数据
 
-- 28 个 `addons/art2godot/` 文件：全部是美术/Figma 导入和场景编辑期工具，不参与发布包运行。
-- `scripts/editor/queendoku/level_generator_editor.gd`：编辑/调试用关卡生成器。
+原包包含 59 份运行文件：37 个 `.bin` 和 22 个 JSON。原文件哈希全部保留。解码为编辑 JSON 后得到 65,915 条顶层记录及 45,133 条 solution，其中 63 条会被原运行时规则拒绝，未改动这些原数据。
 
-28 个 `art2godot` 文件没有可供语义还原的字节码，当前工程未伪造其实现。
+JSON 往返有 36 个浮点值出现至多 `1.1102230246251565e-16` 的末位舍入；只对双方均为 float 的值使用记录在工具中的相对 `1e-15` 比较，结构、整数等仍严格比较。每份数据的舍入个数与最大差异列在 [运行验收清单](recovery/1.22.0/runtime_manifest.json)，并非笼统忽略所有数字差异。
 
-缺失路径明细：
+新版编辑加密插件使用原 `BankBinaryFormat` 和 `BankLevelCodec` 规则。59 份编辑 JSON 编码、XOR、解码及展开后的往返全部通过。该测试写入临时目录，不覆盖作为恢复证据的运行文件。
 
-```text
-addons/art2godot/art2godot.gd
-addons/art2godot/config/font_config.gd
-addons/art2godot/config/name_transform_config.gd
-addons/art2godot/config/path_template.gd
-addons/art2godot/config/prefab_map_config.gd
-addons/art2godot/config/sprite_map_config.gd
-addons/art2godot/core/font_registry.gd
-addons/art2godot/core/fui_converter.gd
-addons/art2godot/core/fui_field_map.gd
-addons/art2godot/core/fui_loader.gd
-addons/art2godot/core/fui_parser.gd
-addons/art2godot/core/image_transforms.gd
-addons/art2godot/core/node_builder.gd
-addons/art2godot/core/node_index.gd
-addons/art2godot/core/node_name_builder.gd
-addons/art2godot/core/patch_plan.gd
-addons/art2godot/core/prefab_registry.gd
-addons/art2godot/core/sprite_cleanup.gd
-addons/art2godot/core/sprite_dedup_index.gd
-addons/art2godot/core/sprite_importer.gd
-addons/art2godot/core/sprite_registry.gd
-addons/art2godot/core/three_way_merge.gd
-addons/art2godot/core/tscn_parser.gd
-addons/art2godot/core/tscn_patcher.gd
-addons/art2godot/figma/figma_channel_dock.gd
-addons/art2godot/figma/figma_channel_tools.gd
-addons/art2godot/figma/figma_node_tools.gd
-addons/art2godot/figma/figma_ws_client.gd
-scripts/editor/queendoku/level_generator_editor.gd
-```
+## 本地适配与不可恢复边界
 
-`LevelGeneratorEditor` 当前文件是依据现存调用接口制作的兼容性重建，不是从 APK 字节码恢复的原实现。发布包只证明了类名、路径和调用接口，不能证明原算法；因此它不计入核心还原率，也不再作为自动验收通过条件。正常游戏运行使用 APK 内已有的 `scripts/module/gameplay/core/level_generator.gd` 和预制关卡库，不依赖该编辑器生成器。
+- 保留 Godot MCP 和关卡编辑插件等明确的本地开发工具。
+- 新版不再引用旧版兼容性关卡生成器；旧工具与退役业务按新版结构移除，历史由 Git 和备份保存。
+- 只启用实际可运行的编辑器插件。原包没有完整提供的插件不猜写实现；包内残留的脚本和着色器仍作为证据保留。
+- UniKit/LXAuth 的 GDScript 层完整恢复，原生 SDK 源码与服务端不能由本包恢复。桌面缺 SDK 的预期分支使用普通日志，移动端继续保留警告。登录门禁、15 秒等待和同步行为没有改变。[日志适配差异](recovery/1.22.0/desktop_native_logging_adaptations.json)
+- 学习版使用独立 Android 包名和独立存档目录，避免覆盖商店版和旧学习版数据。
+- 修复原包已有的棋盘析构顺序问题：父棋盘清空池后，子格子不能再向池中归还骨骼；销毁阶段直接释放。该修复解决本机 Metal 退出崩溃，不改正常回收、选题或存档规则。详见 [退出生命周期审计](recovery/1.22.0/runtime_teardown_audit.md)。
+- 非 Gradle Android 导出使用本地插件把清单 target SDK 从模板默认 35 调整到原包的 36，保留 min SDK 24；它没有重编译原生引擎。
 
-工程另外包含 35 个 Godot MCP 脚本、关卡库加密插件以及两个恢复辅助脚本。这些均是开发/恢复工具，不冒充 APK 业务源码。
+## 已执行验收
 
-## 6. 最终验证
+[最终验收记录](recovery/1.22.0/final_validation.json)列出各命令、退出码和保留警告；[源码整合核对](recovery/1.22.0/final_source_integrity.json)逐文件记录最终哈希及有意保留的代码/布局差异。
 
-使用官方 Spine 4.2 + Godot 4.6.1 custom editor 完成：
+- 使用匹配的 Spine-Godot 4.6.1，修复后的第二轮导入和脚本/资源扫描无错误或警告。
+- 全量验收：853 脚本、187 场景、75 翻译、59 关卡文件，数据统计和 BankData API 通过。
+- 原包字节码、运行题库、翻译的文件清单与 SHA-256 通过。
+- 桌面实际操作：中文教程、双击落猫、滑动排除、教程完成、第 1 关通关、打卡、结算动画、进入第 2 关、设置和返回主页；重启后第 2 关存档续玩、修复后的 Metal 正常退出。
+- Android arm64 APK 导出，独立包名/版本/签名验证，以及 APK 内关卡/翻译哈希检查通过；未打入编辑明文与恢复工具。
+- 本轮无连接的 Android 设备，真机运行未验证，旧版 Pixel 6a 结果不沿用。
 
-- 全工程 headless import：退出码 0，无脚本解析、编译、资源加载错误或警告。
-- 深度验收：257 个恢复脚本、74 个场景、75 个翻译、26 组关卡库全部加载；编辑/运行时关卡数据一致。
-- 主场景 headless 启动：能够从 splash 进入 homepage，无脚本错误；强制退出时仅有对象泄漏提示，不属于启动失败。
+运行日志仍保留两类原有提示：桌面缺少 NativeUtil SDK，以及默认 `frame_form=0 / wins=0` 被原档案逻辑判为需要 clamp（结果仍为 0）。后者不是新恢复数据损坏，未修改原档案规则。Headless 全量验收在退出时还会报告 ObjectDB 存活提示；最终桌面正常退出未再出现资源泄漏或崩溃。
 
-验收成功输出：
-
-```text
-LEVEL_DATA_INFO: 63 original solution entries are rejected by runtime validation
-VALIDATION_OK: 257 recovered scripts, 74 scenes, 75 translations, 26 level banks, 20,746 records, and 20,710 solution entries
-```
-
-## 7. 结论与上限
-
-如果评价对象是“APK 中实际发布的核心业务 GDScript 和运行时数据”，当前证据支持接近满分的还原质量：全部脚本有对应源码，格式化前 255/257 字节完全一致，另 2 份差异均为明确的环境适配，业务代码没有发现推测性重写或标识符替换。
-
-无法宣称整个原始开发仓库 100% 复原，因为发布包没有保存注释、Git 历史、28 个 `art2godot` 工具和编辑器生成器实现。继续猜写这些文件只会降低“忠实还原”可信度；对缺乏证据的部分保留缺失说明，比制作一个看似完整但无法证明的实现更接近本项目的核心目标。
-
-## 8. 复核工具
-
-| 工具 | 文件 SHA-256 |
-| --- | --- |
-| GDRETools v2.5.0-beta.5 macOS zip | `01211b4dd82f874bb21dfc11483d19affad9cff9c1912eacf561972b750011e6` |
-| GDRETools 可执行文件 | `65eb334c49714643f71cc813c0e6d6294ac3d888682e9be2259877479bb637a9` |
-| Spine-Godot 4.2/4.6.1 macOS zip | `75749b6a4bcc0d3af253eaa90eab7a44660be3cae4ead7ce56ab2ed5a3973022` |
-| Spine-Godot 可执行文件 | `38a1848cb855b8baef5f83ec82648bde2ec275c1c4ba2d690383000ce3c4836b` |
-
-审计完成日期：2026-07-11。
+工具、哈希和可重复操作见 [来源记录](recovery/1.22.0/provenance.json)、[恢复工具](recovery/1.22.0/TOOLS.md)、[Android 构建](recovery/1.22.0/ANDROID_BUILD.md)。

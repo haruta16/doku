@@ -3,6 +3,8 @@
 class_name DokuRoundModule
 extends RefCounted
 
+const ScoreRules = preload("res://products/meowdoku/gameplay/domain/doku_round_performance.gd")
+const MouseSelector = preload("res://products/meowdoku/gameplay/domain/mouse_tool_selector.gd")
 const Actions = preload("res://products/meowdoku/gameplay/domain/doku_action_rules.gd")
 const BoardState = preload("res://products/meowdoku/gameplay/domain/doku_board_state.gd")
 const ToolService = preload("res://products/meowdoku/gameplay/domain/doku_tool_service.gd")
@@ -15,19 +17,22 @@ func create_snapshot(context: Dictionary) -> Dictionary:
 	for field: String in ["board", "regions", "solution", "history"]:
 		if not context.get(field, []) is Array:
 			return _failure("invalid_context", "invalid " + field)
-	for field: String in ["reward", "content"]:
+	for field: String in ["reward", "content", "performance"]:
 		if not context.get(field, {}) is Dictionary:
 			return _failure("invalid_context", "invalid " + field)
 	var snapshot: Dictionary = {
 		"schema": 1, "board": context.get("board", []).duplicate(true),
 		"regions": context.get("regions", []).duplicate(true),
 		"solution": context.get("solution", []).duplicate(true),
+		"life_cap": context.get("life_cap", 3), "lives_inf": context.get("lives_inf", false),
+		"kind": context.get("kind", 1), "draft_active": context.get("draft_active", false),
 		"lives": context.get("lives", 3), "life_plus_used": context.get("life_plus_used", false), "board_revision": 0,
 		"hint_cost": context.get("hint_cost", 1), "hint_item": context.get("hint_item", "hint"),
 		"reward": context.get("reward", {}).duplicate(true),
 		"content": context.get("content", {}).duplicate(true), "pending_hint": {},
 		"history": context.get("history", []).duplicate(true), "highlight_cursor": -1,
 		"attempt_sequence": context.get("attempt_sequence", 0),
+		"performance": ScoreRules.initial(context.get("performance", {})),
 	}
 	var error: String = validate_snapshot(snapshot)
 	return {"ok": true, "snapshot": snapshot} if error.is_empty() else _failure("invalid_context", error)
@@ -70,7 +75,12 @@ func validate_snapshot(snapshot: Dictionary) -> String:
 		return "solution violates doku rules"
 	if typeof(snapshot.get("life_plus_used", false)) != TYPE_BOOL:
 		return "invalid life plus state"
-	if typeof(snapshot.get("lives")) != TYPE_INT or snapshot.lives < 0 or snapshot.lives > 3:
+	if typeof(snapshot.get("life_cap", 3)) != TYPE_INT or int(snapshot.get("life_cap", 3)) < 1:
+		return "invalid life cap"
+	for field: String in ["lives_inf", "draft_active"]:
+		if typeof(snapshot.get(field, false)) != TYPE_BOOL:
+			return "invalid " + field
+	if typeof(snapshot.get("lives")) != TYPE_INT or snapshot.lives < 0 or snapshot.lives > int(snapshot.get("life_cap", 3)):
 		return "invalid lives"
 	if typeof(snapshot.get("board_revision")) != TYPE_INT or snapshot.board_revision < 0:
 		return "invalid board revision"
@@ -90,6 +100,10 @@ func validate_snapshot(snapshot: Dictionary) -> String:
 		return "invalid highlight cursor"
 	if typeof(snapshot.get("attempt_sequence", 0)) != TYPE_INT or int(snapshot.get("attempt_sequence", 0)) < 0:
 		return "invalid attempt sequence"
+	if snapshot.has("performance"):
+		var performance_error: String = ScoreRules.validate(snapshot.performance)
+		if not performance_error.is_empty():
+			return performance_error
 	var pending: Dictionary = snapshot.pending_hint
 	if not pending.is_empty():
 		if typeof(pending.get("token")) != TYPE_STRING or not pending.get("hint") is Dictionary:
@@ -115,6 +129,12 @@ func sync_runtime(snapshot: Dictionary, runtime: Dictionary) -> Dictionary:
 		next["highlight_cursor"] = runtime.highlight_cursor
 	if runtime.has("lives"):
 		next["lives"] = runtime.lives
+	if runtime.has("draft_active") and runtime.draft_active != snapshot.get("draft_active", false):
+		return _failure("draft_activation_mismatch")
+	if runtime.has("performance"):
+		if not runtime.performance is Dictionary:
+			return _failure("invalid_performance")
+		next["performance"] = ScoreRules.initial(runtime.performance)
 	if runtime.has("life_plus_used"):
 		next["life_plus_used"] = runtime.life_plus_used
 	var error: String = validate_snapshot(next)
@@ -122,7 +142,27 @@ func sync_runtime(snapshot: Dictionary, runtime: Dictionary) -> Dictionary:
 
 
 func apply_action(snapshot: Dictionary, kind: String, payload: Dictionary, call_context: Dictionary) -> Dictionary:
+	if payload.has("scoring") and not payload.scoring is Dictionary:
+		return _failure("invalid_scoring_context")
+	for field: String in ["consumed_step", "step_increment", "draft_elapsed_ms"]:
+		if payload.get("scoring", {}).has(field) and (typeof(payload.scoring[field]) != TYPE_INT or int(payload.scoring[field]) < 0):
+			return _failure("invalid_scoring_context")
+	var outcome: Dictionary = _apply_action(snapshot, kind, payload, call_context)
+	if not outcome.get("ok", false):
+		return outcome
+	var projected: Dictionary = ScoreRules.project(snapshot, kind, payload, outcome.get("result", {}), outcome.get("changes", []))
+	outcome.snapshot["performance"] = projected.performance
+	outcome.result["performance_events"] = projected.events
+	outcome.result["performance_delta"] = projected.delta
+	return outcome
+
+
+func _apply_action(snapshot: Dictionary, kind: String, payload: Dictionary, call_context: Dictionary) -> Dictionary:
 	var next: Dictionary = snapshot.duplicate(true)
+	if kind == "mouse":
+		return _mouse(next, payload, call_context.get("policy", {}))
+	if kind == "activate_draft":
+		return _activate_draft(next, call_context.get("policy", {}))
 	if kind == "revive":
 		return _revive(next, call_context)
 	if kind == "life_plus":
@@ -146,7 +186,7 @@ func _request_hint(next: Dictionary, call_context: Dictionary) -> Dictionary:
 	if int(next.lives) <= 0 or _complete(next):
 		return _failure("round_not_playable")
 	# 原版按每次成功打开提示收费；新请求替换旧凭证，同一请求重试由宿主去重。
-	var hint: Dictionary = HintService.find_hint(next.board, next.regions, next.solution)
+	var hint: Dictionary = HintService.find_hint(next.board, next.regions, next.solution, next.get("content", {}).get("gameplay_policy", {}))
 	if not hint.get("found", false):
 		return _failure("no_hint")
 	var policy: Dictionary = call_context.get("policy", {})
@@ -216,14 +256,15 @@ func _apply_basic_move(next: Dictionary, kind: String, payload: Dictionary) -> D
 		if not decision.get("ok", false):
 			return decision
 		target = int(decision.final_state)
-		next["lives"] = int(decision.lives)
+		next["lives"] = int(next.lives) if next.get("lives_inf", false) else int(decision.lives)
 	var changes: Array = []
 	if model.set_cell_state(row, col, target):
 		changes.append({"row": row, "col": col, "before": before, "after": target})
 		next["board_revision"] = int(next.board_revision) + 1
 	next["board"] = model.get_board()
 	_append_history(next, changes, target == States.CAT, target == States.ERROR)
-	return _success(next, changes, {"complete": _complete(next), "lives": next.lives})
+	return _success(next, changes, {"complete": _complete(next), "lives": next.lives,
+		"correct": target != States.ERROR, "wrong_positions": [Vector2i(row, col)] if target == States.ERROR else []})
 
 
 func settle_snapshot(snapshot: Dictionary, _payload: Dictionary) -> Dictionary:
@@ -240,6 +281,22 @@ static func _complete(snapshot: Dictionary) -> bool:
 
 
 static func _success(snapshot: Dictionary, changes: Array = [], result: Dictionary = {}) -> Dictionary:
+	# 旧视图的完整性修复现在属于同一候选事务；表现层不在提交后偷偷改棋盘。
+	var placed_cat: bool = changes.any(func(change: Dictionary) -> bool: return int(change.get("after", -1)) == States.CAT)
+	if placed_cat:
+		var repairs: Array = []
+		for row in range(snapshot.board.size()):
+			for col in range(snapshot.board.size()):
+				var before: int = int(snapshot.board[row][col])
+				var answer: bool = bool(snapshot.solution[row][col])
+				if (before == States.CAT and not answer) or (before == States.ERROR and answer):
+					snapshot.board[row][col] = States.EMPTY
+					repairs.append({"row": row, "col": col, "before": before, "after": States.EMPTY, "integrity_heal": true})
+		changes.append_array(repairs)
+		if not repairs.is_empty():
+			result["integrity_repairs"] = repairs
+			if result.has("complete"):
+				result["complete"] = _complete(snapshot)
 	return {"ok": true, "snapshot": snapshot, "changes": changes, "result": result, "inventory_delta": {}}
 
 
@@ -252,7 +309,7 @@ func _use_tool(next: Dictionary, kind: String, call_context: Dictionary) -> Dict
 	if int(next.lives) <= 0 or (kind != "locate" and _complete(next)):
 		return _failure("round_not_playable")
 	var policy: Dictionary = call_context.get("policy", {})
-	var price: Variant = policy.get(kind + "_cost", 1)
+	var price: Variant = policy.get("cost", policy.get(kind + "_cost", 1))
 	if typeof(price) != TYPE_INT or price not in [0, 1]:
 		return _failure("invalid_tool_price")
 	var planned: Dictionary
@@ -293,7 +350,9 @@ func _revive(next: Dictionary, call_context: Dictionary) -> Dictionary:
 	if typeof(consume_once) != TYPE_BOOL:
 		return _failure("invalid_revive_policy")
 	var amount: Variant = policy.get("revive_lives", 0)
-	if typeof(amount) != TYPE_INT or amount < 1 or amount > 3:
+	if int(next.get("life_cap", 3)) != 3:
+		amount = int(next.get("life_cap", 3))
+	if typeof(amount) != TYPE_INT or amount < 1 or amount > int(next.get("life_cap", 3)):
 		return _failure("invalid_revive_lives")
 	var previous: int = int(next.get("attempt_sequence", 0))
 	if previous >= 9223372036854775806:
@@ -326,12 +385,16 @@ func _apply_planned_action(next: Dictionary, kind: String, payload: Dictionary, 
 	var board: Array = next.board
 	var planned: Dictionary = {}
 	var changes: Array = []
+	if kind in ["draft_mark", "draft_commit", "draft_clear"] and next.has("draft_active") and not next.draft_active:
+		return _failure("draft_not_active")
 	if kind == "draft_commit":
-		planned = Actions.commit_draft(board, next.solution, int(next.lives))
+		planned = Actions.commit_draft(board, next.solution, int(next.lives), bool(next.get("lives_inf", false)))
+		next["draft_active"] = false
 		next["lives"] = planned.lives
 		changes = planned.changes
 		_append_history(next, changes, planned.has_cat, not planned.wrong_positions.is_empty())
 	elif kind == "draft_clear":
+		next["draft_active"] = false
 		planned = Actions.clear_draft(board)
 		changes = planned.changes
 	elif kind == "auto_complete":
@@ -391,7 +454,8 @@ func _apply_planned_action(next: Dictionary, kind: String, payload: Dictionary, 
 		next["board_revision"] = int(next.board_revision) + 1
 	return _success(next, changes, {"complete": _complete(next), "lives": next.lives,
 		"draft_contradiction": Actions.draft_contradiction(next.board, next.regions),
-		"draft_all_correct": Actions.draft_all_correct(next.board, next.solution)})
+		"draft_all_correct": Actions.draft_all_correct(next.board, next.solution),
+		"draft_lethal": planned.get("lethal", false), "wrong_positions": planned.get("wrong_positions", [])})
 
 
 static func _board_changes(before: Array, after: Array) -> Array:
@@ -418,3 +482,43 @@ func _life_plus(next: Dictionary, payload: Dictionary, policy: Dictionary) -> Di
 	next["lives"] = mini(int(next.lives) + 1, 3)
 	next["life_plus_used"] = true
 	return _success(next, [], {"lives": next.lives, "life_plus_used": true, "first_done": policy.first_use})
+
+
+func _activate_draft(next: Dictionary, policy: Dictionary) -> Dictionary:
+	if next.get("draft_active", false):
+		return _failure("draft_already_active")
+	if not bool(policy.get("enabled", false)) or int(next.lives) <= 0 or _complete(next):
+		return _failure("draft_unavailable")
+	var cost: Variant = policy.get("cost", 1)
+	if typeof(cost) != TYPE_INT or cost not in [0, 1]:
+		return _failure("invalid_tool_price")
+	next["draft_active"] = true
+	var response: Dictionary = _success(next, [], {"cost": cost, "draft_active": true})
+	response["inventory_delta"] = {"draft": -cost}
+	return response
+
+
+func _mouse(next: Dictionary, payload: Dictionary, policy: Dictionary) -> Dictionary:
+	if int(next.lives) <= 0 or _complete(next) or not bool(policy.get("enabled", true)):
+		return _failure("round_not_playable")
+	var cost: Variant = policy.get("cost", 1)
+	if typeof(cost) != TYPE_INT or cost not in [0, 1] or typeof(payload.get("seed", 0)) != TYPE_INT:
+		return _failure("invalid_tool_price")
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(payload.get("seed", 0))
+	var targets: Array[Dictionary] = MouseSelector.select_targets(next.board, next.solution, next.regions, rng)
+	if targets.is_empty():
+		return _failure("no_mouse_target")
+	var changes: Array = []
+	for target: Dictionary in targets:
+		var cell: Vector2i = target.cell
+		var before: int = int(next.board[cell.x][cell.y])
+		var after: int = States.CAT if target.is_cat else States.MARK
+		target["before"] = before
+		next.board[cell.x][cell.y] = after
+		changes.append({"row": cell.x, "col": cell.y, "before": before, "after": after})
+	next["board_revision"] = int(next.board_revision) + 1
+	_append_history(next, changes, bool(targets[0].is_cat))
+	var response: Dictionary = _success(next, changes, {"targets": targets, "cost": cost, "complete": _complete(next)})
+	response["inventory_delta"] = {"mouse": -cost}
+	return response

@@ -1,4 +1,4 @@
-## 生命条图标实验：0=爱心 1=小鱼 2=闪电；同时影响失败页标题等文案分支
+## 实验配置 life_icon：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name LifeIconConfig
 
@@ -6,20 +6,12 @@ class_name LifeIconConfig
 const VALUE_HEART: int = 0 # 爱心
 const VALUE_FISH: int = 1 # 小鱼
 const VALUE_LIGHTNING: int = 2 # 闪电
+const VALUE_FISH_C1: int = 3
+const VALUE_FISH_C2: int = 4
+const VALUE_FISH_C3: int = 5
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "life_icon"
-	default_value = VALUE_FISH # 默认档：小鱼
-	timing = ABTestManager.TIMING_GAME_START # 染色时机：每局开局时
-
-
-## 是否用小鱼生命条
-func is_fish_life_bar() -> bool:
-	return value() == VALUE_FISH
-
-
-## 是否用闪电生命条
-func is_lightning_life_bar() -> bool:
-	return value() == VALUE_LIGHTNING
+	default_value = VALUE_FISH

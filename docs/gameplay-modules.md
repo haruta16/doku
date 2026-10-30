@@ -1,230 +1,136 @@
 # 玩法模块与对局业务边界
 
-这次拆分的目标是：同一个提示、定位、撤销或结算动作，可以在没有具体页面的情况下计算结果并完成存档；换成 Block 或交换三消时，存档事务、对局标识和重试机制可以继续使用。它不要求不同玩法共享棋盘类型、动作列表或对局页面。
+当前实现将 Meowdoku 1.22 的选题、输入、Mouse、草稿、颜色挑战、金鱼关、评分和每日残局接入了原框架的候选状态与事务边界。产品玩法仍是 Doku；公共宿主只负责对局身份、请求顺序、库存与提交，不解释猫、区域、Elo 或实验组。
 
-本文说明当前已经接入的代码，也明确尚由旧页面适配的部分。资源发布、下载和切换是另一条边界；玩法通过开局上下文保存本局使用的内容身份，不自行下载资源或读取远端配置。
+代码按职责放在 `products/meowdoku/gameplay/`：`domain` 是独立规则，`application` 是本产品用例与策略，`content` 负责题库合同，`presentation` 负责输入、页面与演出。`application` 并非整个目录都纯：`LevelSelector` 的入口负责捕获 GameState、内容与 AB，具体选择则在显式注入的候选状态中执行。产品存档与平台装配在 `products/meowdoku/app/`，跨玩法设施在 `scripts/framework/`。
 
-现在 Meowdoku 的玩法代码集中在 `products/meowdoku/gameplay/`：纯棋盘规则放 `domain`，本产品策略与用例放 `application`，题库及产品内容合同放 `content`，页面与输入放 `presentation`。`application` 中的 `LevelData`/策略捕获仍是产品装配入口，可以读取产品配置；不要将整个目录误认为纯函数。跨玩法的产品存档结构与平台接入在 `products/meowdoku/app/`，公共设施在 `scripts/framework/`。Block 不继承 Doku 的产品策略或页面。
+## 1. 活棋盘、可恢复快照与演出
 
-## 1. 三种状态，各自只负责一件事
-
-| 数据 | 所在位置 | 含义 |
+| 数据 | 位置 | 职责 |
 | --- | --- | --- |
-| 当前正在显示、交互的棋盘 | `DokuBoardState` | 同一棋盘唯一的活状态；所有 CellView 绑定到它 |
-| 对局的可恢复快照与最后一条回执 | `LocalCoreStore.round_services[module/mode]` | 上次成功提交的状态；用于恢复、事务和请求重试 |
-| 动画、手势、临时覆盖层 | BoardView、CellView、页面和输入方案 | 显示与交互过程，不是另一份权威棋盘 |
+| 当前棋盘 | `DokuBoardState` | 唯一活模型；CellView 读取绑定的同一模型 |
+| 已提交对局 | `LocalCoreStore.round_services["doku/main" 或 "doku/daily"]` | 棋盘、生命、历史、提示凭证、评分与最后回执 |
+| 产品残局镜像 | `endgame.snapshot` / `endgame.daily_snapshot` | 兼容页面恢复，并携带业务局号、冻结题面和策略 |
+| 手势、覆盖层、动画 | 输入槽、BoardView、CellView、页面 | 临时交互与显示，不是另一份权威存档 |
 
-存档快照与活模型同时存在是正常的。不能同时存在的是两套可以各自修改、却没有同步规则的活棋盘。提示、工具和赠命的事务入口从唯一活模型捕获 `runtime_snapshot`，把最近的普通操作一并纳入本次事务。事务成功后，页面才呈现这些事务返回的变化。普通点按及逐格动画执行纯规则计划，由产品检查点保存，不为每个动画格同步写一整份存档。
+普通画叉等手势可以先更新活模型，在检查点保存。事务动作从活模型捕获 `runtime_snapshot`，将已发生的普通进度一并放入候选；成功后才接受回执、消费库存并呈现结果。Mouse 的逐格动画不是逐格交易：目标棋盘、评分与消费先完整提交，动画被隐藏或销毁不会留下“已扣费但只恢复半个动作”的状态。
 
-`runtime_snapshot` 是本地兼容接缝，不是允许外部客户端任意上传权威状态的网络协议。本项目没有因此获得服务端防作弊或多人同步能力。
+`runtime_snapshot` 是本地页面适配接口，不是外部客户端可以上传权威棋盘的网络协议。这里不包含服务端防作弊或跨设备分布式事务。
 
-## 2. Doku 的纯逻辑
+## 2. 纯领域模块
 
-### DokuBoardState
+### 棋盘与动作规则
 
-路径：`products/meowdoku/gameplay/domain/doku_board_state.gd`。
+`domain/doku_board_state.gd` 不访问节点、单例、时钟或存档。它负责格值、输入锁、改叉与曾经犯错的追踪；需要时间时由调用者传入时间戳。读取返回副本，恢复先完整校验。
 
-它是 `RefCounted`，不引用节点、SceneTree、GameState 或 AB 单例。负责格子值、输入锁、曾经画叉/犯错的追踪，以及传入时间戳后的改叉语义。
+`restore_board` 用于建立恢复基线；`apply_committed_board` 用于接受本局已提交动作，保留仍有效的追踪与临时输入锁。`clear_input_locks` 只清临时锁，不清棋盘、历史或模型版本。BoardView 的 `refresh_from_model` 只重画，不再次触发落子、计分或消费；`present_cell_transition` 保留相应震动、区域高亮、格子和猫动画。
 
-- `set_cell_state` 是经过值校验的直接写入，供恢复、演示及已决定结果使用。
-- `transition_cell` 保留原 CellView 的普通变化语义。需要时间时由视图边界传入毫秒数，模型自己不读取时钟。
-- `get_board`、`get_folded_board` 返回副本，外部修改数组不会改变活模型。
-- `restore_board` 先完整验证，再替换状态；无效输入不会只恢复半个棋盘。
-- 模型的 `revision` 反映当前模型内的棋盘变化；它不等于存档事务版本，也不等于跨重启的对局 `board_revision`。
+CellView 在独立演示或预热时使用自己的 1×1 模型。真正 `setup` 后才绑定有效尺寸的共享棋盘；预热 12×12 个视图不会把它们绑定到尺寸为 0 的模型。非法题面在模型和页面入场前都被拒绝。
 
-BoardView 保留原有 setter、信号及动画调用形式，CellView 的状态读取转发到绑定的模型。教学演示中独立创建的 CellView 有自己的 1×1 模型，不必为了画一格创建完整对局。
+`domain/doku_action_rules.gd` 返回点按、画叉、猜猫、草稿提交和自动完成等计划。它不播动画、不扣库存。草稿一次提交的致命分支与 1.22 一致：若错误数足以耗尽剩余生命，只执行实际扣命的错误格，正确猫和叉不转正；复活时页面将相应错误格回滚作为同一次复活事务的运行时输入。无限命与大于 3 的生命上限由快照保存，不能套用旧版固定三命假设。
 
-`refresh_from_model` 只重画已有结果，不发出一次新的落子事件，不重记历史、不重做消费。它适合恢复或回执重放后的静态对齐。普通交互仍应使用对应的显示变化接口，以保留原有演出。
+### 提示、定位、Mouse 与草稿
 
-### DokuActionRules
+`domain/doku_hint_service.gd` 复用 `HintEngine` 的规则顺序，包含 1.22 的颜色排除、R3b/R4b 反向集合锁定。是否启用由本局冻结的 `hint_func` 决定。提示的逻辑结果不包含翻译或 UI 节点；页面可复制结果补充文案、颜色与高亮，不能替换已保存的原始提示凭证。
 
-路径：`products/meowdoku/gameplay/domain/doku_action_rules.gd`。
-
-这是无节点、无时钟、无存档副作用的规则与动作计划集合。输入方案、真实页面与无界面模块复用它，不各自维护一份草稿或落子规则。
-
-| 输入/动作 | 纯逻辑产物 | 页面保留的工作 |
+| 动作 | 领域结果 | 事务与表现 |
 | --- | --- | --- |
-| 点按、拖动、双击 | 是否允许、目标值、并步前值、错猜后的生命与最终错误状态 | 识别手势、播放点击与错误反馈、提交一条手势历史 |
-| 草稿提交/丢弃 | 变化顺序、正确/错误猫、批量扣命、全对/矛盾判定 | 按原顺序转正、画叉、扣心表现、烟花与完成回调 |
-| 自动排叉、锁叉、轴打叉 | 受影响格子与可锁定约束集合 | 扩散方向、等待时长、临时输入锁 |
-| 自动完成 | 可展示条件，以及叉/猫两个阶段的坐标计划 | 分阶段呈现、取消与收尾检查点 |
-| 生命 +1 | 二选一区域、时间/命数/局内资格/概率条件 | 提交事务成功后显示新生命及首次引导 |
+| `request_hint` | 提示与绑定局号、请求序号、棋盘版本的凭证 | 成功打开一次计费一次；失败不替换旧凭证 |
+| `apply_hint` | 凭证对应的棋盘变化 | 不二次收费；旧棋盘版本或旧凭证被拒绝；已应用结果可幂等重放 |
+| `locate` | 未完成答案格与变化 | 无候选返回已受理的 `no_effect` 回执，按原版计次；存储失败仍是失败 |
+| `mouse` | 注入 RNG 选择的目标列表、前后值及最终棋盘 | 全部目标、库存、步数和分数同次提交；页面按目标顺序演出 |
+| `activate_draft` | 本局 `draft_active=true` | 每次进入草稿收费；已激活不能重复扣费 |
+| `draft_clear` / `draft_commit` | 丢弃或提交草稿并关闭激活状态 | 退出统计、耗时与结果同次提交；再次进入是新的使用 |
 
-计划是一次性结果，不是第二套活模型。错猜计划区分 `after=MARK` 的历史/动画阶段和 `final_state=ERROR` 的落定状态；无界面宿主可直接应用最终值，页面保留原错误演出。草稿一次提交只产生一条复合历史，批量错误不会把生命扣成负数。
+`HintOverlay` 显示说明并发出应用/关闭/详情信号；提示高亮执行器负责演出。`MouseToolSelector` 在领域层，只使用传入棋盘、答案、区域与 RNG。
 
-取消也属于显示边界：隐藏或复用页面会递增动作代次，清理临时输入锁；延迟错误、草稿自动提交、烟花与提示冷却回调先确认代次。CellView 重置会使上一轮草稿动画结束回调失效。
+当前 1.22 页面使用 Mouse 和草稿等入口。旧 `undo`、轴打叉等纯动作/API 作为兼容和独立规则测试保留，不代表当前页面仍提供旧版撤销按钮。兼容 `undo` 仍先查可撤销历史，再决定收费；不能用它的规则替代 Mouse。
 
-### DokuHintService
+### 评分、步数与通关奖励
 
-路径：`products/meowdoku/gameplay/domain/doku_hint_service.gd`。
+`domain/doku_round_performance.gd` 把 1.22 评分公式投影为可保存的普通数据：
 
-`find_hint(board, regions, solution)` 保留现有规则顺序：已有猫的排除提示、答案位置错叉兜底、R1、R2、R3/R4、推理链。`apply_hint` 接受保存过的原始提示，返回新棋盘和变化列表，不读取或修改页面。
-
-变化中的 `before` 是真实格子值；`history_before` 保留旧产品的撤销记录语义。例如草稿叉转成正式叉，真实原值是草稿，但旧回看记录的原值是空白。R3/R4 的变化顺序也保留先行后列，避免改变回看播放顺序。
-
-页面可以复制提示再补充翻译、覆盖层和显示文案，不能拿修改后的显示对象替换已保存的凭证。
-
-### DokuToolService
-
-路径：`products/meowdoku/gameplay/domain/doku_tool_service.gd`。
-
-- `locate` 选择未完成的答案格，按所属区域剩余候选数量、行、列确定目标。无目标时规划器返回 `no_locate_target`；对局模块按原版把它作为一次有效使用收费，返回无棋盘变化的回执。
-- `undo(..., "revert", ...)` 从后向前寻找可撤销步骤，跳过错误猜测，保护正式猫、错误格及锁定叉；返回新的历史和棋盘。选中可编辑步骤后，即使格值已等于原值，也按原版移除相应历史并收费；完全没有可选步骤时不收费。
-- `undo(..., "highlight", ...)` 只选择回看范围，返回坐标历史与游标，不修改棋盘。高亮时长、声音和播放过程仍由视图决定。
-
-这些函数没有库存操作。是否免费、是否允许广告授权、主线工具使用如何影响 DDA，由产品层决定。定位按使用次数计费，撤销先检查可选步骤；没有视觉变化不代表所有道具都免费。模块将有效使用结果与库存变化一同提交，真实失败不提交。
-
-### DokuRoundModule
-
-路径：`products/meowdoku/gameplay/domain/doku_round_module.gd`。
-
-它把棋盘规则、提示和工具组合为对局用例，校验本局题面、生命数及历史，维护持久 `board_revision`、未应用提示和结算条件。它不持有页面或视图。
-
-独立动作包括 `set_mark`、`place_cat`、`draft_mark`、`draft_commit`、`draft_clear`、`auto_mark`、`axis_mark`、`lock_marks`、`auto_complete`，以及提示/定位/撤销/复活/赠命。普通落子和草稿提交同时更新棋盘、历史及生命。自动完成是否犯过错由棋盘/历史推导，不能用玩家参数覆盖。具体玩法动作没有进入通用 RoundService 的分支中。
-
-提示按原版“每次重新打开成功都收费、应用时不再收费”：
-
-1. `request_hint` 计算提示，生成绑定 `round_id`、请求序号与 `board_revision` 的凭证。
-2. 宿主把凭证和扣费放在一次核心存档提交中。
-3. 即使本局棋盘未变，新一次 `request_hint` 仍重新计费并替换旧凭证。库存不足或提交失败时不扣费、不替换，原请求序号可重试。
-4. `apply_hint` 只接受当前凭证标识。新提示成功购买或棋盘版本改变后，旧提示失效；应用本次提示不再收费，重复应用不再产生棋盘变化。
-
-凭证仍随业务快照持久化以保证提交和应用一致，但页面重开并重新请求提示属于新购买，不提供免费复看权益。同一个已提交请求序号的重复调用仍返回原回执，不再次扣费；它与玩家主动再次打开不同。普通关找不到提示方案不收费，SP关沿用定位降级；原有免费策略保持不变。
-
-生命 +1 同样具有事务边界：新生命、每局已使用标记、产品首次赠送标记与可恢复残局一次提交。写盘失败不会先消耗首次资格；重复回调不会再次加命。首次标记只区分首次保证赠送/引导与以后局的概率赠送，不把以后局全部禁用。
-
-### 本局产品策略快照
-
-路径：`products/meowdoku/gameplay/application/meowdoku_gameplay_policy.gd`。
-
-`MeowdokuGameplayPolicy` 在开局最后一次 AB 染色后，把影响规则与收费的值冻结成普通字典：草稿变体、撤销模式/免费状态、工具解锁关卡、自动排叉/自动完成、生命 +1、复活生命数/免费模式、残局保存开关、滑动保护参数与影响输入语义的开关。DDA 结算的四个布尔策略也在此固定，包括按当时规则组与内容计算的“下一关是否跳过正常难度递进”。主线恢复、失败重试与业务内容上下文携带同一快照；本局不会因后来读取到的 AB 值而改变规则。
-
-完整有效的恢复快照直接复制，不先查询当前内容或 AB。没有此字段的旧残局使用本次启动策略生成兼容快照；早期 schema 1 若缺少新增字段，只补齐缺项，保留已有冻结值。视觉实验不必全部冻结。一次性免费复活是否已经消费、今日广告是否已解锁自动排叉属于会变化的业务资格，继续在产品事务中判断，不伪装成静态 AB 值。失败弹窗只展示资格并发出请求，免费次数仍与复活结果同次提交。
-
-## 3. RoundService 的契约
-
-路径：`scripts/framework/application/round_service.gd`。
-
-这是小型应用服务，不是本地 HTTP 服务、万能规则引擎或统一棋盘父类。它只理解命名空间、对局标识、请求序号、库存增减与存档提交。
-
-### 存储端口
-
-构造时传入一个提供以下方法的对象：
-
-```gdscript
-is_open() -> bool
-revision() -> int
-snapshot() -> Dictionary
-commit(candidate: Dictionary, expected_revision: int) -> Dictionary
+```text
+performance = score, combo, max_combo, se_count, se_last_step,
+              step_used, tool_used, draft_elapsed_ms
 ```
 
-测试直接传 `LocalCoreStore`。实际 Meowdoku 传产品适配端口，借此将旧残局格式、尚未落盘的产品统计和新对局记录合并到同一份候选状态中；通用宿主不认识这些旧字段。
+猫的基础增分随连击从 576 开始，每档增加 96，上限 1440；步数档位奖励按冻结的 `score_encourage`、棋盘尺寸和实际步数差计算。草稿提交保留多猫均摊步数的语义。Mouse、定位、提示应用的步数和工具次数在动作提交时记入，动画监听器只消费 `score_events` / `combo_events`，不会再次加分或把总分回退到中间格。
 
-### 玩法模块
+`win_bonus(board, policy, perfect, full_hp, draft_used)` 产生通关补叉与奖励计划。`auto_x_fill_variant` 决定是否补叉及瞬间/逐格表现；`win_encourage_variant` 决定完美或满命奖励。页面 `_win_business_runtime()` 在结算前投影最终棋盘和分数，结算成功后 `_accept_win_bonus()` 接受一次，补叉动画仅显示已提交结果。保存失败不会推进关卡或发布奖励；同一结算标识重试不会再次加分。
 
-模块以 `RefCounted` 实现五个方法，不要求继承项目定义的玩法父类：
+`DokuRoundModule` 组合上述规则，负责题面、生命、历史、performance 的校验，维护 `board_revision`、草稿状态、提示凭证与结算条件。它不持有页面或 GameState。
+
+## 3. 冻结策略与候选选题
+
+`application/meowdoku_gameplay_policy.gd` 保存 `schema=1, rules_revision=122` 的规则快照，包含草稿、Mouse、提示、生命、评分、通关补叉、多触点、双击与滑动解释等值。旧兼容字段不等于重新启用旧版 UI。完整快照直接复用；旧快照缺少新增字段时仅补兼容缺项，保留已有冻结值。
+
+输入解释器由冻结值构造为局部实例，不调用会写调试存档、切换实验组或发全局信号的 `set_debug_override()`。开局后切换实时 AB 不会改变本局单触点/多触点、双击保护、滑动解释或 Mouse 资格。纯输入识别器通过注入的高频重置回调工作，不直接重置全局 AB 配置对象。视觉实验可以按表现时机读取；当天广告资格等动态业务条件仍在事务中核验。
+
+选题相关代码位于 `application/selection/`：
+
+1. `LevelSelector.create_entry_state()` 捕获初始状态与内容代次。`DokuSelectionState` 保留独立的原始候选、可变候选及相关字段读取记录。
+2. `DokuSelectionRuntime` 注入候选状态、局部 RNG、冻结配置解释器、时间、日期与推荐队列副本。各 NL 策略、预填猫、颜色和金鱼选择均在该环境中运行，不直接推进 live GameState。
+3. `select_from_candidate()` 接受页面已准备的候选，避免前置入场变化被另一次 live 快照覆盖。重试、恢复、每日和调试题通过 `prepare_existing_entry()` 形成同类计划；`refresh_plan_state()` 纳入后续入场准备结果。
+4. 计划携带读取依赖、前后差异、内容/推荐代次、冻结策略、唯一选择标识及待发布效果。选择过程不写盘、不实际出队。
+5. 棋盘建立成功后，`LevelData.stage_selected()` 在候选中校验并合并选择结果，随后与初始 RoundService 记录一次提交。相关字段或代次冲突会拒绝旧计划；不相关统计变化不会盲目覆盖。
+
+主线、新颜色/金鱼插入关、每日和 preview 各有入场语义。每日使用独立残局和统计槽，恢复保留身份与计数；新局清理本模式局内计数，重开只重置本轮步骤、不删除累计步骤。preview 不覆盖主线或每日残局。固定关卡表优先于随机算法；恢复使用保存的题面与策略，不重新取当前内容。
+
+推荐队列的消费与 `delivered_qids` 一起写入候选的 `features.recommendation.queue`，随对局建立提交，不采用“开局成功后再单独 ack”的两次写盘。辅助玩家标签刷新与无效推荐报告由产品注入的 `publish_selection_effects(plan, guard)` 在成功提交后执行；相同选择标识不重复发布，重置或新选题造成代次变化时停止旧效果。标签缓存与异步回包同样绑定存档代次。已持久确认的辅助玩家在冷启动首局仍生效，未知标签的刷新结果影响后续捕获的上下文。
+
+特殊关表统一通过 `SpecialProvider.levels_for(runtime)` 读取；未提供覆盖时使用内置表，显式空表表示删除全部特殊关。回流、推荐、困难关交替与实际取题使用同一冻结表，不能一个分支读内置常量、另一个读下载内容。1.22 的压缩题库在读取 API 边界解码，JSON 发布使用物化数组；内容、provider 和排序缓存按内容代次失效，不用文件数量推测内容是否变化。
+
+开发诊断入口同样必须消费计划。`fastjump` 将选题、候选 Elo 事实与胜负进度合并提交；模拟器将候选游标、去重记录、重试题和概率胜负合并提交，保存失败立即停止。模拟器留空尺寸覆盖时使用当前 1.22 策略，明确输入时才按 `size_cycle` 尺寸表对照；它只模拟胜负、脏标记和去重，不生成 Elo 计分事实。缓存重试保留题目身份与冻结策略。兼容的 `GameState.on_level_won/failed(..., selection_plan)` 返回提交是否成功，并按选择标识防止同一诊断结果重复推进；正式对局仍使用带局号校验的结算入口。
+
+## 4. RoundService 与产品端口
+
+公共宿主位于 `scripts/framework/application/round_service.gd`，只理解命名空间、局号、请求序号、库存增减和存储提交。模块提供：
 
 | 方法 | 职责 |
 | --- | --- |
-| `create_snapshot(context)` | 校验开局数据，生成本玩法初始快照 |
-| `validate_snapshot(snapshot)` | 返回空字符串表示有效，否则返回原因 |
-| `sync_runtime(snapshot, runtime)` | 可选的旧活模型适配；不需要的模块可以拒绝覆盖 |
-| `apply_action(snapshot, kind, payload, call_context)` | 计算动作结果，不能直接存档或调用 UI |
-| `settle_snapshot(snapshot, payload)` | 验证结束条件，产生结算结果与奖励增量 |
+| `create_snapshot(context)` | 校验开局数据并创建领域快照 |
+| `validate_snapshot(snapshot)` | 校验可恢复数据 |
+| `sync_runtime(snapshot, runtime)` | 验证并合并本地活模型进度 |
+| `apply_action(snapshot, kind, payload, call_context)` | 返回新快照、结果、表现数据和库存差值 |
+| `settle_snapshot(snapshot, payload)` | 验证终局并计算领域奖励 |
 
-成功的动作/结算返回：
+成功结果以 `ok/snapshot/result/changes/inventory_delta` 表示；失败返回 `ok=false/error`，宿主不发布候选。可持久化值不能夹带 Node、Callable 或 Signal。
 
-```gdscript
-{
-    "ok": true,
-    "snapshot": next_snapshot,
-    "result": result_data,
-    "changes": presentation_data,
-    "inventory_delta": {"hint": -1},
-}
-```
+存储端口提供 `is_open()`、`revision()`、`snapshot()` 与 `commit(candidate, expected_revision)`。实际产品使用 `MeowdokuRoundSession.ProductPort`：它将工具事实、评分统计、复活次数、DDA/dirty、残局镜像与对局记录合并后提交。免费成功使用仍按 1.22 计当日工具次数和相关脏标志；`has_used_tool` 则沿用旧统计定义，只对真正付费的旧工具设置，不能混同这两个事实。
 
-`snapshot`、`result` 和 `changes` 由玩法自己定义。宿主不枚举 Doku 的格子状态，也不解释 Block 的清行事件。值必须能够持久化，不得夹带 Node、Callable、Signal 等运行时引用。模块失败返回 `{"ok": false, "error": "..."}`；宿主不提交失败动作。
+`MeowdokuRoundSession` 接收普通 Object 端口，不依赖 Node 生命周期。端口提供 `is_storage_ready/get_core_store/get_core_candidate/commit_core_candidate`；有选题计划时额外提供 `stage_round_selection(candidate, plan, checkpoint)`。此注入方法由 GameState 装配 LevelData 与内容版本，Session 不直接加载 ContentContext 或 LevelData。独立内存适配器因此可以测试动作事务。
 
-`call_context` 包含宿主提供的 `round_id`、请求 `sequence` 和产品提供的 `policy`。动作 `payload` 与产品策略分开：例如玩家请求 `undo`，产品决定当前使用撤销还是高亮、价格为 0 还是 1。把按钮显示状态直接当作收费授权会让业务重新依赖 UI，应避免。
+产品结算通过 `MeowdokuRoundSettlement.stage()` 修改候选。1.22 进度、Elo 和新玩法结算由注入的 `progress_stager` 处理，通用幂等外壳继续保护主线推进、奖励、每日完成日期和残局清理。纯结算模块不静态加载整个 GameState。
 
-### 调用与重试
+请求顺序与恢复合同：
 
-```gdscript
-var host := RoundService.new(core_store)
-host.register_module("block_probe", BlockProbeModule.new())
-var opened: Dictionary = host.start("block_probe", "main", 1, context)
-var placed: Dictionary = host.action(
-    "block_probe", "main", opened.round_id, opened.next_sequence,
-    "place", {"row": 0, "col": 0}
-)
-```
+- `doku/main`、`doku/daily` 等命名空间各保存当前一局；同题重开仍有新业务局号，恢复才沿用保存局号。
+- 动作序号递增；提交失败可以用原序号重试。同序号同动作同参数返回原回执，改参数或更旧序号被拒绝。
+- 新局后旧局延迟请求失效；同一终局标识重复结算不会再次发奖励。
+- `duplicate=true` 用于恢复已提交结果，不触发第二次计分、消费或整段动画。
+- 页面隐藏、销毁或重新入场会使旧表现代次失效；付费结果已提交时仍然保留。输入临时锁、遮罩所有权和静音作用域必须随对应演出释放。
 
-- 存储键为 `module_id/mode_id`，如 `doku/main`、`doku/daily`、`block_probe/main`。
-- 每个命名空间保存当前一局。新局的 `start_sequence` 是上一局加一，形成稳定 `round_id`；用同一开局序号改变上下文会被拒绝。
-- 同一局动作序号严格递增；失败且未提交的动作可以用原序号重试。
-- 只保存最后一条回执。同序号、同动作、同 payload 重试返回该回执；同序号改动作被拒绝。更早的序号拒绝执行，避免无限保存每一格的去重记录。
-- 新局开始后，旧 `round_id` 的延迟请求会被拒绝。
-- 完成结算后再结算返回原结算，不重复发奖励；结束后的普通动作会被拒绝。
-- 返回 `duplicate: true` 表示回执已存在，显示层应恢复已提交状态，不能当作新动作再记历史、重复播整段流程或触发埋点。
+普通进度恢复到最后一次成功检查点；成功业务事务则保证其完整结果、消费与评分一起恢复。框架没有承诺任意普通手势动画帧都立即写盘。
 
-宿主对候选快照和库存执行一次提交。库存不足、未知道具、溢出或存档失败都会阻止发布。这不是分布式事务：跨设备冲突、联网权威和远程支付校验不在此契约内。
+## 5. 第二玩法能复用什么
 
-## 4. 现有项目如何接入
+Block Probe 位于 `scripts/examples/block/`，提供独立规则与可交互页面，验证放置、越界/重叠、消行列、计分、恢复和幂等奖励。它使用相同 RoundService 与 LocalCoreStore，不引用 Doku 棋盘、题库或提示引擎。
 
-`products/meowdoku/gameplay/application/meowdoku_round_session.gd` 是产品适配器。它创建 Doku 模块、恢复业务局号，把新快照映射到旧残局结构，提交成功后把结果交给页面呈现。
+换成 Block 或三消时，可以保留事务存储、局号、重试、内容发布与适用的基础 UI；需要自己的状态、动作、快照校验、输入、棋盘视图、规则与产品装配。三消的掉落/连锁不应伪装为 Doku 格子状态，公共宿主也不应增加按具体游戏名称分支的逻辑。可复用边界已经可运行，但不等于仅换配置就获得另一款完整商业游戏。
 
-它接收普通 Object 方法端口，生产环境传 GameState，独立验证传 RefCounted 内存适配器，不依赖 Node 生命周期。端口需要 `is_storage_ready()`、`get_core_store()`、`get_core_candidate()`、`commit_core_candidate(candidate, expected_revision)`；其中 core store 提供 `revision()`。`MeowdokuRoundSettlement.stage()` 只操作调用者持有的候选字典；冻结题面交给纯 `DokuLevelDefinition` 校验，不再为了结算加载当前题库或内容环境。发布时额外的场景媒体合同仍由 `DokuLevelCatalog` 检查。
+## 6. 验证入口与限制
 
-`LevelData.resolve_level_entry` 负责在选择状态的副本上解析题目，返回 `entry + expected_selection + next_selection`。它可以读取题库与冻结的产品配置，但不推进正式游标、不消费当天首次资格、不写“已见题目”。`commit_selected` 在棋盘准备完成后，把最终选中的游标、当天资格、重试缓存及初始残局一次提交。普通统计变化不使选择失效；相关选择字段或内容代次改变才会拒绝旧计划。
-
-现有输入与演出适配边界：
-
-- 输入方案识别点按、双击和拖动，调用纯规则获取变化；页面负责手势合并后的历史提交。
-- 草稿提交/丢弃、自动排叉与自动完成已从页面迁出规则计算；页面执行计划并保留原时序。它们没有改成每格一次独立磁盘事务。
-- 生命变化展示、计时器、页面暂停、教程覆盖、提示翻译、音效和高亮执行器仍属于产品/显示层。
-- 无界面模块可独立执行上述动作；真实产品页面对普通输入使用同一纯规则计划，对付费工具/提示/复活/赠命走事务用例。两条执行路径共享规则而不共享动画实现。
-
-新增动作仍应明确输入、规则结果、消费/奖励、历史和恢复点。普通动画动作不承诺进程在任意动画帧退出都恢复到那一帧；成功业务事务保证对应结果及消费一起恢复，普通对局进度以最后成功检查点为准。不要让新工具改另一套棋盘、旧手势继续改独立格子字段。
-
-## 5. Block Probe 验证了什么
-
-路径：`scripts/examples/block/domain/block_probe_module.gd`。
-
-它实现固定方块队列的放置、越界/重叠拒绝、同时消行消列、计分与结束判断。快照是 `occupied + pieces + piece_index + score`；动作是 `place`。它没有引用 Doku 的 BoardState、CellState、HintEngine、题库或页面。
-
-`test_round_service.gd` 将 Doku 与 Block 注册到同一个未修改的宿主、使用同一个真实 LocalCoreStore，验证非法放置不推进请求、合法放置清行、分数与结束状态保存、重启恢复、结算奖励只发一次，以及两个命名空间互不覆盖。这比空接口或只创建一个 Block 类更能证明边界可复用。
-
-现已增加独立可交互页面（`scripts/examples/block/`），支持点击/拖放、合法位置预览、清行、新局、读取与领取；通过 `python3 tools/run_block_example.py` 运行，使用独立产品和存档。示例还验证旧拖拽不能落到新局或下一块。它尚不包含商业 Block 的随机出块、三格托盘或难度策略，也没有实现交换三消的连锁表现。使用与测试见 [框架使用指南](framework-usage.md)。
-
-## 6. 换成 Block 或交换三消时的实际工作
-
-可以保留：LocalCoreStore、RoundService、库存事务、请求重试、内容发布/冻结机制，以及适用的产品菜单、设置、广告入口和基础 UI 管理。
-
-需要新增或替换：
-
-1. 玩法自己的状态模型、动作、规则与快照校验。三消需要交换合法性、匹配、掉落、补充和连锁结果；Block 需要形状、托盘与消行规则。不要为了适配 Doku 的 CAT/MARK 状态而扭曲这些模型。
-2. 相应模块的五个契约方法，以及自己的存档 schema/旧版本迁移策略。
-3. 内容结构与关卡解析器。复用资源定位和发布基础设施，不复用 Doku 的区域题库规则。
-4. 自己的输入适配器、棋盘视图和对局页面。可以复用按钮等组件，但不要求强行共用 BaseGamePage。
-5. 产品装配：注册模块、路由到页面、注入价格/奖励/难度政策、定义恢复与结束体验。不要在通用 RoundService 中新增 `if gameplay == "doku"`。
-6. 至少一组独立规则测试和一组跨存档恢复测试，再补对应玩法的真实页面验证。
-
-这是一套能承载第二玩法的基础边界，不是“只换配置就能把 Doku 变成三消”的承诺。可复用部分应随着第二玩法的真实需求验证后增长，而不是提前加入所有玩法都可能用到的字段和生命周期。
-
-## 7. 验证入口
-
-不要直接用主工程启动验证脚本；主工程 autoload 会读写日常存档。使用隔离运行器：
+不要直接在主工程运行验证脚本，autoload 会访问日常存档。使用隔离运行器：
 
 ```bash
 python3 tools/run_validation.py \
-  --script res://tools/validation/test_doku_board_state.gd \
-  --script res://tools/validation/test_doku_board_view.gd \
-  --script res://tools/validation/test_doku_actions.gd \
-  --script res://tools/validation/test_doku_hint_service.gd \
-  --script res://tools/validation/test_doku_tools.gd \
-  --script res://tools/validation/test_round_service.gd \
-  --script res://tools/validation/test_doku_level_selection.gd
+  --script res://tools/validation/test_doku_v122_contract.gd \
+  --script res://tools/validation/test_doku_v122_selection_matrix.gd \
+  --script res://tools/validation/test_game_v122_transaction.gd \
+  --script res://tools/validation/test_game_input_lifecycle.gd \
+  --script res://tools/validation/test_game_operation_lifecycle.gd \
+  --script res://tools/validation/test_game_entry_transaction.gd
 ```
 
-运行器复制工程及导入缓存，并仅在临时副本中重定向用户数据。业务规则测试覆盖语义，视图测试覆盖兼容信号/显示，存档测试覆盖失败不发布与重试。无界面通过不等于美术演出已完成人工验收；动画节奏与触控体验仍需要正常交互检查。
+运行器复制工程和缓存，仅在临时副本中重定向用户数据并关闭真实业务网络。选题矩阵覆盖 112 个启用的 normal_level 值；纯规则、失败注入、真实页面的多触点/遮挡/重入/演出销毁分别验证不同边界。断言通过之外还要检查脚本错误、资源泄漏和正常退出；无界面验证不替代设备上对动画节奏、触感和视觉的人工验收。

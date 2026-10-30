@@ -20,8 +20,8 @@ func _run() -> void:
 	for damage: String in ["round_record", "round_snapshot", "round_content", "round_policy", "round_definition", "round_level", "round_attempt", "settlement_record", "settlement_receipt", "settlement_attempt", "settlement_level"]:
 		_test_recover(damage)
 	_test_double_invalid()
-	_test_future(2, 1)
-	_test_future(1, 2)
+	_test_future(ProductStore.SCHEMA + 1, 1)
+	_test_future(ProductStore.SCHEMA, 2)
 	_test_recovered_reset()
 	_test_legacy_watermark(3)
 	_test_legacy_watermark(20)
@@ -57,7 +57,7 @@ func _damage(state: Dictionary, kind: String) -> void:
 		"settlement_attempt": state.product_settlements.main.last_attempt = {}
 		"settlement_level": state.product_settlements.main.level = {}
 
-func _write(dir: String, slot: String, state: Dictionary, revision: int, schema: int = 1, format: int = 1) -> void:
+func _write(dir: String, slot: String, state: Dictionary, revision: int, schema: int = ProductStore.SCHEMA, format: int = 1) -> void:
 	DirAccess.make_dir_recursive_absolute(dir)
 	var cfg := ConfigFile.new()
 	cfg.set_value("core", "schema_version", schema)
@@ -138,7 +138,7 @@ func _test_future(schema: int, format: int) -> void:
 	var product := ProductStore.new(dir, PASSWORD)
 	var before: String = FileAccess.get_sha256(dir.path_join("core_b.cfg"))
 	var result: Dictionary = _open(product, dir)
-	_check(not result.ok and result.status == ("schema_mismatch" if schema > 1 else "unsupported"), "future schema/file format prevents fallback to older application state")
+	_check(not result.ok and result.status == ("schema_mismatch" if schema > ProductStore.SCHEMA else "unsupported"), "future schema/file format prevents fallback to older application state")
 	_check(not product.core.is_open() and not product.core.commit(_state(), 7).ok, "future data cannot be overwritten through unopened core")
 	_check(FileAccess.get_sha256(dir.path_join("core_b.cfg")) == before, "future file remains untouched")
 

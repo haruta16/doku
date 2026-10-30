@@ -199,3 +199,28 @@ static func _is_valid_state(state: int) -> bool:
 
 static func _is_draft(state: int) -> bool:
 	return state == States.DRAFT_CROSS or state == States.DRAFT_CAT
+
+
+## 发布已经持久化的同尺寸棋盘；保留每格追踪与输入锁，不重新开始一局。
+func apply_committed_board(board: Array, at_ms: int) -> bool:
+	if board.size() != _size:
+		return false
+	var validated := DokuBoardState.new()
+	if not validated.restore_board(board):
+		return false
+	for row in range(_size):
+		for col in range(_size):
+			var target: int = validated.get_cell_state(row, col)
+			var previous: int = get_cell_state(row, col)
+			if previous == target:
+				continue
+			if previous == States.LOCKED_MARK:
+				# 已提交的恢复/修复有最高优先级，不通过玩家输入入口解锁。
+				set_cell_state(row, col, States.EMPTY)
+			transition_cell(row, col, target, at_ms)
+	return true
+
+
+## Transient input ownership is not a board action and never changes puzzle cells/history.
+func clear_input_locks() -> void:
+	_input_locks.fill(0)

@@ -1,0 +1,71 @@
+{
+  "private_only": true,
+  "files": [
+    {
+      "path": "products/meowdoku/app/features/account/view/account_result_page.gd",
+      "before_sha256": "882930fea718af63b0791d0c3ae6b4944b81c1767a5d7fc75a9fee583619fc67",
+      "after_sha256": "7b66095506cfa3b1a47d04bf23de220e04712d80c6488395670a63864bafa709"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/no_connection_page.gd",
+      "before_sha256": "0ca711e7b8a0c03b02ecf9cf6f67c5390958869b6b901fe6e2da3c454ff3b187",
+      "after_sha256": "da5c903a3604b1a29a1ac5f3d6c7846b8ea1435604acd2b880e6984f3bc3151e"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/sign_out_confirm_page.gd",
+      "before_sha256": "de761114a5effe3f4e8e85c1052fe0f334fb1d7fb4bc04de54548d86e80b4fe5",
+      "after_sha256": "22fbce35eb03bd42aa88543dc4aca387d0119e3ff4843e0b4499bba1071c1fd2"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/login_page.gd",
+      "before_sha256": "5adc7d49c8824be71b114b9b6dbd48287f16296ff8ac1375ee78923a98e230e0",
+      "after_sha256": "9309e0306fa80b140996039640869efe60cf9bb5baaca3acd6c0601973bb84ab"
+    },
+    {
+      "path": "products/meowdoku/app/features/account/view/delete_account_confirm_page.gd",
+      "before_sha256": "055f0f25c5ec3a35aa47b0940b260c9de9bd13e4345bab89531d07c7a6d9e621",
+      "after_sha256": "0c91fba6065beb8c3e2eeaf43481ab1b52a59944420d073071053df06feee77c"
+    },
+    {
+      "path": "products/meowdoku/app/features/purchase/view/purchase_success_page.gd",
+      "before_sha256": "b0c449e12620374aeca9e409fbf9082c40364d0454e42b2db0358b539dab3d67",
+      "after_sha256": "91f7b52fecc490993f4a393ab927d7c39845a2b6c6dd59b83933a17fbe2dcad0"
+    },
+    {
+      "path": "products/meowdoku/app/features/daily_streak/view/streak_revive_page.gd",
+      "before_sha256": "ca3e0fb9c841ecbfdebdef69687ab29ea4070513577053cebfc6a450fd255104",
+      "after_sha256": "1b05d5085fd935466cfc41adffaf885895ca75d78104e64fce76e0ea45c5faba"
+    },
+    {
+      "path": "products/meowdoku/app/features/setting/view/setting_page.gd",
+      "before_sha256": "a492881a350133a889df9b82af46824987250f860054235f24463ca24ee2e5e9",
+      "after_sha256": "63acfa904f082c45a3d2db1b95535dbf03c7156ae9808208abaf632664965e3d"
+    },
+    {
+      "path": "products/meowdoku/app/features/language/view/language_page.gd",
+      "before_sha256": "e542d94bbec2b88d6190007bcf79f3ba3a79ea0cf03f9ff36533a1b8f4e777df",
+      "after_sha256": "a9dbc528d863190c7522ffd8c7424c99b46ed4079e267c62184e64178b013519"
+    },
+    {
+      "path": "products/meowdoku/app/features/home/view/home_companion_reward_page.gd",
+      "before_sha256": "0796a48f9c9b71ad92225ea6d94aafee2de7c155ec843aa7e2ced12af712c8f9",
+      "after_sha256": "103dfc3294d994a96ed7f3bcd3e835f6d74bda96b21ecc942416210aa7d79f5e"
+    },
+    {
+      "path": "tools/validation/fixtures/ui_creating_frame.gd",
+      "before_sha256": "a08bbc453df05e713d624b5707dc18b245ac9031211d973870e8cb2882b52d96",
+      "after_sha256": "d20136073fd214d3fa819df37296ea6f29a54a303146e6ed384fdf17771fea00"
+    },
+    {
+      "path": "tools/validation/test_ui_components.gd",
+      "before_sha256": "e9e557099e02ee1f74898f29d2e182350f6c50808edc7721da7718c0e3909f3f",
+      "after_sha256": "61487d21348d01d540aa77b2ef90cc58021b665c4fad5e75645215647030a3ef"
+    }
+  ],
+  "public_dependencies": {
+    "scripts/framework/ui/base/ui_base_window.gd": "f84229356c294578191101692a0b724dcb72b6261ad5b6a3e1b594131d3e7fdd",
+    "scripts/framework/ui/base/ui_frame_window.gd": "b22fbdda6346d5b772ffd2c6af95951f152fc0f0e69993c13fa06838c3b2625b",
+    "scripts/framework/ui/ui_window_manager.gd": "8c3e2921ffb3e95699c52c24021082bf09c438e907362e453c5260a55f0da13f"
+  },
+  "test_result": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/real-hide-strict.result.json"
+}

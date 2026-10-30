@@ -228,8 +228,8 @@ func _test_settlements() -> void:
 	candidate.profile["consecutive_clean_wins"] = 0
 	candidate.profile["consecutive_fails"] = 0
 	candidate.endgame["snapshot"] = {"version": 2, "level": 51}
-	for field in candidate.round_runtime:
-		candidate.round_runtime[field] = false
+	# 1.22 round runtime 同时有字典、整数和布尔字段；空分区由产品投影填默认值。
+	candidate["round_runtime"] = {}
 	_check(game.commit_core_candidate(candidate, game.get_core_store().revision()).ok, "准备主线结算状态")
 	var round_id := _start_test_round(game, "main", 51)
 	var first_id := round_id + "/attempt#0"
@@ -275,9 +275,11 @@ func _test_settlements() -> void:
 	_check(daily.ok and game.get_daily_completed_date() == daily_date and game.get_daily_elapsed_sec() == 69, "每日通关成绩一次提交")
 	_check(game.get_current_level() == 53 and not game.get_endgame_snapshot().is_empty(), "每日结算保留主线进度与停放残局")
 	_check(game.settle_daily_round(daily_round + "/attempt#0", daily_date, "win", 69, 93.5).duplicate, "每日通关可幂等重试")
+	var preview_stats: Dictionary = game.get_core_candidate().endgame.stats.duplicate(true)
 	var preview := _start_test_round(game, "preview", 0)
-	_check(game.settle_preview_round(preview + "/attempt#0", "win", {"board": [[1]]}).ok, "题库预览使用独立结算命名空间")
+	_check(game.settle_preview_round(preview + "/attempt#0", "win", {"board": [[1]]}, {"elapsed_sec": 42, "game_time_sec": 42}).ok, "题库预览使用独立结算命名空间")
 	_check(game.get_current_level() == 53 and not game.get_endgame_snapshot().is_empty() and game.get_daily_completed_date() == daily_date, "题库预览不覆盖主线残局或每日成绩")
+	_check(game.get_core_candidate().endgame.stats == preview_stats, "preview context cannot write main or daily timing statistics")
 	var before_reset_sequence: int = game.get_core_store().snapshot().round_services["doku/main"].start_sequence
 	game.reset_all()
 	_check(game.get_core_store().snapshot().round_services["doku/main"].start_sequence == before_reset_sequence, "重置保留局号高水位")

@@ -1,5 +1,4 @@
-## 百分比文本的多语言格式化：按当前语言决定小数点用「.」还是「,」、% 放前面还是后面
-## 结算页、每日挑战等处统一走这里，避免各页面自己拼字符串
+## 国际化数值格式工具：处理百分号位置、小数分隔符与翻译占位替换。
 class_name I18nFormat
 extends RefCounted
 
@@ -14,6 +13,21 @@ static func percent(value: float, decimals: int = 1) -> String:
 	if _is_percent_prefix_locale():
 		return "%" + num
 	return num + "%"
+
+
+static func fill(key: String, args: Variant) -> String:
+	var template: String = TranslationServer.translate(key)
+	if not template.replace("%%", "").contains("%"):
+		return template
+	return template % args
+
+
+static func decimal(value: float, decimals: int = 1) -> String:
+	var num_fmt: String = "%." + str(decimals) + "f"
+	var num: String = num_fmt % value
+	if _is_decimal_comma_locale():
+		num = num.replace(".", ",")
+	return num
 
 
 ## 土耳其语习惯把 % 写在数字前面

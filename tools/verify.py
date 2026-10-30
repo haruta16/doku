@@ -21,12 +21,12 @@ from validation_report import build_summary, capture_environment, write_summary
 
 ROOT = Path(__file__).resolve().parents[1]
 SUITES = ("quick", "framework", "all")
-INPUT_DIRECTORIES = ("scripts", "products", "tools", "addons", ".autoconverted")
+INPUT_DIRECTORIES = ("scripts", "products", "tools", "addons", ".autoconverted", "docs/recovery/1.22.0")
 LIMITS = [
     "No APK/native SDK/mobile-device or production CDN/TLS acceptance.",
     "Development release checks simulate the build predicate; they do not export a release binary.",
     "PCK proof checks content/UID behavior, not a production mobile package.",
-    "Recorded shutdown exceptions remain visible; passing does not mean leak-free.",
+    "Historical shutdown evidence remains visible; current runs reject all reported shutdown leaks.",
 ]
 
 
@@ -78,6 +78,7 @@ def steps_for(suite: str, engine: str, output: Path) -> list[dict]:
 
 def fingerprints() -> dict[str, str]:
     paths = [ROOT / "project.godot", ROOT / "export_presets.cfg", ROOT / "icudt_godot.dat",
+             ROOT / "unikit_config.tres", ROOT / "lxauth_android_config.tres",
              ROOT / "docs/validation/review-followup-content-report.json"]
     for directory in INPUT_DIRECTORIES:
         paths.extend(path for path in (ROOT / directory).rglob("*")

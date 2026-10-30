@@ -1,0 +1,1794 @@
+{
+  "scope": "Meowdoku 1.22.0 service, profile, activity and recommendation learning comments",
+  "baseline": "originals/upgrades/1.22.0/annotation_baseline_services",
+  "validation": "tools/migrate_learning_comments.py parse_source(...).fingerprint compared with the exact pre-annotation snapshot",
+  "file_count": 132,
+  "file_responsibility_coverage": 132,
+  "total_functions": 1564,
+  "functions_with_preceding_comments": 256,
+  "new_method_comment_count": 256,
+  "added_comment_lines": 422,
+  "all_token_fingerprints_unchanged": true,
+  "files": [
+    {
+      "path": "scripts/module/account/account_manager.gd",
+      "functions": 50,
+      "functions_with_preceding_comments": 16,
+      "new_method_comments": [
+        "_ready",
+        "take_pending_result",
+        "refresh_progress_conflict",
+        "apply_progress_choice",
+        "_apply_progress_choice_async",
+        "start_login",
+        "start_logout",
+        "_relogin_guest",
+        "start_delete_account",
+        "_wipe_local_and_recreate_guest",
+        "_on_level_settled",
+        "_on_profile_saved",
+        "await_startup_settled",
+        "_arbitrate_merge",
+        "conflict_of",
+        "_set_state"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 20,
+      "baseline_sha256": "2f37178aff48bbca14793ce1d0d41b786d86aa142a53a171806e7ab496a4a020",
+      "annotated_sha256": "41cf73ab2c41d6af06baf738dfbd79d55809abe7edaa6f5d88a8f932daa785c5",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/access_token_result.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "is_ok"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "cc00e7ab8e1bf027b38bec9144478ffca8bd7c308a9e73da401cd6d825c86681",
+      "annotated_sha256": "99fd8d7cb2f45cbe813ef031bdbb9358bdf04e6b4671759d75c8a3b3bd21f0a0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/account_data.gd",
+      "functions": 8,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "load_data",
+        "_save",
+        "clear"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "1ba15f19f622e4b1cea77171f1f032a47f96624cb2ab81e056f6e6af1f77ed8d",
+      "annotated_sha256": "a561a4c26836ab1c26b962289b200d4903cde07c03c078291681ded30e1c67d0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/account_define.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "channels_for_platform"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "19fe866768f2b84cb2292120849cf4b88be584e35fff56fa003786b937cf632b",
+      "annotated_sha256": "d60d184c4b6f6d5c3162ea84d8e562a0d2ca2ef82b34b0cc1fb91270483e522d",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/account_flow_result.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "4c6cc8d1a387763c38d0bd50e34e1f4bc3935461a006029284ed1159dd98e8e9",
+      "annotated_sha256": "218dd351c235e88210922298ece7de618f914096f923d7c9ca7dabb5cf0a6466",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/account_profile.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "beb671a8766a202c08bf9be3b5fdcf0d409f5f77579377bb2afeef4650792488",
+      "annotated_sha256": "21bc62f6312c3144d7e874b16c9090fcff3a907fb75681d95bf9d973f75d4c8e",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/auth_failure.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "3b50f0ac116603ee60c9a062821b17ae57f532c311cc8ddfc8785d4bfd429ea1",
+      "annotated_sha256": "cb992a66ac3a40519558339e0d470574ec94b9274df6e2025d2b6ac41e6ee789",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/auth_flow_outcome.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "finish_ok",
+        "finish_fail"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "66ba8e9fc4c554f6aa711d977151834d197d5ccfce7b1d35e233a84d9385b0b0",
+      "annotated_sha256": "45b0604019f14b2742644ae165cb6c23f7c41cc6cb38634f56ccded365423447",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/progress_conflict.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "c2462df153b70fabcd3b56257c37e27f9662848f93ca2eed169c601402c49f80",
+      "annotated_sha256": "b2f2a5714eaae8ee6c0ae10c9933d6bb85f7f274f361f70b63a326ba50f8a46f",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/model/progress_snapshot.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "8f1695747029670059b8cc11d1f6f83eeb35400a54c3e10bf0dce3cf24c5976d",
+      "annotated_sha256": "e1a54666a9b4359d2caca01079c3bac95a91184f1d941dd47384ab2b878268ff",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/account_deleted_page.gd",
+      "functions": 7,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "c56def69bcdefddd6fadb5d3573a418645583025c1d9fbb8c0c8e10892177927",
+      "annotated_sha256": "137def9cf934df4525c6e0b50eb8b4bc848bbab3d08ddf31accd94c1f1f18719",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/account_result_page.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "4278fce0eaf662052cd038ca6a944399ad84f383bfa8360ed3e60837c7965fbd",
+      "annotated_sha256": "61475ccdd65f467ffa05dc52face34ae085b84af5fd0b81b838896ef0642cc14",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/delete_account_confirm_page.gd",
+      "functions": 9,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "set_busy",
+        "_on_delete_finished"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "cdf4b6ffe0942e50d5795ca8cd6cbfe622f0fbef022450b87f4f8fbaa4fb9939",
+      "annotated_sha256": "46944490fdac8a17837cd7832148ff27178d77306118e4a5dc759bbba3b9b476",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/delete_success_page.gd",
+      "functions": 6,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "a7323b089cc68644c49cbee698ae836309ac6c65d73736f9335c324dc74895c1",
+      "annotated_sha256": "851ee73a5dbdacf2eb831a6df0480b7f5745ddd6526ddc13f68e67f49f7f7354",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/login_page.gd",
+      "functions": 15,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "on_show",
+        "_rebuild",
+        "_on_channel_pressed"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "843a4d8605405f9869b51cbe6689de2398c9dfc44d39bde2c41b6c31a240f181",
+      "annotated_sha256": "859ff379f4d69c1c4107ce0890ef97c56148155ea443ad0453825d8de3f0162c",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/no_connection_page.gd",
+      "functions": 8,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "102af9bc87052999174a266a29dc7dccda48ad2f62604b8378206760e49b4862",
+      "annotated_sha256": "42ae49e2dbb622acbf526353ce0aa874aba3d05305921079adcfc0842fc24503",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/other/account_popup_layout.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "apply"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "f043e8e814dbbe6cbbac7f7463b20b745ebf3dc369d00e2335a3507b1bf7b431",
+      "annotated_sha256": "13f8230436a531ccb71040ddf335a5371459c05f9cb906e9fd6420d5a2742315",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/other/channel_row.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "0caf3a2e39175908e6cd1495425aa7ded85353def139e90b25affb601ad80b03",
+      "annotated_sha256": "7c34658e7acec9d114f9842a737d35c756753f10032c9f14922d2c6c1165c8cb",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/other/progress_option_row.gd",
+      "functions": 6,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "28122a758136732e49b8dfbb8de8d2c623c6878efe542bbb3005ac4caae71b26",
+      "annotated_sha256": "630916dd5ac6f0cee8926e3cf3ac1bfb5803b8849b24047e8dd73f9dee5d44e1",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/other/save_progress_row.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "35a4311c6fb2baf4d0fbea7b47dc6084b56cc880e48f4c8b64392818d95b3e83",
+      "annotated_sha256": "5d71afb5188294ad5518c08b8d938233a5b632bbde846b0f2fe0ea6b1a205cce",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/progress_select_page.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "on_show",
+        "_select",
+        "_on_continue_pressed"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "c0d2ca78f35cdc25dbf3413e023426b514c8398b940550a98985d1e5bd178bda",
+      "annotated_sha256": "80e0a419d1508a1fce22d85800e986979268aef8a6a090ad1b1d64d373ce8f16",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/account/view/sign_out_confirm_page.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "c829bb02f26b2fc516e930445fe9920dc0f465eea5bfaa0e0349493b7b165b14",
+      "annotated_sha256": "cf7fa6a723081abd4c3b59b18aa4649543eb51fb5a07f3ae72210fbe89fc4317",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/core/data_sync_api.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "fetch_meta",
+        "download",
+        "upload"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "3d10a44f9667cd2cd7c053a9d27e212a08dcbb6defbf9a6b4802aafe9ba56c99",
+      "annotated_sha256": "32c079921133cbb908f2ce4c46d3ca6f8b4dc2b522d87c4f761baed60d7c287d",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/core/data_sync_config.gd",
+      "functions": 0,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "bfc16974ca80abbaaa1865824094813b99987d0eff3b67125041a4ec594643fb",
+      "annotated_sha256": "50045f6bd0f93c59649ad8f996985a898acdb1ca2d880d13ef4b6c83101e0d56",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/core/data_sync_registry.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "register",
+        "mark_synced"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 4,
+      "baseline_sha256": "ea33d23a06507f5da27654debaf991562a1bc84048c41004ae5142dba4a98a59",
+      "annotated_sha256": "fc27f9aa90485eafd999bf4f99365b2ddfde4f5a938ea32df21533b2c652741c",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/data_sync_manager.gd",
+      "functions": 27,
+      "functions_with_preceding_comments": 13,
+      "new_method_comments": [
+        "_resolve_sync_enabled",
+        "reset_for_account_switch",
+        "request_sync",
+        "sync_once",
+        "_merge_pending",
+        "_sync",
+        "_do_sync",
+        "_upload",
+        "_send_download_request",
+        "_download_and_merge_cloud",
+        "_build_root",
+        "_merge_cloud_root",
+        "_save_cloud_snapshot"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 15,
+      "baseline_sha256": "e41a02c931f254c8ccad32bd20bcfbfa74fc186dd5673f7da10fdbbfee4b66d8",
+      "annotated_sha256": "102babb758c0f120111d4bd5d6756fa8b44615681ffbf12e0a2554b04efbc2bc",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/model/cloud_save_result.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "959febc073a788b1dce009e43fde5b53bd6ae94573a455785916c683ca5db7eb",
+      "annotated_sha256": "47a59ed5689066fb887f2ed2b24999a5ead368857d84a14213a9754450451fc0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/model/download_merge_result.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "d3b3ef13ff5ebd45cc40710235710023daa796bfe105c74435a12a4cb916d5cd",
+      "annotated_sha256": "2c34ef84aeba55eaa1de8fa241e374915dd0b9e90a1ba1103175f8fd6bb53b41",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/model/download_response.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "5dd347d5717679ae2d983fc04b4e32594aa1ad53845de033a17b0f375c8059b2",
+      "annotated_sha256": "8579d5affc4a8e95d7c54a651ecd6cd5d50f4eb3d61a3351fd01b43012f1d955",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/model/merge_context.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "0906af75b2c5bdcebe62726401245d999b821e7c930f2ccf7614bd4966eb692a",
+      "annotated_sha256": "3f0daee0dcfc560abc9558a76eef495b5368e5e5362aaee7a7e266b0a5ff982f",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/model/sync_request.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "afbc9223d22b2596ccb977dacdfc52bbb60ef3ea840f2665d6be7476112de2d1",
+      "annotated_sha256": "335bad2a7d5fea1609d23daa860fb8b64bb3e8b8f7b4092b3ec7fdd0699094c6",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/data_sync/model/sync_result.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "adb0ce9054490d7702d68e63b17c8f45bd82d4bac18f2d09b015d0f737cb71a1",
+      "annotated_sha256": "696a7601ad938f31dca4ea543fa85ad9a6f0404b5f29158ad9093dab3f5de12c",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/core/costume_skin.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "apply"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "6191ebe2137d5abdd7abb14c00a33ac15ae0eb86a0f3dcc5846d994ea0796b98",
+      "annotated_sha256": "7e0ffa8edd8b29b6a132a049d1a1aafc72a7eea4b92be9a82b630b9502fd3ad0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/core/profile_nickname.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "d312bf28953271b90ce4e77802ea1024e800efaea8b5576f101d37d350d4c46c",
+      "annotated_sha256": "25e22a753b4b2803a04683d370ab63e99384d83d26682c87ee7b8814315b4742",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/model/avatar_frame.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "2cdc8ccfe400a69fd1a1e29addac45fb06e0c3b336ec057d41754448b7f96895",
+      "annotated_sha256": "32723b749b14b0a0e8a0336ca247d76b29527c4d84532d5031d568755c86380e",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/model/costume_catalog.gd",
+      "functions": 12,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "costume_for_day_skipping",
+        "today_day_offset"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 4,
+      "baseline_sha256": "285d0171991682508c5638f7e645885f99d65836a264d1fa7cf2db45e5dad307",
+      "annotated_sha256": "bb93da2849605b656841bbdad60022e8f418151b0b8c7d5d0a26042141c452aa",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/model/costume_icon.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "87d5dbc1a602816ef2ef06963433e8c4c508bf8df21ab7dff20265c53eb7749c",
+      "annotated_sha256": "24f4d68346583472d1e8da6f08e26fae4e53405a90371d8b7c6b17954503a8db",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/model/player_info.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "9ad67b8bfcdba4404b1403b1bc52edc674d29d20e7ca5b5909ef8fd9b0464f86",
+      "annotated_sha256": "ae1a6f0126d08c9ad04badbc626e33c0cd223625cd77d90dec7c8eac9bd08e24",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/model/profile_catalog.gd",
+      "functions": 11,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "e4983ddcfe2b3939c48bb591af3673edd97ede6e6ce99b07e3a21f35699f8eed",
+      "annotated_sha256": "6123ac153b6d587a6ed5870c6137f75446f1169d1983155f469497e8e937263a",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/model/profile_data.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 4,
+      "new_method_comments": [
+        "read_id_list",
+        "resolve_frame_tier_presented_form",
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 6,
+      "baseline_sha256": "af6b34e9267785e93c0a9e905d5cce7d9ad9a4216be352aec04e911fcc35fe21",
+      "annotated_sha256": "0995bd1c29c405e2ea6ff9b9eacf0291600a94b1ad4482f19cd7544a224ad8c3",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/profile_service.gd",
+      "functions": 73,
+      "functions_with_preceding_comments": 13,
+      "new_method_comments": [
+        "_ready",
+        "grant_frame",
+        "grant_avatar",
+        "get_player_info",
+        "merge_cloud_data",
+        "_prune_expired_trials",
+        "grant_costume_trial",
+        "grant_costume_permanent",
+        "get_today_costume",
+        "unlock_today_costume",
+        "_refresh_costume_state",
+        "_save",
+        "_clamp_frame_form"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 15,
+      "baseline_sha256": "e2941ca8a4640c343e124ab19f8f967e452a66e0f539014462d9ebc8891e68f1",
+      "annotated_sha256": "7027c7e840a4aae8f8e586a4497a0879cf08085bfda7023ad5fdfe5cfb236734",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/view/avatar_cell.gd",
+      "functions": 20,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "apply_player_info",
+        "play_count_increase"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "4c72ac7c8ecad05cf9c46008afdb1bc3ef634236fc6107155c08ce77fa701fba",
+      "annotated_sha256": "8a4fa874eb53f5911955077ff24f655355c9f2871eea5a4c9a3f788740f9cc9a",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/view/avatar_profile_cell.gd",
+      "functions": 11,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "154e1a5a01351bfe3b960cb715764858af3be2adc8c28618984e1c186acfe2e2",
+      "annotated_sha256": "d298eb95cfb57f2f63968f149e7ad5a4ae5ecfed5cc6c811bbed395c829755da",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/view/costume_cell.gd",
+      "functions": 9,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "1de6e38c5c43e925fab4cd3c1f3370daf465df8e546c781d9a51b352382832a4",
+      "annotated_sha256": "0a90d587eccc9c2a6306a9304b062ae79c81315ff47cd304e6b7ee8cae00778c",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/profile/view/profile_page.gd",
+      "functions": 59,
+      "functions_with_preceding_comments": 4,
+      "new_method_comments": [
+        "_exit_name_edit",
+        "_switch_tab",
+        "_is_scroll_drag_release",
+        "_on_confirm_pressed"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 6,
+      "baseline_sha256": "59c64e5c956f3782fc0319058a5d6cbc64ff392fd68d2658998ca53e9751b8d3",
+      "annotated_sha256": "76a8208da3c0782615220b2d234ae9c3951f2086b4dff15e91bc4cbb23f27937",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/core/money_format.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "parse_many",
+        "render"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 4,
+      "baseline_sha256": "5e59153baf68379fc4f17e7fc3edc4a5d22683e48a2e1465804a8d08921e9d6d",
+      "annotated_sha256": "30e4278b4dc500d5fb4648e2f30b7b943d951c63e8dca6b24c72f5477663f85b",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/model/purchase_data.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "202ecc2b70b173e58dd51382468b3056b13989a8d6851e0b27da30b2855dcd89",
+      "annotated_sha256": "7c4ebd68aedcd791f0bd002440a555f85ca3974c27f9908d712f379255237955",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/purchase_define.gd",
+      "functions": 15,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "1effc48d815b9536c2459fa8913eb789733c4c504d8a3a252313a8210cfa4e23",
+      "annotated_sha256": "4d22f3b4377c7b9ba081d18a1336d64efd18dced44de31a6f41a8556ee869108",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/purchase_manager.gd",
+      "functions": 60,
+      "functions_with_preceding_comments": 10,
+      "new_method_comments": [
+        "_ready",
+        "_recompute_vip",
+        "_resolve_owned_subscriptions",
+        "buy",
+        "restore_purchase",
+        "claim_vip_daily_gift",
+        "lock_vip_price_ab",
+        "_on_subscription_updated",
+        "debug_simulate_purchase_success",
+        "_debug_apply_fake_store_restore"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 12,
+      "baseline_sha256": "7a086326bcea27890d5c97ed59977cd2f6de86335bf2673f97cb1fa175c90680",
+      "annotated_sha256": "0cdc2cfa46d12f9ce247dd8cbe742df8b2804ca43f127559cf4efe51c0f00dfd",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/view/discount_pct_label.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "068933cfa1839aae2a50bb51a71dbd97dd97f06da545039fe8e8018f2da9bc4e",
+      "annotated_sha256": "e369aee5bcc6907be1d6995c9a138a7d00d61b0e4078ba11b98c633406dc44de",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_package_cell.gd",
+      "functions": 14,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "91e2c50ebf9d0919e53b90b100260e9ff0346da5f7dce3610b7dcbd4ef63ff2a",
+      "annotated_sha256": "81e2435386b0d404c4c895713d104162959577b7e27065b12ea64a2e078ad16b",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_page.gd",
+      "functions": 50,
+      "functions_with_preceding_comments": 5,
+      "new_method_comments": [
+        "_make_plans",
+        "_apply_plan_prices",
+        "_on_plan_buy_pressed",
+        "_on_purchase_result",
+        "_on_restore_pressed"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 7,
+      "baseline_sha256": "56259e7fa75943187e6d3f3ed7fca89608ee884f1963f1403cbac52dd83a1ad8",
+      "annotated_sha256": "4fb97fe1529e49555fc1b4f148b0919b122231499229d28a9688159aab1a610c",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_settings_cell.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "a8a1cc77497a2c963c2a2fff5f9689109becd22c5cd12567503b024bac956798",
+      "annotated_sha256": "d3c69d134d022cf6231eba6b399bab6a3e3576752bbdab89bd06aeed7d3c3286",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_success_page.gd",
+      "functions": 8,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "250c31d6fe65fe96304ba7364cf9c15a666cd113f402ba310d19d292288b6e55",
+      "annotated_sha256": "b0c449e12620374aeca9e409fbf9082c40364d0454e42b2db0358b539dab3d67",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/purchase/view/vip_daily_gift_flow.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "run"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "10002aacc32fb6c5bbe3fe9bbaf7b93e7723068180258de6c73f305e2c6d51e8",
+      "annotated_sha256": "2e29ae32e6241358226886f225b5edfb2f92c8f21bd7f373673b3ca4c7dd4be0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/core/fish_flight_curve.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "build_runtime_curve",
+        "sample_timing_bezier"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "44fc687956371f7c101c7b8792b0925c83e66047e1e8640ac31c73857878723c",
+      "annotated_sha256": "100ea3c04a4c6d680e851fda5bc22017a959331741734d4b4026b2e1692e0e9a",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/core/peekaboo_rules.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "is_claimed_today",
+        "should_appear",
+        "grants_reward"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "9e6646b40e5f0d900469c6236efbd36780aff19c55dcdb8c021a5ea1c34d1cf5",
+      "annotated_sha256": "61eb2dcc761ce992cbf71d844b997c0105ee444ee36f92029fb66d9fcf580a03",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/model/peekaboo_data.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "c0347ba062b8c480356e6ed764dc99f7caa4adc14591939418e681794da0d20d",
+      "annotated_sha256": "e309f7cd17a32839e7d5b2f462106c23e5da17207defd5862cf99523b57ee5d6",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/peekaboo_manager.gd",
+      "functions": 15,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "evaluate_on_cold_start",
+        "mark_claimed",
+        "mark_soft_protected"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "960b66e1fc5c723ea7250f0c3370483d4dba9328ad1f6b9a89864e7428bf5b2b",
+      "annotated_sha256": "2086a972383cbdb28f485565ce742aaf27f39bfa620a2d941573eb1038eecf9a",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_cat_cell.gd",
+      "functions": 9,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "d21022fb69b39360575b0770edc88d9691038dd9576cee62371851ef27ab9636",
+      "annotated_sha256": "e43bb52d90e5c8376c0dfe17aab0ce0b1412e1f9a386c293edac817b4be71f00",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_confirm_page.gd",
+      "functions": 9,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "5129ccb19a02f5649079ed4cf35520d07c5579b50004226e59bd5b7b688f2ddf",
+      "annotated_sha256": "bd0524a46c9a737c131fc971cc7117b4c356962400f4ef18e208bd5bf880d617",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_fish.gd",
+      "functions": 11,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "053fee91e21cf38114ef55ba2ebf69ace8b73d3f9473265e890eb7245525e84e",
+      "annotated_sha256": "cb6b01405d691aeb0a20ae6bfe686a772b8e8a6a2050885813848074ae496bba",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_flow.gd",
+      "functions": 15,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "run",
+        "_watch_reward_ad",
+        "_await_fish_arrived_then_settle"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "d9e343f8e1c72ce85b497fea8cf6d95e9b25d602ab56a65be0f228683904773a",
+      "annotated_sha256": "8534c8a2a4a21d4acf04468a36778dad908bbceb3f02d6a0d1e662d64e8d590f",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/level_rec/core/rec_api.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "request_next"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "19efd2cf1b043c0dcfd647040de266eb2864234734370d356e5915b1ba0ae612",
+      "annotated_sha256": "e34e170329bf1d82a450dc9824c54271598c8d2069e41d537f55249cddf9fdeb",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/level_rec/core/rec_history_store.gd",
+      "functions": 6,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "record",
+        "reset_session_position"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "b30aae720dcd03db856fd8b6ca23459d374d712e8363aca64a5617c36c56d2be",
+      "annotated_sha256": "4439e8fe9c47677a02627868285d7acda043f09d05757be8b07f98c05fa5dbf2",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/level_rec/level_rec_manager.gd",
+      "functions": 24,
+      "functions_with_preceding_comments": 6,
+      "new_method_comments": [
+        "record_level_history",
+        "dequeue",
+        "_try_prefetch",
+        "_prefetch",
+        "_validate_current_head",
+        "report_invalid_entry"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 8,
+      "baseline_sha256": "78f4c90e0a48c322fe55864f2a9de9d1f3c2853eb98e75ad9481e90ef90356cf",
+      "annotated_sha256": "eaa15bc786464233be8fe5966c2c7a27d712d30d1aa01a833d3a1e46ba9d7c0e",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/level_rec/model/rec_level_queue.gd",
+      "functions": 14,
+      "functions_with_preceding_comments": 5,
+      "new_method_comments": [
+        "enqueue",
+        "mark_delivered",
+        "build_retained_assignments",
+        "peek",
+        "dequeue"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 6,
+      "baseline_sha256": "08f262f6f72e9bf6da603fe40a6218f76590798ab3b0081cef43c4d01ff3585b",
+      "annotated_sha256": "0170b552a4b974013adf621a957409f635b1329e8a415d4710c4a3a3e6c35187",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/level_rec/net/rec_http.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "00feac1078769405cf806765ff42569d57ed89c5c544069899b240aa1d114c8c",
+      "annotated_sha256": "ad67b188a794d752a698096ec50341257971eb13e7b1ec909eb1bee2f2eaea89",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/color_challenge/core/color_challenge_gate.gd",
+      "functions": 21,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "resolve_kind",
+        "should_spawn_pending",
+        "should_clear_on_form_switch"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "1f1c61545e084656f3e20a2dc2e2c409787b8467541f0da0defb148685fcd334",
+      "annotated_sha256": "5ec13ca6b094ef710b50ae6d058aab709a9eb6e17263a71b8d737457d4271545",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/color_challenge/core/color_palette.gd",
+      "functions": 14,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "split_regions_into_two",
+        "build_slot_colors"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "6887e72d7b940e79d16ca1006f14755c99b1f48c846e53d57bcd5cc8686ab739",
+      "annotated_sha256": "8dbbdda573df99542871bea55054029bbe834a3650b8a365be9d8845178f00ac",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/color_challenge/selector/color_challenge_selector.gd",
+      "functions": 7,
+      "functions_with_preceding_comments": 4,
+      "new_method_comments": [
+        "select",
+        "_pick_with_fallback",
+        "_pick",
+        "_build_entry"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 6,
+      "baseline_sha256": "59dbe7fc56155b88835e04e1733d65e897d4f9cf1c0acb2dae2b11ca08d792d6",
+      "annotated_sha256": "b5cfc1c9a37f5c0956f7c9eeba2dbb5765f7611d510c62f63fe613c8e95a8db4",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/color_challenge/view/color_challenge_btn_style.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "9959a1f06eb4747b36eb94527e149fdf09df7be86e6b2c504c98cefcfd99688c",
+      "annotated_sha256": "08ce4c1c68ee5ad5c26104b2c3ccab013a345fd29c0c8e0824691f58e7486291",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/color_challenge/view/color_challenge_toast.gd",
+      "functions": 8,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "bc638c9a5f31bf45e5dd54d5d70d4d247e586693404d3b4e99fddce15fda6b28",
+      "annotated_sha256": "09d8f8adb05bc2137a8e349760e82e28ed792ad38a0b78e4eda7cd37d2e2a332",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/golden_fish/core/golden_fish_gate.gd",
+      "functions": 16,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "resolve_kind",
+        "should_spawn_pending"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "fb2171840fd7ebb84a6dd65b61b08f00d5e10892ec6d7017ef3b2bf06df23250",
+      "annotated_sha256": "d47c8143524f55378259a7f3a8af399a3445fd98f377794878bfe31bcf9cc797",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/golden_fish/golden_fish_pre_cat.gd",
+      "functions": 11,
+      "functions_with_preceding_comments": 4,
+      "new_method_comments": [
+        "prepare_entry",
+        "consume_pending",
+        "resolve_insert",
+        "mark_revived"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 6,
+      "baseline_sha256": "87a5b6b39749a7b835a9758627f21c0510f060ec7f79c6331b62b11bce21c878",
+      "annotated_sha256": "28ab1300cd2df3c4bf9310eae86a6585211c15419b7f2a81844ca7693a282216",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/golden_fish/selector/golden_fish_selector.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "select",
+        "_pick_with_fallback"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "aa5610a4376938f52c078f9a8f29084ebb88888e0dd266f51660cb8f60ec544b",
+      "annotated_sha256": "69def70df5918abb3d5071254ec68042b7d148734c8c505b5c364fd17079b90e",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/golden_fish/view/golden_fish_btn_style.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "81e1df73735ffa2c5eeb060e9b35b1491e739a4e5f51fd6efc1ccb539baa6025",
+      "annotated_sha256": "fccded52c3214b178316cf2ef0294dbae19ca061a6058a8836dd7809c4ee4f57",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/core/robot_boost.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "plan",
+        "apply_to_robot"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "8bc7d7b69bc62203cb123410e5a353263ed88b1cf28b14851359f64f153d8ca6",
+      "annotated_sha256": "0e6ddf77b382a94b863db236243b042576ef079fdc350508745edc2d82304660",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/core/robot_identity.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "assign"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "be0adcc3f645f508c17cfa53b9318384b7a0bf69ff018d07a07253e8b314ffeb",
+      "annotated_sha256": "f48e6cb9a6ae6b1e96f78115eae06a2195e395352fd246c37f3de99864bf5260",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/core/robot_online.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "next_score_sec",
+        "idle_sec"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 4,
+      "baseline_sha256": "68a4d2487625690750556d0a87f9721283004c04aff20710bf819c3e7d265550",
+      "annotated_sha256": "63eff5da9ee79aad3ce343925d8e5e16ce9d53630ec8eef17f29824f35cb6136",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/core/robot_ranking.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "robot_score_at",
+        "rank"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "3e16c1c5642b5c6e8ea09610831d31e548ef0e54bfaf8b5a19d95025970ddb5d",
+      "annotated_sha256": "2fac3a1947beedf516314f6e9544a5da3ad839051be8a5adb3eb795c820109ab",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/core/robot_score_gen.gd",
+      "functions": 15,
+      "functions_with_preceding_comments": 4,
+      "new_method_comments": [
+        "player_base",
+        "score_array",
+        "distribute_timeline",
+        "ensure_min_scoring"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "a7187d837fb81aed87a8476907142c6081d6eeebfa4deb1aea69cecac979b783",
+      "annotated_sha256": "0fd2c3d9b2df9cfccd4be620651482384a53142618a5282e52b837f70f87cda3",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/core/robot_stalking.gd",
+      "functions": 6,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "catch_up_delta",
+        "overtake_guard_unix"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "3ef8721ff3ae1550cfdc14391b0241f9abbac72881caeb850cd29dfa63fe46ec",
+      "annotated_sha256": "dbbec9b51f4e2f0e61db7a479a95cc6f702463ba18f17a56954be924ded9c638",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/model/rank_info.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "522949ec26da6d08ea25309e1636250a3cc50da74af3c2faf85aff608b6b40bd",
+      "annotated_sha256": "526144b2aa9db56ff0af1173339945724fd06d616fb50c6a821721d9352d0af7",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/model/robot_config.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "96259e7ab06f65bd3ef54925f29c5e25823809608d38a4b6b0163a89d4af09d8",
+      "annotated_sha256": "8fadd030ad71abf886aefdef25bd8e8228c251d13885ca4fde2cf0f33b1ae9a2",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/model/robot_data.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "0b351c82ff312786e51825eb5e6911e9c969de5bc4f74a3571bbc599ed60fde1",
+      "annotated_sha256": "f0bcc1a43386fd848fb0412330708fdae326a4aa765fb73a51794c9d0794d9da",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/model/robot_localized_nickname_pool.gd",
+      "functions": 0,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "2f3bb44a8462844ba336222b1132438a433241d0fba5efdf948f126c80b4bfee",
+      "annotated_sha256": "1925a2c927db534c067747a0c4ededd0451d2004018f5ebde674c4003c33a721",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/model/robot_nickname_pool.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "555f82916f0b5c8170b218e587f0e30882474530fd14fc800ba73a597eb15775",
+      "annotated_sha256": "1e98f97e00978829187ec909784ecce15c08237e3607a6205b40414de3bfdb92",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/model/robot_pool.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "6c65086670c5b6ca2121a0a822db78c39f0515829b9cab1b514ad808ba7ec589",
+      "annotated_sha256": "8042fd80ea1d167c0c85b97df5833652176edc74529f85e5e2e476b92c0ff269",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/robot_service.gd",
+      "functions": 34,
+      "functions_with_preceding_comments": 10,
+      "new_method_comments": [
+        "create_pool",
+        "get_ranking",
+        "get_rank_list",
+        "on_player_score",
+        "apply_player_boost",
+        "_freeze_future",
+        "_tick_stalking_on_query",
+        "discard_pool",
+        "_persist",
+        "_effective_now"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 13,
+      "baseline_sha256": "700e4e4a232f3a7b05d3577845503eeca3a9093a52df14a1065d274d2d933b2f",
+      "annotated_sha256": "595fdcaaa5fe476377c6b2a590f622dac73cc79cbaf39d28e67f07a8da43432a",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/robot/simulation/robot_sim.gd",
+      "functions": 22,
+      "functions_with_preceding_comments": 4,
+      "new_method_comments": [
+        "begin",
+        "at_minute",
+        "player_win",
+        "_persist"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 6,
+      "baseline_sha256": "f1a25d7c1873e5ff07613289b7cbf4e12b86d4fd134b01a3053435051fb988d0",
+      "annotated_sha256": "d3843ab95ffffd267b3948626e3e6bae248dfcc733fbbc396ffb96e7b00d8e8d",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/core/css_bezier.gd",
+      "functions": 1,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "evaluate"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "2f1d34161e4d688a64bfd6639644e9d69b06bb2947248c7174cd5a63db4f3454",
+      "annotated_sha256": "c1e878e6f02c36dc386cfe83a3882d4d8443f44f63c3750b93d15e6cb34c4506",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/core/rank_activity_period.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "should_open",
+        "global_period_index"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "8ea27a1ebdf09e7461d9bdd8428bfe2d849222b8187703e17b3932365f1fcc6e",
+      "annotated_sha256": "3735dff4d5c3aca0839c85b782b080dbc29c2a8f593f7b57004d72b4bcfbb2ca",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/core/rank_like_logic.gd",
+      "functions": 12,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "resolve_settlement",
+        "consume_barrage",
+        "make_barrage_schedule"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "144fb1b14ea1eeeb51cb30d243139459d6bd1075ce316ed95bef842d86f0f32c",
+      "annotated_sha256": "5a5c5f35ee25db147b0441924270329a90b2e74f24c8945cebb8f33038530021",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/model/rank_activity_config.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "84133471ca7c5b4cc40a35988c25ec061a7559fca3d0c976534d88f56f8ed2ee",
+      "annotated_sha256": "ea730661b24573c9d1a9f3ce3568cb01f44e4410123ea12b5d6f078a8ae8f64f",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/model/rank_activity_data.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "29eb0c583f2d52c0ed1a2633876bc0f89739fb3779cd74485044a32033055376",
+      "annotated_sha256": "001f9408bbc2d8b609fba3cb6fa642fea1eab4da3f7eb2d5f5237be35ec4519d",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/model/rank_like_period_data.gd",
+      "functions": 6,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "to_dict",
+        "from_dict"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "2023e5f9da6aa16ad68dd53381eb68a5f4f313588d093dac0785529be95eaade",
+      "annotated_sha256": "343c0ced03aca77157e764d8dd928dd4ec0c30619345db535c8bde1f584ea3be",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/rank_activity_manager.gd",
+      "functions": 116,
+      "functions_with_preceding_comments": 25,
+      "new_method_comments": [
+        "_ready",
+        "get_rank_infos",
+        "maybe_open",
+        "confirm_participation",
+        "notify_level_start",
+        "set_level_collect",
+        "notify_level_failed",
+        "notify_level_revived",
+        "notify_level_win",
+        "notify_level_exit",
+        "add_external_collect",
+        "begin_external_presentation",
+        "end_external_presentation",
+        "set_streak_rule",
+        "claim_reward",
+        "_open_period",
+        "_settle",
+        "_maybe_run_settle",
+        "_fold_to_not_opened",
+        "_commit_level_cache",
+        "_after_collect_changed",
+        "prepare_rank_like_settlement",
+        "toggle_player_like",
+        "_reconcile_interrupted_reward",
+        "merge_cloud_data"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 27,
+      "baseline_sha256": "1b4a8ff8c6a593dd1bad77d658b15bee9d9dda2df0d06831fe5cd835268229de",
+      "annotated_sha256": "c662e2bcfd85723edc76541a22905dbb011cf3a17c5f0e7b3c5728dcfa89e298",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/firework_line_trail.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "ecffb28101c722a810627727cec11f2171224981f9faab1e2d418af692cedd0f",
+      "annotated_sha256": "aca79573e470b6f0e7e9c3c4d34d535aac739ed922b75cd31934fe68b7058459",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/online_tag.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "9f509bffd5fc13ef16ae8bdf8c1c76ee8b2d82d852d6b23e9de92d51d5461707",
+      "annotated_sha256": "fd5895808708ab6bf4bde58b635f4e2c37b06aec933891eda9938b1b7a22712e",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_online_helper.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "bc0795897b2b536fa284756df56f102ba9d92842d0bef92eaf3cd3b59f3c7315",
+      "annotated_sha256": "a7c7f16d7d17247f2e54150ecc1dd0959bdbb13571a000ffef16b10349e86abb",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_bar.gd",
+      "functions": 22,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "setup",
+        "play_tier_up",
+        "_kill_tweens"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 4,
+      "baseline_sha256": "db2353409d22c8fa549b495321a4ff2e980472d4a902dbe72890f5f20b958767",
+      "annotated_sha256": "4e75c75a2ecac42c83b80da71c5d265bf76f2ef00104acca515c9ccd40096601",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_cell.gd",
+      "functions": 10,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "d9c2bd056ee2157eeaf782e3c8a99537e87a3aa0ef60dd4249ca361f1cd58d54",
+      "annotated_sha256": "0aa68f808ff169625144d3624552eb04c80be82084b1ee2b9034e801aad4b219",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_fish_show.gd",
+      "functions": 8,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "play"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "dd63451cf50baabab49918d76edfdac946ab1609723f3a3f3aaadb378ffa490b",
+      "annotated_sha256": "fbc37818976e54c3dc89b83f63b3246df512daabae62aa167699872c1bef4f33",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_slider_mask.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "5ac5c30d4b3596cf9d8b4a9f65c0296c1ec67bec407acd2b1e4fcaec24987752",
+      "annotated_sha256": "164e47285254b38adc20ccd585aaa96267ca001d74e2d85d1a155466880a1ed8",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/top3_podium.gd",
+      "functions": 16,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "6aa7a10b71534c25ba7ff5e324ff5298acf3ba8748055c7da6900c1981b0514e",
+      "annotated_sha256": "c4237b50e3b254689317dad4987e45b76aa3f16f6be028d7fdf827c1ea806105",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/top3_podium_award.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "988b218437f25ef5b295cb2464e27d5c0bc0a2173487e328a45f9b4c2e94d73c",
+      "annotated_sha256": "1995a2fb79b09864f4d63b7a31abae6952b79af5e40107f08b7f7a149501218b",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/treasure_box.gd",
+      "functions": 7,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "reset_for_reuse"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "d1e624243d6856701d2c312bb55b38d3ad4d5034eb4cf3abddadd32b82b09974",
+      "annotated_sha256": "648edaf46651298ee23b4f8c8c83a713a04d7f0772d2c440bcad9a1de9a3bdb5",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_change_page.gd",
+      "functions": 50,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "on_show",
+        "_fast_forward"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "3753587c98092b108795e3922fe431b71967ee9494978c9170f5c18164966ee1",
+      "annotated_sha256": "aa139fc3050209d0ae14038ad9f3e3a136a8a914420da83b91c1afafd1da56d9",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_change_page_v2.gd",
+      "functions": 108,
+      "functions_with_preceding_comments": 9,
+      "new_method_comments": [
+        "on_show",
+        "_anim_watchdog_tick",
+        "_force_finish_stuck_anim",
+        "on_hide",
+        "_rebuild",
+        "_run_list_rise",
+        "_run_podium_promotion",
+        "_fast_forward",
+        "_kill_flyout_tween_before_cell_destroy"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 11,
+      "baseline_sha256": "71c1e13427404265c86540792b948535a6362858138154b12847d6ae0cb0748f",
+      "annotated_sha256": "a6c28a464ab42e218766c9987309c6bb8d791410e6a18e8da62e8c1cb72c7f54",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_entry_cell.gd",
+      "functions": 12,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "383348d770770542c2dcf6e87376bdfe443d9a4f6952e5017944317fb012e543",
+      "annotated_sha256": "47d335c6d926b198cfd617112a4fda90f710941849075efd820d7688d9362858",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_entry_left_cell.gd",
+      "functions": 15,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "a56eb2974470fd735666120d5c48877ce678c6e1e467eca7be594f3488a6e91b",
+      "annotated_sha256": "c128296704968750303899a9d69c6f82e85c72a3b80eeaa26e43f25ef168c901",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_htp_page.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "f61e990cf3f155200763b9a147aa781bff7c9bb78db494761dce160b5c67fc09",
+      "annotated_sha256": "565214ed4125b290f471dc71455d14319baefd8bfa1635c257851f2d08dd95f6",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_mini_entry_cell.gd",
+      "functions": 14,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "93d0f17d35ca1f902275948bdd270939ecae4c6a24efab4098b8001e1360b3ac",
+      "annotated_sha256": "6db18df8b2af1c668463cb2d5bd43a59c4695c9f01a3fc9b5bb7988bebb3a42f",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_offline_page.gd",
+      "functions": 15,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "51ec795163fcb5ed18e6987030e91ffc9f9906a6bf1901f76185fa037f29d100",
+      "annotated_sha256": "e825f7de166ce9a4d8f06ac208fb75d8f64dc8fca5d6b379d97c43e1190abef4",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_open_popup_page.gd",
+      "functions": 8,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "10a4143eebb0efad44bac7115a4ede8069cea2c5722c08e7bbe2301bd565f1ef",
+      "annotated_sha256": "690166c6db2cde6b412983a66a4f8a775ddca634db640b7c778f7bbb9b117736",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_page.gd",
+      "functions": 46,
+      "functions_with_preceding_comments": 5,
+      "new_method_comments": [
+        "on_show",
+        "_claim_reward_deferred",
+        "_refresh_snapshot",
+        "on_hide",
+        "_cancel_external_press"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 7,
+      "baseline_sha256": "acb9de4c6f15930eadc376fcc78fcf16e09d01854b88e8b7c095438ce2330ac9",
+      "annotated_sha256": "bcef580944391dfa9b682eccf7029e96737fcc081aaef4b63a4bbda13da2028b",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_podium_page.gd",
+      "functions": 8,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "c33d6f1c0ecedc0560b1f7ebb8c000aa46c795d81675b0c46fdc88e87d3c8386",
+      "annotated_sha256": "5127f33efe89098f2f568ccd1114082b397a71064e1d8092ee710a4ef0bf1abf",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_solo_podium_page.gd",
+      "functions": 9,
+      "functions_with_preceding_comments": 1,
+      "new_method_comments": [
+        "_on_cell_finished"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 2,
+      "baseline_sha256": "e8d6259004c07ee12a579e6821abacace5d0a37e50fe471c9d81eb2cc0238979",
+      "annotated_sha256": "f9386e49837192eefa8ccca09ca89531f51bc28bc03a7757f4b9cd442f09c20c",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_bullet.gd",
+      "functions": 6,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "3f8b0d332ad2b9551ae7d205eb8fd2aea48bcbbcc1a241978eef98b9cffa4195",
+      "annotated_sha256": "c5b7f407cfb23fc2ea39407f14ecc9172fc8221e6f6e4861ffe9770b932d8151",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_cell.gd",
+      "functions": 41,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "set_entry",
+        "reset_for_reuse",
+        "finish_collection_now"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "244e036f251569c573cc2f31568af7d87cd54a0c883c4973e0f623fad4839ad0",
+      "annotated_sha256": "ebbb6c9af3088aff43489e51b96f6b22713d7c401b03ddb127af55a311baf3b2",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_change_list_state.gd",
+      "functions": 7,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "prepare_rise",
+        "tick",
+        "get_row_offset"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "a9b07e29d6cb8debf2b768097b8d246cbfc08e16e01bf346a6d598e5b47eaac4",
+      "annotated_sha256": "19c31d5804bf7cf3719ae4af17c278dc8220fb830a28659a543887e5b5e4c9c9",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_change_virtual_list_adapter.gd",
+      "functions": 12,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "bind_cell",
+        "present_cell",
+        "unbind_cell"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 4,
+      "baseline_sha256": "d81914eabd46b870f37d2a78af14e5df40222e3e7731808c9bbce3ac0b2c517f",
+      "annotated_sha256": "deba35c2e998498bb5512863dfe963b66f3b69a9d46333b00cf0ba1894bae5e0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_collector_cell.gd",
+      "functions": 12,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "on_item_collected",
+        "settle_count_to_actual"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "1cdc541e8ff9b93094960ba6d275a9054ac5f957dea618dc39cfa295fda1e7e1",
+      "annotated_sha256": "1d0b218f5425996d529e0b0ea67aad54f727531e42964aa9b861d4a7f9e7d13f",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_floating_row_controller.gd",
+      "functions": 7,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "sync",
+        "teardown"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "1ae7486783f1bf0e209136f04911e3a2a47efa5fb4ca047e3602f19297f3750e",
+      "annotated_sha256": "b048a0f72c14d74ac2897adb57108f813ab072027e089bf79a690f3472858186",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_gift_cell.gd",
+      "functions": 9,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "9058b2b753abf75623ac32de9bdfb11cc014c523bcacf5d08dc9c58be7845fdf",
+      "annotated_sha256": "013725b368180dbf0950bf4625e528e8bb2569853cc817e7f63d487447dfd4ac",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_gift_cell_game_win.gd",
+      "functions": 2,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "a3a82cd04ca886072499f6a05c260dba0a2b9d19007d5ff56a831496e7a84e86",
+      "annotated_sha256": "8a21f849770245777c203e53766c608cf321d7baeaeccf6406915baff4c94dd0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_gift_cell_solo_end.gd",
+      "functions": 4,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "bb395115e66db41b78c3cff297fb87ca3a1fafefb140c6f1b7352f8d4f1f6869",
+      "annotated_sha256": "24c63f32f3b4c01cfb02d6ec472cd57530fbb2bd7c6781ccc88337fc5ce175bf",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_heart.gd",
+      "functions": 12,
+      "functions_with_preceding_comments": 2,
+      "new_method_comments": [
+        "set_like_state",
+        "reset_like_state"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 3,
+      "baseline_sha256": "607b855e2acf36910b894a02f015d59c8fc7bd8d4fc142739dca8d4587c82abe",
+      "annotated_sha256": "324e5ab6c6bbef8ea282b8235afb3de9f0e54d26e5537a6957b3d57b031819ad",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_offline_overlay_helper.gd",
+      "functions": 3,
+      "functions_with_preceding_comments": 0,
+      "new_method_comments": [],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 1,
+      "baseline_sha256": "75ab58dad69d546c48d176ac8ea599b36fd5f5128032dfb508bead38f26299b5",
+      "annotated_sha256": "9a49d9d2f44a60f9c55c5bf3574d53666ac0a102a2600d526e334a4c7f3864c0",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_row_snapshot.gd",
+      "functions": 5,
+      "functions_with_preceding_comments": 3,
+      "new_method_comments": [
+        "same_payload",
+        "with_revision",
+        "apply"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 4,
+      "baseline_sha256": "68be74385ded84c96acee40c31d14063022d49da6eb2cdc61f5f74365fcb57eb",
+      "annotated_sha256": "59375ec59bf48e4a28c42c3ea3eed9cc245df13a04f83cfc1d20f1ae55ff7bd5",
+      "token_fingerprint_unchanged": true
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_virtual_list_adapter.gd",
+      "functions": 11,
+      "functions_with_preceding_comments": 4,
+      "new_method_comments": [
+        "get_item_key",
+        "bind_cell",
+        "unbind_cell",
+        "reset_cell"
+      ],
+      "preserved_existing_comments": [],
+      "added_comment_lines": 5,
+      "baseline_sha256": "df92643e573348cb50da950ca3a17c2ae6ea5dd7be5843974f36617345a77471",
+      "annotated_sha256": "ddd3a84c06ebbcc2ec4ab85594043069549438cbe30ef8c95f8e155d5c49b15a",
+      "token_fingerprint_unchanged": true
+    }
+  ]
+}

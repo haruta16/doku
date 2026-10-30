@@ -1,0 +1,78 @@
+{
+  "status": "fixed_applied_to_stage_by_root",
+  "patch": "/tmp/doku122-gameplay-owned-close-final.patch",
+  "paths": {
+    "products/meowdoku/gameplay/presentation/result/view/game_win_page.gd": {
+      "baseline_stage_sha256": "01b555e6344ac37c7038c08be246b9af37dd03586499e5eed35c68be985314e6",
+      "fixed_sha256": "0d844c1861732500d1ba6cf839dd6ee6020bc3f73b7e512a14f652e24b6c892e",
+      "applied_stage_sha256": "0d844c1861732500d1ba6cf839dd6ee6020bc3f73b7e512a14f652e24b6c892e"
+    },
+    "products/meowdoku/gameplay/presentation/daily/view/dc_costume_tutorial_page.gd": {
+      "baseline_stage_sha256": "60aea2c757eb8bf57545efc6109127b753d996b2b5c4013232f179fbcaedde55",
+      "fixed_sha256": "dd6c6e23219527aa32c20b99f43984a1a4b64b605bd3a9bb8aaf89cd955cb4da",
+      "applied_stage_sha256": "dd6c6e23219527aa32c20b99f43984a1a4b64b605bd3a9bb8aaf89cd955cb4da"
+    },
+    "products/meowdoku/gameplay/presentation/daily/view/dc_costume_unlock_page.gd": {
+      "baseline_stage_sha256": "ab11c2d2bd49f1abf1679b891197ffe817593a1b00235d2bc38f7993734ff0a4",
+      "fixed_sha256": "547b6507ea0e5ca7c065f28b85a359ddbdf9f32b89d8a2c4fadafa0268884d9d",
+      "applied_stage_sha256": "547b6507ea0e5ca7c065f28b85a359ddbdf9f32b89d8a2c4fadafa0268884d9d"
+    },
+    "products/meowdoku/gameplay/presentation/daily/view/dc_replay_confirm_page.gd": {
+      "baseline_stage_sha256": "928dd3f764398a9ca7b8567e7313c69ec65941a631cb745b8f3448ae7668627b",
+      "fixed_sha256": "fde5e0739839e3fd04fa6eb6c67f426d12880ec51207796b17c6206859c2d9dd",
+      "applied_stage_sha256": "fde5e0739839e3fd04fa6eb6c67f426d12880ec51207796b17c6206859c2d9dd"
+    },
+    "products/meowdoku/gameplay/presentation/daily/view/daily_game_page.gd": {
+      "baseline_stage_sha256": "26dd573e6886c0abcc27623c46930ac5d6c951561c852f2699da9ba6f3b3b45a",
+      "fixed_sha256": "ed5cbb8b066a2c2592ee9e4fcbba4b3a4287bfb7d2886f22e099da8b55c24f82",
+      "applied_stage_sha256": "ed5cbb8b066a2c2592ee9e4fcbba4b3a4287bfb7d2886f22e099da8b55c24f82"
+    },
+    "tools/validation/test_game_page_lifecycle.gd": {
+      "baseline_stage_sha256": "6359d67dda455e80cf93604f4a008058ca8fd1d21e0a3d9e04f8d50f6b37d710",
+      "fixed_sha256": "db83e798f13ddd101bc266bb91fd16e9cbb5899d72c6d2e291d7021aece3f325",
+      "applied_stage_sha256": "db83e798f13ddd101bc266bb91fd16e9cbb5899d72c6d2e291d7021aece3f325"
+    }
+  },
+  "shared_dependencies": {
+    "scripts/framework/ui/base/ui_base_window.gd": "f84229356c294578191101692a0b724dcb72b6261ad5b6a3e1b594131d3e7fdd",
+    "scripts/framework/ui/base/ui_frame_window.gd": "b22fbdda6346d5b772ffd2c6af95951f152fc0f0e69993c13fa06838c3b2625b",
+    "scripts/framework/ui/ui_window_manager.gd": "8c3e2921ffb3e95699c52c24021082bf09c438e907362e453c5260a55f0da13f"
+  },
+  "contracts": [
+    "Win owns the wait for companion popup close, so freeing Win unwinds Win on_hide and UIManager hide parents before returning.",
+    "All four pages preserve normal completed close, but refreshed/freed windows cannot emit completed tutorial or repeat choice effects.",
+    "Daily tutorial child invalidation or replacement resumes the still-current clock without marking the tutorial shown.",
+    "Replacement tutorial completion signals cannot complete an older Daily wait. External window predicates capture WeakRef rather than destructible Node."
+  ],
+  "evidence": [
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-gameplay-close-weak-1793362752618879000.log",
+      "ok": true,
+      "checks": 121,
+      "failures": 0,
+      "phase": "before_final_shared_connect_guards"
+    },
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-gameplay-close-final2-1793362825432851000.log",
+      "ok": true,
+      "checks": 126,
+      "failures": 0,
+      "phase": "before_final_shared_connect_guards"
+    },
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-gameplay-close-shared-final-1793362888731730000.log",
+      "ok": true,
+      "checks": 126,
+      "failures": 0,
+      "phase": "final_sources_with_final_shared_helper"
+    }
+  ],
+  "negative_control": {
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-tutorial-negative-1793362989917771000.log",
+    "restored_source": "products/meowdoku/gameplay/presentation/daily/view/daily_game_page.gd",
+    "checks": 126,
+    "failures": 3,
+    "meaning": "Restoring only the old Daily parent wait fails child-free and child-refresh clock resumption plus replacement-completion isolation; the exact final stage version passes 126/0 strictly.",
+    "private_fixture_after_control": "Daily source remains deliberately at baseline in this diagnostic fixture; final source is in stage and /tmp/doku122-daily-parent-final.gd. No further source edits after root freeze."
+  }
+}

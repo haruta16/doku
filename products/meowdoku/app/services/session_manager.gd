@@ -1,4 +1,4 @@
-## 会话管理（autoload）：维护 sessionId 与前台活跃时长，长后台后重开会话，落盘时由 GameState 处理日切
+## 运行会话管理器：累计前台活跃时长，后台超过 30 分钟后重建会话并记录冷启动。
 extends Node
 
 ## 后台停留超过 30 分钟就判定为新会话（秒）
@@ -24,23 +24,18 @@ var _active_seg_start_ms: int = -1
 ## 周期性把前台时长结算进 GameState 的 Timer（60 秒一跳）
 var _active_flush_timer: Timer = null
 
-## 本会话已采集的前台秒数（含保存失败待重试，不含当前未采集区间）
+## 本会话已结算的前台秒数（不含正在计时、还没落盘的那一段）
 var _session_active_sec: int = 0
-## 尚未保存的已采集秒数；切后台也保留，成功清档时才撤销。
-var _pending_active_sec: int = 0
-var _flushing_active: bool = false
-## 提交中的这段时长已经发生；成功通知不重复加，失败通知也不能暂时把它读丢。
-var _flush_today_active_sec: int = -1
-var _flush_today_date: String = ""
-var _reset_generation: int = 0
 
 
-## 节点就绪：开一个新会话、通知 GameState，并启动活跃时长的定时落盘
+## 创建本次会话，记录冷启动和会话开始，并每 60 秒结算一段前台活跃时长。
 func _ready() -> void:
 	_reset_session()
 	GameState.all_data_reset.connect(_on_all_data_reset)
 
 	GameState.on_session_started()
+
+	GameState.record_cold_start_login()
 
 	_active_seg_start_ms = Time.get_ticks_msec()
 	_active_flush_timer = Timer.new()
@@ -92,18 +87,6 @@ func _flush_active_segment() -> void:
 
 
 ## 只采集单调时钟的整数秒；不足 1 秒留在当前区间，后台不产生新时间。
-func _capture_active_segment() -> void:
-	if _active_seg_start_ms < 0:
-		return
-	var elapsed_sec: int = (Time.get_ticks_msec() - _active_seg_start_ms) / 1000 # 整数除法，不足 1 秒的部分丢弃
-	if elapsed_sec <= 0:
-		return
-	_pending_active_sec += elapsed_sec
-	_session_active_sec += elapsed_sec
-	_active_seg_start_ms += elapsed_sec * 1000 # 起点只推进已结算的整数秒，余数留到下次
-
-
-## 今日前台活跃秒数：已落盘部分 + 当前这段尚未落盘的时长
 func get_today_active_sec() -> int:
 	var base: int = GameState.get_today_active_sec()
 	if _flush_today_date == Time.get_date_string_from_system():
@@ -115,9 +98,12 @@ func get_today_active_sec() -> int:
 
 
 ## 本会话前台活跃秒数：同样把正在计时的那一段也算进去
+
+
 func get_session_active_sec() -> int:
 	if _active_seg_start_ms < 0:
 		return _session_active_sec
+	@warning_ignore("integer_division")
 	return _session_active_sec + (Time.get_ticks_msec() - _active_seg_start_ms) / 1000
 
 
@@ -126,7 +112,6 @@ func _on_resume() -> void:
 	if _last_pause_unix == 0:
 		return
 	var span_sec: int = int(Time.get_unix_time_from_system()) - _last_pause_unix
-	_last_pause_unix = 0 # 一次离开只对应一次恢复，不能被重复通知再次消费。
 	if span_sec > SESSION_REFRESH_INTERVAL_SEC:
 		_reset_session()
 		session_changed.emit(session_id)
@@ -140,29 +125,19 @@ func _on_resume() -> void:
 func _reset_session() -> void:
 	session_id = _generate_session_id()
 	session_record = 1
-	_last_pause_unix = 0
+	_last_pause_unix = int(Time.get_unix_time_from_system())
 	_session_active_sec = 0
-	if _active_seg_start_ms >= 0:
-		_active_seg_start_ms = Time.get_ticks_msec()
 
 
 ## 调试用：立即重开会话（cheat 面板调用），流程与超时重开一致
 func debug_advance_session() -> void:
 	_flush_active_segment()
+	# 未写入的旧会话时长仍在 pending 中重试；新会话从当前单调时钟开始。
+	if _active_seg_start_ms >= 0:
+		_active_seg_start_ms = Time.get_ticks_msec()
 	_reset_session()
 	session_changed.emit(session_id)
 	GameState.on_session_started()
-
-
-## 只响应成功清档；保存失败不撤销旧时长，旧提交返回也不能复活已清理的计时。
-func _on_all_data_reset() -> void:
-	_reset_generation += 1
-	_pending_active_sec = 0
-	_flush_today_active_sec = -1
-	_flush_today_date = ""
-	_session_active_sec = 0
-	if _active_seg_start_ms >= 0:
-		_active_seg_start_ms = Time.get_ticks_msec()
 
 
 ## 生成 UUID v4 形式的 session_id：16 随机字节 + 版本位/变体位，再格式化成 8-4-4-4-12
@@ -181,3 +156,38 @@ func _generate_session_id() -> String:
 			hex.substr(20, 12),
 		]
 	)
+
+func _capture_active_segment() -> void:
+	if _active_seg_start_ms < 0:
+		return
+	var elapsed_sec: int = (Time.get_ticks_msec() - _active_seg_start_ms) / 1000 # 整数除法，不足 1 秒的部分丢弃
+	if elapsed_sec <= 0:
+		return
+	_pending_active_sec += elapsed_sec
+	_session_active_sec += elapsed_sec
+	_active_seg_start_ms += elapsed_sec * 1000 # 起点只推进已结算的整数秒，余数留到下次
+
+
+## 今日前台活跃秒数：已落盘部分 + 当前这段尚未落盘的时长
+
+func _on_all_data_reset() -> void:
+	_reset_generation += 1
+	_pending_active_sec = 0
+	_flush_today_active_sec = -1
+	_flush_today_date = ""
+	_session_active_sec = 0
+	if _active_seg_start_ms >= 0:
+		_active_seg_start_ms = Time.get_ticks_msec()
+
+
+## 生成 UUID v4 形式的 session_id：16 随机字节 + 版本位/变体位，再格式化成 8-4-4-4-12
+
+var _pending_active_sec: int = 0
+
+var _flushing_active: bool = false
+
+var _reset_generation: int = 0
+
+var _flush_today_active_sec: int = -1
+
+var _flush_today_date: String = ""

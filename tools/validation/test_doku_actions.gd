@@ -21,6 +21,8 @@ func _run() -> void:
 		quit(2)
 		return
 	# 产品策略依赖产品 autoload；等运行器完成 autoload 初始化再加载。
+	root.get_node("GameState").set_sound_on(false)
+	root.get_node("GameState").set_music_on(false)
 	Policy = load("res://products/meowdoku/gameplay/application/meowdoku_gameplay_policy.gd")
 	_test_inputs()
 	_test_drafts()
@@ -30,6 +32,7 @@ func _run() -> void:
 	await _test_page()
 	await _test_life_plus_transaction()
 	await _test_failure_policy()
+	await create_timer(0.5).timeout
 	print("DOKU ACTION TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -129,7 +132,9 @@ func _test_module() -> void:
 	var module := Module.new()
 	var opened: Dictionary = module.create_snapshot({"board": _empty(), "regions": regions, "solution": solution})
 	_check(opened.ok, "pure round snapshot created")
-	var marked: Dictionary = module.apply_action(opened.snapshot, "draft_mark", {"row": 0, "col": 0, "state": States.DRAFT_CAT}, {})
+	var activated: Dictionary = module.apply_action(opened.snapshot, "activate_draft", {}, {"policy": {"enabled": true, "cost": 0}})
+	_check(activated.ok and activated.snapshot.draft_active, "draft entry activation is part of the domain transaction")
+	var marked: Dictionary = module.apply_action(activated.snapshot, "draft_mark", {"row": 0, "col": 0, "state": States.DRAFT_CAT}, {})
 	_check(marked.ok and marked.snapshot.board[0][0] == States.DRAFT_CAT, "round module accepts independent draft input")
 	var committed: Dictionary = module.apply_action(marked.snapshot, "draft_commit", {}, {})
 	_check(committed.ok and committed.snapshot.lives == 2 and committed.snapshot.board[0][0] == States.ERROR, "headless draft commit uses same rules")
@@ -221,28 +226,36 @@ func _test_page() -> void:
 	page._board_view.setup(4, regions, colors, [], true)
 	page._entry_anim_playing = false
 	page._is_complete = false
-	page._setup_undo_system()
-	page._enter_draft_mode()
+	page._entry_preparing = false
+	page._business_history = []
+	page._business_session = load("res://products/meowdoku/gameplay/application/meowdoku_round_session.gd").new(root.get_node("GameState"), "main")
+	_check(page._ensure_business_round().ok, "manual draft presentation fixture owns a durable round")
+	var activation: Dictionary = page._execute_business_action("activate_draft", {}, {"enabled": true, "cost": 0})
+	_check(activation.ok, "actual page draft entry has durable activation before cells")
+	page._enter_draft_mode(false)
 	page._set_cell_draft(0, 1, States.DRAFT_CAT)
 	page._set_cell_draft(1, 0, States.DRAFT_CAT)
 	page._set_cell_draft(2, 1, States.DRAFT_CROSS)
 	page._apply_draft_commit()
 	_check(page._board_view.get_board()[0][1] == States.CAT and page._board_view.get_board()[1][0] == States.ERROR and page._lives == 2, "actual draft presenter matches pure plan")
-	_check(page._step_history.size() == 1 and page._step_history.serialize()[0].wrong, "actual draft keeps one compound history step")
+	_check(page._business_history.size() == 1 and page._business_history[0].wrong, "actual draft keeps one compound history step")
 	# 旧错误回调不能清掉新局的 pending 标记；页面此时仍然可见。
 	page._business_generation += 1
 	page._wrong_guess_pending = true
 	await create_timer(0.45).timeout
 	_check(page._wrong_guess_pending, "old draft callback cannot mutate a visible reused page")
-	page._board_view.set_axis_auto_mark_enabled(true)
-	_check(page._board_view._row_auto_mark_btns.size() == 4 and page._board_view._col_auto_mark_btns.size() == 4, "axis controls use injected round policy")
-	page._board_view.set_axis_auto_mark_enabled(false)
-	_check(page._board_view._row_auto_mark_btns.is_empty(), "disabled round policy removes axis controls")
+	# 1.22 移除了行列自动标记按钮；当前页面仍以冻结题面与输入开关控制实际格子。
+	_check(page._board_view._cells.size() == 4 and page._board_view._cells[0].size() == 4, "current board view uses the prepared 4x4 puzzle")
+	page._board_view.set_touch_enabled(false)
+	_check(not page._board_view._touch_enabled, "current board view disables input without old axis button controls")
+	page._board_view.set_touch_enabled(true)
 	page._gameplay_policy.swipe_guard = true
 	page._gameplay_policy.swipe_guard_variant = 2
 	page._ensure_input_system()
-	_check(page._gesture_recognizer.get_script().get_global_name() == &"SwipeGuardRecognizer" and page._gesture_recognizer._policy.tolerance_pct == 0.1, "actual recognizer receives frozen threshold policy")
-	var recognizer: Variant = page._gesture_recognizer
+	_check(page._ensure_slot(-1).recognizer.get_script().get_global_name() == &"SwipeGuardRecognizer" and page._ensure_slot(-1).recognizer._frozen_policy.get("swipe_guard_variant") == 2, "actual 1.22 pointer recognizer receives frozen swipe policy")
+	var recognizer: Variant = page._ensure_slot(-1).recognizer
+	# 独立验证旧超时不能取消重开窗口；窗口长度固定，避免跟随当前 AB。
+	recognizer.window_sec_provider = func(_r: int, _c: int) -> float: return 0.35
 	recognizer._open_double_tap_window(0, 0)
 	await create_timer(0.2).timeout
 	recognizer.reset_for_scheme_switch()
@@ -251,71 +264,56 @@ func _test_page() -> void:
 	_check(recognizer._last_tap_cell == Vector2i(0, 0), "old tap timeout cannot close reused same-cell window")
 	await create_timer(0.2).timeout
 	_check(recognizer._last_tap_cell == Vector2i(-1, -1), "current tap timeout closes its own window")
-	var token: int = page._auto_mark_token
+	var token: int = page._auto_complete_token
 	page._board_view.set_cell_input_locked(0, 0, true)
 	page.on_hide()
-	_check(page._auto_mark_token > token and not page._board_view.is_cell_input_locked(0, 0), "hide cancels automatic work and clears temporary input locks")
+	_check(page._auto_complete_token > token and not page._board_view.is_cell_input_locked(0, 0), "hide cancels automatic work and clears temporary input locks")
+	page._do_destroy()
 	page.queue_free()
 	await process_frame
 
 
+## 赠命已从 1.22 UI 退役，保留旧快照/域动作的原子兼容合同，不制造旧页面按钮。
 func _test_life_plus_transaction() -> void:
 	var game: Node = root.get_node("GameState")
-	game.reset_life_plus_first_done()
-	var scene: PackedScene = load("res://products/meowdoku/gameplay/presentation/main/ui/game_page.tscn")
-	var page: Variant = scene.instantiate()
-	current_scene.add_child(page)
-	page.set_process(false)
-	page._entry_ready = true # 本用例手工装配题面，跳过真实入场；入场门槛由专门页面回归验证。
-	page._puzzle = {"regions": regions, "solution": solution}
-	page._level_config = {"level": 1, "size": 4, "rank": 1, "seed": 11}
-	page._round_policy = {"schema": 1, "draft_unlock_level": 21}
-	page._freeze_gameplay_policy()
-	page._gameplay_policy.life_plus_enabled = true
-	var colors: Array[int] = [0, 1, 2, 3]
-	page._board_view.setup(4, regions, colors, [], true)
+	_check(game.reset_all(), "legacy life transaction starts from isolated state")
+	game.set_sound_on(false)
+	game.set_music_on(false)
+	var session_script: Script = load("res://products/meowdoku/gameplay/application/meowdoku_round_session.gd")
+	var session: RefCounted = session_script.new(game, "main")
 	var board: Array = _empty()
 	board[0] = [States.MARK, States.CAT, States.MARK, States.EMPTY]
-	page._board_view.get_board_state().restore_board(board)
-	page._board_view.refresh_from_model()
-	page._lives = 1
-	page._life_plus_used_this_game = false
-	page._like_hand_state.in_game_sec = 61.0
-	page._setup_undo_system()
-	_check(page._ensure_business_round().ok, "life grant starts actual main round")
-	var revision: int = game.get_core_store().revision()
-	var files: RefCounted = game._product_store.files
-	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace")
-	page._maybe_trigger_life_plus(0, 1)
-	_check(page._lives == 1 and not page._life_plus_used_this_game and not game.is_life_plus_first_done(), "failed life commit publishes neither life nor first-use entitlement")
-	_check(game.get_core_store().revision() == revision and game.get_endgame_snapshot().lives == 1, "failed life commit preserves durable checkpoint")
-	files.set_fault_injector_for_tests(Callable())
-	page._maybe_trigger_life_plus(0, 1)
-	var core: Dictionary = game.get_core_store().snapshot()
-	var saved: Dictionary = game.get_endgame_snapshot()
-	_check(page._lives == 2 and page._life_plus_used_this_game and game.is_life_plus_first_done(), "successful life commit then publishes actual page feedback")
-	_check(core.profile.life_plus_first_done and core.round_services["doku/main"].snapshot.life_plus_used and saved.life_plus_used and saved.lives == 2, "entitlement round state and legacy checkpoint commit together")
-	_check(game.get_core_store().revision() == revision + 1, "life grant uses one durable commit")
-	revision = game.get_core_store().revision()
-	page._maybe_trigger_life_plus(0, 1)
-	_check(page._lives == 2 and game.get_core_store().revision() == revision, "repeated life callback cannot grant again")
-	# 后续局仍有随机赠命资格；持久首次标记只影响保证触发/引导，不禁止未来局。
-	var session: RefCounted = load("res://products/meowdoku/gameplay/application/meowdoku_round_session.gd").new(game, "main")
 	var started: Dictionary = session.ensure_started({"board": board, "regions": regions, "solution": solution, "lives": 1})
-	_check(started.ok, "later round starts independently of first life grant")
-	var later: Dictionary = session.execute("life_plus", {"row": 0, "col": 1}, {}, {}, {"enabled": true, "daily": false, "elapsed_sec": 61.0, "minimum_sec": 60.0, "first_use": false, "random_value": 0.0})
-	_check(later.ok and later.result.lives == 2 and not later.result.first_done, "first-use flag does not block later rounds")
-	page.on_hide()
-	page.queue_free()
-	await process_frame
+	_check(started.ok, "legacy life port starts actual persisted main round")
+	var revision: int = game.get_core_store().revision()
+	var before: Dictionary = game.get_core_store().snapshot()
+	var files: RefCounted = game._product_store.files
+	var policy: Dictionary = {"enabled": true, "daily": false, "elapsed_sec": 61.0, "minimum_sec": 60.0, "first_use": true, "random_value": 0.0}
+	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace")
+	var failed: Dictionary = session.execute("life_plus", {"row": 0, "col": 1}, {}, {}, policy)
+	_check(not failed.ok and not game.is_life_plus_first_done(), "failed compatibility action never consumes first-use entitlement")
+	_check(game.get_core_store().revision() == revision and game.get_core_store().snapshot() == before, "failed life action preserves entire durable round")
+	files.set_fault_injector_for_tests(Callable())
+	var applied: Dictionary = session.execute("life_plus", {"row": 0, "col": 1}, {}, {}, policy)
+	_check(applied.ok and applied.snapshot.lives == 2 and game.is_life_plus_first_done(), "life and first-use entitlement commit together")
+	var core: Dictionary = game.get_core_store().snapshot()
+	_check(core.profile.life_plus_first_done and core.round_services["doku/main"].snapshot.life_plus_used, "product receipt retains legacy life eligibility")
+	_check(game.get_core_store().revision() == revision + 1, "legacy life grant uses one durable commit")
+	revision = game.get_core_store().revision()
+	var repeated: Dictionary = session.execute("life_plus", {"row": 0, "col": 1}, {}, {}, policy)
+	_check(not repeated.ok and game.get_core_store().revision() == revision, "repeated life action cannot grant again")
+	var later: RefCounted = session_script.new(game, "main")
+	_check(later.ensure_started({"board": board, "regions": regions, "solution": solution, "lives": 1}).ok, "later compatible round starts independently of first life grant")
+	policy.first_use = false
+	var granted: Dictionary = later.execute("life_plus", {"row": 0, "col": 1}, {}, {}, policy)
+	_check(granted.ok and granted.result.lives == 2 and not granted.result.first_done, "first-use flag does not block later rounds")
 
 
 func _test_failure_policy() -> void:
 	var game: Node = root.get_node("GameState")
 	var ab: Node = root.get_node("ABTestManager")
 	var policy: Dictionary = Policy.capture(ab, 40)
-	policy.revive_free_variant = 2
-	policy.reward_unlock_level = 0
+	policy.reward_unlock_level = 50
 	var params := {"level_config": {"level": 40, "size": 4}, "remaining_cats": 2, "gameplay_level": 40, "gameplay_policy_snapshot": policy}
 	for path: String in ["res://products/meowdoku/gameplay/presentation/result/ui/game_fail_page.tscn", "res://products/meowdoku/gameplay/presentation/daily/ui/daily_fail_page.tscn"]:
 		var scene: PackedScene = load(path)
@@ -324,11 +322,11 @@ func _test_failure_policy() -> void:
 		# 与实际管理器一致地进入窗口生命周期，不能只调用钩子而仍停在 INVALID。
 		page._do_create()
 		page._do_show(params)
-		_check(page._is_free_revive() and page._revive_offer().consume_free_once, "actual failure page reads frozen once-only revive mode")
+		_check(page._is_free_revive(), "actual failure page reads frozen reward unlock threshold")
 		var requested: Array = []
 		page.revive_requested.connect(func(context: Dictionary) -> void: requested.append(context))
 		page._on_revive_btn_pressed()
-		_check(requested == [{"consume_free_once": true}] and not game.has_used_revive_free(), "failure button emits eligibility intent without consuming entitlement")
+		_check(requested == [{}] and not game.has_used_revive_free(), "failure button emits eligibility intent without consuming entitlement")
 		page._do_hide()
 		page._do_show(params)
 		page._anim.animation_finished.emit(&"disappear")

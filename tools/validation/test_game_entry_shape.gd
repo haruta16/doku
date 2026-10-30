@@ -42,6 +42,9 @@ func _run() -> void:
 	ui.hide_all()
 	ContentContext.publish(null)
 	await create_timer(0.4).timeout
+	for name: String in ["game", "daily_game", "confirm"]:
+		await ui.destroy_ui(name)
+	await process_frame
 	print("GAME ENTRY SHAPE TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -74,7 +77,7 @@ func _missing_size(source: String) -> void:
 	ContentContext.publish(catalog)
 	var expected_size: int = entries[selected].regionMap.size()
 	var plan: Dictionary = levels.resolve_level_entry(1, 4, 123)
-	_check(plan.ok and plan.size == expected_size and not plan.entry.has("size"), source + " plan derives the size without rewriting the optional input field")
+	_check(plan.ok and plan.size == expected_size and BankData.get_region_map(plan.entry).size() == expected_size, source + " plan derives the size from the optional-field puzzle")
 	var page: Variant = ui.show_ui("game", {"level_index": 1})
 	await create_timer(0.3).timeout
 	_check(page._entry_ready and page._entry_error.is_empty(), source + " actual main page enters successfully")
@@ -96,7 +99,7 @@ func _rejected_setup() -> void:
 	page = ui.show_ui("game", {"level_index": 1})
 	await create_timer(0.3).timeout
 	_check(page._board_view.rejected_setups == 1, "failure comes from the actual board setup boundary")
-	_check(not page._entry_ready and page._entry_error.get("error") == "entry_board_setup_failed", "failed setup cannot declare the old cached board ready")
+	_check(not page._entry_ready and page._entry_error.get("error") == "invalid_board", "failed setup cannot declare the old cached board ready")
 	_check(page._clock_timer.is_stopped() and not page._board_view.visible, "failed setup closes interaction and presentation")
 	var after: Dictionary = game.get_core_store().snapshot()
 	_check(after.profile.bank_progress == before.profile.bank_progress and after.profile.retry_puzzle_params == before.profile.retry_puzzle_params, "failed setup does not commit selection or retry data")
@@ -115,7 +118,7 @@ func _invalid_prepared_shape() -> void:
 	var before: Dictionary = game.get_core_store().snapshot()
 	var page: Variant = ui.show_ui("game", {"debug_prebuilt": {"size": 4, "regions": [[0]], "solution": [[true]]}})
 	await create_timer(0.3).timeout
-	_check(not page._entry_ready and page._entry_error.get("error") == "invalid_entry_puzzle", "incomplete prepared entry is rejected before layout and commit")
+	_check(not page._entry_ready and page._entry_error.get("error") == "invalid_board", "incomplete prepared entry is rejected before layout and commit")
 	_check(game.get_core_store().snapshot().endgame.stats.main_id == before.endgame.stats.main_id, "invalid prepared data cannot publish successful entry tracking")
 	await _close()
 
@@ -123,7 +126,7 @@ func _invalid_prepared_shape() -> void:
 func _daily_rejected_setup() -> void:
 	_prepare_player()
 	var ab: Node = root.get_node("ABTestManager")
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	ab.dc_level.set_debug_override(0)
 	var page: Variant = ui._get_or_create("daily_game")
 	page._board_view.reject_setup = true

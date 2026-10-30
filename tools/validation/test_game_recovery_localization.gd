@@ -37,15 +37,19 @@ func _run() -> void:
 	files = game.get_core_store().get("_file_store")
 	var ab: Node = root.get_node("ABTestManager")
 	ab.dc_level.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	ab.win_toast.set_debug_override(0)
+	ab.dc_start_toast.set_debug_override(0)
 	_test_supported_locales()
+	_test_embedded_image_translation()
 	for locale: String in DISPLAY_TEXT:
 		await _test_failed_settlement(locale)
 		await _test_failed_checkin(locale)
 		await _test_feature_failures(locale)
 	files.set_fault_injector_for_tests(Callable())
 	ui.hide_all()
+	for name: String in ["game", "daily_game", "confirm", "tutorial", "award", "setting", "language", "reward_claim_popup"]:
+		await ui.destroy_ui(name)
 	TranslationServer.set_locale(previous_locale)
 	await process_frame
 	await process_frame
@@ -84,6 +88,7 @@ func _open(locale: String) -> Variant:
 	await create_timer(0.1).timeout
 	game.reset_all()
 	game.set_sound_on(false)
+	game.set_music_on(false)
 	TranslationServer.set_locale(locale)
 	var page: Variant = ui.show_ui("game", {"level_index": 1})
 	await create_timer(0.2).timeout
@@ -96,7 +101,7 @@ func _test_failed_settlement(locale: String) -> void:
 	var page: Variant = await _open(locale)
 	page._lives = 0
 	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace")
-	page._on_game_over()
+	await page._on_game_fail()
 	var dialog: Variant = ui.get_ui("confirm")
 	_check(dialog != null and dialog.is_showing(), locale + " actual failed settlement opens recovery")
 	if dialog != null:
@@ -129,14 +134,14 @@ func _test_failed_checkin(locale: String) -> void:
 		for column: int in page._level_config.size:
 			page._board_view.get_board_state().set_cell_state(row, column, CellState.CAT if page._puzzle.solution[row][column] else CellState.EMPTY)
 	page._board_view.refresh_from_model()
-	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace" and game.get_current_level() == 2)
-	page._on_game_complete()
+	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace")
+	await page._on_game_win()
 	await create_timer(0.3).timeout
 	var dialog: Variant = ui.get_ui("confirm")
-	_check(page._is_complete and game.get_current_level() == 2, locale + " commits win before failing check-in")
-	_check(dialog != null and dialog.is_showing() and streak.get_data().current_streak == 6, locale + " actual failed check-in opens recovery")
+	_check(not page._is_complete and game.get_current_level() == 1, locale + " keeps failed atomic win/check-in uncommitted")
+	_check(dialog != null and dialog.is_showing() and streak.get_data().current_streak == 6, locale + " actual failed atomic check-in opens recovery")
 	if dialog != null:
-		_check_dialog(dialog, locale, 2)
+		_check_dialog(dialog, locale, 0)
 	files.set_fault_injector_for_tests(Callable())
 	ui.hide_all()
 	await create_timer(0.1).timeout
@@ -148,6 +153,7 @@ func _test_feature_failures(locale: String) -> void:
 	await create_timer(0.1).timeout
 	game.reset_all()
 	game.set_sound_on(false)
+	game.set_music_on(false)
 	TranslationServer.set_locale(locale)
 	var settings: Variant = ui.show_ui("setting")
 	await _expect_feature_failure(locale, "settings", settings._on_vibration_btn_pressed)
@@ -175,24 +181,16 @@ func _test_feature_failures(locale: String) -> void:
 	award._on_persisted = Callable()
 	ui.hide_ui("award")
 
-	var streak: Dictionary = game.get_streak_data()
-	streak["switch_award_uid"] = uid
-	_check(game.commit_streak_data(streak), locale + " prepares switch gift")
-	var switch_page: Variant = ui.show_ui("streak_switch1")
-	await _expect_feature_failure(locale, "streak switch", switch_page._on_action_pressed)
-	_check(not switch_page._granted and switch_page.is_showing(), locale + " keeps failed switch gift retryable")
-	ui.hide_ui("streak_switch1")
+	# 原 switch1/2/3 已在 1.22 退休；同一持久奖励通过通用领取页保留失败重试合同。
+	var reward: Variant = ui.show_ui("reward_claim_popup", {"items": [AwardItem.make("hint", 1)], "claim": func() -> bool: return awards._persist_award(uid)})
+	await _expect_feature_failure(locale, "unified gift claim", reward._on_action_pressed)
+	_check(reward._claim.is_valid() and not reward._claiming and reward.is_showing(), locale + " keeps failed gift claim retryable")
+	ui.hide_ui("reward_claim_popup")
 
 	var tutorial: Variant = ui.show_ui("tutorial")
 	await _expect_feature_failure(locale, "tutorial", tutorial.complete_tutorial)
 	_check(not tutorial._completion_committed and not game.is_tutorial_done(), locale + " keeps failed tutorial completion pending")
 	ui.hide_ui("tutorial")
-	var auto_mark: Variant = ui.show_ui("daily_auto_mark_popup")
-	auto_mark._reward_pending_date = Time.get_date_string_from_system()
-	auto_mark._refresh_entitlement_mode()
-	_check(auto_mark._primary_btn.get_node("BtnGroup/BtnTxt").text == TranslationServer.translate("FAIL_TRY_AGAIN"), locale + " translates earned auto-mark retry")
-	await _expect_feature_failure(locale, "daily auto-mark", auto_mark._on_primary_btn_pressed)
-	_check(not auto_mark._reward_pending_date.is_empty() and not game.is_daily_auto_mark_enabled_for_today(), locale + " keeps earned auto-mark retry without granting on failed save")
 	ui.hide_all()
 	await create_timer(0.1).timeout
 
@@ -205,7 +203,7 @@ func _expect_feature_failure(locale: String, feature: String, action: Callable) 
 		fault.hit = true
 		return true
 	)
-	action.call()
+	await action.call()
 	files.set_fault_injector_for_tests(Callable())
 	_check(fault.hit, locale + " " + feature + " reaches the intended save failure")
 	var toast: Toast = Toast._current
@@ -219,7 +217,7 @@ func _expect_feature_failure(locale: String, feature: String, action: Callable) 
 func _check_dialog(dialog: Variant, locale: String, offset: int) -> void:
 	_check(dialog.get_node("Root/Content/DialogRoot/TitleLabel").text == DISPLAY_TEXT[locale][offset], locale + " recovery title uses selected language")
 	_check(dialog.get_node("Root/Content/DialogRoot/ContentLabel").text == DISPLAY_TEXT[locale][offset + 1], locale + " recovery explanation uses selected language")
-	_check(dialog.get_node("Root/Content/DialogRoot/ActionButton").text == TranslationServer.translate("FAIL_TRY_AGAIN"), locale + " keeps original translated retry action")
+	_check(dialog.get_node("Root/Content/DialogRoot/ActionButton").btn_text == TranslationServer.translate("FAIL_TRY_AGAIN"), locale + " keeps original translated retry action")
 
 
 func _check(ok: bool, message: String) -> void:
@@ -227,3 +225,29 @@ func _check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		push_error("TEST_FAILED: " + message)
+
+
+func _test_embedded_image_translation() -> void:
+	var remapper: Script = load("res://products/meowdoku/app/features/language/localized_resource_translation.gd")
+	var mixed: String = "prose res://assets/example.png [img=12x14]res://assets/sprites/game/fish_full.png[/img] [img]res://products/meowdoku/assets/sprites/game/tool_cat_item.png[/img] [img]https://example.invalid/x.png[/img]"
+	var expected: String = mixed.replace("[img=12x14]res://assets/", "[img=12x14]res://products/meowdoku/assets/")
+	_check(remapper._remap_images(mixed) == expected, "translation image mapping preserves prose, external images and already migrated paths")
+	_check(remapper._remap_images(remapper._remap_images(mixed)) == expected, "translation image mapping is idempotent")
+	var image: RegEx = RegEx.new()
+	image.compile("\\[img[^\\]]*\\](res://[^\\[]+)\\[/img\\]")
+	var image_count: int = 0
+	for path: String in ProjectSettings.get_setting("internationalization/locale/translations"):
+		if not path.ends_with(".translation"):
+			continue
+		var original: Translation = load(path)
+		TranslationServer.set_locale(original.locale)
+		for key: String in ["RANK_OPEN_DESC", "RANK_OPEN_DESC_FISH", "HOME_COMPANION_HALLOWEEN_DESC"]:
+			var source: String = original.get_message(key)
+			if not source.contains("[img"):
+				continue
+			var visible: String = TranslationServer.translate(key)
+			_check(visible == remapper._remap_images(source), original.locale + " maps every embedded resource without changing other translation text")
+			for match: RegExMatch in image.search_all(visible):
+				image_count += 1
+				_check(ResourceLoader.exists(match.get_string(1)), original.locale + " embedded image resolves after relocation")
+	_check(image_count >= 225, "all 75 locales exercise all three known recovered image message keys")

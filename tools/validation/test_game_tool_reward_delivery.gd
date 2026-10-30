@@ -25,12 +25,12 @@ func _run() -> void:
 	game = root.get_node("GameState")
 	ui = root.get_node("UIManager")
 	kit = root.get_node("UniKitManager")
-	files = game._product_store.files
+	files = game.get_core_store().get("_file_store")
 	var ab: Node = root.get_node("ABTestManager")
 	ab.normal_endgame_save.set_debug_override(0)
 	ab.common_rewardad_logic.set_debug_override(1)
 	ab.reward_unlock_level.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	kit.cheat_show_reward = true
 	await _test_history_failure()
 	for stage: String in ["register", "claim"]:
@@ -42,6 +42,10 @@ func _run() -> void:
 		await _test_reset_during_commit(stage)
 	ui.hide_all()
 	await create_timer(0.7).timeout
+	for name: String in ["game", "home", "mock_ad", "ad_reward_restored", "confirm"]:
+		await ui.destroy_ui(name)
+	await process_frame
+	await process_frame
 	print("GAME TOOL REWARD DELIVERY TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -52,6 +56,7 @@ func _open() -> Variant:
 	await create_timer(0.4).timeout
 	_check(game.reset_all(), "reset isolated player")
 	game.set_sound_on(false)
+	game.set_music_on(false)
 	game.set_tutorial_done(true)
 	game.set_current_level(50)
 	game.set_tool_count("hint", 0)
@@ -66,12 +71,13 @@ func _open() -> Variant:
 
 func _wait_ready(page: Variant) -> void:
 	var deadline: int = Time.get_ticks_msec() + 8000
-	while (not page._entry_ready or page._entry_anim_playing) and Time.get_ticks_msec() < deadline:
+	while (not page._entry_ready or page._entry_anim_playing or page._tool_btns_locked) and Time.get_ticks_msec() < deadline:
 		await process_frame
 
 
 func _request(page: Variant, kind: String = "hint") -> String:
-	page.get("_tool_" + kind + "_btn").pressed.emit()
+	await page.call("_on_" + kind + "_btn_pressed")
+	await process_frame
 	var id: String = kit._reward_active_show_id
 	_check(not id.is_empty() and kit._reward_callbacks.has(id), "real depleted-tool request starts an identified Mock")
 	var mock: Variant = ui.get_ui("mock_ad")
@@ -123,7 +129,7 @@ func _test_retry(stage: String, transition: String) -> void:
 	var page: Variant = await _open()
 	var id: String = await _request(page)
 	var before_sequence: int = game.get_core_store().snapshot().award_sequence
-	var history_before: Array = page._step_history.serialize()
+	var history_before: Array = page._business_history.duplicate(true)
 	var before_board: Array = page._board_view.get_board()
 	var armed := {"value": false}
 	# 按真实业务阶段开启故障，不依赖这是整场测试的第几次写入。
@@ -142,7 +148,7 @@ func _test_retry(stage: String, transition: String) -> void:
 	_check(pending.size() == (1 if stage == "claim" else 0), stage + " durable pending matches actual registration outcome")
 	var uid: int = int(kit._pending_direct_rewards.get(id, {}).get("uid", -1))
 	_check((uid > 0) == (stage == "claim"), "registered uid is retained only after success")
-	_check(page._step_history.serialize() == history_before and page._board_view.get_board() == before_board, "ad only replenishes inventory; no automatic tool use")
+	_check(page._business_history.duplicate(true) == history_before and page._board_view.get_board() == before_board, "ad only replenishes inventory; no automatic tool use")
 	var timer: Timer = kit._reward_record_retry_timer
 	_check(is_instance_valid(timer) and not timer.is_stopped(), stage + " failure starts shared retry timer")
 	files.set_fault_injector_for_tests(Callable())

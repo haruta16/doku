@@ -1,0 +1,64 @@
+{
+  "schema": "doku.audio_shutdown_boundary_assessment.v1",
+  "generated_utc": "2026-10-30T12:39:19.375942+00:00",
+  "conclusion": "The same four Ogg object classes and two retained resources reproduce without any product/framework code on this exact Godot build. Classify as an independently reproduced engine/build audio shutdown limitation for immediate process exit, not evidence of a persistent UI coroutine or page ownership leak. The internal mechanism and long-running memory accumulation are not established.",
+  "blocking_scope": "Nonblocking for the product/UI cancellation fix, provided the failed micro probe remains disclosed and is never counted as strict pass; all acceptance suites retain their existing zero-shutdown-error gate.",
+  "original_probe": {
+    "metadata": "/tmp/doku122-account-audio-boundary.json",
+    "sha256": "f80bcf5a526ace968b7f29e6ef7ab2941a919b129e5f1ab94ea316ea15be92a7",
+    "strict_ok": false
+  },
+  "minimal_control": {
+    "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/report.json",
+    "sha256": "953ad5a7e6ea22a041a3d3dada12fd99fd7744714c5dfd250745471fe17769d9",
+    "product_autoloads": 0,
+    "framework_code": false,
+    "same_original_asset_sha256": "c2298bcc2bd242d3e1bdc166625b4001aab0c6fab2539bda085b3078da3eae18",
+    "frames_after_play": 4,
+    "cleanup": [
+      "player.stop()",
+      "player.stream = null",
+      "player.free()",
+      "immediate quit"
+    ],
+    "added_sleep": false,
+    "load_only_strict_ok": true,
+    "play_strict_ok": false,
+    "failed_play_log": {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-pure-audio-onysc8ll/play.log",
+      "log_sha256": "e5c64d3a3fe733a2b3a7c600cad89b9039d7e8b78344412f10db52d0eec8abca"
+    }
+  },
+  "matched_leak_signature": {
+    "OggPacketSequence": 3,
+    "AudioStreamOggVorbis": 1,
+    "AudioStreamPlaybackOggVorbis": 1,
+    "OggPacketSequencePlayback": 1,
+    "resources_still_in_use": 2,
+    "GDScriptFunctionState": 0,
+    "AudioStreamPlayer_node": 0
+  },
+  "product_readonly_observations": [
+    {
+      "path": "products/meowdoku/app/services/sound_manager.gd",
+      "line": 220,
+      "finding": "Players allocated once per known Kind and retained as children; normal play at line 299 reuses the player rather than appending new nodes."
+    },
+    {
+      "path": "products/meowdoku/app/services/sound_manager.gd",
+      "line": 248,
+      "finding": "Final shutdown stops each player, clears stream, and clears the player dictionary; pure comparison performs stronger explicit free before exit and still reproduces the audio-only residual."
+    },
+    {
+      "path": "tools/validation/test_ui_components.gd",
+      "line": 166,
+      "finding": "Existing real-page lifecycle matrix includes 10 pages with show/reopen/destroy/recreate/normal-close; its reported strict pass is separate evidence, not a long-running audio object-count measurement."
+    }
+  ],
+  "limits": [
+    "No engine C++ reference graph was inspected; do not assert a proven audio mix-buffer race or queue implementation cause.",
+    "No long-running object-count/memory-growth test was performed; no evidence here demonstrates persistent accumulation.",
+    "Do not insert sleeps or relax the shutdown error classifier to make the failing micro case pass."
+  ],
+  "stage_modified": false
+}

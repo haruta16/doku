@@ -25,7 +25,7 @@ func _run() -> void:
 	game.set_tutorial_done(true)
 	var ab: Node = root.get_node("ABTestManager")
 	ab.normal_endgame_save.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	var values: Dictionary = {}
 	for source: String in ["sp", "lk", "lkmodified"]:
 		var id: String = "doku/levels/bankdata" + source
@@ -56,6 +56,9 @@ func _run() -> void:
 	ContentContext.publish(null)
 	# 真实通关页的出现等待已被隐藏作废；让挂起的等待返回后再结束测试进程。
 	await create_timer(1.4).timeout # 通关页 APPEAR_DELAY 为 1.2 秒。
+	for name: String in ["game", "win", "bank"]:
+		await ui.destroy_ui(name)
+	await process_frame
 	print("GAME BANK DIMENSION TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 

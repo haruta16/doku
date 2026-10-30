@@ -38,6 +38,9 @@ func _run() -> void:
 	await _test_streak_presentation_reopened(true)
 	ui.hide_all()
 	await create_timer(0.4).timeout
+	for name: String in ["award", "streak", "reward_claim_popup", "mock_ad", "toast"]:
+		ui.destroy_ui(name)
+	await process_frame
 	print("PRODUCT REWARD OWNERSHIP TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -59,6 +62,7 @@ func _test_award_replaced_during_commit(action: String) -> void:
 	var second: int = awards.dispatch([{"kind": "locate", "count": 3}], 1, "ownership_b", "ownership_b_double")
 	awards.show_award(first)
 	var page: Variant = ui.get_ui("award")
+	await _wait_gift_ready(page, "_test_award_replaced_during_commit")
 	_check(page != null and page._streak_uid == first, action + " displays first actual reward")
 	var state := {"called": false}
 	var replace := func() -> void:
@@ -93,6 +97,7 @@ func _test_award_replaced_during_commit(action: String) -> void:
 	_check(page.is_showing() and page.visible and page._streak_uid == second, action + " old continuation cannot close or clear second reward")
 	_check(game.get_tool_count("locate") == locate_before and not game.find_in_flight_award(second).is_empty(), action + " second reward remains unclaimed until its own input")
 	_check(page._on_persisted.is_valid(), action + " second reward retains its own collect callback")
+	await _wait_gift_ready(page, "_test_award_replaced_during_commit")
 	var expected_hint: int = hint_before + (2 if action in ["collect", "hide"] else 0)
 	_check(game.get_tool_count("hint") == expected_hint, action + " first result preserves only its committed grant")
 	page._on_collect_pressed()
@@ -101,6 +106,7 @@ func _test_award_replaced_during_commit(action: String) -> void:
 	if action == "double":
 		_check(game.find_in_flight_award(first).get("doubled", false), "interrupted first double remains durably pending")
 		awards.show_award(first)
+		await _wait_gift_ready(page, "_test_award_replaced_during_commit")
 		page._on_collect_pressed()
 		_check(game.get_tool_count("hint") == hint_before + 4, "first doubled reward remains claimable later")
 
@@ -142,7 +148,8 @@ func _test_old_ad_callback() -> void:
 	var second: int = awards.dispatch([{"kind": "locate", "count": 3}], 1, "ad_ownership_b", "ad_ownership_b_double")
 	awards.show_award(first)
 	var page: Variant = ui.get_ui("award")
-	page._on_collect_double_pressed()
+	await _wait_gift_ready(page, "_test_old_ad_callback")
+	await page._on_collect_double_pressed()
 	var show_id: String = kit._reward_active_show_id
 	_check(not show_id.is_empty() and kit._reward_callbacks.has(show_id), "actual double button registers identified Mock reward")
 	if show_id.is_empty() or not kit._reward_callbacks.has(show_id):
@@ -156,6 +163,7 @@ func _test_old_ad_callback() -> void:
 	_check(page.is_showing() and page._streak_uid == second, "old ad callbacks cannot close replacement reward page")
 	_check(game.get_tool_count("locate") == locate_before and not game.find_in_flight_award(second).get("doubled", false), "old ad cannot grant or double replacement reward")
 	ui.hide_ui("mock_ad")
+	await _wait_gift_ready(page, "_test_old_ad_callback")
 	page._on_collect_pressed()
 	_check(game.get_tool_count("locate") == locate_before + 3, "replacement reward remains normally claimable")
 
@@ -173,6 +181,7 @@ func _test_award_shown_reentry() -> void:
 	awards.show_award(first)
 	ui.events.window_shown.disconnect(listener)
 	var page: Variant = ui.get_ui("award")
+	await _wait_gift_ready(page, "_test_award_shown_reentry")
 	_check(state.called, "actual shown notification opens a newer reward")
 	_check(page._streak_uid == second, "outer render cannot overwrite newly shown reward data")
 	var before: int = game.get_tool_count("locate")
@@ -206,6 +215,7 @@ func _test_failed_claim_reentry() -> void:
 	var uid: int = awards.dispatch([{"kind": "hint", "count": 2}], 1, "reentrant_failed_claim")
 	awards.show_award(uid)
 	var page: Variant = ui.get_ui("award")
+	await _wait_gift_ready(page, "_test_failed_claim_reentry")
 	var before: int = game.get_tool_count("hint")
 	var state := {"called": false}
 	files.set_fault_injector_for_tests(func(phase: String) -> bool:
@@ -226,25 +236,32 @@ func _test_failed_claim_reentry() -> void:
 
 func _test_switch_gift_reopened() -> void:
 	await _reset()
+	# 旧切组界面已退役；保留旧档礼包资格，经 1.22 通用领取页验证相同交接边界。
 	var data: Dictionary = game.get_streak_data().duplicate(true)
 	data.pending_switch_page = 1
 	data.last_group = 3
 	var registered: Dictionary = game.commit_streak_transition(data, [{"kind": "hint", "count": 2}], "switch_reentry")
-	_check(registered.get("ok", false), "actual switch transition registers gift")
+	_check(registered.get("ok", false), "legacy switch transition still registers one candidate gift")
 	var uid: int = int(game.get_streak_data().get("switch_award_uid", 0))
 	_check(uid > 0, "switch fixture has a real unclaimed award")
-	var page: Variant = ui.show_ui("streak_switch1")
+	var second: int = awards.dispatch([{"kind": "locate", "count": 3}], 1, "switch_replacement")
+	var item_script: Script = load("res://products/meowdoku/app/features/award/model/award_item.gd")
+	var params := {"items": [item_script.make("hint", 2)], "claim": func() -> bool: return awards._persist_award(uid)}
+	var replacement := {"items": [item_script.make("locate", 3)], "claim": func() -> bool: return awards._persist_award(second)}
+	var page: Variant = ui.show_ui("reward_claim_popup", params)
 	var state := {"called": false}
+	var before: int = game.get_tool_count("locate")
 	var listener := func(_revision: int) -> void:
 		if not state.called and game.find_in_flight_award(uid).is_empty():
 			state.called = true
-			ui.show_ui("streak_switch1")
+			ui.show_ui("reward_claim_popup", replacement)
 	game.get_core_store().committed.connect(listener)
 	page._on_action_pressed()
 	game.get_core_store().committed.disconnect(listener)
-	_check(state.called and page.is_showing() and not page._granted, "old switch gift callback cannot close or mark newly refreshed explanation")
+	_check(state.called and page.is_showing() and not page._claiming, "old successful gift cannot close or lock a synchronously reopened 1.22 popup")
+	_check(game.get_tool_count("locate") == before and not game.find_in_flight_award(second).is_empty(), "replacement popup retains its distinct unclaimed gift")
 	page._on_action_pressed()
-	_check(page.is_hidden(), "new explanation retains its own close action")
+	_check(page.is_hidden() and game.get_tool_count("locate") == before + 3, "replacement uses its own claim callback exactly once")
 
 
 func _test_covered_streak_input() -> void:
@@ -267,3 +284,10 @@ func _check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		push_error("TEST_FAILED: " + message)
+
+
+func _wait_gift_ready(page: Variant, context: String) -> void:
+	var deadline: int = Time.get_ticks_msec() + 5000
+	while is_instance_valid(page) and page.is_showing() and page._buttons_locked and Time.get_ticks_msec() < deadline:
+		await process_frame
+	_check(is_instance_valid(page) and page.is_showing() and not page._buttons_locked, "1.22 actual reward input waits for gift appearance: " + context + " uid=" + str(page._streak_uid) + " showing=" + str(page.is_showing()) + " locked=" + str(page._buttons_locked))

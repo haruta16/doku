@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PURE_FILES = (
     "scripts/framework/presentation/content_scene_bindings.gd",
     "products/meowdoku/gameplay/content/doku_content_validator.gd",
+    "products/meowdoku/gameplay/content/bank_data.gd",
+    "products/meowdoku/gameplay/content/bank_level_codec.gd",
+    "products/meowdoku/gameplay/content/bank_binary_format.gd",
     "products/meowdoku/gameplay/content/doku_level_catalog.gd",
     "products/meowdoku/gameplay/content/doku_policy.gd",
     "products/meowdoku/gameplay/content/level_bank_io.gd",
@@ -55,7 +58,7 @@ def validate(release: Path, engine: str) -> None:
             result = subprocess.run(command, capture_output=True, text=True, timeout=180)
             output = result.stdout + result.stderr
             diagnostics = classify_engine_errors(output, arguments)
-            if (result.returncode or has_reported_failures(output) or diagnostics.get("unexpected_errors")
+            if (result.returncode or has_reported_failures(output) or diagnostics.get("unexpected_errors") or diagnostics.get("shutdown_errors")
                     or any(marker in output for marker in ("SCRIPT ERROR:", "Parse Error:", "PRODUCT_VALIDATION_FAILED:"))):
                 raise RuntimeError(output[-8000:])
             if "--script" in arguments:

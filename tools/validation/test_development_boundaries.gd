@@ -57,7 +57,7 @@ func _run() -> void:
 
 
 func _test_registry() -> void:
-	var registry: Dictionary = UIRegistry.build_registry()
+	var registry: Dictionary = load("res://products/meowdoku/app/ui/ui_registry.gd").build_registry()
 	for name: String in ["home", "game", "daily_game", "setting", "confirm", "feedback"]:
 		_check(registry.has(name), "ordinary route remains registered: " + name)
 	for name: String in ["debug", "generator"]:

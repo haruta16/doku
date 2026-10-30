@@ -1,4 +1,5 @@
 ## 真实评分、反馈与确认弹窗：重复动作及关闭动画不能跨展示发结果。
+## 1.22已退休旧rate_us、设置分页帮助、streak_switch1和IQ反馈；已删除的 UI 合同由当前教学/奖励测试覆盖，不为旧测试恢复退役入口。
 extends SceneTree
 
 var checks: int = 0
@@ -23,19 +24,17 @@ func _run() -> void:
 	await _test_setting_close()
 	await _test_confirm_back()
 	await _test_result_waits()
-	await _test_switch_gift()
 	await _test_win_reopen()
-	await _test_tutorial_iq_reopen()
-	await _test_tutorial_feedback_completion()
+	await _test_home_popup_cancellation()
 	ui.hide_all()
 	host.queue_free()
 	await process_frame
-	await process_frame
+	await create_timer(0.8).timeout
 	print("UI POPUP RESULTS TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
 func _test_rating() -> void:
-	for name: String in ["rate_us", "rate_us_v2"]:
+	for name: String in ["rate_us_v2"]:
 		var page: Variant = ui.show_ui(name)
 		await create_timer(0.5).timeout
 		var results: Array = []
@@ -83,13 +82,24 @@ func _test_confirm() -> void:
 	var result := {"confirmed": 0, "closed": 0}
 	var params: Dictionary = {"on_confirm": func() -> void: result.confirmed += 1, "on_close": func() -> void: result.closed += 1}
 	var page: Variant = ui.show_ui("confirm", params)
+	var presentation: int = page.get_presentation_revision()
 	page._on_action_btn_pressed()
 	page._on_action_btn_pressed()
 	page._on_close_btn_pressed()
 	_check(result.confirmed == 1 and result.closed == 0, "confirm preserves immediate callback timing but accepts only the first button")
 	await create_timer(0.6).timeout
 	_check(page.is_hidden(), "confirm closes through manager lifecycle")
-	ui.show_ui("confirm", params)
+	_check(page.get_presentation_revision() == presentation and presentation == page._window_presentation_revision, "confirm normal close preserves the framework presentation identity")
+	_check(not ui._ordered_windows().has(page), "confirm completed close removes its manager stack entry")
+	var destroyed := {"done": false}
+	_capture_destroy(ui, "confirm", destroyed)
+	var deadline: int = Time.get_ticks_msec() + 1000
+	while not destroyed.done and Time.get_ticks_msec() < deadline:
+		await process_frame
+	_check(destroyed.done and ui.get_ui("confirm") == null, "confirm normal hide can be destroyed without waiting on a stale stack entry")
+	if not destroyed.done and is_instance_valid(page):
+		page.free()
+	page = ui.show_ui("confirm", params)
 	page.close()
 	ui.show_ui("confirm", params)
 	await create_timer(0.6).timeout
@@ -110,41 +120,18 @@ func _test_setting_close() -> void:
 	_check(calls == {"old": 0, "new": 0}, "cancelled setting close calls neither the original nor replacement callback")
 	await ui.hide_ui("setting")
 	_check(calls == {"old": 0, "new": 1}, "setting completed close invokes only its captured callback")
-	for skip_animation: bool in [false, true]:
+	for _iteration: int in 2:
 		ui.show_ui("setting", {"on_close": old_callback})
 		var reopen := func() -> void:
 			if not page.visible:
 				ui.show_ui("setting", {"on_close": new_callback})
 		page.visibility_changed.connect(reopen)
-		page._skip_next_close_anim = skip_animation
 		await ui.hide_ui("setting")
 		await create_timer(0.5).timeout
-		_check(page.is_showing() and page.visible and calls == {"old": 0, "new": 1}, "setting visible callback cancels stale completion (skip animation: %s)" % skip_animation)
+		_check(page.is_showing() and page.visible and calls == {"old": 0, "new": 1}, "setting visible callback cancels stale completion")
 		page.visibility_changed.disconnect(reopen)
 		await ui.hide_ui("setting")
 		calls.new = 1
-	ui.show_ui("setting", {"on_close": old_callback})
-	page._on_how_to_play_btn_pressed()
-	var tutorial: Variant = ui.get_ui("how_to_play_paged")
-	_check(page.is_hidden() and tutorial.is_showing(), "setting transfers its close callback to the help presentation")
-	tutorial._close()
-	_check(calls.old == 1 and calls.new == 1, "normal help close invokes the original setting callback once")
-	await create_timer(0.5).timeout
-	ui.show_ui("setting", {"on_close": old_callback})
-	page._on_how_to_play_btn_pressed()
-	ui.show_ui("setting", {"on_close": new_callback})
-	tutorial._close()
-	_check(calls.old == 1 and calls.new == 1 and page.is_showing(), "old help close cannot borrow a reopened setting callback")
-	await ui.hide_ui("setting")
-	_check(calls.new == 2, "reopened setting retains its own later close callback")
-	await create_timer(0.5).timeout
-	ui.show_ui("setting", {"on_close": old_callback})
-	page._on_how_to_play_btn_pressed()
-	await ui.hide_ui("how_to_play_paged")
-	ui.show_ui("how_to_play_paged")
-	tutorial._close()
-	_check(calls.old == 1 and calls.new == 2, "cancelled help presentation cannot borrow the next help close signal")
-	await create_timer(0.5).timeout
 
 
 func _test_confirm_back() -> void:
@@ -210,7 +197,7 @@ func _capture_feedback(page: Variant, result: Dictionary, owner: Callable = Call
 
 
 func _test_result_waits() -> void:
-	var rating: Variant = ui.show_ui("rate_us")
+	var rating: Variant = ui.show_ui("rate_us_v2")
 	var result: Dictionary = {"done": false}
 	_capture_rating(rating, result)
 	rating._select_stars(4)
@@ -218,10 +205,10 @@ func _test_result_waits() -> void:
 	await create_timer(0.6).timeout
 	_check(result.get("done", false) and result.get("data", {}) == {"star_count": 4, "is_submitted": true}, "rating waiter receives the completed presentation result")
 	_check(rating.closed.get_connections().is_empty(), "rating waiter disconnects after success")
-	ui.show_ui("rate_us")
+	ui.show_ui("rate_us_v2")
 	result = {"done": false}
 	_capture_rating(rating, result)
-	ui.show_ui("rate_us")
+	ui.show_ui("rate_us_v2")
 	await process_frame
 	await process_frame
 	_check(result.get("done", false) and result.get("data", null) == {}, "rating refresh cancels the prior waiter")
@@ -255,7 +242,7 @@ func _test_result_waits() -> void:
 	await process_frame
 	_check(result.get("done", false) and not result.get("accepted", true), "destroying feedback releases its caller")
 
-	rating = ui.show_ui("rate_us")
+	rating = ui.show_ui("rate_us_v2")
 	var owner: Dictionary = {"active": true}
 	result = {"done": false}
 	_capture_rating(rating, result, func() -> bool: return owner.active)
@@ -277,23 +264,6 @@ func _test_result_waits() -> void:
 	ui.hide_ui("confirm")
 
 
-func _test_switch_gift() -> void:
-	var state: Node = root.get_node("GameState")
-	var before: int = state.get_tool_count("hint")
-	var data: Dictionary = state.get_streak_data()
-	data["last_group"] = int(data.get("last_group", 0)) + 1
-	var staged: Dictionary = state.commit_streak_transition(data, [{"kind": "hint", "count": 2}], "switch-test")
-	_check(staged.get("ok", false), "switch gift registered before showing the page")
-	var page: Variant = ui.show_ui("streak_switch1")
-	var files: RefCounted = state.get_core_store().get("_file_store")
-	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace")
-	page._on_action_pressed()
-	_check(page.is_showing() and not page._granted and state.get_tool_count("hint") == before, "failed switch gift claim retains page and retry entitlement")
-	files.set_fault_injector_for_tests(Callable())
-	page._on_action_pressed()
-	_check(page.is_hidden() and page._granted and state.get_tool_count("hint") == before + 2, "same switch button retries once and closes only after successful claim")
-	page._on_action_pressed()
-	_check(state.get_tool_count("hint") == before + 2, "repeated switch action does not grant twice")
 
 
 func _test_win_reopen() -> void:
@@ -312,67 +282,60 @@ func _test_win_reopen() -> void:
 	board.queue_free()
 
 
-func _test_tutorial_iq_reopen() -> void:
-	root.get_node("ABTestManager").guide_feedback.set_debug_override(2)
-	var page: Variant = ui.show_ui("tutorial")
-	page._play_iq_feedback()
-	await process_frame
-	ui.show_ui("tutorial")
-	await create_timer(0.5).timeout
-	_check(page._iq_label.text == tr("TUTORIAL_IQ_FORMAT") % 60 and page._iq_value == 60, "old IQ tween cannot overwrite a reopened tutorial's initial display")
-	page._anim_effect_fireworks.play("Flreworks")
-	page._hide_iq_bar_after_fireworks()
-	ui.show_ui("tutorial")
-	page._anim_effect_fireworks.animation_finished.emit(&"Flreworks")
-	await create_timer(0.6).timeout
-	_check(page._iq_bar.visible, "old fireworks completion cannot dismiss the reopened IQ tutorial")
-	ui.hide_ui("tutorial")
-	root.get_node("ABTestManager").guide_feedback.set_debug_override(0)
-
-
-func _test_tutorial_feedback_completion() -> void:
+## 排名任务由真实首页队列启动；取消必须在 hide/free/reset 返回前展开父 await，不能靠多等一帧。
+func _test_home_popup_cancellation() -> void:
 	var game: Node = root.get_node("GameState")
-	for variant: int in [1, 2]:
-		root.get_node("ABTestManager").guide_feedback.set_debug_override(variant)
-		game.set_tutorial_done(false)
-		var page: Variant = ui.show_ui("tutorial")
-		await _wait_tutorial_mode(page, page.StepMode.PLACE_CAT)
-		_tap_tutorial(page, Vector2i(0, 2))
-		_tap_tutorial(page, Vector2i(0, 2))
-		await _wait_tutorial_mode(page, page.StepMode.MARK_CELLS)
-		for cell: Vector2i in page._allowed_cells.duplicate():
-			_tap_tutorial(page, cell)
-		await _wait_tutorial_mode(page, page.StepMode.PLACE_CAT)
-		_tap_tutorial(page, Vector2i(3, 1))
-		_tap_tutorial(page, Vector2i(3, 1))
-		await _wait_tutorial_mode(page, page.StepMode.MARK_CELLS)
-		for cell: Vector2i in page._allowed_cells.duplicate():
-			_tap_tutorial(page, cell)
-		await _wait_tutorial_mode(page, page.StepMode.PLACE_CAT)
-		_tap_tutorial(page, Vector2i(1, 0))
-		_tap_tutorial(page, Vector2i(1, 0))
-		await _wait_tutorial_mode(page, page.StepMode.FREE_PLAY)
-		_tap_tutorial(page, Vector2i(2, 3))
-		_tap_tutorial(page, Vector2i(2, 3))
-		await _wait_tutorial_mode(page, page.StepMode.CONFIRM)
-		_check(page._board_view.count_cat_cells() == 4, "feedback variant %d reaches completed board" % variant)
-		page._confirm_btn.tag_pressed.emit()
-		await create_timer(0.6).timeout
-		var game_page: Variant = ui.get_ui("game")
-		_check(game.is_tutorial_done() and game_page != null and game_page.visible and game_page._entry_error.is_empty(), "feedback variant %d completes into actual first game" % variant)
-		ui.hide_ui("game")
-		ui.hide_ui("tutorial")
-	root.get_node("ABTestManager").guide_feedback.set_debug_override(0)
+	var rank: Node = root.get_node("RankActivityManager")
+	for phase: String in ["delay", "popup"]:
+		for transition: String in ["hide", "free", "reset"]:
+			ui.hide_all()
+			await create_timer(0.2).timeout
+			await ui.destroy_ui("home")
+			await ui.destroy_ui("rank_activity_open_popup")
+			_check(game.reset_all(), "home cancellation prepares isolated rank state")
+			game.set_sound_on(false)
+			game.set_tutorial_done(true)
+			game.set_current_level(50)
+			var home: Variant = ui.show_ui("home")
+			var queue: Variant = home._popup_queue
+			var label: String = "home rank " + phase + " " + transition
+			_check(home._rank_popup_pending and queue.is_running(), label + " starts the real queued rank parent flow")
+			if phase == "popup":
+				var deadline: int = Time.get_ticks_msec() + 3000
+				while Time.get_ticks_msec() < deadline:
+					var popup: Variant = ui.get_ui("rank_activity_open_popup")
+					if is_instance_valid(popup) and popup.is_showing():
+						break
+					await process_frame
+				var popup: Variant = ui.get_ui("rank_activity_open_popup")
+				_check(is_instance_valid(popup) and popup.is_showing() and queue.is_running(), label + " suspends the parent on its live popup")
+			var observed: Dictionary = {"drained": false, "stale": 0}
+			var drained: Callable = func() -> void: observed.drained = true
+			queue.drained.connect(drained)
+			var old_task := UIPopupEntry.new()
+			old_task.key = "cancelled_home_regression"
+			old_task.callable = func() -> void: observed.stale += 1
+			queue.enqueue(old_task)
+			match transition:
+				"hide": ui.hide_ui("home")
+				"free": home.free()
+				"reset": _check(game.reset_all(), label + " resets successfully")
+			# These assertions intentionally precede every await after cancellation.
+			_check(observed.drained and not queue.is_running(), label + " synchronously exits the queued parent await")
+			_check(queue.is_empty() and observed.stale == 0, label + " discards pending old-home tasks before waking the parent")
+			_check(not rank._data.joined, label + " never confirms participation after its owner ends")
+			queue.drained.disconnect(drained)
+			ui.hide_all()
+			if is_instance_valid(home):
+				home.free()
+			game.set_current_level(1)
+			var replacement: Variant = ui.show_ui("home")
+			await create_timer(0.15).timeout
+			_check(replacement.is_showing() and not queue.is_running() and observed.stale == 0, label + " cannot advance old tasks into a replacement home")
+			ui.hide_all()
+			replacement.free()
 
 
-func _wait_tutorial_mode(page: Variant, mode: int) -> void:
-	var deadline: int = Time.get_ticks_msec() + 5000
-	while page._current_mode != mode and Time.get_ticks_msec() < deadline:
-		await process_frame
-	_check(page._current_mode == mode, "feedback flow reaches interaction mode %d" % mode)
-
-
-func _tap_tutorial(page: Variant, cell: Vector2i) -> void:
-	var view: Control = page._board_view.get_cell_view(cell.x, cell.y)
-	page._board_view.cell_drag_start.emit(view.position + view.size * 0.5)
-	page._board_view.cell_drag_end.emit()
+func _capture_destroy(manager: Node, name: String, result: Dictionary) -> void:
+	await manager.destroy_ui(name)
+	result.done = true

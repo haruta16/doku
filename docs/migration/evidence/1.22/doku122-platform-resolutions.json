@@ -1,0 +1,3096 @@
+{
+  "schema": 1,
+  "stage": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0",
+  "decisions": [
+    {
+      "path": "export_presets.cfg",
+      "action": "merge_122_export_with_framework_content",
+      "reason": "1.22 version/arm64/SDK adapter plus all 59 runtime banks and framework content config; exclude raw evidence/editor data/tools.",
+      "before_sha256": "2412badaed98504ec4f8438dae547a111c5643f5a583a1a4be184de04023de52",
+      "after_sha256": "9a811bdb9313c5f52a34a133a9f5811cc8ced4642d3793e0effcc4e29e1004be"
+    },
+    {
+      "path": "products/meowdoku/app/platform/unikit_manager.gd",
+      "action": "merge_122_with_framework_reward_ownership",
+      "reason": "Preserve all 1.22 UniKit modules, events, async timeout queries, banner/audio behavior; merge exact-show reward ownership, reset generations, durable retry and stale callback guards.",
+      "before_sha256": "a30add22dfb280ba439875b34ff3081e8c57fbc564eff8ac4a9ad73cf9601abb",
+      "after_sha256": "186f1660cb1b6eaa7613ace81ad696451a5904fda4fcb68864163edd18b34aac"
+    },
+    {
+      "path": "products/meowdoku/assets/animation/GenericPopup.res",
+      "action": "preserve_verified_relocated_binary",
+      "reason": "1.22 original binary content is unchanged from 1.8.1. Isolated Godot loads original and framework-relocated resources and produces byte-identical canonical TRES; keep existing relocated binary.",
+      "after_sha256": "210092c6cde3482ce71a26b81159c0b5a026f7625bdc74087a86e4e5020b4461",
+      "proof_directory": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-animation-proof-s_2h1ub6",
+      "before_sha256": "210092c6cde3482ce71a26b81159c0b5a026f7625bdc74087a86e4e5020b4461"
+    },
+    {
+      "path": "products/meowdoku/assets/animation/GenericPopupV2.res",
+      "action": "preserve_verified_relocated_binary",
+      "reason": "1.22 original binary content is unchanged from 1.8.1. Isolated Godot loads original and framework-relocated resources and produces byte-identical canonical TRES; keep existing relocated binary.",
+      "after_sha256": "506c2bca12606dede6ee1bee49ff0f42f4ecfd96866fbf9d1cc7661893a6a89f",
+      "proof_directory": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-animation-proof-s_2h1ub6",
+      "before_sha256": "506c2bca12606dede6ee1bee49ff0f42f4ecfd96866fbf9d1cc7661893a6a89f"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/bgm/bgm_afternoon_tea.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "0f6ceea246a8ccc67dce6f9ae408900ccc50c91fb941f94b94a2adb04149d1ce",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/bgm/bgm_afternoon_tea_loud.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "76fbd04960bc35f4e3278aa3021118c300ffe30ca2173bf0ef956496d19db8ac",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/bgm/bgm_cute.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "c5b282f896442543a93f162b7e3cd172ce27c24973caf2198b71c1dcd909ce11",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/bgm/bgm_meditation.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "4bef7f32ba33361bf9a53569c3935c25bbe8fdbaff46d1f0562185b3a1363fa9",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/bgm/bgm_white_noise.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "302b628b28936d945c2f0b70140bfe88894b095c50135205484d73fee953ef23",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "ae0d84eb0defd8fce797035dacc01f2410df20476df49626b923fa42582020ce"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_a.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "56893bf644778f26b640525ffd827f1f62c5f610b9d53eeb6791265d14061ece"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_s1.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "4f5b4a6aaafce7b31a1595517190a228a6741ac932f376df4847ba79a25dd946",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_s2.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "c6db6936c0a83a8779023d39be950c5c01d0cd8e0bb4a4a70d8952c303e79a49",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_s3.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "f01d024643a0617be3d9ecf98f11e5e509e171a79f3e4855442f62fbd06c8849",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_s4.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "38795f74b29480f3751600ee5f981e431104fd5bdfef63eea6db49c0937be39f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_s5.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "704c38ddbe9ea2f4322db65f1d4e19a8dccd8f6f56748f8dd6972c599f575e70",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_s7.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e8da9864f932ff99a8478da379c35d8bb96ca978c51bda91b45f15002a58645a",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_amazing_s8.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "f991225efe6c7a61efc4c5fb801a1a04435eabf7a1ac57451286476c361a6be9",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "d9bfadc6ff9f019a6873f3a6909e7eccf1e614fe87539ad1ddcf18770d7ff6e6"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_a.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "38ecd63f5758c3d8f4639b761f8d2d7eb39df2a96ffdf2ec60adca1f99a24f19"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_s1.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "4b9ef074987f3a06af3915547d548433b2e1c9dd79065074cf81f029b7d901ae",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_s2.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "d2f23e53715d17be89db2332e6110f4cc9b462815942a91cd64548810f16063f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_s3.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "81a822abdaa1a081577eaed60f36a26c8e6d0673f689c5c825a614087887a855",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_s4.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "cdd5431d79e712e884b8e244c75bb68e4c6336c3288ebea397157549555df67e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_s5.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "2e7a3cca439acca4118a6cb2a2d1d51e9c56ded1401b7437797489c335cd7275",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_s7.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "34867e34a8f634c36e353db58e548f80547b593b4ccab4fc72f30eb5aa00c0c3",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_excellent_s8.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e49d6c54ef60c89d88790f2ff41fddc9a7c81e11608974bac4ccb28246f8c7eb",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "a5d7d1b31a5d9155da24af73d375767e5c65ad3cd7ceebe8ea370d064e4f3d0c"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_a.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "3daa846b33831ce14ae447494adc0034903cd34b2f7ef03a74f237744549d4d8"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_s1.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "646f3b6fdf22d0fb092f79bf27cc61698e9dde3d44ef66c4283dbbf6f2c1950c",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_s2.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "8012752ae03dbb8d99690b43477cb0cb88962d3a5140a69fabd7749c0063ea62",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_s3.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "279e5860707945143b28f20ea982c695a4eceb46386d3c30acd5c53247bd9272",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_s4.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "8c5b8b46bb2681eefa4cb600d433d292f2216cbaa5d3d0b9d53cca9a9fb9a089",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_s5.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "20dd2767a9676e1e992e1c35b68b377539fd02248c6730dd593a04dab5b53ea6",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_s7.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "30a189a8138af048a93a3807bb2ec46440921432ce0bbe43baefc956c3b29ad2",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_great_s8.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "9d7a5f0f90cb3f6cd1b61780744826ab6c92cac383ef3720a6e772f52f372e16",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "98f40c4b71cea0283321ec517d3940923cfcb24a8d6431a77d5da70c9004fcc2"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_a.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "ae7c441e8e2f90ee26b9f3201cb44c17f8c0449508418a015a3b57bf9ae9ac27"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_s1.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e635195c194caaf73a88b2ef80945714d82c7b6fd5e168edb7eb1ac4f1789be7",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_s2.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "1cbd6b3989eb71db5a01916fe18f2645b3dc6387ae65acd9776646fd3221d189",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_s3.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "a5022005403a44d1c3d471e4baaec5a544030b91649e8888ea74cf84a40a6efc",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_s4.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "9ac3c601f2913545ab6d6879d424cf4f6e5dcdf00a1356c48e36bb4166644c03",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_s5.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e31c8846453ec4e3db590b4d011ee0550b1c9f475cbe7a17524af893cb776744",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_s7.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "f3073774e92bed659a9e6195b740c510b24bb728416989dc136266596aa894bb",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_nice_s8.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "016635dd78c6286b9960e9735e3b2259a22e0d32c732063b7e03a170bbacff94",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "ce55284ed68d4d5f3372c397a32df6a85c91f6215a6eac2d7c7f8deb8c7e622c"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_a.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "28366f87ef830a6c41602fb0f5ba853736ec65a28f4cfda02beb399a8f24fd6f"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_s1.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "6803a1d1008ff3bdfcceb93541dd90fa9b5c2540e75978ed7c94a3ada2b16ff9",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_s2.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "dab8142325ca9fa72cfa4ecb9aeb1f7e7b500b1f9facb5deb420e1bb7b826a65",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_s3.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "dabe11dccffff199647f9f14f36bc0846d1ec8e6f1355b5aba778e4f8d9d92ae",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_s4.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "53f3fddeef64e0a0158b0f2a98ef976dca643f4e177f284445bbfa283e078f0e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_s5.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "0198535031159518a216e220406de71a6bfbaf6ec621eb0571c4722af9cdce2e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_s7.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "02a9cdbe6c921f89483f1745b59751b541a1f58f371d97486aeaa3a69d452a22",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_perfect_s8.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "dac8a9d7272f61d166eb8e57e21335ee428d2615374bbf52ae78384605ccaf0f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "7dd8a2d040016cd6eadfba37cafe17c09b175b1d074c40f2fe26d453170b4789"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_a.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "f166c2e6fd10085dd65d80a0fe3e05cd6d523a6433cf000206a3605889e9cd6b"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_s1.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "006ae3fa6c2b60d25ef0ebafccd2ebde2efa1a86f6155591ad6044865f321024",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_s2.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "c9e17872c18e17444b0527390bda26a3ed40d95c3dcc815f51232682aebf5ca8",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_s3.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "b468c609d8c8b0f1b2c0996b58079b09324a770798038b8790415187c75157a2",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_s4.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e4294b88f25aa44312071ac594cab8868c3b3c5cb05c66c046771076b7edab8f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_s5.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "532a97f3868fb52edd6e1093e51a44907836dcd8d4f6ab4f2aebc63175fd66e8",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_s7.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "1c445ba07fe9fbea9fd0ce881f68f68f4fc4d758e34a915605e6162151e81d5e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/combo_unbelievable_s8.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "9eac9a2a14749736839ae6d804ec676862d54568f5dbdb286e6bddf40096843b",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/level_fail_low.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "a1731217347f1bd508db911c3773380bc46b1fffca127518997016ecb15a6854"
+    },
+    {
+      "path": "products/meowdoku/assets/audio/sfx/mark_wrong_low.ogg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "1.22 SoundManager migrated; retired source has no remaining runtime text references.",
+      "after_sha256": null,
+      "before_sha256": "da0eb8dbddcf4495a45a1f66a0bdb1e1c6e73acbf449f8ea9e886ba11b9a1587"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_box01/Box_01.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "2a01bac5309a65a75443287eaf217405c1d1084011a210454b932f4bd95ee082",
+      "after_sha256": "98b251279436e2d17d31cad2e55f85a411eb40ed52ae049fe48fb428e408c078"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_cat_icon/maomi_fuor.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "aae8c24983d96ffeafc6d01d97f9195b2165ec0c6cd8cb571ceeb5722af66e21",
+      "after_sha256": "b538e0b0b356e3685c2db4806b68f2375d7ba36bc5975dc203738fff9fcd87f9"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_fail_settlement/failure.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c7e309a9224488a119d40036780a4e2ffb13bb5c57898ca2f361245aab986e93",
+      "after_sha256": "c643278b892ff96aee3e8e0af5c50695cde307a73e4c5048e778f9ac0eb267a9"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_fail_settlement1/failure_group1.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "529c548d181e34586ad5abbd258ef616a7de61fba50849003b701f8b5e0358f2",
+      "after_sha256": "c435587a884a6cd835d5a1a1e1d8b54cc4728701e430cb04ed96205a63725bb9"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_like_hand/LikeHand_4/LikeHand_4.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "7cb6964c1f290808a7cdcc3c438d6ef7156b1793cf257bb590b5786952450038",
+      "after_sha256": "7046fb0f4836f54a18a66dfb96af24f361b3372bfd8844bfd2a45e9d7aa8a0d3"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_like_hand/LikeHand_5/LikeHand_5.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "38b2df553b76b646739869e410f44090ca92286b5fe3112536c455525eb8a0ba",
+      "after_sha256": "a4478ab5c8b62b64758d91d63703de7420dce59013d1de2fa5e75afd61ec525f"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_like_hand/LinkeHand_1/LikeHand_1.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "4a62f55c5e9b3337518e0fa190c11b37528037a5f82034458fdd429a4ad36b8b",
+      "after_sha256": "7200f9f8b5647ecd87c54e783e3b01677452c35a5f7ef8044b5120b6eedd9dac"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_like_hand/LinkeHand_2/LikeHand_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "9c2b062ed94980a6435eeeb0671cee6a755a483cd1459116e2c99637ccb8d23a",
+      "after_sha256": "4812b3baff52793be886dd7e3052c85285a3662a723d32cdb2a642b23663df16"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_like_hand/LinkeHand_3/LikeHand_3.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0163591c4e0db59b46a7fa65fc866beb1e571167a612f75af0b7f1177a785225",
+      "after_sha256": "f59b181ffc89b79159e89ebb7a0193acc72f2469f906d99c8a3bc4b1a84662c6"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_logo/logo.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "5286888f3752aa0008ec38ea1f999442669a2a9bb72dee6bad2089f2e0820fee",
+      "after_sha256": "8a05f1d4932ff75c5298362af72ccceb868d7a24b95874689dccc52e1ca20c03"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/spine/ui_win_settlement/game_win_result.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "77666228a58b44af3361007cd55c5f3b4354486b049608028dc17c57e8d0cd66",
+      "after_sha256": "323326186c02aca042eea94e2f267e8e6b0cc3adae7769e64f1d8397efcdd595"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/glow/et_glow_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "8399febabbccf74bb01caf8fe056d8473dbf6f2df57174690b8644a4110d45af",
+      "after_sha256": "46e0e17fa5778fa47ff06a9cf34539a30206b86ec4da69cdaaf49da83488e067"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/glow/et_glow_001_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "66436cc15e378c67a988b21b663449aeefbdcbfb9cdba7bb51224f5b225d7312",
+      "after_sha256": "c68ab95d8367b57d3ac13e981f7d1bed5481b821eb68dee8f08aaee51754c617"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/glow/et_glow_001_3.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "4c0609ade49bdb62a8819a9a38af42cfade677eff250904368efd003d3734f1f",
+      "after_sha256": "af1e7fc7df38b6168f8f5278ae5a2568286e74c0b62a3d8137554895146e2d28"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/glow/et_glow_002.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "4276dc3f3ecc472adb4f2b54b45c89c7ac056ef72f2bf5b8081b953a2cab60af",
+      "after_sha256": "5dcdac41003d8bd1372fc7def5674121995970e8f9623f13814cc02aaa28386d"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/glow/et_glow_003.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "96aef7442af24282f23f0ce3990efabbe5a39bcb497b1089ce3abd4a3e39a42f",
+      "after_sha256": "57e31ea86f14013fdff79fd2d81f4d5beb37ba5f7f33bbaa9dac520bb3d74fdf"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/glow/et_glow_004.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f6b053746076b359ab34c49cb5b180397d3c9a1c6a540e0517f3010bed9d6696",
+      "after_sha256": "e631f583e32f833f7706c4cda4f2bc425d5e037141e84c934c46034d2f3d2128"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/glow/et_glow_fish.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "7f1d6427fe2f7c21f58ef77c5795d092089700f1a723a9939d6951252d3eeac1",
+      "after_sha256": "6a3e5b7fa416b24cad97531d1685e271aa3fc4f9ff1100f688ed425e46b3b56a"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/line/et_line_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1845080f14063c5000f8d9db8b6137936999f0d22e5f0735c3e096d957cfe24c",
+      "after_sha256": "69a6dd4595f13246e42cfffa023cadeb7cb11dc4799f4a96928923af80345fcc"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ae846eed62937df23b018335dfdda689bcd589622a95c29beea1023bdcb11e93",
+      "after_sha256": "87cf2ce8192ebcdbe3381a6418829fb5feb2d884f858767e8a31c454e24add81"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_002.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c83dea1c8405f0999f3d36cc0db16db9b4ed013ab714c0a4476df66d5e19d2ef",
+      "after_sha256": "273ee2cd8101d107ebcae32affc8cf8c850e3f54f8a4ca62cd98a54409a33ae2"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_003.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ced17be6c3017eafd38eaf8867bc68762c74ddda9761b574a9bdbe1fe08b084e",
+      "after_sha256": "5e766859d4bc69982893f6077162209d348852bdb30936c1982761b33e5954e6"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_004.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d3a270232807581a42638d8d2e3c512a88652d02b4562798e75be8df79eb50c5",
+      "after_sha256": "0c204e230d3fab75f5f3ba86233d66d21dc055036624509d75bfeea7cbc775b5"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_005.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e244ab1029745e4fc31829d296cab35020dbcf65b1a93d1fc3194232107ed109",
+      "after_sha256": "d832458793a463988437d55462eb0b3b887a556ace980ccbef100d90a6c690e0"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_006.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6ad3fa7bc41a1ae57b69365be078671404e044191d72c56ee4466f1a1315b9a3",
+      "after_sha256": "2795be27ead76152128292c67be03a17ff5dd8d54fb8f4938547c2fa4b45a64f"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_007.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "37d2b0eca26215ec9d048dbf38469471536a014ef2a325c77e44d12ec27924a0",
+      "after_sha256": "349b2502be2f49413913396a13fec29b8e1dae0cb0a4457659105f5228c98f17"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_008.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "5b0d76aeb2b951204ef181a5049498195bdfd40ba199a93627be305ed20a3eee",
+      "after_sha256": "757f2dd2d6e64d1634e9d4f8edefa8ea11d06738c69555b68e9ce823d84b5b62"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_009.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "7676e0dc52b5b1fa664a67ae4718c9c67a131229c6d66ac61663b0ae839086ba",
+      "after_sha256": "0df632ea2d35077c219eca608a5897926e6f4621cb333db74147c9049dbe558c"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_010.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e470e800d189838b4866bb48c8bc230df6c956ae2a296efb31ed9ae1af11e0cc",
+      "after_sha256": "25793e8c8477894f016525dc748c4d1bbf1be61f566e7f83b5a92513dee6d93c"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_011.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "5ccb07c4b20016407aaa69fd4cd794fe1afb0c5b144efeada87fb2614e32e77e",
+      "after_sha256": "ecb14d816d1b9663b5cc47b05422d98580879a1480dd758262bf226c3e985dfe"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_012.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "451cdccb2dc184a1505cbfbe6eb0297a0b5013a338ce2f6ee5630f03ce62f337",
+      "after_sha256": "298894eb9629ad4de9b185a0e8637805ef0559c10cc51d095880068534eeb7ba"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_013.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ab24aa44793085fc9fe7abc5b2f048730b240886fba76213ffd705f2f3490e02",
+      "after_sha256": "e874006b367cfb8d419753dfa85f43f5fa334e11e1bbe153a1d09cc215e58232"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_014.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "30a116c6a2b1140b717c1ecd662e8576a2d6370aea951007691348455c0ec004",
+      "after_sha256": "1d0ce60b0c6b0558cac0d3e4485802da718c7e34e952b4ad8df79fcaba2aab87"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/mask/et_mask_014_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6c33b82f6a343f2e3ec795a8e820a058fc68cc92227425a5314d0d244c898915",
+      "after_sha256": "56704ee764bcd5166e25a8ea8c3eddd9284272bfb8306992d3c058fabb3941e8"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/obj/et_fish_full_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d3778be5fd8cb7d462f64c3db4cdfbeae01d0193f7869a4fc9e13d778937a240",
+      "after_sha256": "8a06ba28eea2825025640dc2fa30df2c4a8101779cd54630ba8fb7bc77309542"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/obj/et_lightning_003.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "6c4d1552260303c7f5eec710ed508aedebbd36920bed41e50d8b4d426d1f88be",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/obj/et_ribbon_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "216483833a5c90be2c7c264b0ec056ec251dd8fefd89970d34382d974c3c90c7",
+      "after_sha256": "4d4f2689b5eb0d7494d5208642e61fe811eb903efbfe9dd59fd8efdcfb9ad75b"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/obj/et_ribbon_002.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c7f5919d68156a77674b2f182be43d079e5c82d17173c35183b3d5e3a37168ca",
+      "after_sha256": "4f40d66647561d9b4f520187b9cb7ec56516893da0247485e7609962cd77ce1c"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/rainbow/et_rainbow_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "83e6e1f09b85262d4bae08d75048ce2b7fb943fe9338d398013c918ed0aa2844",
+      "after_sha256": "58e7ffd53027dd209dad7cfe2776d85bbb4662936f4fadfad86ede7926f3ad91"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ring/et_ring_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0563b7b59ac6186d076419b42834cfac6f69bf8c284532792df37812468d4132",
+      "after_sha256": "5f2b8b2fa4330e555c6c301ebced90a6bb14cdda562e7346a27b9dd58e74a809"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/shine/et_shine_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d10fc8ba14aaa42aad998ed352c76379b9027a286042b2a48b44bb78bfc6e813",
+      "after_sha256": "0c32eb3007b00c1ebc9826ba6c21aa9e49be22fef2eb99f767e4e317ff910a01"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/shine/et_shine_002.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0d46a8b3cd5ba2079a91fcba9dcca7ff26c7468d64daace88a1b8804eba70b36",
+      "after_sha256": "accfe3e2f2931ee141e396c9e576e28d0b113b1a5a5bb7a6d226c43ce65328a9"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/shine/et_shine_003.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "bcfb558d3cbdc3cb21f7c106fb7248f5669805e3fa266d4bfe8b76f060f91f17",
+      "after_sha256": "406db9a95081d0a9543234a2be7d55fd5c3188d46c82414208c7285e83c40878"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/star/et_star_003.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "453e5dbb9d60b78d01cb06090bacec8029a9a321f768da6b5a45034724feea48",
+      "after_sha256": "eaac6b6ccd5a7d7235e91d203547688d03f95922108536aae7c902f5cdba93e1"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/star/et_star_1.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1c45f78e7a28920b772e917e545c5dcd5af01c9d5c3fd524dcff85aff28f96c3",
+      "after_sha256": "2f598b2b45d6477b6ef64608acb115823ac6d3d3ed1e45be359c000e0346ce15"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/star/et_star_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "17bddc006af79aa228c537ece1075b75df98b5b7e6371e0ce8c9c3ab0c0ba4d1",
+      "after_sha256": "70f88d501b2c62a3b6a875ee869592a88b26f24133e36cfc97177303c25b139d"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_Rectangle_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "8a1efbf4f25675c266bf25d1ffddbd8b3ffbfb356af628ec2118b141fee26945",
+      "after_sha256": "c361c0d1cdcda0a1c9b78837cb69810081a4b31d430a375172a623a8aff8de2b"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_Rectangle_002.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1b8fe76e538fe0f1812a2fbbcbec9a14be9c8389115b5d924f1b2ff5a6176571",
+      "after_sha256": "124921adf6c67be188c29d8904b46a3dbaa3b5299ae87739b1f8b1873e35115d"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_block_001.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "11abe6c5c765b6cb50dce50dbc283d0d94a3c322a0128cf5ff0439b634a7e152",
+      "after_sha256": "e87a227ce34efbad446c17df305ff64cb8b21c1a004a89f4c001467fca8a572b"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_broken_fish_1.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "95db5a947188012b909afe5fa0f9119e29fd4303716c4cffcf3de884fc01d237",
+      "after_sha256": "bfda83909ccdb6aabf301f37763b46d89130036d7ab61b379b45a46ddcd2eb7d"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_broken_fish_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6f879b2ba6aab38b601c816f210cc8689cc2f8682d878337e6c4144758863b60",
+      "after_sha256": "6f879b2ba6aab38b601c816f210cc8689cc2f8682d878337e6c4144758863b60"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_broken_fish_glow.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d5c2fa3b53efcd326949f7cf5b20eb94e38fc84da923999f6b06ec32c1542abd",
+      "after_sha256": "7feb052cadba20871ec17a8ac7754d3098629719394c6ecba5425e097a2c106f"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_broken_heart_1.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "07824d807b640b8784588af07918d68ed10324068d4c1d5c4695a4ead97c2ab7",
+      "after_sha256": "b1b795849c051014ed056b79d03b5a0ba196c17916eaebca1c7ebe20c97c7eb1"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_broken_heart_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0ce2505292bca3c50d26c80c386667a19a945dd5b7143f0272cb9a9f2cf4184d",
+      "after_sha256": "38b97fad84e7d844abf7bc1490da9298c4a8d8d041b1b67d10585708be2a26d4"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_broken_heart_glow.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "a1c4732e3173105d0b1370d4104d0a48cd1ab9db94266fb2525b0d7c51f75828",
+      "after_sha256": "8e5473e8f7dde531708374d094e41c80057453cc689209c4f6e9b40ee5012689"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_lock_mask.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "9023c17c8359cc79870203287cbe73d3eff51d84ffba76afd21467a1065a8a3e",
+      "after_sha256": "da812807f7500b9c882bcfdf26d5671a48a226eb151e30010749ea758d646db5"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_main_interface_flow.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "9c89a6f279b3a735c1b2c413d81471cf05b27c693176dd92e17f1dc01b77beaf",
+      "after_sha256": "bde62f341e41c0a858f9f1baf3f479e68fff437a1f4def890990462b1ee1cc5a"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui/et_main_interface_flow_mask.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "48b18a6fb0ac8f37b99e9cf1aff3cafa7654449475029060d463d7f1f2907655",
+      "after_sha256": "75df63805ce6e03e51d2a51d376200f1400d906939287c04ba1e66bd21f8ff06"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui_guide/ui_guide_hand.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "549b07ab504ba7d03ebb85b31cf65e220834db48aa9c2576ede2eb07433403c8",
+      "after_sha256": "2bc8f773bb6cdc2e2726b603dccd1677727c6548c4c73053066fa83235ab9b15"
+    },
+    {
+      "path": "products/meowdoku/assets/effect/texture/ui_hand/ui_guide_hand01.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "798d11a66469574e971e394e13dea67b52123002c18b52061d9dd4951138fc9a",
+      "after_sha256": "237d64f82608bd4f1de3e0a5bd1a77f796478264dfd4f1deb7d3e06a71e1f991"
+    },
+    {
+      "path": "products/meowdoku/assets/fonts/NotoSourceHan-subset.ttf.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0c3be097f008df60c77a22955cfa1f916077ecb0dd85174dc43f7a57a3b7dc04",
+      "after_sha256": "0c3be097f008df60c77a22955cfa1f916077ecb0dd85174dc43f7a57a3b7dc04"
+    },
+    {
+      "path": "products/meowdoku/assets/fonts/Roboto.ttf.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d54ad2fedbed9237fa2a73dfa8a88b1fc862bd3b5c876f0fa1d3ff4668dc2ccb",
+      "after_sha256": "d54ad2fedbed9237fa2a73dfa8a88b1fc862bd3b5c876f0fa1d3ff4668dc2ccb"
+    },
+    {
+      "path": "products/meowdoku/assets/icons/icon_1024.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "08c09927098cb7c37e8cc4ca0cd13b1d6c4874d35ef070256e3d9fa0ad133f98",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/icons/icon_192.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1143b769859e634691ca4ea830f6ec8c1cbfe7c4746fe8ef8b20b9443ac9f11a",
+      "after_sha256": "54eb58611413ce9094ed065a71074fbc0472e78c5b9522a865e4940f3675780e"
+    },
+    {
+      "path": "products/meowdoku/assets/icons/icon_432.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "28b262b58615b34ebc19c23e9b98d71c6eb5d892dc109bdcd7919c4b9fcf4e3e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/icons/icon_adaptive_background.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "af7efee9c8e0c64d946b7b2b59c741ccc5e3789ce9cafcb884517652ab49d919",
+      "after_sha256": "978f9a8d9821086366f269bcc8cfad6458b282ab9288da638dc99b3f959d9866"
+    },
+    {
+      "path": "products/meowdoku/assets/icons/icon_adaptive_foreground.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "81e25207dde531ed8b7bfc5ec0a08388f85955c7ae5a0e1113a7faefb2b6ef7e",
+      "after_sha256": "7c4ce6faefeb977ef178386e0b5c922643dcc11064aa4789cbc2c890b56a057f"
+    },
+    {
+      "path": "products/meowdoku/assets/icons/ios_launch_2x.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "03f80e7f9329672154489161bceb3c07659cf2b12375f8cdcf4f5c9f817c67e7",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/icons/ios_launch_3x.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "00498ad3b362d0a4b0ceec076144a67b4ca72b3490ac72ad23783c50a7fa6411",
+      "after_sha256": "f9cb0e0403673b2d517e0243cfef395768167c33438ea97c7b311401eaf33824"
+    },
+    {
+      "path": "products/meowdoku/assets/icons/project_icon.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e5853d43b398110e5d2a97b10d4c27a50182c8e950bd350199261da3565d3bc4",
+      "after_sha256": "961c2bf35f1a182e1d8ff2443756fc5a01e4a6ce9d2e2eb40854655714562bff"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/big_star.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "61ffda39380ea3900742ff2521bc9030c4d2ace1d7bac9de896f8dc429f24d3e",
+      "after_sha256": "86054fcf9ed9fd00769985c0e72d53df778af7673c570dcf249471a7a17559c6"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/border.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e85cc920ec85088442df6070e072d6e086ecaae6ba73eaca9bd4100147b065b7",
+      "after_sha256": "7633f7f1710771bd989b84424951d87c3679372765044eb9bb3fd3957e384a76"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/bottom1.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "9248f2bd09041e850fad3180b47388aa392354d1653a853a7cd8ff58b887cecd",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/btn_close.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "8d8a7cec5b17325d31456e215c407b497c66ab85ed0b03ee7ddf8a961f75f38f",
+      "after_sha256": "a2bdbe52d1ee12c68cc3df7efa22186270a94b13cace7778bdba8c8e4699871f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/btn_orange_capsule.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "df96eb98aa45e705dae081809cfc2b10f6d32ab65ac6525434f1e85e713138d6",
+      "after_sha256": "db22b81a689a0f07cddae861454438b660facaac0c41303ede07645b2cf5de4d"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/btn_orange_round.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "9ca0b6d29302525d5a0dc39e8935340d2a61306be71fb21f46ff075c532c3527",
+      "after_sha256": "f8d8a00e6e0309442edeec1ee8bdf2d8399cde5f1c5c7870b41ade5f79b08ba3"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/btn_primary.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ecd8e113d2ccb56844e4b314205a58ac613235956a42167708d1e976fab1e875",
+      "after_sha256": "7a379e971751cef897b5acfcd22cfaeb7c0f35161ccdb8502b4bbfe6542f638c"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/btn_shadow.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ba49a58aa256eee80df20d8902b2b96459904566741f1ce3c5e31feed7c5d6f1",
+      "after_sha256": "7908500691aac1c33883f76eb7d93b5e5b623bda0a89276e3d7d45291819b497"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/btn_white.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "813d95c1074e664251b32831b5966665fae247bd08f82cdd5c3ef569a282ff62",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/bullet_dot.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1b56756b20dcd60a3488a6b5490e34de95c30ef5b272d6ce31f6af2485187b01",
+      "after_sha256": "ef3d5427e614da6e150246f783bee8882c5449bc6fd24de8fb1160b4b264835f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/cat_daily_streak.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "4fef5e26bc5cadc957339704bc1d20a2ec6410f55bad7ae24e13f142394f1e84",
+      "after_sha256": "f608539449e21eee86f18939287d3afd23b95178115a08305d588ec317d478bd"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/cat_face.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b4f33cfdd44e9f19271914d95cb29ef1b6a646e8f3df4f252b5d6567da79940e",
+      "after_sha256": "44ea8b0573640eb555bb4b39384efb538779f8b0f00e11073278207c7c64a927"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/dialog_frame_9patch.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "331155c7b31c93b780d0651eb5c0e6992acfe563a1f0ca3f7ccdc551dabb1ed5",
+      "after_sha256": "87a34f5aa475a9b721a8b2bcab7689685e163256b996ea95b847f1a72608f09a"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/logo.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "a1a98ba76d3134a0298b999bfa5283148ee5e4a60223f45cb19d807e146439b9",
+      "after_sha256": "93d4f9d38dbf0c365a23490bc559ef6514d588b331c5e5af151b2322c52bbdf1"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/love_heart.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6b70d844a7bc72d6617e754cbf4ae2f4b456e07993adcab9ed23693cd61fb0c3",
+      "after_sha256": "76c88996f36e95084b73142356e7bf88bcb988763675169bfbac134a2d76e94e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/normal_btn_bg.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "a49beb761f0ce5f643fc00dcb5e6d0cfffb96dd72c5bc44ba16907dbe628aea0",
+      "after_sha256": "9576c0a0105b818e15ab8dd536913553e6f1a4facac5e522b975a2a62064c979"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/paw.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "bf9c651eff9e88d47c123f2c6810dd83121f326984da98e1238739feb2c57f1e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/popup_frame.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "f9fa2b9620430ce3d6c7965aeccb6710f894f76005d08eaf79aafcc9bf2b4b10",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/rectangle_10.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "349382f2a637807848c41ef04d3ab9d0b09f7d317a4c001f40d0886d7716d537",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/setting_logo.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "1ee14d8a631bcef5eba4e5b172ce76f49829765e0aef6e695a491d8a1fc948b7",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/shape_81.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ba8449a1b27c6e5a4809cbf9245a5c3c1f3e116b9038303224ab1f8ebd48c482",
+      "after_sha256": "ba8449a1b27c6e5a4809cbf9245a5c3c1f3e116b9038303224ab1f8ebd48c482"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/small_star.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0e685f668798773fe26292821cb2e9ba37eb8a963e0e9824ffcc17442cba928f",
+      "after_sha256": "8360d55a2317b32aa9f2327f5adedf15aeb0cdc9122a1ebd32e983b17f41d499"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/subtract.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b8cd40d1724779317a6e5c4c6b91d02861843a59d5386d1b657759ca636bc71b",
+      "after_sha256": "14a53d0fce749354a87326cf091bfb12dd030065d7212bc4ecb4cf96a3b974a9"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/subtract_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b0284dbc10b8251c10bb4ed02229ec573dacf5a04abc72cd8775f91e23180022",
+      "after_sha256": "63bdeb4839db8c927c980d0b760dd15dc7b0c883f3b1269c8000a28d1203dd1c"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/success_check_circle.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "2386da9ea4c30a75dd6a52b27a3a21490737ffecbed573e28ecd85552987c18a",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/success_check_mark.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e98a04deafd50309624377d15484833514008e0ad585482fb570fa7b9d78cd0c",
+      "after_sha256": "517ae17ddfd48b651ecd53c1440f1b8f61328bc9da6a2b793bacb5482cb17cae"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/top1.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "8611926cdf33e56877b4757825b1221a93d22bdec6311224ff6ee69690cb15ae",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/vector_music.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0bc805a5108a34c8303ca5d6bd62c65def4a20356bb004432e7a9634e4b34421",
+      "after_sha256": "e5baab6f04ee35a1acb4fe570f59da91aa98f6837ccded441b3995b78dc428d7"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/vector_phone.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f38007bb7b086d6e51aeec3ecc7c3ad4ceca316b581b4f6a948ff3d48cd7f42c",
+      "after_sha256": "edd96898d674e7c374fcf5060067c59cf70694b02bbb320fc095841a43372177"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/common/vector_sound.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f34c02e8d635bb7a1f939772c2764f8013dd16cb23995d3e5a65b3d9c70e5f5f",
+      "after_sha256": "201043517f4bfb8278f871577bdc76224c65bea113bf4a4def9e6de4778e9f6a"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily/state_done.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "1f5b2d1f1e036b76d1643ac93e64b2b3e153fc76a0fe2bc1967c1230285e512c",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily/state_locked.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d53a994de1d93d197a78bfd1af3c94a6f83be66e8c8ad253c291ef79cdc96d4f",
+      "after_sha256": "d53a994de1d93d197a78bfd1af3c94a6f83be66e8c8ad253c291ef79cdc96d4f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily/state_normal.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "63083500ab0c4c1a5c7acc85ff3949952bf37c1699d5533824328bbce6af29d8",
+      "after_sha256": "63083500ab0c4c1a5c7acc85ff3949952bf37c1699d5533824328bbce6af29d8"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/btn_secondary.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "f9d1b5cfb5690c5402c9b229248cba8a3c306c94789ed884560ec18324b89e7c",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/heart.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e76bab01327c42bffc2e8bfe8cd75c60db0a4d5c3590249e9cb1804bf5838cc4",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/icon_ad.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6340d8b25dfa8414bcb52df52fa5270f42ac2b070bcd5332f3dd8ddf096ed436",
+      "after_sha256": "8413e76d2a99cdc32159792c19ce2c993e3f3850f8f7d5ef10b4de899cfaa597"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/icon_auto_mark.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "89a94ef3eb904e55e5a174f21d49433283ee081163355aacf4c1928d37d0f428",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/popup_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "ffcc51a9aaac214420b038ea5d1f099f578d14eeb01c633bf009100185f2d181",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/popup_bg_9slice.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "b6d8132c94d0335f76216bdcb36f0542979de355d2e2ae77ec646be77683da52",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/star_big.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6c7905028ad1977c6f970a6a5b2330e32bba0c6662a8e20cdc8f62e68b445bff",
+      "after_sha256": "0f5f22f0af201afd418fdf891e4d1fdf94af01cc63cadd29169878205a3081a2"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_auto_mark/star_small.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c7930c46a58f8c2b86d774d1abfda204ed29cf9714e571101033f92cd792c47b",
+      "after_sha256": "eec67e0d3427ebed2b8df2a2e5556e84d96d77e619d2bf73b141501bb494ed89"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "a8eaf1a17eda32eae7116771add33eab221a7dd4f3ee8a8feb8d71d8ff89efb5",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/chest.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "f7e0f3c693d636fcf1a581a3a5da9f94fcfa32c4b84f27878a1e810dccf3eb51",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/daily_streak_switch_page1/btn_frame.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "fb697609cecce0da3355c28a339783d916c7fb237b371e86a4c2aed5f3f20245",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/daily_streak_switch_page1/dialog_frame.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "41c52c6c32bafe54c3954bb1f621327cc8bd8d61ae8358ad77101215c29dea2e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/daily_streak_switch_page1/hint_icon.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "045a6c4cafc106037e15be42e9b309926cc8381b5687f8cc8e8b2e2d49cf1f15",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/daily_streak_switch_page1/tool_cat.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "acd7e55d22360c0d163e0512676b356258424265eaf7ff8b9918ab747ae7ea19",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/daily_streak_switch_page2/dialog_frame.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "254ddb202f4b32aedad8e2b2d12e0ed25aca052fc454dd91746a31a92e052c8f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/daily_streak_switch_page3/dialog_frame.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "10239660687c3159eb596444c33775637fab494159534d265328af3b39f7f16e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/dot.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d2dd066887513eea79ca9ec9fba21412bad91b7b64a8a94cfbe6fe3b51762dcb",
+      "after_sha256": "e0dfe47119a85be547c9eb345cc5775f0ef0c608b1aef8f6c5dbf6274cd2bb37"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/glow_layer.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "0308c070ad6a1e6ac0a87d22002eeb006785321958e709e0836731de9f8e8a8d",
+      "after_sha256": "ce7723a969439f90ec1b3b848f7818dea9c7225910fc1f05537e780af39476f1"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/light_rays.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f3c8031d35cc868600f745a64d53091554ac496ff8351f4f3cf223fcf425d557",
+      "after_sha256": "b8930c89ca3e8d0c3dc6bf0d2eaaf9ea6a3e2cd54f739ecdee750438b05ed9fa"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/state_checked.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "d9a20c14b7dea65785989c0d3e165264b09513199b8c80fdc022398630c2290f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/state_checked1.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "b33ff8c1db8519fe70824e850e5863dd6e140e1a10c91cb6268970583f6e5f6d",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/state_checked2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d6c3422e3661bb56dffbdfbf54e4534097eee1a718c892e4aada4ef470719e06",
+      "after_sha256": "d6c3422e3661bb56dffbdfbf54e4534097eee1a718c892e4aada4ef470719e06"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/state_unchecked.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "642ac1d4893886fefd446e6ec62d6186a85859823275f6501805a684d5c41c5f",
+      "after_sha256": "642ac1d4893886fefd446e6ec62d6186a85859823275f6501805a684d5c41c5f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/sudoku_bg_round20.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "76d0582a0aba41274714f14ac16381e6bb5a1cb29ada297e1e0a9be71c5fb5e4",
+      "after_sha256": "e6b4de79153daa46f2b656d980c5737826c878b7b06241c4195aba9f8309c128"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/sun.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "a0cb04d905d43101a0ba44ee3a0d98620ced9e27abcc3d5d8add18627e12515c",
+      "after_sha256": "f9f6296b917b5aeb0742c8e01e55abb3e52a403075b53d072c7ec4681e601e07"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/treasure_box.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "532760fe7a2030ce5cb5c1f6ba2d280fcaeff57bbfc40e069d8cf6bf235a084a",
+      "after_sha256": "c7709a82869d4b9f255d2ac5a88036ade472d58115ed9ab6085dfc69eb8cd5d1"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/daily_streak/vector_1.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "3f2593887500699f176163fc8256be928752b7f5469049b0c17bc0f6676b965f",
+      "after_sha256": "3f2593887500699f176163fc8256be928752b7f5469049b0c17bc0f6676b965f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_01.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "fc504274c641045c087c25eacb56bbfb13f9eeb91d0435644a32447c4e9be691",
+      "after_sha256": "f2b3d5fef8bc22b93da87035bb737b27cd59756e46d9582b925ecd4a62ec8e8f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_01a.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f6e02a244c4dc47c053b8550a897ef6936782bb93369e74abe1b4a544541ea03",
+      "after_sha256": "fad9a0caa2e78267e370afcb37aab53fa5cc1fd04a410735c29167d1cb9e689d"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_02.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "40208b3adf61dc6468097f457a4ab9bfb898899776e039e7beddb40ce0518ef1",
+      "after_sha256": "69af1561b3e3458b2a73759404288eeb16567769bbea080743c2201f354cd52a"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_02a.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1a7cc506e9c750c2a022812465568dd0b0072a59f57fd0ad1930d80ed4d093c6",
+      "after_sha256": "591f1215996aeb2d7c348f6e33809be8ab8a4f91f1d52e9f18698e8e34d0624d"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_03.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f28320b44d777f7c3f57c83265f97d85035b3c37901046515c0d8fe17ed9a856",
+      "after_sha256": "3deb90475ff6b0ae39be283fe41889170675043ab8e0414d542b99e7fc2cead6"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_03a.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c0fba62387cd4d6ad6a8aa67e6348d21e5eb10d8bea09687fa82e3fa177d9108",
+      "after_sha256": "bf4691699d0e56666fa7d792a1a16b01ae4feada40b2cadd1321b2775a9b7333"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_04.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d3ca541c10453979d4dc13f26608251c9d38cf188f0090ee9b19296db0c81400",
+      "after_sha256": "5c31568aafbd56d18c93733e7ef2b94ab543ce62b93a3ecbbdaf745ed322a193"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_04a.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1a07c792fb2a86d30294fa4233659cfb2f8bfc4854f07ab23bf2afacd66e9b18",
+      "after_sha256": "a197cb784d14939eae159c24e3496c73ac66cbfb2cfa6ce555ae372f84680480"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_05.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "4f53ca6700eb2c4220b254a8f0377da4b9ac819bd58a0e2ca3b091990f34ec81",
+      "after_sha256": "e7a9d389ee5ac52818ee1b8921e50dbe0b81e3093ac8373b52bd24d8124bb666"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_05a.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "5eae00523905303f94e9c070cf432a8677706db4d5c2b3e646d76e84ddc40db0",
+      "after_sha256": "46a5883143f74497f7e0056fbf660acd81569e91e9ddb9c264b1a148e5ee84ba"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_06.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6565d7d729b5b4838aaafae24b0387f996acdeae93a41b04374c1d7419791603",
+      "after_sha256": "fd7f3aa0e106366ecd3191406c8b6ecef981d507d881beb0de0454e2d8b12c39"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_06a.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "a38bda2fb4017f2497f856e4bae2f6b211bff9e4649d3ccab55c3ba21fd5c7d1",
+      "after_sha256": "90d4ab3e24382755c9a7b2fd71d5c13f909a04f25324cb1282d32b47e7940e41"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_07.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "94835d22747cc74f4690afefc6ba216e945c39915cabe5bb1acf9a7c5cfb63d1",
+      "after_sha256": "fc5ede5020595ca6b04bdeb407a7a46b71e76672fd449bb4b14940523013cfda"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/fail/cat_crying.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "4a164662493f6c7e8aba8e6dacd3f7b8e85ded7075af92874a20223976333fa4",
+      "after_sha256": "defa1a78dd472600d6446c13f35b91b87113d0b17b348d06fabf592e1c38d0fe"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/fail/cat_face.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "7ed18bbb7969f84a1eabe1aa8754bc151a071183ea6a4326d6ff6ca3f1d0570d",
+      "after_sha256": "77a8c27d5b07d2b9c140cf4a3a6820b6339d9725bd304e760be163b8f1c7ad93"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/fail/icon_btn.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "11b7bfd2de7f487db31d9e5c54ce532d174c8d411b25c2525851751be99f7462",
+      "after_sha256": "adf8a06e57097cfc5ec61436827a7037292d6ddfa3674dd08fb5221c0fa1cc1d"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/ad_play_icon.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "7318c4af9642145428014529ffe1f246e75731eba1f11094874165b6fefc7801",
+      "after_sha256": "10f5e62b35fc8b468ab138b1e77c48e16c9859a14b52ab688c7a470327199bbc"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/ad_play_icon2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "dbe39111358405cac46ca081aac3a83e49caab36e89cfa6f5c08640be6cf49d8",
+      "after_sha256": "b4521ee977d2c57065496539fc24978c9df19094e5ae1efbecc20adf2b595199"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_auto_complete_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "3824dd5ee87e192228535b39d4ce76f7a161b63e5a03f283b48795370178249f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_auto_mark_1.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c1593149b5c780796693adf9586982603c825c960caa020c387564eabd581223",
+      "after_sha256": "e4b98c86a74ca8e408779e6329fe283cb27795f51f0ff5fa80c62901d6bbee52"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_auto_mark_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "042c04921eaa4e47ab2b96d846f90f7369d2e6edde87dd5ce9e8d4da11971075",
+      "after_sha256": "7e2f8c48f75a71255620efa27be5ceae3d96b74218f8ddef39be31ee9e70f1f1"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_back.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "2e989fc2aad73b173d03aff746cee15c27c7691f36c516f583aad52bdee5319f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_close.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "5dbab574b84a75b939f7e8cc2b4faca80ae638d7c65c17b4b89b38dd4e638823",
+      "after_sha256": "59f0417a583b588aa3a39493929bd53226230238426385393899eaa775c73371"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_info.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "039583f5fb68f0e270aac9723a419163b8b4d7cc1559a78fa3b8d1ac9318c1ed",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_info2.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "178c250327eb8ca378b373b4006518e9f3ca110971b5ea0443273a9819d80959",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_settings.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "861b8c9a46c9eb37aaefbba866c6711d986156fb71c80c5fdf083491027817cc",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/btn_tool_bg.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1f6ead69ae0ee395bebd89586d84b760c3aec56a4c5d49296c336ffa507c9cc4",
+      "after_sha256": "9616035769b7b787a24104ed18233dc8a0cb06395230758609e54d2236bb126e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/fish_dim.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e66a1d50fc4289c34c0e63d2c058e395400bb529dcc13da9007b8bbccee81e9c",
+      "after_sha256": "84a7507fe897ef81ce2a3991398016a14a8dd2bcd927f9fd5e124d633eb6ee6e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/fish_full.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "10da1341649b97e9ace76cf3346ac871b37e0335ac4fa7379d0f83b00e44e372",
+      "after_sha256": "eb6e53b0036edc38724079c76f9beb9abdc6b376de1d9df9be98f03c9808b1dc"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast01/paw_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "a1f3e80681768bf847a47d2a800a335c5e96de37c4bbc5caeabf433b9961513b",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast01/union_86.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e516260bbcee0298522fd878f13f3d7937204aecf437002422b5840168ac12b2",
+      "after_sha256": "a41cd3770102f26b5428cc903771182ac396785eaadfa07ba0118385fecdde07"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast02/paw_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "627ecc90ceca8feaf8e8d0535b3ea0a6c40ddc4970c7dab10258f915c5591361",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast02/union_86.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "7e6a69de4926cdb24dd359e659ebb546d07f0a9cc96501347d668b8af42634d0",
+      "after_sha256": "86f656587a61327ced574ee4b13abe128972b77ff2d89317f376a7e575293832"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast03/paw_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "3273294b1bb3d0fabc2a56609ffa84d3f34f261abb7eda143474f440a83ae5c7",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast03/union_86.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "30d2ab6ffdc6a1435516f251d5ef66a01e92ad28a61a46f6a144bbcb2c395e23",
+      "after_sha256": "dc1392aea8a387f8c11801a834f3badaa332638e527d24a1c7155164698a9fac"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast04/paw_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "eb6cb2af0658a3672f4801dfe39d99b32885d674fdf98f03cc3ff7339dfad98f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/game_win_toast04/union_86.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d3a701bb77e8ecec230b96c379a47d7707acb5f3882a299a9660db7d6a56fc7d",
+      "after_sha256": "73e1286c3516575dcd79fa1c560f26b45c7694dea81c252c2ee7185c680a5bac"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/hard.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b51cab27513d75d94183a01df671bd4e1db39ba177f9326c17838f215ff8cb42",
+      "after_sha256": "b7632e02190484f9a7b8d9ff1e95cb7f354b8187e2db36322fc9f5537bab5b0d"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/heart_dim.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "a44cccc3674f256a0b08fbdca58db48c4d8f2765438bb77a1144f92874b29674",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/heart_full.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "bdf7c3f9fe046c9e5b574ff737b0ed673845492692376395fdc4a7fe0e679f18",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/heart_full_1.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "1720a6a8dd75da57b9fd4e1c5ee35eef6bcac2428cc647ec7f777739495c7377",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/heart_full_2.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "af84ed87a428e81f0d4da382d406d6603e616a77aac41c8656f7d53faa3105b9",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_apply.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e0b5d7fda167df5e6e0a8dbc9ee2cb761c4dc0ee08be80f21a7ae5199d3af3e8",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_auto_complete.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "c50a606cfbf55b3499489898f340d9bb85dd1b3b1b4f2414355ca6c2451a3826",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_hint_lamp.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "346ba04e8bdb25d5f3e787cad074bcf44620ffe034ee6667e13dbd5e2d6a50c9",
+      "after_sha256": "6837943ff67f58c4d22f77b8cdd8cad44fe1612a785ee557d8c64d6a80bc2833"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_light.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "4fedb5f07f4043d28aeb4cda5b0d96991b594ffad5c91e5dfab4817ffd2a9245",
+      "after_sha256": "8b1b0f0e2a6054292c280df3eeeb935cd27a9bc7f1592ebd58baf992480db8de"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_mark_lock.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "485f58194939bf228b097a77a89faa99d09a55b5caaeb96f3ec12871e2923bdc",
+      "after_sha256": "4adaa20d204bb337cc1acf3ee6ac46ff4556a5cf3a0d2c37376cab64a2654a9c"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_mark_white.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "68cef28ccf6303316192166582db15dadb36c17d00dc674a23965c7146b063fa",
+      "after_sha256": "f4b192d40cca5704a9e66fb9693c1ed0eb7f242056b17f92296c15278d014150"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_mark_white_2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "2129c6792e8a77c982064675ff182f416e3c8d3975e1df04a62e29668d9780f9",
+      "after_sha256": "cb19ad01d81be5fca56d9fea73b55e9cf41eb1e44087445c0619742ba2051ef8"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_mark_white_3.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "e1d4b8d615b36d2a7a38bf626b668b5f75e8b6bffab4401beba3d5fd8f785d60",
+      "after_sha256": "0f082fb69e1737ce4774b4a4841bcbb58e142b2d72ed3462699de1eca8b83f57"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_pencil.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "032e866da728fa1910de8ee196b8c1ba75bf59108bf392320a26d2dcf9d1f886",
+      "after_sha256": "52cbae3e5d38d650c7c448f82c40c0d11a496d376f0a5beba0f78bc877cf4d6c"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_pencil_selected.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "3211f7fe5ba172d4c11c04e0510b2108634e6066f1f31d3b3e0781fa1bf6461a",
+      "after_sha256": "447695e43b009ebfe407df4fdc9f4af9734038d3a0522f47fbf99ff8d6647dbf"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_plus.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "cee733b1a5e945e1da1bd2bc698d2ecaf2e82c3b6e966e37dc9da4fdcd6e160d",
+      "after_sha256": "d53d0c16a33ad6afa2e69962bc902b9e1f3556e6603283b94c37f601327838d0"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_prompt_frame.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c13fa79234c3ded65894ef912a70db1d37381a56375540f3727a5b25845472d4",
+      "after_sha256": "6610b8b340f7cb92a9c5bce07c10448d51f851058dfea68360ca308654ce0763"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_rule_arrow.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c6a45e1fb2c0a88c39d37d92345cc9cb7655b86398c3d18b37327a23537394a0",
+      "after_sha256": "b3fb7cb7b75a0c2f2718f90a30c6cd36cecfc73f28f5ea607dc78d94b35ea70b"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_timer.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "8aff67c495d263f517d1b43acfac1d5fd2d6058a8c1bba93b101da7cce00b904",
+      "after_sha256": "de0c525463ece0ac3ca38861f70d2ebf78a6a678325a5d82b7ebf635dc708b82"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_timer2.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b9176066fffad59ea14c38afbaecb31c39adf36c499321a0423acac30bb2e101",
+      "after_sha256": "dbf7cab5591a412b944a16830b122b1ff2865e27e6baa1cbef6a81ffb3e8faef"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_tip_arrow.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "3ab23592908f44e42bee7bccc473ba2c8b5d15dc5750bf03d6570f0164f87e04",
+      "after_sha256": "cfc992f9f72467cdfb2453797f433cbd7fcb3b8b52ca7c0afee6f35e9e91c5d8"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_tool.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c41154e385502490b3957c81f32b178b3662d02998dfaebebf5138dafe1fcba5",
+      "after_sha256": "7132a03d940231b25b0bd6defbc8d03c7c12760724842c56de197c79ab8799b9"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_tool_alt.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "180ea569c094e76e1dfd54603047bf2b71c1879641328ad85f5b7eb5cd6a0851",
+      "after_sha256": "c45b9d6999cdf7bdebefbc7ce6b53f90049cfcfc7174c42aee9665af2d3da882"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/icon_undo.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6b3753cefaa1414495df21d9daa77c869ee45a96ff57e4cfa67bf1769d9803a4",
+      "after_sha256": "cbfbbf715f8de68fe7947d3c4f16fc92da61b36fc855324bbcfe1c968333af27"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/item_tool_clear.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "94007c0fff12d6489ebd47c540287ff98b3e6d0bad3c20c5860f37da32b315d7",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/lightning_dim.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "92f8d363a366e90eb8128c950a786b1c1f78e4705af8afdf58115ba138f1a05d",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/lightning_full.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "391d5e17599734eab34f6e120d64e081d7375dfc8812be70644470cde3331c99",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/rule_diagram_color.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b6c05b157d84b04becea070e33a6ba5aaee97db2ecaff1511a65d1391439ac41",
+      "after_sha256": "ad07569663c49b29713161e29cc4a4d70f4855b60877c3b73b7dbedea2939fd1"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/rule_diagram_line.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "7cb4990dfd9c27df716da759af7dbfb6e73e94965502c9ac67b27c27c4c15bbc",
+      "after_sha256": "19f1c39a483349ab13e0f7a0c86d7294e6326f31310842b549e1afde249d5ebb"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/rule_diagram_touch.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "054d74cb97041700815f54e60689d372a6f08fea73488d77d6aed2f3e9f60f77",
+      "after_sha256": "2cefa42174d4d7392c6e1b8b28ee2e57dd3efb69531223c2eb9c39e592e3dd35"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/rule_divider.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1a84ae8b8ba45c0cfc37e226492c942351442aaedfc9281e52ebe7239612f782",
+      "after_sha256": "13da228903fb6f69e9e194742dabd4357f70d4af021afbe649c44c2862285128"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/rule_highlight.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "3fd8b6c10fa870e2ab97b06b2e671f5adb42f6f31134812fe5575fe833cb59da",
+      "after_sha256": "1a6521761b4e05dfa0044fc2d91d29c240eba2ca7b6261831a8106b0c70a273e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_00.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "3730b631018b21984768fc9508e1b5b441731122420417e4ff1fb7ee2fca459d",
+      "after_sha256": "f9decccc955e9e64cfccfc97c881d0a3d0c40697e7bd4a5a62f0c87b438e3942"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_01.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "cd797cf02de530e16e350f3a48341b406cf4188924c547d4aea2f5f66b24e673",
+      "after_sha256": "61eccb1c0317fe2750451998766181507f5321edc03d56e899c4d2119948e65d"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_02.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b12c72888383f7d0cc34f9f64df74d73fb1dba74baf2a590a56c3b7d5ddef8e5",
+      "after_sha256": "9f897c9344862f944ec0e352be913524a391bed1822f7fc04bfec35b609db83e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_03.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "29bbb19fee8933827fed26bc423327e6f2919d046e69d08729c6eaee9367497e",
+      "after_sha256": "fe77cede56494414f4b2ff38f8ca54e47baad8fe99b8b8bbd93de41d5477cf55"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_04.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c144c1489120f0f8254b18164cba326186bc25c984f2131d17030a39d81a0c0e",
+      "after_sha256": "38a7e82a215589dfd65f4405543ed2fe1f2d92e158bc6d7e3fc4f7111697ce1f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_05.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "fbd1806342216d2e91ba819778db8f9e1db50c2bf848d20abfba73d20b169d39",
+      "after_sha256": "b4fa2784844ae6a0b5461d3f385079f09412ccc3f60f0ed8241490803f71fcdb"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_06.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f7f2b60b28047bb78296e4f4d4f26491fe1bce8dd357be0e4a229a9218de321c",
+      "after_sha256": "26dc866c98f63de71874a0219f97e65864a73947e003fc6e566c12d866ab7440"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_07.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ee936bde911d4911fcd5422651b3a26ad158bdd8b841ba9fd7cf541dc629091e",
+      "after_sha256": "c2f15572d1dcb7c09bbc0c0eefed5ec3ebc8965c0b4d7cf608a0f5cf9e4f4a2e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_08.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "c64cbc3be979dc78e3faeb5f7789d718c62b09b9aad5c298f4dd75e2b42d1299",
+      "after_sha256": "c216fe25629035355ec92e22ed2b9e7739f2d367114444011fcadb2779c4e8c4"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_09.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "9344697c0340ace14a83fe13d3695c4620f378cce2035277b7ef4e5e92f1f79a",
+      "after_sha256": "9937035a30528198ab7efa95f7f8480903d067bf2e75338c31959cdf11a694b4"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/score_font/ui_mao_sz_pic_10.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "83f7424da1ac5b2dc5e54d55ac7f3ce8c783d29656b52d2b4d1dd543800a7dd8",
+      "after_sha256": "264113e0e7ad6e26328b44ca371de9a5df0ad32c0627ea9a7d9aa9625692df9f"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/tool_cat_item.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "8064513cd4b3ebd2ece9fb57e28fd6d1c021297143aa51ce558ae366eb426080",
+      "after_sha256": "b1deb9f9a77403df7af2843d131d226fde40ee984059838b7f9ed529009b20ef"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/tool_cat_item_prompt.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "399a8cab3fef65593fe30b5c29c0422668da456fa01b2700a8221fe9d49ee047",
+      "after_sha256": "f3b76d194fd9362fb77e053513acd1160bc0cef0bdbfa50d9463e8125732eb5c"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/ui_mao_glc_pic_07.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "b713486ce2baa5703d2e55fe6ae7e77620fec9dcd47b263f9b3121c2ab675781",
+      "after_sha256": "b53ac05225b84d3e9bd307ff25cf14ac69d47be41330d0f1721531ecb708c61c"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/undo_glow_strip.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "abdc96cca4db93ea148e2b2ef82052507d520d3ee9634fdcd329ae2d7c562ee2",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/undo_stroke_strip.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "38835bb80bcfa288860b85845db171535f39757a4b898dde3a82f3b678838d70",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/warn_bubble_tail.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "91290f34450814c906fbcc986722f0367fc33a4d0fab0ded973c0147e4bd7e47",
+      "after_sha256": "d793caaca4bfbea1eda903adecb967765f376bd908e9726cf020b5ff9f591274"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/game/win_toast/bg.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "cdd17df5b4479ace7a673184e86b310fa4100d7bb47c455d8b28830fbc8e291a",
+      "after_sha256": "cdd17df5b4479ace7a673184e86b310fa4100d7bb47c455d8b28830fbc8e291a"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/btn_circle_frame.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "cb9be0c42bd7c3374c02556f1e1636e3507c5a64c390fdfd14620ccda01ba478",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/cat_avatar.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "58f5419e888460565c3bc5141c2314ea1f5cac5e0d29b925c6e262cb7b8e2560",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/daily_base_top.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "16aafdf3eb732d5423ceb9ad08454bd0313d48a8eaeca65a084d81707d92f5bb",
+      "after_sha256": "8bd53db1d56d4edb3c9373c8b595941f93ef053e73903f6cb606df32c24471d3"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/daily_paw.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f4e4eeeb8b7b619ffc889622d86325518cc9cdcb24732d81d4c0b2ba4e05fb4e",
+      "after_sha256": "0e5360af0d68932fcb27303575af0af1794077412216883d5b85964669d58e24"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/daily_paw_dim.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "738541f4b650e3b4aaa359f76cff548bde3f2c23c4161689cef1e2eba99c89c8",
+      "after_sha256": "e8ae9e9b1404e4915bba3a5ba9be49c3c2efef7abbcf40b5fb43db11d9362fd5"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/daily_record.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "40d12069f84a70fffa284acf3a0a93d24139e633e29f3d85881062846da17753",
+      "after_sha256": "4ae1899bcee442b01fccce915a116767169ad12fbad3276d2cc8038ef56e6f82"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/difficulty_banner.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "20b0360a04d3d21976b22c57a0694ed5afff0d91860c3461e6434c812a58f73a",
+      "after_sha256": "1abad33aa428ce8c919a599c3a84c1f0e88b242109c05944ffc38f195e80be68"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/icon_settings.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f41744c14101f8d61f9b495ad934955b39526d1b5766e1b70e037e16b2e63d14",
+      "after_sha256": "1677b9bd7f81d58de75ead536049c684f651de65809148000c397b64ac301550"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/home/lock.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "bb803bbe7661fd93bd96b99acba793d535d2e298f13b98572252e01a2a31d0ad",
+      "after_sha256": "bb803bbe7661fd93bd96b99acba793d535d2e298f13b98572252e01a2a31d0ad"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/language/language_setting_v2/vector_3.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "609b592ad4ea8e726c8aad7b2ef377fba2695d9aac6d5c26ccf53da83dd985d1",
+      "after_sha256": "f22813efdb17b4acb2ab4c6e84cb6917cfabc4a146beb2d2160f244e1ae6a1aa"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/language/setting_language02/setting_language02.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "0c14a979229a793b01c9e072e0a6673e489ee35b324dc94725f3f1fdce6bc9f0",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/language/setting_language02/vector.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "9ac5c1551d144ec9f8518195ec13456af50bc2f7937251bc42249da609462c6f",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/language/setting_language_v3/setting_language_v3.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e6509cf8bb01b7a6ea46aeba7b1bf54d9f9acb01b5e806a06f97fe7d8fcb19b3",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/language/setting_language_v3/vector.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "958f158b77bf22815b650695d63f6ddfc4c57bc578bfdf164286b8d3e40ec8d4",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/pop/bg_hard_toast.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "2742651ac10412d9ad7cb166c6be5afd2650d4c52e2b1094b4e5df419089dd78",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/pop/bg_normal_toast.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "aa3a5f5df5d5466c3a447cdbdebc867e7f70793ff3886ce290164861cc393b41",
+      "after_sha256": "aa3a5f5df5d5466c3a447cdbdebc867e7f70793ff3886ce290164861cc393b41"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/pop/icon_cat_paw.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "6a721817ce0a0b26559ad7d4526b0efdcbac847012f2b250d0ba43b24da96ac5",
+      "after_sha256": "71ff492526a4875807dc048597ad93040df4dca5e3030c9fad1769f7c3ba12b6"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/pop/icon_fire.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "a7cff2e0da0f03e6cc4c3eae00a3f14926e4f581bbc12d70e3824fb1e1f82d8e",
+      "after_sha256": "a7cff2e0da0f03e6cc4c3eae00a3f14926e4f581bbc12d70e3824fb1e1f82d8e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/rate_us/cat_wave.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "8bcf183a0b44a06cb77184d42b7bf15ccbbb87acc9a61e9f2cbda00f1c6f9047",
+      "after_sha256": "79595e5d3a9c4eff5498e4c2a7e839939551198244f3a20c38a1a83cb7943428"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/rate_us/heart.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1b910294a916718b27433fe9109b1c5c741919bd326b26f8dcfde4b0bdb0d9d2",
+      "after_sha256": "01863b3a663cf9b0df7ef48e1c486d2059ee7fb8d14c60a6cb2ffb9f9d7b3c80"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/rate_us/sparkle_lg.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "940f05bce7a659026041f573210d98a7aec401ccb438bdd073c587c03d5a72ce",
+      "after_sha256": "36b1e38172ecb0952caf1c20f760b10d566ead021541fccf21dc07958ba56f30"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/rate_us/sparkle_sm.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "5d6b0e382d2e1da71b770b41140a407acf3c0065394b7742068775925bb1861b",
+      "after_sha256": "6ba431ce33f103477e0e12fc78e1b256467747c29300d71d31e1fa6e66e6bc5c"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/rate_us/star.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "36bf5037fad62d8107115f171f662179d4dc92d1147fb08e9e7295ebce663507",
+      "after_sha256": "9308853045917f9444a7aa3b53ad2745aab3388bea9a133867e983a0aed4afa4"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/rate_us/star_dim.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "2062681df34d2707a83d02e724057698bb31187b1235004c25f25aca8b83a61e",
+      "after_sha256": "7f3ee9e9a336fdb546de66d1643c219d657bd05fb5dbbd7c9d9991b684e13ff9"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/circle_white.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "d6bcd8d2defdbe08b78927e1fda497f050c124ff272db6722899badc946c809e",
+      "after_sha256": "d6bcd8d2defdbe08b78927e1fda497f050c124ff272db6722899badc946c809e"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_music.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "3eecd511fbf67b8b0385385a7ccfd0cbb10ff1a2cf7f92579141b2497c7db039",
+      "after_sha256": "a6094826c36b7e3d5f9bc7a069d8cce06d6c9aa09bec5d52ac3ab3442daef551"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_music_off.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "535db0760259119b53c782bb7121409888660d4cc03640b35fbcf7db1b73a7e5",
+      "after_sha256": "c596de28120565d2076e5b7f94f387840f1e4dc64ad684b7100eded826613dd8"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_people.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "fa432f8a4f6d1f62784988b0ad0cfeddf53dde04c99a6f8177ce0e6fed99e158",
+      "after_sha256": "4870b3820bd5b01998ef69ff6583f38480aa77e761460bf8ec74836c2cfc1b18"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_people_off.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "a2d1423b6b1df7f7db6d47d9b67d00c6f25548450ab3e2477a83a9f408f208b5",
+      "after_sha256": "c68fd2172d376e947601db9ac5eb2e00ccc082ea5738b52d2f57604b5ee21c6b"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_sound.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "f3e6f3fb78ab9e79dc5645934a09f8b56c1e100bf5fa8bdc68a50e86090efd87",
+      "after_sha256": "5ff5877fd2dc302aee9093099aa9bcc7153af284c70408582662fa4f51809c52"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_sound_off.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "ca91389ed32b94a0cf56b9693c4864f2f5028a08367df26cccfa5b76495a93fc",
+      "after_sha256": "377d52be0b20a970a1597a1a2096e89bd64dd7bf6ce6d5cbebc1dbd801cfc532"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_vibrate.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "046e760c14631de95e177b12b6c3976a8074e6d0c51af2bbd6c558d460c846c6",
+      "after_sha256": "af40f6737bc3e49d81a63c7038c6b6abbd642d2c9633996c4ca668050a64cb54"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/icon_vibrate_off.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "1df30ec4ef5981ea68315533732eb77a10212f1dff5354d6105650179726db88",
+      "after_sha256": "5989cfd3080d4fd57de2c691c26aa426a8dfc3dc0197eb3eeff25508d4f44321"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/board_bg_round20.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "3911c7a83473c79a4c205a075a351f51c71fe095cf1e4edcb813bdb9a88bc549",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/board_bg_round30.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "488065faff9361a9fc032c8150a472a74eb1faac3e17879c23e4f8350c6f75c3",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/board_bg_round30_2.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "3c0e471ff1c947011b90c2f46141c03d139dea0559dc97ca08b44aebdc2a8066",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/btn_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "6b1c4cb9e724eff6c1406a6028db05c0f9af7f56584ed908a636dd6c8f5c6292",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/btn_bg_2.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "1ae5fb7ac727cc5516bcb63f2664971fdb853fe01904a351705a42e2633dacd1",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/cat_face.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "cf247f73f6c6c5ae7f77198f3c99fb82553c7a2d199507dc033a186a67ee5086",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/cat_face_2.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "05ae271a95d42d14cab2662a8ada165336bc87f8ba5e48e669f53d2229810750",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/heart.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "87f65cbc53df35f93dc3f92ddd9a20c43af205c0f55802484c8c866963d2d297",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/heart_love.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "8039c8bfe32ca8f2bfa300c859c3c3754ff7ff8fbdd6b707bdde19b23fab198e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/heart_love_2.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "7001f8442ffe0f54234995f09c297f35d2d567ef79ff042a274cf8e497e1e4ae",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/hint_icon.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "1571b67234672fc4cede6fcbd8d3fd79e962c7e2d7ec1d9e0a6e99850e8a164e",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/plus.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "6fb6ac8eaf37fa7ea7193ad7c294f9fa714f1c94db086656f6ecdf5c016dc333",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/popup_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "d39424ef58c4889a9f6961471bf7a64418bc6d9fe75b1f61e6abf29325d1300c",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/rectangle_5_72.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "be17a206c54ba700e046a67b1f8393e2ce5ba70ff21710a30a387eac6f013d44",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/tool_cat_tool.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "981c88357c7ac87fb66eb5bc420397d59ccb2420c071229f00a6c14d3ec964f1",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/union.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "37601bac6dd55523a6ed4120deed0e01198a0f78f4719cd8f11ee2c903edb421",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/union_9.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "aa108c9a090401dad823a131772e027df3934029ad5ac473a6f8aba48f9d23bd",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/vector_1.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "7d30bd94ca98b928291b8b4e0cc929269a66f817357465a53f3e0915c4042d72",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_ingame/yellow_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "c9a226fe8b1b4eb19ba4cbfad809f24615f5640fbdcad11587cce0c0c8c919a9",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/setting/setting_outgame/popup_bg.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "a1904e9de15ebb204a2b9e1a3b54842448db5a3dc9693621a3719ef079d9254d",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/win/cat_victory.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "e559d62275924a96f71522a7eabbe5a8f1534b3e2e2c8286b19104c87d9d57fc",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/win/confetti.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "3a135d5677952885d265a02744fdaa4b054533b657d76d7645d17e7b52ca6ffc",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/win/daily_win_title.png.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "3610d5860f7a87e12caabd7a9d0d78ceb4ef813d518e124b9156618836deb483",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/win/ray_light.png.import",
+      "action": "take_122_import_settings",
+      "reason": "Preserve 1.22 resource UID/import parameters; recompute imported cache identity for relocated source.",
+      "before_sha256": "506ce8b0f8fb91980dc3de18265fb3f3726d3b73841e3153e56523516952fc49",
+      "after_sha256": "91f4db252cc12fc6deff538ca20cb95d50636ff875d12d928b05a70fda193e98"
+    },
+    {
+      "path": "products/meowdoku/assets/sprites/win/unstoppable.svg.import",
+      "action": "delete_retired_orphan_import",
+      "reason": "Upstream removed source; no reference in staged products/scripts/addons text resources.",
+      "before_sha256": "ecddd98891b12b0bd4f3aeae1fe9f6f0496195071db3c07359ea06bae8456233",
+      "after_sha256": null
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/model/daily_endgame_snapshot.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "6924be5f6161a25db7838850caaab92d7c24ab28775b4a5658f174a7d629d349"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/daily_auto_mark_popup.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": null,
+      "before_sha256": "52ca369848c25c94254ba6e86454323250456c80275f7fa524a784e6f8752b80"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/daily_fail_page.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "0a7884882e1fd56c315b039599547ec873ef911c94fc4ee5d70c0b6fd2776b21",
+      "before_sha256": "8b85c062e57ec5b2457812399ca89624e6f183e85c8fd067047fedf0611415b0"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/daily_game_page.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "26dd573e6886c0abcc27623c46930ac5d6c951561c852f2699da9ba6f3b3b45a",
+      "before_sha256": "2caa45c3d811af87cf055e9250e89f93459332cad7a8631361bf1adce2af0e8d"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/daily_win_page.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "8ac758fa9ba213e2ee394b79ca3bc68c6afc109e3348c6d79e5e7b4fdf54d924",
+      "before_sha256": "8ecbddeda084ac13d8c59100814fc63a7a09c87dc86d181a942cd9df791edb76"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/dc_replay_flow.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "d4da612e62c9beb031605e0291e190a4d43f4db1c4f6d4e3a61e163f42b0928f"
+    },
+    {
+      "path": "tools/audit_recovery.py",
+      "action": "adapt_recovery_validation",
+      "reason": "Allow immutable original bytecode/runtime hashes to be verified at migrated resource paths; original identity strings remain unchanged.",
+      "before_sha256": "6dcfb54e64036f880aae0c39ebdfe5efc70bbb5c8f891053de6150ed116088f6",
+      "after_sha256": "4e114bc0338d1ff081aab1b1be1d4373a873f7d895a6221af5a2084b5639e538"
+    },
+    {
+      "path": "tools/content/run_product_tests.py",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "5b78bd9cb9ffae0226fe985b1c97293224e8806998d1be93b174bfb96581c979",
+      "before_sha256": "e44ac9bfee36f696a8395b05d1a5b443d36f605b9af96a4a494f08a561dc3e20"
+    },
+    {
+      "path": "tools/migration_122_inventory.py",
+      "action": "add_three_baseline_inventory",
+      "reason": "Exhaustive fixed-revision migration inventory and original evidence verification.",
+      "before_sha256": null,
+      "after_sha256": "2cdcf6d4be4fce72d718378eb706d5a98da9d6136886003df5dff5ada6be4986"
+    },
+    {
+      "path": "tools/recovery_paths.gd",
+      "action": "adapt_recovery_validation",
+      "reason": "Shared one-way lookup for immutable original identities; mapping is a separate migration artifact.",
+      "before_sha256": null,
+      "after_sha256": "55df64fc34260b46422a2c8a07c9e1419632c07c3574ad11b276875fbac840f6"
+    },
+    {
+      "path": "tools/run_validation.py",
+      "action": "adapt_isolated_validation",
+      "reason": "Copy immutable 1.22 evidence; include real bank/Spine checks; disable production HTTP/sync only in isolated copies while preserving explicit completion contracts.",
+      "before_sha256": "0bab396eae54fc4fddb3a41d40d29f936be502a67043a4a98e9e8fc31e4518f3",
+      "after_sha256": "417e0e6c6e26b862811aeea31f4781f5fb09ce3df7127b22579d8f5dd85232e7"
+    },
+    {
+      "path": "tools/validate_recovery.gd",
+      "action": "adapt_recovery_validation",
+      "reason": "Use immutable 1.22 manifests through complete identity mapping; enforce original counts/unique implementations, binary banks and recorded float tolerance; retain completion contract.",
+      "before_sha256": "48d53ae01ca6a48c0d5b9e288029602c7aef7f519dc4734cc1b4e10681ae3e3d",
+      "after_sha256": "07a66c1b06382c990f2078c1c7c7cc9e9379489f2003f416fbd7e4d55010d89a"
+    },
+    {
+      "path": "tools/validation/fixtures/identified_ad_adapter.gd",
+      "action": "merge_122_with_framework_reward_ownership",
+      "reason": "Adapt isolated identified native test bridge to 1.22 async query seams without production test branches.",
+      "before_sha256": "fb4656a9794b20b2f71606a6e10888e9bbc700af370ebb1f93d7d409a216ee2c",
+      "after_sha256": "da430f51cef71419388688b6fff17c5841f4816054035f6ac123764233b426d9"
+    },
+    {
+      "path": "tools/validation/fixtures/recovered_relocations.json",
+      "action": "upgrade_recovered_identity_map",
+      "reason": "Only identities from the independently preserved 1.22 package manifest; no duplicate implementation targets.",
+      "before_sha256": "bc6f904059af55292e7ca523f2a454c4eddd5f89d2b6575e50f37ac7eae37d10",
+      "after_sha256": "b5b6e0881c7c3db4f75143e5ab13409e25e124b16d9ba0965e84e27957e84923"
+    },
+    {
+      "path": "tools/validation/fixtures/recovered_scenes.json",
+      "action": "upgrade_scene_identity_fixture",
+      "reason": "187 original 1.22 scene identities, kept separate from extra framework scenes.",
+      "before_sha256": "e3c1f1bf52b2e14d0be48d27a9c3da7c8ee56b81986d51792250e13e6b4f7ed7",
+      "after_sha256": "7449f92947bb40854757a35828b035543277228ba7d3c45e87f86ec91d3e4c6f"
+    },
+    {
+      "path": "tools/validation/fixtures/recovery_122_paths.json",
+      "action": "add_complete_relocation_map",
+      "reason": "Separate migration map; original package paths and hashes remain immutable.",
+      "before_sha256": null,
+      "after_sha256": "c7e389c3c146549e59e0608db78b4e77409e20feffd520403ad4cc81975e549c"
+    },
+    {
+      "path": "tools/validation/test_daily_snapshot_122.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "ba0dad351ccaa84e3f18a9dfa8ce59eb11b9da6ec59ec53d3da7e9f793d0f8b0"
+    },
+    {
+      "path": "tools/validation/test_daily_v122_transaction.gd",
+      "action": "merge_complete_122_with_framework_transactions",
+      "reason": "Preserve complete 1.22 functionality, connect atomic round/reward identity and lifecycle contracts; validate only in isolated offline projects.",
+      "after_sha256": "934e000acfc0c864d0d0f50366d5000373a6676568eb56f8d0784a5f1bfe70a9"
+    },
+    {
+      "path": "tools/validation/test_migration_122_isolation.py",
+      "action": "add_isolation_regressions",
+      "reason": "Prove source/evidence unchanged, network guards in copied services, signature drift rejected and 59-bank completion required. Three tests passed; existing 32 runner tests also passed.",
+      "after_sha256": "935d51955df54ccc2d1e0448188ca0fc69b816d5f066332466202a17314dc112"
+    },
+    {
+      "path": "tools/validation/test_storage_ad_identity.gd",
+      "action": "merge_122_with_framework_reward_ownership",
+      "reason": "Await 1.22 async readiness/validity while retaining all existing identity, duplicate, storage failure and stale callback cases.",
+      "before_sha256": "668e73e8fbd1e7a0ca5843001cc2b033183b301e70c3f82ecdcd47384695ea52",
+      "after_sha256": "aef22b5f5d121740a84857c095bfbe7ef84be48edb4a18ec3ca4770c4138d353"
+    },
+    {
+      "path": "tools/verify.py",
+      "action": "adapt_isolated_validation",
+      "reason": "Bind new verification reports to immutable 1.22 input evidence as well as migrated code/configuration.",
+      "before_sha256": "2430e2cb48406bd957c9c329b9cba2c28552ddf891d6d09a0b7a3c0b7052cb2d",
+      "after_sha256": "10898332e522bbb210982b2ae1388a9bdcacb7ebbed167db9fae3d19f4c4c022"
+    },
+    {
+      "path": "tools/verify_board_teardown.gd",
+      "action": "adapt_isolated_validation",
+      "reason": "Keep original 17 component assertions; add the runner explicit nonzero-check completion contract.",
+      "before_sha256": "c78c4e3cc5b2ed8736b73a366cc9139072aef1af593576c26e7fd95e88a0d321",
+      "after_sha256": "0dd9edc9f5f91683c0349c0222ef44daf4ed67b69c16f65232e012f1ea44b073"
+    },
+    {
+      "path": "tools/verify_level_bank_roundtrip.gd",
+      "action": "adapt_recovery_validation",
+      "reason": "Resolve original editor identities; roundtrip outputs use isolated runner userdata instead of global OS cache.",
+      "before_sha256": "b49d565b37bcc0ad867800ae2d85621893095e69f66b494d48a7b3f60ec1f1aa",
+      "after_sha256": "8afe6cc2b8949f021801df4b6e8583f5f876c3ec8db4007fa32301df9e69281d"
+    },
+    {
+      "path": "tools/validation/test_daily_entry_calendar.gd",
+      "action": "adapt_explicit_122_replay_state",
+      "reason": "Replace removed per-cell timer internals with actual ClockTicker heartbeat observation; hidden cell cannot refresh and reused cell resumes immediately.",
+      "before_sha256": "85ac8b38cb1f4f1a249913c07e83298f5270d7101700fdbfecab26fb1295e5fa",
+      "after_sha256": "8c6b4040a410ef490d98e07360744d7ad61ceacc25141a1b7f2f9122aeb5a5de"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/result/view/ad_reward_restored_page.gd",
+      "action": "merge_122_claim_semantics_with_lifecycle",
+      "reason": "1.22 close/back also claim. Preserve atomic claims, retained failed entitlement, synchronous obtain-listener cancellation, cached-offer generations, manager close/mask ownership and reentrant collected callbacks.",
+      "before_sha256": "0bb3aad0f643df9bd82968afdb607e05292f7c72693dd7671fbdddad8535cccd",
+      "after_sha256": "1aafc0070f717d6466b8007ab7a93478a3443e2d85569ab2b1a5d9aaa60622bb"
+    },
+    {
+      "path": "products/meowdoku/app/features/home/view/home_page.gd",
+      "action": "merge_only_restore_offer_lifecycle",
+      "reason": "Only _show_ad_reward_restored/_cancel_restore_offer and calls in show/hide/destroy/reset owned here; reserve exact page/offer revision, disconnect completion listener on cancellation, preserve pending eligibility, avoid hiding reentrant newer offer. Other Home changes owned by root.",
+      "before_sha256": "5f1fe82569ac23dd6f7dcf62957296204508c1dbad62c49cb5ff163acbf132ee",
+      "after_sha256": "6e2be601f4a985bda2256d62153ca94822e016df8ff84a482f333ac7cccdcb76"
+    },
+    {
+      "path": "tools/validation/test_game_reward_restore_lifecycle.gd",
+      "action": "adapt_122_close_also_claim_contract",
+      "reason": "Keep cancellation, cached reopen, listener cleanup, modal ownership, reentrant new offer, storage retry and durable quota assertions; close now grants as in1.22 instead of declining.",
+      "before_sha256": "76c721e12767dbf05efcd2e105b3f22e2057bfb6bfa3d59cb19396b32aff719b",
+      "after_sha256": "a856c83413dc79f8441393ee32cb0679bfc63598a241dc17a6e54cae3992771a"
+    },
+    {
+      "path": "tools/validation/test_game_reward_requests.gd",
+      "action": "adapt_122_real_reward_consumers",
+      "reason": "Keep all consecutive reward/order/generation/reentrant burst/storage failure/covered page contracts; update actual handlers, async readiness, 1.22 AB field and failure entry names.",
+      "before_sha256": "2aaa462ecd689b3d299cafa424bd2117178d2b6205cec60975a7a13f2fbc4059",
+      "after_sha256": "3e1b13aa38227521f893e4b4733313b0d344bc22c6267aa34d0b8afa9d7aa3bf"
+    },
+    {
+      "path": "project.godot",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "a31b33d5a737c145d6df37188f2735bdce5bc6fa46686eb9758da3c62b0c43bb",
+      "reason": "Translation registration only: preserve all75 recovered translations and append62 framework recovery PO resources; other project changes root-owned.",
+      "after_sha256": "4a8e40de8ffde94cf03038f92492821de8fda7e83b5d9876ed9e9cc153a73ddd"
+    },
+    {
+      "path": "products/meowdoku/app/features/language/language_manager.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "5d57eaee7373d1f352fc8252fb44969853d8fe0df8431196c9258c59c4efaf35",
+      "reason": "Register runtime translation proxies to relocate embedded image resources while preserving75 original files; remove proxies before GDScript shutdown and restore native originals.",
+      "after_sha256": "1100361d32d4c4513e90dada342d8b2fa5e30e989fef15c4476c1bf710b425f0"
+    },
+    {
+      "path": "products/meowdoku/app/features/language/localized_resource_translation.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Delegate original translations/plurals; remap only img-tag legacy asset roots, preserving prose, external URLs, source keys and original evidence.",
+      "after_sha256": "5b5a4339f31baec6e862be1e5f0c8b30ccd5a52c96b6d7179e64c991c87f947f"
+    },
+    {
+      "path": "products/meowdoku/app/features/rank_activity/ui/rank_activity_open_popup_page.tscn",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Provide transparent mouse-ignore Overlay target for unchanged GenericPopup binary animation; shared framework mask remains authoritative.",
+      "after_sha256": "40a19f2eb2a724a29f554cd8560d551fff8dd14f0c44d508bc98f2d16624fe0c"
+    },
+    {
+      "path": "products/meowdoku/app/features/profile/ui/profile_page.tscn",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Same transparent Overlay animation target after scanning every shared GenericPopup/V2 consumer.",
+      "after_sha256": "1b134d4220d241b9819f812cb7e29f2bf256378ef579d84d9f95ca9aae92b103"
+    },
+    {
+      "path": "products/meowdoku/app/features/daily_streak/view/streak_revive_flow.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Owner generation cancellation across intent/query/reward/close without detached waits; preserve exact showID + day/account/storage epoch guards and retryable business qualification.",
+      "after_sha256": "73b4d5f1a6d424c5551a6fd0563cc023dff7a993df6dd37e8cca17b30cd8953c"
+    },
+    {
+      "path": "products/meowdoku/app/features/daily_streak/view/streak_page.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "73fd1b8445f77b79e96f37b86a44adae363d69938f2169ad154e833dc4ce73af",
+      "reason": "Only open_after_win: optional owner predicate and cancelable frame polling; remaining implementation business-owned.",
+      "after_sha256": "1f116cb02e0c16eac0194ad200ee36b8da9360dac5ced67643d1143a233f850b"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/main/view/game_page.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "6eeba6100d0eb16123f9e0b4a292bb419dfa0aeb94272163ec53ef0d7cef0f21",
+      "reason": "Only _try_run_streak_flow_after_win: cancel delay and popup waits by exact business generation; remaining implementation root-owned.",
+      "after_sha256": "f0e9c90695c72df5970cad20aa8465bcefaa694c56926cbec2da156a91e09500"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/result/view/game_fail_page.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "3349a8e7a94e8adc3cc3b69366b763d6ee5a04b184a210641fc611de8db8d7ba",
+      "reason": "Only _run_vip_daily_gift_async/on_hide and hide-callback lifecycle: cancel by generation; synchronous disconnectable completion callback avoids same-frame-destroy coroutine leaks.",
+      "after_sha256": "f484749247f332849f2443442a82425576cb450ce7ed4530dca2dbc500ca2013"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/dc_costume_unlock_page.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Cancel close animation waits on refresh/destroy without changing entitlement business logic.",
+      "after_sha256": "ab11c2d2bd49f1abf1679b891197ffe817593a1b00235d2bc38f7993734ff0a4"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/dc_costume_tutorial_page.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Guard close completion by exact presentation revision; clean spotlight on destroy; no stale tutorial_closed after refresh.",
+      "after_sha256": "60aea2c757eb8bf57545efc6109127b753d996b2b5c4013232f179fbcaedde55"
+    },
+    {
+      "path": "products/meowdoku/gameplay/presentation/daily/view/dc_replay_confirm_page.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Reject hidden/consumed late actions; cancel close animation waits and callbacks on destroy.",
+      "after_sha256": "928dd3f764398a9ca7b8567e7313c69ec65941a631cb745b8f3448ae7668627b"
+    },
+    {
+      "path": "tools/validation/test_game_page_lifecycle.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "bcc0e6a5a66ff1c8ac6d722f7e3729dc3dc58746225e09ab75d0c98113f9ef39",
+      "reason": "Adapt1.22 shared headers and daily restore OFF fixture; preserve hide/reuse/layout/streak/ad-entry cancellation; cover3newDaily popup refresh/destroy contracts.",
+      "after_sha256": "6359d67dda455e80cf93604f4a008058ca8fd1d21e0a3d9e04f8d50f6b37d710"
+    },
+    {
+      "path": "tools/validation/test_game_settlement_recovery.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "f743533946554e797a621eae0fbb7f0c45823b50a9a2d606cdea8e73000b79a7",
+      "reason": "Retain actual click retries and translation; replace retired post-win separate check-in with stronger atomic win+streak+reward commit assertions.",
+      "after_sha256": "7e9d3d88324c1346234fc9268ae8b7368eeb48e228bde17917a81b691ccfa00d"
+    },
+    {
+      "path": "tools/validation/test_game_recovery_localization.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "0eb881faebb068d18cf8012ee839141618187e00a043a2c3e9b6cff228027165",
+      "reason": "Validate75locale fallback,62recovery resources,5actual failure languages,225embedded-image paths; replace retired switch gifts with unified claim and remove retired auto-mark-popup contract.",
+      "after_sha256": "0d9ede93faf7cd42048f3e8f9fbf4dd924f1d8b5c5884569202dc006a789f4f1"
+    },
+    {
+      "path": "tools/validation/test_game_tool_reward_delivery.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "985239e3887ebc8822b8f70d02217b6308280f932c6686bf0c4a478ba58f2957",
+      "reason": "Adapt real1.22 async tool handlers, frozen round readiness and canonical history while preserving all history/register/claim/reentrant/reset durability assertions.",
+      "after_sha256": "f623efd432f5521b24dd0c8919f26d69de1441aaf023c9ca6b0e47d255f09201"
+    },
+    {
+      "path": "tools/validation/capture_v122_ui.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Visible renderer only, fail-closed isolated fixture, real9-page captures, blank/hidden detection and explicit QA fixtures; no production data/network.",
+      "after_sha256": "a68f26ddc61fe6ebb51ff2f60b88cf8ad6953382f41aca442c069d16ce19bab0"
+    },
+    {
+      "path": "tools/validate_content_product.py",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": "a7b281af55ea0ef3a093a4aed14d56ff78f94b0bc60bb81422796581dff612de",
+      "reason": "Add BankData, bank_level_codec and bank_binary_format to isolated no-autoload product validator dependencies required by1.22 compact banks.",
+      "after_sha256": "d557e886a51d716973496db51ff0cf75d7a613235f6f79b993b0d6ab34432156"
+    },
+    {
+      "path": "tools/verify_android_manifest.gd",
+      "action": "merge_122_platform_validation_followup",
+      "before_sha256": null,
+      "reason": "Use user:// for output guard instead of global OS cache so isolated runner safely redirects verifier temporary writes.",
+      "after_sha256": "e23c4c345f3ff0b3d5b4de2c7b4f60e61e11b7a4bd7265c7d8950f4d4fa5954a"
+    },
+    {
+      "path": "docs/migration/1.22-platform-validation.md",
+      "action": "record_or_enforce_validation_scope",
+      "reason": "Document original identity preservation, isolated test/render scope and explicit native Android/SDK/service acceptance gaps.",
+      "before_sha256": null,
+      "after_sha256": "441416983cfd651f783a0f161be2e6082bf17994fbfdd6370472bda7d0c64ecc"
+    },
+    {
+      "path": "tools/content/run_tests.py",
+      "action": "record_or_enforce_validation_scope",
+      "reason": "Apply strict shutdown diagnostics to local HTTP and Spine integration runner as well as script errors and completion contracts.",
+      "before_sha256": "d5f3c14869c1ee022a4dee2b0a503dfd7332b6cc097f189084c88d2d24c3f6ca",
+      "after_sha256": "ac266418b5f93216460db28fd6163a542931dbdb55f921b518961d05680b20dd"
+    },
+    {
+      "path": "tools/content/verify_exported_resources.py",
+      "action": "record_or_enforce_validation_scope",
+      "reason": "Treat any shutdown leak as export proof failure even when historically recorded; no fallback acceptance.",
+      "before_sha256": "f68f4f3815913b8d590fdd775ea6c67c51dd96bf385e253fe0bbfa73f019c3e8",
+      "after_sha256": "ade2b083f38db138fc79e187b1cafd3dc96cd36085ea609d2902e775ae5bed22"
+    },
+    {
+      "path": "tools/content/run_product_tests.py",
+      "action": "harden_publication_acceptance_and_archive_logs",
+      "reason": "Both accepted and expected-rejection cases reject unexpected engine diagnostics, script/parse errors and shutdown leaks; preserve each raw stdout/stderr log outside disposable project with absolute/relative paths and SHA-256.",
+      "before_sha256": "5b78bd9cb9ffae0226fe985b1c97293224e8806998d1be93b174bfb96581c979",
+      "after_sha256": "de70ac44b673123ee7e1d57d57da0a6dc7c49cd12b5e3241b757abbe15e187de"
+    },
+    {
+      "path": "tools/validation/test_publication_case_diagnostics.py",
+      "action": "regress_publication_rejection_guard",
+      "reason": "Eight Python regression tests retain legitimate rejection while refusing coexisting SCRIPT/Parse/unexpected/shutdown errors, nested Python wrappers, missing reason/artifact invariants; verifies durable raw log evidence.",
+      "before_sha256": null,
+      "after_sha256": "f5785279a7986c80f8b4e1a7c4590f646599ab602a6d230b08433b43d65712c0"
+    },
+    {
+      "path": "tools/verify.py",
+      "action": "fingerprint_root_native_configuration",
+      "reason": "Include unikit_config.tres and lxauth_android_config.tres in before/after input fingerprints, matching files copied into isolated product fixtures.",
+      "before_sha256": "10898332e522bbb210982b2ae1388a9bdcacb7ebbed167db9fae3d19f4c4c022",
+      "after_sha256": "184f37301ae6096a1109b35794dae2cdb485d50e923cf9111dc6fada0a5d5aec"
+    },
+    {
+      "path": "tools/validation/test_verify.py",
+      "action": "regress_native_configuration_fingerprint",
+      "reason": "Add a private-fixture assertion proving both native root configs are fingerprinted and changes to either are detected.",
+      "before_sha256": "6c0af6e8618192a9f876a0a742431f3b354db34129f04d957a0eecab02bf9f98",
+      "after_sha256": "0627b2fa9045951ebc124cfe60a2c0f31f1f96b3caaca28808da2edd5b976b1a"
+    },
+    {
+      "path": "scripts/framework/ui/base/ui_base_window.gd",
+      "action": "fix_owned_presentation_wait_cancellation",
+      "reason": "Presentation-owned signal/predicate wait gates cancel synchronously after revision invalidation; detach and disconnect before notifying, return false on cancellation or invalid signal, guard reentrant refresh/show/destroy, and unwind unmanaged PREDELETE parent waits. Follow-up: PREDELETE delegates to the same idempotent teardown so product on_destroy runs exactly once and unwinds its own wait chains. Never-entered INVALID packed templates skip uninitialized hooks; existing ready/tree lifecycle cancellation remains intact.",
+      "before_sha256": "629b6b8901dfc0b810d3b3536592dc8fde25fbb02fdad15774f4e3a5337e7efa",
+      "after_sha256": "460e78356fdf87058e8e2e0af99ac47a1895e5265c3037ace0f22a383f5d35ad",
+      "followup_before_sha256": "f84229356c294578191101692a0b724dcb72b6261ad5b6a3e1b594131d3e7fdd"
+    },
+    {
+      "path": "scripts/framework/ui/base/ui_frame_window.gd",
+      "action": "fix_owned_presentation_wait_cancellation",
+      "reason": "Await close animations through the presentation-owned cancellable signal gate, allowing reopen/destroy to unwind pending manager calls without treating cancellation as successful completion.",
+      "before_sha256": "fb7c4e64134ea3d522a731fcf733cd9378d67f63d7eb15c0afda61408c2c7785",
+      "after_sha256": "b22fbdda6346d5b772ffd2c6af95951f152fc0f0e69993c13fa06838c3b2625b"
+    },
+    {
+      "path": "scripts/framework/ui/ui_window_manager.gd",
+      "action": "fix_owned_presentation_wait_cancellation",
+      "reason": "Check presentation revision as well as show revision after each asynchronous hide boundary, so stale closure cannot hide/refinish refreshed content.",
+      "before_sha256": "8a7bc4a11c5e1bf5163f3d49308558c0ed1aa91766b6a5c741997b7c53d10667",
+      "after_sha256": "8c3e2921ffb3e95699c52c24021082bf09c438e907362e453c5260a55f0da13f"
+    },
+    {
+      "path": "tools/validation/test_ui_presentation_wait.gd",
+      "action": "regress_owned_presentation_wait_cancellation",
+      "reason": "Add 47 meaningful lifecycle assertions covering completion/cancellation, signal arity, invalid signals, polling, reentrant refresh/destroy/queued deletion, direct and queued free, and manager animation ownership. Retains all initial 47 assertions and adds 21 assertions for real on_destroy side effects, managed/unmanaged/direct/queued/idempotent teardown, and uncreated PackedScene templates (68 total).",
+      "before_sha256": null,
+      "after_sha256": "544f90d172ec3ff1cd0b74aa3d554da5edc6cc31282ad3abd030673e3b9da7b3",
+      "followup_before_sha256": "e5f2bc775f01cda1f10476a41547d1e9d3c540ab11c4242392ba212e81c2b652"
+    },
+    {
+      "path": "tools/validation/test_ui_presentation_wait.gd.uid",
+      "action": "regress_owned_presentation_wait_cancellation",
+      "reason": "Unique Godot ResourceUID.create_id result for the new test, generated only in an independent product-free fixture; existing UIDs remain untouched.",
+      "before_sha256": null,
+      "after_sha256": "d7b43912413b509bf5e065c1e43562326f78636d4f1dfd1ad0a6dab5fca4c7d7"
+    },
+    {
+      "path": "tools/validation/fixtures/audio_shutdown.gd",
+      "before_sha256": null,
+      "after_sha256": "de85a93a617464a4f474f9831008c1853fc37d18d87a0c709e978fe39f304d00",
+      "action": "verify_bounded_audio_shutdown",
+      "reason": "Validation-only final cleanup observes stream/playback WeakRef expiration under a deadline and rejects retained/reactivated audio. New synthetic-WAV regression covers normal release, intentional retained-reference failure, and newly created players; catalog terminal cleanup asserts actual release instead of waiting a fixed number of frames."
+    },
+    {
+      "path": "tools/validation/fixtures/audio_shutdown.gd.uid",
+      "before_sha256": null,
+      "after_sha256": "8a438bb8d2790b534276df3c6233802303704e9031015d671e62b0190d0437aa",
+      "action": "identify_audio_shutdown_fixture_resource",
+      "reason": "Validation-only final cleanup observes stream/playback WeakRef expiration under a deadline and rejects retained/reactivated audio. New synthetic-WAV regression covers normal release, intentional retained-reference failure, and newly created players; catalog terminal cleanup asserts actual release instead of waiting a fixed number of frames."
+    },
+    {
+      "path": "tools/validation/test_audio_shutdown.gd",
+      "before_sha256": null,
+      "after_sha256": "2335b425c9861d4afe4eac98b18822682717a166edfa4dbe01540bb745a56351",
+      "action": "verify_bounded_audio_shutdown",
+      "reason": "Validation-only final cleanup observes stream/playback WeakRef expiration under a deadline and rejects retained/reactivated audio. New synthetic-WAV regression covers normal release, intentional retained-reference failure, and newly created players; catalog terminal cleanup asserts actual release instead of waiting a fixed number of frames."
+    },
+    {
+      "path": "tools/validation/test_audio_shutdown.gd.uid",
+      "before_sha256": null,
+      "after_sha256": "16246b1744cf00417ae21a409321877ff9820ab4bf673a451ed70189d542fcd6",
+      "action": "identify_audio_shutdown_fixture_resource",
+      "reason": "Validation-only final cleanup observes stream/playback WeakRef expiration under a deadline and rejects retained/reactivated audio. New synthetic-WAV regression covers normal release, intentional retained-reference failure, and newly created players; catalog terminal cleanup asserts actual release instead of waiting a fixed number of frames."
+    },
+    {
+      "path": "tools/validation/test_content_level_catalog.gd",
+      "before_sha256": "e575f0155fa1d553d6694bff42ba049ef656a7ddbfc233076759c3f71e5107cf",
+      "after_sha256": "6741f10a8f4e07fd2b645ae5078f65912892a8967c6be89295d20fb5e253ff33",
+      "action": "verify_bounded_audio_shutdown",
+      "reason": "Validation-only final cleanup observes stream/playback WeakRef expiration under a deadline and rejects retained/reactivated audio. New synthetic-WAV regression covers normal release, intentional retained-reference failure, and newly created players; catalog terminal cleanup asserts actual release instead of waiting a fixed number of frames."
+    }
+  ],
+  "evidence": {
+    "source_identity_audit": "latest mapped audit passed:853 scripts /187 scenes /75 translations /59 banks; historical hashes unchanged",
+    "core_reward_test": "focused-third strict pass:full identity63 assertions/0 failures including4realpage immediate destroy;0engine errors/leaks",
+    "daily_snapshot_test": "suite-first32assertions/0failures;initial universal startup Timer leak separatelyfixed",
+    "full_recovery_runtime": "focused-third strict pass:853 recovered scripts,187 scenes,75 translations,59 banks,65915 records,45133solution entries;0 unexpected engine errors",
+    "main_real_scene_test": "game-v122-first:19 assertions,3 failures due ProgressState stage_activity parse dependency; entry and same-round restoration execute",
+    "logs": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo",
+    "android": "Custom APK templates absent; no new Android/device/SDK build claimed",
+    "daily_real_scene_test": "focused-third strict pass45assertions/0failures:actual before_replace entry and win faults,Confirm retry,idempotent daily settlement,3restoremodes,invalidpool,cachedshow/hide/destroy",
+    "inventory": "/tmp/doku-122-inventory.mapped.json (tree1907/2298/4956 complete;0unmapped/0collision)",
+    "isolation": "44 runner Python tests+4 migration isolation tests pass; every product process prechecks exact transport guards/config/unique native directory/MCP/editor plugins;root SDK .tres copied",
+    "board_spine_teardown": "focused-third strict pass17assertions/0failures with actual SpineSprite+BoardView+CellView destruction orders",
+    "bank_roundtrip": "focused-second strict pass59bank roundtrips;original identity evidence untouched",
+    "restore_offer_test": "reward-verify-verbose strict pass28assertions/0failures;1.22 close/back claim, cancellation/reentrance/listeners/mask/store retry",
+    "save_roundtrip_diagnostic": "/tmp/doku122-save-{expected,actual}-1793354194_45889.txt: ConfigFile re-encode changed in_game_sec finalULP; business replaced parsed re-encode compare with exact decrypted raw-text comparison, parser validation retained",
+    "remaining_owned_validation": "None within assigned platform/assets/tools/daily/QAscope. Parent final fresh full-suite and final workspace transfer are separate.",
+    "final_strict_followups": {
+      "lifecycle": {
+        "checks": 59,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/fail-close-cancellation/report.json"
+      },
+      "settlement_recovery": {
+        "checks": 71,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/fail-close-cancellation/report.json"
+      },
+      "localization": {
+        "checks": 1219,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/final-owned-cleanup/report.json"
+      },
+      "calendar": {
+        "checks": 45,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/calendar-final/report.json"
+      },
+      "tool_reward_delivery": {
+        "checks": 171,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/tool-delivery-final/report.json"
+      },
+      "reward_requests": {
+        "checks": 567,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/rewards-final/report.json"
+      },
+      "reward_restore": {
+        "checks": 28,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/reward-verify-verbose/report.json"
+      },
+      "daily_transactions": {
+        "checks": 45,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/rewards-final/report.json"
+      },
+      "main_transactions_at_snapshot": {
+        "checks": 41,
+        "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-122-platform-d4oauneo/rewards-final/report.json"
+      }
+    },
+    "visible_qa": "/tmp/doku122-visible-qa-verified/report.json",
+    "http_integration": "/tmp/doku122-content-http-report.json",
+    "spine_pck_integration": "/tmp/doku122-content-spine-report.json",
+    "exported_resources": "/tmp/doku122-content-export.log",
+    "publication_matrix": {
+      "ok": true,
+      "checks": 22,
+      "failures": 0,
+      "report": "/tmp/doku122-content-product-final-report.json",
+      "sha256": "dd33013bdce05592571f0f8d6fb305db9ca19c26bbe397c7c8325cac7e024c10"
+    },
+    "registration_coverage": {
+      "original_autoloads": 35,
+      "current_autoloads": 36,
+      "missing_or_misdirected_original_autoloads": 0,
+      "original_scenes": 187,
+      "added_scenes_since7af": 131,
+      "missing_scenes": 0,
+      "original_ui_scene_registrations": 64,
+      "missing_registrations": 0,
+      "ab_variables": 156,
+      "missing_ab_variables": 0,
+      "original_addon_scripts": 89,
+      "missing_addon_scripts": 0
+    },
+    "native_limits": "No new Android APK/device/real services acceptance. Required custom Spine Android templates absent. Real placement-only native reward SDK cannot provide show identity, so reward bridge fails closed until identified bridge is implemented. Real ads/billing/auth/cloud/TLS were not exercised.",
+    "native_limit_document": "docs/migration/1.22-platform-validation.md",
+    "final_coverage_reports": [
+      "/tmp/doku122-scene-coverage.json",
+      "/tmp/doku122-framework-only-missing.json",
+      "/tmp/doku122-popup-overlay-audit.json",
+      "/tmp/doku122-translation-image-inventory.json"
+    ],
+    "publication_diagnostic_guard": {
+      "private_root": "/private/tmp/doku122-publication-guard-81fya_gf",
+      "applied_to_stage": true,
+      "product_source_changed": false,
+      "files": [
+        {
+          "path": "tools/content/run_product_tests.py",
+          "baseline_sha256": "5b78bd9cb9ffae0226fe985b1c97293224e8806998d1be93b174bfb96581c979",
+          "proposed_sha256": "de70ac44b673123ee7e1d57d57da0a6dc7c49cd12b5e3241b757abbe15e187de"
+        },
+        {
+          "path": "tools/validation/test_publication_case_diagnostics.py",
+          "baseline_sha256": null,
+          "proposed_sha256": "f5785279a7986c80f8b4e1a7c4590f646599ab602a6d230b08433b43d65712c0"
+        },
+        {
+          "path": "tools/verify.py",
+          "baseline_sha256": "10898332e522bbb210982b2ae1388a9bdcacb7ebbed167db9fae3d19f4c4c022",
+          "proposed_sha256": "184f37301ae6096a1109b35794dae2cdb485d50e923cf9111dc6fada0a5d5aec"
+        },
+        {
+          "path": "tools/validation/test_verify.py",
+          "baseline_sha256": "6c0af6e8618192a9f876a0a742431f3b354db34129f04d957a0eecab02bf9f98",
+          "proposed_sha256": "0627b2fa9045951ebc124cfe60a2c0f31f1f96b3caaca28808da2edd5b976b1a"
+        }
+      ],
+      "regression": {
+        "tests": 9,
+        "failures": 0,
+        "log": "/private/tmp/doku122-publication-guard-81fya_gf/publication-guard-tests.log",
+        "log_sha256": "4803796f42923ad94f3ad490e4e01f40e8cccd952961e0c616a2f754f3d17deb"
+      },
+      "patch": "/private/tmp/doku122-publication-guard-81fya_gf/publication-guard.patch"
+    },
+    "presentation_wait_cancellation": {
+      "private_validation_archive": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/predelete-final-68",
+      "applied_to_stage_by_root": true,
+      "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/predelete-final-68/report.json",
+      "report_sha256": "4e7756fdb7092bcb5db1eaa5158868e56967b970b2a006519a0f2688ca970f59",
+      "patch": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/predelete-final-68/ui-presentation-waits.patch",
+      "patch_sha256": "7c6b41b83fca03f62fcfb601b85997d8501628566e6e161bb3aeca3fdb509cef",
+      "index_sha256": "5612a169df76474689fc72d71d1a140b2b3eb7fc89e1edca42331d7a642e0b4f",
+      "results": [
+        {
+          "ok": true,
+          "completion": {
+            "kind": "test",
+            "ok": true,
+            "checks": 68,
+            "failures": 0,
+            "summary": "UI_PRESENTATION_WAIT_TESTS: 68 assertions, 0 failures"
+          },
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/predelete-final-68/test_ui_presentation_wait.log",
+          "log_sha256": "85ac2c70e294dcee33a5fd52108d07e22a03d594253bfa44c618c9c7ee17e32d",
+          "strict_shutdown_gate": true
+        },
+        {
+          "ok": true,
+          "completion": {
+            "kind": "test",
+            "ok": true,
+            "checks": 260,
+            "failures": 0,
+            "summary": "UI FRAMEWORK TESTS: 260 assertions, 0 failures (no Autoload)"
+          },
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/predelete-final-68/test_ui_framework.log",
+          "log_sha256": "88c6eb63af9f681dcc5db8defd8bb8d088a6c229b98c083d543350171046cf7b",
+          "strict_shutdown_gate": true
+        }
+      ],
+      "superseded_initial_private_validation": {
+        "checks": 47,
+        "report_sha256": "89be44da9b0424465947173fc7309f21dcea5d9382e949dd091a4e5836cec20a",
+        "note": "Root has archived the original public-ui-waits.json unchanged. The final 68-assertion run retains every original assertion and supersedes the mutable private working report path."
+      },
+      "scope": "Three public lifecycle scripts and one regression script plus original generated UID. Final follow-up changes only base and regression; product integrations remain in business/gameplay ledgers."
+    },
+    "nonruntime_recovery_root_artifacts": {
+      "paths": {
+        "assets.sparsepck": "89871c9ce9a83f6c222536eabbd4886032fcdc6d9b97317ea67335ebff90bb65",
+        "_cl_": "43ba65402fefd1395cac5853415e99d6622a3241d34b2af962515874cc4e54e0",
+        "coverage_config.json": "dd7cd80f9eaa8fd6d0d2fabbbda7ef684a2c7eeda71c1d207823117744489ed9",
+        ".assets/assets/localization/translations.csv": "a6ab8fc1c3705464dd5fc0defdcc50ee4776bbd3f6320ce194ad72d0ff2ac025"
+      },
+      "included_by_prepare": false,
+      "runtime_or_tool_references_found": false,
+      "retained_in": "docs/migration/1.22-coverage.json per-file original Git blob and final SHA records",
+      "scope": "Current project/isolated prepare and 12 verification groups. Original Android APK metadata _cl_ remains historical boot evidence, not a claim that the original APK ignored it. Current localization explicitly registers relocated translations and recovery PO; raw .assets CSV is not a runtime import input."
+    },
+    "final_runtime_call_audit_refresh": {
+      "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/docs/migration/1.22-runtime-call-audit.json",
+      "sha256": "ba796bd38e0cdb3d6dd1620faabb9248161e850c6b5ff2d63a885c907f9e168f",
+      "production_scripts": 944,
+      "runtime_apis": 103,
+      "calls": 1312,
+      "unresolved": 0,
+      "reviewed_changed_source_files": 19,
+      "reviewed_line_moves": 8,
+      "semantic_call_multisets_equal": true,
+      "runtime_api_implementation_files_unchanged": true,
+      "archived_review": "docs/migration/evidence/runtime-call-refresh/reviewed-line-moves.json",
+      "scope": "Documentation-only refresh after the final 19 lifecycle source changes; no runtime/tool/test edits. All 8 moved call locations manually compared against the exact previous SHA in root9x fixture. All 103 API signatures, implementations and 1312 call arguments remain unchanged.",
+      "previous_report_sha256": "c75ed460297fd52b6ba0d4b5a8fbe5dc378dd8dbe330bb498922dd77ba11c521",
+      "latest_source_changes": [
+        {
+          "path": "products/meowdoku/app/ui/common/confirm_dialog.gd",
+          "previous_sha256": "ddd19234558203204d6796582ad20305ee65027ba6be9a84dbe9fbcaeb2f33bc",
+          "current_sha256": "17081189ed3a87ac78d90fe20bc6c0c74d0e9013e23e19e8039fc6dbcc62fad4"
+        },
+        {
+          "path": "scripts/framework/ui/base/ui_base_window.gd",
+          "previous_sha256": "f84229356c294578191101692a0b724dcb72b6261ad5b6a3e1b594131d3e7fdd",
+          "current_sha256": "460e78356fdf87058e8e2e0af99ac47a1895e5265c3037ace0f22a383f5d35ad"
+        }
+      ],
+      "latest_scope": "Documentation-only refresh after final Base PREDELETE and Confirm canonical getter fixes; exact graph including all locations unchanged, 103 APIs / 1312 calls / 0 unresolved. Earlier reviewed eight line moves remain archived in the report history."
+    },
+    "audio_immediate_exit_engine_boundary": {
+      "archive": "docs/validation/migration-1.22-audio-exit",
+      "index_sha256": "865d1154e8a23094cdde09881f76e1f0ab88d0e36b6b5691133f9d2bed858df8",
+      "strict_play_case_passed": false,
+      "strict_load_only_passed": true,
+      "waiver_added": false,
+      "runtime_source_changes": false,
+      "classification": "Known nonblocking engine/build immediate-process-exit limitation, independently reproduced with 0 product/framework Autoloads. No conclusion about internal mechanism or persistent memory growth."
+    },
+    "presentation_wait_real_page_followup": {
+      "report": "/tmp/doku122-confirm-canonical-evidence.json",
+      "report_sha256": "25823d8266f64edc2bdb5ae4bb512fbc613123026abc3b386438bd171035d6ca",
+      "final_shared_base_sha256": "460e78356fdf87058e8e2e0af99ac47a1895e5265c3037ace0f22a383f5d35ad",
+      "results": [
+        {
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-confirm-popup-lifecycle-final-1793364478806855000.log",
+          "ok": true,
+          "checks": 80,
+          "failures": 0,
+          "log_sha256": "6f0a7647907ef86b13556715ea728d6c2bc13b659b4554e9a6e21467eda31ee0"
+        },
+        {
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-confirm-lifecycle-final-1793364500986040000.log",
+          "ok": true,
+          "checks": 45,
+          "failures": 0,
+          "log_sha256": "8860b276429403b9f1f7e886871e99dd9fc29aa51c6b0b2d14df1190268f38a1"
+        }
+      ]
+    },
+    "bounded_audio_shutdown_protocol": {
+      "archive": "docs/validation/migration-1.22-audio-protocol",
+      "index_sha256": "fdd182f119fc0ec86f65282f64b6c9c8c3b3bca037c4e1e3cf6451685ac35993",
+      "zip_sha256": "f4b3a47290de83d22878a5443bd9ff6df0ca4ae491a5c7182c59f47adce19085",
+      "applied_files": 5,
+      "final_regression_checks": 14,
+      "real_catalog_checks": 92,
+      "strict_pass": true,
+      "original_immediate_exit_control_remains_failed": true,
+      "runtime_source_changes": false,
+      "diagnostic_waiver": false
+    }
+  },
+  "updated_utc": "2026-10-30T13:11:09.208547+00:00",
+  "final_full_verification": {
+    "status": "passed_all_12_groups",
+    "report": "docs/validation/migration-1.22-full/report.json",
+    "report_sha256": "52f0f980e87e51b8fe1a7ebb2912dcb9986876df030009a1020d15ce0eaf6923",
+    "inputs_sha256": "0eb62accf6f38c546620b5ae76a8ddc581476fc82ec3da9df45bd8a733b97867",
+    "archive_index_sha256": "3a0b7e9d96dc4712485ddf8700f40eb5fd3e7537fb5f2360dbcfafac4fb9f238",
+    "planned": 12,
+    "executed": 12,
+    "passed": 12,
+    "excluded": [],
+    "not_executed": [],
+    "changed_inputs": [],
+    "implementation_frozen": true,
+    "limitations": "Native mobile SDK/device/release acceptance remains unverified; the independent rapid Ogg-exit engine probe still fails and is retained separately. PCK aggregate does not enumerate every engine process."
+  }
+}

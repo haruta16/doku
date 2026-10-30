@@ -6,6 +6,7 @@ var failures: int = 0
 var game: Node
 var ui: Node
 var files: RefCounted
+var fault_hits: int = 0
 
 
 func _initialize() -> void:
@@ -24,14 +25,22 @@ func _run() -> void:
 	files = game.get_core_store().get("_file_store")
 	var ab: Node = root.get_node("ABTestManager")
 	ab.dc_level.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	ab.win_toast.set_debug_override(0)
+	ab.dc_start_toast.set_debug_override(0)
+	ab.dc_endgame_save.set_debug_override(0)
+	ab.daily_streak_success_page.set_debug_override(0)
 	for mode: String in ["game", "daily_game"]:
 		for outcome: String in ["win", "fail"]:
 			await _test_terminal_retry(mode, outcome)
 	await _test_abandoned_retry()
 	await _test_win_checkin_retry(false)
 	await _test_win_checkin_retry(true)
+	ui.hide_all()
+	for name: String in ["game", "daily_game", "home", "confirm", "fail", "daily_fail", "streak"]:
+		await ui.destroy_ui(name)
+	await process_frame
+	await process_frame
 	print("GAME SETTLEMENT RECOVERY TESTS: %d assertions, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -41,8 +50,10 @@ func _open(mode: String) -> Variant:
 	await create_timer(0.1).timeout
 	game.reset_all()
 	game.set_sound_on(false)
+	game.set_music_on(false)
+	game.set_tutorial_done(true)
 	var page: Variant = ui.show_ui(mode, {"level_index": 1} if mode == "game" else {})
-	await create_timer(0.2).timeout
+	await _wait_ready(page)
 	page._on_appear_animation_finished()
 	_check(page._ensure_business_round().get("ok", false), mode + " prepares a durable active round")
 	return page
@@ -52,8 +63,6 @@ func _test_terminal_retry(mode: String, outcome: String) -> void:
 	var page: Variant = await _open(mode)
 	page._stat_start_ms -= 10000
 	if mode == "daily_game" and outcome == "win":
-		game.activate_daily_auto_mark(false)
-		page._gameplay_policy.auto_mark_variant = int(root.get_node("ABTestManager").game_auto_mark.VALUE_PROP_AD)
 		page._start_unix -= 1000.0
 	if outcome == "win":
 		var size: int = page._level_config.size
@@ -64,21 +73,22 @@ func _test_terminal_retry(mode: String, outcome: String) -> void:
 	else:
 		page._lives = 0
 	var before: Dictionary = game.get_core_store().snapshot()
-	var time_before: int = game.get_game_total_stat("normal" if mode == "game" else "daily", "time_total")
+	var time_before: int = game.get_game_total_stat("main" if mode == "game" else "daily", "time_total")
 	page._build_game_end_params("quit")
 	page._build_game_end_params("quit")
-	_check(game.get_game_total_stat("normal" if mode == "game" else "daily", "time_total") == time_before, "building an end request has no statistics side effects")
+	_check(game.get_game_total_stat("main" if mode == "game" else "daily", "time_total") == time_before, "building an end request has no statistics side effects")
 	var previous_locale: String = TranslationServer.get_locale()
 	TranslationServer.set_locale("fr")
 	_fail(true)
 	if outcome == "win":
-		page._on_game_complete()
+		await page._on_game_win()
 	else:
-		page._on_game_over()
+		await page._on_game_fail()
+	_check(fault_hits > 0, "terminal failure reaches injected before_replace storage fault")
 	var dialog: Variant = ui.get_ui("confirm")
 	_check(dialog != null and dialog.is_showing(), mode + " " + outcome + " exposes retry after failed terminal commit")
 	if dialog != null:
-		_check(dialog.get_node("Root/Content/DialogRoot/ActionButton").text == "Réessayer", "terminal recovery uses the existing French retry translation")
+		_check(dialog.get_node("Root/Content/DialogRoot/ActionButton").btn_text == "Réessayer", "terminal recovery uses the existing French retry translation")
 	TranslationServer.set_locale(previous_locale)
 	_check(not page._is_complete and game.get_core_store().snapshot() == before, "failed terminal commit publishes no outcome")
 	_check(page._clock_timer.is_stopped() and page._board_view.mouse_filter == Control.MOUSE_FILTER_IGNORE, "terminal retry pauses clock and board input")
@@ -88,8 +98,8 @@ func _test_terminal_retry(mode: String, outcome: String) -> void:
 		_check(dialog.is_showing() and not page._is_complete, "another failed retry remains actionable after old close animation")
 		_fail(false)
 		var first_score: float = float(page._level_config.get("beat_percent", 0.0))
-		if mode == "daily_game" and outcome == "win":
-			game.reset_daily_auto_mark_enabled() # 模拟保存重试前的权益日切。
+		# 修改运行中实验不能重算此前已经捕获的终局分数。
+		root.get_node("ABTestManager").dc_beat_percent.set_debug_override(1)
 		dialog.get_node("Root/Content/DialogRoot/ActionButton").tag_pressed.emit()
 		dialog.get_node("Root/Content/DialogRoot/ActionButton").tag_pressed.emit()
 		await create_timer(0.1).timeout
@@ -99,12 +109,12 @@ func _test_terminal_retry(mode: String, outcome: String) -> void:
 		_check(record.status == ("settled" if outcome == "win" else "active"), "win closes host and failure retains revivable host")
 		_check(game.get_current_level() == (2 if mode == "game" and outcome == "win" else 1), "retry advances main progress exactly once")
 		if mode == "game":
-			_check(game.get_game_total_stat("normal", "time_total") == time_before + 10, "failed terminal retries do not double-count or extend end time")
+			_check(game.get_game_total_stat("main", "time_total") == time_before + 10, "failed terminal retries do not double-count or extend end time")
 		if outcome == "fail":
 			page._on_revive_requested()
 			_check(not page._like_hand_state.clock_paused and not page._is_complete and page._lives > 0, "revive after terminal save retry resumes the gameplay clock")
 		if mode == "daily_game" and outcome == "win":
-			_check(is_equal_approx(game.get_daily_beat_percent(), first_score), "daily retry preserves the first score when auto-mark entitlement changes")
+			_check(is_equal_approx(game.get_daily_beat_percent(), first_score), "daily retry preserves the first score when live experiment changes")
 			_check(game.get_daily_completed_date() == Time.get_date_string_from_system(), "daily retry records completion date")
 	_fail(false)
 	ui.hide_all()
@@ -115,7 +125,7 @@ func _test_abandoned_retry() -> void:
 	var page: Variant = await _open("game")
 	page._lives = 0
 	_fail(true)
-	page._on_game_over()
+	await page._on_game_fail()
 	var dialog: Variant = ui.get_ui("confirm")
 	if dialog == null or not dialog.is_showing():
 		_fail(false)
@@ -135,7 +145,13 @@ func _test_abandoned_retry() -> void:
 
 
 func _fail(enabled: bool) -> void:
-	files.set_fault_injector_for_tests((func(phase: String) -> bool: return phase == "before_replace") if enabled else Callable())
+	fault_hits = 0
+	files.set_fault_injector_for_tests((func(phase: String) -> bool:
+		if phase == "before_replace":
+			fault_hits += 1
+			return true
+		return false
+	) if enabled else Callable())
 
 
 func _test_win_checkin_retry(cancel: bool) -> void:
@@ -153,34 +169,39 @@ func _test_win_checkin_retry(cancel: bool) -> void:
 	page._board_view.refresh_from_model()
 	var previous_locale: String = TranslationServer.get_locale()
 	TranslationServer.set_locale("ja")
-	files.set_fault_injector_for_tests(func(phase: String) -> bool: return phase == "before_replace" and game.get_current_level() == 2)
-	page._on_game_complete()
-	await create_timer(0.3).timeout
+	# 1.22 移植合同：胜利、签到、奖励在一个候选提交；任何写失败都不得先公布胜利。
+	_fail(true)
+	await page._on_game_win()
 	var dialog: Variant = ui.get_ui("confirm")
-	_check(page._is_complete and game.get_current_level() == 2, "win stays committed when its later check-in fails")
-	_check(dialog != null and dialog.is_showing() and streak.get_data().current_streak == 6, "failed post-win check-in exposes its own retry")
+	_check(fault_hits > 0, "combined win/check-in reaches injected storage failure")
+	_check(not page._is_complete and game.get_current_level() == 1, "failed win/check-in leaves progress and terminal presentation untouched")
+	_check(dialog != null and dialog.is_showing() and streak.get_data().current_streak == 6, "failed atomic check-in exposes terminal retry without partial check-in")
 	if dialog != null:
-		_check(dialog.get_node("Root/Content/DialogRoot/ActionButton").text == "もう一度", "check-in recovery uses the existing Japanese retry translation")
+		_check(dialog.get_node("Root/Content/DialogRoot/ActionButton").btn_text == "もう一度", "atomic check-in recovery uses the existing Japanese retry translation")
 	TranslationServer.set_locale(previous_locale)
 	if dialog != null and dialog.is_showing():
 		var old_retry: Callable = dialog._on_confirm
 		if cancel:
 			ui.hide_ui("game")
 			await process_frame
-			_check(dialog.is_hidden(), "leaving game cancels its pending check-in prompt")
+			_check(not dialog.is_showing(), "leaving game cancels its pending combined result prompt")
 			_fail(false)
 			old_retry.call()
 			await create_timer(0.1).timeout
-			_check(streak.get_data().current_streak == 6, "old post-win retry does not check in after owner leaves")
+			_check(streak.get_data().current_streak == 6 and game.get_current_level() == 1, "old combined retry changes neither check-in nor progress after owner leaves")
 		else:
-			dialog.get_node("Root/Content/DialogRoot/ActionButton").tag_pressed.emit()
+			dialog._on_action_btn_pressed()
 			await create_timer(0.4).timeout
-			_check(dialog.is_showing() and streak.get_data().current_streak == 6, "repeated failed check-in keeps an actionable prompt")
+			_check(dialog.is_showing() and streak.get_data().current_streak == 6 and game.get_current_level() == 1, "repeated failed combined result keeps an actionable prompt")
 			_fail(false)
-			dialog.get_node("Root/Content/DialogRoot/ActionButton").tag_pressed.emit()
-			await create_timer(0.1).timeout
-			_check(streak.get_data().current_streak == 7 and streak.get_pending_show_uid() > 0, "check-in retry registers day-seven reward")
-			_check(game.get_current_level() == 2, "check-in retry does not replay the saved victory")
+			dialog._on_action_btn_pressed()
+			await process_frame
+			_check(streak.get_data().current_streak == 7 and streak.get_pending_show_uid() > 0, "combined retry atomically registers day-seven reward")
+			_check(game.get_current_level() == 2 and page._is_complete, "combined retry commits exactly one victory")
+			var revision: int = game.get_core_store().revision()
+			old_retry.call()
+			_check(game.get_core_store().revision() == revision, "late duplicate combined result callback writes nothing")
+
 	_fail(false)
 	ui.hide_all()
 	await create_timer(0.2).timeout
@@ -191,3 +212,9 @@ func _check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		push_error("TEST_FAILED: " + message)
+
+
+func _wait_ready(page: Variant) -> void:
+	var deadline: int = Time.get_ticks_msec() + 8000
+	while not page._entry_ready and page._entry_error.is_empty() and Time.get_ticks_msec() < deadline:
+		await process_frame

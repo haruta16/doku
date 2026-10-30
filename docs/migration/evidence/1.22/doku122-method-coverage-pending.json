@@ -1,0 +1,103 @@
+[
+  {
+    "source": "res://scripts/common/unikit_manager.gd",
+    "target": "res://products/meowdoku/app/platform/unikit_manager.gd",
+    "missing_original_methods": [
+      "_mark_reward_received"
+    ]
+  },
+  {
+    "source": "res://scripts/module/award/award_manager.gd",
+    "target": "res://products/meowdoku/app/features/award/award_manager.gd",
+    "missing_original_methods": [
+      "_apply_item",
+      "_item_dict_valid"
+    ]
+  },
+  {
+    "source": "res://scripts/module/game_state/save_store.gd",
+    "target": "res://scripts/framework/storage/save_store.gd",
+    "missing_original_methods": [
+      "_load_once",
+      "_read_config",
+      "capture_file_snapshot",
+      "restore_file_snapshot"
+    ]
+  },
+  {
+    "source": "res://scripts/module/gameplay/selector/level_selector.gd",
+    "target": "res://products/meowdoku/gameplay/application/selection/level_selector.gd",
+    "missing_original_methods": [
+      "_fail_and_restore",
+      "_finalize",
+      "_get_resolver"
+    ]
+  },
+  {
+    "source": "res://scripts/module/ui/base/ui_base_window.gd",
+    "target": "res://scripts/framework/ui/base/ui_base_window.gd",
+    "missing_original_methods": [
+      "_attach_button_press_guard"
+    ]
+  },
+  {
+    "source": "res://scripts/module/ui/queue/ui_popup_queue.gd",
+    "target": "res://products/meowdoku/app/ui/queue/ui_popup_queue.gd",
+    "missing_original_methods": [
+      "_run"
+    ]
+  },
+  {
+    "source": "res://scripts/module/ui/ui_manager.gd",
+    "target": "res://products/meowdoku/app/ui/ui_manager.gd",
+    "missing_original_methods": [
+      "_abort_mask_crossfade",
+      "_assign_z_index",
+      "_compact_z_indices",
+      "_create_and_cache",
+      "_evict_cached",
+      "_fade_out_mask",
+      "_get_or_create",
+      "_hide_mask",
+      "_is_in_stack",
+      "_kill_mask_secondary_tween",
+      "_kill_mask_tween",
+      "_load_scene_async",
+      "_notification",
+      "_on_back_button",
+      "_ordered_windows",
+      "_pop_stack",
+      "_push_stack",
+      "_refresh_occlusion",
+      "_reorder_window_tree",
+      "_restack_mask",
+      "_scene_path",
+      "_show_mask",
+      "_start_mask_crossfade",
+      "_top_mask_window",
+      "_unhandled_input",
+      "await_hidden",
+      "block_input_briefly",
+      "destroy_ui",
+      "fade_out_mask_early",
+      "get_top_ui_name",
+      "get_top_ui_name_excluding",
+      "get_top_window",
+      "get_ui",
+      "get_window_count",
+      "has_ui",
+      "hide_all",
+      "hide_all_except",
+      "hide_all_showing_except",
+      "hide_ui",
+      "is_any_loading",
+      "is_covered_by_mask",
+      "is_top_of_stack",
+      "set_layer_visible",
+      "set_window_mask_opacity",
+      "show_ui",
+      "warm_pool",
+      "warm_pool_async"
+    ]
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "timestamp_utc": "2026-10-30T12:35:53.518445+00:00",
+  "status": "reproduced_unresolved_audio_shutdown_boundary",
+  "single_run": true,
+  "test_condition": [
+    "show actual account_result",
+    "wait1process_frame",
+    "call hide_ui and assert CLOSING",
+    "queue_free",
+    "wait3process_frame",
+    "immediate quit"
+  ],
+  "added_sleep": false,
+  "assertions": 3,
+  "failures": 0,
+  "strict_ok": false,
+  "exit_code": 0,
+  "source_sha256_stage_matches_fixture": {
+    "scripts/framework/ui/base/ui_base_window.gd": "f84229356c294578191101692a0b724dcb72b6261ad5b6a3e1b594131d3e7fdd",
+    "scripts/framework/ui/base/ui_frame_window.gd": "b22fbdda6346d5b772ffd2c6af95951f152fc0f0e69993c13fa06838c3b2625b",
+    "scripts/framework/ui/ui_window_manager.gd": "8c3e2921ffb3e95699c52c24021082bf09c438e907362e453c5260a55f0da13f",
+    "products/meowdoku/app/features/account/view/account_result_page.gd": "7b66095506cfa3b1a47d04bf23de220e04712d80c6488395670a63864bafa709",
+    "products/meowdoku/app/services/sound_manager.gd": "e2e2e7a4e75517f89b107c903de17dab48e7d905a1a82e58ffe65d50e34f72d2"
+  },
+  "runner": "/tmp/doku122-ui-final-account-destroy-probe.py",
+  "probe_sha256": "89d07e87630e53da80079450826bb1503471debf19b2357926742b093b696327",
+  "logs": {
+    "combined": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-final-account_result.log",
+    "engine": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-final-account_result.engine.log",
+    "result": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-final-account_result.result.json"
+  },
+  "shutdown_instances": [
+    "Leaked instance: OggPacketSequence:9223372280292182293 - Reference count: 3",
+    "Leaked instance: AudioStreamOggVorbis:9223372280308959510 - Reference count: 1",
+    "Leaked instance: AudioStreamPlaybackOggVorbis:9223372305374120706 - Reference count: 1",
+    "Leaked instance: OggPacketSequencePlayback:9223372305390897923 - Reference count: 1",
+    "Resource still in use: res://products/meowdoku/assets/audio/sfx/dlg_open_1.ogg::OggPacketSequence_r6ohj (OggPacketSequence)",
+    "Resource still in use: res://products/meowdoku/assets/audio/sfx/dlg_open_1.ogg (AudioStreamOggVorbis)"
+  ],
+  "function_state_present": false,
+  "conclusion": "Final cancellable UI wait code removes the previously observed parent FunctionState, but the same very short exit sequence still retains dlg_open_1.ogg playback/resource instances. This run does not establish whether engine audio-thread teardown or product ownership causes retention. Not strict pass; do not waive or substitute a delay. Full157componenttest strict pass remains separate evidence."
+}

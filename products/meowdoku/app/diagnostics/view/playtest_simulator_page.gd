@@ -7,7 +7,7 @@ extends UIFrameWindow
 # ---- 子节点引用 ----
 @onready var _count_input: LineEdit = $CenterPanel/Margin/VBox/CountRow/CountInput # 模拟局数
 @onready var _rnr_input: LineEdit = $CenterPanel/Margin/VBox/RnrRow/RnrInput # rule_normal_rank 覆盖值（留空 = 用 SDK 真值）
-@onready var _sc_input: LineEdit = $CenterPanel/Margin/VBox/ScRow/ScInput # size_cycle 覆盖值（留空 = 用 SDK 真值）
+@onready var _sc_input: LineEdit = $CenterPanel/Margin/VBox/ScRow/ScInput # 旧 size_cycle 尺寸表覆盖值（留空 = 当前 1.22 选题策略）
 @onready var _error_label: Label = $CenterPanel/Margin/VBox/ErrorLabel # 参数 / 流程错误提示
 @onready var _result_label: Label = $CenterPanel/Margin/VBox/ResultLabel # 跑完后的摘要
 @onready var _start_btn: Button = $CenterPanel/Margin/VBox/ButtonRow/StartBtn # 开始按钮，跑的过程中禁用防重入
@@ -126,7 +126,10 @@ func _on_start_pressed() -> void:
 	_result_label.visible = false
 	_start_btn.disabled = true
 
+	var presentation: int = get_presentation_revision()
 	await get_tree().process_frame
+	if not is_showing() or presentation != get_presentation_revision():
+		return
 
 	var summary: Dictionary = _run_simulation(count)
 	if summary.get("ok", false):
@@ -193,8 +196,11 @@ func _build_record_meta(
 	pid: String,
 	entry: Dictionary,
 	rm: Array,
-	actions: PackedStringArray
+	actions: PackedStringArray,
+	plan: Dictionary
 ) -> Dictionary:
+	var context: Dictionary = LevelSelector.capture_context(int(plan.get("seed", 0)), plan.get("selection_policy", {}))
+	var runtime: DokuSelectionRuntime = LevelSelector.make_runtime(plan.next_selection, context)
 	return {
 		"iter": iter_idx,
 		"lv": lv,
@@ -207,10 +213,10 @@ func _build_record_meta(
 		"bank_idx": int(entry.get("_bank_idx", 0)),
 		"rank": int(entry.get("_bank_rank", 1)),
 		"tier": String(entry.get("_bank_tier", "")),
-		"strategy": GameState.get_current_strategy(),
+		"strategy": runtime.state.get_current_strategy(),
 		"rnr": ABTestManager.rule_normal_rank.value(),
-		"is_dfe": GameState.is_current_level_daily_first_easy(),
-		"is_hard": LevelData.is_hard_level(lv),
+		"is_dfe": runtime.state.is_current_level_daily_first_easy(),
+		"is_hard": LevelSelector.is_hard_level(lv, runtime.policy, runtime),
 		"actions": ",".join(actions),
 	}
 
@@ -271,7 +277,7 @@ static func _compute_pool_sizes() -> Dictionary:
 	# LK-Modified 题库没有 rank / tier，按「尺寸 + maxR」统计
 	var lkmod_buckets: Dictionary = {}
 	for e in BankData.get_lk_modified_levels():
-		var sz: int = e.regionMap.size()
+		var sz: int = BankData.get_region_map(e).size()
 		var mr: int = int(e.get("maxR", 0))
 		if sz <= 0 or mr <= 0:
 			continue
@@ -284,12 +290,13 @@ static func _compute_pool_sizes() -> Dictionary:
 
 # ================= 模拟主流程 =================
 ## 模拟主循环：重置存档 → 逐局取题并登记撞重 → 随机判胜负 → 汇总统计并写报告 → 还原原关卡
-## 注意：会真的改存档（reset_all / record_puzzle / 胜负推进都会落盘），也会写报告文件
+## 注意：会真的改存档（reset_all / 候选选题与胜负合并提交都会落盘），也会写报告文件
 func _run_simulation(count: int) -> Dictionary:
 	# 先把玩家当前关卡记下来，跑完要还原
 	var orig_lv: int = GameState.get_current_level()
 	# reset_all 会落盘：当前关卡回 1、策略回 1、最近题目记录清空
-	GameState.reset_all()
+	if not GameState.reset_all():
+		return {"ok": false, "error": "reset_all 保存失败，模拟未开始"}
 
 	# 先扫题库桶，后面判「池小噪声」要用
 	var pool_sizes: Dictionary = _compute_pool_sizes()
@@ -304,15 +311,14 @@ func _run_simulation(count: int) -> Dictionary:
 		rnr_overridden = true
 		print("[playtest] rnr override = %d" % rnr_val)
 
-	# size_cycle 可选覆盖：没填就用 SDK 真值
+	# 留空使用完整 1.22 normal_level 策略；明确输入时保留 size_cycle 尺寸表对照诊断
 	var sc_raw: String = _sc_input.text.strip_edges()
-	var sc_value: int
+	var sc_value: int = -1
 	if sc_raw.is_valid_int():
 		sc_value = sc_raw.to_int()
 		print("[playtest] size_cycle override = %d" % sc_value)
 	else:
-		sc_value = ABTestManager.size_cycle.value()
-		print("[playtest] size_cycle = %d (SDK 真值)" % sc_value)
+		print("[playtest] 使用当前 1.22 normal_level 策略")
 
 	# 逐局日志行
 	var log_lines: Array = []
@@ -330,6 +336,7 @@ func _run_simulation(count: int) -> Dictionary:
 		# 本轮关卡号（上一轮的胜负会推进它）
 		var lv: int = GameState.get_current_level()
 
+		var plan: Dictionary
 		var entry: Dictionary
 		var source: String
 		# 上一轮失败会留下 retry_puzzle 缓存，优先复用它，复现线上重试路径
@@ -345,16 +352,19 @@ func _run_simulation(count: int) -> Dictionary:
 				"_bank_source_main": cached.get("bank_source_main", ""),
 				"_bank_source": cached.get("bank_source", "regular"),
 			}
+			plan = _prepare_cached_simulation_plan(lv, entry, cached)
 			source = "cached" # 命中重试缓存
 		else:
-			# 否则按 size_cycle 表取一张新题
-			entry = LevelData.get_level_entry(lv, _compute_ab_size(lv, sc_value))
+			# 默认走 1.22；仅明确给出 sc 时使用旧尺寸表。计划保留到胜负同次提交。
+			plan = LevelData.resolve_level_entry(lv, _compute_ab_size(lv, sc_value) if sc_value >= 0 else 0)
+			entry = plan.get("entry", {})
+			if plan.get("ok", false) and plan.get("existing_entry", false):
+				_finalize_diagnostic_delivery(plan)
 			source = "fresh" # 新取的题
 
-		# 取不到题就中止，并把玩家关卡还原
-		if entry.is_empty() or not entry.has("regionMap"):
-			GameState.cheat_jump_to_level(orig_lv)
-			return {"ok": false, "error": "get_level_entry(%d) 返回空 entry" % lv}
+		# 失败不再追加跳关写盘；仅释放本工具临时实验覆盖。
+		if not plan.get("ok", false) or entry.is_empty() or not entry.has("regionMap"):
+			return _simulation_error("关卡 %d 选题失败: %s" % [lv, plan.get("error", "empty_entry")], rnr_overridden)
 
 		# size 为 0 时用 regionMap 行数兜底
 		var sz: int = int(entry.get("size", 0))
@@ -368,24 +378,23 @@ func _run_simulation(count: int) -> Dictionary:
 		var actions: PackedStringArray = PackedStringArray()
 		if randf() < 1.0 / 3.0: # 1/3 概率点定位
 			actions.append("locate")
-			GameState.mark_current_level_dirty()
 		if randf() < 1.0 / 3.0: # 1/3 概率点提示
 			actions.append("hint")
-			GameState.mark_current_level_dirty()
 
 		# 本轮上下文，撞重报告里当 CURR 侧
 		var curr_meta: Dictionary = _build_record_meta(
-			i + 1, lv, sz, source, full_pid, entry, rm, actions
+			i + 1, lv, sz, source, full_pid, entry, rm, actions, plan
 		)
 		# 登记本轮 pid；返回非空表示历史上出现过（跨 level 即撞重）
-		var dup_prev: Dictionary = GameState.record_puzzle(full_pid, lv)
+		var dup_prev: Dictionary = GameState.find_recent_puzzle(full_pid)
 		var dedup_triggered: bool = false
 		# 撞重后按线上逻辑推进题库指针再重取一次题，看修复路径会不会再撞
 		if not dup_prev.is_empty() and int(dup_prev.get("level", -1)) != lv:
-			# 推进 main / lk_mod 的题库下标
-			LevelData.advance_for_entry(entry, sz)
-			# 重取时第二参传 0，表示仍用关卡默认尺寸
-			var retry_entry: Dictionary = LevelData.get_level_entry(lv, 0)
+			# 诊断重取也在候选推进游标；最终与本轮胜负一次提交。
+			var retry_plan: Dictionary = _prepare_duplicate_rescue(plan, entry, sz, lv)
+			if not retry_plan.get("ok", false):
+				return _simulation_error("关卡 %d 重取失败: %s" % [lv, retry_plan.get("error", "empty_entry")], rnr_overridden)
+			var retry_entry: Dictionary = retry_plan.get("entry", {})
 			if not retry_entry.is_empty() and retry_entry.has("regionMap"):
 				var retry_sz: int = int(retry_entry.get("size", 0))
 				if retry_sz == 0:
@@ -400,10 +409,11 @@ func _run_simulation(count: int) -> Dictionary:
 					retry_pid,
 					retry_entry,
 					retry_rm,
-					actions
+					actions,
+					retry_plan
 				)
 				# 重取后仍然撞重，才写成报告里的 dedup
-				var retry_dup: Dictionary = GameState.record_puzzle(retry_pid, lv)
+				var retry_dup: Dictionary = GameState.find_recent_puzzle(retry_pid)
 				if not retry_dup.is_empty() and int(retry_dup.get("level", -1)) != lv:
 					dedup_triggered = true
 					# 取这个 pid 上次出现的记录；找不到就用占位默认值，字段照常写全
@@ -470,6 +480,7 @@ func _run_simulation(count: int) -> Dictionary:
 					dedup_reports.append(dedup_entry)
 
 				# 本轮正式改用重取后的题
+				plan = retry_plan
 				entry = retry_entry
 				sz = retry_sz
 				rm = retry_rm
@@ -482,34 +493,21 @@ func _run_simulation(count: int) -> Dictionary:
 		# 归一到「形状前缀」维度做等价类统计
 		var prefix: String = _strip_suffix(full_pid)
 
-		# 1/10 概率判失败，否则算通关；失败会把本题缓存进 retry_puzzle
+		# dirty、重试题与游标同本轮胜负提交，不提前写 GameState。
+		plan["diagnostic_dirty"] = not actions.is_empty()
+		var retry_params: Dictionary = RetryPuzzleBuilder.build(lv, entry)
+		retry_params["selection_policy"] = plan.get("selection_policy", {}).duplicate(true)
+		plan["retry_params"] = retry_params
 		var outcome: String
-		# 失败：标记关卡重试并缓存本题，下一轮就命中 cached 分支
+		var committed: bool
 		if randf() < 1.0 / 10.0:
 			outcome = "restart"
-			GameState.on_level_failed(lv)
-
-			(
-				GameState
-				. set_retry_puzzle(
-					lv,
-					{
-						"bank_mode": true,
-						"bank_size": sz,
-						"bank_rank": int(entry.get("_bank_rank", 1)),
-						"bank_index": int(entry.get("_bank_idx", 0)),
-						"bank_source_main": entry.get("_bank_source_main", ""),
-						"bank_source": entry.get("_bank_source", ""),
-						"bank_tier": entry.get("_bank_tier", ""),
-						"prebuilt_regions": rm,
-						"prebuilt_solution": entry.get("solution", []),
-					}
-				)
-			)
+			committed = GameState.on_level_failed(lv, LevelKind.MAIN, plan)
 		else:
 			outcome = "win"
-
-			GameState.on_level_won(lv)
+			committed = GameState.on_level_won(lv, LevelKind.MAIN, int(entry.get("_bank_rank", 0)), 0, true, null, plan)
+		if not committed:
+			return _simulation_error("关卡 %d 的选题/结算保存失败，已停止" % lv, rnr_overridden)
 		actions.append(outcome)
 
 		# 撞重的行加个 [DEDUP] 尾巴，方便在报告里 grep
@@ -565,6 +563,8 @@ func _run_simulation(count: int) -> Dictionary:
 
 	# 还原玩家的关卡
 	GameState.cheat_jump_to_level(orig_lv)
+	if not GameState.get_last_storage_result().get("ok", false):
+		return _simulation_error("模拟完成，但还原原关卡保存失败", rnr_overridden)
 
 	# 清掉临时 AB 覆盖，避免影响后续游玩
 	if rnr_overridden:
@@ -659,7 +659,9 @@ func _write_report(
 	out.append("# Playtest 模拟报告")
 	out.append("")
 	out.append("生成时间: %s  " % ts)
-	out.append("模拟参数: count=%d, locate=1/3, hint=1/3, restart=1/10, size_cycle=0" % count)
+	out.append("模拟参数: count=%d, locate=1/3, hint=1/3, restart=1/10, size_cycle=%s" % [count, _sc_input.text if not _sc_input.text.strip_edges().is_empty() else "1.22默认"])
+	out.append("")
+	out.append("本工具模拟胜负、道具脏标记和选题去重，不模拟 Elo 计分事实；Elo 评分验证请使用 fastjump 或真实对局。")
 	out.append("")
 	out.append("## 统计摘要")
 	out.append("")
@@ -834,3 +836,57 @@ func _write_report(
 	f.store_string("\n".join(out))
 	f.close()
 	return path
+
+
+func _simulation_error(message: String, rnr_overridden: bool) -> Dictionary:
+	if rnr_overridden:
+		ABTestManager.rule_normal_rank.clear_debug_override()
+	return {"ok": false, "error": message}
+
+
+func _prepare_cached_simulation_plan(level: int, entry: Dictionary, cached: Dictionary) -> Dictionary:
+	var state: DokuSelectionState = LevelSelector.create_entry_state()
+	entry["selection_policy"] = cached.get("selection_policy", {}).duplicate(true)
+	entry["is_restore"] = false
+	entry["_puzzle_id"] = str(cached.get("_puzzle_id", ""))
+	if entry._puzzle_id.is_empty():
+		entry["_puzzle_id"] = LevelData.compute_puzzle_id(int(entry.get("size", 0)), entry.get("regionMap", []))
+	var plan: Dictionary = LevelSelector.prepare_existing_entry(state, level, entry)
+	if plan.get("ok", false):
+		plan["retry_params"] = cached.duplicate(true)
+		plan["restart"] = true
+	return plan
+
+
+## 显式旧尺寸表走 legacy pool 查询，需在候选补齐正式选择的查重记录。
+func _finalize_diagnostic_delivery(plan: Dictionary) -> void:
+	var context: Dictionary = LevelSelector.capture_context(int(plan.get("seed", 0)), plan.get("selection_policy", {}))
+	var state := DokuSelectionState.new(plan.next_selection, context)
+	var entry: Dictionary = plan.entry
+	state.finalize_selected_puzzle(int(plan.level), {
+		"puzzle_id": str(plan.get("puzzle_id", "")), "v": context.app_version,
+		"nl": plan.get("selection_policy", {}).get("normal_level", 0),
+		"src": entry.get("_bank_source_main", entry.get("_bank_source", "")),
+		"iso_sig": entry.get("_iso_sig", []), "style_hist": entry.get("stepHist", []),
+		"style_order_z": entry.get("stepOrderZ", []), "style_size": int(plan.get("size", 0)),
+	}, plan.get("retry_params", {}))
+	plan["next_selection"] = state.export_candidate()
+	for field: Dictionary in state.observed_selection_fields():
+		if not plan.read_selection_fields.has(field):
+			plan.read_selection_fields.append(field)
+
+
+func _prepare_duplicate_rescue(original: Dictionary, entry: Dictionary, size: int, level: int) -> Dictionary:
+	var context: Dictionary = LevelSelector.capture_context(int(original.get("seed", 0)), original.get("selection_policy", {}))
+	var state := DokuSelectionState.new(original.next_selection, context)
+	LevelData.advance_for_entry(entry, size, state)
+	var plan: Dictionary = LevelSelector.prepare(level, 0, {}, false, int(original.get("seed", 0)), context, state)
+	if not plan.get("ok", false):
+		return plan
+	# 合并从本轮最初候选到最终题的全部变更，不能以中间候选作为 live 预期值。
+	plan["expected_selection"] = original.expected_selection.duplicate(true)
+	plan["effects"] = original.get("effects", []).duplicate(true) + plan.get("effects", [])
+	for field: Dictionary in original.get("read_selection_fields", []):
+		if not plan.read_selection_fields.has(field):
+			plan.read_selection_fields.append(field)
+	return plan

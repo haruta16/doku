@@ -1,25 +1,37 @@
-## 消除特效实验：叉被消掉时的动画表现；0=原效果 1=叉改成缩小消失 2=去掉消除时的发光
+## 实验配置 eliminate_effect：登记默认分组并向业务代码解释取值，调试覆盖与远端回退由 AbConfigBase 统一处理。
 extends AbConfigBase
 class_name EliminateEffectConfig
 
-# ---- 分组取值 ----
-const VALUE_DEFAULT: int = 0 # 沿用原有效果
-const VALUE_SHRINK_CROSS: int = 1 # 叉改成缩小消失
-const VALUE_NO_GLOW: int = 2 # 去掉消除时的发光
+const VALUE_LEGACY_DEFAULT: int = 0
+const VALUE_LEGACY_SHRINK: int = 1
+const VALUE_CONTROL: int = 2
+const VALUE_CELL_SQUEEZE: int = 3
+const VALUE_CROSS_BIG: int = 4
+const VALUE_NEW_ART: int = 5
+const VALUE_FULL: int = 6
 
 
-## 初始化：登记实验 key、默认档与染色时机
+## 登记实验键与默认分组，供 ABTestManager 初始化并在远端值不可用时回退。
 func _init() -> void:
 	key = "eliminate_effect"
-	default_value = VALUE_DEFAULT # 默认档：原效果
-	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
+	default_value = VALUE_CONTROL
 
 
-## 叉是否改成缩小消失
-func is_shrink_cross() -> bool:
-	return value() == VALUE_SHRINK_CROSS
+func is_experiment_group() -> bool:
+	var v: int = value()
+	return v == VALUE_CELL_SQUEEZE or v == VALUE_CROSS_BIG or v == VALUE_NEW_ART or v == VALUE_FULL
 
 
-## 是否去掉发光
-func is_remove_glow() -> bool:
-	return value() == VALUE_NO_GLOW
+func is_cell_squeeze() -> bool:
+	var v: int = value()
+	return v == VALUE_CELL_SQUEEZE or v == VALUE_FULL
+
+
+func is_cross_big() -> bool:
+	var v: int = value()
+	return v == VALUE_CROSS_BIG or v == VALUE_FULL
+
+
+func use_new_art() -> bool:
+	var v: int = value()
+	return v == VALUE_NEW_ART or v == VALUE_FULL

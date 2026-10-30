@@ -1,5 +1,4 @@
-## 动画播放工具（全静态）：play 前先回 RESET 基线并推进到第 0 帧，避免首帧闪
-## 当前仓库内没有调用方，属于预留工具；缺动画时直接 push_error，不静默失败
+## 界面动画辅助：封装动画播放，并提交嵌套动画节点的目标状态。
 class_name AnimUtil
 extends RefCounted
 
@@ -25,3 +24,18 @@ static func play(player: AnimationPlayer, anim: StringName, reset: bool = true) 
 			)
 	player.play(anim) # 播放目标动画
 	player.advance(0.0) # 同样推进 0 秒，让第一帧就是新动画的姿态
+
+
+static func commit_nested(player: AnimationPlayer) -> void:
+	if player == null or player.current_animation == &"":
+		return
+	var animation: Animation = player.get_animation(player.current_animation)
+	var root: Node = player.get_node_or_null(player.root_node)
+	if animation == null or root == null:
+		return
+	for i in animation.get_track_count():
+		if animation.track_get_type(i) != Animation.TYPE_ANIMATION:
+			continue
+		var nested := root.get_node_or_null(animation.track_get_path(i)) as AnimationPlayer
+		if nested != null and nested.is_playing():
+			nested.advance(0.0)

@@ -1,9 +1,8 @@
-## 每日挑战入口的纯逻辑：三态判定（未解锁 / 可玩 / 今日已完成）+ 日期、倒计时、成绩文案
-## 全部是 static，不碰节点；主页入口格 daily_challenge_entry_cell 直接调这里
+## 每日挑战入口状态：结合解锁进度、日期与重玩实验决定按钮行为和显示文案。
 class_name DailyEntryState
 extends RefCounted
 
-enum State { LOCKED, NORMAL, DONE } # 入口三态：LOCKED 未解锁 / NORMAL 今天可玩 / DONE 今天已完成
+enum State { LOCKED, NORMAL, DONE, REPLAY }
 
 const UNLOCK_LEVEL: int = 21 # 解锁门槛：主线打到第 21 关才开放每日挑战
 
@@ -25,15 +24,25 @@ const _MONTH_ABBR: Array[String] = [
 ]
 
 
-## 算出口三态：先看等级够不够，再看今天是不是已经翻篇
+## 先检查主线解锁门槛，再比较本地日期和历史最大日期，区分正常、完成与今日重玩。
 static func compute_state() -> int:
 	if GameState.get_current_level() < UNLOCK_LEVEL:
 		return State.LOCKED
 	var today: String = _today_str()
-	# 已完成 = 今天通关过，或者今天已经落后于 max_daily_date（这一天已被翻过去）
-	if GameState.get_daily_completed_date() == today or today < GameState.get_max_daily_date():
+	if today < GameState.get_max_daily_date():
 		return State.DONE
+	if GameState.get_daily_completed_date() == today:
+		return State.REPLAY
 	return State.NORMAL
+
+
+## 今日完成状态还需通过装扮实验的重玩开关，不能只看日期。
+static func can_replay_today() -> bool:
+	return compute_state() == State.REPLAY and ABTestManager.dc_costume.can_replay()
+
+
+static func is_done_like(state: int) -> bool:
+	return state == State.DONE or state == State.REPLAY
 
 
 ## 今天的日期文案（如 "Jun 3"），月份走翻译表
@@ -65,13 +74,20 @@ static func done_rank_text() -> String:
 	return TranslationServer.translate("HOME_DAILY_TOP_PERCENT") % I18nFormat.percent(top, decimals)
 
 
-## 入口点击的统一处理：未解锁/已完成各弹一条 Toast，可玩时走回调或直接打开每日页
-static func handle_click(host: Node, on_normal: Callable = Callable()) -> void:
+## 按统一入口状态显示提示或调用正常、重玩回调，默认正常入口打开每日挑战。
+static func handle_click(
+	host: Node, on_normal: Callable = Callable(), on_replay: Callable = Callable()
+) -> void:
 	match compute_state():
 		State.LOCKED:
 			Toast.popup("HOME_TOAST_DAILY_LOCKED", host)
 		State.DONE:
 			Toast.popup("HOME_TOAST_DAILY_DONE", host)
+		State.REPLAY:
+			if ABTestManager.dc_costume.can_replay() and on_replay.is_valid():
+				on_replay.call()
+			else:
+				Toast.popup("HOME_TOAST_DAILY_DONE", host)
 		State.NORMAL:
 			if on_normal.is_valid():
 				on_normal.call()

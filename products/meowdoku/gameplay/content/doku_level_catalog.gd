@@ -84,7 +84,7 @@ static func resolve_definition(definition: Dictionary, provider: Callable) -> Di
 	var index: int = int(puzzle.index) - 1
 	if index < 0 or index >= entries.size() or not entries[index] is Dictionary:
 		return _failure("level_reference_missing:" + str(puzzle.bank))
-	var entry: Dictionary = entries[index].duplicate(true)
+	var entry: Dictionary = BankData.materialize_entry(entries[index], true)
 	if not entry.get("regionMap") is Array:
 		return _failure("level_reference_invalid:" + str(puzzle.bank))
 	var size: int = entry.regionMap.size()

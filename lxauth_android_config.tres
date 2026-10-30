@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="LXAuthAndroidConfig" format=3 uid="uid://dxwbk2jl1203k"]
+
+[ext_resource type="Script" uid="uid://b0hnn6ptxj7it" path="res://addons/lxlogin/editor/lxauth_android_config.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+facebook_app_id = "2724140174607113"
+facebook_client_token = "4295e3ec7780b937e316da9688fe1450"

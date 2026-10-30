@@ -40,7 +40,7 @@ func _run() -> void:
 	await process_frame
 	_check(not page._entry_error.is_empty(), "content error blocks hard-level entry")
 	_check(_saved().profile.daily_first_easy_date == "", "failed hard-level entry does not consume today's opportunity")
-	_check(state.is_daily_first_easy_available(), "failed entry retains evaluated qualification")
+	_check(_daily_available_from_candidate(), "failed entry retains evaluated qualification")
 	await _close()
 	content.publish(null)
 	var entry_date: String = Time.get_date_string_from_system()
@@ -81,9 +81,9 @@ func _run() -> void:
 	_fail_writes(true)
 	page = ui.show_ui("game", {"level_index": 1})
 	await create_timer(0.1).timeout
-	_check(page._entry_error.get("error") == "selection_commit_failed", "new selection reports failed entry transaction")
+	_check(page._entry_error.get("error") == "commit_failed", "new selection reports failed entry transaction")
 	_assert_old_entry(before, "selection write failure")
-	_check(state.is_daily_first_easy_available(), "failed selection keeps daily opportunity retryable")
+	_check(_daily_available_from_candidate(), "failed selection keeps daily opportunity retryable")
 	await _close()
 	_fail_writes(false)
 	entry_date = Time.get_date_string_from_system()
@@ -92,7 +92,7 @@ func _run() -> void:
 	_check(page._entry_error.is_empty() and not page._entry_preparing, "fresh daily puzzle retries successfully")
 	_check(_saved().profile.daily_first_easy_date in [entry_date, Time.get_date_string_from_system()], "fresh puzzle commits daily date")
 	_check(_saved().endgame.snapshot.regionMap == page._puzzle.regions, "new checkpoint matches prepared board")
-	_check(_saved().profile.saved_game_auto_mark == page._gameplay_policy.auto_mark_variant, "entry metadata commits with selected puzzle")
+	_check(_saved().round_services["doku/main"].snapshot.content.gameplay_policy == page._gameplay_policy_snapshot(), "frozen 1.22 gameplay metadata commits with selected puzzle")
 	await _close()
 
 	# 有操作的残局优先恢复，但资格评估本身不能落盘。
@@ -109,16 +109,17 @@ func _run() -> void:
 			break
 	snapshot.marks = [mark]
 	candidate.endgame.snapshot = snapshot
+	# Canonical RoundService record is authoritative; keep both legacy and canonical fixtures consistent.
+	candidate.round_services["doku/main"].snapshot.board[int(mark[0])][int(mark[1])] = CellState.MARK
 	candidate.round_runtime.current_level_dirty = true
 	_check(state.commit_core_candidate(candidate, state.get_core_store().revision()).get("ok", false), "progressed checkpoint fixture commits")
 	before = _saved()
-	state.evaluate_daily_first_easy()
-	_check(not state.is_daily_first_easy_available(), "progressed checkpoint disables difficulty replacement")
+	_check(not _daily_available_from_candidate(), "progressed checkpoint disables difficulty replacement")
 	_check(_saved().profile.daily_first_easy_date == "", "eligibility evaluation does not consume persistent date")
 	_fail_writes(true)
 	page = ui.show_ui("game", {"level_index": 1})
 	await create_timer(0.1).timeout
-	_check(page._is_endgame_restore_session and page._entry_error.get("error") == "entry_commit_failed", "restored entry reports metadata write failure")
+	_check(page._is_endgame_restore_session and page._entry_error.get("error") == "commit_failed", "restored entry reports metadata write failure")
 	_assert_old_entry(before, "restored entry write failure")
 	await _close()
 	_fail_writes(false)
@@ -131,6 +132,9 @@ func _run() -> void:
 	_check(state.is_current_level_dirty(), "restoration preserves the round's dirty status")
 	await _close()
 	await _daily_entry_transaction()
+	for name: String in ["game", "daily_game", "confirm"]:
+		await ui.destroy_ui(name)
+	await process_frame
 	print("GAME ENTRY TRANSACTION: checks=%d failures=%d" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 
@@ -141,6 +145,8 @@ func _prepare(level: int) -> void:
 	candidate.profile.current_strategy = 1
 	candidate.profile.tutorial_done = true
 	candidate.profile.daily_first_easy_date = ""
+	candidate.round_runtime.daily_first_easy_available = false
+	candidate.round_runtime.daily_first_easy_evaluated = false
 	candidate.profile.retry_puzzle_level = 0
 	candidate.profile.retry_puzzle_params = {}
 	candidate.profile.saved_game_auto_mark = -1
@@ -150,17 +156,15 @@ func _prepare(level: int) -> void:
 	candidate.endgame.stats.main_id = "entry-prior-id"
 	candidate.round_runtime.is_daily_first_easy_level = false
 	_check(state.commit_core_candidate(candidate, state.get_core_store().revision()).get("ok", false), "entry fixture commits")
-	state.set("_daily_first_easy_available", false)
-	state.set("_daily_first_easy_evaluated", false)
 
 
 func _rearm_daily() -> void:
 	var candidate: Dictionary = state.get_core_candidate()
 	candidate.profile.daily_first_easy_date = ""
+	candidate.round_runtime.daily_first_easy_available = false
+	candidate.round_runtime.daily_first_easy_evaluated = false
 	candidate.profile.saved_game_auto_mark = -1
 	_check(state.commit_core_candidate(candidate, state.get_core_store().revision()).get("ok", false), "new-day fixture commits")
-	state.set("_daily_first_easy_available", false)
-	state.set("_daily_first_easy_evaluated", false)
 
 
 func _saved() -> Dictionary:
@@ -178,7 +182,7 @@ func _assert_old_entry(before: Dictionary, context: String) -> void:
 
 
 func _daily_entry_transaction() -> void:
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	ab.dc_level.set_debug_override(0)
 	var candidate: Dictionary = state.get_core_candidate()
 	candidate.profile.daily_started_date = ""
@@ -254,3 +258,10 @@ func _check(condition: bool, message: String) -> void:
 	if not condition:
 		failures += 1
 		push_error("TEST_FAILED: " + message)
+
+
+func _daily_available_from_candidate() -> bool:
+	var selector: Script = load("res://products/meowdoku/gameplay/application/selection/level_selector.gd")
+	var candidate_state: Variant = selector.create_entry_state(122)
+	candidate_state.evaluate_daily_first_easy()
+	return candidate_state.is_daily_first_easy_available()

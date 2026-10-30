@@ -1,0 +1,78 @@
+{
+  "status": "fixed_applied_to_stage_by_root",
+  "patch": "/tmp/doku122-confirm-canonical-revision.patch",
+  "paths": {
+    "products/meowdoku/app/ui/common/confirm_dialog.gd": {
+      "baseline_stage_sha256": "ddd19234558203204d6796582ad20305ee65027ba6be9a84dbe9fbcaeb2f33bc",
+      "fixed_sha256": "17081189ed3a87ac78d90fe20bc6c0c74d0e9013e23e19e8039fc6dbcc62fad4",
+      "applied_stage_sha256": "17081189ed3a87ac78d90fe20bc6c0c74d0e9013e23e19e8039fc6dbcc62fad4"
+    },
+    "tools/validation/test_ui_popup_results.gd": {
+      "baseline_stage_sha256": "3ffe13a2c63de021a46019c756ff66bd843ce9b24074cefa4633ab400c7bed59",
+      "fixed_sha256": "39260e63925b6e276164f55b81de442c1cdf3486ac359d2f4c0a285664624911",
+      "applied_stage_sha256": "39260e63925b6e276164f55b81de442c1cdf3486ac359d2f4c0a285664624911"
+    }
+  },
+  "root_cause": "ConfirmDialog overrode the framework presentation getter with its local animation counter. Normal on_hide incremented that counter, causing the new manager post-hide ownership guard to return before stack removal and hidden publication. The HIDDEN dialog stayed in_stack and destroy_ui waited indefinitely.",
+  "bounded_probe": {
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-timeout-probe-1793363916274829000.log",
+    "completed_assertions": 45,
+    "failures": 0,
+    "blocked_at": "_finish -> UIManager.destroy_ui(confirm)",
+    "state": {
+      "confirm_window_state": "HIDDEN",
+      "show_revision": 1,
+      "base_presentation_revision": 1,
+      "overridden_presentation_revision": 2,
+      "in_stack": true
+    }
+  },
+  "daily_fixed": {
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-confirm-canonical-1793364005545503000.log",
+    "checks": 45,
+    "failures": 0,
+    "strict": true
+  },
+  "popup_diagnostic": {
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-confirm-popup-contract-1793364081308769000.log",
+    "checks": 80,
+    "failures": 6,
+    "meaning": "The three new Confirm contracts pass; six failures concern Home direct-free cancellation because the new shared PREDELETE handler bypasses on_destroy. Platform owns that separate correction."
+  },
+  "callsite_audit": {
+    "other_getter_overrides": 0,
+    "production_external_confirm_open_calls": 0,
+    "settlement_retry": "Cleanup captures instance+presentation; callbacks separately require current business generation and settlement_pending. A normal hidden dialog may retain its presentation identity, while refresh/destroy changes the base identity."
+  },
+  "prior_predelete_validation": [
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-confirm-popup-predelete-1793364286027731000.log",
+      "ok": true,
+      "checks": 80,
+      "failures": 0
+    },
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-confirm-predelete-final-1793364336263295000.log",
+      "ok": true,
+      "checks": 45,
+      "failures": 0
+    }
+  ],
+  "prior_shared_base_sha256": "8c5afa9b7bf21a90d06ddc4d28b1f1cee9c35c7676a87da39938cc05d3c4ba61",
+  "final_shared_base_sha256": "460e78356fdf87058e8e2e0af99ac47a1895e5265c3037ace0f22a383f5d35ad",
+  "final_evidence": [
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-confirm-popup-lifecycle-final-1793364478806855000.log",
+      "ok": true,
+      "checks": 80,
+      "failures": 0
+    },
+    {
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-confirm-lifecycle-final-1793364500986040000.log",
+      "ok": true,
+      "checks": 45,
+      "failures": 0
+    }
+  ],
+  "applied_shared_base_sha256": "460e78356fdf87058e8e2e0af99ac47a1895e5265c3037ace0f22a383f5d35ad"
+}

@@ -1,0 +1,108 @@
+{
+  "raw_identical": 845,
+  "identical_after_precision_fixes": 847,
+  "padding_only": 6,
+  "accounted_for": 853,
+  "differences": [
+    {
+      "path": "scripts/module/daily/view/daily_win_page.gdc",
+      "status": "only_variant_string_alignment_padding",
+      "changed_padding_bytes": 1,
+      "decompressed_offsets": [
+        9099
+      ]
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_day_icon.gdc",
+      "status": "only_variant_string_alignment_padding",
+      "changed_padding_bytes": 3,
+      "decompressed_offsets": [
+        7089,
+        7090,
+        7091
+      ]
+    },
+    {
+      "path": "scripts/module/game/view/other/level_encourage.gdc",
+      "status": "only_variant_string_alignment_padding",
+      "changed_padding_bytes": 28,
+      "decompressed_offsets": [
+        2329,
+        2330,
+        2331,
+        2350,
+        2351,
+        2363,
+        2393,
+        2394,
+        2395,
+        2414,
+        2415,
+        2425,
+        2426,
+        2427,
+        2433,
+        2434,
+        2435,
+        2465,
+        2466,
+        2467,
+        2486,
+        2487,
+        2497,
+        2498,
+        2499,
+        2505,
+        2506,
+        2507
+      ]
+    },
+    {
+      "path": "scripts/module/gameplay/core/puzzle_generator.gdc",
+      "status": "identical_after_float_precision_fix"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/delivery/final_level_validator.gdc",
+      "status": "identical_after_float_precision_fix"
+    },
+    {
+      "path": "scripts/module/home/view/home_companion_reward_page.gdc",
+      "status": "only_variant_string_alignment_padding",
+      "changed_padding_bytes": 7,
+      "decompressed_offsets": [
+        11861,
+        11862,
+        11863,
+        11897,
+        11898,
+        11899,
+        11979
+      ]
+    },
+    {
+      "path": "scripts/module/home/view/home_companion_settle_strip.gdc",
+      "status": "only_variant_string_alignment_padding",
+      "changed_padding_bytes": 10,
+      "decompressed_offsets": [
+        9541,
+        9542,
+        9543,
+        9577,
+        9578,
+        9579,
+        9613,
+        9614,
+        9615,
+        9663
+      ]
+    },
+    {
+      "path": "scripts/module/result/view/game_win_page.gdc",
+      "status": "only_variant_string_alignment_padding",
+      "changed_padding_bytes": 1,
+      "decompressed_offsets": [
+        34405
+      ]
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "scope": "Isolated userdata in each branch. The release branch replaces OS.is_debug_build() only in the seven listed product files; no exported release binary or mobile SDK is validated.",
+  "predicate_files": [
+    "products/meowdoku/app/bootstrap/launcher.gd",
+    "products/meowdoku/app/ui/ui_registry.gd",
+    "products/meowdoku/app/state/game_state.gd",
+    "products/meowdoku/gameplay/presentation/main/view/game_page.gd",
+    "products/meowdoku/gameplay/presentation/daily/view/daily_game_page.gd",
+    "products/meowdoku/gameplay/presentation/board/board_view.gd",
+    "addons/cheat_manager/cheat_bus.gd"
+  ],
+  "ok": true,
+  "branches": [
+    {
+      "mode": "debug",
+      "ok": true,
+      "steps": [
+        {
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--path",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/project",
+            "--log-file",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import-bootstrap.engine.log",
+            "--editor",
+            "--import"
+          ],
+          "exit_code": 0,
+          "ok": true,
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import-bootstrap.log",
+          "summary": "",
+          "completion": {
+            "kind": "import",
+            "ok": true
+          },
+          "diagnostics_classified": true,
+          "phase": "resource_import_without_project_custom_font"
+        },
+        {
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--path",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/project",
+            "--log-file",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import.engine.log",
+            "--editor",
+            "--import"
+          ],
+          "exit_code": 0,
+          "ok": true,
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import.log",
+          "summary": "",
+          "completion": {
+            "kind": "import",
+            "ok": true
+          },
+          "diagnostics_classified": true,
+          "phase": "full_project_configuration_import"
+        },
+        {
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--path",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/project",
+            "--log-file",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/test.engine.log",
+            "--script",
+            "res://tools/validation/test_development_boundaries.gd",
+            "--",
+            "debug"
+          ],
+          "exit_code": 0,
+          "ok": true,
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/test.log",
+          "summary": "DEVELOPMENT BOUNDARY TESTS: mode=debug 33 assertions, 0 failures",
+          "completion": {
+            "kind": "test",
+            "ok": true,
+            "checks": 33,
+            "failures": 0,
+            "summary": "DEVELOPMENT BOUNDARY TESTS: mode=debug 33 assertions, 0 failures"
+          },
+          "diagnostics_classified": true
+        }
+      ]
+    },
+    {
+      "mode": "simulated_release",
+      "ok": true,
+      "steps": [
+        {
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--path",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/project",
+            "--log-file",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import-bootstrap.engine.log",
+            "--editor",
+            "--import"
+          ],
+          "exit_code": 0,
+          "ok": true,
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import-bootstrap.log",
+          "summary": "",
+          "completion": {
+            "kind": "import",
+            "ok": true
+          },
+          "diagnostics_classified": true,
+          "phase": "resource_import_without_project_custom_font"
+        },
+        {
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--path",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/project",
+            "--log-file",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import.engine.log",
+            "--editor",
+            "--import"
+          ],
+          "exit_code": 0,
+          "ok": true,
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import.log",
+          "summary": "",
+          "completion": {
+            "kind": "import",
+            "ok": true
+          },
+          "diagnostics_classified": true,
+          "phase": "full_project_configuration_import"
+        },
+        {
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--path",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/project",
+            "--log-file",
+            "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/test.engine.log",
+            "--script",
+            "res://tools/validation/test_development_boundaries.gd",
+            "--",
+            "simulated_release"
+          ],
+          "exit_code": 0,
+          "ok": true,
+          "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/test.log",
+          "summary": "DEVELOPMENT BOUNDARY TESTS: mode=simulated_release 32 assertions, 0 failures",
+          "completion": {
+            "kind": "test",
+            "ok": true,
+            "checks": 32,
+            "failures": 0,
+            "summary": "DEVELOPMENT BOUNDARY TESTS: mode=simulated_release 32 assertions, 0 failures"
+          },
+          "diagnostics_classified": true
+        }
+      ]
+    }
+  ]
+}

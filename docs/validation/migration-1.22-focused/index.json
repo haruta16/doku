@@ -1,0 +1,246 @@
+{
+  "schema": 1,
+  "scope": "Historical focused reproductions, fixed runs and negative controls. These deliberately include failing old implementations and do not replace the frozen all-suite acceptance report. Original evidence payloads are preserved; paths resolve through this archive index. The final 68-case lifecycle and Confirm correction evidence is retained separately from the earlier 47-case version. The rapid-audio-exit probe remains a failed boundary probe; see the separate pure-engine control archive.",
+  "records": [
+    {
+      "original_path": "/private/tmp/doku122-gameplay-owned-close-final.patch",
+      "archive_entry": "aa6e9b6adc2833a0bca84015c44b064a9b713d269a7e907558c048cc6a4329b6/doku122-gameplay-owned-close-final.patch",
+      "sha256": "aa6e9b6adc2833a0bca84015c44b064a9b713d269a7e907558c048cc6a4329b6",
+      "bytes": 10858
+    },
+    {
+      "original_path": "/private/tmp/doku122-home-popup-final.patch",
+      "archive_entry": "8d20c129daafb3d4095d1df76c14632cc5a35cb422e0d3f7d176c59b069a2051/doku122-home-popup-final.patch",
+      "sha256": "8d20c129daafb3d4095d1df76c14632cc5a35cb422e0d3f7d176c59b069a2051",
+      "bytes": 6778
+    },
+    {
+      "original_path": "/private/tmp/doku122-sound-exit-cleanup.patch",
+      "archive_entry": "83c3829c740337795bb231b6bdab11f3ecc329c996f7d0dbec2bfa78f5deb4ab/doku122-sound-exit-cleanup.patch",
+      "sha256": "83c3829c740337795bb231b6bdab11f3ecc329c996f7d0dbec2bfa78f5deb4ab",
+      "bytes": 525
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-audio-1793360647635148000.log",
+      "archive_entry": "c6efbd6c14f04913e84ac181f18c8a82f2591fbe224d96594848de5e7072d678/catalog-leak-audio-1793360647635148000.log",
+      "sha256": "c6efbd6c14f04913e84ac181f18c8a82f2591fbe224d96594848de5e7072d678",
+      "bytes": 28012
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-tutorial-negative-1793362989917771000.log",
+      "archive_entry": "951b8eafcb8cbc3934027b3f8231e562e077953313aa63bb8f1f720a9a23df38/catalog-leak-daily-tutorial-negative-1793362989917771000.log",
+      "sha256": "951b8eafcb8cbc3934027b3f8231e562e077953313aa63bb8f1f720a9a23df38",
+      "bytes": 157203
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-exitstop-1793360591297747000.log",
+      "archive_entry": "beae36da7272dc86c73669e38b7e57dedf7160b4946c231c748efe19397eaeb5/catalog-leak-exitstop-1793360591297747000.log",
+      "sha256": "beae36da7272dc86c73669e38b7e57dedf7160b4946c231c748efe19397eaeb5",
+      "bytes": 91877
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-gameplay-close-final2-1793362825432851000.log",
+      "archive_entry": "5274de2944378809e2075fddc5312fadb4c775c8a93059ef93f6b55d863934fc/catalog-leak-gameplay-close-final2-1793362825432851000.log",
+      "sha256": "5274de2944378809e2075fddc5312fadb4c775c8a93059ef93f6b55d863934fc",
+      "bytes": 155734
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-gameplay-close-shared-final-1793362888731730000.log",
+      "archive_entry": "ed87ab847875f52165a4f3bded6a2896a016fa08250cbc03fb29b65d96cf1850/catalog-leak-gameplay-close-shared-final-1793362888731730000.log",
+      "sha256": "ed87ab847875f52165a4f3bded6a2896a016fa08250cbc03fb29b65d96cf1850",
+      "bytes": 155733
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-gameplay-close-weak-1793362752618879000.log",
+      "archive_entry": "2bef9aa4e60900b3b3178aa924a34f34427b2c4cd6a4377d1d30962ca7d18933/catalog-leak-gameplay-close-weak-1793362752618879000.log",
+      "sha256": "2bef9aa4e60900b3b3178aa924a34f34427b2c4cd6a4377d1d30962ca7d18933",
+      "bytes": 153915
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-home-popup-negative-1793362030187582000.log",
+      "archive_entry": "2b34b0a7e2b1dee364de47db0bd36c80479f8811d72f7552d2c3b3dd794c07f6/catalog-leak-home-popup-negative-1793362030187582000.log",
+      "sha256": "2b34b0a7e2b1dee364de47db0bd36c80479f8811d72f7552d2c3b3dd794c07f6",
+      "bytes": 220599
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-home-popup-regression-1793361952540070000.log",
+      "archive_entry": "df7702383a5dc4b1de113d60cecf0e429f36e7dd81d7cec8b1241319b0199624/catalog-leak-home-popup-regression-1793361952540070000.log",
+      "sha256": "df7702383a5dc4b1de113d60cecf0e429f36e7dd81d7cec8b1241319b0199624",
+      "bytes": 215504
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-operation-1793360662049164000.log",
+      "archive_entry": "1cc8cba993d0d939cbc990696c6584172ab16e5a76675bce73e0787f4dbf929c/catalog-leak-operation-1793360662049164000.log",
+      "sha256": "1cc8cba993d0d939cbc990696c6584172ab16e5a76675bce73e0787f4dbf929c",
+      "bytes": 242508
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-reward-home-cancel-delay-1793361660763567000.log",
+      "archive_entry": "747be37dfc3bfd7518b440c1833dddaea79f6241aa9917483a2da50c55891b87/catalog-leak-reward-home-cancel-delay-1793361660763567000.log",
+      "sha256": "747be37dfc3bfd7518b440c1833dddaea79f6241aa9917483a2da50c55891b87",
+      "bytes": 128869
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-reward-home-fixed-1793361810918917000.log",
+      "archive_entry": "61c4ff1971f026c75bc1f8729530536273b29821425540107835f7cc6a33730f/catalog-leak-reward-home-fixed-1793361810918917000.log",
+      "sha256": "61c4ff1971f026c75bc1f8729530536273b29821425540107835f7cc6a33730f",
+      "bytes": 385634
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/source-manifest-1793360540760845000.json",
+      "archive_entry": "b6a054f29063da6eaa4ac7ec171f7391b189bf123d7e1671e724f2ac04b0475f/source-manifest-1793360540760845000.json",
+      "sha256": "b6a054f29063da6eaa4ac7ec171f7391b189bf123d7e1671e724f2ac04b0475f",
+      "bytes": 75266
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/test_content_level_catalog-1793360540790003000.log",
+      "archive_entry": "87707e447b5ce8f953e5493e2484e1c9a756bd4c9f788cb7f01d918410932743/test_content_level_catalog-1793360540790003000.log",
+      "sha256": "87707e447b5ce8f953e5493e2484e1c9a756bd4c9f788cb7f01d918410932743",
+      "bytes": 92891
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-account_result.log",
+      "archive_entry": "e6f77175d532a3d09a51b2ddd61c1d903a73d1246619b685954717727b551906/destroy-account_result.log",
+      "sha256": "e6f77175d532a3d09a51b2ddd61c1d903a73d1246619b685954717727b551906",
+      "bytes": 38165
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-cancel.log",
+      "archive_entry": "518197e70df6151a942b72ccf34a575e4fcb281c78fee2d9707e2f36dcc2a85d/destroy-cancel.log",
+      "sha256": "518197e70df6151a942b72ccf34a575e4fcb281c78fee2d9707e2f36dcc2a85d",
+      "bytes": 34850
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-setting.log",
+      "archive_entry": "739d68f7acc3bf17d0808a9ca177ac8199532252eb48c631cac4acbad46e34d7/destroy-setting.log",
+      "sha256": "739d68f7acc3bf17d0808a9ca177ac8199532252eb48c631cac4acbad46e34d7",
+      "bytes": 38390
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/no-exit.log",
+      "archive_entry": "ba622973e6b8a779f74a4d6aca5bce0cbf78e047f0e84bd063b3efdf64bac0c9/no-exit.log",
+      "sha256": "ba622973e6b8a779f74a4d6aca5bce0cbf78e047f0e84bd063b3efdf64bac0c9",
+      "bytes": 34802
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/real-hide-strict.log",
+      "archive_entry": "8abd618af5b48ff25e5cc9b2a5c425f010897043d168665f4b2e4f5ececd39f3/real-hide-strict.log",
+      "sha256": "8abd618af5b48ff25e5cc9b2a5c425f010897043d168665f4b2e4f5ececd39f3",
+      "bytes": 108438
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/real-hide-strict.result.json",
+      "archive_entry": "3f8a46fd13d81b53c6c6cc0cb935acbf2eafa27cc55d11fbf5406a09f405ff8a/real-hide-strict.result.json",
+      "sha256": "3f8a46fd13d81b53c6c6cc0cb935acbf2eafa27cc55d11fbf5406a09f405ff8a",
+      "bytes": 830
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/source-manifest.json",
+      "archive_entry": "aad0f6cd40a9719e8e672d426d0f6ce154d4e91c914016482525f79325283f0d/source-manifest.json",
+      "sha256": "aad0f6cd40a9719e8e672d426d0f6ce154d4e91c914016482525f79325283f0d",
+      "bytes": 133159
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/test_ui_components.log",
+      "archive_entry": "6259fa914b52c69f3030d629860321c8bd7aa2531f6f2c8177206cb9eb7d756c/test_ui_components.log",
+      "sha256": "6259fa914b52c69f3030d629860321c8bd7aa2531f6f2c8177206cb9eb7d756c",
+      "bytes": 35412
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/test_ui_framework.log",
+      "archive_entry": "88c6eb63af9f681dcc5db8defd8bb8d088a6c229b98c083d543350171046cf7b/test_ui_framework.log",
+      "sha256": "88c6eb63af9f681dcc5db8defd8bb8d088a6c229b98c083d543350171046cf7b",
+      "bytes": 3523
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/test_ui_presentation_wait.log",
+      "archive_entry": "5750f58c49b639d9380d40648d524045e99a6eca73e4f22d8fac4bd0b1b4dba6/test_ui_presentation_wait.log",
+      "sha256": "5750f58c49b639d9380d40648d524045e99a6eca73e4f22d8fac4bd0b1b4dba6",
+      "bytes": 1189
+    },
+    {
+      "original_path": "/private/tmp/doku122-confirm-canonical-revision.patch",
+      "archive_entry": "66fef5c57c55008c7630329f6b5bb36cf39768878a7efe442627a6b5c69e64d6/doku122-confirm-canonical-revision.patch",
+      "sha256": "66fef5c57c55008c7630329f6b5bb36cf39768878a7efe442627a6b5c69e64d6",
+      "bytes": 2317
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-confirm-popup-contract-1793364081308769000.log",
+      "archive_entry": "09877f9d1c66182bf9ea7f71262fcfa31f0aa043d9908193915f1b4f23fc9ab6/catalog-leak-confirm-popup-contract-1793364081308769000.log",
+      "sha256": "09877f9d1c66182bf9ea7f71262fcfa31f0aa043d9908193915f1b4f23fc9ab6",
+      "bytes": 213884
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-confirm-popup-lifecycle-final-1793364478806855000.log",
+      "archive_entry": "6f0a7647907ef86b13556715ea728d6c2bc13b659b4554e9a6e21467eda31ee0/catalog-leak-confirm-popup-lifecycle-final-1793364478806855000.log",
+      "sha256": "6f0a7647907ef86b13556715ea728d6c2bc13b659b4554e9a6e21467eda31ee0",
+      "bytes": 212624
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-confirm-popup-predelete-1793364286027731000.log",
+      "archive_entry": "4078394fa6157612005ad4648d63915d5e962f1f6482b45095173c75008a428f/catalog-leak-confirm-popup-predelete-1793364286027731000.log",
+      "sha256": "4078394fa6157612005ad4648d63915d5e962f1f6482b45095173c75008a428f",
+      "bytes": 212727
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-confirm-canonical-1793364005545503000.log",
+      "archive_entry": "4d0c8c6a6e1d1b395ccfc5291fe7739d10e409f127bfc70b37721674338b3d90/catalog-leak-daily-confirm-canonical-1793364005545503000.log",
+      "sha256": "4d0c8c6a6e1d1b395ccfc5291fe7739d10e409f127bfc70b37721674338b3d90",
+      "bytes": 98153
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-confirm-lifecycle-final-1793364500986040000.log",
+      "archive_entry": "8860b276429403b9f1f7e886871e99dd9fc29aa51c6b0b2d14df1190268f38a1/catalog-leak-daily-confirm-lifecycle-final-1793364500986040000.log",
+      "sha256": "8860b276429403b9f1f7e886871e99dd9fc29aa51c6b0b2d14df1190268f38a1",
+      "bytes": 98152
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-confirm-predelete-final-1793364336263295000.log",
+      "archive_entry": "30104c3d3396db97c7702ed06b3c98035ff7c2fc119ae0ed3a9a5a560a2effa0/catalog-leak-daily-confirm-predelete-final-1793364336263295000.log",
+      "sha256": "30104c3d3396db97c7702ed06b3c98035ff7c2fc119ae0ed3a9a5a560a2effa0",
+      "bytes": 98152
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-daily-timeout-probe-1793363916274829000.log",
+      "archive_entry": "93af364c0005bdca3e95a2415efd591bc56eaab546954bfa8127c8f165beee54/catalog-leak-daily-timeout-probe-1793363916274829000.log",
+      "sha256": "93af364c0005bdca3e95a2415efd591bc56eaab546954bfa8127c8f165beee54",
+      "bytes": 99261
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-final-account_result.engine.log",
+      "archive_entry": "d3fad339b56ad8df26e9506b6793a6307c64f2fcbb3fc9fb2d065a63140551af/destroy-final-account_result.engine.log",
+      "sha256": "d3fad339b56ad8df26e9506b6793a6307c64f2fcbb3fc9fb2d065a63140551af",
+      "bytes": 37335
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-final-account_result.log",
+      "archive_entry": "36f0cda679dc974981514c25ca8675ca049c38ee195fa6475a7e6b25039e1133/destroy-final-account_result.log",
+      "sha256": "36f0cda679dc974981514c25ca8675ca049c38ee195fa6475a7e6b25039e1133",
+      "bytes": 37405
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/test_ui_framework.log",
+      "archive_entry": "88c6eb63af9f681dcc5db8defd8bb8d088a6c229b98c083d543350171046cf7b/test_ui_framework.log",
+      "sha256": "88c6eb63af9f681dcc5db8defd8bb8d088a6c229b98c083d543350171046cf7b",
+      "bytes": 3523
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-ui-waits-30gq971t/test_ui_presentation_wait.log",
+      "archive_entry": "85ac2c70e294dcee33a5fd52108d07e22a03d594253bfa44c618c9c7ee17e32d/test_ui_presentation_wait.log",
+      "sha256": "85ac2c70e294dcee33a5fd52108d07e22a03d594253bfa44c618c9c7ee17e32d",
+      "bytes": 1189
+    }
+  ],
+  "artifact_sha256": {
+    "account-audio-boundary.json": "f80bcf5a526ace968b7f29e6ef7ab2941a919b129e5f1ab94ea316ea15be92a7",
+    "business-close-manifest.json": "47d5993c27e30de87049035cd9cac97a51b7598478f8a83bde576ca3c5f83d13",
+    "confirm-canonical.json": "25823d8266f64edc2bdb5ae4bb512fbc613123026abc3b386438bd171035d6ca",
+    "gameplay-close.json": "7997c74b791a83b56e09eb191fef12632cdf3d1bdb6481d582b42489f08fe4bc",
+    "home-popup.json": "e2d131bf6a7ae72691e5a31817c2865aa32879b4cd1531def378ca1accc7a51e",
+    "public-ui-waits-final.json": "4e7756fdb7092bcb5db1eaa5158868e56967b970b2a006519a0f2688ca970f59",
+    "public-ui-waits.json": "89be44da9b0424465947173fc7309f21dcea5d9382e949dd091a4e5836cec20a",
+    "sound-exit.json": "94f2964eb7b5e4d64f5e9c542ba7c174b11030ba367143440ace34a001242bed",
+    "supporting-evidence.zip": "33744c408aeeea50b4ba4a80a1a1eace76f3ad8511717eb3cc8e5daa8640b51d",
+    "ui-components-diagnosis.json": "1772c15283c3d917edb5e73bcbf5da56b5e66450021003e339904315e5c60ef2"
+  }
+}

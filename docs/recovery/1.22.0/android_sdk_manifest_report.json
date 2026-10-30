@@ -1,0 +1,48 @@
+{
+  "implementation": "Godot 4.6.1 EditorExportPlugin._update_android_prebuilt_manifest",
+  "scope": "Only the integer value of uses-sdk/android:targetSdkVersion; preserve minSdkVersion=24 and all other bytes.",
+  "engine_template_compile_sdk": 35,
+  "expected_export_target_sdk": 36,
+  "tests": "2 original Spine templates; unchanged input/length/non-target bytes; idempotence; reject truncated, wrong-length, non-integer, raw-string and wrong-minimum input; independent Android aapt decoded outputs",
+  "final_project_apk_rebuilt": true,
+  "templates": [
+    {
+      "template": "tools/spine-godot/4.2-4.6.1/templates/android_debug.apk",
+      "original_manifest_sha256": "40bf7913c73e4d27a33b15c1b8f31f27538f5db3d228b8841cb62bda82a76839",
+      "patched_manifest_sha256": "15e386135ce68c8525b7a8cd8b42dac611a72e68098b45631009aa0ff60f35d7",
+      "manifest_bytes": 7252,
+      "changed_byte_offsets": [
+        4416
+      ],
+      "aapt_min_sdk": 24,
+      "aapt_target_sdk": 36
+    },
+    {
+      "template": "tools/spine-godot/4.2-4.6.1/templates/android_release.apk",
+      "original_manifest_sha256": "7c53e56f4631cd809a3222d573944de4a082d38877021754e894a8d35b2a624d",
+      "patched_manifest_sha256": "b936df2d92b08d0affeea5c997b746a42a39d055dce685a179c0f35d1955cfd0",
+      "manifest_bytes": 7200,
+      "changed_byte_offsets": [
+        4384
+      ],
+      "aapt_min_sdk": 24,
+      "aapt_target_sdk": 36
+    }
+  ],
+  "failure_guard": {
+    "preflight": "Official _get_export_options_overrides in memory; no preset.set calls",
+    "isolated_invalid_template_export_exit_code": 1,
+    "prior_output_unchanged": true,
+    "preset_contains_no_override_path": true,
+    "output_cleanup_cases": [
+      "preserve existing unchanged output",
+      "preserve output if original fingerprint unavailable",
+      "remove newly created failed output",
+      "remove changed failed output"
+    ],
+    "log": "originals/upgrades/1.22.0/logs/android_manifest_rejection.log"
+  },
+  "final_apk_sha256": "00e2f43d83b953bd9a0a37302a484892ce2aaeaff184c50c01b1b45a4e72947d",
+  "final_apk_min_sdk": 24,
+  "final_apk_target_sdk": 36
+}

@@ -1,30 +1,29 @@
-## 带防误滑的手势识别器：在父类基础上用 SwipeAxisGuard 锁死这一笔的行/列，避免手抖把线画歪
+## 滑动保护识别器：结合经过区域与保护窗口，决定本次涂抹是否允许修改格子。
 class_name SwipeGuardRecognizer
 extends BoardGestureRecognizer
 
+const LOCK_THRESHOLD: int = 4
+var guard_parameters_provider: Callable = Callable()
+var _frozen_policy: Dictionary = {}
+
+func set_policy(policy: Dictionary) -> void:
+	_frozen_policy = policy.duplicate(true)
+
 # ---- 防误滑判定器 ----
 var _guard := SwipeAxisGuard.new() # 轴向锁定器：判断这一笔沿行还是沿列
-var _policy: Dictionary = {"enabled": false, "min_size": 0, "threshold": 4, "tolerance_pct": 0.4}
 
 
-## 页面注入本局冻结参数；识别器不在每次手势时重新读取产品实验。
-func configure_policy(policy: Dictionary) -> void:
-	_policy = policy.duplicate(true)
-
-
-# ================= 覆写父类的手势入口 =================
-## 按下：先初始化判定器，再走父类的双击/点击逻辑，最后同步保护参数
-func on_drag_start(pos: Vector2) -> Array[CellAction]:
-	# 用当前棋盘几何与原始起点格初始化（起点不受锁定影响）
+func on_drag_start(pos: Vector2, is_physical_press_on_cell: bool = true) -> Array[CellAction]:
 	_guard.begin(
 		board.get_puzzle_size(),
-		BoardView.SLOT_PX,
-		BoardView.BOARD_PADDING,
+		board.get_grid_slot(),
+		board.get_grid_padding(),
 		BoardView.CELL_PX,
 		board.pointer_to_cell(pos.x, pos.y)
 	)
-	# 判定是否该锁定，并把锁定状态推给棋盘做调试显示
-	var actions: Array[CellAction] = super(pos)
+
+	var actions: Array[CellAction] = super(pos, is_physical_press_on_cell)
+
 	_configure_guard()
 	_push_zone()
 	return actions
@@ -34,6 +33,7 @@ func on_drag_start(pos: Vector2) -> Array[CellAction]:
 func on_drag_over(pos: Vector2) -> Array[CellAction]:
 	# target_pending 刚被消费 → 这一笔的目标状态已定，此时才知道要不要保护
 	var was_pending: bool = _stroke.target_pending
+
 	var actions: Array[CellAction] = super(pos)
 	if was_pending and not _stroke.target_pending:
 		_guard.set_active(_guard_active_now())
@@ -45,12 +45,7 @@ func on_drag_over(pos: Vector2) -> Array[CellAction]:
 func on_drag_end() -> void:
 	super()
 	_guard.end()
-	board.update_swipe_protection_zone({})
 
-
-func reset_for_scheme_switch() -> void:
-	super()
-	_guard.end()
 	board.update_swipe_protection_zone({})
 
 
@@ -60,23 +55,39 @@ func _resolve_cell(pos: Vector2) -> Vector2i:
 	return _guard.process(pos.x, pos.y)
 
 
-## 现在是否该锁定：AB 开关开着 + 尺寸达标 + 目标状态已定且非空
 func _guard_active_now() -> bool:
-	return (
-		_swipe_guard_enabled_for_level()
-		and not _stroke.target_pending
-		and _stroke.target_state != CellState.EMPTY
+	return not _stroke.target_pending and _stroke.target_state != CellState.EMPTY
+
+
+func _can_paint_cell(cell: Vector2i) -> bool:
+	var state: int = board.get_cell_state(cell.y, cell.x)
+	if state == CellState.CAT or state == CellState.ERROR:
+		return false
+	return state != _stroke.target_state
+
+
+func _configure_guard() -> void:
+	var parameters: Dictionary = guard_parameters_provider.call() if guard_parameters_provider.is_valid() else {}
+	if parameters.is_empty() and not _frozen_policy.is_empty():
+		var variant: int = int(_frozen_policy.get("swipe_guard_variant", 1))
+		parameters = {"target_color": variant in [10, 11], "target_color_pct": 0.0 if variant == 11 else 0.2}
+	if not parameters.is_empty():
+		_guard.configure(_guard_active_now(), LOCK_THRESHOLD, SwipeProtectConfig.HOTZONE_TOL_PCT * BoardView.CELL_PX)
+		if bool(parameters.get("target_color", false)):
+			_guard.configure_target_color(true, float(parameters.get("target_color_pct", 0.2)) * BoardView.CELL_PX, _can_paint_cell, board.get_regions())
+		return
+	var cfg: SwipeProtectConfig = ABTestManager.swipe_protect
+	_guard.configure(
+		_guard_active_now(), LOCK_THRESHOLD, SwipeProtectConfig.HOTZONE_TOL_PCT * BoardView.CELL_PX
 	)
 
-
-## 当前关卡是否启用防误滑（AB 分组 + 棋盘尺寸下限）
-func _swipe_guard_enabled_for_level() -> bool:
-	return bool(_policy.enabled) and board.get_puzzle_size() >= int(_policy.min_size)
-
-
-## 把 AB 配置换算成判定器的参数
-func _configure_guard() -> void:
-	_guard.configure(_guard_active_now(), int(_policy.threshold), float(_policy.tolerance_pct) * BoardView.CELL_PX)
+	if cfg.has_target_color_protection():
+		_guard.configure_target_color(
+			true,
+			cfg.target_color_tol_pct() * BoardView.CELL_PX,
+			_can_paint_cell,
+			board.get_regions()
+		)
 
 
 ## 把锁定状态推给棋盘，用于调试可视化

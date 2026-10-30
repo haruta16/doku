@@ -1,4 +1,4 @@
-## 自适应字号 Label（@tool）：用二分查找在 [最小字号, 基准字号] 里找「塞得进自身矩形」的最大字号
+## 普通标签自适应：根据可用区域测量文本，调整字号并合并重复重排请求。
 @tool
 class_name AutoFitLabel
 extends Label
@@ -15,11 +15,22 @@ extends Label
 		min_font_size = maxi(1, v)
 		_queue_refit()
 
+@export var fit_height_single_line: bool = true:
+	set(v):
+		fit_height_single_line = v
+		_queue_refit()
+
+@export var layout_box_override: Vector2 = Vector2.ZERO:
+	set(v):
+		layout_box_override = v
+		_queue_refit()
+
 # ---- 运行时状态 ----
 var _base_font_size: int = 0 # 缓存的基准（上限）字号；0 表示还没解析过
 
 var _fitting: bool = false # 正在写 font_size 时的重入保护（写字号会触发 resized）
 var _refit_queued: bool = false # 已排队标记：把同一帧的多次请求合并成一次 call_deferred
+var _auto_fit_enabled: bool = true
 
 
 # ================= 生命周期 =================
@@ -49,6 +60,24 @@ func refit() -> void:
 	_apply_fit()
 
 
+func reset_font_size() -> void:
+	if _base_font_size <= 0:
+		_base_font_size = max_font_size if max_font_size > 0 else get_theme_font_size(&"font_size")
+	if _base_font_size > 0:
+		_fitting = true
+		add_theme_font_size_override(&"font_size", _base_font_size)
+		_fitting = false
+	_queue_refit()
+
+
+func set_auto_fit_enabled(enabled: bool) -> void:
+	if _auto_fit_enabled == enabled:
+		return
+	_auto_fit_enabled = enabled
+	if _auto_fit_enabled:
+		_queue_refit()
+
+
 ## 合并式排队：同一帧内多次请求只延迟执行一次
 func _queue_refit() -> void:
 	if _refit_queued:
@@ -66,13 +95,11 @@ func _deferred_refit() -> void:
 	_apply_fit()
 
 
-# ================= 核心算法 =================
-## 核心：先定可用矩形与基准字号，再二分找能塞下的最大字号并写进主题覆盖
 func _apply_fit() -> void:
-	if _fitting or not is_inside_tree(): # 重入中、或还没进树：直接跳过
+	if not _auto_fit_enabled or _fitting or not is_inside_tree():
 		return
 	var box: Vector2 = _layout_box()
-	if box.x <= 0.0 or box.y <= 0.0: # 还没有尺寸（布局没跑）时算不了
+	if box.x <= 0.0 or box.y <= 0.0:
 		return
 	var display_text: String = _resolve_display_text()
 	if display_text.is_empty():
@@ -82,13 +109,13 @@ func _apply_fit() -> void:
 		return
 
 	if _base_font_size <= 0:
-		_base_font_size = max_font_size if max_font_size > 0 else get_theme_font_size(&"font_size") # 优先级：max_font_size > 0 就用它，否则用主题字号
+		_base_font_size = max_font_size if max_font_size > 0 else get_theme_font_size(&"font_size")
 	if _base_font_size <= 0:
 		return
 
-	var wrap: bool = autowrap_mode != TextServer.AUTOWRAP_OFF # 开了自动换行就得按换行后的高度判断，不能只量一行宽度
+	var wrap: bool = autowrap_mode != TextServer.AUTOWRAP_OFF
 
-	var lo_fs: int = min(min_font_size, _base_font_size) # 二分：候选区间 [lo_fs, hi_fs]，fs 记录目前能塞下的最大字号
+	var lo_fs: int = min(min_font_size, _base_font_size)
 	var hi_fs: int = _base_font_size
 	var fs: int = lo_fs
 	while lo_fs <= hi_fs:
@@ -109,8 +136,9 @@ func _resolve_display_text() -> String:
 	return atr(text)
 
 
-## 用锚点 + 偏移自己算可用矩形，不依赖 size（布局可能还没跑）
 func _layout_box() -> Vector2:
+	if layout_box_override.x > 0.0 and layout_box_override.y > 0.0:
+		return layout_box_override
 	var parent_size: Vector2 = Vector2.ZERO
 	var pc := get_parent() as Control
 	if pc != null:
@@ -120,7 +148,6 @@ func _layout_box() -> Vector2:
 	return Vector2(w, h)
 
 
-## 判断某字号塞不塞得下：换行时用隐藏探针量高度，不换行时直接量文本尺寸
 func _text_fits(font: Font, txt: String, box: Vector2, fs: int, wrap: bool) -> bool:
 	if wrap:
 		var probe: Label = _ensure_probe()
@@ -134,12 +161,14 @@ func _text_fits(font: Font, txt: String, box: Vector2, fs: int, wrap: bool) -> b
 		if probe.get_minimum_size().y > box.y:
 			return false
 
-		if autowrap_mode == TextServer.AUTOWRAP_WORD: # AUTOWRAP_WORD 下还要确认没有单个单词比框还宽
-			for word: String in txt.split(" ", false):
+		if autowrap_mode == TextServer.AUTOWRAP_WORD:
+			for word: String in txt.replace("\n", " ").split(" ", false):
 				if font.get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fs).x > box.x:
 					return false
 		return true
 	var s: Vector2 = font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1.0, fs)
+	if not fit_height_single_line:
+		return s.x <= box.x
 	return s.x <= box.x and s.y <= box.y
 
 

@@ -1,0 +1,46 @@
+{
+  "stage_modified": false,
+  "fixture": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/project",
+  "source_manifest": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/source-manifest.json",
+  "baseline": {
+    "test": "test_ui_components",
+    "checks": 74,
+    "failures": 0,
+    "leak": "one GDScriptFunctionState; _do_hide/hide_release/completed",
+    "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/test_ui_components.log"
+  },
+  "controls": [
+    {
+      "case": "remove only exit branch",
+      "checks": 66,
+      "failures": 0,
+      "shutdown_errors": [],
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/no-exit.log"
+    },
+    {
+      "case": "unchanged 74 assertions; fixture on_destroy synchronously emits its owned hide_release/close_release",
+      "checks": 74,
+      "failures": 0,
+      "shutdown_errors": [],
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-cancel.log"
+    }
+  ],
+  "real_pages": [
+    {
+      "page": "setting",
+      "checks": 3,
+      "failures": 0,
+      "leak": "one GDScriptFunctionState; _do_hide/process_frame",
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-setting.log"
+    },
+    {
+      "page": "account_result",
+      "checks": 3,
+      "failures": 0,
+      "leak": "one GDScriptFunctionState; _do_hide/animation_finished; also dlg_open_1.ogg audio references on immediate exit",
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-ui-components-g5ntf1vo/destroy-account_result.log"
+    }
+  ],
+  "proposed_fix": "Shared UIBaseWindow-owned wait handle: synchronously cancel after marking destroy/revision, disconnect underlying signal before completion, return bool; migrate on_hide awaits for frame/animation/tween/child close to helper and guard cancellation. Preserve all current cancellation assertions; no extra sleep, no skipping exit branch. Platform is designing shared helper; root owns rollout.",
+  "diagnostic_environment": "Private fixture native userdata directory creation is sandbox-denied; assertion and ObjectDB evidence are reported independently, not strict-green."
+}

@@ -1,18 +1,168 @@
-## 震动总控：把游戏里的抽象档位 Level 翻译成 iOS / Android 各自的原生震动调用
-## 原生能力来自 VibratePlugin 单例，插件不存在时所有调用静默跳过
+## 触觉反馈管理器：按业务事件和广告位置选择震动模式，适配 iOS 与 Android 原生接口。
 class_name VibrateManager
 extends RefCounted
 
-# 震动档位：枚举值就是档位号，6/8/9 故意没定义
 enum Level {
 	LEVEL1,
 	LEVEL2,
 	LEVEL3,
 	LEVEL4,
 	LEVEL5,
+	LEVEL6,
 	LEVEL7,
 	LEVEL10,
 }
+
+enum Pos {
+	START_BTN,
+	SETTINGS_BTN,
+	AVATAR_BTN,
+	WIN_NEXT_BTN,
+	OPTIONS_BTN,
+	BLIND_MOD_BTN,
+	CELL_MARK,
+	CELL_PLACE_CAT,
+	CELL_ERROR,
+	HINT_CLEAR,
+	TOOL_USE,
+	GAME_WIN,
+	GAME_FAIL,
+	DAILY_WIN,
+	DAILY_FAIL,
+	BOARD_INTRO,
+	TUTORIAL_MARK,
+	TUTORIAL_CAT,
+	TUTORIAL_WIN,
+	SETTING_CLOSE,
+	SETTING_TOGGLE,
+	SETTING_VIBRATION_ON,
+	PROFILE_RENAME,
+	PROFILE_AVATAR_TAB,
+	PROFILE_FRAME_TAB,
+	PROFILE_AVATAR_SELECT,
+	PROFILE_FRAME_SELECT,
+	PROFILE_COSTUME_TAB,
+	PROFILE_COSTUME_SELECT,
+	RANK_ENTRY_CLICK,
+	RANK_CHANGE_DROP,
+	RANK_CELL_FLY,
+	RANK_COLLECTOR_FLY,
+	RANK_GIFT_BOX_APPEAR,
+	RANK_GIFT_OPEN,
+	STREAK_ENTRY_CLICK,
+	STREAK_CHECK_IN,
+	STREAK_DAY_NORMAL,
+	STREAK_DAY_CHEST,
+	STREAK_GIFT,
+	STREAK_CONTINUE,
+	STREAK_GO_PLAY,
+	DAILY_ENTRY_CLICK,
+	CHEAT_VIBRATE,
+	STREAK_SWING,
+	STREAK_FIRST_CLICK,
+	STREAK_DAY_LAND,
+}
+
+enum _Cond {
+	ALWAYS,
+	VIBRATE_ADD,
+}
+
+static var _pos_table: Dictionary = {}
+static var _pos_table_ready: bool = false
+
+
+static func _ensure_pos_table() -> void:
+	if _pos_table_ready:
+		return
+	_pos_table_ready = true
+	_build_pos_table()
+
+
+static func _build_pos_table() -> void:
+	var add_l2: Array = [
+		Pos.SETTINGS_BTN,
+		Pos.AVATAR_BTN,
+		Pos.WIN_NEXT_BTN,
+		Pos.OPTIONS_BTN,
+		Pos.BLIND_MOD_BTN,
+		Pos.RANK_CELL_FLY,
+		Pos.RANK_COLLECTOR_FLY,
+		Pos.PROFILE_RENAME,
+		Pos.PROFILE_AVATAR_TAB,
+		Pos.PROFILE_FRAME_TAB,
+		Pos.PROFILE_AVATAR_SELECT,
+		Pos.PROFILE_FRAME_SELECT,
+		Pos.PROFILE_COSTUME_TAB,
+		Pos.PROFILE_COSTUME_SELECT,
+		Pos.BOARD_INTRO,
+	]
+	for p: int in add_l2:
+		_pos_table[p] = {"level": Level.LEVEL2, "cond": _Cond.VIBRATE_ADD}
+
+	var add_l3: Array = [Pos.SETTING_TOGGLE]
+	for p: int in add_l3:
+		_pos_table[p] = {"level": Level.LEVEL3, "cond": _Cond.VIBRATE_ADD}
+
+	var add_l4: Array = [Pos.RANK_GIFT_OPEN, Pos.RANK_GIFT_BOX_APPEAR]
+	for p: int in add_l4:
+		_pos_table[p] = {"level": Level.LEVEL4, "cond": _Cond.VIBRATE_ADD}
+
+	var add_l5: Array = [Pos.RANK_CHANGE_DROP]
+	for p: int in add_l5:
+		_pos_table[p] = {"level": Level.LEVEL5, "cond": _Cond.VIBRATE_ADD}
+
+	_pos_table[Pos.SETTING_CLOSE] = {"level": Level.LEVEL2, "cond": _Cond.VIBRATE_ADD}
+
+	_pos_table[Pos.SETTING_VIBRATION_ON] = {"level": Level.LEVEL3, "cond": _Cond.VIBRATE_ADD}
+
+	_pos_table[Pos.CELL_MARK] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.CELL_PLACE_CAT] = {"level": Level.LEVEL3, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.CELL_ERROR] = {"level": Level.LEVEL3, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.HINT_CLEAR] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.TOOL_USE] = {"level": Level.LEVEL4, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.GAME_WIN] = {"level": Level.LEVEL5, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.GAME_FAIL] = {"level": Level.LEVEL4, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.DAILY_WIN] = {"level": Level.LEVEL5, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.DAILY_FAIL] = {"level": Level.LEVEL4, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.TUTORIAL_MARK] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.TUTORIAL_CAT] = {"level": Level.LEVEL3, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.TUTORIAL_WIN] = {"level": Level.LEVEL5, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.START_BTN] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.RANK_ENTRY_CLICK] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_ENTRY_CLICK] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_CONTINUE] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_GO_PLAY] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+
+	_pos_table[Pos.STREAK_SWING] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_CHECK_IN] = {"level": Level.LEVEL5, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_FIRST_CLICK] = {"level": Level.LEVEL5, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_DAY_NORMAL] = {"level": Level.LEVEL5, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_DAY_LAND] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_DAY_CHEST] = {"level": Level.LEVEL4, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.STREAK_GIFT] = {"level": Level.LEVEL4, "cond": _Cond.ALWAYS}
+
+	_pos_table[Pos.DAILY_ENTRY_CLICK] = {"level": Level.LEVEL2, "cond": _Cond.ALWAYS}
+	_pos_table[Pos.CHEAT_VIBRATE] = {"level": Level.LEVEL3, "cond": _Cond.ALWAYS}
+
+
+static func play_at(pos: Pos) -> void:
+	_ensure_pos_table()
+	if not _pos_table.has(pos):
+		return
+	var entry: Dictionary = _pos_table[pos]
+	var cond: int = entry.cond
+	var pos_name: String = Pos.keys()[pos]
+
+	if not _enabled:
+		_log_vibrate(entry.level, "disabled", pos_name)
+		return
+	if cond == _Cond.VIBRATE_ADD:
+		if not ABTestManager.vibrate_add.is_enabled():
+			_log_vibrate(entry.level, "vibrate_add:off", pos_name)
+			return
+	_play_vibrate_internal(entry.level, pos_name)
+
 
 static var _is_ios: bool = OS.get_name() == "iOS" # 平台判定只做一次
 
@@ -20,19 +170,18 @@ static var _map_low: Dictionary = {} # 低内存机的 Android 参数表（惰�
 static var _map_high: Dictionary = {} # 高内存机的 Android 参数表（惰性构建）
 static var _maps_ready: bool = false # 参数表是否已构建过
 
-## iOS 档位 → 系统震动反馈的方法名，直接反射调用
 static var _map_ios: Dictionary = {
 	Level.LEVEL1: "selectionChanged",
 	Level.LEVEL2: "feedbackMedium",
 	Level.LEVEL3: "feedbackHeavy",
 	Level.LEVEL4: "longVibrate",
 	Level.LEVEL5: "notificationSuccess",
+	Level.LEVEL6: "notificationSuccess",
 	Level.LEVEL7: "longVibrate",
 	Level.LEVEL10: "longVibrate",
 }
 
 
-## 构建 Android 的两张参数表：d = 持续毫秒，a = 振幅（0~255）
 static func _build_maps() -> void:
 	if _maps_ready:
 		return
@@ -43,27 +192,26 @@ static func _build_maps() -> void:
 	for i: int in 20:
 		ct.append(50)
 		ca.append(roundi(10.0 + 140.0 * (float(i) / 19.0)))
-	# 20 段渐强图案，当前两张表都没引用它（历史遗留，_play_android 里仍留着 "t" 分支）
 	var _charge: Dictionary = {"t": ct, "a": ca}
 
-	# 低内存机：震动时间略长、振幅偏小
 	_map_low = {
 		Level.LEVEL1: {"d": 40, "a": 10},
 		Level.LEVEL2: {"d": 40, "a": 80},
 		Level.LEVEL3: {"d": 40, "a": 200},
 		Level.LEVEL4: {"d": 200, "a": 50},
 		Level.LEVEL5: {"d": 60, "a": 250},
+		Level.LEVEL6: {"d": 60, "a": 300},
 		Level.LEVEL7: {"d": 130, "a": 50},
 		Level.LEVEL10: {"d": 200, "a": 50},
 	}
 
-	# 高内存机：同样的档位改为「更短更脆」的手感
 	_map_high = {
 		Level.LEVEL1: {"d": 20, "a": 10},
 		Level.LEVEL2: {"d": 20, "a": 80},
 		Level.LEVEL3: {"d": 20, "a": 150},
 		Level.LEVEL4: {"d": 200, "a": 50},
 		Level.LEVEL5: {"d": 30, "a": 250},
+		Level.LEVEL6: {"d": 30, "a": 300},
 		Level.LEVEL7: {"d": 130, "a": 50},
 		Level.LEVEL10: {"d": 200, "a": 50},
 	}
@@ -90,9 +238,11 @@ static func _ensure_ram() -> void:
 static var _enabled: bool = true # 总开关，由设置页的震动选项驱动
 
 
-## 开关震动（设置页里改）
 static func set_enabled(on: bool) -> void:
+	var changed: bool = _enabled != on
 	_enabled = on
+	if changed and is_instance_valid(EventBus):
+		EventBus.emit_event(EventName.SETTING_TOGGLE, {"name": "vibration", "on": on})
 
 
 ## 当前是否允许震动
@@ -125,10 +275,15 @@ static func has_amplitude_control() -> bool:
 	return p.hasAmplitudeControl() as bool
 
 
-## 对外主入口：按档位震一下，按平台分派
 static func play_vibrate(level: Level) -> void:
+	_play_vibrate_internal(level, "")
+
+
+static func _play_vibrate_internal(level: Level, pos_hint: String) -> void:
 	if not _enabled:
+		_log_vibrate(level, "disabled", pos_hint)
 		return
+	_log_vibrate(level, "", pos_hint)
 	if _is_ios:
 		_play_ios(level)
 	else:
@@ -182,3 +337,69 @@ static func _vibrate_pattern(timings_ms: PackedInt32Array, amplitudes: PackedInt
 	if p == null:
 		return
 	p.vibratePattern(timings_ms, amplitudes)
+
+
+static var _debug_log: bool = not OS.has_feature("rel")
+
+
+static func _log_vibrate(level: Level, skip_reason: String, pos_hint: String) -> void:
+	_emit_timeline_event(level, skip_reason, pos_hint)
+	if not _debug_log:
+		return
+	var lv_name: String = Level.keys()[level]
+	var pos_tag: String = " @%s" % pos_hint if not pos_hint.is_empty() else ""
+	if not skip_reason.is_empty():
+		print(
+			"[vibrate] %s SKIPPED(%s)%s  <- %s" % [lv_name, skip_reason, pos_tag, _debug_caller()]
+		)
+		return
+	print("[vibrate] %s %s%s  <- %s" % [lv_name, _debug_detail(level), pos_tag, _debug_caller()])
+
+
+static func _emit_timeline_event(level: Level, skip_reason: String, pos_hint: String) -> void:
+	if not is_instance_valid(EventBus):
+		return
+	var payload: Dictionary = {"level": Level.keys()[level]}
+	if not pos_hint.is_empty():
+		payload["pos"] = pos_hint
+
+	if not skip_reason.is_empty():
+		payload["skip"] = skip_reason
+	EventBus.emit_event(EventName.VIBRATE_PLAY, payload)
+
+
+static func _debug_detail(level: Level) -> String:
+	if _is_ios:
+		return "iOS:%s" % str(_map_ios.get(level, "?"))
+	_ensure_ram()
+	_build_maps()
+	var map: Dictionary = _map_high if _is_high_ram else _map_low
+	if not map.has(level):
+		return "android:<no data>"
+	var data: Dictionary = map[level] as Dictionary
+	var ram: String = "high" if _is_high_ram else "low"
+	var body: String = ""
+	if data.has("t"):
+		body = "android(%s):波形%d段" % [ram, (data["t"] as PackedInt32Array).size()]
+	else:
+		body = "android(%s):%dms·振幅%d" % [ram, int(data["d"]), int(data["a"])]
+	if _plugin() == null:
+		body += "  [无plugin,未实际震动]"
+	return body
+
+
+static func _debug_caller() -> String:
+	var stack: Array = get_stack()
+	for i: int in stack.size():
+		var src: String = str(stack[i].get("source", ""))
+		if not src.ends_with("vibrate_manager.gd"):
+			var f: Dictionary = stack[i]
+			return (
+				"%s:%d %s()"
+				% [
+					src.get_file(),
+					int(f.get("line", 0)),
+					str(f.get("function", "?")),
+				]
+			)
+	return "?"

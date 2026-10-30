@@ -1,0 +1,238 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "command": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/content/build_channel.py",
+        "--product",
+        "test",
+        "--revision",
+        "3",
+        "--target",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/tampered-release",
+        "http://127.0.0.1:65264/http",
+        "--key",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/private.pem",
+        "--output",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bad-channel-artifact",
+        "--allow-local-http"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": true,
+      "summary": [
+        "Channel publisher rejects modified payload before producing an artifact"
+      ]
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-0.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+        "--script",
+        "res://test.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+        "http://127.0.0.1:65264/http"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 51,
+        "failures": 0,
+        "summary": "CONTENT_TESTS checks=51 failures=0"
+      },
+      "summary": [
+        "CONTENT_TESTS checks=51 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nCONTENT_TESTS checks=51 failures=0\n",
+      "diagnostics_classified": true,
+      "log_sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d"
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-1.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+        "--script",
+        "res://updates.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+        "http://127.0.0.1:65264"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 58,
+        "failures": 0,
+        "summary": "CONTENT_UPDATE_TESTS checks=58 failures=0"
+      },
+      "summary": [
+        "CONTENT_UPDATE_TESTS checks=58 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nCONTENT_UPDATE_TESTS checks=58 failures=0\n",
+      "diagnostics_classified": true,
+      "log_sha256": "fbc5f56108dec77547326216ed5f4b58018488cd7ac0cd4a0e41ad97ba2476fa"
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-2.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+        "--script",
+        "res://boot-failure.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 2,
+        "failures": 0,
+        "summary": "CONTENT_BOOT_FAILURE checks=2 failures=0"
+      },
+      "summary": [
+        "CONTENT_BOOT_FAILURE checks=2 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nCONTENT_BOOT_FAILURE checks=2 failures=0\nWARNING: Not a PNG file\n     at: check_error (drivers/png/png_driver_common.cpp:55)\n     GDScript backtrace (most recent call first):\n         [0] load_image (res://scripts/framework/content/content_catalog.gd:60)\n         [1] validate_registered_media (res://scripts/framework/content/content_catalog.gd:108)\n         [2] begin_cold_start (res://scripts/framework/content/content_store.gd:244)\n         [3] _run (res://boot-failure.gd:55)\nERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT\n   at: png_to_image (drivers/png/png_driver_common.cpp:68)\n   GDScript backtrace (most recent call first):\n       [0] load_image (res://scripts/framework/content/content_catalog.gd:60)\n       [1] validate_registered_media (res://scripts/framework/content/content_catalog.gd:108)\n       [2] begin_cold_start (res://scripts/framework/content/content_store.gd:244)\n       [3] _run (res://boot-failure.gd:55)\nERROR: Error loading image: 'res://content/test/broken-image/broken.png'.\n   at: load_image (core/io/image_loader.cpp:100)\n   GDScript backtrace (most recent call first):\n       [0] load_image (res://scripts/framework/content/content_catalog.gd:60)\n       [1] validate_registered_media (res://scripts/framework/content/content_catalog.gd:108)\n       [2] begin_cold_start (res://scripts/framework/content/content_store.gd:244)\n       [3] _run (res://boot-failure.gd:55)\n",
+      "diagnostics_classified": true,
+      "log_sha256": "672761cc2d6f8dab219d70dc42f2818b05e28ce2a993c046b43d00a053a72868",
+      "expected_test_errors": [
+        "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+        "ERROR: Error loading image: 'res://content/test/broken-image/broken.png'."
+      ]
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-3.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+        "--script",
+        "res://boot-failure.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+        "resume"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 1,
+        "failures": 0,
+        "summary": "CONTENT_BOOT_FAILURE_COLD_RECOVERY checks=1 failures=0"
+      },
+      "summary": [
+        "CONTENT_BOOT_FAILURE_COLD_RECOVERY checks=1 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nCONTENT_BOOT_FAILURE_COLD_RECOVERY checks=1 failures=0\n",
+      "diagnostics_classified": true,
+      "log_sha256": "90257417ff23b2152eb3f4fdec8dfd8d2ab64acb748fd06b321da41035a5c90a"
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-import.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+        "--editor",
+        "--import"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "import",
+        "ok": true
+      },
+      "summary": [],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\n[   0% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | Started 项目初始化 (5 steps)\u001b[39m\u001b[0m\n[   0% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | 正在扫描文件结构……\u001b[39m\u001b[0m\n[  16% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | 正在加载全局类名……\u001b[39m\u001b[0m\n[  33% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | 正在校验 GDExtension……\u001b[39m\u001b[0m\n[  50% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | 正在创建自动加载脚本……\u001b[39m\u001b[0m\n[  66% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | 正在初始化插件……\u001b[39m\u001b[0m\n[  83% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | 正在启动文件扫描……\u001b[39m\u001b[0m\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mfirst_scan_filesystem\u001b[22m\n\u001b[0m\n[   0% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | Started 正在注册全局类…… (12 steps)\u001b[39m\u001b[0m\n[   0% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | \u001b[39m\u001b[0m\n[   7% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentCatalog\u001b[39m\u001b[0m\n[  15% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentChannel\u001b[39m\u001b[0m\n[  23% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentContext\u001b[39m\u001b[0m\n[  30% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentDownloader\u001b[39m\u001b[0m\n[  38% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentManifest\u001b[39m\u001b[0m\n[  46% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentMediaMap\u001b[39m\u001b[0m\n[  53% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentRawPack\u001b[39m\u001b[0m\n[  61% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentStore\u001b[39m\u001b[0m\n[  69% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | ContentValidation\u001b[39m\u001b[0m\n[  76% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | \u001b[39m\u001b[0m\n[  84% ] \u001b[90m\u001b[1mupdate_scripts_classes\u001b[22m | \u001b[39m\u001b[0m\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mupdate_scripts_classes\u001b[22m\n\u001b[0m\n[   0% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | Started 正在加载编辑器 (5 steps)\u001b[39m\u001b[0m\n[   0% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | 正在加载编辑器布局……\u001b[39m\u001b[0m\n[  16% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | 正在加载停靠面板……\u001b[39m\u001b[0m\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mloading_editor_layout\u001b[22m\n\u001b[0m\n",
+      "diagnostics_classified": true,
+      "log_sha256": "4eff2e2e517477f91775b74abd54a9c75182c9cd8018829d8cf809440ebaac89"
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-first.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+        "--script",
+        "res://bootstrap-test.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+        "http://127.0.0.1:65264"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 24,
+        "failures": 0,
+        "summary": "CONTENT_BOOTSTRAP_TESTS checks=24 failures=0"
+      },
+      "summary": [
+        "CONTENT_BOOTSTRAP_TESTS checks=24 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nCONTENT_BOOTSTRAP_TESTS checks=24 failures=0\n",
+      "diagnostics_classified": true,
+      "log_sha256": "afe2930e0bb9221d03ab115f0d72c824a52407115422880d23a4108aa162f582"
+    },
+    {
+      "command": [
+        "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--log-file",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-resume.engine.log",
+        "--path",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+        "--script",
+        "res://bootstrap-test.gd",
+        "--",
+        "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+        "http://127.0.0.1:65264",
+        "resume"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 4,
+        "failures": 0,
+        "summary": "CONTENT_BOOTSTRAP_TESTS checks=4 failures=0"
+      },
+      "summary": [
+        "CONTENT_BOOTSTRAP_TESTS checks=4 failures=0"
+      ],
+      "log": "Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org\n\nCONTENT_BOOTSTRAP_TESTS checks=4 failures=0\n",
+      "diagnostics_classified": true,
+      "log_sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1"
+    }
+  ],
+  "expected_steps": 8,
+  "executed_steps": 8,
+  "scope": "Isolated projects; ephemeral keys; local HTTP faults and real Godot runtime; no mobile or production TLS validation."
+}

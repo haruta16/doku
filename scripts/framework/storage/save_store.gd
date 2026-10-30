@@ -7,6 +7,7 @@ const Result = preload("res://scripts/framework/operation_result.gd")
 const _META := "__save_store"
 const _FORMAT_VERSION: int = 1
 
+var _plain: bool = false
 var _password: String
 var _dir: String
 var _dual_slot: bool
@@ -27,8 +28,10 @@ func _init(
 	path_a: String,
 	path_b: String = "",
 	flag_path: String = "",
-	legacy_path: String = ""
+	legacy_path: String = "",
+	plain: bool = false
 ) -> void:
+	_plain = plain
 	_password = password
 	_dir = dir
 	_dual_slot = dual_slot
@@ -188,7 +191,7 @@ func _read_candidate(path: String, slot: String, slot_validator: Callable = Call
 	if not FileAccess.file_exists(path):
 		return _failure("missing", "")
 	var cfg := ConfigFile.new()
-	if cfg.load_encrypted_pass(path, _password) != OK:
+	if (cfg.load(path) if _plain else cfg.load_encrypted_pass(path, _password)) != OK:
 		return _failure("corrupt", "存档读取或校验失败: " + path)
 	var revision: int = 0
 	if cfg.has_section(_META):
@@ -218,12 +221,21 @@ func _atomic_write(cfg: ConfigFile, final_path: String) -> Dictionary:
 	if DirAccess.make_dir_recursive_absolute(_dir) != OK:
 		return _failure("write_failed", "无法创建存档目录")
 	var tmp_path := final_path + ".tmp"
-	if cfg.save_encrypted_pass(tmp_path, _password) != OK:
+	if (cfg.save(tmp_path) if _plain else cfg.save_encrypted_pass(tmp_path, _password)) != OK:
 		return _failure("write_failed", "无法写入临时存档")
 	if _inject_fault("after_temp_write"):
 		return _failure("write_failed", "注入临时文件写后中断")
 	var verify := ConfigFile.new()
-	if verify.load_encrypted_pass(tmp_path, _password) != OK or verify.encode_to_text() != cfg.encode_to_text():
+	if (verify.load(tmp_path) if _plain else verify.load_encrypted_pass(tmp_path, _password)) != OK:
+		return _failure("write_failed", "临时存档回读失败")
+	# ConfigFile 的浮点文本 parse→encode 可能改变末位；校验实际写入的原文，
+	# 不把重编码当保真依据，也不以浮点容差放过损坏。解密和配置解析仍须成功。
+	var verified_file: FileAccess = FileAccess.open(tmp_path, FileAccess.READ) if _plain else FileAccess.open_encrypted_with_pass(tmp_path, FileAccess.READ, _password)
+	if verified_file == null:
+		return _failure("write_failed", "临时存档回读失败")
+	var verified_text: String = verified_file.get_as_text()
+	verified_file.close()
+	if verified_text != cfg.encode_to_text():
 		return _failure("write_failed", "临时存档回读不一致")
 	if _inject_fault("before_replace"):
 		return _failure("write_failed", "注入替换前中断")
@@ -271,3 +283,7 @@ func _copy_config(source: ConfigFile) -> ConfigFile:
 
 func _failure(status: String, message: String, revision: int = 0) -> Dictionary:
 	return Result.failure(status, message, {"status": status, "revision": revision})
+
+## 旧工具/造数器显式选择明文格式；仍使用临时文件校验及 revision 防覆盖。
+static func plain_file(path: String) -> SaveStore:
+	return SaveStore.new("", path.get_base_dir(), false, path, "", "", "", true)

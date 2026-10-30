@@ -1,0 +1,254 @@
+{
+  "schema": "doku.audio_shutdown_protocol_archive.v1",
+  "generated_utc": "2026-10-30T13:11:09.208547+00:00",
+  "status": "applied_validation_fixture_cleanup",
+  "source_changes": [
+    {
+      "path": "tools/validation/fixtures/audio_shutdown.gd",
+      "before_sha256": null,
+      "after_sha256": "de85a93a617464a4f474f9831008c1853fc37d18d87a0c709e978fe39f304d00"
+    },
+    {
+      "path": "tools/validation/fixtures/audio_shutdown.gd.uid",
+      "before_sha256": null,
+      "after_sha256": "8a438bb8d2790b534276df3c6233802303704e9031015d671e62b0190d0437aa"
+    },
+    {
+      "path": "tools/validation/test_audio_shutdown.gd",
+      "before_sha256": null,
+      "after_sha256": "2335b425c9861d4afe4eac98b18822682717a166edfa4dbe01540bb745a56351"
+    },
+    {
+      "path": "tools/validation/test_audio_shutdown.gd.uid",
+      "before_sha256": null,
+      "after_sha256": "16246b1744cf00417ae21a409321877ff9820ab4bf673a451ed70189d542fcd6"
+    },
+    {
+      "path": "tools/validation/test_content_level_catalog.gd",
+      "before_sha256": "e575f0155fa1d553d6694bff42ba049ef656a7ddbfc233076759c3f71e5107cf",
+      "after_sha256": "6741f10a8f4e07fd2b645ae5078f65912892a8967c6be89295d20fb5e253ff33"
+    }
+  ],
+  "archive": {
+    "path": "evidence.zip",
+    "sha256": "f4b3a47290de83d22878a5443bd9ff6df0ca4ae491a5c7182c59f47adce19085",
+    "bytes": 28201
+  },
+  "entries": [
+    {
+      "archive_path": "pure-comparison/report.json",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/report.json",
+      "sha256": "0061f9997a452c8f1cbb2c5db136c4481b0e3783f0dd49708c076c9bfef23ff3",
+      "bytes": 6775,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "pure-comparison/load_only.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/load_only.log",
+      "sha256": "9cc5a1b2168c2328e93c3a841525f2cfa6065f9d9dc63d6569d17b03278482de",
+      "bytes": 1231,
+      "recorded_sha256": "9cc5a1b2168c2328e93c3a841525f2cfa6065f9d9dc63d6569d17b03278482de",
+      "original_recorded_hash_verified": true
+    },
+    {
+      "archive_path": "pure-comparison/load_only.engine.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/load_only.engine.log",
+      "sha256": "36804cddeb3957e60bacabf37692a1e44c31819aed9396e8736dddacec478445",
+      "bytes": 1181,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "pure-comparison/play.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/play.log",
+      "sha256": "e5c64d3a3fe733a2b3a7c600cad89b9039d7e8b78344412f10db52d0eec8abca",
+      "bytes": 2163,
+      "recorded_sha256": "e5c64d3a3fe733a2b3a7c600cad89b9039d7e8b78344412f10db52d0eec8abca",
+      "original_recorded_hash_verified": true
+    },
+    {
+      "archive_path": "pure-comparison/play.engine.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/play.engine.log",
+      "sha256": "8c4d868f695d366baf85d27e76f8edcb13f87d91ee56aec5334002ca3390b32d",
+      "bytes": 2111,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "pure-comparison/managed_shutdown.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/managed_shutdown.log",
+      "sha256": "bf1538a56f176b4469f67251b84eff7a7899faf7b5cdfd282486113d4fd45979",
+      "bytes": 1286,
+      "recorded_sha256": "bf1538a56f176b4469f67251b84eff7a7899faf7b5cdfd282486113d4fd45979",
+      "original_recorded_hash_verified": true
+    },
+    {
+      "archive_path": "pure-comparison/managed_shutdown.engine.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/managed_shutdown.engine.log",
+      "sha256": "ac55a14e0c9b4cc1f0b5bcba3860b741ce1253686e98bc68ea19f170ec21b7c8",
+      "bytes": 1236,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "prototype-helper/report.json",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/shared-protocol-report.json",
+      "sha256": "11d9e73c50e5240bb9a1bf48d5aa3b4081db034fcfd6510463fb54f50f13dc1f",
+      "bytes": 3085,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "prototype-helper/shared-managed_shutdown.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/shared-managed_shutdown.log",
+      "sha256": "be3c3eb6e2b21afba0050902192d0bc3b38f9dc30568beb68d979d9a3a4ed7ef",
+      "bytes": 276,
+      "recorded_sha256": "be3c3eb6e2b21afba0050902192d0bc3b38f9dc30568beb68d979d9a3a4ed7ef",
+      "original_recorded_hash_verified": true
+    },
+    {
+      "archive_path": "prototype-helper/shared-managed_shutdown.engine.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/shared-managed_shutdown.engine.log",
+      "sha256": "be3c3eb6e2b21afba0050902192d0bc3b38f9dc30568beb68d979d9a3a4ed7ef",
+      "bytes": 276,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "prototype-helper/shared-held_reference.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/shared-held_reference.log",
+      "sha256": "7e62daa2956c4166c2d9b03c199b6bdbcb4eaf8085eb752ef905197dd749e597",
+      "bytes": 398,
+      "recorded_sha256": "7e62daa2956c4166c2d9b03c199b6bdbcb4eaf8085eb752ef905197dd749e597",
+      "original_recorded_hash_verified": true
+    },
+    {
+      "archive_path": "prototype-helper/shared-held_reference.engine.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/shared-held_reference.engine.log",
+      "sha256": "7e62daa2956c4166c2d9b03c199b6bdbcb4eaf8085eb752ef905197dd749e597",
+      "bytes": 398,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "final-regression/report.json",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-final-uf9j5moh/report.json",
+      "sha256": "47e6cf32ecdaf4476248d911aee9adf805a233529acb152a95ad8ac66474de98",
+      "bytes": 2167,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "final-regression/test_audio_shutdown.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-final-uf9j5moh/test_audio_shutdown.log",
+      "sha256": "ebec90ab2c9ae9833abefbfc910252203799f6c6738fce27d233164bb8b68f74",
+      "bytes": 151,
+      "recorded_sha256": "ebec90ab2c9ae9833abefbfc910252203799f6c6738fce27d233164bb8b68f74",
+      "original_recorded_hash_verified": true
+    },
+    {
+      "archive_path": "final-regression/test_audio_shutdown.engine.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-final-uf9j5moh/test_audio_shutdown.engine.log",
+      "sha256": "ebec90ab2c9ae9833abefbfc910252203799f6c6738fce27d233164bb8b68f74",
+      "bytes": 151,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "pure-comparison/protocol-evidence.json",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-stwy8w86/protocol-evidence.json",
+      "sha256": "e24a4433fc51a9af522c3613e8944949650675aa8a38d4c9780eb3c30f7761fe",
+      "bytes": 3384,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "final-regression/audio-shutdown.patch",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku122-audio-shutdown-final-uf9j5moh/audio-shutdown.patch",
+      "sha256": "f0b36e6a00f1bb774d739b680189bf866f96c868abe4eda9d6abb8bf5b4f391f",
+      "bytes": 7287,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "real-catalog/evidence.json",
+      "source": "/tmp/doku122-catalog-audio-drain-evidence.json",
+      "sha256": "9ceb357ad8b0e842cde0d40349095c52d8bc3c8a649d913ec3b801fb69872bb0",
+      "bytes": 2416,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "real-catalog/final.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-audio-drain-final-1793365664687319000.log",
+      "sha256": "2a4df8c44fbe92722d1b90e2cb6bfbe90d4409ba91f4b94a876f98a082e2a8ec",
+      "bytes": 5766,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "real-catalog/final.engine.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-audio-drain-final-1793365664687319000.engine.log",
+      "sha256": "41580ac916daa1a8cab56f8122af0085cb37b81ab38207897240b23bc6f384a5",
+      "bytes": 5748,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "real-catalog/baseline-failed.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-xoilrfua/test-11.log",
+      "sha256": "b96c7dfa3b79ef2372a6eb9645f6c70504d25984e65280b596b8fe00533bc73a",
+      "bytes": 5865,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    },
+    {
+      "archive_path": "real-catalog/prior-0.log",
+      "source": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-audio-drain-1793365309651782000.log",
+      "sha256": "3e6007988a50c3ea600521bb39d1c75b00fe87b070e76810242d3efc2ef96332",
+      "bytes": 5765,
+      "recorded_sha256": null,
+      "original_recorded_hash_verified": false
+    }
+  ],
+  "results": {
+    "original_immediate_exit_control": {
+      "strict_ok": false,
+      "kept_failed": true
+    },
+    "pure_managed_shutdown": {
+      "strict_ok": true,
+      "checks": 4
+    },
+    "prototype_helper_normal": {
+      "strict_ok": true,
+      "checks": 3
+    },
+    "prototype_helper_retained_reference_negative": {
+      "strict_ok": true,
+      "checks": 4,
+      "drain_ok": false
+    },
+    "final_automatically_discovered_regression": {
+      "strict_ok": true,
+      "checks": 14
+    },
+    "final_real_catalog": {
+      "strict_ok": true,
+      "checks": 92,
+      "verbose": false,
+      "release_observation": {
+        "elapsed_ms": 61,
+        "ok": true,
+        "players": 65,
+        "polls": 10,
+        "reactivated": [],
+        "remaining": [],
+        "tracked_references": 65
+      }
+    }
+  },
+  "acceptance": "No fixed sleep or diagnostic waiver. Stop and detach while SceneTree is live; accept only after all captured stream/playback WeakRefs have expired. A deadline expiry, retained reference, or final-tree reactivated/new audio player fails. Runner continues to reject every shutdown error.",
+  "scope": "Only validation fixtures/tests and their UIDs. No production audio or engine shutdown architecture changed. Original docs/validation/migration-1.22-audio-exit remains unchanged historical failure evidence."
+}

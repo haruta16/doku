@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/validate_content_product.py", line 79, in <module>
+    main()
+  File "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/validate_content_product.py", line 75, in main
+    validate(args.release, args.godot)
+  File "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/validate_content_product.py", line 63, in validate
+    raise RuntimeError(output[-8000:])
+RuntimeError: Godot Engine v4.6.1.stable.custom_build.14d19694e (2026-02-16 15:13:51 UTC) - https://godotengine.org
+
+PRODUCT_VALIDATION_FAILED: {"detail":"reachable main selection requires a valid cycling pool; finite LK supplements may already be exhausted","error":"main_pool_missing","level":1000001,"logical_id":"doku/policy","ok":false,"path":"$.size_cycles.8","rank":2,"rule_group":0,"size":4,"tier":""}
+
+Traceback (most recent call last):
+  File "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/content/build_release.py", line 154, in <module>
+    main()
+  File "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/content/build_release.py", line 150, in main
+    build(parser.parse_args())
+  File "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/content/build_release.py", line 133, in build
+    subprocess.run([sys.executable, str(validation), "--release", str(stage), "--godot", engine], check=True)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Library/Developer/CommandLineTools/usr/bin/python3', '/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-122-port-ndn2oyw0/tools/validate_content_product.py', '--release', '/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-gl78cy2x/releases/content-build-uqoay2xq/release', '--godot', '/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot']' returned non-zero exit status 1.

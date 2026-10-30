@@ -27,9 +27,11 @@ static func inspect(logical_id: String, value: Variant) -> Dictionary:
 	if not logical_id.begins_with("doku/levels/"):
 		return _invalid(logical_id, "$", "unsupported logical content id")
 	var filename := logical_id.trim_prefix("doku/levels/")
+	if filename.ends_with(".pace"):
+		return _inspect_pace(logical_id, value)
 	var expected_size := 0
 	var dimensions := RegEx.new()
-	dimensions.compile("^bankdata(?:gc|lkstyle)?([0-9]+)x([0-9]+)$")
+	dimensions.compile("^bankdata(?:gc|lkstyle|onefish)?([0-9]+)x([0-9]+)$")
 	var matched := dimensions.search(filename)
 	if matched != null:
 		if matched.get_string(1) != matched.get_string(2):
@@ -39,8 +41,8 @@ static func inspect(logical_id: String, value: Variant) -> Dictionary:
 	var is_gc: bool = matched != null and filename.begins_with("bankdatagc")
 	if filename == "bankdatalk" and value is Array:
 		groups.append({"path": "$", "entries": value})
-	elif (is_gc or filename in ["bankdatalkmodified", "bankdatasp"]) and value is Dictionary:
-		if value.size() != 1 or not value.get("levels") is Array:
+	elif (is_gc or filename.begins_with("bankdataonefish") or filename in ["bankdatalkmodified", "bankdatasp", "bankdatadigitssp", "bankdatahardr4", "bankdatasuperhard", "bankdatasuperhardr4", "bankdatasp_tt", "bankdatasingleregion", "bankdataclimaxfilters", "bankdatacolorchallenge"]) and value is Dictionary:
+		if not value.get("levels") is Array or (value.size() != 1 and filename != "bankdataclimaxfilters"):
 			return _invalid(logical_id, "$.levels", "expected a levels array and no other root fields")
 		groups.append({"path": "$.levels", "entries": value.levels})
 	elif matched != null and value is Dictionary:
@@ -57,7 +59,7 @@ static func inspect(logical_id: String, value: Variant) -> Dictionary:
 	for group: Dictionary in groups:
 		var entries: Array = group.entries
 		for index: int in entries.size():
-			var entry: Variant = entries[index]
+			var entry: Variant = BankData.materialize_entry(entries[index], true) if entries[index] is Dictionary else entries[index]
 			var path: String = str(group.path) + "[%d]" % index
 			if not entry is Dictionary or not entry.get("regionMap") is Array:
 				return _invalid(logical_id, path + ".regionMap", "expected a puzzle with a regionMap array")
@@ -112,6 +114,19 @@ static func validate_catalog(catalog: RefCounted) -> Dictionary:
 				loaded = LevelBankIO.builtin_by_id(logical_id)
 			banks[logical_id] = loaded
 		return banks[logical_id]
+	for file: Dictionary in catalog.manifest_snapshot().get("files", []):
+		var logical_id: String = str(file.get("id", ""))
+		if not logical_id.begins_with("doku/levels/") or not logical_id.ends_with(".pace"):
+			continue
+		var pace: Dictionary = provider.call(logical_id)
+		var main: Dictionary = provider.call(logical_id.trim_suffix(".pace"))
+		if not pace.get("ok", false) or not main.get("ok", false) or not main.get("value") is Dictionary:
+			return _invalid(logical_id, "$", "pace requires an available main bank")
+		for partition: Variant in main.value:
+			if not main.value[partition] is Array:
+				continue
+			if not pace.value.get(partition) is Array or pace.value[partition].size() != main.value[partition].size():
+				return _invalid(logical_id, "$", "pace index count differs from main bank")
 	var media: Dictionary = {}
 	var media_result: Dictionary = catalog.read_json("media")
 	if media_result.get("ok", false):
@@ -261,7 +276,7 @@ static func _validate_main_pools(provider: Callable, policy: Dictionary, fixed: 
 				var usable: bool = false
 				for entries: Array in pools.values():
 					for entry: Dictionary in entries:
-						if Core.validate_solution_entry(entry, size):
+						if Core.validate_solution_entry(BankData.materialize_entry(entry), size):
 							usable = true
 							break
 					if usable:
@@ -350,22 +365,46 @@ static func _policy_error(path: String, detail: String) -> Dictionary:
 static func _entry_metadata_error(entry: Dictionary, size: int) -> Dictionary:
 	# 来源注记会由读取口重写；选题/关卡业务字段只允许客户端自己组装。
 	for field: Variant in entry:
-		if not field is String or (field.begins_with("_") and field != "_content_provenance"):
+		if not field is String or (field.begins_with("_") and field not in ["_content_provenance", "_pid_h", "_pid_s", "_source_file"]):
 			return {"path": "[" + JSON.stringify(field) + "]", "detail": "reserved or invalid metadata key"}
+	if entry.has("_pid_h") and (not entry._pid_h is String or entry._pid_h.length() != 16 or not entry._pid_h.is_valid_hex_number(false)):
+		return {"path": "._pid_h", "detail": "expected a 16 character canonical hash"}
+	if entry.has("_pid_s"):
+		if not entry._pid_s is Array or entry._pid_s.size() != 8:
+			return {"path": "._pid_s", "detail": "expected eight transform suffixes"}
+		for suffix: Variant in entry._pid_s:
+			if not _integer(suffix) or int(suffix) < 0 or int(suffix) > 7:
+				return {"path": "._pid_s", "detail": "invalid transform suffix"}
+	if entry.has("_source_file") and not entry._source_file is String:
+		return {"path": "._source_file", "detail": "expected source label"}
+	for field: String in ["rating", "ratingV2", "eloRating", "maxRegionFrac"]:
+		if entry.has(field) and (typeof(entry[field]) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(entry[field]))):
+			return {"path": "." + field, "detail": "expected a finite rating"}
 	if entry.has("size") and (not _integer(entry.size) or int(entry.size) != size):
 		return {"path": ".size", "detail": "size must match regionMap dimensions"}
-	for field: String in ["seed", "id", "steps", "r1", "r2", "r3", "r4", "r5"]:
+	for field: String in ["seed", "id", "steps", "r1", "r2", "r3", "r4", "r5", "leadR1", "shapeCategory", "singleCount", "transform"]:
 		if entry.has(field) and not _integer(entry[field]):
 			return {"path": "." + field, "detail": "expected an integer"}
-	for field: String in ["r", "maxR"]:
+	for field: String in ["r", "maxR", "rank"]:
 		if entry.has(field) and (not _integer(entry[field]) or int(entry[field]) not in [1, 2, 3, 4, 5]):
 			return {"path": "." + field, "detail": "expected an integer rank from 1 to 5"}
-	for field: String in ["tier", "pattern", "date", "label"]:
+	for field: String in ["tier", "pattern", "date", "label", "filter"]:
 		if entry.has(field) and not entry[field] is String:
 			return {"path": "." + field, "detail": "expected a string"}
+	for field: String in ["isChainedStrategy", "isHiddenSingleL1"]:
+		if entry.has(field) and typeof(entry[field]) != TYPE_BOOL:
+			return {"path": "." + field, "detail": "expected a boolean"}
+	for field: String in ["stepHist", "stepOrderZ"]:
+		if not entry.has(field):
+			continue
+		if not entry[field] is Array or (field == "stepHist" and entry[field].size() != 5):
+			return {"path": "." + field, "detail": "invalid style vector shape"}
+		for number: Variant in entry[field]:
+			if typeof(number) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(number)) or (field == "stepHist" and (not _integer(number) or number < 0)):
+				return {"path": "." + field, "detail": "invalid style vector value"}
 	if entry.has("prefill_positions") and not validate_prefill(entry.prefill_positions, entry.get("solution"), size):
 		return {"path": ".prefill_positions", "detail": "expected unique in-bounds answer positions"}
-	for field: String in ["colorMap", "patternRegions"]:
+	for field: String in ["colorMap", "patternRegions", "spRegion"]:
 		if not entry.has(field):
 			continue
 		if not entry[field] is Array:
@@ -374,7 +413,7 @@ static func _entry_metadata_error(entry: Dictionary, size: int) -> Dictionary:
 			return {"path": ".colorMap", "detail": "color map must match board size"}
 		for index: int in entry[field].size():
 			var value: Variant = entry[field][index]
-			if not _integer(value) or int(value) < 0 or (field == "patternRegions" and int(value) >= size):
+			if not _integer(value) or int(value) < 0 or (field in ["patternRegions", "spRegion"] and int(value) >= size):
 				return {"path": ".%s[%d]" % [field, index], "detail": "invalid region or color index"}
 	return {}
 
@@ -400,3 +439,25 @@ static func validate_prefill(value: Variant, solution: Variant, size: int) -> bo
 
 static func _integer(value: Variant) -> bool:
 	return typeof(value) == TYPE_INT or (typeof(value) == TYPE_FLOAT and is_finite(value) and floor(value) == value)
+
+
+## 节奏旁表按主题库的分区与索引对齐；不把旁表误当成普通题目。
+static func _inspect_pace(logical_id: String, value: Variant) -> Dictionary:
+	if not value is Dictionary or value.is_empty():
+		return _invalid(logical_id, "$", "expected pace partitions")
+	for partition: Variant in value:
+		if str(partition) not in ["levels", "1", "2", "3", "4", "5"] or not value[partition] is Array:
+			return _invalid(logical_id, "$", "invalid pace partition")
+		for row: Variant in value[partition]:
+			if not row is Dictionary:
+				return _invalid(logical_id, "$", "invalid pace row")
+			for key: String in ["g1", "g2", "g3", "g4"]:
+				if typeof(row.get(key)) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(row[key])):
+					return _invalid(logical_id, "$", "invalid pace scalar " + key)
+			for key: String in ["hint_click_seq", "r_seq"]:
+				if not row.get(key) is Array:
+					return _invalid(logical_id, "$", "invalid pace vector " + key)
+				for number: Variant in row[key]:
+					if not _integer(number) or int(number) < 0 or int(number) > 5:
+						return _invalid(logical_id, "$", "invalid pace strategy")
+	return {"ok": true, "error": ""}

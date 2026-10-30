@@ -1,0 +1,145 @@
+{
+  "status": "fixed_applied_to_stage_by_root",
+  "source": "products/meowdoku/app/services/sound_manager.gd",
+  "baseline_sha256": "953c6137b544e16da2fe7d4ac7c358fba72ec1c320d543a70872f7e7be7aae53",
+  "private_sha256": "e2e2e7a4e75517f89b107c903de17dab48e7d905a1a82e58ffe65d50e34f72d2",
+  "patch": "/tmp/doku122-sound-exit-cleanup.patch",
+  "diagnosis": "Active board_enter_1.ogg playback leaked OggPacketSequence/AudioStreamOggVorbis resources at engine shutdown; no FunctionState or script resource leak. Stop and clear player streams in SoundManager._exit_tree without events or storage calls.",
+  "evidence": {
+    "baseline": {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/project",
+        "--log-file",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/test_content_level_catalog-1793360540790003000.engine.log",
+        "--script",
+        "res://tools/validation/test_content_level_catalog.gd",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "ok": false,
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/test_content_level_catalog-1793360540790003000.log",
+      "summary": "0,\"kValue\":-1.0,\"level\":21,\"pace_group\":0,\"pace_score\":0.0,\"playerRating\":-1.0,\"pre_type\":\"0\",\"qid\":\"4_catalog_1_1_0\",\"qrotate\":\"0\",\"rating\":0.0,\"scale\":4,\"status\":\"continue\",\"strategy_layer\":1}\n[BoardIntro] value=0 special_ids=0 special_cells=0 total_nodes=16 pattern_first=false phase=0.00s\n[PATTERN_DBG] _load_data read pattern_mode_on=false\n[Banner] destroy route=mock placement=banner\n[DCPROBE] untagged,game,42,0.0,0,0,0,0.0,50.0\nPERFORMANCE_RESULT=level_catalog entries=10000 cold_ms=155.508 cached_missing_p50_ms=0.001\nLEVEL CATALOG TESTS: 91 assertions, 0 failures\nXR: Clearing primary interface\nXR: Removed interface \"Native mobile\"\nXR: Removed interface \"OpenXR\"\nLeaked instance: OggPacketSequence:9223372276366313647 - Reference count: 3\nLeaked instance: AudioStreamOggVorbis:9223372276383090864 - Reference count: 1\nLeaked instance: AudioStreamPlaybackOggVorbis:9223372622916493476 - Reference count: 1\nLeaked instance: OggPacketSequencePlayback:9223372622933270693 - Reference count: 1\nHint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).\nResource still in use: res://products/meowdoku/assets/audio/sfx/board_enter_1.ogg::OggPacketSequence_3w0w0 (OggPacketSequence)\nResource still in use: res://products/meowdoku/assets/audio/sfx/board_enter_1.ogg (AudioStreamOggVorbis)\nOrphan StringName: Master (static: 0, total: 2)\nStringName: 1 unclaimed string names at exit.\nWARNING: NativeUtilPlugin not available (editor / 非移动端)\n     at: push_warning (core/variant/variant_utility.cpp:1034)\n     GDScript backtrace (most recent call first):\n         [0] _ready (res://products/meowdoku/app/platform/native_util_manager.gd:17)\nWARNING: ProfileService: frame_form=0 与 wins=0 不匹配(老云存档缺键/脏档)，clamp 到 0\n     at: push_warning (core/variant/variant_utility.cpp:1034)\n     GDScript backtrace (most recent call first):\n         [0] _clamp_frame_form (res://products/meowdoku/app/features/profile/profile_service.gd:788)\n         [1] _load (res://products/meowdoku/app/features/profile/profile_service.gd:780)\n         [2] _ensure_loaded (res://products/meowdoku/app/features/profile/profile_service.gd:39)\n         [3] _ready (res://products/meowdoku/app/features/profile/profile_service.gd:28)\nWARNING: ObjectDB instances leaked at exit (run with --verbose for details).\n     at: cleanup (core/object/object.cpp:2641)\nERROR: 2 resources still in use at exit.\n   at: clear (core/io/resource.cpp:805)\n",
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 91,
+        "failures": 0,
+        "summary": "LEVEL CATALOG TESTS: 91 assertions, 0 failures"
+      },
+      "diagnostics_classified": true,
+      "unexpected_errors": [
+        "ERROR: 2 resources still in use at exit."
+      ],
+      "shutdown_errors": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit."
+      ],
+      "known_shutdown_errors": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details)."
+      ],
+      "shutdown_evidence": [
+        "docs/validation/product-layout-migration-report.json",
+        "log_sha256=fc0674edb8814398c931038ff268e642bd76d706952c824a56df781586a6c491"
+      ],
+      "shutdown_baseline_environment": {
+        "applicable": true,
+        "reason": "matched",
+        "expected": {
+          "system": "Darwin",
+          "machine": "arm64",
+          "godot_version": "4.6.1.stable.custom_build.14d19694e"
+        },
+        "observed": {
+          "system": "Darwin",
+          "machine": "arm64",
+          "godot_version": "4.6.1.stable.custom_build.14d19694e"
+        },
+        "mismatched_fields": []
+      },
+      "source_manifest": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/source-manifest-1793360540760845000.json",
+      "test_sha256": "98afa217b5946d9fe9aac8dca1e70b7ba5201f4943cbdec88056ad2f42fe3e5b"
+    },
+    "private_catalog": {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/project",
+        "--log-file",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-exitstop-1793360591297747000.engine.log",
+        "--script",
+        "res://tools/validation/test_content_level_catalog.gd",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-exitstop-1793360591297747000.log",
+      "summary": "PERFORMANCE_RESULT=level_catalog entries=10000 cold_ms=144.678 cached_missing_p50_ms=0.001\nLEVEL CATALOG TESTS: 91 assertions, 0 failures",
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 91,
+        "failures": 0,
+        "summary": "LEVEL CATALOG TESTS: 91 assertions, 0 failures"
+      },
+      "diagnostics_classified": true
+    },
+    "private_audio": {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/project",
+        "--log-file",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-audio-1793360647635148000.engine.log",
+        "--script",
+        "res://tools/validation/test_product_audio_lifecycle.gd",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-audio-1793360647635148000.log",
+      "summary": "PRODUCT AUDIO LIFECYCLE TESTS: 13 assertions, 0 failures",
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 13,
+        "failures": 0,
+        "summary": "PRODUCT AUDIO LIFECYCLE TESTS: 13 assertions, 0 failures"
+      },
+      "diagnostics_classified": true
+    },
+    "private_operation": {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--path",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/project",
+        "--log-file",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-operation-1793360662049164000.engine.log",
+        "--script",
+        "res://tools/validation/test_game_operation_lifecycle.gd",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gameplay-content-yuxxfcqe/catalog-leak-operation-1793360662049164000.log",
+      "summary": "GAME OPERATION LIFECYCLE TESTS: 115 assertions, 0 failures",
+      "completion": {
+        "kind": "test",
+        "ok": true,
+        "checks": 115,
+        "failures": 0,
+        "summary": "GAME OPERATION LIFECYCLE TESTS: 115 assertions, 0 failures"
+      },
+      "diagnostics_classified": true,
+      "expected_test_errors": [
+        "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 317, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+      ]
+    }
+  },
+  "applied_stage_sha256": "e2e2e7a4e75517f89b107c903de17dab48e7d905a1a82e58ffe65d50e34f72d2"
+}

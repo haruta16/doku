@@ -1,0 +1,4293 @@
+{
+  "source_baseline": "formatted, repaired and automatically annotated integration snapshot at originals/upgrades/1.22.0/prepared",
+  "files": 853,
+  "physical_code_lines_unchanged": 845,
+  "changed_code_or_layout": [
+    "addons/unikit/scripts/unikit.gd",
+    "scripts/common/auth_manager.gd",
+    "scripts/module/debug/view/generator_page.gd",
+    "scripts/module/gameplay/view/board_view.gd",
+    "scripts/module/gameplay/view/cell_view.gd",
+    "scripts/module/purchase/view/purchase_page.gd",
+    "scripts/module/rank_activity/view/other/rank_streak_bar.gd",
+    "scripts/module/rank_activity/view/rank_activity_page.gd"
+  ],
+  "items": [
+    {
+      "path": "addons/helpshift_plugin/export_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "25398edf09a725f5693055da83aec85d2bb04cf0b06a86dfc3d23b4c1b3ffb9f"
+    },
+    {
+      "path": "addons/in_app_review_plugin/export_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3131c414cc5d21a31e28989c3c78b48c372f0c8c07cd6113fb73dfbe2c75dbd1"
+    },
+    {
+      "path": "addons/lxlogin/editor/android_export_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "91dc2b7c9f18e1b59d1ee5359ee34e24cce0ee288420df8480b49d8c012bdcdd"
+    },
+    {
+      "path": "addons/lxlogin/editor/ios_export_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "84e343e89c89ff3cc1a090be5d75f9b15682f461fb9efbcd6963a32222490707"
+    },
+    {
+      "path": "addons/lxlogin/editor/lxauth_android_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0c2a473e2cbf680965982aa20e476f22f44ed43321a1009af6e98ce861f7ba20"
+    },
+    {
+      "path": "addons/lxlogin/native/android_bridge_adapter.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b3e663d0fa10fa9a76fbceb4c535340d14fc8913b75d0d5e1f1da25756e5abd0"
+    },
+    {
+      "path": "addons/lxlogin/plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0f38a42c689dde6ba7c575117c2bcae177be02fd43dae9ba7a868b49ed75d801"
+    },
+    {
+      "path": "addons/lxlogin/scripts/lx_auth.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "eb14472cafc16364afcfd01de75da982566ecbac4bd587b3aea93f4913544ba6"
+    },
+    {
+      "path": "addons/lxlogin/scripts/models/auth_error.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "397db54a8122f24fb1951f36a396627dca3d45825d48374595f5f6a5ec0d2cf6"
+    },
+    {
+      "path": "addons/lxlogin/scripts/models/auth_expired_info.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "040b49072706c34a66500ea07613ddb695940e645311291404eb9968a8961048"
+    },
+    {
+      "path": "addons/lxlogin/scripts/models/auth_link_or_login_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cdd1854c99c160d9c4e1041985417496224ad1123b39c57b632e4228ef68c5c2"
+    },
+    {
+      "path": "addons/lxlogin/scripts/models/auth_provider_info.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aa47a7c5dc07e75059224c1987075305a72623ea2f02f5fff6d8a5c8dcaced9f"
+    },
+    {
+      "path": "addons/lxlogin/scripts/models/auth_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "423b78c60834b4619f50154bb05e7c114355a01c781f2f7ba79198fc13dcf8eb"
+    },
+    {
+      "path": "addons/lxlogin/scripts/models/auth_token_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bfd0b7c8901f106266c6e2e0f42da47e52ddfb67064a3906183916d35d7ab236"
+    },
+    {
+      "path": "addons/lxlogin/scripts/models/auth_user_profile.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aa963362409b81f3686aebd888dce7d30282fa57c129cab40e79391edcf31d1d"
+    },
+    {
+      "path": "addons/trail_preview/plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6702168139a65a4a30555b6a9461e2cc7654bb75b60fdc38506947623e5f4ed9"
+    },
+    {
+      "path": "addons/trail_preview/tw.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7e236eeb67930295abe5baaf28234e8889e38ba974b72b8e9aaaa39fe0ebd0c9"
+    },
+    {
+      "path": "addons/unikit/editor/android_export_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "31efa71be360b66e42d41708e636b8a3ca3bc960b064c22dfcf8b80719208b0b"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/bi_config_fetcher.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "03addfab989a6e9eed2582646a32b75363835a2f6fc83094b5272c82ddd56f6a"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/bi_config_inspector_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "834dd5ff49e69eb8c779875589ad7ba491fc5faafe384940e733cfd926f2687e"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/bi_config_requester.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a1c7982967c021bb20a28d387f1a85dbb0d0c6fcb5841e92b2334f101eb4026e"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/bi_http.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7591d8013a02d915a82a34bbc2e7c2ea9713223812cbea91c179e93d0a63986f"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/requesters/abtest_requester.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "64b5b7aaf02137e3c595dc00c12fc2576758fa92d168f91f498718714a67e59f"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/requesters/adconfig_requester.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fd135c1b42572a91718d5e4b4742014cfa8685eb1f983c8fc12ddf3c9d005d77"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/requesters/skadnetwork_requester.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8491bd4b7c7c4c56ae49d66717abab8655cc1c1d32dc70c674a4fe754585e2ca"
+    },
+    {
+      "path": "addons/unikit/editor/bi_config/requesters/usertag_requester.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "eea48a778ba6eeb1d9aaf001e525d1b951d742055633e503bacef18c9eecad52"
+    },
+    {
+      "path": "addons/unikit/editor/ios_export_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a4d38cfa6d412ad58e50f6e64b0dde0041542089e85b5e991ade98862c3b70d9"
+    },
+    {
+      "path": "addons/unikit/editor/plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8f8ccfc647a65b10db02767eb6f8e47e0e60194f1faa045a407314972cc914fb"
+    },
+    {
+      "path": "addons/unikit/editor/unikit_android_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cdca1f077fac24515f7b50676956638d1b917d640ee563d8e6ae915fa37f8c42"
+    },
+    {
+      "path": "addons/unikit/editor/unikit_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "59b599c22ed1b131fdfeaa2a032aae025843627fd91db477c61a9e5d25a5d957"
+    },
+    {
+      "path": "addons/unikit/editor/unikit_ios_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e371bd4a23dff9af82506d84038130e84ffa0002a1931ec55c230a893032c407"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_abtest_module.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b47ea89a752e135a3039fe551b359d9c444bba28d35dd13e8472b2968da7dc1d"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_ad_module.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7d2aa1c98e0e7cff5c176824a36591857ead0c11379d15bea7d46f1593fd4751"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_analyze_module.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "03faaaa6a47d57d82dcd8d841d14bfdf5c256bde5960db3c41e7f6c131a90694"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_grt_module.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2c8dd80f23abc1c47945552bbc85c9a5d07ab8f2f702b105a1cc3dcfe4020cca"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_module_base.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ae38ca68eba4dec53ca8006063e66e404635b171fde3dc64ca5a7d3dad4810dd"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_purchase_module.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1c8b1b337fad77b21f477608d4b8283ecd8842df34ad10cca0d2779fb8a889cc"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_push_module.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7f7fa92f184a3d5b13c50c385306cb6291e08f56685db398e97415d671024f92"
+    },
+    {
+      "path": "addons/unikit/scripts/modules/unikit_usertag_module.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7a6720796d0d371ac6b3062e76f1ba244ccbf177301639b79f2fe23a78d673e7"
+    },
+    {
+      "path": "addons/unikit/scripts/purchase/unikit_purchase_error.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ea23422c4791412c509c3f87aa66b1b78f52d9e457bcd708fd253514d339a308"
+    },
+    {
+      "path": "addons/unikit/scripts/purchase/unikit_purchase_native_bridge.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ac9566a5c1f5c4863adfca1169d9f53f3e4622d31ad2fe5c169744df66522b0b"
+    },
+    {
+      "path": "addons/unikit/scripts/purchase/unikit_purchase_params.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5a9bb63468cbfd901802ece14a542952a94e184d39758f461127ee24e4823f96"
+    },
+    {
+      "path": "addons/unikit/scripts/purchase/unikit_purchase_product.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "69fb3f8266dfaa091ef6b39ea019d67d7dbe11b5d75332cf5c2fbe764fff97d3"
+    },
+    {
+      "path": "addons/unikit/scripts/purchase/unikit_purchase_transaction.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "20a15d69b198a033e70dd781d3c0d42ce2b84f5b15692e371a8871552dd2f672"
+    },
+    {
+      "path": "addons/unikit/scripts/push/unikit_notification_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "314dbc999bcdc56d3b2e7264dc3a64230f489942cf24bbfdf173fbd502e063b2"
+    },
+    {
+      "path": "addons/unikit/scripts/unikit.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "7fcb05a23eb0eed4dd2535c86484fd4384c978668b2085d3e79297f8db110ddf"
+    },
+    {
+      "path": "addons/unikit/scripts/unikit_init_params.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dcaa6c4f33cce0eeaeae0f75563cc89e5c55aacd84a3cecd959de7184478ac05"
+    },
+    {
+      "path": "addons/vibrate_plugin/export_plugin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a77227aa9850cdeef615e5835840fe25cd6a84fe43301456a22a7b152b5f288f"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/AI_AppearAnim_01.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f6537ef0f8598fad0f4d3c83bda3f855b1b87aa22fc1e9fafd4423da5121c542"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/AnimPreset.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dd04756411745a908c30a7ea4f7ab4ff3502a525884487e3d78dd3c00c76d715"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/AnimSequencer.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "db5796527e3a6770052f28c5935e527b81049b0d26c7ff4adaef370d4cbe3804"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/AutoAnimcurve.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "82528e5a4438eea8dc8aa5596df8b9833cf619e25435433a86fc7ccd4b5b2a5a"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/AutoCommonAnim_01.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "35e13c155eb6daefb1e042766bb148570976ea2187e22b1c43a7b26568417356"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/BoardCellIntro.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4eac232230c3171771310c9ea7536dbaecd19bfe266a4ab9bc435d2e23cf8db8"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/BoardContainerCell_01.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "984b9cdb2f40797af0742c24af6244edfbe6b15f4659ee62709afe295054734d"
+    },
+    {
+      "path": "assets/effect/effectscripts/AnimationTool/Script/progress_tip_particles.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b09d5cfc3f0d372d246212ee5e92f4671360bf369f2aa5526a184e645f8874ad"
+    },
+    {
+      "path": "scripts/common/ad_placement.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "44a3c305221cc2773fe7df8dfa445a2b01183e6e6ced880d9bb7632c6c89fca7"
+    },
+    {
+      "path": "scripts/common/att_guide_helper.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "770ae500a480da24a85e728431682f2d0d9b27179f6b29e3732b7e04dffb9741"
+    },
+    {
+      "path": "scripts/common/auth_manager.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "2cf868b05afda2141505a543e7168d6ecd8480a406a5ea1bdb0112cf0a095385"
+    },
+    {
+      "path": "scripts/common/font_experiment_selector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a5a1d7e1c3e1f2511530b2ee4a3b1e18d7be013161c0324e9c56e64e8603810a"
+    },
+    {
+      "path": "scripts/common/font_swap_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dbf5cf4b13cb7b97754526768fe48dc55739d38dc2af7347138cbed29e901991"
+    },
+    {
+      "path": "scripts/common/helpshift_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "73be7a6ae5166c63c706a46f6ce1d560c47a37be0fab0ca881a291fffe37b546"
+    },
+    {
+      "path": "scripts/common/native_util_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dabbcc3715aa1cb74870700d35eabc3dbd1f715b28bd1a1e94b5c330bdaa92b3"
+    },
+    {
+      "path": "scripts/common/unikit_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a30add22dfb280ba439875b34ff3081e8c57fbc564eff8ac4a9ad73cf9601abb"
+    },
+    {
+      "path": "scripts/core/global_unique_id.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "38c8b9f4b4caa7bfbbc443883d1ca47fa3af96bb7f7963fd733a0ee7ffac101d"
+    },
+    {
+      "path": "scripts/core/log/log_util.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ff9a6a7d8f6050fa7d164067ff5aa7ec3e5288d3ca131160b7013d75471fbc44"
+    },
+    {
+      "path": "scripts/core/net/api_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2437257080d54c5f2232afa3a0792f105b889d71d77175293aa23864ef7189a6"
+    },
+    {
+      "path": "scripts/core/net/api_response.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "60cc3332e9e14587b38063eabfc6a953b5d9ee1161cf83be15c7050f052f052c"
+    },
+    {
+      "path": "scripts/core/net/http_client.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4c8b4d3eeada2309a14c228303de62ef660421ca0ffd7771b34024e6cec750c4"
+    },
+    {
+      "path": "scripts/core/net/http_date.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1e607f916672aebe783930ae5865d152ac1a1fd938d20e2e8794385a65940ba5"
+    },
+    {
+      "path": "scripts/module/ab_switch_popup/view/ab_switch_popup.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e5ed63beaa85b2f3d589fa1228b873280b87346ba9e4fd67b12fc2baed614683"
+    },
+    {
+      "path": "scripts/module/abtest/abtest_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1372db21564cec5e7627cbe2747887da8c3abed681a23823687f090156c5964d"
+    },
+    {
+      "path": "scripts/module/abtest/config/ab_config_base.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "301a5e87be49626df99427ea8c0b2a70633c7f668ccd6397b2a6871938f44b97"
+    },
+    {
+      "path": "scripts/module/abtest/config/ad_compliance_ui_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7f157c42d39ba617995faa3a5316b901db15d9fec8747b2691bb8c18eb43a73c"
+    },
+    {
+      "path": "scripts/module/abtest/config/app_login_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "439079477c392b631ef284bb01cad0c4b4592befde609c4490ee4faabab4e810"
+    },
+    {
+      "path": "scripts/module/abtest/config/art_game_end_title_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "05c3cb1f3314f029118cd5d9a7e77b548399b7bb2a3af07a2263df7d9cc744cb"
+    },
+    {
+      "path": "scripts/module/abtest/config/att_dlg_logic_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "77db7c8b88ac94b7f9d9c013505453d6f7a10cc088fb2e6fd6689d1c604119bd"
+    },
+    {
+      "path": "scripts/module/abtest/config/auto_complete_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c47a10581d0db5fd9c7f5afe363413c6a203fb1e5efd27e6ff843d68818ec20b"
+    },
+    {
+      "path": "scripts/module/abtest/config/auto_screen_off_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c38a0cf231680077a93e9ffb7e505857be99dce25f4711565344d552690f0b91"
+    },
+    {
+      "path": "scripts/module/abtest/config/auto_x_fill_mode_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a75cf051ddaa06ed719ad343e80291d45d1f93c008547de2e6ab36e6412133d9"
+    },
+    {
+      "path": "scripts/module/abtest/config/banner_extra_protect_lc_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3c334ac630c872b562283b9a45e3c7b880c4cd0f613bbe68754de72793c27882"
+    },
+    {
+      "path": "scripts/module/abtest/config/banner_unlock_diff_lc_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "607df2011b81603bf0bb9f5e9bc4167dc0aeaf30809ffa4136dc497926772abe"
+    },
+    {
+      "path": "scripts/module/abtest/config/banner_unlock_level_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7e4f78584353471f868b0091614404c2f3cb3b99bf7e7778537e0459aae7163c"
+    },
+    {
+      "path": "scripts/module/abtest/config/banner_unlock_session_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d417c593ae92ebef5c5096896593124be3cdb11418f1a21aa74c839fc6c18e6d"
+    },
+    {
+      "path": "scripts/module/abtest/config/barrage_func_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f9c7034eaba391835bc3a4d7049716f0b007ef7cb2345df3335871fb5c3bba59"
+    },
+    {
+      "path": "scripts/module/abtest/config/bgm_test_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "319b2c606bf75e11248aedd7ee10b4d8c150656bf30975b9b742fe921f7efeca"
+    },
+    {
+      "path": "scripts/module/abtest/config/blind_mod_color_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "30795535e460fc5a8481c016edc5b604ccfe3b9d11faf31446a8b489b9eb176e"
+    },
+    {
+      "path": "scripts/module/abtest/config/blind_mod_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d42f28fcbd179f0324b343bd591079f9e4d14363a95dafca54b5680b0ea30d3d"
+    },
+    {
+      "path": "scripts/module/abtest/config/blind_mod_entry_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b6538e978da4b3f3c417e9a64a766765c21c739d807deeb367ccad03c945ab41"
+    },
+    {
+      "path": "scripts/module/abtest/config/board_intro_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cc9f8c446b5a36ccf89a09f0c2ecbbdf4e3cb078068b548dc6100c6db5c0ea8f"
+    },
+    {
+      "path": "scripts/module/abtest/config/board_size_big_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "000174951b08061d5c9eaa1dc034a5ad790bf6a3936ea29edb09a7bcb95241bd"
+    },
+    {
+      "path": "scripts/module/abtest/config/cat_found_grid_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3ab47ae9ce06db3062235a7e6c23d9a5432458e0458b61dc94a0455b46278b62"
+    },
+    {
+      "path": "scripts/module/abtest/config/cat_toast_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4a439f16f4fe8b7a5770674ea4a42f6b4b4831b17d1e1cc95f250f3b5be501e9"
+    },
+    {
+      "path": "scripts/module/abtest/config/color_challenge_func_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "79ccd49aefaafd8e2e280c18a0b18ee622ca36844f03d92a271bd2e2b3f52bfb"
+    },
+    {
+      "path": "scripts/module/abtest/config/combo_encourage_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dea447bd11d2bd4d49601395b643917b27ee56108207a30548a46a411679003d"
+    },
+    {
+      "path": "scripts/module/abtest/config/combo_text_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0f59a1d7003221909be65965934d731ac23e6139502b2d6c30d695956f907d94"
+    },
+    {
+      "path": "scripts/module/abtest/config/combo_voice_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "490a66d7e678afc037d85b6f37317c609608beb898b808e88721f3db8dcbbece"
+    },
+    {
+      "path": "scripts/module/abtest/config/comeback_func_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e49fdacaa7df07253a23e59ccc2b3ba782495466ddf0ab135f96f62f74955b5c"
+    },
+    {
+      "path": "scripts/module/abtest/config/common_rewardad_logic_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "502d25a8045497ca3da21bd24813a6ba3b957da73479bbfedc456bfc46416d0f"
+    },
+    {
+      "path": "scripts/module/abtest/config/daily_first_level_difficulty_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6ded978cb2838376cd9803743b2245b991ef8d2b3e994c9bb1654152bd59090c"
+    },
+    {
+      "path": "scripts/module/abtest/config/daily_first_win_encourage_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7b8e39ae193e573230f6626e4b9e5f409750ded8ffce42d6c6b837b333bd862e"
+    },
+    {
+      "path": "scripts/module/abtest/config/daily_streak_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "29c788a20618ef06c10f172bd61bee494ba869c02f0f434209a2833c6a266eb3"
+    },
+    {
+      "path": "scripts/module/abtest/config/daily_streak_encourage_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "84d853aa1b31758f5e1ea4eb2ab2c9919f6dca661b11e777c19a41de6f7dabe4"
+    },
+    {
+      "path": "scripts/module/abtest/config/daily_streak_page_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b55e8c80b04b063727e53e1dcf686c1db1a46a112be6c5cce0bb2b76fee254d4"
+    },
+    {
+      "path": "scripts/module/abtest/config/daily_streak_success_page_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3c8c059498bcab5b750c288c6a1abb74f0de73e73b37ad1a08ecf38945575195"
+    },
+    {
+      "path": "scripts/module/abtest/config/dailystreak_icon_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "29a23776d1424a6bb34bc0d8b5f60a40fcdb475000ffdc2494531c333c2e267d"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_beat_percent_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b62f4e0ebdaae9cda6ec78631b9926e77026ed1f542103300672a919d2ad689d"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_costume_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8b822599160fdc2f85874d2a4d16610d4461eb1b4cd65ff1551aec85793a8212"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_endgame_save_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8746f316f4baf015aa7e3f426bba072f98e71640d9d2d5dd4e5a2acedd0f02a0"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_level_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f60460a185f71d46242c4bfdecff5723a7d21f2e32d6f6c57d2fb14432d8a9e8"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_number_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6e632819b783359058da7f228e9f0a0dccb662a49c9e3b37fe5d1ae2f448a355"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_pass_page_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a23400331bf94ce73306817ebc50f767a8bfece993f18abd209a34de1186c2a1"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_start_toast_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f2db4f8682819b858bc7094948bca8a3ff30ce16d9dc3adc8f26c8110129a270"
+    },
+    {
+      "path": "scripts/module/abtest/config/dc_tag_ui_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5263f837245118cfaeb40dc1ec7608c481b6e571e96bf31d1a1923dc46ce8060"
+    },
+    {
+      "path": "scripts/module/abtest/config/dda_rank_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8c6019226928e71ddc69fa08cd3c8ba9dcf5d873f46f0dcf5134248282a4fd0e"
+    },
+    {
+      "path": "scripts/module/abtest/config/doubletap_protect_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "32bd0a67bf44192283c1bb6fc6efcb00ab6c8742cf6785a7392a4bbd9bb64798"
+    },
+    {
+      "path": "scripts/module/abtest/config/draft_mode_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e4cf0fd74e82a28bf59e3221b4465a83d778e4e3992c4d659357e08c947942a6"
+    },
+    {
+      "path": "scripts/module/abtest/config/dyeing_test_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fa927a9749f9cdcecf2570f33c6465a0dbedf5403cd6625aac749595c67761d2"
+    },
+    {
+      "path": "scripts/module/abtest/config/eliminate_effect_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "76f03824549efa9e0d07ddf27ee8385e33c7010ed96a4bf85b94264c5f58aad3"
+    },
+    {
+      "path": "scripts/module/abtest/config/error_catface_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e3114bafd0926eaa6637e21d8a053a31aca879933ef5f4ab8f20ebe09fcdf8c6"
+    },
+    {
+      "path": "scripts/module/abtest/config/error_feedback_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f4290641df9963b479e8810e2c3e8e5fa5f4170d5c462f458dc1228819ca76b3"
+    },
+    {
+      "path": "scripts/module/abtest/config/fail_text_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bd4f9b70fc1fa562520c31c7fac8227681532ef4f37ef7ae829940f38bd24371"
+    },
+    {
+      "path": "scripts/module/abtest/config/fail_ui_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "eb256b79883151465ee5c0a02db8b8e8b4230805b32d2464aa08d93326392884"
+    },
+    {
+      "path": "scripts/module/abtest/config/first_win_encourage_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fbfea832a3f23056f1f21e08ac7c6be3f793d181346754a13b817aa1b1834c30"
+    },
+    {
+      "path": "scripts/module/abtest/config/font_test_en_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4ec7ca3d875d27a4a7a43380eed105ad61831ef031313a41a1ff31e544db372b"
+    },
+    {
+      "path": "scripts/module/abtest/config/font_test_jp_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "34df4eae9fca89e8361ff0cb30c1baa1cd5575e5bc8a11f540a6720650d3ea3d"
+    },
+    {
+      "path": "scripts/module/abtest/config/font_test_zh_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fccb7dbd0b65e816f87a27a21086568d0574f4a0f6350f6bb4a35900c201e6ee"
+    },
+    {
+      "path": "scripts/module/abtest/config/found_cat_animation_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d5759fca34a6ff6531de500be2cbe7394176baecd0008b552c3ab46c30e7865f"
+    },
+    {
+      "path": "scripts/module/abtest/config/full_mark_feedback_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6f8262a3343a08c11d06eeef976813974e0e0171f583a523f38ffcd567e8a09a"
+    },
+    {
+      "path": "scripts/module/abtest/config/function_clear_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6b855bbcc9c2c1c48ad273e04ff08056651c93d693bfb7ca4dc51acfc7bd0096"
+    },
+    {
+      "path": "scripts/module/abtest/config/game_auto_mark_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f4eb85436df55da72a56fcd3b5b9cff2b1a795ea9dff3d97cd8761e8dff347c4"
+    },
+    {
+      "path": "scripts/module/abtest/config/game_grid_ui_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4c9f622583d6595ef42b1aea0a1d2fc2b4469864079698cba21ab676624f40c3"
+    },
+    {
+      "path": "scripts/module/abtest/config/game_life_rule_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e6890246b043c1f7e524ecb54278b747d283fe2a8e4a9bfd27d4548eeed2db3e"
+    },
+    {
+      "path": "scripts/module/abtest/config/game_page_rules_ui_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c2ad12d8056e38836f5e9357a1d06b6322c37db3bd3a07bf601c6e6dd26046ab"
+    },
+    {
+      "path": "scripts/module/abtest/config/goal_emphasis_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d7f121e73c44669b0a1682f395c2171626bedb9bf5e9d8bccf70b66c8f2a4dbc"
+    },
+    {
+      "path": "scripts/module/abtest/config/golden_fish_func_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "653cd4c1a03b21d12a23ebddbf850e5313318612bde597be49aa69e61cd15729"
+    },
+    {
+      "path": "scripts/module/abtest/config/golden_fish_precat_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "20fa6682db7b3c81683991b2286283d76a9ae316b4aff66385e0b50c561f0be2"
+    },
+    {
+      "path": "scripts/module/abtest/config/golden_fish_timing_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5353dd3270e21151e1c7b6302c3f1a79e70520e25e1137c10ae21ee9071ceb39"
+    },
+    {
+      "path": "scripts/module/abtest/config/grid_blast_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "62c6f77dfd79d7e8f09f3f88e7d8b8c148a75a89d771f699bf645579c9c45115"
+    },
+    {
+      "path": "scripts/module/abtest/config/guide_eliminate_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a6c4af3cd47011e3cbcc8532095acfcb8bd49b037e5e351f2e175ce0a61a6904"
+    },
+    {
+      "path": "scripts/module/abtest/config/guide_feedback_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "649bb437614ea5e3f032201d26c1cd0b8f865eb092e1611b88a77c4ec888b6e1"
+    },
+    {
+      "path": "scripts/module/abtest/config/hard_button_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "26c75c3ec0e02d0924ac07872bb71e53ba081587c4953ffed5f33f679187190e"
+    },
+    {
+      "path": "scripts/module/abtest/config/health_points_rule_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bb5b46aed99381fd7007728f70b70bd87693ace721d957fdf45a77428774c4a2"
+    },
+    {
+      "path": "scripts/module/abtest/config/hint_cat_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a82247b23c33408e9d214c5ffc3d129514dd7c3c091fbcecc4fae48e67bdd66f"
+    },
+    {
+      "path": "scripts/module/abtest/config/hint_func_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2949f0568e4bb5b006ace45c194f86774f5e42d11e7724b3835aa89019d2a13a"
+    },
+    {
+      "path": "scripts/module/abtest/config/hint_ue_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0cc70c1893af81ba824677d0e926dbc85348064b86e68ce0d8f63baa1dc6c965"
+    },
+    {
+      "path": "scripts/module/abtest/config/home_companion_cat_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6c94821657a8b2081f27862d0b0eb18709fc7e4f65d2e1dd22113ec4360b62c1"
+    },
+    {
+      "path": "scripts/module/abtest/config/home_entry_shape_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6aedec9ca984effde3dae008aae27343d6a445003f0f89b87dddcc2d87230460"
+    },
+    {
+      "path": "scripts/module/abtest/config/icon_crash_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "547de00dc8590c99d7fb58261efd8c5c2dea9a6d386a2ecfd1fe9b472af8887b"
+    },
+    {
+      "path": "scripts/module/abtest/config/idle_guide_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0d44055cc9c1595df01e1f620898133d391def71ae91e4fbb5fb63f732482435"
+    },
+    {
+      "path": "scripts/module/abtest/config/inter_cd_lc_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0a40197b20bf6efca90a1a03293913bc3cdcabd2b5b8608fbd833b18e4d08c5a"
+    },
+    {
+      "path": "scripts/module/abtest/config/inter_extra_protect_lc_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c3ead2f3c0bc4af2d243ebecc032fe0da341a3ee96aaaf279fd8810f5bea9e9e"
+    },
+    {
+      "path": "scripts/module/abtest/config/inter_prob_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "558d84eda6ba88224dacc8a317e0f29c224b2f0de66d0d4b6f6712949596f7d9"
+    },
+    {
+      "path": "scripts/module/abtest/config/inter_timing_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "abd8c5ac05256d38747ea1d8bb2744516335f593051f27f92cfde6a16d211cb6"
+    },
+    {
+      "path": "scripts/module/abtest/config/inter_unlock_level_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4aacdee9c763bcce43ffed8aeefc5d7edd3a5b54576e1a6d3eaf84d0e367456d"
+    },
+    {
+      "path": "scripts/module/abtest/config/inter_unlock_memory_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "252ea4fa04c7e1bb353644d2f7bad27b40d642124163066313e05d4901450de6"
+    },
+    {
+      "path": "scripts/module/abtest/config/inter_unlock_session_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fd1cb3cd833303e4fa60f17688f2b5cd9ba49ecc99f4def27a5b1722a4291c79"
+    },
+    {
+      "path": "scripts/module/abtest/config/is_vip_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "127627cce51dfd730c5323d678321d55d1fb88819e52e67bae2384aa208cf14b"
+    },
+    {
+      "path": "scripts/module/abtest/config/leaderboard_anim_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c3f73334680bd6c394abb2a6b924ccf58cf02cd8eefeb14d3791e3946f831c6c"
+    },
+    {
+      "path": "scripts/module/abtest/config/leaderboard_collection_levelwin_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "13190ccf4c30875f540498e178cf83996210b5450faa51adbb4385ea90fc8ed9"
+    },
+    {
+      "path": "scripts/module/abtest/config/leaderboard_func_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ae7b7102d22d84adfa1a6b5d176d8bd6ed4fa64ba30de72b9012e089cbc119de"
+    },
+    {
+      "path": "scripts/module/abtest/config/leaderboard_offline_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fc4769b758baa6c27330a14adf876925c67f08b7cd73eaef0d4041843fb9626b"
+    },
+    {
+      "path": "scripts/module/abtest/config/leaderboard_reopen_timing_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ef0d65ea02434c32e6553209b234c5734cb939b0821979dc69f74ee8e5d4962f"
+    },
+    {
+      "path": "scripts/module/abtest/config/leaderboard_robot_logic_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ef9d411e8b1fd456e3292d56f3d6bfe1e460db609da8d153bc39db8b00c6c0e0"
+    },
+    {
+      "path": "scripts/module/abtest/config/level_btn_continue_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bc3fbd05ca25c9d1a07c27ad775fa8db685c9e08e3f6b52d4a66bfa9d713414b"
+    },
+    {
+      "path": "scripts/module/abtest/config/levelwin_anim_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b6679349af077cc87fccd68134c573468416137ad6cefed9150ed1bb9bc33e30"
+    },
+    {
+      "path": "scripts/module/abtest/config/life_icon_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "36d902d3e7b0b5e75551564106826af94f532cfc277eaa10ee11897a4854ad0a"
+    },
+    {
+      "path": "scripts/module/abtest/config/living_days_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e97c1e5a171d99af2ecb4a3a2601f9d9382a2ea63ecddad4fafb22648a82767d"
+    },
+    {
+      "path": "scripts/module/abtest/config/loading_page_test_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "65b8452a0f45ce48384bf07b7904ee4a118db9da4b1e51c4286376109815fe70"
+    },
+    {
+      "path": "scripts/module/abtest/config/mark_sound_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "34f589412b480436766777dea5be78dbd94d1b223a7d6e538a8f8d3089953ae2"
+    },
+    {
+      "path": "scripts/module/abtest/config/meow_feedback_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3fb8e457fc97e2643686081f3e1cc15244063292f4c69e98385e1b106af0862a"
+    },
+    {
+      "path": "scripts/module/abtest/config/misplace_reaction_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "90f6f9fd8c58b0f5fef1af3d0441108eca4b85d05145190b9f47212e7fea42f8"
+    },
+    {
+      "path": "scripts/module/abtest/config/multi_touch_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a951af55c6276750d6187c5f98f23c139251becb2bc1a1794704a89eacd44b06"
+    },
+    {
+      "path": "scripts/module/abtest/config/near_death_fdb_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "50010acf6ea4dff58c3d8d57bde386e7dada160afafdfe0cbe44e9ca27c57abd"
+    },
+    {
+      "path": "scripts/module/abtest/config/no_dc_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4aa56c5eb41b7a19d6af20f630477ac701f185dac9f1afb2e96c8a99fd9f2d14"
+    },
+    {
+      "path": "scripts/module/abtest/config/no_network_remind_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "31a42ec05222bbdc74d0ef833a2092994ce343c7ffee02810f0e475f84e6898a"
+    },
+    {
+      "path": "scripts/module/abtest/config/normal_endgame_save_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "762352c1eb9d2c3b3f50f4c125299a34f4df9747b63a20ff6dea262a9ad23384"
+    },
+    {
+      "path": "scripts/module/abtest/config/normal_level_10_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d414b1bd51bdb7dfab8732b9ac3d53106acb466c8a820a7c873a364dd05ec0c2"
+    },
+    {
+      "path": "scripts/module/abtest/config/normal_level_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ae84a42dbd3a2e72b720b32e1ce5c0a5d79a625692beb99e302dcd560aada5df"
+    },
+    {
+      "path": "scripts/module/abtest/config/normal_start_toast_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "52b39de67e539b1e254df5d804d68593ff53880b7de8a93dc4d8d0a9f86e8113"
+    },
+    {
+      "path": "scripts/module/abtest/config/normal_start_toast_text_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f06fb91c61efa56f4fc6aef157d9efb1a09e7ab674332823bf14053679e6f717"
+    },
+    {
+      "path": "scripts/module/abtest/config/normal_top_ui_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e9cdf3dcffa9777c22a53f20c3b1d70db7dac9753c85eb29e98e3b131932abb3"
+    },
+    {
+      "path": "scripts/module/abtest/config/nu_guide_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "af2fc525c07bda9111b6d80789448db73110a978bdd93ca0aeb9bdd9e42e13c8"
+    },
+    {
+      "path": "scripts/module/abtest/config/pass_anim_cat_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "da3b9de3a458824e108c8b62b66d2c4369f926362323db0f5522325f635bb245"
+    },
+    {
+      "path": "scripts/module/abtest/config/pass_page_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "333738976af005da31ee9bdc59a98277ffeef1af27ec7db1dbb3f3399862742c"
+    },
+    {
+      "path": "scripts/module/abtest/config/pass_text_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a66e72f8a0e03c8cd3b67c5c3065505378b0b4028799af0f62d3ee2687c0d6dc"
+    },
+    {
+      "path": "scripts/module/abtest/config/peekaboo_cat_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "df2e5bb151fc3962f678c204d43c0421b83e801f59632281e94cfc5eb20a6185"
+    },
+    {
+      "path": "scripts/module/abtest/config/play_anim_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9859fa24ac1e3c4b7e126198b74f048c9115f4786fa089e0f6cb660bcc1605e7"
+    },
+    {
+      "path": "scripts/module/abtest/config/podium_per_game_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f39e3315f359ae0b1476989c331e1a485adbe632a4d3ee2c3c7da93e567d8226"
+    },
+    {
+      "path": "scripts/module/abtest/config/podium_per_leaderboard_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c946114af88619d84327907d4c30651e04a45e8c4f69265adc7159aa9b8485be"
+    },
+    {
+      "path": "scripts/module/abtest/config/pre_cat_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1d99e52415e0da06a895a3d31f7719205dfac9347ca285db7f76acf068a4ac94"
+    },
+    {
+      "path": "scripts/module/abtest/config/pre_cat_fx_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8fcaaa48d79e0dfafe522b78e71b423c0e651a012b4aa328de6c13859e86e499"
+    },
+    {
+      "path": "scripts/module/abtest/config/privacy_pop_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "18983acc17d380b8f670cc17b10cda980fb77260e2456cbaec41bb10dc529734"
+    },
+    {
+      "path": "scripts/module/abtest/config/progress_emphasis_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "02abf5b486ebc9578f0d2ab0562ff91ee24417777cdcb40706fcd98f8b74a60f"
+    },
+    {
+      "path": "scripts/module/abtest/config/prop_highlight_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2ab9ac598077b717474294fb21eb8f80830f8af2693f97fc19ae0996bff1274c"
+    },
+    {
+      "path": "scripts/module/abtest/config/prop_mouse_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4a005bcac34c040b67ffd2b99480a1a89ddb43c7e68543a50c914cafab573efc"
+    },
+    {
+      "path": "scripts/module/abtest/config/prop_position_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a053fc8af3df65e345cc35077c91273ebf85aa06230a95e086a303fab5c1554b"
+    },
+    {
+      "path": "scripts/module/abtest/config/push_local_text_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4bad6ce3fe75d31b5769fa8f7043476248c36c98c5d4fb0282926a74b851fd07"
+    },
+    {
+      "path": "scripts/module/abtest/config/push_permission_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d371fc0792599f621e1178fadddb66b724441e351e5ff746f867851a54498470"
+    },
+    {
+      "path": "scripts/module/abtest/config/push_sounds_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c23b8cce710e35973ba2346d63e36dbd7443f6341cb14abf62537f8d28c56bb8"
+    },
+    {
+      "path": "scripts/module/abtest/config/push_style_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "668d6ea4e44b1a45772e6c748a5501112a11bcb93e86a17987f8e7effd6e42c7"
+    },
+    {
+      "path": "scripts/module/abtest/config/push_unlock_level_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "92cf5d49ff89cc8e64e9b55c336cbe111f415f38c6c3c2d1ff6ee92e5f61865b"
+    },
+    {
+      "path": "scripts/module/abtest/config/rank_1st_frame_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ce7f600d373b194942dd76f16f2919de20b9a65d2d9405fd9c50717c9dbf5cdc"
+    },
+    {
+      "path": "scripts/module/abtest/config/rank_bot_name_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7e01903ab29ced6c68b10854908bb027f1218e8f3ed1f4d81e7c4ccdd36e0d1b"
+    },
+    {
+      "path": "scripts/module/abtest/config/rank_like_func_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a2714baa952a3c14ec14e57092d4978bd46d93ebc57a5587aba8c5acec257298"
+    },
+    {
+      "path": "scripts/module/abtest/config/rank_offline_bar_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fa59b0a758b69f6495e07371e3f991f6cbd15e63acbf53c394f4c9f714d80ca9"
+    },
+    {
+      "path": "scripts/module/abtest/config/rank_state_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1c09549c5dd48216a66f19126174a21c8544f8705ea58269905f1e596f381bb4"
+    },
+    {
+      "path": "scripts/module/abtest/config/rank_win_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1f9da711a86c0d05f8cde4fdd4b4243d5c6187484a9bd656de9854ab081ea902"
+    },
+    {
+      "path": "scripts/module/abtest/config/rate_us_pop_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "741344d872b089191b822a60b4bc299a8d1f8100e85f77908a44e58a643152d1"
+    },
+    {
+      "path": "scripts/module/abtest/config/rate_us_pop_ui_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "994cd91a7d991711c374118f6cf6afa281a8095834b750fe1a0b4a79e725667f"
+    },
+    {
+      "path": "scripts/module/abtest/config/region_color_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c825ced38fbcc5ddfc154471e3458ddcf714a36f22359e7900b6a10ff3fd64b2"
+    },
+    {
+      "path": "scripts/module/abtest/config/revive_countdown_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ced110283eca4b373fd6f6d2090dda4299e800bd084539137c5a3bea615e80dc"
+    },
+    {
+      "path": "scripts/module/abtest/config/revive_free_logic_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "09d0e6e4070d3c08ce21fced5517d3f9c68c29df520e3a3c1ace2d5a83b08751"
+    },
+    {
+      "path": "scripts/module/abtest/config/revive_life_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6449b2c7c5d3c3b18ae71d478e968e77a2e2728b172d99c9004bee3d41c6189f"
+    },
+    {
+      "path": "scripts/module/abtest/config/reward_unlock_level_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f39b6a7b6e6ef62e96bf50e86a214427dfd4b23e32002a88fd2336e974393e8d"
+    },
+    {
+      "path": "scripts/module/abtest/config/rule_highlight_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bff5659b3b276b1aeb56b2303e95e399e78e24b84a2dbdbb0d1a4e3c593cfe4a"
+    },
+    {
+      "path": "scripts/module/abtest/config/rule_normal_rank_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9951ed6c4b67f9871224baac66823fb1d7d1e8b3973a17205e3041b24aca3635"
+    },
+    {
+      "path": "scripts/module/abtest/config/rule_text_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7a8b7d54e5f86eed5fba69fcc94b43b9d92b5e81e0c7562042dee585302a34bb"
+    },
+    {
+      "path": "scripts/module/abtest/config/score_encourage_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "14a4399515827a24f8730e3591426ab1f08ca373197c5ee9a9b0dddaaff9e59e"
+    },
+    {
+      "path": "scripts/module/abtest/config/score_performance_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e590094ed638bd5f433d23ab70cbc75f0e49170d7fceac99abb255d1353c84bf"
+    },
+    {
+      "path": "scripts/module/abtest/config/settings_language_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3a8781d639c98650a36268410f59cffb67593e1568f36b104d0932ae143f9d81"
+    },
+    {
+      "path": "scripts/module/abtest/config/single_region_num_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "05040743d1433106d0adc50dd988d4c1f0ea9aefcfb3133d8c335f6d0e913f5b"
+    },
+    {
+      "path": "scripts/module/abtest/config/size_cycle_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "210e77608bd850283bf8b703aead7ab7ae41949076375524a3247f9b69854dda"
+    },
+    {
+      "path": "scripts/module/abtest/config/splash_slogan_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f816f081cbfdb360927b64b9b0303719fa9b3f07f1628c3bc485f922264200e3"
+    },
+    {
+      "path": "scripts/module/abtest/config/streak_protect_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "116b063276e32df54e5fc7cf1a52bae0141a9f096a6f53a0e90a494fbccbbd64"
+    },
+    {
+      "path": "scripts/module/abtest/config/swipe_logic_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f19c4cfa425f2605bbbaf55d12495a4d298589d9cff33f2e9047fc562acfe072"
+    },
+    {
+      "path": "scripts/module/abtest/config/swipe_protect_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e817d712a5750a1f471c3c7005dea677bfc98d543fe707688e36a5d9b09c2d25"
+    },
+    {
+      "path": "scripts/module/abtest/config/system_dfps_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ea3a25ceb3e97359e60648fa23360ffbad3c5e76f637d75b4dc674636afeca1f"
+    },
+    {
+      "path": "scripts/module/abtest/config/tap_feedback_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "94cedadd143e2e87457fda7ddada4bdd7c28b9c12fb544d4d20bf54fd7b2bd03"
+    },
+    {
+      "path": "scripts/module/abtest/config/text_highlight_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "acf66c3e10447a06762599c78cbd286baff7e330bb5f8f520407776dc943feaa"
+    },
+    {
+      "path": "scripts/module/abtest/config/third_rule_text_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5494b02d0eaa29c074fd0d813facd3979c5658b0dc1a7dda9590989e15bed9ff"
+    },
+    {
+      "path": "scripts/module/abtest/config/thumb_up_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "85d2459e60212d7a6835df8b36f3d511b4f6fc3ca943f530f403b68c170fff19"
+    },
+    {
+      "path": "scripts/module/abtest/config/tutorial_diagonal_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c413bb9d7077b541ec2547682ee185ba91c74015ef5789e6d30ff015aefb5484"
+    },
+    {
+      "path": "scripts/module/abtest/config/undo_btn_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "57ce1c97237091d5ae5f87afb6d3e308d523a1d2fe16e3eabca4b6887805f944"
+    },
+    {
+      "path": "scripts/module/abtest/config/unfinished_game_open_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c057e5aa57cb9cc582ed7271924beb73a37a353f493572b6f3cc6f10c6832f90"
+    },
+    {
+      "path": "scripts/module/abtest/config/vibrate_add_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "29d7cb02e85be84f0bce4fa41c35c77fbef9f6e06d187f4120c89fa83e7689ed"
+    },
+    {
+      "path": "scripts/module/abtest/config/vibrate_combo_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fec40a7d81dd4c4eb939a1ef126379c1ec7b81d814d7e2cdef4ff859d70150b9"
+    },
+    {
+      "path": "scripts/module/abtest/config/vip_price_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aefbcf12b8cb489a18325dd764e4fee5ba7711128d9d452c3a8d533705ff1f72"
+    },
+    {
+      "path": "scripts/module/abtest/config/warn_life_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "18f5a87b6d9f586d52e0b017903d907bd8df0ea2bf4791fa8eb58a6e044d36dc"
+    },
+    {
+      "path": "scripts/module/abtest/config/win_encourage_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3eee908ae04605ad89190a47215802247eec4ddc53cd9baeffd983b537149f04"
+    },
+    {
+      "path": "scripts/module/abtest/config/win_red_mark_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c1ec887793e3823f8e5816f495626aa7baa8cfae569843be5e0c9049ecb93244"
+    },
+    {
+      "path": "scripts/module/abtest/config/win_toast_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "51355fb38c172f7a5e153af047d20134a5f78ff24300f8956c51c1769b3c18cf"
+    },
+    {
+      "path": "scripts/module/abtest/config/wrong_cat_effect_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "90685d30a634a1681410f80165abb024a98dc4e26a5aa267634e0a8a3bba7d90"
+    },
+    {
+      "path": "scripts/module/abtest/config/wrong_zone_fdb_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e03e32dc7509295be90b1634f0ba701399f5b6fbfca833a7fe6411eb5c120eac"
+    },
+    {
+      "path": "scripts/module/abtest/debug_ab_override_store.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c11152e7e07fe72bc95b78fa7763d6e46e42eb86cf8aecb0193e1ba02bc4314d"
+    },
+    {
+      "path": "scripts/module/abtest/protect_scheme.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1c4b91cf8c54dd32f25e530c29d75529f87b57852fb99d8582fdc9764c8fbb33"
+    },
+    {
+      "path": "scripts/module/abtest/strategy/home_companion_cat/home_companion_cat_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "69503a068819ec64b75e2485fe9b8fa667cd41ea97bd0eb5cdd6f6c552f5dcde"
+    },
+    {
+      "path": "scripts/module/abtest/strategy/home_companion_cat/home_companion_cat_strategy_cans.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3629758ce8280385cde3c687bc78d55446519f7e0cba1e7bde43a339af1fd63f"
+    },
+    {
+      "path": "scripts/module/abtest/strategy/home_companion_cat/home_companion_cat_strategy_cosmetic.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "28f7d8a699421439df13d7e3f8ac0cd3390451b675ff47fa2842481be1c48eb6"
+    },
+    {
+      "path": "scripts/module/abtest/strategy/home_companion_cat/home_companion_cat_strategy_interact.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2e8f6b72e58367a07455c4a01cb389a2bb2a378d793e5bedaf993249a1abb5d4"
+    },
+    {
+      "path": "scripts/module/abtest/strategy/home_companion_cat/home_companion_cat_strategy_rewards.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4e317d74c2631b85b85b00cfb5b937bbc5c73fc6c25b9a1ed512e27d3b69ac5a"
+    },
+    {
+      "path": "scripts/module/abtest/strategy/home_companion_cat/home_companion_cat_strategy_satiety.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "904eac80d526375a3a9cd0f48751fd8fa62b839554abcbe1d6e3009f86dfca38"
+    },
+    {
+      "path": "scripts/module/abtest/strategy/text_highlight/text_highlight_renderer.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3bd49a8a95ce31c8815569dce933971b1fffb5061fc06a8d8bbb168662c1c8a3"
+    },
+    {
+      "path": "scripts/module/account/account_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "41cf73ab2c41d6af06baf738dfbd79d55809abe7edaa6f5d88a8f932daa785c5"
+    },
+    {
+      "path": "scripts/module/account/model/access_token_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "99fd8d7cb2f45cbe813ef031bdbb9358bdf04e6b4671759d75c8a3b3bd21f0a0"
+    },
+    {
+      "path": "scripts/module/account/model/account_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a561a4c26836ab1c26b962289b200d4903cde07c03c078291681ded30e1c67d0"
+    },
+    {
+      "path": "scripts/module/account/model/account_define.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d60d184c4b6f6d5c3162ea84d8e562a0d2ca2ef82b34b0cc1fb91270483e522d"
+    },
+    {
+      "path": "scripts/module/account/model/account_flow_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "218dd351c235e88210922298ece7de618f914096f923d7c9ca7dabb5cf0a6466"
+    },
+    {
+      "path": "scripts/module/account/model/account_profile.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "21bc62f6312c3144d7e874b16c9090fcff3a907fb75681d95bf9d973f75d4c8e"
+    },
+    {
+      "path": "scripts/module/account/model/auth_failure.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cb992a66ac3a40519558339e0d470574ec94b9274df6e2025d2b6ac41e6ee789"
+    },
+    {
+      "path": "scripts/module/account/model/auth_flow_outcome.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "45b0604019f14b2742644ae165cb6c23f7c41cc6cb38634f56ccded365423447"
+    },
+    {
+      "path": "scripts/module/account/model/progress_conflict.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b2f2a5714eaae8ee6c0ae10c9933d6bb85f7f274f361f70b63a326ba50f8a46f"
+    },
+    {
+      "path": "scripts/module/account/model/progress_snapshot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e1a54666a9b4359d2caca01079c3bac95a91184f1d941dd47384ab2b878268ff"
+    },
+    {
+      "path": "scripts/module/account/view/account_deleted_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "137def9cf934df4525c6e0b50eb8b4bc848bbab3d08ddf31accd94c1f1f18719"
+    },
+    {
+      "path": "scripts/module/account/view/account_result_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "61475ccdd65f467ffa05dc52face34ae085b84af5fd0b81b838896ef0642cc14"
+    },
+    {
+      "path": "scripts/module/account/view/delete_account_confirm_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "46944490fdac8a17837cd7832148ff27178d77306118e4a5dc759bbba3b9b476"
+    },
+    {
+      "path": "scripts/module/account/view/delete_success_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "851ee73a5dbdacf2eb831a6df0480b7f5745ddd6526ddc13f68e67f49f7f7354"
+    },
+    {
+      "path": "scripts/module/account/view/login_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "859ff379f4d69c1c4107ce0890ef97c56148155ea443ad0453825d8de3f0162c"
+    },
+    {
+      "path": "scripts/module/account/view/no_connection_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "42ae49e2dbb622acbf526353ce0aa874aba3d05305921079adcfc0842fc24503"
+    },
+    {
+      "path": "scripts/module/account/view/other/account_popup_layout.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "13f8230436a531ccb71040ddf335a5371459c05f9cb906e9fd6420d5a2742315"
+    },
+    {
+      "path": "scripts/module/account/view/other/channel_row.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7c34658e7acec9d114f9842a737d35c756753f10032c9f14922d2c6c1165c8cb"
+    },
+    {
+      "path": "scripts/module/account/view/other/progress_option_row.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "630916dd5ac6f0cee8926e3cf3ac1bfb5803b8849b24047e8dd73f9dee5d44e1"
+    },
+    {
+      "path": "scripts/module/account/view/other/save_progress_row.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5d71afb5188294ad5518c08b8d938233a5b632bbde846b0f2fe0ea6b1a205cce"
+    },
+    {
+      "path": "scripts/module/account/view/progress_select_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "80e0a419d1508a1fce22d85800e986979268aef8a6a090ad1b1d64d373ce8f16"
+    },
+    {
+      "path": "scripts/module/account/view/sign_out_confirm_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cf7fa6a723081abd4c3b59b18aa4649543eb51fb5a07f3ae72210fbe89fc4317"
+    },
+    {
+      "path": "scripts/module/award/award_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "815a053f68036edc66ccfb61bbe22e35473abb61f1376b17b2b652a2465fc8d1"
+    },
+    {
+      "path": "scripts/module/award/model/award_item.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e41b2cb7dcadc4ed095acb844c6e71c70a57c2b6b24005f98b4a45fedd62a4ee"
+    },
+    {
+      "path": "scripts/module/award/render/award_render.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6553276933699ef3533c858a0c208c565df7b20f61a27f30b2b89e841e669ada"
+    },
+    {
+      "path": "scripts/module/award/render/award_render_direct.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cb997d4859ef8fbec6a9267c4cd830a87fda8d5dad228b6651081bf506c5ba37"
+    },
+    {
+      "path": "scripts/module/award/render/award_render_rank_gift.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ca8b88609b67706c8886334b76c375970a02690e765ceeb691366f121c15caeb"
+    },
+    {
+      "path": "scripts/module/award/render/award_render_streak_gift.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b5298c1ea9c06bdf96c51f9d95fc2e836eb8d0d3ffeb57498b8cc39e700927ee"
+    },
+    {
+      "path": "scripts/module/award/view/award_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "73f6a507fe1879e0c8f5be166563a76cccd2858dcbf19e13bd1b3dbd8983f84d"
+    },
+    {
+      "path": "scripts/module/award/view/other/award_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "275e7beaeaf376125d8cd1f14a43d7011c768287f0b931aa238696f57c614e96"
+    },
+    {
+      "path": "scripts/module/award/view/reward_claim_popup.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d5903d6e2a42ff7d0239e5d649759fb97754a99be384d3b4eb21cd68a4785c1f"
+    },
+    {
+      "path": "scripts/module/bank/model/bank_binary_format.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dd1993b35db90ef89a15e2e8e1fdc48c4bd8123935a9a0c8242a6bd0d6477c35"
+    },
+    {
+      "path": "scripts/module/bank/model/bank_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e2a34bf332625190361216cf7daf1c17209466549158f70cb935aa214e829ff7"
+    },
+    {
+      "path": "scripts/module/bank/model/bank_level_codec.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9c0c4e85c5af097d6ef014029dd0fdffced379254698d2ff246aa3c024dde66d"
+    },
+    {
+      "path": "scripts/module/bank/model/bank_sorter.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f5db3a7b666542ce299805b7eb8feeb4a25447592b7b16e90e58ee9af64d6e59"
+    },
+    {
+      "path": "scripts/module/bank/model/level_bank_io.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a01a270e0e7e42dbeccd2d4432607074411927f88043f6623890a003080e523b"
+    },
+    {
+      "path": "scripts/module/bank/view/bank_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ef1b6822ccc56593fd56808dca282d165cff7221a9cd85c9ed522e0429e26b1e"
+    },
+    {
+      "path": "scripts/module/cheat/cheat_bus.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9310ca61ee06f739e70e41737fcf9cf1a6893ef7dcc43acc0d439e92eb8b13af"
+    },
+    {
+      "path": "scripts/module/cheat/cheat_commands.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5cfd1a34e1dcc242604f45f8c5c963b683bca8928679c70fe415c7326d8fb374"
+    },
+    {
+      "path": "scripts/module/cheat/fixtures/streak_history_fixture_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e94193c0590156092ef1dd2dffdccb3eb79508e099df60a93abd311cfd41d057"
+    },
+    {
+      "path": "scripts/module/cheat/fixtures/streak_history_fixture_session.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d96276ba8dbd2865259b00e78a8bbee430f01fc84c315cfc932e7507c2aa0456"
+    },
+    {
+      "path": "scripts/module/cheat/model/cheat_command.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8fd83635d72c680aef0133a935420ff995c19d57fa18097f930f76c9a5d0a7f9"
+    },
+    {
+      "path": "scripts/module/cheat/remote_console_access.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c44bd08460654d86d92a80e7bae8f6ed01bf235dcfdc9f968fd7554fc64ad0c0"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_ab.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "49d2eb2c1c7e9217e385b3aa23cd88fb8a688653f4fb9027393c3785e4bb74b4"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_activity.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b9fb335d16d0e3266afe9c6cc0e42890a352d6fc2eccf4460d363c3274007efb"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_ad.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9220fd9ab82b2079aefdf62914410defee64da00dbdc3408cf9343474bf3940a"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_base.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5dd436a60dede6b2ea3470d398b36dd6d686f06fe0390f4ca84749ebcd79e095"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_command.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "00d35bfb56c0de1dbd20fd515f9ec06b220aab80a48e1d52bad0bda144ac39db"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_gameplay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8c8922dc005a550512cc2d642be3e3a89c574c55b6f7a2bc80335f088d4e344a"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_info.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "71e9f7867ff2193763be2a5eb37135e95f4178911930ec24e9abfc0c73be042d"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_lang.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ff7c8ba4cce480fe320583b3bc53a1ff7ea185ba888670df6273a4ac4a54b5ec"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_log.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bca278e08fbe396fe1012c83668623b3aea1f36c11507e66e39536c0383bf340"
+    },
+    {
+      "path": "scripts/module/cheat/tab/cheat_tab_puzzle.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b0c0a8457303f6b40c710e022e411c052c41a0dade9d8a197368f49eaf18118b"
+    },
+    {
+      "path": "scripts/module/cheat/tracking/puzzle_session_tracker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8ad58940bd449575a30b9054ab4c6d1b89a76ba2ed548e40d6232463ce532a98"
+    },
+    {
+      "path": "scripts/module/cheat/tracking/recent_level_debug_tracker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "67dfe299e4eef4c6cf4982df8016e95a2fd99632384e0b5ff80873b4dc60bc1f"
+    },
+    {
+      "path": "scripts/module/cheat/view/cheat_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bd2b6e49686472fc64e088c20c4bb69b649a74d0a22346606de48ac793f1ffdd"
+    },
+    {
+      "path": "scripts/module/cheat/view/cheat_panel.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5045ccd809016483bc051f06598f7adc9cccc79b050b68d90e54f54924389744"
+    },
+    {
+      "path": "scripts/module/cheat/view/fps_button.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0bdac4b31aaf9532dca2377e875ab593a7867f92bdfa000d2a8f44512a13dd4e"
+    },
+    {
+      "path": "scripts/module/color_challenge/core/color_challenge_gate.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5ec13ca6b094ef710b50ae6d058aab709a9eb6e17263a71b8d737457d4271545"
+    },
+    {
+      "path": "scripts/module/color_challenge/core/color_palette.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8dbbdda573df99542871bea55054029bbe834a3650b8a365be9d8845178f00ac"
+    },
+    {
+      "path": "scripts/module/color_challenge/selector/color_challenge_selector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b5cfc1c9a37f5c0956f7c9eeba2dbb5765f7611d510c62f63fe613c8e95a8db4"
+    },
+    {
+      "path": "scripts/module/color_challenge/view/color_challenge_btn_style.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "08ce4c1c68ee5ad5c26104b2c3ccab013a345fd29c0c8e0824691f58e7486291"
+    },
+    {
+      "path": "scripts/module/color_challenge/view/color_challenge_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "09d8f8adb05bc2137a8e349760e82e28ed792ad38a0b78e4eda7cd37d2e2a332"
+    },
+    {
+      "path": "scripts/module/comeback/comeback_cheat.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "befde2fd2435412a8fc720894e2b811d66824680c93300d3a2729399248f6812"
+    },
+    {
+      "path": "scripts/module/comeback/core/comeback_gate.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a0dfa9017d3f9604142598a0502b496ec919d450caa84fec8dc31841a0466899"
+    },
+    {
+      "path": "scripts/module/comeback/view/comeback_welcome_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d56e1042ad1ad31fca136f2d7a5a14bd4a068a7491cfa1505a35c2df5fc0b9f1"
+    },
+    {
+      "path": "scripts/module/common/confirm_dialog.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7200bf78ce77bbacaacbedfb2cd9800cd2c2e25a5c36bdbfb2931133dfa3ec01"
+    },
+    {
+      "path": "scripts/module/common/end_title_art_style.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "edfa36ea491fa269f4821f8263fdc96b3aff329d4b06d328baaa4b84dc143915"
+    },
+    {
+      "path": "scripts/module/common/i18n_format.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d7e3d1919ecae0712b56dfb18a6d2fc9e5721ac38c552912567510a86234c43a"
+    },
+    {
+      "path": "scripts/module/common/in_app_review_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "05fe0a24f4daea5cf6f998b8924d1192b0e22acb7f85d38ae489db42f485872e"
+    },
+    {
+      "path": "scripts/module/common/in_game_log_buffer.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5b9313950a2ed658aa033962ab0e6ce25c8700afc1466b368597102b79b455e0"
+    },
+    {
+      "path": "scripts/module/common/power_saver.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6b2f334c40554f0f2a8c97803137bab559b6b8f4c43f5afdb0892a261c2757b7"
+    },
+    {
+      "path": "scripts/module/common/screen_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a30fb078cac65cc207d3b7c376b28fb460c6878feee433f3aa473ae218bf330a"
+    },
+    {
+      "path": "scripts/module/common/shortcut_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "995090e8dc73f7799284c51badd9b623b70fe46b36a0f88841b0ec6bd3a86807"
+    },
+    {
+      "path": "scripts/module/common/spine_idle_guard.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e6bd752b436393cfbf5cc78cd2ea41c77b7cceabd3f1157c44d3612142a47761"
+    },
+    {
+      "path": "scripts/module/common/static_layer_cache.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "12ae8aa33775331cc4f9554914375d6e3efbef10cedf3c3721837563e34f3393"
+    },
+    {
+      "path": "scripts/module/common/vibrate_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9dbe9da881ee427f0c0fcfd3d7c5002b4740b088a5c6fc971b5cb6078daf046c"
+    },
+    {
+      "path": "scripts/module/daily/model/daily_endgame_snapshot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f24f340eafc33d612d9a0185d8e5d433819ffdd9fc527c5a9c56201b8e0f2f8c"
+    },
+    {
+      "path": "scripts/module/daily/model/daily_entry_state.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "57d78fd8aca28c495a2a50f4456cfd930319c74ac39e7813c1b4a757f9ee42ed"
+    },
+    {
+      "path": "scripts/module/daily/model/daily_stats.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a549038ef5ef90105b9060892576e39ead9d8867cba25ad9207fd29be03b9d10"
+    },
+    {
+      "path": "scripts/module/daily/model/dc_players_count.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d32b30e8e719da98ae19f430ae88b5febe49177de848a205dd38e36d2b37be81"
+    },
+    {
+      "path": "scripts/module/daily/view/daily_challenge_entry_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ba02cc5454ad9f7cb7b2446745a2df3c5a8f2de4fa71ffe947accea18de4db35"
+    },
+    {
+      "path": "scripts/module/daily/view/daily_challenge_entry_left_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "146e0a3cbdc476775a58d5acc663d56586a88dc5034e9f947d6af559ee5a2cdf"
+    },
+    {
+      "path": "scripts/module/daily/view/daily_fail_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "04ed1345857dd73cbc73b2e0aa363637e70f30817ea8540162bb85a6273c0be6"
+    },
+    {
+      "path": "scripts/module/daily/view/daily_game_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "349ea3afaffc2d20a9945731d05b87935764df54acfe9ac32fecb771b11bc091"
+    },
+    {
+      "path": "scripts/module/daily/view/daily_start_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bf1719cf0c163aab6ed89ecb912a16984285a25499098720fe207e8b5225c93c"
+    },
+    {
+      "path": "scripts/module/daily/view/daily_win_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "960916c77248c185a9d652acf70a5920b1769f56befb82924ce01624169509e3"
+    },
+    {
+      "path": "scripts/module/daily/view/dc_costume_tutorial_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3f347746b418b0afffd9762c6dab57942fed2f115760005a4c4ea136fcc1b13c"
+    },
+    {
+      "path": "scripts/module/daily/view/dc_costume_unlock_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5485033ea36d07607cdf5079863e33eb6ee5112f9d1c049b83daf95a3cf9e288"
+    },
+    {
+      "path": "scripts/module/daily/view/dc_entry_cat_head.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7347e2ea8f3e6bddbc1b5f12ed43897446cf029b2a1de79879520ad2bd2743fb"
+    },
+    {
+      "path": "scripts/module/daily/view/dc_players_joined_row.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "408661ccdf8c2b801df5f37b45610bf7d9237c3714e118688a55d78d500b992e"
+    },
+    {
+      "path": "scripts/module/daily/view/dc_replay_confirm_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5dbd96ad3a85c8dad96ea18460efcd6751f88874c7f2d85875da16b3c7ba3922"
+    },
+    {
+      "path": "scripts/module/daily/view/dc_replay_flow.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d006380550caf0e4e3e7beb8c28c61991c4dacf0a850bd2b4832217ddfc88fa6"
+    },
+    {
+      "path": "scripts/module/daily/view/dc_start_toast_text_pool.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c187a418aae603f561efd157d9a3b67d478b788de5905e1725032c5051079648"
+    },
+    {
+      "path": "scripts/module/daily_streak/core/feature_daily_streak.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4c4f24354265a4155ce05574e6b585044f6a96b0779967c1820ea0ab18f7c2a0"
+    },
+    {
+      "path": "scripts/module/daily_streak/core/streak_encourage_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6c1b78a2a0e9cce66fef63f266eea8dcecf8e024709c2e5114e2d81c4d3bb892"
+    },
+    {
+      "path": "scripts/module/daily_streak/core/streak_history.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2cdf06c589c51ff03fb0d846bbba4e2004ffa1177ce3ed69d42291c455171e2a"
+    },
+    {
+      "path": "scripts/module/daily_streak/model/streak_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8829748f52bb1cc2724877568ce0dbeb3176e0c18dde6edac7259d86908295e9"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/daily_streak_success_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "53a0e11f416a1b66e5851aa6671bbed45433a8144fd48364301740aad78a5b34"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/other/streak_calendar_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f057997f530c31555d2267eb1a5fd2496a052de168f5ea9116d885b078696855"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/other/streak_day_slot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "089b87bded948af21b95cebd024f6105d2ec85ca4a0db29e69860f5ce9394d9f"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/other/streak_page_layout_refresh.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "50b6b3fcbb9ad8f73c3ac3b6e91b9efe8c8428354afb4894ccca8478cd8f8095"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_day_icon.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2128e79803e861ac1d28218f83bfe6ce9b5943d121645415698cf4184397faad"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_encourage_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0080c3ab440fc5c3ace8e8d321d76d018d49771d43fc0da5bfb3f0ca2aa7ec52"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_entry_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e3952b0e759ccfb1148fd732116ae8ed0d87aea79c40db7f0c2a8bd018aaefeb"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_entry_top_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9aa9372ab0ab16f5f6177cdc24c53b785744ffdd996fddcd645d62bc91e15740"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_gift_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1d04c4b7a278bd3151699ddd3d15270feda8c3fe212d0cb79489a15e81a8929a"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_home_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "53b15f7432e6f31b893ff7cf76a011bc0359f3b594e4458c23af7c976c123f85"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_mini_entry_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "41a0049269fec590f6b3db06f41289938714b5473dc1873ef087d7c2e2891a3b"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ac9dae0cfaf39274f162bb7e500236b3905e36e580544ad5bdefd5e2ac0dc24c"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_revive_flow.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "74a7a4c64eecc355b1f696879b646952ab153d464436c11964ba81c58d4c2fe7"
+    },
+    {
+      "path": "scripts/module/daily_streak/view/streak_revive_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ca3e0fb9c841ecbfdebdef69687ab29ea4070513577053cebfc6a450fd255104"
+    },
+    {
+      "path": "scripts/module/data_sync/core/data_sync_api.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "32c079921133cbb908f2ce4c46d3ca6f8b4dc2b522d87c4f761baed60d7c287d"
+    },
+    {
+      "path": "scripts/module/data_sync/core/data_sync_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "50045f6bd0f93c59649ad8f996985a898acdb1ca2d880d13ef4b6c83101e0d56"
+    },
+    {
+      "path": "scripts/module/data_sync/core/data_sync_registry.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fc27f9aa90485eafd999bf4f99365b2ddfde4f5a938ea32df21533b2c652741c"
+    },
+    {
+      "path": "scripts/module/data_sync/data_sync_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "102babb758c0f120111d4bd5d6756fa8b44615681ffbf12e0a2554b04efbc2bc"
+    },
+    {
+      "path": "scripts/module/data_sync/model/cloud_save_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "47a59ed5689066fb887f2ed2b24999a5ead368857d84a14213a9754450451fc0"
+    },
+    {
+      "path": "scripts/module/data_sync/model/download_merge_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2c34ef84aeba55eaa1de8fa241e374915dd0b9e90a1ba1103175f8fd6bb53b41"
+    },
+    {
+      "path": "scripts/module/data_sync/model/download_response.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8579d5affc4a8e95d7c54a651ecd6cd5d50f4eb3d61a3351fd01b43012f1d955"
+    },
+    {
+      "path": "scripts/module/data_sync/model/merge_context.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3f0daee0dcfc560abc9558a76eef495b5368e5e5362aaee7a7e266b0a5ff982f"
+    },
+    {
+      "path": "scripts/module/data_sync/model/sync_request.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "335bad2a7d5fea1609d23daa860fb8b64bb3e8b8f7b4092b3ec7fdd0699094c6"
+    },
+    {
+      "path": "scripts/module/data_sync/model/sync_result.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "696a7601ad938f31dca4ea543fa85ad9a6f0404b5f29158ad9093dab3f5de12c"
+    },
+    {
+      "path": "scripts/module/debug/dc_probe.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f443b46b8823264e934f13040169aac7849b78f6f1007dad16d3a7c910ec9b90"
+    },
+    {
+      "path": "scripts/module/debug/rec_probe.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a106db4a129431507446f699e1bdd88a979ce12e5d73688423e7ea83e9274a7d"
+    },
+    {
+      "path": "scripts/module/debug/view/ab_debug_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "13092b1237b2392e9fdf61773f216ca1cbda45aa600c59876652e91321ebe0bb"
+    },
+    {
+      "path": "scripts/module/debug/view/costume_geom_probe.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b43929c5f621189ad5ab5c592292a3ba4eb9e1484691c39b0f3c7c1ab6b8b34e"
+    },
+    {
+      "path": "scripts/module/debug/view/dbg_rank_board_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c3c91fabb52b5169f8508a19cf15419a8efe510b5bf21a7c275202a17ecbe3e2"
+    },
+    {
+      "path": "scripts/module/debug/view/debug_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6b44459043c098ddb502bc9fb15305b2d967487b3ac53055e5bf14170c06ab59"
+    },
+    {
+      "path": "scripts/module/debug/view/generator_page.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "acaff8261e630daca2c53b74fee4dd6a37459343c198004028a573a84a8dec74"
+    },
+    {
+      "path": "scripts/module/debug/view/level_json_input_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3683715c6167b694c23e2d782815f67eec497e19dab2fa0cf859a5dbc8ddd9e1"
+    },
+    {
+      "path": "scripts/module/debug/view/level_thumbnail.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1530c454c6b6234092c3077170c6e2e3f01e275809f55f198f1dc7090cf92420"
+    },
+    {
+      "path": "scripts/module/debug/view/mock_ad_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9b03982260eb84a346a146ab1cea1b562eec23ac489764f35c2dcc2c3cf4c62c"
+    },
+    {
+      "path": "scripts/module/debug/view/mock_banner_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a71a69fa250aef15b9e5d37bbd1569a496b574de3a56603e6b06484f555e10e6"
+    },
+    {
+      "path": "scripts/module/debug/view/recent_levels_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9a37434b73f72a54ae61e5c52aaf4b592d9f7e8de9e748a4ece943f7517f6e03"
+    },
+    {
+      "path": "scripts/module/event_bus/event_bus.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a777e7186bfb984fb2e74811074b638ecab07565749e40b17f4d898a1acb7088"
+    },
+    {
+      "path": "scripts/module/event_bus/event_name.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0d74055aa88017b2c34d2cf85fee2d95206e7b185fda2e0050db0479c69ae046"
+    },
+    {
+      "path": "scripts/module/feedback/view/feedback_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "63b754ee3fe8dd5f76193ae55b97daa358e9094ab0f1a7f85417bcc7c08ef1a0"
+    },
+    {
+      "path": "scripts/module/game/cat_toast/cat_toast_judge.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "85fa03c54604ee23cf382e17af7f8f33fe8357c864bf63965c449360defb57b8"
+    },
+    {
+      "path": "scripts/module/game/cat_toast/cat_toast_text_pool.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "64afe819e72582367807205c6fc1b80032958cf9994446c2ecfb7144e12ed420"
+    },
+    {
+      "path": "scripts/module/game/cat_toast/cat_toast_tracker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "910e1af42b47907d18049e80db2fd183db6477ad1a7d9705656167b0367274a8"
+    },
+    {
+      "path": "scripts/module/game/core/game_barrage_logic.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e788a014730d64f62f46071a3cc5430a7ea25b26ef74753a9b344bd7aeb62cb5"
+    },
+    {
+      "path": "scripts/module/game/input/board_cross_pointer_double_tap.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ab46e7f4910dc3beda6e873163e26b26d8b066b48166b39d5994f75f2e77ac6b"
+    },
+    {
+      "path": "scripts/module/game/input/board_gesture_recognizer.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3fb71d6234aae4276f0c057625390583a77b06f9287258a9198254194b831683"
+    },
+    {
+      "path": "scripts/module/game/input/board_input_scheme.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c91abba17953c3e8b3a8cf36716283d601018a45b9d611f556d2efbb968358db"
+    },
+    {
+      "path": "scripts/module/game/input/board_stroke_context.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e63087dbad83442f2db6ec615789ab95a756b86dd2b795072a540e008af7d293"
+    },
+    {
+      "path": "scripts/module/game/input/board_touch_slot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "22f86e0bc3ad338fabc1ba7d55cf2e549d35bc2d7b93f7ec4862000b748d6298"
+    },
+    {
+      "path": "scripts/module/game/input/cell_action.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0a96570e83ac1a9895bdf140708b06e7e6fdda4cf6593cc56f4ca0eb042b8d8e"
+    },
+    {
+      "path": "scripts/module/game/input/operations/base_double_tap_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9e9157234d3dfbd77c40636023539ddb3b485d4871a464c1d67f001a8886e773"
+    },
+    {
+      "path": "scripts/module/game/input/operations/base_swipe_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f7ed7756d452622d7b25c3f0b5bc0e1283b49b062b8f7276ab5ac13a93bc13ca"
+    },
+    {
+      "path": "scripts/module/game/input/operations/base_tap_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "df409b0cec58f92c618847b33f8ec1319e032a7ce481e06713e4b007534fcd1a"
+    },
+    {
+      "path": "scripts/module/game/input/operations/draft_double_tap_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8f48d4234871fc1c5c12a3be388907d612b5469e0c1ad786cb492170720c1448"
+    },
+    {
+      "path": "scripts/module/game/input/operations/draft_swipe_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "94120b243a7909579938b1421a2d779555c553a31efd51d6fa00edd29c98fe21"
+    },
+    {
+      "path": "scripts/module/game/input/operations/draft_tap_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "db2face7c4fdc1286d4ce1193bf9d718c3a11f75366ca04a9ef95392f930ee31"
+    },
+    {
+      "path": "scripts/module/game/input/operations/normal_double_tap_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "391f68517bdf4d06abe47d13273a720771d8d6167739b0e9aa7b9193dd704945"
+    },
+    {
+      "path": "scripts/module/game/input/operations/normal_swipe_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7ab28573b27d99a662cb47b890f7e1443b95e6f13100ca8de696803e4d2a46df"
+    },
+    {
+      "path": "scripts/module/game/input/operations/normal_tap_operation.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "88a78cb9a6ea8b95f2386c841d8bd70303999b8af9df413f589d8ac76fa7dc9c"
+    },
+    {
+      "path": "scripts/module/game/input/swipe_guard_recognizer.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c5cfcdf8316104fef3529236b830678b0cb3c7a5280f8d128e381c0488b6443a"
+    },
+    {
+      "path": "scripts/module/game/level_ops.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1ce399d88e44a205f9e41e89d823a1feb41595b66a449af025a6b65ec99eea2b"
+    },
+    {
+      "path": "scripts/module/game/mouse_tool_selector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e9336e7a267e2ff1c7de6104f39c03249c8b6a2952daf585db01f338766456ba"
+    },
+    {
+      "path": "scripts/module/game/stale_endgame_gate.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4d4feaa55b8f40c51166156d7ce33dbb31e533da4e18883ea666f8c615de209a"
+    },
+    {
+      "path": "scripts/module/game/view/base_game_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "52bc960d0963eab3285d5cdf786b5496f456a5a9be2c26545b59ae0c66a251a2"
+    },
+    {
+      "path": "scripts/module/game/view/base_game_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9bfcefdfe5c465fdfa27d86d8e1e6736a93796563699be27e1d8f32730516555"
+    },
+    {
+      "path": "scripts/module/game/view/board_pattern_sweep_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b05a32b22ed2054aa852695ff4044cc250365d9f3d669fb8142180c2633b5eb2"
+    },
+    {
+      "path": "scripts/module/game/view/bottom_tools.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "88671a28b1fed11b61515bdac60bc27e90adb71656a64fda858af533a3c99263"
+    },
+    {
+      "path": "scripts/module/game/view/bullets_area.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "55aa9a7b308f47ea92dcf869878a361bebda3e8509d73c3fe90d9515dd912d0c"
+    },
+    {
+      "path": "scripts/module/game/view/cat_progress_bar.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "48e106742492fc656c0f1b4fe27d395abdd2ba01fb24e9031e9aa4b1903dd97f"
+    },
+    {
+      "path": "scripts/module/game/view/cat_progress_slot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "72cc950610cf4a34492e9de4dcdbdf93412c18f4d505bcc9c31df473965a39b9"
+    },
+    {
+      "path": "scripts/module/game/view/cat_toast_text.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dd84efd95d1a053ff3b71ae571ba301d29312f30b0804f9aea7b59a5db644ca0"
+    },
+    {
+      "path": "scripts/module/game/view/combo_feedback_view.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c2f24640be97553028907ccd4f12f8e0a6968ccefcc5c368cbf925ec8f3f1df0"
+    },
+    {
+      "path": "scripts/module/game/view/compont/header_adapt_holder.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3fe52daddd3c92c8020098bde46de02763c15e4179ad3a95c48a52c42cce37ca"
+    },
+    {
+      "path": "scripts/module/game/view/full_mark_text.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5fbbc0fdb78b9a9058dfcf44b454568216b3833c278cee978862f2ab4db1e96d"
+    },
+    {
+      "path": "scripts/module/game/view/fx/fx1_cat_wave.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9b6922082fc5e920d451594a1a814e592e2201f84a4b459cc9428fe9a8df2e5e"
+    },
+    {
+      "path": "scripts/module/game/view/fx/fx2_spotlight.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d30c2215184af48036ccd99a610fd5bc458b93a97f21b42c4f5ed07a958a96ba"
+    },
+    {
+      "path": "scripts/module/game/view/fx/fx3_cat_appear.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2a4bd0397ce9ab8dd46f9703d5cd6875435f5c1a30daebd29b861d68b590e0ac"
+    },
+    {
+      "path": "scripts/module/game/view/fx/fx4_row_sweep.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "55096ab95f0aac5970338f9dac6c1ec369c9ff637c696c86321f4b86af540c4d"
+    },
+    {
+      "path": "scripts/module/game/view/fx/pre_cat_fx_context.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d685b1212520e6295daec9da18a83f3318c8bb69675444ba5398dba1ca52418b"
+    },
+    {
+      "path": "scripts/module/game/view/fx/pre_cat_fx_variant.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3f26f34fe0edb6d15cac9d788463a18bd6565dbf49e5b50afdaaaae595c1ef1b"
+    },
+    {
+      "path": "scripts/module/game/view/game_ad_badge.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9d264c08b1f6cb91f2436190cc3683898c7b48e159abe0c9af3c03a596df8157"
+    },
+    {
+      "path": "scripts/module/game/view/game_hard_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "17128d95e4d983da0d51ab797ec9f5219fcd685b8e62cb533819769b9b1df3c3"
+    },
+    {
+      "path": "scripts/module/game/view/game_normal_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "949df249e032133d01dbee50ac3ece22894729c4f75d1158bcadf0875daf11d7"
+    },
+    {
+      "path": "scripts/module/game/view/game_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "31c173733c37d00e7b4e960b3a84dba8f977c49103cdb21ac5565d588dd665a4"
+    },
+    {
+      "path": "scripts/module/game/view/game_win_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "19ec064b99ee92f45cc47c6feb170cb697a2238733d34f92655dd121f0b33b59"
+    },
+    {
+      "path": "scripts/module/game/view/golden_fish_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2f1661b47be928c200af9f063e4f7f01cce4c9946e44c24d5e998e7ddd6f922c"
+    },
+    {
+      "path": "scripts/module/game/view/golden_fish_tutorial_card.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6aa9282d80a32793841cff720c0f856253d2923a8f3e64d6b4dd789c24099260"
+    },
+    {
+      "path": "scripts/module/game/view/good_eye_text.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "17a198fa765c8f5221470591e9ed1c80e4115c354db993ffc68e43d9e871f812"
+    },
+    {
+      "path": "scripts/module/game/view/health_bar_base.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "56e261a1d9eeb5239d6793c3a6ac8656c894bef3ae59cc96c82fd64d03d9220b"
+    },
+    {
+      "path": "scripts/module/game/view/health_mul_bar.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "88d21b1e2925e2af904336c83c16043f0003e61508c7230c7c7bef966631c017"
+    },
+    {
+      "path": "scripts/module/game/view/health_progress_bar.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "17a401a7245a6f55ddd00cd39f20b13b49b80d484926fec13b37e8e046b709fa"
+    },
+    {
+      "path": "scripts/module/game/view/high_freq_indicator.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e20ac67c9f61e652c500f8586743750112cb7da67796846bb1bd4a89cfdbbc34"
+    },
+    {
+      "path": "scripts/module/game/view/hint_mutex.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7d62da81cbd5f8ee7341a34f3f220d6fc932bdfa6e83e393e1582628935333f2"
+    },
+    {
+      "path": "scripts/module/game/view/hint_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "193ffd6f51e259db64ea8fba7f6827645285e9ce479d4688b2077393e87d2c5d"
+    },
+    {
+      "path": "scripts/module/game/view/level_flow_score.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e9bd763dc827700142416b95e8b79bebb1612d9c83bd0cf67c00fad5c94773c7"
+    },
+    {
+      "path": "scripts/module/game/view/life_slot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dabc1233c4bd43cdf470e133da1fef311a2a505e502d57a4211c91e0e38a9ba2"
+    },
+    {
+      "path": "scripts/module/game/view/line_cross_connector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ed908deefee075bea4bdc4eb0121c11fb1ef35892d3226602ee62946bed20174"
+    },
+    {
+      "path": "scripts/module/game/view/near_death_text.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7c018cc93e5ddd21182854221735708fa0904becbff6af125220bf3a7b38e264"
+    },
+    {
+      "path": "scripts/module/game/view/other/level_encourage.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "293792cbb11cf64390a5356593e7cbb73c9eb131ec2628a49ba6ba2922c3d236"
+    },
+    {
+      "path": "scripts/module/game/view/pre_cat_fx_director.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "38f0f87bfc2c7ebbfac3963ad2d4c69c475c4123fb8abc6471138c6ea123f1ea"
+    },
+    {
+      "path": "scripts/module/game/view/start_toast_text_pool.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e538a6adde39adf9332d05499997dc124ea76b56d7ab30e430223c3efab4ff1d"
+    },
+    {
+      "path": "scripts/module/game/view/tool_button.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b8a8c283489861cf6ada2c14bde72d8649b9d64320c9840030d5ceddcd938c05"
+    },
+    {
+      "path": "scripts/module/game/win_toast/win_toast_messages.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bd2d6e9e2475eadeefffd0c8c603de343f63f5734504ef1470c0262715f36230"
+    },
+    {
+      "path": "scripts/module/game/win_toast/win_toast_tier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f3ff9e072c8bf45604d4cebedec9f4609e23a457ba30599c5e9cf0a54d5cb860"
+    },
+    {
+      "path": "scripts/module/game/wrong_zone/wrong_zone_tracker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "57fc0f917be9cc01e39daedcba732c69111a3964f06200eb0c5dd385a7875350"
+    },
+    {
+      "path": "scripts/module/game_state/game_state.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ea51bdebc1c8c61b676dd009110e1bf7b3fbe47ecbde70b045d7f4d0d7525db2"
+    },
+    {
+      "path": "scripts/module/game_state/returnee_clock.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f31a53188bb21238788450ede6fbea8a8b5804cf740c71035af22e8c54d88436"
+    },
+    {
+      "path": "scripts/module/game_state/returnee_level_policy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a9f81c074206d56f6dfe5aabef2be3a7894dfda32bf32605bf50d22780a581b7"
+    },
+    {
+      "path": "scripts/module/game_state/save_store.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "66461d4ed8956f75534a9f16cc6f590ad4f2864c5eb30679bf89cd54a89c20c5"
+    },
+    {
+      "path": "scripts/module/gameplay/core/bad_level_predicates.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b92c551d1b5b63662f95fc92b5cfff7c644124fdd2f1937e639706b48ba5e90d"
+    },
+    {
+      "path": "scripts/module/gameplay/core/colorblind_pattern_variants.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "91700a5ae2a099ab5db2f43237ebaa953afe021a331c42dc78995697859742da"
+    },
+    {
+      "path": "scripts/module/gameplay/core/dead_board_detector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9c24604de1885822342fa129d500166b7ca36da9ec53bc7f2aa7b71841704e6f"
+    },
+    {
+      "path": "scripts/module/gameplay/core/difficulty_v6_rules.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a5d4ec8070652d0d4511775e7ce409ffe250b5ac63c7e9d817bafbb0356c255f"
+    },
+    {
+      "path": "scripts/module/gameplay/core/elo_rating_math.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "575c4105a87d139d175b4aad46e629f9b73f54959d373efc3a2164de0f183f8a"
+    },
+    {
+      "path": "scripts/module/gameplay/core/elo_v2_performance.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "19ba8aebe6ed1b4cb7f0eb8a085af1fd55c91054391be3bb9c5ec70de39c47da"
+    },
+    {
+      "path": "scripts/module/gameplay/core/full_mark_detector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1cf47e453cf6cf8d2a8eae2874178aec8f48227a3843f9367d7a2c89f4223611"
+    },
+    {
+      "path": "scripts/module/gameplay/core/full_mark_tracker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d822e98261a7612163e53effce25b68af2d68832db9b272a068aa9603d20a7fe"
+    },
+    {
+      "path": "scripts/module/gameplay/core/hint_engine.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e49f722893b6b1b0dcf86eb63a460fd2e1ad13f30cc6ee4a2eeb431bb4be2a0c"
+    },
+    {
+      "path": "scripts/module/gameplay/core/last_cat_judge.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7160853c826932e48c08a7299936714a6445ffedc59d10318cdb3397ddbd84a9"
+    },
+    {
+      "path": "scripts/module/gameplay/core/level_generator.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cd0cf5164ca01b718cb90619527ca499cdf746c25d3b544f2c855780c976ae9e"
+    },
+    {
+      "path": "scripts/module/gameplay/core/level_similarity.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7ab16ad267415c96f8768ad4414366683a821a05dbe206d280f506fb8f80987d"
+    },
+    {
+      "path": "scripts/module/gameplay/core/pass_time_dda.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "36555a1075787dd55048607534e32c17c533a1a0ffa9bbc77b2f75cf97c683dc"
+    },
+    {
+      "path": "scripts/module/gameplay/core/pre_cat_decider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5fd922e4c8aeaf813b14ea71f0ce797687c9f918467323bf65c49752ba251ea9"
+    },
+    {
+      "path": "scripts/module/gameplay/core/puzzle_generator.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "01f482e96961be221465ae12727490745efc06e7a8378cd9b496957d634c0313"
+    },
+    {
+      "path": "scripts/module/gameplay/core/queendoku_core.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "48fad345a6da20c877afc2f18d8e6db1069814ff3ccf8932ad0b5951aa8dae5e"
+    },
+    {
+      "path": "scripts/module/gameplay/core/rating_band_table.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e5933e833036c38ad28d9c7a0773623f00a1bcfc2f66958bc4e22331183a21f2"
+    },
+    {
+      "path": "scripts/module/gameplay/core/region_cluster_signature.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3adc18449e405eb852afa3b324b26a21456b21b0db9eefc55100426b17a867ad"
+    },
+    {
+      "path": "scripts/module/gameplay/core/region_outline_geometry.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ad5e3acdea8b35b6ba0b8b1ad2348ecc65ade81719f7851429f228b858ddf0be"
+    },
+    {
+      "path": "scripts/module/gameplay/core/super_hard_schedule.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e14ab339c3ffea7c397f785e4bba9a93d843710dd8c1873048de224a8345301a"
+    },
+    {
+      "path": "scripts/module/gameplay/core/swipe_axis_guard.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "652943a583798d814864b54e7cae4885e77fd5e14d9e697d279702dc3a5b0696"
+    },
+    {
+      "path": "scripts/module/gameplay/model/cell_state.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3d43785ce17f9c148c6e4fc5134e24d5aa6055e0e4c2c130f85f28fb32897c3a"
+    },
+    {
+      "path": "scripts/module/gameplay/model/game_score_model.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4d2c0fa367178199e15e70911161269394defadbdc7507cc98bdb2f835df0f34"
+    },
+    {
+      "path": "scripts/module/gameplay/model/level_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c064c45aa52f44edbe21bce85751c45c6ebc8c53d8c57e8998d3040ac3d160b8"
+    },
+    {
+      "path": "scripts/module/gameplay/model/level_kind.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b215a87e9ee0c2c45e7fa635a826328d0c2cbedc6278475260fa7320fdf19801"
+    },
+    {
+      "path": "scripts/module/gameplay/model/level_pass_time_median.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "628d339e13b9d5b8c755bc01d720408c785cd578cd61c2fb5e7cbb1f7e2aabcd"
+    },
+    {
+      "path": "scripts/module/gameplay/model/tool_kind.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "77a7e1fac59f992c31e888013c1d6df755ad359118618f7798e2f0faa158d930"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/context/daily_first_easy_modifier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cdd0ba82ef448db6718b14cf884c54d787bdc81de8c4e9d098ff8b2acd610a5d"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/context/hard_level_modifier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "17fb415f0f0607502654caf8286049360dba525de87f092990eaf39c37e8ef98"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/context/size_modifier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fa92f288fd91dcdd9f6e10195212a003146882d2cc687488b9247910cd21caa9"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/context/strategy_modifier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "776222aab31d75218de9a8b6e8b8470217a9d0d1197b866a96467a23068d0500"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/context/super_hard_modifier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d7f7675b251511ad1285c1dd4c739039f7bffff5332ada6095edb4a90b823fa6"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/context/tier_fallback_modifier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0f7d15fcacfbedfcc950e02cc3c8f5bed7f70dd4e33a1c1045554a1f1653c9d0"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "899b2e8f73a1a86648eff67f8661489f035f7fda012500cca4afdd2165214018"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/delivery_paced_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "85397d012045e34d1d616b3bd7198b8a3f81cb698fc8861d8f5d65deeaabc644"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/legacy_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "73262ee2a07baff76f044140f4e49f0728cfde3fa41ed5108b15b2b0883020ce"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/main_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aa950ac20bf206448f6de5b99e73c9e52402266d39c1c5dea633a07f96c688b6"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/pace_entry_stamper.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e65dc5c1eadd4bdd6cfb27e404ffb2cd06e9bea87eead1aaf5b0865abf59de9c"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/pace_lk_mod_pace_collector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bbe140eda5309dec83a6a5abb78aa63f6dec2c1481a3567091cd2a38a64e113b"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/pace_log_seq_lookup.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8dd335a573bdc651b7ac02450e688ca2c21669df9c6e6e1855130c69db1e2a80"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/pace_sorted_bank_cursor_factory.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "343825bc4a2abd657a674ef4f8913285bde09b8693ed0d04b613d1be5cbd2e0b"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/pace_sorted_legacy_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "88a01f719803fca87c0c7465a86de9d63cedbb3b3cca0f4a0bda034f63503614"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/pace_sorted_main_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "28f92640a2bae169991fa4e113640fce552c0f6f829571d04631b7799e78a1b3"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/shuffled_bank_cursor_factory.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6c987f548afea317ca5b6854f5db24ff95df8556a720e7a00ead46c2bd343eb6"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/shuffled_legacy_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ce003ef7ab58bf51bc7e8c5dd408232936972d57633a7c2192f91e814e3ef296"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/shuffled_main_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "67770e2cf4bdda2eef6430858a736e2f2a0e7774c931a6016a80de993c7e33d3"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/super_hard_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "64584f606f7d718a22190a4f27beb6ec0ac49ded620a93c3e71f2b4a17bf8a14"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/tail_sorted_bank_cursor_factory.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2f942bf01fa2aecc9af009b3b47a4a05c089dec6c2c89590dc81beb1682d16fe"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/tail_sorted_legacy_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1de5e4b57834897bf51d62bbd9d204248952211da25d0599aebbc1880434bf91"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/tail_sorted_main_bank_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e43f7d0b88061c122f4bda72c3a3ff54c5ee2fba654466ac9c6904d3efa29ccd"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/cursor/v6_filtered_pool_cursor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a6583112aad732cbd8f79ef8efee34246314e977eab108a2a13be950ab95218a"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/delivery/final_level_validator.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ad478a3e9571349e4f3eba3945f48e8f592504febf30cee4f363ab00dd91db62"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/delivery/pace_retry_augmenter.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f7f7a18352dbb58db843bf563185b848dba61e85022ca4c949d916c9139fe354"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/delivery/puzzle_deduplicator.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4633d969cfde003f4efaa86a4eaf802ca9ab84d392b37aea4cd1905aaf574950"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/delivery/retry_puzzle_builder.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7f2984ba15741cb0256ab1409d07c878b9cef87c110a1d4f8de0e1461c5da5d3"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/diagnostics/level_selection_log.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f598819092eb217a33a36e31c91f5b182d6a989cf1f1d1c2ce1299998ba81188"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/level_select_context.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8390d0620d614f97d96d4f326d7b6d22b1d42f24986af6866435f7e9ba7dd42c"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/level_select_request.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9bb4156696d178d5cb9d32dcb7f64542d40fd15f95d72316190ebea5cfc26f22"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/level_selection_random.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "358c26b464b9ccfee49ee4167d9412802dcf01e039a699eec831454783d7dc6b"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/level_selection_trace.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b336dc1be2f538a1c3fd554c7afd6ab7ed43b0018548ee041cbb3b2e1a91715e"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/level_selector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a8fa6663c8d5021e1a0343aec3bb5c4257e74ef9aa1b01a5a7bb8975367cc079"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/climax_filter_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9cf1bd2b086d5af31838c9085e648fc840042b29a9403ac9037625a99e3b303c"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/elo_aux_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7ecc33fcb3c0da38747b29e1a7a8e894d4023bf720f20a8f20279d99690c043e"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/elo_sorted_pick_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c439dc94d2d2a0c917cf09fb4e12f2ccb71d9e0f6a76dd897fea99299dc640e3"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/level_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0f86fba9159228a13c4b346a1d4767190e32f25baeb50ba802fce19ae7d10b58"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/rating_sorted_pick_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ab3155837900934c322174f9771bfd56dc639c7309140b1cd1d85f0454484d38"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/server_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4665357b65fa66cd689973ddae916fcf0937391feaa5ee05aaa15a847e8081ff"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/single_region_supp_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2457fa2c9446d613f79204bb34a1c689c22ca9d1e77d828e4ebf2b21bbba9451"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/sp_tt_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9be39514ea8cee37cdd73f9c8cac37b7439e7a99be9f78cfea94f13aca8b13e3"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/provider/special_provider.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "93190830a6b94560b42cb12499101dd8e24d0d692e710984ef8018d366b16294"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/settlement/level_settlement_context.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "95cd3ba58612b072b60dd898cde60168bd37129d264d366ab05acbd9f56c7ceb"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/hard_rating_selector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fea553229baab86ed31ec562843e3699968166f600c50318f3e39a3e050cba6b"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/level_selection_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "43085636d2711117d93beb3767437660ceec0897d0249da30471f733fe7d2362"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/level_selection_strategy_resolver.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5fa99b31a69d247e9fe98a8985e4f3e2a2018bd1a49dc84bb2dd1f8340043272"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11310_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a36934b7a23afa73b83e78b25116c67322a209401174507e1af489fdb025ba82"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11501_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "abdb5678eb53aa18b5576565c42aa319d070ff995ec4f5a9523a56e3f6df99fe"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11502_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8e6bfb5de6651648898f2a1cf292d38fac93b5ad6a6403968140fbf2d35f87c1"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11503_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5886c39daaf52de46a45f8c82e64b34fc0ddc93c0791458005f4d7d54d81e804"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11504_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "13edc65b0366dd4b312c8edb5b2ba9a74b63c59c373a4eed5f3e4e55f752a006"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11509_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "13d04246bff29fb360929201b977f3b33658bc0f4521d93746e9a3ddba513a94"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11510_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "03e0ea53a3245b9feae708e84f2fecf46951c52e5803a2e71f831f29ae8133e1"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11511_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4e8fb54b249cb9af2e3741d3687afe08a34c09798a7b914cf38ea86ad2a48e0f"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11512_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "19f3e810d4c32d60ec05fa1b327c8b0a086e23df41bb3be0f7fd4cc938027930"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11513_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bcafe22b5f2662d49244eb18bbeb544edbf1126a55e1abe2aa3ae915cd8771ef"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11514_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0b247b898956362e6c4ed960901a7378326f387b2bf24a4186c7422d17524895"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11515_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fa5258c37aee7023aede3fcc9ebbba5df7c7b08acb067f76cd4625c77c38880c"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11516_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b424e0b75bbb35fde773fa966e8036d45d869198805a3eeb8132ae99361af103"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11517_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "077fc4966e9b417a230cdec93dbf6f4ea02b2568e2702e2bed53384265be3915"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11518_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b7fd3706c2e3588a25df110d3f3a8fec2d55ac2422f681534c35f01fafd546c1"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11701_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "29c1a1ac7656455278cfa6eda3c4510dc30ea5aea2272c71162c33f9be0622a3"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11702_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "68f9bfbaac5b6afb16b9ea867a0909115029d9bcb7fcb1d0a33b26b8c845a03f"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11703_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "231df41645dd567b82b855ce29748ba1b9063bb9ebbfc3c6d686cd71309b5e18"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11704_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c293a50c88f5bd0bd032eec6e546977b9e0a4bb700408aeb4a3c3f64dfde786a"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11705_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "976fe34911cbade2a54e881eec0673eed4c3e9371ff5a36c2e964956d95ee055"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11706_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6dc1eefe94c66d0f477b879faf4330d9958fb1f2ac0481434b2bd17fd21fd645"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11707_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4b1c11dd49aeae87d38a0f00281915b4d94a1fdc41debc65a748e85fb0df7b9b"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11708_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "68871f4f45c6c85ad7c66ed5f97be16c3fdb9fa08809d9add729d349c9e82113"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11709_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5b92e87c9f621721dfeb4786208413f1213e047f32c34470e19acf5e63da870b"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11710_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dffaaa7b4ce7669deb38a60d60c7429ce10e9ad521ccc5115201570a006ec0d0"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11711_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "21aa978573b8d85c7af30375b609586a3bb56b03d58e6b9232f250553b4bef65"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11801_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8b39f35b8ccf9eb239ca149cc4955de5c8b88cf91879f3ed5bf8e9b1c032bfa4"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11802_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cb5ab68dbd6eef51330d49f54058b836bd0b75d6eb64c6b6fb0f6ac3a23561bd"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11803_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "04da3f7d999400a1e5846a47b63a1b27fa957d98589e74fa98cb74803ac204f3"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11804_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f24616cc1ab412a8884653dd546f129abcbed240f0307480153070e9018aae1d"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11805_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "38545fa00af437d6dcb21dfcf5c3fc9ffaa2af625cdfb9c57de9b8093619997d"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11806_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "845ab289b013595bef3e0d2eba67458f4ba5cbf9ba3867312742c0c340117371"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11807_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8c686e54d920f89da02ca78e890fc878d30217cb554cc00c11536732f4bd9fcc"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11900_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e6e637b9d50868bd70c9565864c1a83c629731c3bd818b9bc369050f6259a6bf"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11901_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "049db803635f0edce5840ce4e1711db9d581d66da533cfd214b254c0509d38c9"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11902_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f1c97486ca05db3da49b85c3b3e85f0327c9661bdb8091a301a83bc56e357042"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11903_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "233247c9912de47729569758547453e9c1c934beca8019c6439263177dba8fed"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11904_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8e81e44b85547373ed668b019252da205fb775e4178cf0738213fde4cd747df4"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11905_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0063e3205e3351797afcdbe945f7cf44a50e577e0b5599c44828e7d2838d5eee"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11906_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "15ce3a0aea4f850a1e85bc8c74ef7d7818b871555aa3cf7d08aad3af127731d7"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11907_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7c02d8eb12be576a4edc379b4b4bba60a51fc161cbefcf25da4f4eb8ba5b7a56"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11908_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5df5eb62ed9b201f14156d3aac74d5028eda756680ed03dd26444e42cdc01f55"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11909_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4b04107657cc9f626145294c855dbb828a0cc99d65507a7d62b59748225e5fce"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11910_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "55b82aca770f4be499bfa2cdc2cf384eece3873a4d96b16cc8e299fc03e25687"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11911_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "570f271ba3c29544106eed9174d50f854baaeeb167fdbdcf0bc1a1e0803a8e3d"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11912_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cc952c1ac0ac620fa5b7006fa8d722e46c18884e253b98899edd60fc4b5f34a9"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11913_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1548b9994818902ee3f22a6e35e82e5ffd23b9e480479272f761f0422dc471ea"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11914_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6e011da4f9c9a09bf41ab1ebc980b15d1073abef1666d6f3a06f5663423497c2"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11915_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "de72a4f1deddb79a12567b5fa7ebbbc3673dc23335f2418aa194e3aa59bf9bd9"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11916_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "530318a4fd85d3f7d551aec78930c3169ac23cb6cc8572cd00ab9b67dd99e37e"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11917_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0d242b65e338e736b150444b3edde8c991cef8aa6d33844c0e005444f8e13c1c"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11918_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aa61c3c590f0ccdd6458097096feee6530da1db9faee4f795f82ce53863f0720"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11919_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dd47e75741da241cf2b5237297da592d641ae1f81b6f4db4ead9e6e01914bf52"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11920_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c81c0ec6303d7705a5894c625eb41bc525cec6368bcaac731be66338c26b534f"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11921_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "505461f17a5e22f37f942006d70f7b6d285c1d5cf3e4cd2836ac2c764e2b03f0"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11922_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "27560042ec3496251705cc9ee4e415db521113308cae6ab96cf2fcc053a82719"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11923_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "19cf12b96d3a621e07713036b0d6ad18c1f11df8cecd5896ec24de3024e1b401"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11924_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "05396680f11897171f5b94463caa5b08c8e40df449d7f6c958333837ae53c3cc"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11925_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "352890a464304216aaa242feec56f234a5b2f04c4ccbb838b4b35a6e07dc0e7c"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11951_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c34329b04352bf6594bc1738f0b5768833b40129673059ec044498f997a28777"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11952_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d18bdcb03e2337c28273dc3ef861600eea710a88a9f51fc36ea9a7e459f308e2"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11953_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aeaaefa8bf92b20da28cfdbfd8060103dc0b104acba0bd7225a557ceabec7f39"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11954_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a79c9021d6cba897768abc42630438cf5be1882980e65bfb7af12884069b7e38"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11955_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5ffcca0ee528e61ac3d195ce7d645e9dc3761e77da04b8e49e913ae54457c9f4"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11956_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "eb024ad83e689e8ecbdf1ce463a48dd0384c87cee878c92b1443d17d08c9bc46"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11957_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5b21c6d3e0b0c7fc6ae1b73b266962e859a2b550da2b3fc9c10210f4751be1e2"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11958_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5b7a0df873843a335c2008b86132891b51c4e4c1a61e886532d9f361ff0ed3e5"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11959_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d24af5f5babddad54b006bdd5bdfa3cfe7d2a462f4b36a29feeb467716913aca"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11960_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0c4b698b344a69a0938571123ac3471c407687bbe43b976fe1092a24c9658868"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11961_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0c963706d5e1f425bbc4fc566a8a32c362ac9870eccfa784c405f2617c46bbb5"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11962_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "17ff63486f1bfe82fbd3ddc879f1ed413bc252dd954a0d8ef4397759a6207e50"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11963_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "61c0d3266a4e43e133d4939d10fb30b68b57e2d8909f255cc17c30223f7d0022"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11964_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1b4461b909b2bfdd8b324d07807198b0e48a64b068e18d3fc1c16b9cf1c7d9b7"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11965_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c7ac1bff4068fa025251affafa884852e2ac36df1eb97d3a2b41b1cebf8bbea1"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11966_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "225614edff28a45e3f5c3f1792eed89fd510d6391ead75af2292ba65d525df82"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11967_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "605978c10abdc71c52572863142a0cdad8150705771fb4052f5c922de087cf15"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11968_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a68c8516fe843d1a4490867611ddd378ccaf950a3ecc9e7a9abd2fddd406540d"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11969_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3bbac808e441466f2fdab8015780060102107848fe4fd0e0831ab37f8c724492"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11970_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bbcc810b5cd3c2b6a9e47cc9e9809316e51452ad1216080d187add91d4781e4e"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11971_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9943fd27b6dc57a0d1eb3aa84e35499cc645ceda0079f09e8e2ae8c6369b76cc"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_11972_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6279d5a72ca17233d38994870c1b0103b8b613687dfb4e0b427861b78975fc45"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12001_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8ee5b48d89e437d7069cd46ec157f09084533b14dce359f1adf126f7110cb4ac"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12002_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a2841bed7948231552a8ab817a0dc35a5456c2cf467558e1257ae340ab578cce"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12004_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "636cc1a4ea4d59883dc43aa0b718d8bd026951416b6ee4af411404ccb7729b37"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12005_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7c17e6806f27bff0ba3161a70f9fabadb8c165fce39a169b66a0f236039d9e96"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12006_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c5eff4a806a6259cd97bc44d866bed73601d27ad59e8ad88fa87cd9528a6ec85"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12007_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d9b22b3851726574ccfd4e90d206583e88f4afdd041fa8ec295adf4173ef4899"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12008_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c1dcae2f30c46cbaacc960eb25c6eb18b80197638922699d6480f48cdbdd2c9a"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12009_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "98dd3f8fcbe1cf49f1e1a764af2611fdb36f159f1729776a4ee6722a95b23e11"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12100_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b2a5e60df9326aae3218eb919ddd6e1f107f561a6e2da2fdbb679735bd5d506b"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12101_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ba14a427af76bcccce27469055f2ba9a9a66a648be66a4c9b222a843d6945a4d"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12102_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e789695acbdff66686d49f6cdc1e3221e7e78f0da849800893f512795c75ca9a"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12103_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "52af2d45c2d9abff2da292aef61b7c127f30bc0f1f9702216ada78dac422e450"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12104_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fd5c1278d22b41268704f85f6f47ee6648e747be829bf11b1d8ba7a1295f0648"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12105_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "63f4cc64c7cdcdac57fbe7bf0d45113127b989484c41ced294cf4c125cf3fd5c"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12106_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a6c886444ff7a4ee3f1353d122b257e432268955a024905eba0165dec6224db8"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12107_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d16fd459faeebb2fe396b90034f7c781f42680efba76e839dd20da12e47d7f36"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12108_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "342067002bb9c6d5ddcf0fa7278b49892d17ffddc463f510b94feb906f0835d2"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12201_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "48926d2b365689c61246409192dc7a17d8f572bb27ebc8b25fdbf5299ba3b9ca"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12202_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "70a1d5225a72c215cf79749e519583d1e407c8c62830e2c4801378066195e99d"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12203_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "65a46c7c70a0016377a0d605a6401509050f3a45ef1120ad9b2704a7fb583023"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12204_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e92f85b64342d97e346fac9a0e6977724f9889a6d7269c0b4a25247827ed27f9"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12205_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e3be0698a62a5b11b0503c9aa2f9a63c68a82c4bf033e187f65ba6a00a49b4d1"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12206_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "448dbc015885bbb004da09a270a783ea70e705ebbd1bb3c62e0cc7d79df91c56"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12207_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7a37c15eb12dad5f5f431ccf8eccc34d1b74d8a5a5f5fc059b24a32667a16039"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12208_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "25a894aeef62791d5e74b6b9e7788cbbe17debacfac67648a4b26a646eeb42ab"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12209_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1fa206f7c0278e65403e51b51799698ee66276229df51fea9d09f4be940644d7"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_12210_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "484f7600992c8f39b57ccb279d73384961845e60fc90177c94b30434a410d907"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_control_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b7f3a0ad1c09e025dbe086328657d584d4e9831b5c788fa54facf960fd8a8804"
+    },
+    {
+      "path": "scripts/module/gameplay/selector/strategy/nl_v6_difficulty_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f71e5144fdaa939bf5c5231bbf1686e41e15d57d92bfab7cfb2e7041e64c6f0f"
+    },
+    {
+      "path": "scripts/module/gameplay/view/board_grid_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e446d364e34912659583768c1b526adfcd210b20e266c4749e3d9b769c70e733"
+    },
+    {
+      "path": "scripts/module/gameplay/view/board_outer_glow.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6cfbe9060f643ae477c8cd2f1534376efb61bcef50bbc074a4eaeb8eb902cc47"
+    },
+    {
+      "path": "scripts/module/gameplay/view/board_view.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "a64a2af40c03809d3487c9914cf35430a7dda0c4ba8ef06feaff9645b17ff440"
+    },
+    {
+      "path": "scripts/module/gameplay/view/cell_face.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4d12d2a8b25123877d2758f01e7cd593d0c73df79843262b90c5a866df2099a8"
+    },
+    {
+      "path": "scripts/module/gameplay/view/cell_view.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "cfe412beeef41ca30851caf8f9e0ab9d4bc9742f7fa5f977c8d6d16b29b8734d"
+    },
+    {
+      "path": "scripts/module/gameplay/view/region_highlight_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e1022c98ff85b082b5282b332ba875163a5df631bdff402025c75b2ffd2c497f"
+    },
+    {
+      "path": "scripts/module/gameplay/view/swipe_extra_zone_debug_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6cbfff3ef160708424dc89952e7843dfb411e928d3e605adb3b46e92dd18fc3c"
+    },
+    {
+      "path": "scripts/module/gameplay/view/swipe_zone_debug_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "897803fd66a225b52da897360ebf19aad1af4a32c0df9f35fdb12361c5235212"
+    },
+    {
+      "path": "scripts/module/gameplay/view/touch_point_debug_overlay.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "561ea0e44457163f4f1ba77e038f071bacb2a46475140330bcd122d09ca399b8"
+    },
+    {
+      "path": "scripts/module/golden_fish/core/golden_fish_gate.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d47c8143524f55378259a7f3a8af399a3445fd98f377794878bfe31bcf9cc797"
+    },
+    {
+      "path": "scripts/module/golden_fish/golden_fish_pre_cat.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "28ab1300cd2df3c4bf9310eae86a6585211c15419b7f2a81844ca7693a282216"
+    },
+    {
+      "path": "scripts/module/golden_fish/selector/golden_fish_selector.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "69def70df5918abb3d5071254ec68042b7d148734c8c505b5c364fd17079b90e"
+    },
+    {
+      "path": "scripts/module/golden_fish/view/golden_fish_btn_style.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fccded52c3214b178316cf2ef0294dbae19ca061a6058a8836dd7809c4ee4f57"
+    },
+    {
+      "path": "scripts/module/home/core/home_companion_interaction.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "52a6b484fd500cdad53434a448d1c1d5bd036ac7f2a133244033d64110ca7683"
+    },
+    {
+      "path": "scripts/module/home/core/home_companion_system.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "34369e867d20da54df20bd92507b0c105dd07a434b1ff0a07b308fbbe526bbf9"
+    },
+    {
+      "path": "scripts/module/home/home_companion_service.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "faa6627e66918041bd729079bcb03be46a65e436ecd9dbe5a00e8e9b9d6fa6ca"
+    },
+    {
+      "path": "scripts/module/home/model/continue_entry_stats.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "408a8cd4f02cddc1e6a0f197bb0179e833efcaa5bd2abad55b31938729c262a0"
+    },
+    {
+      "path": "scripts/module/home/panel/home_companion_panel.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ded455dc769d27c32c8a6cb0f4d6b8adb81f303a5ce37503598f5ad1de7ac184"
+    },
+    {
+      "path": "scripts/module/home/view/home_companion_cat.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8b6c1e144e701ada9470ce661f84cb7b3afa768658224d9a9d4128c6c07c4039"
+    },
+    {
+      "path": "scripts/module/home/view/home_companion_guide_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9d54d3276addb4e1e741b3df15d53b98a7feef2cc6756cd2015074f0f8a07710"
+    },
+    {
+      "path": "scripts/module/home/view/home_companion_reward_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9abecf55457eaff9952c3723a849efad8e45aff5f833a4bca13019afc02ebec2"
+    },
+    {
+      "path": "scripts/module/home/view/home_companion_settle_strip.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "39a72b6e9edc6bad9bfef433777bd907fb0ef5d2b08debd2cfb7208b07deb61e"
+    },
+    {
+      "path": "scripts/module/home/view/home_companion_speech_bubble.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "235ed14046f9c39b0b210d5ee98a65dbec19d598b1d25ad79f105517c5018e85"
+    },
+    {
+      "path": "scripts/module/home/view/home_glow.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "40477d98dc70f3c64e182f01e059c9b49b1ea550ee1fdde6a0359146bfb08e63"
+    },
+    {
+      "path": "scripts/module/home/view/home_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5ba29d70f8c357b6f8a4ab24b09f4e202ada4249b69945fed3252d5206f8a98d"
+    },
+    {
+      "path": "scripts/module/home/view/other/home_companion_click_button.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "64a5eb98542fd9900104c06398fe31601bd033931f65b4f1e0e3180daee31113"
+    },
+    {
+      "path": "scripts/module/home/view/other/home_companion_progress_bar.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "feb232adf3eb25b10a1b728bf8eada472ab26a3470f416b45fd027815e7f1127"
+    },
+    {
+      "path": "scripts/module/home/view/other/home_companion_reward_preview.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0a970806fb0c45980152b0a42cdc44fce83b593180dc54612beee0e65e592cfd"
+    },
+    {
+      "path": "scripts/module/language/language_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f228cfe5cab800e9fc85194c4e136946ce995baca9da4928d432fcedea2f78bd"
+    },
+    {
+      "path": "scripts/module/language/view/language_option.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0064017a8203ecdeacfda6373f2f3f358b48671cd1d4b52039f6af1795212ed1"
+    },
+    {
+      "path": "scripts/module/language/view/language_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fb9728aada0ed81b3ae64d8851e0f6bc1301860e37043c5dc194f0854e6b69af"
+    },
+    {
+      "path": "scripts/module/level_rec/core/rec_api.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e34e170329bf1d82a450dc9824c54271598c8d2069e41d537f55249cddf9fdeb"
+    },
+    {
+      "path": "scripts/module/level_rec/core/rec_history_store.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4439e8fe9c47677a02627868285d7acda043f09d05757be8b07f98c05fa5dbf2"
+    },
+    {
+      "path": "scripts/module/level_rec/level_rec_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "eaa15bc786464233be8fe5966c2c7a27d712d30d1aa01a833d3a1e46ba9d7c0e"
+    },
+    {
+      "path": "scripts/module/level_rec/model/rec_level_queue.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0170b552a4b974013adf621a957409f635b1329e8a415d4710c4a3a3e6c35187"
+    },
+    {
+      "path": "scripts/module/level_rec/net/rec_http.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ad67b188a794d752a698096ec50341257971eb13e7b1ec909eb1bee2f2eaea89"
+    },
+    {
+      "path": "scripts/module/peekaboo/core/fish_flight_curve.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "100ea3c04a4c6d680e851fda5bc22017a959331741734d4b4026b2e1692e0e9a"
+    },
+    {
+      "path": "scripts/module/peekaboo/core/peekaboo_rules.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "61eb2dcc761ce992cbf71d844b997c0105ee444ee36f92029fb66d9fcf580a03"
+    },
+    {
+      "path": "scripts/module/peekaboo/model/peekaboo_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e309f7cd17a32839e7d5b2f462106c23e5da17207defd5862cf99523b57ee5d6"
+    },
+    {
+      "path": "scripts/module/peekaboo/peekaboo_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2086a972383cbdb28f485565ce742aaf27f39bfa620a2d941573eb1038eecf9a"
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_cat_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e43bb52d90e5c8376c0dfe17aab0ce0b1412e1f9a386c293edac817b4be71f00"
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_confirm_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bd0524a46c9a737c131fc971cc7117b4c356962400f4ef18e208bd5bf880d617"
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_fish.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cb6b01405d691aeb0a20ae6bfe686a772b8e8a6a2050885813848074ae496bba"
+    },
+    {
+      "path": "scripts/module/peekaboo/view/peekaboo_flow.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8534c8a2a4a21d4acf04468a36778dad908bbceb3f02d6a0d1e662d64e8d590f"
+    },
+    {
+      "path": "scripts/module/profile/core/costume_skin.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7e0ffa8edd8b29b6a132a049d1a1aafc72a7eea4b92be9a82b630b9502fd3ad0"
+    },
+    {
+      "path": "scripts/module/profile/core/profile_nickname.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "25e22a753b4b2803a04683d370ab63e99384d83d26682c87ee7b8814315b4742"
+    },
+    {
+      "path": "scripts/module/profile/model/avatar_frame.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "32723b749b14b0a0e8a0336ca247d76b29527c4d84532d5031d568755c86380e"
+    },
+    {
+      "path": "scripts/module/profile/model/costume_catalog.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bb93da2849605b656841bbdad60022e8f418151b0b8c7d5d0a26042141c452aa"
+    },
+    {
+      "path": "scripts/module/profile/model/costume_icon.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "24f4d68346583472d1e8da6f08e26fae4e53405a90371d8b7c6b17954503a8db"
+    },
+    {
+      "path": "scripts/module/profile/model/player_info.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ae1a6f0126d08c9ad04badbc626e33c0cd223625cd77d90dec7c8eac9bd08e24"
+    },
+    {
+      "path": "scripts/module/profile/model/profile_catalog.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6123ac153b6d587a6ed5870c6137f75446f1169d1983155f469497e8e937263a"
+    },
+    {
+      "path": "scripts/module/profile/model/profile_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0995bd1c29c405e2ea6ff9b9eacf0291600a94b1ad4482f19cd7544a224ad8c3"
+    },
+    {
+      "path": "scripts/module/profile/profile_service.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7027c7e840a4aae8f8e586a4497a0879cf08085bfda7023ad5fdfe5cfb236734"
+    },
+    {
+      "path": "scripts/module/profile/view/avatar_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8a4fa874eb53f5911955077ff24f655355c9f2871eea5a4c9a3f788740f9cc9a"
+    },
+    {
+      "path": "scripts/module/profile/view/avatar_profile_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d298eb95cfb57f2f63968f149e7ad5a4ae5ecfed5cc6c811bbed395c829755da"
+    },
+    {
+      "path": "scripts/module/profile/view/costume_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0a90d587eccc9c2a6306a9304b062ae79c81315ff47cd304e6b7ee8cae00778c"
+    },
+    {
+      "path": "scripts/module/profile/view/profile_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "76a8208da3c0782615220b2d234ae9c3951f2086b4dff15e91bc4cbb23f27937"
+    },
+    {
+      "path": "scripts/module/purchase/core/money_format.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "30e4278b4dc500d5fb4648e2f30b7b943d951c63e8dca6b24c72f5477663f85b"
+    },
+    {
+      "path": "scripts/module/purchase/model/purchase_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7c4ebd68aedcd791f0bd002440a555f85ca3974c27f9908d712f379255237955"
+    },
+    {
+      "path": "scripts/module/purchase/purchase_define.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4d22f3b4377c7b9ba081d18a1336d64efd18dced44de31a6f41a8556ee869108"
+    },
+    {
+      "path": "scripts/module/purchase/purchase_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0cdc2cfa46d12f9ce247dd8cbe742df8b2804ca43f127559cf4efe51c0f00dfd"
+    },
+    {
+      "path": "scripts/module/purchase/view/discount_pct_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e369aee5bcc6907be1d6995c9a138a7d00d61b0e4078ba11b98c633406dc44de"
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_package_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "81e2435386b0d404c4c895713d104162959577b7e27065b12ea64a2e078ad16b"
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_page.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "4fb97fe1529e49555fc1b4f148b0919b122231499229d28a9688159aab1a610c"
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_settings_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d3c69d134d022cf6231eba6b399bab6a3e3576752bbdab89bd06aeed7d3c3286"
+    },
+    {
+      "path": "scripts/module/purchase/view/purchase_success_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b0c449e12620374aeca9e409fbf9082c40364d0454e42b2db0358b539dab3d67"
+    },
+    {
+      "path": "scripts/module/purchase/view/vip_daily_gift_flow.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2e29ae32e6241358226886f225b5edfb2f92c8f21bd7f373673b3ca4c7dd4be0"
+    },
+    {
+      "path": "scripts/module/push_streak/streak_push_scheduler.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0077eceae4a80c40a4a468b82ec601fbef44f37ae05d6758846028f9bb341dae"
+    },
+    {
+      "path": "scripts/module/rank_activity/core/css_bezier.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c1e878e6f02c36dc386cfe83a3882d4d8443f44f63c3750b93d15e6cb34c4506"
+    },
+    {
+      "path": "scripts/module/rank_activity/core/rank_activity_period.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3735dff4d5c3aca0839c85b782b080dbc29c2a8f593f7b57004d72b4bcfbb2ca"
+    },
+    {
+      "path": "scripts/module/rank_activity/core/rank_like_logic.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5a5c5f35ee25db147b0441924270329a90b2e74f24c8945cebb8f33038530021"
+    },
+    {
+      "path": "scripts/module/rank_activity/model/rank_activity_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ea730661b24573c9d1a9f3ce3568cb01f44e4410123ea12b5d6f078a8ae8f64f"
+    },
+    {
+      "path": "scripts/module/rank_activity/model/rank_activity_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "001f9408bbc2d8b609fba3cb6fa642fea1eab4da3f7eb2d5f5237be35ec4519d"
+    },
+    {
+      "path": "scripts/module/rank_activity/model/rank_like_period_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "343c0ced03aca77157e764d8dd928dd4ec0c30619345db535c8bde1f584ea3be"
+    },
+    {
+      "path": "scripts/module/rank_activity/rank_activity_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c662e2bcfd85723edc76541a22905dbb011cf3a17c5f0e7b3c5728dcfa89e298"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/firework_line_trail.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aca79573e470b6f0e7e9c3c4d34d535aac739ed922b75cd31934fe68b7058459"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/online_tag.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fd5895808708ab6bf4bde58b635f4e2c37b06aec933891eda9938b1b7a22712e"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_online_helper.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a7c7f16d7d17247f2e54150ecc1dd0959bdbb13571a000ffef16b10349e86abb"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_bar.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "4e75c75a2ecac42c83b80da71c5d265bf76f2ef00104acca515c9ccd40096601"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0aa68f808ff169625144d3624552eb04c80be82084b1ee2b9034e801aad4b219"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_fish_show.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fbc37818976e54c3dc89b83f63b3246df512daabae62aa167699872c1bef4f33"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/rank_streak_slider_mask.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "164e47285254b38adc20ccd585aaa96267ca001d74e2d85d1a155466880a1ed8"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/top3_podium.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c4237b50e3b254689317dad4987e45b76aa3f16f6be028d7fdf827c1ea806105"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/top3_podium_award.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1995a2fb79b09864f4d63b7a31abae6952b79af5e40107f08b7f7a149501218b"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/other/treasure_box.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "648edaf46651298ee23b4f8c8c83a713a04d7f0772d2c440bcad9a1de9a3bdb5"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_change_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "aa139fc3050209d0ae14038ad9f3e3a136a8a914420da83b91c1afafd1da56d9"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_change_page_v2.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a6c28a464ab42e218766c9987309c6bb8d791410e6a18e8da62e8c1cb72c7f54"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_entry_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "47d335c6d926b198cfd617112a4fda90f710941849075efd820d7688d9362858"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_entry_left_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c128296704968750303899a9d69c6f82e85c72a3b80eeaa26e43f25ef168c901"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_htp_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "565214ed4125b290f471dc71455d14319baefd8bfa1635c257851f2d08dd95f6"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_mini_entry_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "6db18df8b2af1c668463cb2d5bd43a59c4695c9f01a3fc9b5bb7988bebb3a42f"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_offline_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e825f7de166ce9a4d8f06ac208fb75d8f64dc8fca5d6b379d97c43e1190abef4"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_open_popup_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "690166c6db2cde6b412983a66a4f8a775ddca634db640b7c778f7bbb9b117736"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_page.gd",
+      "physical_code_lines_unchanged": false,
+      "sha256": "bcef580944391dfa9b682eccf7029e96737fcc081aaef4b63a4bbda13da2028b"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_podium_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5127f33efe89098f2f568ccd1114082b397a71064e1d8092ee710a4ef0bf1abf"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_activity_solo_podium_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f9386e49837192eefa8ccca09ca89531f51bc28bc03a7757f4b9cd442f09c20c"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_bullet.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c5b7f407cfb23fc2ea39407f14ecc9172fc8221e6f6e4861ffe9770b932d8151"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ebbb6c9af3088aff43489e51b96f6b22713d7c401b03ddb127af55a311baf3b2"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_change_list_state.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "19c31d5804bf7cf3719ae4af17c278dc8220fb830a28659a543887e5b5e4c9c9"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_change_virtual_list_adapter.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "deba35c2e998498bb5512863dfe963b66f3b69a9d46333b00cf0ba1894bae5e0"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_collector_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1d0b218f5425996d529e0b0ea67aad54f727531e42964aa9b861d4a7f9e7d13f"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_floating_row_controller.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b048a0f72c14d74ac2897adb57108f813ab072027e089bf79a690f3472858186"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_gift_cell.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "013725b368180dbf0950bf4625e528e8bb2569853cc817e7f63d487447dfd4ac"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_gift_cell_game_win.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8a21f849770245777c203e53766c608cf321d7baeaeccf6406915baff4c94dd0"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_gift_cell_solo_end.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "24c63f32f3b4c01cfb02d6ec472cd57530fbb2bd7c6781ccc88337fc5ce175bf"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_heart.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "324e5ab6c6bbef8ea282b8235afb3de9f0e54d26e5537a6957b3d57b031819ad"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_offline_overlay_helper.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9a49d9d2f44a60f9c55c5bf3574d53666ac0a102a2600d526e334a4c7f3864c0"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_row_snapshot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "59375ec59bf48e4a28c42c3ea3eed9cc245df13a04f83cfc1d20f1ae55ff7bd5"
+    },
+    {
+      "path": "scripts/module/rank_activity/view/rank_virtual_list_adapter.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ddd3a84c06ebbcc2ec4ab85594043069549438cbe30ef8c95f8e155d5c49b15a"
+    },
+    {
+      "path": "scripts/module/rate_us/view/rate_us_page_v2.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "235a5346184aab7ba41d5d8875c3fb11d075c50268a1342e7d6a4655d3da5b9c"
+    },
+    {
+      "path": "scripts/module/result/model/fail_cat_progress_plan.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "82a68281188687b74e417fde39bcd749d5bf92430683f591703ad0488f427e11"
+    },
+    {
+      "path": "scripts/module/result/model/fail_text_stats.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f512e5005f1dd45ec548153e9d07a5caa0bb4ca7ec23c8c753977705f3f4474b"
+    },
+    {
+      "path": "scripts/module/result/model/pass_text_stats.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f72d7471650518f6a56e6cffab7d9b266acc558c1b0bfc5678a4126f850db7bf"
+    },
+    {
+      "path": "scripts/module/result/strategy/pass_text/pass_text_strategy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "029e0fbc5ab523be6fd4b3d73c4708dd390d2503db6ab9ca04c425da4eaca31e"
+    },
+    {
+      "path": "scripts/module/result/strategy/pass_text/pass_text_strategy_v3.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e487ef9c29bee784f1083a38eb388e4a5983c65cb2a3ad2f00fce0c1cc5c5513"
+    },
+    {
+      "path": "scripts/module/result/strategy/pass_text/pass_text_strategy_v3_g1.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4f0b11041f393bd23439820bb94ed42e32b7431707d70a9a9132c61960c69fb3"
+    },
+    {
+      "path": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "925dc62c71cafd7944d7c0bfd3068e19b36da5fbb07ff9562fddfa7ab33dfbb4"
+    },
+    {
+      "path": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4_g1.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "18d8c8a868422c59ddb481edb6f8846dab7f1314d609529d0d266a825949e24a"
+    },
+    {
+      "path": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4_g2.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "83f790e970cb95ebe2e6348f813941471dc589251b0be037481e720bb4bb79aa"
+    },
+    {
+      "path": "scripts/module/result/strategy/pass_text/pass_text_strategy_v4_g3.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4a17e052f2fa5555fdb55ec8bd7fd78d1b1172d37adcd375c1c5bdb041ab4fd6"
+    },
+    {
+      "path": "scripts/module/result/view/ad_reward_restored_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2794bba2dd19f6de1953052e925b55806cee641cfcfe8e914d3df4c30c6e5911"
+    },
+    {
+      "path": "scripts/module/result/view/dc_pass_page_board.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "daf94ab31dbbbe4fd989086bd6358a079ee5e53bd2e3c26fb2039ac990e42e53"
+    },
+    {
+      "path": "scripts/module/result/view/game_fail_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "09abb46af39b7a935df8436f8d7d5399dacfbc5ec75151155a00ae6c63d4d8e3"
+    },
+    {
+      "path": "scripts/module/result/view/game_win_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1cff17559a9fa4a8b9f5e7ab3961d71965a2764ddd03e333cfdb0f506eb72b42"
+    },
+    {
+      "path": "scripts/module/result/view/pass_page_g1_board.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a11ef2263b74304a4767dc9f8c0367045f975711fde2b07e46b51c37bf28b412"
+    },
+    {
+      "path": "scripts/module/result/view/pass_page_g2_board.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5bc27058cfac9a75a8faee9f77c28f15e6e354c9ca8c02870fad8521693ac4bd"
+    },
+    {
+      "path": "scripts/module/robot/core/robot_boost.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0e6ddf77b382a94b863db236243b042576ef079fdc350508745edc2d82304660"
+    },
+    {
+      "path": "scripts/module/robot/core/robot_identity.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f48e6cb9a6ae6b1e96f78115eae06a2195e395352fd246c37f3de99864bf5260"
+    },
+    {
+      "path": "scripts/module/robot/core/robot_online.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "63eff5da9ee79aad3ce343925d8e5e16ce9d53630ec8eef17f29824f35cb6136"
+    },
+    {
+      "path": "scripts/module/robot/core/robot_ranking.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2fac3a1947beedf516314f6e9544a5da3ad839051be8a5adb3eb795c820109ab"
+    },
+    {
+      "path": "scripts/module/robot/core/robot_score_gen.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0fd2c3d9b2df9cfccd4be620651482384a53142618a5282e52b837f70f87cda3"
+    },
+    {
+      "path": "scripts/module/robot/core/robot_stalking.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "dbbec9b51f4e2f0e61db7a479a95cc6f702463ba18f17a56954be924ded9c638"
+    },
+    {
+      "path": "scripts/module/robot/model/rank_info.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "526144b2aa9db56ff0af1173339945724fd06d616fb50c6a821721d9352d0af7"
+    },
+    {
+      "path": "scripts/module/robot/model/robot_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8fadd030ad71abf886aefdef25bd8e8228c251d13885ca4fde2cf0f33b1ae9a2"
+    },
+    {
+      "path": "scripts/module/robot/model/robot_data.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f0bcc1a43386fd848fb0412330708fdae326a4aa765fb73a51794c9d0794d9da"
+    },
+    {
+      "path": "scripts/module/robot/model/robot_localized_nickname_pool.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1925a2c927db534c067747a0c4ededd0451d2004018f5ebde674c4003c33a721"
+    },
+    {
+      "path": "scripts/module/robot/model/robot_nickname_pool.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1e98f97e00978829187ec909784ecce15c08237e3607a6205b40414de3bfdb92"
+    },
+    {
+      "path": "scripts/module/robot/model/robot_pool.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8042fd80ea1d167c0c85b97df5833652176edc74529f85e5e2e476b92c0ff269"
+    },
+    {
+      "path": "scripts/module/robot/robot_service.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "595fdcaaa5fe476377c6b2a590f622dac73cc79cbaf39d28e67f07a8da43432a"
+    },
+    {
+      "path": "scripts/module/robot/simulation/robot_sim.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d3843ab95ffffd267b3948626e3e6bae248dfcc733fbbc396ffb96e7b00d8e8d"
+    },
+    {
+      "path": "scripts/module/session/session_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d9ebb342b88b393e4d5e6e109568608b435898ca6fc3b8009eead80fb3244d7b"
+    },
+    {
+      "path": "scripts/module/setting/view/setting_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e4aa1f6543d78c9c31420250f15b1c21008f287316ae76fd5b662a9c914efee3"
+    },
+    {
+      "path": "scripts/module/sound/bgm_pause_reason.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d9d3728ac2438d93d24ec1760a0205a25e2802a9178e583de9d0d2d12ad437a8"
+    },
+    {
+      "path": "scripts/module/sound/sound_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "958943652ae8496096e7acced27bf3f03107bf006db5d20bbc530d59cfd2af09"
+    },
+    {
+      "path": "scripts/module/splash/core/splash_slogan_picker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4503f29ee42705f405be30ec0d92fb96bc6f82161d0c7d51bd78042e149e6fe9"
+    },
+    {
+      "path": "scripts/module/splash/view/pre_att_guide_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9e9d63d7c585fa27b8a64bb2646b4d052ea07be8315201b049ceeadc841bbf23"
+    },
+    {
+      "path": "scripts/module/splash/view/privacy_dialog.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4858e7b40ccdfc89ead86b22f3d8e4511d3c9410b9b4a4c7406fa6b73d8bfb91"
+    },
+    {
+      "path": "scripts/module/splash/view/privacy_dialog_v2.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "f9edd67a76ce80d11f6376a6246e3a6ad5512315dc5f52015451583ab24be42b"
+    },
+    {
+      "path": "scripts/module/splash/view/privacy_dialog_v3.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "5b78703540add6da59408124e264c1aecdb80bf46b90d03dfe56059a723bc56c"
+    },
+    {
+      "path": "scripts/module/splash/view/splash_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e9822d32b44dd85436f006edf77943a19f38b88ae248d8016d184a1260f201ad"
+    },
+    {
+      "path": "scripts/module/tracker/solution_steps_log.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4517159ae474c829d84da96414a492c8b071d6e4fc92fae671a5283d1e3d520d"
+    },
+    {
+      "path": "scripts/module/tracker/tracker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "85fc094a871b9471306e018c3ecad8c5eade953a0beb924ca8c97fb096c672a3"
+    },
+    {
+      "path": "scripts/module/tutorial/model/tutorial_flow_tracking.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9b4a7257e731545da07f3b6fe71aca0e6caf90fcab8bea32a5c0f79253d87557"
+    },
+    {
+      "path": "scripts/module/tutorial/model/tutorial_g2_copy.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4d5ff0894c73fc039ccb3ab128965749f8af8935c082f7277c58c61dfb391966"
+    },
+    {
+      "path": "scripts/module/tutorial/view/tutorial_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "650d682514ee65b74b34e5d14d4a065903cb441ef2e94bd87ba6c34d1c986c06"
+    },
+    {
+      "path": "scripts/module/ui/anim_util.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1da713cff59870680116d1e7f9df7667bf29f936b4aa0487d06f63f54cd34e19"
+    },
+    {
+      "path": "scripts/module/ui/base/ui_base_window.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "48ad85211c0d6d6039139d9f0e4d637331a6e02e70642cff089ff730c227ba56"
+    },
+    {
+      "path": "scripts/module/ui/base/ui_child_window.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "adc3e4db6b54724cbe3b4f0319b7c930bda5f4f3a0e04290b1dc7aadefe9dbe3"
+    },
+    {
+      "path": "scripts/module/ui/base/ui_frame_window.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d03ee680d9e761dc324412933b422a2484a83451ec96c0187754c66fc44546e6"
+    },
+    {
+      "path": "scripts/module/ui/clock_ticker.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2507c9e3430cc1680b1d16683673866cf08a3d0d060106163610ffeec6b0a86a"
+    },
+    {
+      "path": "scripts/module/ui/common/common_loading_page.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a716e16a87e2b98ebeafcb3b58d8ddfb47d91580e8f59277f748693f59026208"
+    },
+    {
+      "path": "scripts/module/ui/common/pop_up_toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "975daa952d6aac9f5fbc04400440540c29f683840291ca2dbee180c1fa3c3c80"
+    },
+    {
+      "path": "scripts/module/ui/common/rank_list_view_impl.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8a36c72362b02e082373f7004496992a746b2dd406f9e6ede5fba2dadf079f79"
+    },
+    {
+      "path": "scripts/module/ui/common/scroll_drag_helper.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "1a1b822faa495af2747c1748b00feea7b5d093b8d7821913c33a6a249cec0b80"
+    },
+    {
+      "path": "scripts/module/ui/common/scroll_row_culler.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "626f46bc2ea34bba430bb84fbb471cfb81854e5d0a94f35aa7b5f8130cfde7a3"
+    },
+    {
+      "path": "scripts/module/ui/common/toast.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d2f4cff20f27634c527888d4e4a5f9c1978715f1962b41b7e824db70321c4305"
+    },
+    {
+      "path": "scripts/module/ui/common/ui_mask.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "719b341fabbf0d0c9e2a4df679a1ab47565346ba700a7753f36c80cf16554d84"
+    },
+    {
+      "path": "scripts/module/ui/extensions/auto_fit_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bef13e20e3235edc51fda628a55d34db4f3ed8de591e556bc45561f9d459f914"
+    },
+    {
+      "path": "scripts/module/ui/extensions/auto_fit_label_group.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7a9c3e58d37425608b22f0a2417dbac7f5190afe60f3238cda411c5d8debe14d"
+    },
+    {
+      "path": "scripts/module/ui/extensions/auto_fit_rich_text_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2ce486a4d2a2bdedec0ba2da4ce285852031b7b3fabb7b91010cf8d144feeccf"
+    },
+    {
+      "path": "scripts/module/ui/extensions/balanced_rich_text_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "54912f1a9c3b654022ba5cc6d7ae028b071b020fb77c9361d7fd20f4d1533678"
+    },
+    {
+      "path": "scripts/module/ui/extensions/batched_text_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9c38f1f4e410b0660c0665c9d05dd48f44569e8ef53abc8e2bbbd583825d7978"
+    },
+    {
+      "path": "scripts/module/ui/extensions/curve_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0c48bdcd424c420027cedf81f429db7e91d70648e7dbbf56ca0887ecf90edf46"
+    },
+    {
+      "path": "scripts/module/ui/extensions/follow_home_settingbtn_y.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d5c27cbbd669a93b71d29087095859c280e26e96c3241764f1a5e682fb936573"
+    },
+    {
+      "path": "scripts/module/ui/extensions/glyph_batch.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "a41da5a334fff01a96786fba5b40f9f1431275cdc4012375bbc601f93e92954b"
+    },
+    {
+      "path": "scripts/module/ui/extensions/glyph_paint_layer.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "d1e1b48dd718c28e3fc7b670d5626160be5ce1bb8d8d4d43495449aa9e41b268"
+    },
+    {
+      "path": "scripts/module/ui/extensions/gradient_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "23c82232438eeb3acb74d58abe8842ab00e4860244b49433b05b5c094adf3eab"
+    },
+    {
+      "path": "scripts/module/ui/extensions/grid_flow_bg.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "368ce6320b588315301fe4c85ec33fa5e1b81e43b6c8b0ead50026fa5b8d28f4"
+    },
+    {
+      "path": "scripts/module/ui/extensions/rich_text_breath.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "55180631f2c40d80904df5a963907aeec07af135af9a51b0d43425cf12dbb0a5"
+    },
+    {
+      "path": "scripts/module/ui/extensions/rolling_number.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "49397f51e15ab23190792140456fabac4424c36e02e8afd53be21225e83af5ae"
+    },
+    {
+      "path": "scripts/module/ui/extensions/screen_edge_align.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ac033e2e6958f05ad197b09e8a04d48048d081bb0a3fd3c5dc1d4abafc93cf8e"
+    },
+    {
+      "path": "scripts/module/ui/extensions/single_line_glyph_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "acb4c63097af90bc4d920259ecaa95d77e846128594d043261db7c527470848e"
+    },
+    {
+      "path": "scripts/module/ui/extensions/tabular_digit_label.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "2c5486abae8d504870af2b0f0490365b54c12d24db67a2db69d570b6d840a7fd"
+    },
+    {
+      "path": "scripts/module/ui/extensions/underline_link.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "cd0a616a6162a6b14b530058b3d43b7c8f688e28964950fa8d8c96ca953d6195"
+    },
+    {
+      "path": "scripts/module/ui/extensions/width_only_container.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8b6a696e2e236c222c9382836c282725efcdc3d75ecc3d0d6066ce65241a225a"
+    },
+    {
+      "path": "scripts/module/ui/home_setting_anchor.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "e2a3f85609b1fed83bca72c479c598c41a9967b163e57886bf397b3c504b906f"
+    },
+    {
+      "path": "scripts/module/ui/panel/launcher.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3a7bfcc47ff25d755cf6143b0995c6fd21883918d3b57936f40eba95100201e4"
+    },
+    {
+      "path": "scripts/module/ui/queue/ui_popup_entry.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "195e1c3d3b8824529c5835aef6ec57d89237a287a39fdeaf989e68198b0cd2f7"
+    },
+    {
+      "path": "scripts/module/ui/queue/ui_popup_queue.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4ce89372ffe5a3335fce6a29cdc3f5ed3ad14950877a5aa6a5f3430738c27f61"
+    },
+    {
+      "path": "scripts/module/ui/red_dot/dot_name.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "07cf6c53ccb6dad810a70699dcfa50e581a92e727efc7ff84a2ffa34cb7c41dd"
+    },
+    {
+      "path": "scripts/module/ui/red_dot/red_dot.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "0c636adeae43b4ea7841962f7d23a3d4246d4c4ed457bf3d812e841259ff2fcf"
+    },
+    {
+      "path": "scripts/module/ui/red_dot/red_dot_center.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b614b0460a80aea89cf734c7bd322fe3e1c48606b97e606c9dec40d39c3aa524"
+    },
+    {
+      "path": "scripts/module/ui/ui_events.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "95efd12d6dcfb670b42a76c3d052528fa204d681b8ee5b600197b08da21e972f"
+    },
+    {
+      "path": "scripts/module/ui/ui_helper.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "bfbc6166e44de24e9de00e50abcdf9f526534b2f716bd41a4eeb0a63793c1b28"
+    },
+    {
+      "path": "scripts/module/ui/ui_layer_config.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "4315e99c4669ab2d43193fe491196bf3f7beedd191b90e0a8540de364d1d0c5a"
+    },
+    {
+      "path": "scripts/module/ui/ui_manager.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "29086c3b5b4f63851a4725ae24bd02fc3b73c2813e1a50dd12eb509deb62dff9"
+    },
+    {
+      "path": "scripts/module/ui/ui_name.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "9332f0fa1583bc0e4e644b75556b80ab33d9f8bd57f7a489e01a1766336e2ad7"
+    },
+    {
+      "path": "scripts/module/ui/ui_registry.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8c46dcb80898004e8cb61b276f7b80e0dfa58123d73250f9b235e47b63003078"
+    },
+    {
+      "path": "scripts/module/ui/ui_tracker_observer.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "fc0f8d77798a8c1330177e1830d03b8270a8c08ae907927e5162bce88ff1e53f"
+    },
+    {
+      "path": "scripts/module/ui/widget/back_and_setting_header.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "8db1b18e8c35b17b6ca482cc1a5c7948c4bb3713895abbd55e21bec45f55cf17"
+    },
+    {
+      "path": "scripts/module/ui/widget/btn_with_tag.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "7287373a1c382e6a7c678e735f253eaecfe3b21678e959f378446dfe44fe40ff"
+    },
+    {
+      "path": "scripts/module/ui/widget/round_icon_btn.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "c071df9629b225a13caf8ac639069bb7d4cd46a2b993f93ff176e93ca69601f0"
+    },
+    {
+      "path": "scripts/module/ui/widget/virtual_list.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ae193903376c073a648805a29602379c7aadd27efe22d76db1f49c896fe8ec7d"
+    },
+    {
+      "path": "scripts/module/ui/widget/virtual_list_adapter.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "864207b073fba3e26514c07b055904ac4cd43fb2f348c54505225526601c26f3"
+    },
+    {
+      "path": "scripts/module/ui/widget/virtual_list_binding.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "ef0368dc6e221c7da6392008915066ec69a684c4e22bf21a49ca562d352e5454"
+    },
+    {
+      "path": "scripts/module/ui/widget/virtual_list_cell_state.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "73a33906670d26452f8da4cd9194b6655e98400826bbb7415773522090b69997"
+    },
+    {
+      "path": "scripts/module/ui/widget/virtual_list_layout.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "b31711ad0995e6582f9e36de4c97aaa1c0bead6dad0e828bb3751c7df7075e24"
+    },
+    {
+      "path": "scripts/module/user_tag/config/gamble_user_tag.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "47fc3a7e07f5d89a405466f8549a213236154d08f4909aaaf2c139a8fdedb4d4"
+    },
+    {
+      "path": "scripts/module/user_tag/config/has_assist_user_tag.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "465b0336ba581f9d5395aa0d2bc4a27b7e230bf7a2a0d90d8beb04cd4e20fb06"
+    },
+    {
+      "path": "scripts/module/user_tag/config/normal_level_group_tag.gd",
+      "physical_code_lines_unchanged": true,
+      "sha256": "3517c1d8c350b1dc176fc5a532fdd9f9739f31dc271e733a9a72df37ef411315"
+    }
+  ],
+  "explained_changes": {
+    "addons/unikit/scripts/unikit.gd": "Expected native-SDK desktop logging; desktop_native_logging_adaptations.json",
+    "scripts/common/auth_manager.gd": "Expected native-SDK desktop logging; desktop_native_logging_adaptations.json",
+    "scripts/module/gameplay/view/board_view.gd": "Explicit local bug fix: disposal flag prevents child PREDELETE from repopulating an already cleared Spine pool; runtime_teardown_audit.md",
+    "scripts/module/debug/view/generator_page.gd": "Known Godot nested lambda layout repair; lambda_layout_repairs.json",
+    "scripts/module/purchase/view/purchase_page.gd": "Known Godot nested lambda layout repair; lambda_layout_repairs.json",
+    "scripts/module/rank_activity/view/other/rank_streak_bar.gd": "Known Godot nested lambda layout repair; lambda_layout_repairs.json",
+    "scripts/module/rank_activity/view/rank_activity_page.gd": "Known Godot nested lambda layout repair; lambda_layout_repairs.json",
+    "scripts/module/gameplay/view/cell_view.gd": "Known Godot nested lambda layout repair; lambda_layout_repairs.json"
+  },
+  "unexplained_code_or_layout_changes": []
+}

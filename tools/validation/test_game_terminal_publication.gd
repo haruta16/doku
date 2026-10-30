@@ -24,7 +24,7 @@ func _run() -> void:
 	tracker = root.get_node("Tracker")
 	var ab: Node = root.get_node("ABTestManager")
 	ab.dc_level.set_debug_override(0)
-	ab.game_auto_mark.set_debug_override(0)
+	ab.auto_x_fill_mode.set_debug_override(0)
 	ab.win_toast.set_debug_override(0)
 	ab.normal_endgame_save.set_debug_override(0)
 	ab.daily_streak.set_debug_override(0)
@@ -33,7 +33,8 @@ func _run() -> void:
 			await _test_reentry(mode, outcome, "repeat")
 			await _test_reentry(mode, outcome, "hide")
 			await _test_reentry(mode, outcome, "reopen")
-			await _test_first_round_reentry(mode, outcome)
+		await _test_first_round_reentry(mode, "preparation")
+		await _test_first_round_reentry(mode, "round_start")
 		await _test_analytics_identity(mode)
 	ui.hide_all()
 	await create_timer(0.6).timeout
@@ -56,14 +57,14 @@ func _open(mode: String) -> Variant:
 
 func _wait_ready(page: Variant) -> void:
 	var deadline: int = Time.get_ticks_msec() + 8000
-	while (not page._entry_ready or page._entry_anim_playing) and Time.get_ticks_msec() < deadline:
+	while (not page._entry_ready or page._entry_anim_playing or page._tool_btns_locked) and Time.get_ticks_msec() < deadline:
 		await process_frame
 
 
 func _terminal(page: Variant, outcome: String) -> void:
 	match outcome:
-		"fail": page._on_game_over()
-		"win": page._on_game_complete()
+		"fail": page._on_game_fail()
+		"win": page._on_game_win()
 		"quit": page._on_restart_requested()
 
 
@@ -138,29 +139,37 @@ func _test_reentry(mode: String, outcome: String, transition: String) -> void:
 				page._on_revive_requested()
 				_check(not page._is_complete and page._lives > 0 and page._business_attempt_sequence == 1, "revive remains usable after guarded fail")
 				page._lives = 0
-				page._on_game_over()
+				page._on_game_fail()
 				_check(page._is_complete and tracker.get_stat("gamedie_count") == before_deaths + 2, "next legitimate failed attempt has its own publication")
 
 
-func _test_first_round_reentry(mode: String, outcome: String) -> void:
-	var page: Variant = await _open(mode)
-	_prepare_terminal(page, outcome)
-	_check(page._business_session == null, "first terminal starts with lazy business session")
+func _test_first_round_reentry(mode: String, phase: String = "round_start") -> void:
+	ui.hide_all()
+	await create_timer(0.15).timeout
+	_check(game.reset_all(), "reset before first entry reentry")
+	game.set_sound_on(false)
+	game.set_tutorial_done(true)
+	game.set_current_level(50)
 	var slot: String = "doku/main" if mode == "game" else "doku/daily"
-	var state: Dictionary = {"called": false, "generation": -1}
+	var previous_id: String = str(game.get_core_store().snapshot().get("round_services", {}).get(slot, {}).get("round_id", ""))
+	var state: Dictionary = {"called": false, "presentation": -1}
 	var listener := func(_revision: int) -> void:
-		if state.called or not game.get_core_store().snapshot().get("round_services", {}).has(slot):
+		if state.called:
+			return
+		var record: Dictionary = game.get_core_store().snapshot().get("round_services", {}).get(slot, {})
+		if phase == "round_start" and (record.is_empty() or str(record.get("round_id", "")) == previous_id):
 			return
 		state.called = true
 		ui.hide_ui(mode)
-		ui.show_ui(mode, {"level_index": game.get_current_level()} if mode == "game" else {})
-		state.generation = page._business_generation
+		var replacement: Variant = ui.show_ui(mode, {"level_index": game.get_current_level()} if mode == "game" else {})
+		state.presentation = replacement.get_presentation_revision()
 	game.get_core_store().committed.connect(listener)
-	_terminal(page, outcome)
-	game.get_core_store().committed.disconnect(listener)
+	var page: Variant = ui.show_ui(mode, {"level_index": 50} if mode == "game" else {})
 	await _wait_ready(page)
-	_check(state.called, "reentry reaches initial round creation notification")
-	_check(page._business_generation == state.generation and page._is_round_entry_ready() and not page._is_complete, "old initial terminal cannot touch replacement session")
+	game.get_core_store().committed.disconnect(listener)
+	_check(state.called, phase + " reaches its intended commit notification during entry")
+	_check(page.get_presentation_revision() == state.presentation and page._is_round_entry_ready() and not page._is_complete, phase + " cancelled initial entry cannot touch replacement session")
+	_check(page._business_session != null, "ready page already owns its durably committed business session")
 	_check(page._round_transition.is_empty(), "initial commit reentry releases old transition without locking new page")
 
 

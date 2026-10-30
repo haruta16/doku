@@ -5,6 +5,12 @@ extends Control
 enum WindowState { INVALID, CREATING, SHOWING, HIDDEN, CLOSING, DESTROYED } # 窗口状态：INVALID 未创建 / CREATING 创建中 / SHOWING 显示中 / HIDDEN 已创建未显示 / CLOSING 关闭动画中 / DESTROYED 已销毁
 
 var _window_state: int = WindowState.INVALID # 当前状态；只由 UIWindowManager 和本类的 _do_* 改写，外部用下面三个查询函数读
+var _show_version: int:
+	get:
+		return _show_revision
+
+var _window_presentation_revision: int = 0 # 每次刷新展示内容递增，独立于显示栈所有权。
+var _presentation_waits: Array[PresentationWait] = []
 var _show_revision: int = 0 # 每次显示递增；旧的异步关闭不能收尾到后来显示的同一实例
 
 # 声音提示是窗口语义；具体音频资源与开关由宿主决定。
@@ -57,8 +63,13 @@ func _do_create() -> void:
 ## 显示流程：置 SHOWING、显示节点、恢复被隐藏时暂停的定时器，有监听者才开 _process，最后回调 on_show
 func _do_show(params: Dictionary = {}) -> void:
 	_show_revision += 1
+	_window_presentation_revision += 1
 	var revision: int = _show_revision
+	var presentation: int = _window_presentation_revision
 	_window_state = WindowState.SHOWING
+	_cancel_presentation_waits()
+	if not is_instance_valid(self) or not is_presentation_current(presentation):
+		return
 	visible = true
 	if not is_instance_valid(self) or is_queued_for_deletion() \
 		or _window_state != WindowState.SHOWING or _show_revision != revision:
@@ -72,11 +83,12 @@ func _do_show(params: Dictionary = {}) -> void:
 ## 隐藏流程：先 await 子类 on_hide（通常在这里播退场动画），再复查状态、断连接、停处理、隐藏
 func _do_hide() -> void:
 	var revision: int = _show_revision
+	var presentation: int = _window_presentation_revision
 	# @warning_ignore：子类 on_hide 里可能没有 await，这里的 await 会被判成多余
 	@warning_ignore("redundant_await")
 	await on_hide() # 等子类退场逻辑跑完；期间它若又被 show，会把自己置回 SHOWING
 
-	if revision != _show_revision or _window_state == WindowState.DESTROYED:
+	if not is_instance_valid(self) or revision != _show_revision or not is_presentation_current(presentation):
 		return
 	_window_state = WindowState.HIDDEN
 	_disconnect_all_managed() # 断开本窗口登记过的所有信号，避免隐藏后还被回调
@@ -89,10 +101,21 @@ func _do_hide() -> void:
 func _do_destroy() -> void:
 	if _window_state == WindowState.DESTROYED:
 		return
+	# A packed-scene/template instance may be freed before _do_create initializes hooks.
+	var lifecycle_started: bool = _window_state != WindowState.INVALID or is_inside_tree() or is_node_ready()
 	_show_revision += 1
+	_window_presentation_revision += 1
 	_window_state = WindowState.DESTROYED
+	_cancel_presentation_waits()
+	if not is_instance_valid(self):
+		return
 	destroy_all_children()
-	on_destroy()
+	if not is_instance_valid(self):
+		return
+	if lifecycle_started:
+		on_destroy()
+	if not is_instance_valid(self):
+		return
 	_disconnect_all_managed()
 	_destroy_all_timers()
 	_clear_all_listeners()
@@ -124,12 +147,16 @@ var _managed_connections: Array[Dictionary] = [] # 连接登记表：窗口隐�
 
 ## 连一个信号并登记，断开时机交给窗口生命周期
 func connect_managed(sig: Signal, callable: Callable, flags: int = 0) -> void:
+	if sig.is_connected(callable):
+		return
 	sig.connect(callable, flags)
 	_managed_connections.append({"signal": sig, "callable": callable})
 
 
 ## 同上，但只触发一次（CONNECT_ONE_SHOT）
 func connect_managed_once(sig: Signal, callable: Callable) -> void:
+	if sig.is_connected(callable):
+		return
 	sig.connect(callable, CONNECT_ONE_SHOT)
 	_managed_connections.append({"signal": sig, "callable": callable, "one_shot": true})
 
@@ -414,4 +441,114 @@ func _ready() -> void:
 ## 节点被删除时兜底拆掉所有子窗口，防止子窗口泄漏
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		destroy_all_children()
+		# Use the same idempotent teardown before tree_exiting: marking only the
+		# state here would make the manager skip the actual on_destroy hook.
+		_do_destroy()
+
+## Read-only lifecycle identity for canceling delayed work on a cached window.
+func get_presentation_revision() -> int:
+	return _window_presentation_revision
+
+## Dynamic descendants inherit the same content preparation and sound policy as scene children.
+func initialize_dynamic_widget(root: Control) -> void:
+	if not is_instance_valid(root):
+		return
+	if _scene_preparer.is_valid():
+		_scene_preparer.call(root)
+	_attach_button_sounds(root)
+
+
+## 刷新保留栈、遮罩与曝光，但取消旧展示内容的异步续跑。
+func _do_refresh(params: Dictionary = {}) -> void:
+	_window_presentation_revision += 1
+	var revision: int = _window_presentation_revision
+	_cancel_presentation_waits()
+	if is_instance_valid(self) and is_presentation_current(revision):
+		on_show(params)
+
+
+## A wait belongs to one presentation, including its closing animation.
+func is_presentation_current(revision: int) -> bool:
+	return is_instance_valid(self) and not is_queued_for_deletion() and revision == _window_presentation_revision \
+		and _window_state in [WindowState.SHOWING, WindowState.CLOSING]
+
+
+## Cancellation returns false synchronously before a refreshed/destroyed owner continues.
+func wait_presentation_signal(source: Signal, revision: int = -1) -> bool:
+	if revision < 0:
+		revision = _window_presentation_revision
+	if not is_presentation_current(revision) or source.is_null() or not is_instance_valid(source.get_object()) or not source.get_object().has_signal(source.get_name()):
+		return false
+	var pending := PresentationWait.new()
+	_presentation_waits.append(pending)
+	if not pending.arm(self, source, revision):
+		pending.finish(false)
+		return false
+	return await pending.completed
+
+
+## The predicate being true means completion; cancellation is never completion.
+func wait_presentation_until(predicate: Callable, revision: int = -1) -> bool:
+	if revision < 0:
+		revision = _window_presentation_revision
+	while is_instance_valid(self) and is_presentation_current(revision) and predicate.is_valid():
+		var complete: bool = bool(predicate.call())
+		if not is_instance_valid(self) or not is_presentation_current(revision):
+			return false
+		if complete:
+			return true
+		if not is_inside_tree() or not await wait_presentation_signal(get_tree().process_frame, revision):
+			return false
+	return false
+
+
+func _forget_presentation_wait(pending: PresentationWait) -> void:
+	_presentation_waits.erase(pending)
+
+
+func _cancel_presentation_waits() -> void:
+	# Callbacks can register waits for a new presentation while these finish.
+	var previous: Array[PresentationWait] = _presentation_waits
+	_presentation_waits = []
+	for pending in previous:
+		pending.finish(false)
+
+
+class PresentationWait extends RefCounted:
+	signal completed(success: bool)
+	var _owner: WeakRef
+	var _source: Signal
+	var _callback: Callable
+	var _revision: int
+	var _settled: bool = false
+
+	func arm(owner: UIBaseWindow, source: Signal, revision: int) -> bool:
+		_owner = weakref(owner)
+		_source = source
+		_revision = revision
+		var argument_count: int = 0
+		for info in source.get_object().get_signal_list():
+			if info.name == source.get_name():
+				argument_count = info.args.size()
+				break
+		_callback = _on_source.unbind(argument_count) if argument_count > 0 else _on_source
+		return _source.connect(_callback) == OK
+
+	func _on_source() -> void:
+		finish(true)
+
+	func finish(success: bool) -> void:
+		if _settled:
+			return
+		_settled = true
+		var owner: UIBaseWindow = _owner.get_ref() as UIBaseWindow
+		var current: bool = is_instance_valid(owner) and owner.is_presentation_current(_revision)
+		# Disconnect and detach BEFORE emission can synchronously re-enter the owner.
+		if is_instance_valid(_source.get_object()) and _source.is_connected(_callback):
+			_source.disconnect(_callback)
+		_source = Signal()
+		_callback = Callable()
+		if is_instance_valid(owner):
+			owner._forget_presentation_wait(self)
+		_owner = null
+		completed.emit(success and current)

@@ -26,6 +26,10 @@ func _run() -> void:
 	await _test_settings_pages(game)
 	_test_debug_locale(game)
 	_test_reset_defaults(game)
+	var ui: Node = root.get_node("UIManager")
+	for name: String in ["setting", "language"]:
+		await ui.destroy_ui(name)
+	await process_frame
 	print("STORAGE PREFERENCES TESTS: %d assertions, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 
@@ -87,14 +91,14 @@ func _test_settings_pages(game: Node) -> void:
 		_check(bool(game.call("is_%s_on" % option)), option + " 失败保持已保存值")
 		var toggle: Panel = page.get("_%s_toggle_on" % option)
 		_check(toggle.visible, option + " 失败仍显示开启")
-		_check(Toast._current.get_node("Panel/Label").text.contains("重试") or Toast._current.get_node("Panel/Label").text.contains("try again"), option + " 失败展示重试提示")
+		_check(Toast._current.get_node("Panel/Label").text == TranslationServer.translate("RECOVERY_SAVE_ERROR") or Toast._current.get_node("Panel/Label").text.contains("重试") or Toast._current.get_node("Panel/Label").text.contains("try again"), option + " 失败展示重试提示")
 		if option == "vibration":
-			_check(VibrateManager.is_enabled(), "震动写失败未提前关闭运行时震动")
+			_check(load("res://products/meowdoku/app/platform/vibrate_manager.gd").is_enabled(), "震动写失败未提前关闭运行时震动")
 		files.set_fault_injector_for_tests(Callable())
 		page.call("_on_%s_btn_pressed" % option)
 		_check(not bool(game.call("is_%s_on" % option)) and not toggle.visible, option + " 重试成功后状态与界面同步")
 		if option == "vibration":
-			_check(not VibrateManager.is_enabled(), "成功提交后才同步运行时震动")
+			_check(not load("res://products/meowdoku/app/platform/vibrate_manager.gd").is_enabled(), "成功提交后才同步运行时震动")
 		await process_frame
 	# 页面缓存期间通过业务入口修改，下一次展示仍应反映全部四个偏好。
 	await ui.hide_ui("setting")
@@ -132,7 +136,7 @@ func _test_settings_pages(game: Node) -> void:
 
 
 func _test_debug_locale(game: Node) -> void:
-	var commands: Node = load("res://products/meowdoku/app/diagnostics/cheat_commands.gd").new()
+	var commands: RefCounted = load("res://products/meowdoku/app/diagnostics/cheat/tab/cheat_tab_lang.gd").new()
 	var files: RefCounted = game._product_store.files
 	var original_locale := TranslationServer.get_locale()
 	var original_saved: String = game.get_apply_locale()
@@ -146,7 +150,7 @@ func _test_debug_locale(game: Node) -> void:
 	_check(game.get_apply_locale() == "ja" and TranslationServer.get_locale() == "ja", "调试切换重试成功后同步语言")
 	commands._apply_locale("system")
 	_check(game.get_apply_locale().is_empty(), "调试清除覆盖重试成功")
-	commands.free()
+	commands = null
 
 
 func _test_reset_defaults(game: Node) -> void:
@@ -169,7 +173,7 @@ func _test_reset_defaults(game: Node) -> void:
 	candidate.profile.pending_rewards = [{"show_id": "fixture", "source": "hint", "ts": 1}]
 	candidate.profile.reward_history_ts = [1]
 	candidate.profile.recent_puzzles = [{"puzzle_id": "fixture", "level": 5, "v": "1", "src": "test", "ts": 1, "bank_progress": {}, "main_bank_progress": {}, "lkmod_progress": {}}]
-	candidate.inventory = {"locate": 8, "hint": 9, "undo": 10}
+	candidate.inventory = {"locate": 8, "hint": 9, "undo": 10, "mouse": 11, "draft": 12}
 	candidate.endgame.snapshot = {"fixture": "reset"}
 	for key: String in candidate.endgame.stats:
 		candidate.endgame.stats[key] = "changed" if key.ends_with("_id") else {"changed": 1}
@@ -190,7 +194,7 @@ func _test_reset_defaults(game: Node) -> void:
 	for key: String in ProductStore.PROFILE_TYPES:
 		var expected: Variant = defaults.get_value("progress", key)
 		_check(memory.get_value("progress", key) == expected and disk.get_value("progress", key) == expected, "重置恢复默认且落盘: " + key)
-	_check(VibrateManager.is_enabled(), "重置成功恢复运行时震动默认值")
+	_check(load("res://products/meowdoku/app/platform/vibrate_manager.gd").is_enabled(), "重置成功恢复运行时震动默认值")
 
 
 ## 用非默认状态往返检查映射，防止新增字段只更新类型表、读取或写入中的一处。

@@ -1,0 +1,6 @@
+{
+  "res://products/meowdoku/assets/shaders/gradient_text.gdshader": "res://scripts/framework/ui/shaders/gradient_text.gdshader",
+  "res://products/meowdoku/assets/shaders/gradient_text.gdshader.uid": "res://scripts/framework/ui/shaders/gradient_text.gdshader.uid",
+  "res://products/meowdoku/assets/shaders/gradient_text_group.gdshader": "res://scripts/framework/ui/shaders/gradient_text_group.gdshader",
+  "res://products/meowdoku/assets/shaders/gradient_text_group.gdshader.uid": "res://scripts/framework/ui/shaders/gradient_text_group.gdshader.uid"
+}

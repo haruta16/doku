@@ -12,7 +12,6 @@ const VALUE_FIRST_EVER_ONCE: int = 2 # 只免费一次，用过就永久失效
 func _init() -> void:
 	key = "revive_free_logic"
 	default_value = VALUE_CONTROL # 默认档：不免费
-	timing = ABTestManager.TIMING_APP_START # 染色时机：冷启动就绪即定档
 
 
 ## 本次失败是否可免费复活（档位 2 会读 GameState 的「已用过」标记）

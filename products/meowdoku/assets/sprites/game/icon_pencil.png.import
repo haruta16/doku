@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cv35i44siys5w"
-path.s3tc="res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.etc2.ctex"
+path.bptc="res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.bptc.ctex"
+path.astc="res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,12 +13,12 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/icon_pencil.png"
-dest_files=["res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.s3tc.ctex", "res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.bptc.ctex", "res://.godot/imported/icon_pencil.png-0152105942d823f23858de9fc985c222.astc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=1.0
 compress/uastc_level=2
 compress/rdo_quality_loss=0

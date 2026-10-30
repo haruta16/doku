@@ -29,12 +29,14 @@ func on_show(_params: Dictionary = {}) -> void:
 
 func on_hide() -> void:
 	if wait_on_hide:
-		await hide_release
+		if not await wait_presentation_signal(hide_release):
+			return
 
 
 func _play_close_animation() -> void:
 	if wait_on_close:
-		await close_release
+		if not await wait_presentation_signal(close_release):
+			return
 	else:
 		await super._play_close_animation()
 

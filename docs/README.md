@@ -1,8 +1,10 @@
 # Meowdoku 恢复工程
 
-Meowdoku 1.8.1（`com.oakever.meowdoku`，version code 418）的可编辑、可构建恢复工程。
+以 Meowdoku 1.22.0（`2af1f49bd`）为产品基线、承接现有公共框架的学习恢复工程。迁移方法与待办见 [1.22 迁移计划](migration-1.22-plan.md)，范围、设计取舍和最终证据见 [1.22 迁移记录](migration-1.22-report.md)。
 
-当前工作树已在恢复基线上增加内容交付与业务分离，参见 [实施与验收记录](framework-implementation.md)、[内容交付](content-delivery.md)、[本地业务](local-business.md)、[玩法模块](gameplay-modules.md) 和 [框架使用指南](framework-usage.md)。下文“恢复概况”和历史同一性报告描述原恢复阶段；本次主动重构后的源码不再声称与 APK 字节码相同。
+公共框架最初从 1.8.1 恢复基线拆分而来；本次把 1.22 的产品增量迁入该结构，继续保留内容交付与业务分离。框架背景参见 [实施与验收记录](framework-implementation.md)、[内容交付](content-delivery.md)、[本地业务](local-business.md)、[玩法模块](gameplay-modules.md) 和 [框架使用指南](framework-usage.md)。下文“恢复概况”和历史同一性报告描述原恢复阶段；本次主动重构后的源码不再声称与 APK 字节码相同。
+
+迁移前对 `d89f94d` 的架构评估保留在 [当时的状态评估与暂缓事项](current-state-and-deferred-work.md)。它只评价迁移前版本；当前 1.22 的验证范围、剩余限制和维护事项以迁移记录为准，不能将旧结论解释为当前无 bug 或生产发布就绪。
 
 ## 当前目录与阅读顺序
 
@@ -43,7 +45,7 @@ export_presets.cfg              当前 Meowdoku 的导出配置
 
 [历史同一性报告](RECOVERY_FIDELITY_AUDIT.md)、[原恢复过程](MEOWDOKU_逆向恢复全流程总结.md) 和 `docs/validation/` 中的既有验收证据保留当时路径，不把历史路径当作当前源码入口。
 
-原脚本和场景的历史身份保留在 `.autoconverted/`、`tools/validation/fixtures/recovered_scenes.json`，迁移位置由 `recovered_relocations.json` 显式记录；不保留两份可被误改的旧实现。
+1.22 原始脚本证据位于 `.autoconverted/`，恢复证据位于 `docs/recovery/1.22.0/`，路径转换由 `tools/validation/fixtures/recovery_122_paths.json` 记录。旧恢复身份与旧验收报告保留历史含义；当前迁移源码不声称与原始字节码相同。
 
 ## 前置条件
 
@@ -99,7 +101,7 @@ python3 tools/verify.py --suite all --godot /path/to/spine-godot
 
 `quick` 允许缺少引擎时跳过上述两项探针，并在 Python 完成结果中记录执行数与跳过数；它不能替代完整验收。`framework` 和 `all` 不接受 Python 测试跳过。
 
-脚本测试必须输出一次包含正数检查数和零失败数的完成摘要；导入、恢复身份、启动检查及制作工具使用各自的完成合同。新增测试的运行方式、异步收尾与最小模板见 [验证脚本约定](../tools/validation/README.md)。退出资源与 ObjectDB 诊断全部保留，只有 [登记且有历史日志证据的精确例外](../tools/validation/fixtures/shutdown_diagnostics.json)，且本次操作系统、架构与实际引擎版本均匹配时才可通过；新增、变化或重复告警会失败。环境诊断和退出基线不因失败自动放宽，不使用资源数量通配；重新生成日志或指纹不等于批准新例外，仍须核对原因、适用范围及留存证据。通过结果不宣称退出无资源告警。
+脚本测试必须输出一次包含正数检查数和零失败数的完成摘要；导入、恢复身份、启动检查及制作工具使用各自的完成合同。新增测试的运行方式、异步收尾与最小模板见 [验证脚本约定](../tools/validation/README.md)。脚本错误、缺失动画轨道、退出资源与 ObjectDB 泄漏均使当前验收失败。原 [退出诊断台账](../tools/validation/fixtures/shutdown_diagnostics.json) 保留历史日志指纹和环境归因，但不再豁免当前实现。明确注入的写盘失败与环境诊断另行分类，不能把真实错误归为测试成功。一次干净退出也不证明所有运行时路径永远无泄漏。
 
 仅复查原恢复身份时，也可以继续使用下面的旧入口；它的默认范围是 `recovery`，不是全部套件：
 
@@ -112,8 +114,7 @@ python tools/run_validation.py --godot ..\tools\spine-godot\4.2-4.6.1\godot-4.2-
 预期输出：
 
 ```
-LEVEL_DATA_INFO: 63 original solution entries are rejected by runtime validation
-VALIDATION_OK: 257 recovered scripts, 74 scenes, 75 translations, 26 level banks, 20,746 records, and 20,710 solution entries
+VALIDATION_OK: 853 recovered scripts, 187 scenes, 75 translations, 59 level banks, 65915 records, and 45133 solution entries
 ```
 
 ## Android 构建

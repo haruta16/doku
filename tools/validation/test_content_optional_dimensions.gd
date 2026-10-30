@@ -6,7 +6,6 @@ const BANK_ID: String = "doku/levels/bankdatalkmodified"
 var checks: int = 0
 var failures: int = 0
 var levels: Script
-var simulator: Script
 var commands_script: Script
 
 
@@ -24,14 +23,13 @@ func _run() -> void:
 	var game: Node = root.get_node("GameState")
 	var ui: Node = root.get_node("UIManager")
 	levels = load("res://products/meowdoku/gameplay/application/level_data.gd")
-	simulator = load("res://products/meowdoku/app/diagnostics/view/playtest_simulator_page.gd")
 	commands_script = load("res://products/meowdoku/app/diagnostics/cheat_commands.gd")
 	_check(game.reset_all(), "isolated player resets")
 	game.set_sound_on(false)
 	game.set_tutorial_done(true)
 	root.get_node("ABTestManager").normal_endgame_save.set_debug_override(0)
 	var expected: Dictionary = _pool_snapshot()
-	var expected_counts: Dictionary = simulator._compute_pool_sizes()
+	var expected_counts: Dictionary = _pool_counts()
 	var expected_selection: Dictionary = _selection_snapshot()
 	var data: Variant = LevelBankIO.builtin_by_id(BANK_ID).value
 	var entries: Array = data.levels if data is Dictionary else data
@@ -51,7 +49,7 @@ func _run() -> void:
 	var actual: Dictionary = _pool_snapshot()
 	for key: String in expected:
 		_check(actual[key] == expected[key], key + " keeps eligible puzzle identities and order for optional size")
-	_check(simulator._compute_pool_sizes() == expected_counts, "simulator reports the same pool sizes for the legal update")
+	_check(_pool_counts() == expected_counts, "actual pool builder reports the same pool sizes for the legal update")
 	_check(_selection_snapshot() == expected_selection, "real main selector preserves source, puzzle and progress across the metadata-only update")
 	_check(levels._lk_modified_pool(8, 4, false).size() > 0, "reported 8x8 rank4 pool remains available")
 	var commands: Node = commands_script.new()
@@ -86,11 +84,11 @@ func _pool_snapshot() -> Dictionary:
 	for size: int in range(4, 13):
 		for rank: int in range(1, 6):
 			for strict: bool in [false, true]:
-				var pool: Array = levels._lk_modified_pool(size, rank, strict).duplicate(true)
+				var pool: Array = levels._lk_modified_pool(size, rank, strict).map(func(entry: Dictionary) -> Dictionary: return BankData.materialize_entry(entry, true))
 				for entry: Dictionary in pool:
 					entry.erase("size")
 					entry.erase("_content_provenance") # 发布来源已改变，题面本身必须不变。
-				result["%d/%d/%s" % [size, rank, strict]] = pool
+				result["%d/%d/%s" % [size, rank, strict]] = JSON.parse_string(JSON.stringify(pool))
 	return result
 
 
@@ -113,3 +111,13 @@ func _check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
 		printerr("TEST_FAILED: " + message)
+
+
+func _pool_counts() -> Dictionary:
+	var counts: Dictionary = {}
+	for size: int in range(4, 13):
+		for rank: int in range(1, 6):
+			var pools: Dictionary = levels.build_pools(size, rank, "", false, true)
+			for source: String in pools:
+				counts["%d/%d/%s" % [size, rank, source]] = pools[source].size()
+	return counts

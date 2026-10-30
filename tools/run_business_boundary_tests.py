@@ -26,6 +26,11 @@ FILES = (
     "products/meowdoku/gameplay/application/meowdoku_round_settlement.gd",
     "products/meowdoku/gameplay/application/meowdoku_settlement_rules.gd",
     "products/meowdoku/app/state/meowdoku_store.gd",
+    "products/meowdoku/app/state/meowdoku_state_fields.gd",
+    "products/meowdoku/app/state/meowdoku_award_policy.gd",
+    "products/meowdoku/app/features/profile/model/profile_catalog.gd",
+    "products/meowdoku/gameplay/application/meowdoku_action_facts.gd",
+    "products/meowdoku/gameplay/application/models/level_kind.gd",
 )
 TESTS = ("test_product_session.gd", "test_product_settlement.gd")
 

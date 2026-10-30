@@ -1,0 +1,2343 @@
+{
+  "schema": 2,
+  "scope": "Successful frozen all-suite reports, source fingerprints, raw case logs, and referenced process logs; no player data, engine binary, private signing key, or disposable test project is included.",
+  "process_logs": [
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/architecture.log",
+      "archive_entry": "287fdd66d5f3c7eb15fa1fbb4f1343408a4b450ffebdbe07c038251e62085455/architecture.log",
+      "sha256": "287fdd66d5f3c7eb15fa1fbb4f1343408a4b450ffebdbe07c038251e62085455",
+      "bytes": 107,
+      "recorded_sha256": "287fdd66d5f3c7eb15fa1fbb4f1343408a4b450ffebdbe07c038251e62085455",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/block.log",
+      "archive_entry": "9fa99bf3ac44ec1011c4c249c468daff6c6b188d334ebaf394ce058556f74766/block.log",
+      "sha256": "9fa99bf3ac44ec1011c4c249c468daff6c6b188d334ebaf394ce058556f74766",
+      "bytes": 1595,
+      "recorded_sha256": "9fa99bf3ac44ec1011c4c249c468daff6c6b188d334ebaf394ce058556f74766",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/business_boundary.log",
+      "archive_entry": "84f7643a96e7ba2d736534e048d29eb027f6d6791d88eec49b57bf1e9d467ba8/business_boundary.log",
+      "sha256": "84f7643a96e7ba2d736534e048d29eb027f6d6791d88eec49b57bf1e9d467ba8",
+      "bytes": 2424,
+      "recorded_sha256": "84f7643a96e7ba2d736534e048d29eb027f6d6791d88eec49b57bf1e9d467ba8",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/content.log",
+      "archive_entry": "863b16908516c31095979ef558cd9f37376344010055319f280f0935fb5ec5af/content.log",
+      "sha256": "863b16908516c31095979ef558cd9f37376344010055319f280f0935fb5ec5af",
+      "bytes": 4618,
+      "recorded_sha256": "863b16908516c31095979ef558cd9f37376344010055319f280f0935fb5ec5af",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/development.log",
+      "archive_entry": "b82554f60ca48f81b5785475fb79d3abc70b333b8867611edec4a4b58ab37ce6/development.log",
+      "sha256": "b82554f60ca48f81b5785475fb79d3abc70b333b8867611edec4a4b58ab37ce6",
+      "bytes": 4863,
+      "recorded_sha256": "b82554f60ca48f81b5785475fb79d3abc70b333b8867611edec4a4b58ab37ce6",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/engine-version.log",
+      "archive_entry": "6f4d42c350a11ec5404e5eddb10cbb0cb490b7cb81888cac0a368d0ecb821362/engine-version.log",
+      "sha256": "6f4d42c350a11ec5404e5eddb10cbb0cb490b7cb81888cac0a368d0ecb821362",
+      "bytes": 36,
+      "recorded_sha256": "6f4d42c350a11ec5404e5eddb10cbb0cb490b7cb81888cac0a368d0ecb821362",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/framework.log",
+      "archive_entry": "5acee3b345b7bda0deb90a7980e66ed920000a56d4a9b101f8200e80f0825ebb/framework.log",
+      "sha256": "5acee3b345b7bda0deb90a7980e66ed920000a56d4a9b101f8200e80f0825ebb",
+      "bytes": 114358,
+      "recorded_sha256": "5acee3b345b7bda0deb90a7980e66ed920000a56d4a9b101f8200e80f0825ebb",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/framework_boundary.log",
+      "archive_entry": "6ba19cd1e6888c9c561c3adc0e3ed96d80842ee89d2cb065cb1d8e6aa9df0043/framework_boundary.log",
+      "sha256": "6ba19cd1e6888c9c561c3adc0e3ed96d80842ee89d2cb065cb1d8e6aa9df0043",
+      "bytes": 1552,
+      "recorded_sha256": "6ba19cd1e6888c9c561c3adc0e3ed96d80842ee89d2cb065cb1d8e6aa9df0043",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/pck.log",
+      "archive_entry": "1434de2138edcc45da957e068d51cdfb565f55a56f27780803ad86289a8d1f6d/pck.log",
+      "sha256": "1434de2138edcc45da957e068d51cdfb565f55a56f27780803ad86289a8d1f6d",
+      "bytes": 517,
+      "recorded_sha256": "1434de2138edcc45da957e068d51cdfb565f55a56f27780803ad86289a8d1f6d",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/catalog.log",
+      "archive_entry": "2105dc51b3a114c807e5679689760f1f8828e60884bd1a5bdcc41aaa296b5fb7/catalog.log",
+      "sha256": "2105dc51b3a114c807e5679689760f1f8828e60884bd1a5bdcc41aaa296b5fb7",
+      "bytes": 160,
+      "recorded_sha256": "2105dc51b3a114c807e5679689760f1f8828e60884bd1a5bdcc41aaa296b5fb7",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/daily-missing-rank.log",
+      "archive_entry": "2e4aad8b28b98b3e0cf810f4d6484e0c455820d3366bc81677e14d7cc305bc23/daily-missing-rank.log",
+      "sha256": "2e4aad8b28b98b3e0cf810f4d6484e0c455820d3366bc81677e14d7cc305bc23",
+      "bytes": 2204,
+      "recorded_sha256": "2e4aad8b28b98b3e0cf810f4d6484e0c455820d3366bc81677e14d7cc305bc23",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/daily-missing-tier.log",
+      "archive_entry": "4f99eef08812d9a82eb6f1e0332bad177e96fdd566835079612013e574b4412f/daily-missing-tier.log",
+      "sha256": "4f99eef08812d9a82eb6f1e0332bad177e96fdd566835079612013e574b4412f",
+      "bytes": 2212,
+      "recorded_sha256": "4f99eef08812d9a82eb6f1e0332bad177e96fdd566835079612013e574b4412f",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/gc-correct.log",
+      "archive_entry": "8b6c9e289d45f2e5f70e4d7a3a56655632f19938b0247609e11dc1bccc136359/gc-correct.log",
+      "sha256": "8b6c9e289d45f2e5f70e4d7a3a56655632f19938b0247609e11dc1bccc136359",
+      "bytes": 166,
+      "recorded_sha256": "8b6c9e289d45f2e5f70e4d7a3a56655632f19938b0247609e11dc1bccc136359",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/gc-wrong-shape.log",
+      "archive_entry": "4eebfdc9708c9d65587e7e4c88665e04d77165f6ba5b922912f5814ee6386c6c/gc-wrong-shape.log",
+      "sha256": "4eebfdc9708c9d65587e7e4c88665e04d77165f6ba5b922912f5814ee6386c6c",
+      "bytes": 2215,
+      "recorded_sha256": "4eebfdc9708c9d65587e7e4c88665e04d77165f6ba5b922912f5814ee6386c6c",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/lk-invalid-date.log",
+      "archive_entry": "6943ecf906a91873a92d7efd2428006f6e5fe00feaebfbf87ef3ddeb1d81c2c2/lk-invalid-date.log",
+      "sha256": "6943ecf906a91873a92d7efd2428006f6e5fe00feaebfbf87ef3ddeb1d81c2c2",
+      "bytes": 2179,
+      "recorded_sha256": "6943ecf906a91873a92d7efd2428006f6e5fe00feaebfbf87ef3ddeb1d81c2c2",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/lk-invalid-label.log",
+      "archive_entry": "dafb82e2bd7d7c67e4e6c854b3927619fb530e2752784423a4a8683d83f8a651/lk-invalid-label.log",
+      "sha256": "dafb82e2bd7d7c67e4e6c854b3927619fb530e2752784423a4a8683d83f8a651",
+      "bytes": 2180,
+      "recorded_sha256": "dafb82e2bd7d7c67e4e6c854b3927619fb530e2752784423a4a8683d83f8a651",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/main-ab-size-missing.log",
+      "archive_entry": "b627ce07b230adc01dfb59bea1b52621ca569da9c867448a0cd89be4a3778a35/main-ab-size-missing.log",
+      "sha256": "b627ce07b230adc01dfb59bea1b52621ca569da9c867448a0cd89be4a3778a35",
+      "bytes": 2298,
+      "recorded_sha256": "b627ce07b230adc01dfb59bea1b52621ca569da9c867448a0cd89be4a3778a35",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/main-combined-source.log",
+      "archive_entry": "5fbd9ba9c2ac283b7d82c9a983cb56e43190e1fb2d3a1cb78d0d87ba13452596/main-combined-source.log",
+      "sha256": "5fbd9ba9c2ac283b7d82c9a983cb56e43190e1fb2d3a1cb78d0d87ba13452596",
+      "bytes": 186,
+      "recorded_sha256": "5fbd9ba9c2ac283b7d82c9a983cb56e43190e1fb2d3a1cb78d0d87ba13452596",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/main-first-rank-missing.log",
+      "archive_entry": "5ffdd347f09d7287bca708e74cd4015146881fc73a11c530bdae49d5ea552edb/main-first-rank-missing.log",
+      "sha256": "5ffdd347f09d7287bca708e74cd4015146881fc73a11c530bdae49d5ea552edb",
+      "bytes": 2295,
+      "recorded_sha256": "5ffdd347f09d7287bca708e74cd4015146881fc73a11c530bdae49d5ea552edb",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/main-late-policy-missing.log",
+      "archive_entry": "8a8d1db03cc5888b70e12babd141aacbb29d5c7caf16c87a9e1be6c21ea39cc7/main-late-policy-missing.log",
+      "sha256": "8a8d1db03cc5888b70e12babd141aacbb29d5c7caf16c87a9e1be6c21ea39cc7",
+      "bytes": 2301,
+      "recorded_sha256": "8a8d1db03cc5888b70e12babd141aacbb29d5c7caf16c87a9e1be6c21ea39cc7",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/per-level-home-slot.log",
+      "archive_entry": "49c45afb519991119ad0a95ce0e246c4e33e5695333adf5ffe4823fc8563cb6a/per-level-home-slot.log",
+      "sha256": "49c45afb519991119ad0a95ce0e246c4e33e5695333adf5ffe4823fc8563cb6a",
+      "bytes": 2353,
+      "recorded_sha256": "49c45afb519991119ad0a95ce0e246c4e33e5695333adf5ffe4823fc8563cb6a",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/raw-correct.log",
+      "archive_entry": "baace24efd530b1972897b6c608a949045275002f811e44211e00a28b1788626/raw-correct.log",
+      "sha256": "baace24efd530b1972897b6c608a949045275002f811e44211e00a28b1788626",
+      "bytes": 271,
+      "recorded_sha256": "baace24efd530b1972897b6c608a949045275002f811e44211e00a28b1788626",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/raw-wrong-size.log",
+      "archive_entry": "c2081c234e66f5d0c13738e014bf0ab6e413d9382d28abb97213b0238a0cd590/raw-wrong-size.log",
+      "sha256": "c2081c234e66f5d0c13738e014bf0ab6e413d9382d28abb97213b0238a0cd590",
+      "bytes": 2195,
+      "recorded_sha256": "c2081c234e66f5d0c13738e014bf0ab6e413d9382d28abb97213b0238a0cd590",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/shortened-special-bank.log",
+      "archive_entry": "1f4af72ebbdcbcfc7e1e2185e7121b182ff17321248c166ae50c2e71f8b72aac/shortened-special-bank.log",
+      "sha256": "1f4af72ebbdcbcfc7e1e2185e7121b182ff17321248c166ae50c2e71f8b72aac",
+      "bytes": 2119,
+      "recorded_sha256": "1f4af72ebbdcbcfc7e1e2185e7121b182ff17321248c166ae50c2e71f8b72aac",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/special-bank-without-guide.log",
+      "archive_entry": "68250a600b3db058be56493c588aab2a7e807db3400a2ab11014127dac420524/special-bank-without-guide.log",
+      "sha256": "68250a600b3db058be56493c588aab2a7e807db3400a2ab11014127dac420524",
+      "bytes": 198,
+      "recorded_sha256": "68250a600b3db058be56493c588aab2a7e807db3400a2ab11014127dac420524",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/special-malformed-prefill.log",
+      "archive_entry": "49c6747deb4ae36bbf3f08306fd6ad6809ece0421970c5b56b41116f6d4ed080/special-malformed-prefill.log",
+      "sha256": "49c6747deb4ae36bbf3f08306fd6ad6809ece0421970c5b56b41116f6d4ed080",
+      "bytes": 2224,
+      "recorded_sha256": "49c6747deb4ae36bbf3f08306fd6ad6809ece0421970c5b56b41116f6d4ed080",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/special-valid-prefill.log",
+      "archive_entry": "196ebafe462286e35fba84da1c7d89151221e4362bcf2e4d9b8eacdf140519e8/special-valid-prefill.log",
+      "sha256": "196ebafe462286e35fba84da1c7d89151221e4362bcf2e4d9b8eacdf140519e8",
+      "bytes": 188,
+      "recorded_sha256": "196ebafe462286e35fba84da1c7d89151221e4362bcf2e4d9b8eacdf140519e8",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/special-wrong-prefill-answer.log",
+      "archive_entry": "7e683651cc1c24784ea2238ecff091d5e866b372cfb3ee60a7b21f3f72b3c3b0/special-wrong-prefill-answer.log",
+      "sha256": "7e683651cc1c24784ea2238ecff091d5e866b372cfb3ee60a7b21f3f72b3c3b0",
+      "bytes": 2224,
+      "recorded_sha256": "7e683651cc1c24784ea2238ecff091d5e866b372cfb3ee60a7b21f3f72b3c3b0",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/spine-correct.log",
+      "archive_entry": "f3ca77f4bdd02c39c91313f3fc3db44e0d0dc7fb63618f77a712c6fe4e993be9/spine-correct.log",
+      "sha256": "f3ca77f4bdd02c39c91313f3fc3db44e0d0dc7fb63618f77a712c6fe4e993be9",
+      "bytes": 172,
+      "recorded_sha256": "f3ca77f4bdd02c39c91313f3fc3db44e0d0dc7fb63618f77a712c6fe4e993be9",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/spine-wrong-contract.log",
+      "archive_entry": "05fe5b0fd3d653e798d6af269486c8e5deede345996c6ae605ad5aa30774fe0f/spine-wrong-contract.log",
+      "sha256": "05fe5b0fd3d653e798d6af269486c8e5deede345996c6ae605ad5aa30774fe0f",
+      "bytes": 2087,
+      "recorded_sha256": "05fe5b0fd3d653e798d6af269486c8e5deede345996c6ae605ad5aa30774fe0f",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication-report-case-logs/unknown-inherited-media.log",
+      "archive_entry": "6685c203257d09f1e135a5ba36e4f945faea5ac04256135fe46bd88a8e5b84cb/unknown-inherited-media.log",
+      "sha256": "6685c203257d09f1e135a5ba36e4f945faea5ac04256135fe46bd88a8e5b84cb",
+      "bytes": 2095,
+      "recorded_sha256": "6685c203257d09f1e135a5ba36e4f945faea5ac04256135fe46bd88a8e5b84cb",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/publication.log",
+      "archive_entry": "ccd5e97a4cf102487a6b68db3f86af07ff2e533410d868a2ccb3ee88bb28c471/publication.log",
+      "sha256": "ccd5e97a4cf102487a6b68db3f86af07ff2e533410d868a2ccb3ee88bb28c471",
+      "bytes": 3028,
+      "recorded_sha256": "ccd5e97a4cf102487a6b68db3f86af07ff2e533410d868a2ccb3ee88bb28c471",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/python.log",
+      "archive_entry": "b4dc4cc99230b58363cdcf8ee15fb2b5e39613c482d6f08ecd61433cc86bab8c/python.log",
+      "sha256": "b4dc4cc99230b58363cdcf8ee15fb2b5e39613c482d6f08ecd61433cc86bab8c",
+      "bytes": 358,
+      "recorded_sha256": "b4dc4cc99230b58363cdcf8ee15fb2b5e39613c482d6f08ecd61433cc86bab8c",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/spine.log",
+      "archive_entry": "21f31ea36fd2389c39da32886c95625c13052989f0c2a412fb0c05ab9accf425/spine.log",
+      "sha256": "21f31ea36fd2389c39da32886c95625c13052989f0c2a412fb0c05ab9accf425",
+      "bytes": 564,
+      "recorded_sha256": "21f31ea36fd2389c39da32886c95625c13052989f0c2a412fb0c05ab9accf425",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/tmp/doku122-final-verification4/ui_boundary.log",
+      "archive_entry": "b70aadd657b9dd9e8e1cb76f78a2f27be420e76cf69a75f729a23573e114f8e6/ui_boundary.log",
+      "sha256": "b70aadd657b9dd9e8e1cb76f78a2f27be420e76cf69a75f729a23573e114f8e6",
+      "bytes": 1734,
+      "recorded_sha256": "b70aadd657b9dd9e8e1cb76f78a2f27be420e76cf69a75f729a23573e114f8e6",
+      "recorded_hash_verified": true
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/example.engine.log",
+      "archive_entry": "bd247d4fc0aa82b55266c32fab1ae67e33ac6957c7cadf14ccfb9a331b174b73/example.engine.log",
+      "sha256": "bd247d4fc0aa82b55266c32fab1ae67e33ac6957c7cadf14ccfb9a331b174b73",
+      "bytes": 1527,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/example.log",
+      "archive_entry": "293752b37d9c62208e210c455fc7e92ceaaeb9dec5f6adc85735d305b7417a03/example.log",
+      "sha256": "293752b37d9c62208e210c455fc7e92ceaaeb9dec5f6adc85735d305b7417a03",
+      "bytes": 1563,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/import.engine.log",
+      "archive_entry": "0004cff18a409473d74142c8b6a83a256eada3233d798b95a9a1c964578082e9/import.engine.log",
+      "sha256": "0004cff18a409473d74142c8b6a83a256eada3233d798b95a9a1c964578082e9",
+      "bytes": 1374,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-_o_92un6/import.log",
+      "archive_entry": "2f979933ae895cb411b19b12a6cc07d97da3f47ab86524a2e15c00d6605df1e5/import.log",
+      "sha256": "2f979933ae895cb411b19b12a6cc07d97da3f47ab86524a2e15c00d6605df1e5",
+      "bytes": 1926,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-elmpwfzt/consumer.engine.log",
+      "archive_entry": "57069fde2cb87ecd59c9079d304b8f9a2de8ca0b901e7bf9810c4c49c848b76d/consumer.engine.log",
+      "sha256": "57069fde2cb87ecd59c9079d304b8f9a2de8ca0b901e7bf9810c4c49c848b76d",
+      "bytes": 155,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-elmpwfzt/consumer.log",
+      "archive_entry": "57069fde2cb87ecd59c9079d304b8f9a2de8ca0b901e7bf9810c4c49c848b76d/consumer.log",
+      "sha256": "57069fde2cb87ecd59c9079d304b8f9a2de8ca0b901e7bf9810c4c49c848b76d",
+      "bytes": 155,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-elmpwfzt/import.engine.log",
+      "archive_entry": "edad7af47e0f495047908d4011b14e6621e2a7c5b05a08735dc31f4d1dfbe299/import.engine.log",
+      "sha256": "edad7af47e0f495047908d4011b14e6621e2a7c5b05a08735dc31f4d1dfbe299",
+      "bytes": 3283,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-elmpwfzt/import.log",
+      "archive_entry": "ae8c353e9d9892c3f79f679eddf3cb82ce34485c4a96f892ca2cd7a7f482cfd8/import.log",
+      "sha256": "ae8c353e9d9892c3f79f679eddf3cb82ce34485c4a96f892ca2cd7a7f482cfd8",
+      "bytes": 4709,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/import.engine.log",
+      "archive_entry": "0eb26c2488f64cdeb73d0cf53c67b7eeb0a793c4fb32f39f0a2816f269baefbf/import.engine.log",
+      "sha256": "0eb26c2488f64cdeb73d0cf53c67b7eeb0a793c4fb32f39f0a2816f269baefbf",
+      "bytes": 1417,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/import.log",
+      "archive_entry": "ad311149321343acfd797d031f758ff6052d07a15e91b39e1167722935c94977/import.log",
+      "sha256": "ad311149321343acfd797d031f758ff6052d07a15e91b39e1167722935c94977",
+      "bytes": 1992,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/test.engine.log",
+      "archive_entry": "bb6a3dda42a114933dd798b16341c37f99b8a1cec1bdc55a122c2760f90f8e21/test.engine.log",
+      "sha256": "bb6a3dda42a114933dd798b16341c37f99b8a1cec1bdc55a122c2760f90f8e21",
+      "bytes": 164,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-rzdn9b7g/test.log",
+      "archive_entry": "bb6a3dda42a114933dd798b16341c37f99b8a1cec1bdc55a122c2760f90f8e21/test.log",
+      "sha256": "bb6a3dda42a114933dd798b16341c37f99b8a1cec1bdc55a122c2760f90f8e21",
+      "bytes": 164,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-ug9v76f_/import.engine.log",
+      "archive_entry": "ba7b773f75448c95a32ba754476bb77a8242375c4df5b3ff498d23f38e8a5de2/import.engine.log",
+      "sha256": "ba7b773f75448c95a32ba754476bb77a8242375c4df5b3ff498d23f38e8a5de2",
+      "bytes": 3300,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-ug9v76f_/import.log",
+      "archive_entry": "f7794fb0dfdb99725a9e292d967152391096be398b1383cfb254e9e2588949bd/import.log",
+      "sha256": "f7794fb0dfdb99725a9e292d967152391096be398b1383cfb254e9e2588949bd",
+      "bytes": 4703,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-ug9v76f_/test_product_session.gd.engine.log",
+      "archive_entry": "1968a76f73ee2b7a9a4e8d4c4fafee28c332aa2d5f9055fd88e7695064d72679/test_product_session.gd.engine.log",
+      "sha256": "1968a76f73ee2b7a9a4e8d4c4fafee28c332aa2d5f9055fd88e7695064d72679",
+      "bytes": 152,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-ug9v76f_/test_product_session.gd.log",
+      "archive_entry": "1968a76f73ee2b7a9a4e8d4c4fafee28c332aa2d5f9055fd88e7695064d72679/test_product_session.gd.log",
+      "sha256": "1968a76f73ee2b7a9a4e8d4c4fafee28c332aa2d5f9055fd88e7695064d72679",
+      "bytes": 152,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-ug9v76f_/test_product_settlement.gd.engine.log",
+      "archive_entry": "bd2133d8f07d9223d670021f7f74a2b39efe1d81be8c339423cbb8a7872c32f4/test_product_settlement.gd.engine.log",
+      "sha256": "bd2133d8f07d9223d670021f7f74a2b39efe1d81be8c339423cbb8a7872c32f4",
+      "bytes": 155,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-ug9v76f_/test_product_settlement.gd.log",
+      "archive_entry": "bd2133d8f07d9223d670021f7f74a2b39efe1d81be8c339423cbb8a7872c32f4/test_product_settlement.gd.log",
+      "sha256": "bd2133d8f07d9223d670021f7f74a2b39efe1d81be8c339423cbb8a7872c32f4",
+      "bytes": 155,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import-bootstrap.engine.log",
+      "archive_entry": "3f97675100d5c1dceaba9ab4f834172a3156011c801e9115c1afb0d0e65d5839/import-bootstrap.engine.log",
+      "sha256": "3f97675100d5c1dceaba9ab4f834172a3156011c801e9115c1afb0d0e65d5839",
+      "bytes": 177598,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import-bootstrap.log",
+      "archive_entry": "be6935131cc30272c0fec4f2e763027e88bd31a6d4ca9e20963a68f4eeb797ae/import-bootstrap.log",
+      "sha256": "be6935131cc30272c0fec4f2e763027e88bd31a6d4ca9e20963a68f4eeb797ae",
+      "bytes": 261870,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import.engine.log",
+      "archive_entry": "2dffd6218ea2d2773d88df3233a17c8f02e722cc6c58e0a7c8b845fba2183bdd/import.engine.log",
+      "sha256": "2dffd6218ea2d2773d88df3233a17c8f02e722cc6c58e0a7c8b845fba2183bdd",
+      "bytes": 825,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/import.log",
+      "archive_entry": "555053dc1a35a92491bbb4b98f5c9f2a30f1bb42ddcea03b98f248bc5898a355/import.log",
+      "sha256": "555053dc1a35a92491bbb4b98f5c9f2a30f1bb42ddcea03b98f248bc5898a355",
+      "bytes": 1101,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/test.engine.log",
+      "archive_entry": "c1dba97575cceeb6333eea51b3d953e3f61d15c12049362c80d803ee48a7e8fb/test.engine.log",
+      "sha256": "c1dba97575cceeb6333eea51b3d953e3f61d15c12049362c80d803ee48a7e8fb",
+      "bytes": 8074,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/debug/test.log",
+      "archive_entry": "88910271a47bd39cfe6c0c628ff4ba3be58bc6b239a1f649093f6e21c5f998e9/test.log",
+      "sha256": "88910271a47bd39cfe6c0c628ff4ba3be58bc6b239a1f649093f6e21c5f998e9",
+      "bytes": 8092,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import-bootstrap.engine.log",
+      "archive_entry": "519895804a69895eb12e8c8798eca242a136181a2527d06c0616b5b7acbd3b89/import-bootstrap.engine.log",
+      "sha256": "519895804a69895eb12e8c8798eca242a136181a2527d06c0616b5b7acbd3b89",
+      "bytes": 177557,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import-bootstrap.log",
+      "archive_entry": "863212fafb54d128e25a0e85c291f228b19bb8ac6aa7f402a31520ae4ed95f01/import-bootstrap.log",
+      "sha256": "863212fafb54d128e25a0e85c291f228b19bb8ac6aa7f402a31520ae4ed95f01",
+      "bytes": 261806,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import.engine.log",
+      "archive_entry": "2dffd6218ea2d2773d88df3233a17c8f02e722cc6c58e0a7c8b845fba2183bdd/import.engine.log",
+      "sha256": "2dffd6218ea2d2773d88df3233a17c8f02e722cc6c58e0a7c8b845fba2183bdd",
+      "bytes": 825,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/import.log",
+      "archive_entry": "555053dc1a35a92491bbb4b98f5c9f2a30f1bb42ddcea03b98f248bc5898a355/import.log",
+      "sha256": "555053dc1a35a92491bbb4b98f5c9f2a30f1bb42ddcea03b98f248bc5898a355",
+      "bytes": 1101,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/test.engine.log",
+      "archive_entry": "2b07c82b82671c22948817e9cf495fb562fc70e537d735a8df3bcb3e639fecbc/test.engine.log",
+      "sha256": "2b07c82b82671c22948817e9cf495fb562fc70e537d735a8df3bcb3e639fecbc",
+      "bytes": 7718,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-4x6xfh4o/simulated_release/test.log",
+      "archive_entry": "6c7a4ee91893dd1c6bd2171b3544d18754fbdf719329546354af0a8d2f64f867/test.log",
+      "sha256": "6c7a4ee91893dd1c6bd2171b3544d18754fbdf719329546354af0a8d2f64f867",
+      "bytes": 7736,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/import-bootstrap.engine.log",
+      "archive_entry": "3f97675100d5c1dceaba9ab4f834172a3156011c801e9115c1afb0d0e65d5839/import-bootstrap.engine.log",
+      "sha256": "3f97675100d5c1dceaba9ab4f834172a3156011c801e9115c1afb0d0e65d5839",
+      "bytes": 177598,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/import-bootstrap.log",
+      "archive_entry": "be6935131cc30272c0fec4f2e763027e88bd31a6d4ca9e20963a68f4eeb797ae/import-bootstrap.log",
+      "sha256": "be6935131cc30272c0fec4f2e763027e88bd31a6d4ca9e20963a68f4eeb797ae",
+      "bytes": 261870,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/import.engine.log",
+      "archive_entry": "2dffd6218ea2d2773d88df3233a17c8f02e722cc6c58e0a7c8b845fba2183bdd/import.engine.log",
+      "sha256": "2dffd6218ea2d2773d88df3233a17c8f02e722cc6c58e0a7c8b845fba2183bdd",
+      "bytes": 825,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/import.log",
+      "archive_entry": "555053dc1a35a92491bbb4b98f5c9f2a30f1bb42ddcea03b98f248bc5898a355/import.log",
+      "sha256": "555053dc1a35a92491bbb4b98f5c9f2a30f1bb42ddcea03b98f248bc5898a355",
+      "bytes": 1101,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/smoke.engine.log",
+      "archive_entry": "9f38128fb60a69c563b04c3c36319c2cd4fbc9d38137bfac15423e9b9dcf8faa/smoke.engine.log",
+      "sha256": "9f38128fb60a69c563b04c3c36319c2cd4fbc9d38137bfac15423e9b9dcf8faa",
+      "bytes": 4845,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/smoke.log",
+      "archive_entry": "6a4d415c6756bbb2fd3ba30436d192c027314f634dc4950620399e46c72b71a0/smoke.log",
+      "sha256": "6a4d415c6756bbb2fd3ba30436d192c027314f634dc4950620399e46c72b71a0",
+      "bytes": 4863,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-0.engine.log",
+      "archive_entry": "eae3ff4d414191fcd7f0e14d3ea73fc576413e008742b7d271d4162c634eaa8d/test-0.engine.log",
+      "sha256": "eae3ff4d414191fcd7f0e14d3ea73fc576413e008742b7d271d4162c634eaa8d",
+      "bytes": 2646,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-0.log",
+      "archive_entry": "107de2ef65123de7054d77716f38a7a3047161c913bdaad021ec41aadf14a141/test-0.log",
+      "sha256": "107de2ef65123de7054d77716f38a7a3047161c913bdaad021ec41aadf14a141",
+      "bytes": 2664,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-1.engine.log",
+      "archive_entry": "056dce4ce924e657c057576d6519b8273f9032e544ee7a4a9e403888ca3f93ea/test-1.engine.log",
+      "sha256": "056dce4ce924e657c057576d6519b8273f9032e544ee7a4a9e403888ca3f93ea",
+      "bytes": 2470,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-1.log",
+      "archive_entry": "acb99707368040d064e8b919431bc594d9a61cfaae322c56fc25db71c264efe7/test-1.log",
+      "sha256": "acb99707368040d064e8b919431bc594d9a61cfaae322c56fc25db71c264efe7",
+      "bytes": 2488,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-10.engine.log",
+      "archive_entry": "f4d9aa0cebfa385f6a39ab38b3834d459acfc12b72f637173b4b03b907ef97c9/test-10.engine.log",
+      "sha256": "f4d9aa0cebfa385f6a39ab38b3834d459acfc12b72f637173b4b03b907ef97c9",
+      "bytes": 2743,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-10.log",
+      "archive_entry": "daeae7b353582efd98205238e4399bfe16f6f098ce7a9f5b0416e6f67898f320/test-10.log",
+      "sha256": "daeae7b353582efd98205238e4399bfe16f6f098ce7a9f5b0416e6f67898f320",
+      "bytes": 2761,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-11.engine.log",
+      "archive_entry": "3bad8a3b440ee4d5f168e0ed526b21e3a1ba2e36edc2c15acbe71d8b26e5eb6d/test-11.engine.log",
+      "sha256": "3bad8a3b440ee4d5f168e0ed526b21e3a1ba2e36edc2c15acbe71d8b26e5eb6d",
+      "bytes": 2564,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-11.log",
+      "archive_entry": "e65f6e225039dafe7da9a4289989051b3b4955138b26be6e71501b29b907cf3a/test-11.log",
+      "sha256": "e65f6e225039dafe7da9a4289989051b3b4955138b26be6e71501b29b907cf3a",
+      "bytes": 2582,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-12.engine.log",
+      "archive_entry": "a08d110c314dc33338def908baa54a7ce2f42e38fc66a4b87493828851a813eb/test-12.engine.log",
+      "sha256": "a08d110c314dc33338def908baa54a7ce2f42e38fc66a4b87493828851a813eb",
+      "bytes": 5730,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-12.log",
+      "archive_entry": "7436b7b9e4afbcc517c7fedc4a5a199d984efd1c447ade93deeb9a3a39d4bce6/test-12.log",
+      "sha256": "7436b7b9e4afbcc517c7fedc4a5a199d984efd1c447ade93deeb9a3a39d4bce6",
+      "bytes": 5748,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-13.engine.log",
+      "archive_entry": "e75d63a555c121a68d18d4034b5ae149624ec100fa649948ecde6d0248cff727/test-13.engine.log",
+      "sha256": "e75d63a555c121a68d18d4034b5ae149624ec100fa649948ecde6d0248cff727",
+      "bytes": 2584,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-13.log",
+      "archive_entry": "25549fb2b8bdf89541edf50ffa5ce60148f04ad8fc4884e359632d2f1acdc60a/test-13.log",
+      "sha256": "25549fb2b8bdf89541edf50ffa5ce60148f04ad8fc4884e359632d2f1acdc60a",
+      "bytes": 2602,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-14.engine.log",
+      "archive_entry": "6d73f3a289670abe773807c42b6ffc5943b515d79207206b426091dfd1226821/test-14.engine.log",
+      "sha256": "6d73f3a289670abe773807c42b6ffc5943b515d79207206b426091dfd1226821",
+      "bytes": 4212,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-14.log",
+      "archive_entry": "bb9180bbb5b8a2fac6b6fb83c2f6587320cf5ca990d7ecccc4319ddb9c4ef197/test-14.log",
+      "sha256": "bb9180bbb5b8a2fac6b6fb83c2f6587320cf5ca990d7ecccc4319ddb9c4ef197",
+      "bytes": 4230,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-15.engine.log",
+      "archive_entry": "6ad9eb28ec929c8a958ffd64919ea94eef12e88be6c117b3ca3afd5ebdb6a99a/test-15.engine.log",
+      "sha256": "6ad9eb28ec929c8a958ffd64919ea94eef12e88be6c117b3ca3afd5ebdb6a99a",
+      "bytes": 6711,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-15.log",
+      "archive_entry": "61be5ed27f0d2308ef8f2cc0d3b4f4220eed6180657907b08ad72db185ed876e/test-15.log",
+      "sha256": "61be5ed27f0d2308ef8f2cc0d3b4f4220eed6180657907b08ad72db185ed876e",
+      "bytes": 6783,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-16.engine.log",
+      "archive_entry": "6bed06f553a15ac2d0e65d3409adb4d68eaf3f8b7d74a96b2642958ec78c18e4/test-16.engine.log",
+      "sha256": "6bed06f553a15ac2d0e65d3409adb4d68eaf3f8b7d74a96b2642958ec78c18e4",
+      "bytes": 2482,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-16.log",
+      "archive_entry": "04ee02e388b85e81505ebc2e25b334af7cfb7231552ebcfd7a39c4bcc49fdbab/test-16.log",
+      "sha256": "04ee02e388b85e81505ebc2e25b334af7cfb7231552ebcfd7a39c4bcc49fdbab",
+      "bytes": 2500,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-17.engine.log",
+      "archive_entry": "e468339cde2ff2be68f53e18d1ab50269b1467d41f9662780176104b76d90831/test-17.engine.log",
+      "sha256": "e468339cde2ff2be68f53e18d1ab50269b1467d41f9662780176104b76d90831",
+      "bytes": 8974,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-17.log",
+      "archive_entry": "ff0ead9cfce6fe1d428b3d7b2049b21acf7c1b20a40c3cafd32d565b572849f7/test-17.log",
+      "sha256": "ff0ead9cfce6fe1d428b3d7b2049b21acf7c1b20a40c3cafd32d565b572849f7",
+      "bytes": 8992,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-18.engine.log",
+      "archive_entry": "707f828f614309899ffdc6ca7dd2ef587c15a6263982cf4d3c0b5faee34ff917/test-18.engine.log",
+      "sha256": "707f828f614309899ffdc6ca7dd2ef587c15a6263982cf4d3c0b5faee34ff917",
+      "bytes": 4750,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-18.log",
+      "archive_entry": "79b205f14d9d75a93a67fd770f8ec642f0877f2aa6675b8dbf4da5bd54be7bb3/test-18.log",
+      "sha256": "79b205f14d9d75a93a67fd770f8ec642f0877f2aa6675b8dbf4da5bd54be7bb3",
+      "bytes": 4768,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-19.engine.log",
+      "archive_entry": "b7c27435bcc1a749c86afe111a715a4abdf6e20735cc7e6a17b1535da40b4405/test-19.engine.log",
+      "sha256": "b7c27435bcc1a749c86afe111a715a4abdf6e20735cc7e6a17b1535da40b4405",
+      "bytes": 3806,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-19.log",
+      "archive_entry": "0d7bbf05fc84c4a680f8a901cea82fe27e399c162d66dfcbaacf520718fb72d0/test-19.log",
+      "sha256": "0d7bbf05fc84c4a680f8a901cea82fe27e399c162d66dfcbaacf520718fb72d0",
+      "bytes": 3824,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-2.engine.log",
+      "archive_entry": "efb0cb43ee3670314d3acd602faca939b1f9cdb5931a752371d773d56b7228ee/test-2.engine.log",
+      "sha256": "efb0cb43ee3670314d3acd602faca939b1f9cdb5931a752371d773d56b7228ee",
+      "bytes": 2549,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-2.log",
+      "archive_entry": "23b90e286f55c976ed942b64b94480a49d70ff269cff9f93a349fb93bf0569b5/test-2.log",
+      "sha256": "23b90e286f55c976ed942b64b94480a49d70ff269cff9f93a349fb93bf0569b5",
+      "bytes": 2567,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-20.engine.log",
+      "archive_entry": "4e3b19888fc164d1d6cb7e6688591f381471ab1e3c2e8bcd5df5851e124ec8a7/test-20.engine.log",
+      "sha256": "4e3b19888fc164d1d6cb7e6688591f381471ab1e3c2e8bcd5df5851e124ec8a7",
+      "bytes": 2484,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-20.log",
+      "archive_entry": "fc21325e23d7e8ac5a3d7416af7bff8360e0c40207bbe16a67178ff2cabb8914/test-20.log",
+      "sha256": "fc21325e23d7e8ac5a3d7416af7bff8360e0c40207bbe16a67178ff2cabb8914",
+      "bytes": 2502,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-21.engine.log",
+      "archive_entry": "7b773e7c23e40a3e6a0331ea99114fa8f7444dc82c3e629ed763cf31e621f251/test-21.engine.log",
+      "sha256": "7b773e7c23e40a3e6a0331ea99114fa8f7444dc82c3e629ed763cf31e621f251",
+      "bytes": 14374,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-21.log",
+      "archive_entry": "75e012fcb8137803a0fda382570ddd365b88ed2899d53bf41750d5a4cdba7f8b/test-21.log",
+      "sha256": "75e012fcb8137803a0fda382570ddd365b88ed2899d53bf41750d5a4cdba7f8b",
+      "bytes": 14444,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-22.engine.log",
+      "archive_entry": "f74c9544aad9eec77a03e1abc5fde0b6426ea5ba114dfc2ad3a91b42159b359d/test-22.engine.log",
+      "sha256": "f74c9544aad9eec77a03e1abc5fde0b6426ea5ba114dfc2ad3a91b42159b359d",
+      "bytes": 2982,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-22.log",
+      "archive_entry": "48740b20fd2854b272bb3ab608e5ccfb77596bd0860731f58c0c94a2c5801352/test-22.log",
+      "sha256": "48740b20fd2854b272bb3ab608e5ccfb77596bd0860731f58c0c94a2c5801352",
+      "bytes": 3000,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-23.engine.log",
+      "archive_entry": "0f8e86f6aa799acb8e9a6168a5583f2f7ac22936acdf3569203a89a3360193c1/test-23.engine.log",
+      "sha256": "0f8e86f6aa799acb8e9a6168a5583f2f7ac22936acdf3569203a89a3360193c1",
+      "bytes": 8056,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-23.log",
+      "archive_entry": "47ce94c3c4e8eb9fef7fc955fe7066b66c2bd45c73da8467636f1f563309d46d/test-23.log",
+      "sha256": "47ce94c3c4e8eb9fef7fc955fe7066b66c2bd45c73da8467636f1f563309d46d",
+      "bytes": 8074,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-24.engine.log",
+      "archive_entry": "cf22a3a1f85aac924a5f57b6069fb90ea7e6e8f5d5e6a010bff9637403d51b48/test-24.engine.log",
+      "sha256": "cf22a3a1f85aac924a5f57b6069fb90ea7e6e8f5d5e6a010bff9637403d51b48",
+      "bytes": 6536,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-24.log",
+      "archive_entry": "cd35ad3df7f4c18db01b4f55cba2b467e86bb54ea14d7cbeaa3fbe62aad58c98/test-24.log",
+      "sha256": "cd35ad3df7f4c18db01b4f55cba2b467e86bb54ea14d7cbeaa3fbe62aad58c98",
+      "bytes": 6574,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-25.engine.log",
+      "archive_entry": "67115e197cde61daaf6792648c0ca199adbdcfb0a9d5f16104dfda8db841ed7a/test-25.engine.log",
+      "sha256": "67115e197cde61daaf6792648c0ca199adbdcfb0a9d5f16104dfda8db841ed7a",
+      "bytes": 2521,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-25.log",
+      "archive_entry": "d74b1fd2c04893040c2941c668805a68543128a581d15a356579bc1e1511b398/test-25.log",
+      "sha256": "d74b1fd2c04893040c2941c668805a68543128a581d15a356579bc1e1511b398",
+      "bytes": 2539,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-26.engine.log",
+      "archive_entry": "31adc25c77595e1c64f32dd62719eb6fe01e12b0411c5d9cb8e2eb4866b49d21/test-26.engine.log",
+      "sha256": "31adc25c77595e1c64f32dd62719eb6fe01e12b0411c5d9cb8e2eb4866b49d21",
+      "bytes": 3232,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-26.log",
+      "archive_entry": "3ba7132765e2ee7e84f99fe897a49faf417c8061aa67c2124d64e78bfd2f6e91/test-26.log",
+      "sha256": "3ba7132765e2ee7e84f99fe897a49faf417c8061aa67c2124d64e78bfd2f6e91",
+      "bytes": 3250,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-27.engine.log",
+      "archive_entry": "733387ebbd8f8b662378ea24563b56bf32b5ef87d25b9efc93986065aded4e49/test-27.engine.log",
+      "sha256": "733387ebbd8f8b662378ea24563b56bf32b5ef87d25b9efc93986065aded4e49",
+      "bytes": 2541,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-27.log",
+      "archive_entry": "cfecd0cc5b5d056543b287f2682960e7bb7120fa873ee1705409bb4597afd152/test-27.log",
+      "sha256": "cfecd0cc5b5d056543b287f2682960e7bb7120fa873ee1705409bb4597afd152",
+      "bytes": 2559,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-28.engine.log",
+      "archive_entry": "8bc16b80803597b3ce555b3e82ad0405fb1e3ba60e4541ae13e8e500699b60e3/test-28.engine.log",
+      "sha256": "8bc16b80803597b3ce555b3e82ad0405fb1e3ba60e4541ae13e8e500699b60e3",
+      "bytes": 3448,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-28.log",
+      "archive_entry": "17479940a77c94a8129ae0b1bc4fbafc7aeb14e5268e30a616bd2d5b35822d25/test-28.log",
+      "sha256": "17479940a77c94a8129ae0b1bc4fbafc7aeb14e5268e30a616bd2d5b35822d25",
+      "bytes": 3466,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-29.engine.log",
+      "archive_entry": "49150ac41a68a12c3784864331a19f71e929fa939bbb5bac12286eee3ec8fbf3/test-29.engine.log",
+      "sha256": "49150ac41a68a12c3784864331a19f71e929fa939bbb5bac12286eee3ec8fbf3",
+      "bytes": 2495,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-29.log",
+      "archive_entry": "fa7c0a83a37ba464aaad687f7465b04e33f45ef6f558d49bb8c545e5200cf75d/test-29.log",
+      "sha256": "fa7c0a83a37ba464aaad687f7465b04e33f45ef6f558d49bb8c545e5200cf75d",
+      "bytes": 2513,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-3.engine.log",
+      "archive_entry": "4dde31970b6ad5f476abc9ceadc579ade0b32c23fc959e00f62e36f8bbf5a1e1/test-3.engine.log",
+      "sha256": "4dde31970b6ad5f476abc9ceadc579ade0b32c23fc959e00f62e36f8bbf5a1e1",
+      "bytes": 3042,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-3.log",
+      "archive_entry": "ef451dc5c533b768592841340dc49287854c99a0760076afbcb628dfd78d0dad/test-3.log",
+      "sha256": "ef451dc5c533b768592841340dc49287854c99a0760076afbcb628dfd78d0dad",
+      "bytes": 3060,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-30.engine.log",
+      "archive_entry": "6a884357a7a3b7b634485bf88f47e37377809ed16c225405ae91784031405202/test-30.engine.log",
+      "sha256": "6a884357a7a3b7b634485bf88f47e37377809ed16c225405ae91784031405202",
+      "bytes": 14908,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-30.log",
+      "archive_entry": "a5954f0ccde150a800846a24ea3f5065daa3a4f3cd38329c10d9fd8990070408/test-30.log",
+      "sha256": "a5954f0ccde150a800846a24ea3f5065daa3a4f3cd38329c10d9fd8990070408",
+      "bytes": 14926,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-31.engine.log",
+      "archive_entry": "54ede25876eda90297a9d558b5448f1bf060191a12d618502dfa2b30ed4fc27a/test-31.engine.log",
+      "sha256": "54ede25876eda90297a9d558b5448f1bf060191a12d618502dfa2b30ed4fc27a",
+      "bytes": 3956,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-31.log",
+      "archive_entry": "d888f76a845170ce643452df84b433377a0217d005b1d92bb8fdb944b85a2408/test-31.log",
+      "sha256": "d888f76a845170ce643452df84b433377a0217d005b1d92bb8fdb944b85a2408",
+      "bytes": 4004,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-32.engine.log",
+      "archive_entry": "5cc4b5e662f5e53402477fb35a89177fe9c353e4f4b3ebeed2f8d7f4070df530/test-32.engine.log",
+      "sha256": "5cc4b5e662f5e53402477fb35a89177fe9c353e4f4b3ebeed2f8d7f4070df530",
+      "bytes": 2554,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-32.log",
+      "archive_entry": "9686c141467a7a87c205e87c2b9ed34834af8ddb5ec60f8d64f15b0e19848649/test-32.log",
+      "sha256": "9686c141467a7a87c205e87c2b9ed34834af8ddb5ec60f8d64f15b0e19848649",
+      "bytes": 2572,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-33.engine.log",
+      "archive_entry": "2aad94126362282dc4fe32aa39667614a4ecedc3fbebb2bb217449a17916c063/test-33.engine.log",
+      "sha256": "2aad94126362282dc4fe32aa39667614a4ecedc3fbebb2bb217449a17916c063",
+      "bytes": 2477,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-33.log",
+      "archive_entry": "0a25e3926ffa328f47b9cbf8704e47e86a7e1c59908a660948d21e09b35f7d33/test-33.log",
+      "sha256": "0a25e3926ffa328f47b9cbf8704e47e86a7e1c59908a660948d21e09b35f7d33",
+      "bytes": 2495,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-34.engine.log",
+      "archive_entry": "51937d9948ccdc2efc7fbedc8e3908d86d48b992dff243b360ca036777e5d6e6/test-34.engine.log",
+      "sha256": "51937d9948ccdc2efc7fbedc8e3908d86d48b992dff243b360ca036777e5d6e6",
+      "bytes": 21579,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-34.log",
+      "archive_entry": "350c2d8a17594e7e3594d8c2f9dca319836519b7cdc515248f229dced26aae19/test-34.log",
+      "sha256": "350c2d8a17594e7e3594d8c2f9dca319836519b7cdc515248f229dced26aae19",
+      "bytes": 21597,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-35.engine.log",
+      "archive_entry": "20f1a87cb1a8e5d86039f094ad1ebc232d0940f40ebbcbac3ee718d7c2dab8a1/test-35.engine.log",
+      "sha256": "20f1a87cb1a8e5d86039f094ad1ebc232d0940f40ebbcbac3ee718d7c2dab8a1",
+      "bytes": 2489,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-35.log",
+      "archive_entry": "16315b9da6b5109586b466a63213f59e5f2566e23c143dcbc28ec5c82a295375/test-35.log",
+      "sha256": "16315b9da6b5109586b466a63213f59e5f2566e23c143dcbc28ec5c82a295375",
+      "bytes": 2507,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-36.engine.log",
+      "archive_entry": "6132e22f32126eb436d3c38df5e61e892b2efd19a823975e779b4462b1831a1b/test-36.engine.log",
+      "sha256": "6132e22f32126eb436d3c38df5e61e892b2efd19a823975e779b4462b1831a1b",
+      "bytes": 2501,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-36.log",
+      "archive_entry": "baa78446679950dce3e2bb5e178e436239b18d89ec1f7b44cbb3cd2c3ad41885/test-36.log",
+      "sha256": "baa78446679950dce3e2bb5e178e436239b18d89ec1f7b44cbb3cd2c3ad41885",
+      "bytes": 2519,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-37.engine.log",
+      "archive_entry": "eb4c06640f40661ca63fce57c15592ae133f0b36326dde82356fb72200ed8db2/test-37.engine.log",
+      "sha256": "eb4c06640f40661ca63fce57c15592ae133f0b36326dde82356fb72200ed8db2",
+      "bytes": 41710,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-37.log",
+      "archive_entry": "c45c0d160ba902ad4708caa0115deb4d58b4d140ba760ac0f233b667a58a1685/test-37.log",
+      "sha256": "c45c0d160ba902ad4708caa0115deb4d58b4d140ba760ac0f233b667a58a1685",
+      "bytes": 41748,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-38.engine.log",
+      "archive_entry": "99615616d76a4bafc1f2a33ca8b4fb17f0a86cca6e98356c49c322f60abdf64e/test-38.engine.log",
+      "sha256": "99615616d76a4bafc1f2a33ca8b4fb17f0a86cca6e98356c49c322f60abdf64e",
+      "bytes": 14548,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-38.log",
+      "archive_entry": "dd021ad3a4196a740b0b7173f5d8f6c4905d0778a56399d229958698c017a62f/test-38.log",
+      "sha256": "dd021ad3a4196a740b0b7173f5d8f6c4905d0778a56399d229958698c017a62f",
+      "bytes": 14644,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-39.engine.log",
+      "archive_entry": "a56f0e05233fe47ed5e77dee774a7527f634ee6315356ea19788bcb5cd3538fc/test-39.engine.log",
+      "sha256": "a56f0e05233fe47ed5e77dee774a7527f634ee6315356ea19788bcb5cd3538fc",
+      "bytes": 5960,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-39.log",
+      "archive_entry": "cc4cba2351ddbb4218e7da3ffee1c26e21c9217ecf13dd74e2ae4c42e00e97d4/test-39.log",
+      "sha256": "cc4cba2351ddbb4218e7da3ffee1c26e21c9217ecf13dd74e2ae4c42e00e97d4",
+      "bytes": 5978,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-4.engine.log",
+      "archive_entry": "58ffe4d7b8efffbdaee86f2d73b864019f731f1c6d90c2cb6d6f28238b361759/test-4.engine.log",
+      "sha256": "58ffe4d7b8efffbdaee86f2d73b864019f731f1c6d90c2cb6d6f28238b361759",
+      "bytes": 9700,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-4.log",
+      "archive_entry": "8d0fda2a5d3a9345c2ac44aea6320d5ecc7d97b8befb3147d3ed0be5916734d5/test-4.log",
+      "sha256": "8d0fda2a5d3a9345c2ac44aea6320d5ecc7d97b8befb3147d3ed0be5916734d5",
+      "bytes": 9758,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-40.engine.log",
+      "archive_entry": "d5c857821cb8756e5d73eb17e8616c67b359261e0a5cb156583099af350f10fb/test-40.engine.log",
+      "sha256": "d5c857821cb8756e5d73eb17e8616c67b359261e0a5cb156583099af350f10fb",
+      "bytes": 14165,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-40.log",
+      "archive_entry": "d6d82cd644f4adaec0a6d7f32a445a0de391e8b5ae6bf5b87e72f945b9086c98/test-40.log",
+      "sha256": "d6d82cd644f4adaec0a6d7f32a445a0de391e8b5ae6bf5b87e72f945b9086c98",
+      "bytes": 14225,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-41.engine.log",
+      "archive_entry": "cd55be76e84b8217616c40fd43f9fc4268cc0cf1b4f232e602f4cf7c3e8ce277/test-41.engine.log",
+      "sha256": "cd55be76e84b8217616c40fd43f9fc4268cc0cf1b4f232e602f4cf7c3e8ce277",
+      "bytes": 22816,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-41.log",
+      "archive_entry": "ab52119d281a04e555ad21d24c4a6d96021153b8c95762a9bfad0da646ec2cb6/test-41.log",
+      "sha256": "ab52119d281a04e555ad21d24c4a6d96021153b8c95762a9bfad0da646ec2cb6",
+      "bytes": 22938,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-42.engine.log",
+      "archive_entry": "17ececd651e351ef6e7d030f49371e0cac33d559611d903205c257fc316507af/test-42.engine.log",
+      "sha256": "17ececd651e351ef6e7d030f49371e0cac33d559611d903205c257fc316507af",
+      "bytes": 68837,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-42.log",
+      "archive_entry": "7cd66d4c38a538295cfe3ae4f3ffe071d3561d24b5d8bb3bec4b9502540c06e1/test-42.log",
+      "sha256": "7cd66d4c38a538295cfe3ae4f3ffe071d3561d24b5d8bb3bec4b9502540c06e1",
+      "bytes": 68855,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-43.engine.log",
+      "archive_entry": "792d100f3f5a6c0fbfa7434c3708db4b73400efb35a78cda955db6cf0bebcacc/test-43.engine.log",
+      "sha256": "792d100f3f5a6c0fbfa7434c3708db4b73400efb35a78cda955db6cf0bebcacc",
+      "bytes": 82329,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-43.log",
+      "archive_entry": "71f48cbde3301f312cacc532a19656e401511d255ae2c758ee694c36662b6af1/test-43.log",
+      "sha256": "71f48cbde3301f312cacc532a19656e401511d255ae2c758ee694c36662b6af1",
+      "bytes": 82347,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-44.engine.log",
+      "archive_entry": "14801af5dd30245646d120dc029e49b1fc2ac7631bdce6f5bef2729c02d19b7f/test-44.engine.log",
+      "sha256": "14801af5dd30245646d120dc029e49b1fc2ac7631bdce6f5bef2729c02d19b7f",
+      "bytes": 23810,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-44.log",
+      "archive_entry": "0ddf97ea284f307c97027aeda9e05b7f5a581c51158d11b905befa96acd18139/test-44.log",
+      "sha256": "0ddf97ea284f307c97027aeda9e05b7f5a581c51158d11b905befa96acd18139",
+      "bytes": 23852,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-45.engine.log",
+      "archive_entry": "9b8c1f9bc9250173f0fd2543be0f073d7cb4deb5ac37722aa33d9716de27f8ff/test-45.engine.log",
+      "sha256": "9b8c1f9bc9250173f0fd2543be0f073d7cb4deb5ac37722aa33d9716de27f8ff",
+      "bytes": 43586,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-45.log",
+      "archive_entry": "f2174a99998d409e3a74e6b88ec03568770eb671d72e778048b0ee2ea66b5c21/test-45.log",
+      "sha256": "f2174a99998d409e3a74e6b88ec03568770eb671d72e778048b0ee2ea66b5c21",
+      "bytes": 43716,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-46.engine.log",
+      "archive_entry": "8eacce788360e75c0164cd6731f907713433081dfd6a498e90f7d30d40c30b49/test-46.engine.log",
+      "sha256": "8eacce788360e75c0164cd6731f907713433081dfd6a498e90f7d30d40c30b49",
+      "bytes": 86879,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-46.log",
+      "archive_entry": "945f8fcca634940ef1bb83a6055db14b8bf0939050ef0a317a5c394d29034444/test-46.log",
+      "sha256": "945f8fcca634940ef1bb83a6055db14b8bf0939050ef0a317a5c394d29034444",
+      "bytes": 87167,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-47.engine.log",
+      "archive_entry": "0cba924a4f8a6cd1cee27c54a99068e2e994e7b584736d908b74ac98be9575e3/test-47.engine.log",
+      "sha256": "0cba924a4f8a6cd1cee27c54a99068e2e994e7b584736d908b74ac98be9575e3",
+      "bytes": 254199,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-47.log",
+      "archive_entry": "264e13dfe8180c69d539123644983ca7577bb86b836d08eb5e340dcb579d31f2/test-47.log",
+      "sha256": "264e13dfe8180c69d539123644983ca7577bb86b836d08eb5e340dcb579d31f2",
+      "bytes": 254393,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-48.engine.log",
+      "archive_entry": "39331844c45d980d548ae4f6b2be1bd34ff1cfe5c283a825be05027bfb6df4a6/test-48.engine.log",
+      "sha256": "39331844c45d980d548ae4f6b2be1bd34ff1cfe5c283a825be05027bfb6df4a6",
+      "bytes": 7619,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-48.log",
+      "archive_entry": "621b5c8f9047ed2611b2e18dec758ee188fb7d3154d25d76c5956fb407fb7300/test-48.log",
+      "sha256": "621b5c8f9047ed2611b2e18dec758ee188fb7d3154d25d76c5956fb407fb7300",
+      "bytes": 7637,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-49.engine.log",
+      "archive_entry": "e8dcd498c586b71b295f8c486d5919f71e9953604314e1db3cf2b23b0d6a9cbc/test-49.engine.log",
+      "sha256": "e8dcd498c586b71b295f8c486d5919f71e9953604314e1db3cf2b23b0d6a9cbc",
+      "bytes": 73190,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-49.log",
+      "archive_entry": "e2a585571c9ec03abb7dc65a8ddef5704dc7640f6924b3216b9afc5627396b97/test-49.log",
+      "sha256": "e2a585571c9ec03abb7dc65a8ddef5704dc7640f6924b3216b9afc5627396b97",
+      "bytes": 73520,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-5.engine.log",
+      "archive_entry": "b3e8e3fc9b39e8aec98a3721e13b06e4d15132ba9b5a4c3eaa5f10541c44b9ec/test-5.engine.log",
+      "sha256": "b3e8e3fc9b39e8aec98a3721e13b06e4d15132ba9b5a4c3eaa5f10541c44b9ec",
+      "bytes": 24690,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-5.log",
+      "archive_entry": "80e03d9e0a54f96fa0036318b676aaddcf7338386aafb4a749aa5aeb6b968aa4/test-5.log",
+      "sha256": "80e03d9e0a54f96fa0036318b676aaddcf7338386aafb4a749aa5aeb6b968aa4",
+      "bytes": 24728,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-50.engine.log",
+      "archive_entry": "153bf1cc754ffb60778da6eb73c371a0532c1be36e0c59623e100ae85f6a9c82/test-50.engine.log",
+      "sha256": "153bf1cc754ffb60778da6eb73c371a0532c1be36e0c59623e100ae85f6a9c82",
+      "bytes": 121088,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-50.log",
+      "archive_entry": "de57cd9647d8b19984fe19c07e14f7000e262ed4a24d085eb375e53e96e5236d/test-50.log",
+      "sha256": "de57cd9647d8b19984fe19c07e14f7000e262ed4a24d085eb375e53e96e5236d",
+      "bytes": 121330,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-51.engine.log",
+      "archive_entry": "0573200911a104795565799046def05016d0d9a583fa70a08405e8423e148be1/test-51.engine.log",
+      "sha256": "0573200911a104795565799046def05016d0d9a583fa70a08405e8423e148be1",
+      "bytes": 30394,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-51.log",
+      "archive_entry": "6b10895cf414ac12f5dbedf9b6c986f2e94bfc650d5a64793a77a0159065d784/test-51.log",
+      "sha256": "6b10895cf414ac12f5dbedf9b6c986f2e94bfc650d5a64793a77a0159065d784",
+      "bytes": 30504,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-52.engine.log",
+      "archive_entry": "c4fb170a38e460edf252b9bed587dd0e892c7eed972ebfd1681a03131e6c1f61/test-52.engine.log",
+      "sha256": "c4fb170a38e460edf252b9bed587dd0e892c7eed972ebfd1681a03131e6c1f61",
+      "bytes": 96718,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-52.log",
+      "archive_entry": "0a46ea86082cb04b2503be501d847477a2f26cddeb2ab7254954e8001818634e/test-52.log",
+      "sha256": "0a46ea86082cb04b2503be501d847477a2f26cddeb2ab7254954e8001818634e",
+      "bytes": 96896,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-53.engine.log",
+      "archive_entry": "31d90dc0164a15b4c03a57cd9682de99627e383cbea5f413543ab329e6d1c671/test-53.engine.log",
+      "sha256": "31d90dc0164a15b4c03a57cd9682de99627e383cbea5f413543ab329e6d1c671",
+      "bytes": 73968,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-53.log",
+      "archive_entry": "30acf57a87263157f65fa4c9ff0d8882aa55a64cc77d513a8a00192f335928b3/test-53.log",
+      "sha256": "30acf57a87263157f65fa4c9ff0d8882aa55a64cc77d513a8a00192f335928b3",
+      "bytes": 74094,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-54.engine.log",
+      "archive_entry": "e664a5cc2a1d9e6866f5f9ec418209ef725d72f7d05f82d96b8739b871ab91b0/test-54.engine.log",
+      "sha256": "e664a5cc2a1d9e6866f5f9ec418209ef725d72f7d05f82d96b8739b871ab91b0",
+      "bytes": 17012,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-54.log",
+      "archive_entry": "c851ed708e92215fc4451c869ffe97e7b1ddad3bd29ca7a3cd571b2b74fd98be/test-54.log",
+      "sha256": "c851ed708e92215fc4451c869ffe97e7b1ddad3bd29ca7a3cd571b2b74fd98be",
+      "bytes": 17042,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-55.engine.log",
+      "archive_entry": "79260213808204d9b098ddc690fad98a35ae04c419927d455e9e0216007a2ec1/test-55.engine.log",
+      "sha256": "79260213808204d9b098ddc690fad98a35ae04c419927d455e9e0216007a2ec1",
+      "bytes": 24242,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-55.log",
+      "archive_entry": "e6afb143fb0b4fc45e7f83dc6d4a30f6d00038e6dd13d9b9a1f1f214fe4746db/test-55.log",
+      "sha256": "e6afb143fb0b4fc45e7f83dc6d4a30f6d00038e6dd13d9b9a1f1f214fe4746db",
+      "bytes": 24296,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-56.engine.log",
+      "archive_entry": "da48f3d6ff7d15baecea321ae67fb52cc64816fabad076cc5c2dc1394a52911a/test-56.engine.log",
+      "sha256": "da48f3d6ff7d15baecea321ae67fb52cc64816fabad076cc5c2dc1394a52911a",
+      "bytes": 89773,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-56.log",
+      "archive_entry": "6b8bd60c7b688b3060a38e19ea718780e8cb50cb1e14d5ef28a267dc10b8b276/test-56.log",
+      "sha256": "6b8bd60c7b688b3060a38e19ea718780e8cb50cb1e14d5ef28a267dc10b8b276",
+      "bytes": 89835,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-57.engine.log",
+      "archive_entry": "8bc4e191daeebebb69dba0829c2c9a490cf33a4eeb4b0f728d7d7293c42dc753/test-57.engine.log",
+      "sha256": "8bc4e191daeebebb69dba0829c2c9a490cf33a4eeb4b0f728d7d7293c42dc753",
+      "bytes": 15869,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-57.log",
+      "archive_entry": "0ba1aec426c5e48823dd9f24b59b75787bbffe3ada87cc229e77dab921ecd28d/test-57.log",
+      "sha256": "0ba1aec426c5e48823dd9f24b59b75787bbffe3ada87cc229e77dab921ecd28d",
+      "bytes": 15887,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-58.engine.log",
+      "archive_entry": "8ed1df0d923b1928e2f69fd7e57c59a8ef0a5b94256022b97c87b9ad8010a91c/test-58.engine.log",
+      "sha256": "8ed1df0d923b1928e2f69fd7e57c59a8ef0a5b94256022b97c87b9ad8010a91c",
+      "bytes": 2702,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-58.log",
+      "archive_entry": "36928189ad2d3012c28df2aca89b7f09bb8442516fc33a24823311266ba365c7/test-58.log",
+      "sha256": "36928189ad2d3012c28df2aca89b7f09bb8442516fc33a24823311266ba365c7",
+      "bytes": 2720,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-59.engine.log",
+      "archive_entry": "768d18e68fbdc38cf0095dfe459bacbcef22563f8e09a4e3a8c3c3f5e862812f/test-59.engine.log",
+      "sha256": "768d18e68fbdc38cf0095dfe459bacbcef22563f8e09a4e3a8c3c3f5e862812f",
+      "bytes": 21214,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-59.log",
+      "archive_entry": "2de564c7b2f8bcf5df53ea9bf8f9aa8283098ef6040f9ac5b872c303ce13d1d8/test-59.log",
+      "sha256": "2de564c7b2f8bcf5df53ea9bf8f9aa8283098ef6040f9ac5b872c303ce13d1d8",
+      "bytes": 21244,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-6.engine.log",
+      "archive_entry": "9de3e2e971557b8a006c445676879e4cb59e520d2f426bf18369bfc3575f6051/test-6.engine.log",
+      "sha256": "9de3e2e971557b8a006c445676879e4cb59e520d2f426bf18369bfc3575f6051",
+      "bytes": 2485,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-6.log",
+      "archive_entry": "b94948fe8135ea621e39386a291f43ccbdaeefbb1ff4327972e86c3a6cb2ed03/test-6.log",
+      "sha256": "b94948fe8135ea621e39386a291f43ccbdaeefbb1ff4327972e86c3a6cb2ed03",
+      "bytes": 2503,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-60.engine.log",
+      "archive_entry": "a979ec1ff9c40d95cdd0a39792d3bf04d6d0a7dde2606d74fc2d5fe1e06aa500/test-60.engine.log",
+      "sha256": "a979ec1ff9c40d95cdd0a39792d3bf04d6d0a7dde2606d74fc2d5fe1e06aa500",
+      "bytes": 8277,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-60.log",
+      "archive_entry": "848d60c2c1c04fe1ff5ee5501dfb2e9b37219a539d5e7479b16e9047b026c810/test-60.log",
+      "sha256": "848d60c2c1c04fe1ff5ee5501dfb2e9b37219a539d5e7479b16e9047b026c810",
+      "bytes": 8295,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-61.engine.log",
+      "archive_entry": "c8874b54fc9e29b137106764520c76b90f2e596f39250a30ea0b0f1f09ecbb5d/test-61.engine.log",
+      "sha256": "c8874b54fc9e29b137106764520c76b90f2e596f39250a30ea0b0f1f09ecbb5d",
+      "bytes": 20519,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-61.log",
+      "archive_entry": "47dda7193c0de37511242acdd606668dad0ed56112dc77829a1a0891450349cb/test-61.log",
+      "sha256": "47dda7193c0de37511242acdd606668dad0ed56112dc77829a1a0891450349cb",
+      "bytes": 20537,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-62.engine.log",
+      "archive_entry": "471de6403aceee7bccb1d3acc6a87f894574206f2d1f6aae67031dbcf383207d/test-62.engine.log",
+      "sha256": "471de6403aceee7bccb1d3acc6a87f894574206f2d1f6aae67031dbcf383207d",
+      "bytes": 2486,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-62.log",
+      "archive_entry": "5b560af8dcdb7664e41512253158171635bb6f7345c0278e27f664f06dc0ff4c/test-62.log",
+      "sha256": "5b560af8dcdb7664e41512253158171635bb6f7345c0278e27f664f06dc0ff4c",
+      "bytes": 2504,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-63.engine.log",
+      "archive_entry": "cfc7e1adb95e863ef17e2468eea28e11f0f383d2ff84732a78efd4535e695017/test-63.engine.log",
+      "sha256": "cfc7e1adb95e863ef17e2468eea28e11f0f383d2ff84732a78efd4535e695017",
+      "bytes": 2489,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-63.log",
+      "archive_entry": "9de6830ec18ee63b37162bf5b153aa519ae3e688f479a6bda98b5288fcaf9aa1/test-63.log",
+      "sha256": "9de6830ec18ee63b37162bf5b153aa519ae3e688f479a6bda98b5288fcaf9aa1",
+      "bytes": 2507,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-64.engine.log",
+      "archive_entry": "265efe0472016cda4cfc1651f8b393e0a1845c75d3aea5bdab6c43acd8f51009/test-64.engine.log",
+      "sha256": "265efe0472016cda4cfc1651f8b393e0a1845c75d3aea5bdab6c43acd8f51009",
+      "bytes": 2494,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-64.log",
+      "archive_entry": "eb4f20770e174aab2f9d39c3c7241467ef22183253c23747f0109aaa5cc740b0/test-64.log",
+      "sha256": "eb4f20770e174aab2f9d39c3c7241467ef22183253c23747f0109aaa5cc740b0",
+      "bytes": 2512,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-65.engine.log",
+      "archive_entry": "5c9393e76bf4890872eed09c529f38180e8675cf20c4508dea1266ae5308d382/test-65.engine.log",
+      "sha256": "5c9393e76bf4890872eed09c529f38180e8675cf20c4508dea1266ae5308d382",
+      "bytes": 2548,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-65.log",
+      "archive_entry": "0a11fb39b818848d53542c9f2337d5b42a69c18d27b5a7d0d9f0a6f13922e3b3/test-65.log",
+      "sha256": "0a11fb39b818848d53542c9f2337d5b42a69c18d27b5a7d0d9f0a6f13922e3b3",
+      "bytes": 2566,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-66.engine.log",
+      "archive_entry": "4515e7f070778e292e7386fffbaa85baa452c4c4d6d2584c4a8913ffab5e0c22/test-66.engine.log",
+      "sha256": "4515e7f070778e292e7386fffbaa85baa452c4c4d6d2584c4a8913ffab5e0c22",
+      "bytes": 6774,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-66.log",
+      "archive_entry": "3db59317be09bde3a341e9a7098869ac6c85c96839201d1fbeccd5e1f7510add/test-66.log",
+      "sha256": "3db59317be09bde3a341e9a7098869ac6c85c96839201d1fbeccd5e1f7510add",
+      "bytes": 6792,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-67.engine.log",
+      "archive_entry": "7601db45b560b8e036c1e7fc1599c798036b2a87ffe057f1d57ce2276f930060/test-67.engine.log",
+      "sha256": "7601db45b560b8e036c1e7fc1599c798036b2a87ffe057f1d57ce2276f930060",
+      "bytes": 8475,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-67.log",
+      "archive_entry": "c75a7da6dfaf347807dc7f7e39540fbf2034d77e1702e0d53dd7a1620a206bb5/test-67.log",
+      "sha256": "c75a7da6dfaf347807dc7f7e39540fbf2034d77e1702e0d53dd7a1620a206bb5",
+      "bytes": 8513,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-68.engine.log",
+      "archive_entry": "aa4b63bc0322ecb7b777b1cfd5e4cad2aab46eb4be404d15b5a57aae4441e9c0/test-68.engine.log",
+      "sha256": "aa4b63bc0322ecb7b777b1cfd5e4cad2aab46eb4be404d15b5a57aae4441e9c0",
+      "bytes": 6455,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-68.log",
+      "archive_entry": "94c940a9a60f77e40abcaa6116dd8d02da60d7ca3389d055bf7136aab9b9be16/test-68.log",
+      "sha256": "94c940a9a60f77e40abcaa6116dd8d02da60d7ca3389d055bf7136aab9b9be16",
+      "bytes": 6473,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-69.engine.log",
+      "archive_entry": "e91e1202277f844c471196d6f4e68293cf3d4910ad89ceab08515e7c4fde8247/test-69.engine.log",
+      "sha256": "e91e1202277f844c471196d6f4e68293cf3d4910ad89ceab08515e7c4fde8247",
+      "bytes": 10709,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-69.log",
+      "archive_entry": "fd33c1b2c69b78cb0577f68e9e3893d131ccfac7f1c0ea853d40183cfe771068/test-69.log",
+      "sha256": "fd33c1b2c69b78cb0577f68e9e3893d131ccfac7f1c0ea853d40183cfe771068",
+      "bytes": 10727,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-7.engine.log",
+      "archive_entry": "d0ee78f216b1f5b91adb8dec87705fb8fbefd084e3ffea72be3517f9e99df7c5/test-7.engine.log",
+      "sha256": "d0ee78f216b1f5b91adb8dec87705fb8fbefd084e3ffea72be3517f9e99df7c5",
+      "bytes": 3861,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-7.log",
+      "archive_entry": "c1a2efcb307023094e3f88f7294627472367fcb48ceca60a8df3789edc44384e/test-7.log",
+      "sha256": "c1a2efcb307023094e3f88f7294627472367fcb48ceca60a8df3789edc44384e",
+      "bytes": 3915,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-70.engine.log",
+      "archive_entry": "1884266e84b05bb5e8dccae4892019744a9693a520263e84ef9b1aebb59ca5b9/test-70.engine.log",
+      "sha256": "1884266e84b05bb5e8dccae4892019744a9693a520263e84ef9b1aebb59ca5b9",
+      "bytes": 8000,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-70.log",
+      "archive_entry": "94d91f416b9565adc1d166c5f70fa7e149039b66510a20ae219be91a555215ba/test-70.log",
+      "sha256": "94d91f416b9565adc1d166c5f70fa7e149039b66510a20ae219be91a555215ba",
+      "bytes": 8018,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-71.engine.log",
+      "archive_entry": "25f69000166327470f0d6788f4a7cc4fad7fbacc770cb17682c09245ed5ec180/test-71.engine.log",
+      "sha256": "25f69000166327470f0d6788f4a7cc4fad7fbacc770cb17682c09245ed5ec180",
+      "bytes": 3816,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-71.log",
+      "archive_entry": "5794105d26135be69d6b44823fbbea9dfdde24fd40fb3a21396f8dcd71cda9d6/test-71.log",
+      "sha256": "5794105d26135be69d6b44823fbbea9dfdde24fd40fb3a21396f8dcd71cda9d6",
+      "bytes": 3834,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-72.engine.log",
+      "archive_entry": "9653e00fa46dd77b14e26c7f55470151072a3ac05e27f8465fe43e7a9e1e3e8d/test-72.engine.log",
+      "sha256": "9653e00fa46dd77b14e26c7f55470151072a3ac05e27f8465fe43e7a9e1e3e8d",
+      "bytes": 2495,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-72.log",
+      "archive_entry": "229ecf088cd2b377f9991778d61ab73ff379a3783a1b556cc8ada9354701cf0f/test-72.log",
+      "sha256": "229ecf088cd2b377f9991778d61ab73ff379a3783a1b556cc8ada9354701cf0f",
+      "bytes": 2513,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-73.engine.log",
+      "archive_entry": "d8e2747a7731f5cdcc29db9204ecb2210c87551ce2d7e7ce1e014edf492d79b7/test-73.engine.log",
+      "sha256": "d8e2747a7731f5cdcc29db9204ecb2210c87551ce2d7e7ce1e014edf492d79b7",
+      "bytes": 8943,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-73.log",
+      "archive_entry": "5ce15f8b0f2dedfc2e77783c962b961ee8b9012103998d6e9f13372138eee3e8/test-73.log",
+      "sha256": "5ce15f8b0f2dedfc2e77783c962b961ee8b9012103998d6e9f13372138eee3e8",
+      "bytes": 8961,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-74.engine.log",
+      "archive_entry": "4deabc1c31ac3a8cdfaf435e3b7b31624cb431bc0a3f7b3b9cdab02ca4c9a8fc/test-74.engine.log",
+      "sha256": "4deabc1c31ac3a8cdfaf435e3b7b31624cb431bc0a3f7b3b9cdab02ca4c9a8fc",
+      "bytes": 3449,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-74.log",
+      "archive_entry": "1de85def3ffa95b32a6272c75aace205552db643f63fae72b543e4a907305b45/test-74.log",
+      "sha256": "1de85def3ffa95b32a6272c75aace205552db643f63fae72b543e4a907305b45",
+      "bytes": 3467,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-75.engine.log",
+      "archive_entry": "cfcd811f549a8050d94d2e3c3bdac0ea73bd9de4e81be28f60d508e3346213d3/test-75.engine.log",
+      "sha256": "cfcd811f549a8050d94d2e3c3bdac0ea73bd9de4e81be28f60d508e3346213d3",
+      "bytes": 15785,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-75.log",
+      "archive_entry": "402fe28bef4572c8c4b4c2388a509a3c1c174cb16a61ae7900a3c91433fe14c0/test-75.log",
+      "sha256": "402fe28bef4572c8c4b4c2388a509a3c1c174cb16a61ae7900a3c91433fe14c0",
+      "bytes": 15827,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-76.engine.log",
+      "archive_entry": "c830d717491b9ce623947d7fa0912f7b71c73d550d8c38e2aa22cb405697d1a3/test-76.engine.log",
+      "sha256": "c830d717491b9ce623947d7fa0912f7b71c73d550d8c38e2aa22cb405697d1a3",
+      "bytes": 15763,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-76.log",
+      "archive_entry": "3b4b0c7407a6c6f3ff5682859cafd411cfe9f3d4f290340b07450e7cc6b3a44b/test-76.log",
+      "sha256": "3b4b0c7407a6c6f3ff5682859cafd411cfe9f3d4f290340b07450e7cc6b3a44b",
+      "bytes": 15781,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-77.engine.log",
+      "archive_entry": "fd856d09b8547c0c4512ac7501342dbc58ce7a8003d9008c6adab274995bf370/test-77.engine.log",
+      "sha256": "fd856d09b8547c0c4512ac7501342dbc58ce7a8003d9008c6adab274995bf370",
+      "bytes": 11762,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-77.log",
+      "archive_entry": "d55de8ba7d76c7a258ccfec66b7a11ce64fdfe649dc9153eee02a10ef7b3ad94/test-77.log",
+      "sha256": "d55de8ba7d76c7a258ccfec66b7a11ce64fdfe649dc9153eee02a10ef7b3ad94",
+      "bytes": 11780,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-78.engine.log",
+      "archive_entry": "0182eecdf6035a4c3e1474e0ead100d14243c7d93f0d48611a5abf92f5f23cb1/test-78.engine.log",
+      "sha256": "0182eecdf6035a4c3e1474e0ead100d14243c7d93f0d48611a5abf92f5f23cb1",
+      "bytes": 3160,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-78.log",
+      "archive_entry": "871f1eb07e64d4b5481611e3b3a3af346ca5b0119cd86f473f0d833936bb1d31/test-78.log",
+      "sha256": "871f1eb07e64d4b5481611e3b3a3af346ca5b0119cd86f473f0d833936bb1d31",
+      "bytes": 3178,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-79.engine.log",
+      "archive_entry": "7a3277da185a3bd95e44dfca88d83e36881965735f660bc2d2ca32e8e46b3054/test-79.engine.log",
+      "sha256": "7a3277da185a3bd95e44dfca88d83e36881965735f660bc2d2ca32e8e46b3054",
+      "bytes": 5357,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-79.log",
+      "archive_entry": "7083b51dd2aa4e41b49334fd061f324060e16f3345f4a913b7be256d70103ac0/test-79.log",
+      "sha256": "7083b51dd2aa4e41b49334fd061f324060e16f3345f4a913b7be256d70103ac0",
+      "bytes": 5375,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-8.engine.log",
+      "archive_entry": "2ac1fc1f3ad9215c38111e8eecb85e0e2973b670b95586664c0315b97d9ce6d6/test-8.engine.log",
+      "sha256": "2ac1fc1f3ad9215c38111e8eecb85e0e2973b670b95586664c0315b97d9ce6d6",
+      "bytes": 3179,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-8.log",
+      "archive_entry": "292311066c7ed3e7297fd830044aa63d6b9abf552ec2634e66f9e356ecfe0b6a/test-8.log",
+      "sha256": "292311066c7ed3e7297fd830044aa63d6b9abf552ec2634e66f9e356ecfe0b6a",
+      "bytes": 3213,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-80.engine.log",
+      "archive_entry": "bbdfd8936239eb78895ba8e9c10f01531dae3a01abe625fb29a7058d30ff4238/test-80.engine.log",
+      "sha256": "bbdfd8936239eb78895ba8e9c10f01531dae3a01abe625fb29a7058d30ff4238",
+      "bytes": 2484,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-80.log",
+      "archive_entry": "949c362ecdf308a4042d16c310cf3c07e01cda46f257769879af7fee08622f35/test-80.log",
+      "sha256": "949c362ecdf308a4042d16c310cf3c07e01cda46f257769879af7fee08622f35",
+      "bytes": 2502,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-81.engine.log",
+      "archive_entry": "ad440abcdffa646770ab38d444d4bc1bbf22b8336b1f3a5edae62750a6d8f3c7/test-81.engine.log",
+      "sha256": "ad440abcdffa646770ab38d444d4bc1bbf22b8336b1f3a5edae62750a6d8f3c7",
+      "bytes": 2819,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-81.log",
+      "archive_entry": "87856f370855488fa47253fae4d441c29d516eafcd64d94ef5c6c38536049950/test-81.log",
+      "sha256": "87856f370855488fa47253fae4d441c29d516eafcd64d94ef5c6c38536049950",
+      "bytes": 2837,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-82.engine.log",
+      "archive_entry": "d9f668651f3ab5d1fc5c142c3fcee0f2ef253440450b7deaa783ad04668cb960/test-82.engine.log",
+      "sha256": "d9f668651f3ab5d1fc5c142c3fcee0f2ef253440450b7deaa783ad04668cb960",
+      "bytes": 7945,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-82.log",
+      "archive_entry": "b8ddd95d726ae4a4a5adb23256615812cad01c65aa0fa168439e5622ebd2bd07/test-82.log",
+      "sha256": "b8ddd95d726ae4a4a5adb23256615812cad01c65aa0fa168439e5622ebd2bd07",
+      "bytes": 7963,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-83.engine.log",
+      "archive_entry": "964d6c02964f7ddce888cd07fa6c54d00f25620659a31cf3ba627820c7e22902/test-83.engine.log",
+      "sha256": "964d6c02964f7ddce888cd07fa6c54d00f25620659a31cf3ba627820c7e22902",
+      "bytes": 21403,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-83.log",
+      "archive_entry": "7e3370e9fd920465800ca54a16ece050f52cc4318d5ec1861502752bd839e19c/test-83.log",
+      "sha256": "7e3370e9fd920465800ca54a16ece050f52cc4318d5ec1861502752bd839e19c",
+      "bytes": 21421,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-84.engine.log",
+      "archive_entry": "44f5c803b76e06d4f96c9493b49dbb1678e4da5f107983813b9ce59c95852048/test-84.engine.log",
+      "sha256": "44f5c803b76e06d4f96c9493b49dbb1678e4da5f107983813b9ce59c95852048",
+      "bytes": 2491,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-84.log",
+      "archive_entry": "1052cbea3867f7f24f316e6b3b1f22c9e6e42b0bcf08ec3b5b8bfb23ddbbfcf4/test-84.log",
+      "sha256": "1052cbea3867f7f24f316e6b3b1f22c9e6e42b0bcf08ec3b5b8bfb23ddbbfcf4",
+      "bytes": 2509,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-85.engine.log",
+      "archive_entry": "c2dc380b05bdd2bf4b37de8acb205a3f58431f00c97cb921def02e061b71223d/test-85.engine.log",
+      "sha256": "c2dc380b05bdd2bf4b37de8acb205a3f58431f00c97cb921def02e061b71223d",
+      "bytes": 2535,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-85.log",
+      "archive_entry": "c71ffb92cfa52afd7663a41f6eb20afabd21f27a82e09faa2898f95a4490a8cb/test-85.log",
+      "sha256": "c71ffb92cfa52afd7663a41f6eb20afabd21f27a82e09faa2898f95a4490a8cb",
+      "bytes": 2553,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-86.engine.log",
+      "archive_entry": "fc86fb6dd7dec855ae1a43c8366fdb045305347ae918c287e1b2cde37fbcb0a7/test-86.engine.log",
+      "sha256": "fc86fb6dd7dec855ae1a43c8366fdb045305347ae918c287e1b2cde37fbcb0a7",
+      "bytes": 4492,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-86.log",
+      "archive_entry": "0407bf0f210c04f5577b1a5b6cb2cc9027e0b64570e6ea3daaa324b14787310b/test-86.log",
+      "sha256": "0407bf0f210c04f5577b1a5b6cb2cc9027e0b64570e6ea3daaa324b14787310b",
+      "bytes": 4510,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-9.engine.log",
+      "archive_entry": "21c08031d361183839e91d365cbf39d31d4d5aa7e2fcdcac92cd7a5cf206231d/test-9.engine.log",
+      "sha256": "21c08031d361183839e91d365cbf39d31d4d5aa7e2fcdcac92cd7a5cf206231d",
+      "bytes": 2483,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    },
+    {
+      "original_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-gjme6ilf/test-9.log",
+      "archive_entry": "7d98565414a2988b68514c221cd941177947911e6084951afad927345671d205/test-9.log",
+      "sha256": "7d98565414a2988b68514c221cd941177947911e6084951afad927345671d205",
+      "bytes": 2501,
+      "recorded_sha256": null,
+      "recorded_hash_verified": false
+    }
+  ],
+  "inline_logs_in_reports": [
+    {
+      "document": "content-report.json",
+      "pointer": "$/steps/1/log",
+      "sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d"
+    },
+    {
+      "document": "content-report.json",
+      "pointer": "$/steps/2/log",
+      "sha256": "fbc5f56108dec77547326216ed5f4b58018488cd7ac0cd4a0e41ad97ba2476fa"
+    },
+    {
+      "document": "content-report.json",
+      "pointer": "$/steps/3/log",
+      "sha256": "672761cc2d6f8dab219d70dc42f2818b05e28ce2a993c046b43d00a053a72868"
+    },
+    {
+      "document": "content-report.json",
+      "pointer": "$/steps/4/log",
+      "sha256": "90257417ff23b2152eb3f4fdec8dfd8d2ab64acb748fd06b321da41035a5c90a"
+    },
+    {
+      "document": "content-report.json",
+      "pointer": "$/steps/5/log",
+      "sha256": "4eff2e2e517477f91775b74abd54a9c75182c9cd8018829d8cf809440ebaac89"
+    },
+    {
+      "document": "content-report.json",
+      "pointer": "$/steps/6/log",
+      "sha256": "afe2930e0bb9221d03ab115f0d72c824a52407115422880d23a4108aa162f582"
+    },
+    {
+      "document": "content-report.json",
+      "pointer": "$/steps/7/log",
+      "sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1"
+    },
+    {
+      "document": "spine-report.json",
+      "pointer": "$/steps/0/log",
+      "sha256": "7a0cbd8aa7c3ac34db2d71c679e2a898c432d6be890a21af7420e583564c1de5"
+    },
+    {
+      "document": "spine-report.json",
+      "pointer": "$/steps/1/log",
+      "sha256": "8938c3cc2ff0f69a8d7eafdfda7301c3911c54b6902161b99efea9fa3748d64c"
+    }
+  ],
+  "inline_engine_log_substitutions": [
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/resume.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "spine-report.json",
+          "pointer": "$/steps/1/log",
+          "sha256": "8938c3cc2ff0f69a8d7eafdfda7301c3911c54b6902161b99efea9fa3748d64c",
+          "recorded_inline_sha256": "8938c3cc2ff0f69a8d7eafdfda7301c3911c54b6902161b99efea9fa3748d64c",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/resume.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/project",
+            "--script",
+            "res://test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388",
+            "resume"
+          ],
+          "source_document_sha256": "48496a57528a8bf6d09a0cc20a0c993981f7c62695183d654dfb3cadf640b6ce",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/test.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "spine-report.json",
+          "pointer": "$/steps/0/log",
+          "sha256": "7a0cbd8aa7c3ac34db2d71c679e2a898c432d6be890a21af7420e583564c1de5",
+          "recorded_inline_sha256": "7a0cbd8aa7c3ac34db2d71c679e2a898c432d6be890a21af7420e583564c1de5",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/test.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388/project",
+            "--script",
+            "res://test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-spine-test-61ff6388"
+          ],
+          "source_document_sha256": "48496a57528a8bf6d09a0cc20a0c993981f7c62695183d654dfb3cadf640b6ce",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-first.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/6/log",
+          "sha256": "afe2930e0bb9221d03ab115f0d72c824a52407115422880d23a4108aa162f582",
+          "recorded_inline_sha256": "afe2930e0bb9221d03ab115f0d72c824a52407115422880d23a4108aa162f582",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-first.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+            "--script",
+            "res://bootstrap-test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-import.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/5/log",
+          "sha256": "4eff2e2e517477f91775b74abd54a9c75182c9cd8018829d8cf809440ebaac89",
+          "recorded_inline_sha256": "4eff2e2e517477f91775b74abd54a9c75182c9cd8018829d8cf809440ebaac89",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-import.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+            "--editor",
+            "--import"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-resume.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/7/log",
+          "sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1",
+          "recorded_inline_sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-resume.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/bootstrap-project",
+            "--script",
+            "res://bootstrap-test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264",
+            "resume"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-0.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/1/log",
+          "sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d",
+          "recorded_inline_sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-0.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://test.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264/http"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-1.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/2/log",
+          "sha256": "fbc5f56108dec77547326216ed5f4b58018488cd7ac0cd4a0e41ad97ba2476fa",
+          "recorded_inline_sha256": "fbc5f56108dec77547326216ed5f4b58018488cd7ac0cd4a0e41ad97ba2476fa",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-1.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://updates.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "http://127.0.0.1:65264"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-2.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/3/log",
+          "sha256": "672761cc2d6f8dab219d70dc42f2818b05e28ce2a993c046b43d00a053a72868",
+          "recorded_inline_sha256": "672761cc2d6f8dab219d70dc42f2818b05e28ce2a993c046b43d00a053a72868",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-2.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://boot-failure.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 4
+    },
+    {
+      "original_engine_log_path": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-3.engine.log",
+      "retention": "inline_stdout_stderr_substitute",
+      "engine_log_file_retained": false,
+      "original_engine_log_missing": true,
+      "reason": "Disposable engine file is absent; the exact command has complete captured stdout/stderr in a retained SHA-verified child report. This is not a byte-for-byte copy of the engine --log-file output.",
+      "inline_sources": [
+        {
+          "document": "content-report.json",
+          "pointer": "$/steps/4/log",
+          "sha256": "90257417ff23b2152eb3f4fdec8dfd8d2ab64acb748fd06b321da41035a5c90a",
+          "recorded_inline_sha256": "90257417ff23b2152eb3f4fdec8dfd8d2ab64acb748fd06b321da41035a5c90a",
+          "command": [
+            "/Users/haruta/Library/Application Support/Godot/app_userdata/Godots/versions/custom_editor/Godot.app/Contents/MacOS/Godot",
+            "--headless",
+            "--log-file",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/step-3.engine.log",
+            "--path",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor/project",
+            "--script",
+            "res://boot-failure.gd",
+            "--",
+            "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/content-tests-wp2xspor",
+            "resume"
+          ],
+          "source_document_sha256": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+          "original_inline_hash_verified": true
+        }
+      ],
+      "matched_reference_count": 2
+    }
+  ],
+  "missing_referenced_logs": [],
+  "process_archive": "process-logs.zip",
+  "process_archive_sha256": "562acc4d30512d90a587c0d28c75b3955b71d8f24cbb61ce8d2accf259db86b7",
+  "artifact_sha256": {
+    "architecture.log": "287fdd66d5f3c7eb15fa1fbb4f1343408a4b450ffebdbe07c038251e62085455",
+    "block-report.json": "d5b1d82417817a0a8d4e2aa32d8be88b9d76dca166e4d0b1bcab169518b74afb",
+    "block.log": "9fa99bf3ac44ec1011c4c249c468daff6c6b188d334ebaf394ce058556f74766",
+    "business_boundary-report.json": "660b690cafe888ab680ce7ea4aecd807287e32d82905d24fa2264826b5464758",
+    "business_boundary.log": "84f7643a96e7ba2d736534e048d29eb027f6d6791d88eec49b57bf1e9d467ba8",
+    "content-report.json": "558668399d0787f5d2061cc89f03729c77496c20aefc2017aafa94551d008281",
+    "content.log": "863b16908516c31095979ef558cd9f37376344010055319f280f0935fb5ec5af",
+    "development-report.json": "a9c0b89ad019109fea4e5344f784a753bf3543da6bc723ca7f31615446a9babc",
+    "development.log": "b82554f60ca48f81b5785475fb79d3abc70b333b8867611edec4a4b58ab37ce6",
+    "engine-version.log": "6f4d42c350a11ec5404e5eddb10cbb0cb490b7cb81888cac0a368d0ecb821362",
+    "framework-report.json": "c3bab0ea9e8c9121b3b5aac14af9226e6c6c5071817c0d36d0b3b9363a5a9549",
+    "framework.log": "5acee3b345b7bda0deb90a7980e66ed920000a56d4a9b101f8200e80f0825ebb",
+    "framework_boundary-report.json": "ff2db5f47022205e3f88ea1054257f5f6b51e4096c994376e08569269513f1ec",
+    "framework_boundary.log": "6ba19cd1e6888c9c561c3adc0e3ed96d80842ee89d2cb065cb1d8e6aa9df0043",
+    "inputs.json": "0eb62accf6f38c546620b5ae76a8ddc581476fc82ec3da9df45bd8a733b97867",
+    "pck.log": "1434de2138edcc45da957e068d51cdfb565f55a56f27780803ad86289a8d1f6d",
+    "process-logs.zip": "562acc4d30512d90a587c0d28c75b3955b71d8f24cbb61ce8d2accf259db86b7",
+    "publication-report-case-logs/catalog.log": "2105dc51b3a114c807e5679689760f1f8828e60884bd1a5bdcc41aaa296b5fb7",
+    "publication-report-case-logs/daily-missing-rank.log": "2e4aad8b28b98b3e0cf810f4d6484e0c455820d3366bc81677e14d7cc305bc23",
+    "publication-report-case-logs/daily-missing-tier.log": "4f99eef08812d9a82eb6f1e0332bad177e96fdd566835079612013e574b4412f",
+    "publication-report-case-logs/gc-correct.log": "8b6c9e289d45f2e5f70e4d7a3a56655632f19938b0247609e11dc1bccc136359",
+    "publication-report-case-logs/gc-wrong-shape.log": "4eebfdc9708c9d65587e7e4c88665e04d77165f6ba5b922912f5814ee6386c6c",
+    "publication-report-case-logs/lk-invalid-date.log": "6943ecf906a91873a92d7efd2428006f6e5fe00feaebfbf87ef3ddeb1d81c2c2",
+    "publication-report-case-logs/lk-invalid-label.log": "dafb82e2bd7d7c67e4e6c854b3927619fb530e2752784423a4a8683d83f8a651",
+    "publication-report-case-logs/main-ab-size-missing.log": "b627ce07b230adc01dfb59bea1b52621ca569da9c867448a0cd89be4a3778a35",
+    "publication-report-case-logs/main-combined-source.log": "5fbd9ba9c2ac283b7d82c9a983cb56e43190e1fb2d3a1cb78d0d87ba13452596",
+    "publication-report-case-logs/main-first-rank-missing.log": "5ffdd347f09d7287bca708e74cd4015146881fc73a11c530bdae49d5ea552edb",
+    "publication-report-case-logs/main-late-policy-missing.log": "8a8d1db03cc5888b70e12babd141aacbb29d5c7caf16c87a9e1be6c21ea39cc7",
+    "publication-report-case-logs/per-level-home-slot.log": "49c45afb519991119ad0a95ce0e246c4e33e5695333adf5ffe4823fc8563cb6a",
+    "publication-report-case-logs/raw-correct.log": "baace24efd530b1972897b6c608a949045275002f811e44211e00a28b1788626",
+    "publication-report-case-logs/raw-wrong-size.log": "c2081c234e66f5d0c13738e014bf0ab6e413d9382d28abb97213b0238a0cd590",
+    "publication-report-case-logs/shortened-special-bank.log": "1f4af72ebbdcbcfc7e1e2185e7121b182ff17321248c166ae50c2e71f8b72aac",
+    "publication-report-case-logs/special-bank-without-guide.log": "68250a600b3db058be56493c588aab2a7e807db3400a2ab11014127dac420524",
+    "publication-report-case-logs/special-malformed-prefill.log": "49c6747deb4ae36bbf3f08306fd6ad6809ece0421970c5b56b41116f6d4ed080",
+    "publication-report-case-logs/special-valid-prefill.log": "196ebafe462286e35fba84da1c7d89151221e4362bcf2e4d9b8eacdf140519e8",
+    "publication-report-case-logs/special-wrong-prefill-answer.log": "7e683651cc1c24784ea2238ecff091d5e866b372cfb3ee60a7b21f3f72b3c3b0",
+    "publication-report-case-logs/spine-correct.log": "f3ca77f4bdd02c39c91313f3fc3db44e0d0dc7fb63618f77a712c6fe4e993be9",
+    "publication-report-case-logs/spine-wrong-contract.log": "05fe5b0fd3d653e798d6af269486c8e5deede345996c6ae605ad5aa30774fe0f",
+    "publication-report-case-logs/unknown-inherited-media.log": "6685c203257d09f1e135a5ba36e4f945faea5ac04256135fe46bd88a8e5b84cb",
+    "publication-report.json": "cede525486beaae659ad7c9b51473e1251545aba1edb36d0b7735a33b29c633d",
+    "publication.log": "ccd5e97a4cf102487a6b68db3f86af07ff2e533410d868a2ccb3ee88bb28c471",
+    "python.log": "b4dc4cc99230b58363cdcf8ee15fb2b5e39613c482d6f08ecd61433cc86bab8c",
+    "report.json": "52f0f980e87e51b8fe1a7ebb2912dcb9986876df030009a1020d15ce0eaf6923",
+    "spine-report.json": "48496a57528a8bf6d09a0cc20a0c993981f7c62695183d654dfb3cadf640b6ce",
+    "spine.log": "21f31ea36fd2389c39da32886c95625c13052989f0c2a412fb0c05ab9accf425",
+    "summary.json": "cb39b918ba5f43cf62f8a35c5a54a6c28dafbe46476c96826181723e489d1ae0",
+    "ui_boundary-report.json": "b5c0e2a0614a501e7967809933070f256b04cc5acbee42bd31247c7f7df775cb",
+    "ui_boundary.log": "b70aadd657b9dd9e8e1cb76f78a2f27be420e76cf69a75f729a23573e114f8e6"
+  }
+}

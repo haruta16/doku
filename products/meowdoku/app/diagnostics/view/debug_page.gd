@@ -1,5 +1,4 @@
-## 调试页总目录：把「解题技巧 / V3 尺寸示例 / R1-R5 策略」排成卡片列表，点「体验」带调试参数直接进 GAME 页
-## 只在非 Android 构建里注册（UIRegistry._DEBUG_PAGES）；脚本内没有别的调用点，只有 GeneratorPage 的返回按钮会回到本页
+## 玩法调试目录页：按技巧、尺寸和生成策略组织入口，供人工验证真实关卡。
 class_name DebugPage
 extends UIFrameWindow
 
@@ -430,12 +429,10 @@ func _make_size_demo_card(entry: Dictionary) -> Control:
 	return outer
 
 
-## 造一张策略卡：R 徽章 + 名称 + 「体验」；点击时现场生成地图
 func _make_strategy_card(entry: Dictionary) -> Control:
-	# r 决定配色，sz 决定棋盘边长
-	var r: int = entry["r"]
+	var rank: int = entry["r"]
 	var sz: int = entry.get("size", 4)
-	var colors: Dictionary = R_COLORS[r] if r < R_COLORS.size() else R_COLORS[1] # 超出表格范围就退到 R1 配色
+	var colors: Dictionary = R_COLORS[rank] if rank < R_COLORS.size() else R_COLORS[1]
 
 	var outer := MarginContainer.new()
 	outer.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -481,7 +478,7 @@ func _make_strategy_card(entry: Dictionary) -> Control:
 	badge_style.corner_radius_bottom_left = 11
 	badge_panel.add_theme_stylebox_override("panel", badge_style)
 	var badge_lbl := Label.new()
-	badge_lbl.text = "R%d" % r
+	badge_lbl.text = "R%d" % rank
 	badge_lbl.add_theme_font_size_override("font_size", _FS_MD)
 	badge_lbl.add_theme_color_override("font_color", colors["text"])
 	badge_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -515,11 +512,10 @@ func _make_strategy_card(entry: Dictionary) -> Control:
 	btn.add_theme_stylebox_override("hover", btn_normal)
 	btn.add_theme_stylebox_override("pressed", btn_normal)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	# 点击后现场生成（seed 固定 1、最多试 300 次），成功就带 regions / solution 开局
 	btn.pressed.connect(
 		func() -> void:
 			var result: Dictionary = (
-				LevelGeneratorEditor
+				PuzzleGenerator
 				. generate_solvable_puzzle(
 					{
 						"size": sz,
@@ -546,6 +542,8 @@ func _make_strategy_card(entry: Dictionary) -> Control:
 					}
 				)
 			)
+
+			UIManager.hide_ui(UiName.HOME)
 	)
 	hbox.add_child(btn)
 
@@ -577,7 +575,6 @@ func _make_badge(level_text: String, colors: Dictionary, available: bool) -> Con
 	return badge_panel
 
 
-## 造「体验」按钮，点击按 debug_config 打开 GAME 页
 func _make_play_btn(config: Dictionary) -> Button:
 	var btn := Button.new()
 	btn.text = "体验"
@@ -597,7 +594,12 @@ func _make_play_btn(config: Dictionary) -> Button:
 	btn.add_theme_stylebox_override("hover", btn_normal)
 	btn.add_theme_stylebox_override("pressed", btn_normal)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	btn.pressed.connect(func() -> void: UIManager.show_ui(UiName.GAME, {"debug_config": config})) # debug_config 由 GamePage 映射成 EntryMode.DEBUG_CONFIG
+	btn.pressed.connect(
+		func() -> void:
+			UIManager.show_ui(UiName.GAME, {"debug_config": config})
+
+			UIManager.hide_ui(UiName.HOME)
+	)
 	return btn
 
 
