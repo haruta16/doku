@@ -53,6 +53,12 @@ var _moveto_keys_held: Array = []  # Track injected keys for guaranteed release
 
 
 func _ready() -> void:
+	# Runtime inspection and script execution are development facilities only.
+	if not OS.is_debug_build():
+		process_mode = Node.PROCESS_MODE_DISABLED
+		set_process(false)
+		set_process_input(false)
+		return
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 

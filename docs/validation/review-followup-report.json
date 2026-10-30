@@ -1,0 +1,953 @@
+{
+  "ok": true,
+  "date": "2026-10-27",
+  "scope": "Follow-up fixes for reachable main content pools, per-show rewarded-ad identity, screen-to-layout safe areas, child creation reentrancy, suite selection, and targeted mapping/diagnostic maintenance. Final full suite ran on a frozen source copy; real player saves were not used.",
+  "full_suite": {
+    "ok": true,
+    "steps": [
+      {
+        "check": "editor_import",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/import.log",
+        "log_sha256": "67537191d33896ac3cbce14497a23d9cdbc6280def3c35fb4b6ce62b57f7e981",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ]
+      },
+      {
+        "check": "res://tools/validate_recovery.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "VALIDATION_OK: 257 recovered scripts, 74 scenes, 75 translations, 26 level banks, 20,746 records, and 20,710 solution entries",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-0.log",
+        "log_sha256": "6d720c88d79f285709bb2b57e042b812169e573662178dae2ab4a4bfe8fff255",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_block_example.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "BLOCK EXAMPLE TESTS: 21 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-1.log",
+        "log_sha256": "786f6d32396da24d9802b701ed675911d16717c3c261eb043eb21da7fd40488a",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_channel_urls.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "CONTENT_CHANNEL_URL_TEST checks=14 failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-2.log",
+        "log_sha256": "9605d3c563158af476912db685cc2ab02b296081826288421ddbeca9d817f2d6",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_consumer_contracts.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "CONTENT CONSUMER CONTRACT TESTS: 78 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-3.log",
+        "log_sha256": "3e576bc061d4b9bace2d1382236c7ef679823412a9e927e76f9fd47f3dc6ecb6",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_integration.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PASS: 2700 baseline size decisions, content schema, real bank/policy activation and old-round isolation",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-4.log",
+        "log_sha256": "088f37355729045475b2550be859561783eefd8c1ee23086fb14297f5de21bb6",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_level_catalog.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "LEVEL CATALOG TESTS: 49 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-5.log",
+        "log_sha256": "c1665f02c42b3cb4258224acd607faa774a05d9a3a44412cd4220c8377b4a3ab",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_media_consumers.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "CONTENT_CONSUMER_TEST failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-6.log",
+        "log_sha256": "3965b1c5746f7e67390f880644403aeef8f8e2deece1a48931e996ccf789a0b5",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_prefill.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "CONTENT_PREFILL_TEST checks=22 failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-7.log",
+        "log_sha256": "6a16d631445c5f1de8b24c3553b3a760c4729c8c0439c119bf3cd3610856c26c",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_provenance.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "CONTENT_PROVENANCE_TEST checks=36 failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-8.log",
+        "log_sha256": "4334abda0f3fba68abcc4038bd1ba9047c288e969d37760d05e8559def75fdaa",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_tutorial.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "CONTENT_TUTORIAL_TEST checks=21 failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-9.log",
+        "log_sha256": "45ae83cfefc0b75bb203df95f0a6c23e278ad1bd25ead2be0e595af8137badc3",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_content_tutorial_boot_failure.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "CONTENT_TUTORIAL_BOOT_TEST checks=9 failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-10.log",
+        "log_sha256": "4b0d6ed47c67514a51d506bb5e9ceb2b16423ba027ad6591ea7eb0fafe46cf74",
+        "expected_test_errors": [
+          "ERROR: TutorialPage: 教学棋盘未能完整创建"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_daily_win_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "DAILY WIN LIFECYCLE TESTS: 9 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-11.log",
+        "log_sha256": "90eca8cb4ee775ee58ebe757fb79d3dea0775b0e03394b0f9f58c3d979967a04",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_development_boundaries.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "DEVELOPMENT BOUNDARY TESTS: mode=debug 33 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-12.log",
+        "log_sha256": "240637caca85810644c3d3d95737e96005d6e44db99b73e151b2c0f425c73ee4",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_doku_actions.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "DOKU ACTION TESTS: 88 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-13.log",
+        "log_sha256": "8ee52768b12134c9e18aa38a88af8fce6a1e1e905c602bbe351edd13afdb5744",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 6, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_doku_board_state.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PASS: DokuBoardState snapshots, transitions, restore and locks",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-14.log",
+        "log_sha256": "29db8c878aa200c8d3e9658a5b6540befd2c5fa52e193b4edd6f0990153adf48",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_doku_board_view.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PASS: BoardView/CellView unique model, legacy behavior, redraw and demos",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-15.log",
+        "log_sha256": "681ef34c69a44735a776bd73b570540a6f10537266830a62731ebe6d2fb961a5",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_doku_hint_service.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PASS: Doku hints wrong-mark fallback, R1, R1_mark, four R2 modes, R3/R4 and chains",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-16.log",
+        "log_sha256": "80360a79779b6d446ed456bbd5989b5bc164a761ae9e7ff2a32b0a7bd2e56375",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_doku_level_selection.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PASS: Level selection preview, deterministic seed, atomic commit, retries, daily downgrade and conflict guards",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-17.log",
+        "log_sha256": "06cc8ec33e029e243ecbc6deaef3b6df75d5c7d5a14bd1b84bf83ffc86e003d2",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_doku_selection_fallback.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "DOKU_SELECTION_FALLBACK_TEST checks=18 failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-18.log",
+        "log_sha256": "e7013fc9a8bfa335710e1b828c148c5519076e7bb90cd069d8aceca558aba856",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_doku_tools.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PASS: Doku tools locate ordering, no target, protected undo, pure highlight and invalid history",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-19.log",
+        "log_sha256": "def0424ca084951592baf695fe83775041e6cad928413e2be719c27867262437",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_framework_contracts.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "FRAMEWORK CONTRACT TESTS: 71 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-20.log",
+        "log_sha256": "ac7850a38df880ae9bc0efa6df665dd45373cf39b72cb9804075456e11ef5815",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_entry_actions.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME ENTRY ACTION TESTS: 39 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-21.log",
+        "log_sha256": "a12df322ef7104b111b59964b6337f35d5c06fc699d6ab335c080c9c9d3d8ff8",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_entry_flow.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME ENTRY FLOW: 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-22.log",
+        "log_sha256": "4114c3f11fea7373b2ba22f023ead0423094633ed091e6d574b04e4ec8b2bc00",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_entry_transaction.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME ENTRY TRANSACTION: checks=104 failures=0",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-23.log",
+        "log_sha256": "7cc458db2b663cf590eba96cc75d828db5cd5c5639d6a773ac431aeb7e02fabe",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 13, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 15, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_page_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME PAGE LIFECYCLE TESTS: 43 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-24.log",
+        "log_sha256": "12bd187ea1136e8fa7ff09318195dc09015d56a969ab91caa7dc8da3bc10a8db",
+        "expected_test_errors": [
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=5 transform=5 entry_idx=0, advancing",
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=6 transform=6 entry_idx=0, advancing",
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=7 transform=7 entry_idx=0, advancing",
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=0 transform=0 entry_idx=0, advancing",
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=1 transform=1 entry_idx=0, advancing",
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=2 transform=2 entry_idx=0, advancing",
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=3 transform=3 entry_idx=0, advancing",
+          "ERROR: DailyGamePage: invalid solution day_offset=189 virtual_idx=4 transform=4 entry_idx=0, advancing"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_reward_restore_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "REWARD RESTORE LIFECYCLE TESTS: 27 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-25.log",
+        "log_sha256": "1ec2e95d88e8c538429cb72952622db857ace108cecb568a298058338809ed9b",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 15, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [AdRewardRestoredPage] 奖励未入账: { \"status\": \"write_failed\", \"revision\": 15, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_settlement_recovery.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME SETTLEMENT RECOVERY TESTS: 64 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-26.log",
+        "log_sha256": "a258a1928955ca54d530603c264b68f59dafd1dcfc27930e5b62850bb4d67c09",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 14, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 14, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 21, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 21, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 27, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 27, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 33, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 33, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 33, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 40, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 40, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 40, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 48, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_use_cases.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME USE CASE TESTS: 34 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-27.log",
+        "log_sha256": "3c73f24632459fa328d44b16c522b1b1b973c04185e275b79699bdf2eb94a59e",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 6, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 13, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 15, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_product_checkpoint.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PRODUCT CHECKPOINT TESTS: 24 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-28.log",
+        "log_sha256": "09ff56a91297fd89bc19c48c89fc236f5e851c6bb1171ce2dc2654f6dc9e91e4",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 14, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_product_entitlements.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PRODUCT ENTITLEMENT TESTS: 48 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-29.log",
+        "log_sha256": "d833591b78d84ecee2a58e21b61567c8b289c6ec87c8988b967a51aa646bfd45",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 22, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_product_session.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PRODUCT SESSION TESTS: 15 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-30.log",
+        "log_sha256": "931b117cb8726d46d16bf51a8cd6f1aa365923af4be568a59d1a3996d0ed2180",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_product_settlement.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PRODUCT SETTLEMENT TESTS: 15 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-31.log",
+        "log_sha256": "d078780eca621a46cf416d9781220098e2515cf8915fca0e0044f1667240761d",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_round_service.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PASS: RoundService Doku hints, durable retries, failed writes, settlement and Block reuse",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-32.log",
+        "log_sha256": "25bf1b52c92a21efe5ee2e621ce9dc6bcbbe73d6f2959037f19dc86315bbaf76",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "STORAGE TESTS: 90 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-33.log",
+        "log_sha256": "a9a57046853680f0c4ee9eaa2abe002914b7aa7739e9010c349f30f9da0c5a6b",
+        "expected_test_errors": [
+          "ERROR: Condition \"magic != 0x43454447\" is true. Returning: ERR_FILE_UNRECOGNIZED",
+          "ERROR: Condition \"magic != 0x43454447\" is true. Returning: ERR_FILE_UNRECOGNIZED",
+          "ERROR: Condition \"magic != 0x43454447\" is true. Returning: ERR_FILE_UNRECOGNIZED",
+          "ERROR: Condition \"magic != 0x43454447\" is true. Returning: ERR_FILE_UNRECOGNIZED",
+          "ERROR: Condition \"magic != 0x43454447\" is true. Returning: ERR_FILE_UNRECOGNIZED",
+          "ERROR: Condition \"magic != 0x43454447\" is true. Returning: ERR_FILE_UNRECOGNIZED"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_ad_identity.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "STORAGE AD IDENTITY TESTS: 63 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-34.log",
+        "log_sha256": "495c903ea201813cb7b7f677473a9eae0404ca69459793c4bba0223ff8dc7f30",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 9, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_award_page.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "STORAGE AWARD PAGE TESTS: 19 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-35.log",
+        "log_sha256": "fe736c692cebb977b8a8dd226d53e1e9d65d27342eda64f9eb8716ee39f998ee",
+        "expected_test_errors": [
+          "ERROR: [AwardManager] 奖励尚未入账，保留待领取记录: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 7, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [AwardManager] 翻倍资格未保存: { \"status\": \"write_failed\", \"revision\": 7, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_business.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "STORAGE BUSINESS TESTS: 105 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-36.log",
+        "log_sha256": "07f25603d1412950f22a63050246f93ee00d0463a2788803163263ec71df545b",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [AwardManager] 奖励尚未入账，保留待领取记录: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 13, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 16, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 19, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_notification_streak.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "STORAGE NOTIFICATION STREAK TESTS: 63 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-37.log",
+        "log_sha256": "4465299dcfe9d696c2bfe4e810680624bc36f536da6020dbb66b33f8140751e2",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 7, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 12, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 19, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 21, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [AwardManager] 奖励尚未入账，保留待领取记录: { \"status\": \"write_failed\", \"revision\": 23, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 24, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_performance.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PERFORMANCE_RESULT={\"bounded_round\":{\"actions\":64,\"namespaces\":1,\"record_bytes_after\":5212,\"record_bytes_before\":4788},\"engine\":\"4.6.1-stable (custom_build)\",\"kind\":\"desktop_file_commit_measurement\",\"limitations\":[\"not a mobile budget\",\"includes encrypted double-slot scan/readback/rename\",\"single-process synchronous workload; no forced power loss\"],\"platform\":\"macOS\",\"samples_per_size\":12,\"sizes\":[{\"commit_us\":{\"max\":1315,\"mean\":1274.83333333333,\"p50\":1274,\"p95\":1315},\"encoded_state_bytes\":14320,\"record_count\":24,\"snapshot_us\":{\"max\":9,\"mean\":8.33333333333333,\"p50\":8,\"p95\":9}},{\"commit_us\":{\"max\":15327,\"mean\":14701.3333333333,\"p50\":14611,\"p95\":15327},\"encoded_state_bytes\":229012,\"record_count\":384,\"snapshot_us\":{\"max\":139,\"mean\":134.0,\"p50\":135,\"p95\":139}},{\"commit_us\":{\"max\":66312,\"mean\":59952.0833333333,\"p50\":59056,\"p95\":66312},\"encoded_state_bytes\":918364,\"record_count\":1536,\"snapshot_us\":{\"max\":552,\"mean\":525.083333333333,\"p50\":523,\"p95\":552}}]}\nSTORAGE PERFORMANCE TESTS: 133 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-38.log",
+        "log_sha256": "9d6780470fe8ea15a813fdaaa2564599187663da1ce4d0c586b88162168de4ba",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_preferences.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "STORAGE PREFERENCES TESTS: 142 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-39.log",
+        "log_sha256": "5e9eaec5d82432e9af75ab5e8c0434e2fa9d97d4bda9a49b721a5b26e7b6da79",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 12, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 13, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 16, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 17, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 17, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 20, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_reward_registration.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "STORAGE REWARD REGISTRATION TESTS: 30 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-40.log",
+        "log_sha256": "550a60693b8238a44e1f0611494d70305577dc606adc65a23bfcb1ad4e3a54ee",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 6, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 7, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 7, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 7, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 9, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_ui_framework.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "UI FRAMEWORK TESTS: 146 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-41.log",
+        "log_sha256": "822e9256bda41538c4723175377675baaa7ae962f669fdeae70328646c9e8e16",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_ui_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "UI LIFECYCLE TESTS: 35 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-42.log",
+        "log_sha256": "34d9ae815543cdce18a5918545b5bc8c525a43b23226529d06736a527861fd0a",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_ui_popup_results.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "UI POPUP RESULTS TESTS: 59 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-43.log",
+        "log_sha256": "4561948db2e7deac3bce0d3e389678c4845bb25c56746b35c7f60e37e018b730",
+        "expected_test_errors": [
+          "ERROR: [AwardManager] 奖励尚未入账，保留待领取记录: { \"status\": \"write_failed\", \"revision\": 6, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_ui_safe_area.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "UI SAFE AREA TESTS: 53 assertions, 0 failures",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/test-44.log",
+        "log_sha256": "f32f240dfe700cc361ce4fe0b1d16425bcaf984b70852cccb4df699d616f8e23",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "startup_600_frames",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "",
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-i3n2e5zt/smoke.log",
+        "log_sha256": "12a1e63c83f91332daf9dc98c19612e6ac0eb36a65cae28295528ae996f515c8",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ]
+  },
+  "accepted_verification": {
+    "steps": 47,
+    "self_contained_scripts": 45,
+    "ok": true,
+    "unknown_engine_errors": 0,
+    "shutdown_warning_steps": 6
+  },
+  "independent_ui": [
+    {
+      "check": "editor_import",
+      "ok": true,
+      "exit_code": 0,
+      "summary": "",
+      "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-6y57cknz/import.log",
+      "log_sha256": "0820f7a6175bb87cc3d380a616ccb0117d5f8fdfba2637c36c7a62015883a6f6",
+      "environment_errors": [
+        "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests'.",
+        "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests.",
+        "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+        "ERROR: Could not open 'user://' directory: 'user://'.",
+        "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+        "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+      ]
+    },
+    {
+      "check": "res://tools/validation/test_ui_framework.gd",
+      "ok": true,
+      "exit_code": 0,
+      "summary": "UI FRAMEWORK TESTS: 147 assertions, 0 failures (no Autoload)",
+      "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-6y57cknz/test.log",
+      "log_sha256": "7b1e0b1d99bcddacfdf97f4ebdf82404d3cf7a7a88dd43096d0e9d8b7471453f",
+      "environment_errors": [
+        "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests'.",
+        "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests.",
+        "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+      ]
+    }
+  ],
+  "independent_business": [
+    {
+      "check": "editor_import",
+      "ok": true,
+      "exit_code": 0,
+      "summary": "",
+      "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-u6ul1dkd/import.log",
+      "log_sha256": "10fbd80754d0e64027ac106ac32ae18984f8474d5f063548bcaf1e818664ae8a",
+      "environment_errors": [
+        "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Doku Business Boundary'.",
+        "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Doku Business Boundary.",
+        "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+        "ERROR: Could not open 'user://' directory: 'user://'.",
+        "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+        "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+      ]
+    },
+    {
+      "check": "res://tools/validation/test_product_session.gd",
+      "ok": true,
+      "exit_code": 0,
+      "summary": "PRODUCT SESSION TESTS: 15 assertions, 0 failures",
+      "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-u6ul1dkd/test_product_session.gd.log",
+      "log_sha256": "c1789a31372bfb79d82c972956acc025e6c471ff36d84aeba7685978564bd618",
+      "environment_errors": [
+        "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Doku Business Boundary'.",
+        "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Doku Business Boundary.",
+        "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+      ]
+    },
+    {
+      "check": "res://tools/validation/test_product_settlement.gd",
+      "ok": true,
+      "exit_code": 0,
+      "summary": "PRODUCT SETTLEMENT TESTS: 15 assertions, 0 failures",
+      "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-business-u6ul1dkd/test_product_settlement.gd.log",
+      "log_sha256": "404c6332ceaf5a75a81f188c8bfc080cd7629a7458d80b8b10a4cfe7b83e73d6",
+      "environment_errors": [
+        "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Doku Business Boundary'.",
+        "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Doku Business Boundary.",
+        "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+      ]
+    }
+  ],
+  "development_boundaries": {
+    "scope": "Isolated userdata in each branch. The release branch replaces OS.is_debug_build() only in the seven listed product files; no exported release binary or mobile SDK is validated.",
+    "predicate_files": [
+      "scripts/app/bootstrap/launcher.gd",
+      "scripts/app/ui/ui_registry.gd",
+      "scripts/app/state/game_state.gd",
+      "scripts/gameplays/doku/presentation/main/view/game_page.gd",
+      "scripts/gameplays/doku/presentation/daily/view/daily_game_page.gd",
+      "scripts/gameplays/doku/presentation/board/board_view.gd",
+      "addons/cheat_manager/cheat_bus.gd"
+    ],
+    "ok": true,
+    "branches": [
+      {
+        "mode": "debug",
+        "ok": true,
+        "steps": [
+          {
+            "command": [
+              "/opt/homebrew/bin/godot-4.6.1",
+              "--headless",
+              "--path",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/debug/project",
+              "--log-file",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/debug/import.engine.log",
+              "--editor",
+              "--import"
+            ],
+            "exit_code": 0,
+            "ok": true,
+            "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/debug/import.log",
+            "summary": "",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+              "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+              "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+            ]
+          },
+          {
+            "command": [
+              "/opt/homebrew/bin/godot-4.6.1",
+              "--headless",
+              "--path",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/debug/project",
+              "--log-file",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/debug/test.engine.log",
+              "--script",
+              "res://tools/validation/test_development_boundaries.gd",
+              "--",
+              "debug"
+            ],
+            "exit_code": 0,
+            "ok": true,
+            "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/debug/test.log",
+            "summary": "DEVELOPMENT BOUNDARY TESTS: mode=debug 33 assertions, 0 failures",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+            ]
+          }
+        ]
+      },
+      {
+        "mode": "simulated_release",
+        "ok": true,
+        "steps": [
+          {
+            "command": [
+              "/opt/homebrew/bin/godot-4.6.1",
+              "--headless",
+              "--path",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/simulated_release/project",
+              "--log-file",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/simulated_release/import.engine.log",
+              "--editor",
+              "--import"
+            ],
+            "exit_code": 0,
+            "ok": true,
+            "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/simulated_release/import.log",
+            "summary": "",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+              "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+              "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+            ]
+          },
+          {
+            "command": [
+              "/opt/homebrew/bin/godot-4.6.1",
+              "--headless",
+              "--path",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/simulated_release/project",
+              "--log-file",
+              "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/simulated_release/test.engine.log",
+              "--script",
+              "res://tools/validation/test_development_boundaries.gd",
+              "--",
+              "simulated_release"
+            ],
+            "exit_code": 0,
+            "ok": true,
+            "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-z_zjm3n1/simulated_release/test.log",
+            "summary": "DEVELOPMENT BOUNDARY TESTS: mode=simulated_release 32 assertions, 0 failures",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "python_gate": {
+    "ok": true,
+    "tests": 23,
+    "original_log": "/private/tmp/doku-review2-python-final.log",
+    "log_sha256": "31d06050947bddd7954a2fc2070fe6be75d435d2911febea9d7237b45a5a9c5c",
+    "observed": [
+      "Ran 23 tests in 1.093s",
+      "DEVELOPMENT TOOLS TESTS: 16 assertions, 0 failures; simulated_debug=true",
+      "DEVELOPMENT TOOLS TESTS: 15 assertions, 0 failures; simulated_debug=false"
+    ]
+  },
+  "main_selection_equivalence": {
+    "ok": true,
+    "comparisons": 184320,
+    "original_log": "/tmp/doku-main-selection-baseline/parity.log",
+    "log_sha256": "2d14280d05b193e55705df2615a43b6972f226ba76917c4601a4ef632ef9221d",
+    "observed": [
+      "MAIN RULE PARITY: 184320 choices and RNG states agree"
+    ]
+  },
+  "content_report": "review-followup-content-report.json",
+  "sources": {
+    "count": 867,
+    "matching_full_suite_copy": 866,
+    "fingerprinted_not_executed": [
+      "export_presets.cfg"
+    ],
+    "fingerprint": "framework-source-sha256.json",
+    "changed_inputs": [
+      "scripts/app/features/award/view/award_page.gd",
+      "scripts/app/platform/unikit_manager.gd",
+      "scripts/app/ui/ui_manager.gd",
+      "scripts/framework/content/content_media_map.gd",
+      "scripts/framework/ui/base/ui_base_window.gd",
+      "scripts/framework/ui/ui_window_manager.gd",
+      "scripts/gameplays/doku/application/level_data.gd",
+      "scripts/gameplays/doku/content/doku_content_validator.gd",
+      "scripts/gameplays/doku/content/doku_level_catalog.gd",
+      "scripts/gameplays/doku/domain/doku_level_definition.gd",
+      "scripts/gameplays/doku/domain/doku_main_selection_rules.gd",
+      "scripts/gameplays/doku/domain/doku_main_selection_rules.gd.uid",
+      "scripts/gameplays/doku/presentation/daily/view/daily_auto_mark_popup.gd",
+      "scripts/gameplays/doku/presentation/daily/view/daily_fail_page.gd",
+      "scripts/gameplays/doku/presentation/main/view/base_game_page.gd",
+      "scripts/gameplays/doku/presentation/result/ui/game_fail_page.tscn",
+      "scripts/gameplays/doku/presentation/result/view/game_fail_page.gd",
+      "tools/content/run_product_tests.py",
+      "tools/run_ui_framework_tests.py",
+      "tools/run_validation.py",
+      "tools/validate_content_product.py",
+      "tools/validation/fixtures/identified_ad_adapter.gd",
+      "tools/validation/fixtures/identified_ad_adapter.gd.uid",
+      "tools/validation/fixtures/ui_creating_child.gd",
+      "tools/validation/fixtures/ui_creating_child.gd.uid",
+      "tools/validation/test_content_consumer_contracts.gd",
+      "tools/validation/test_product_entitlements.gd",
+      "tools/validation/test_storage_ad_identity.gd",
+      "tools/validation/test_storage_ad_identity.gd.uid",
+      "tools/validation/test_storage_award_page.gd",
+      "tools/validation/test_storage_preferences.gd",
+      "tools/validation/test_storage_reward_registration.gd",
+      "tools/validation/test_ui_framework.gd",
+      "tools/validation/test_ui_safe_area.gd",
+      "tools/validation/test_ui_safe_area.gd.uid",
+      "tools/validation/test_validation_runner.py"
+    ]
+  },
+  "decisions": [
+    "Share pure main selection rules with validation. Enumerate difficulty boundaries and joint size/tail periods, including actual GamePage size overrides, fixed levels and eligible cycling pools.",
+    "Require exact native show identity. Legacy placement-only rewarded callbacks cannot safely award a different show; reward availability is disabled until the external bridge implements the documented signals. Interstitials remain compatible.",
+    "Keep explicit GameState fields and existing page responsibilities. Add key-set and nondefault partition roundtrips rather than a reflective schema or general page state machine.",
+    "Safe-area scene change moves only three group tags so Container layout preserves the correction. No artwork changed.",
+    "Child ownership precedes callbacks; synchronous visibility cancellation prevents subsequent hooks. Individual hide can remain asynchronous while destruction hooks remain synchronous."
+  ],
+  "limits": [
+    "Native plugin implementation is absent. Four per-show signal contracts are specified and desktop/mock/fake-bridge paths verified; actual SDK integration is still external.",
+    "Confirmed rewards for already ended page-specific entitlements retain existing business lifecycle semantics. This is not a general late-award or cross-process receipt service.",
+    "Reward retries remain in memory until storage succeeds. Persistent write failure followed by process termination cannot recover unpersisted evidence.",
+    "Safe-area tests use real desktop viewport and Control transforms with injected system rectangles. Real mobile safe rectangles, rotation/touch, release export, SDK, production CDN/TLS and visual acceptance remain unverified.",
+    "Shutdown resource warnings are retained separately; this report does not prove absence of lifecycle leaks or exhaustive timing coverage."
+  ]
+}

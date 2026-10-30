@@ -1,6 +1,6 @@
 # Hint Engine — 提示引擎
 
-> 文件：[scripts/module/gameplay/core/hint_engine.gd](../../scripts/module/gameplay/core/hint_engine.gd)
+> 文件：[products/meowdoku/gameplay/domain/hint_engine.gd](../../products/meowdoku/gameplay/domain/hint_engine.gd)
 >
 > 这是 Meowdoku 的**解题引擎**——给定当前棋盘，自动推导下一步该放哪只猫或标哪些叉。它是 `QueendokuCore` 最大的消费者，也是「如果玩家点提示按钮，系统怎么算出答案」的全部逻辑。
 >

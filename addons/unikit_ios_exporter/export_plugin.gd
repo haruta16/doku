@@ -570,8 +570,8 @@ class IOSUniKitExportPlugin:
 		var src_2x: String = ProjectSettings.get_setting("application/boot_splash/image") as String
 		var src_3x: String = ""
 
-		src_2x = "res://assets/icons/ios_launch_2x.png"
-		src_3x = "res://assets/icons/ios_launch_3x.png"
+		src_2x = "res://products/meowdoku/assets/icons/ios_launch_2x.png"
+		src_3x = "res://products/meowdoku/assets/icons/ios_launch_3x.png"
 
 		var dst_2x: String = TEMPLATE_DIR + "SplashImage@2x.png"
 		var dst_3x: String = TEMPLATE_DIR + "SplashImage@3x.png"
@@ -590,7 +590,7 @@ class IOSUniKitExportPlugin:
 			push_warning(
 				(
 					"[UniKitIOSExporter] SplashImage 启动图未找到,iOS 启动时可能出现白屏。"
-					+ " 请确认 res://assets/icons/ios_launch_2x.png 和 ios_launch_3x.png 存在。"
+					+ " 请确认 res://products/meowdoku/assets/icons/ios_launch_2x.png 和 ios_launch_3x.png 存在。"
 				)
 			)
 

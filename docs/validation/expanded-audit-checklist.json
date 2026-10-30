@@ -1,0 +1,262 @@
+{
+  "status": "closed_with_explicit_environment_boundaries",
+  "baseline": "closeout-report.json",
+  "baseline_source_backup": "/private/tmp/doku-expanded-baseline-5mnxxu8j",
+  "scope": "扩展到内容交付与激活清理、存储恢复/清档后发布、奖励与签到及启动页回调、连续棋盘输入与演出资源生命周期。",
+  "product_invariants": [
+    "保留提示每次成功重新打开收费、空目标定位收费、无可选撤销步骤免费",
+    "不增加代码热更、远端业务、玩法或运营系统",
+    "真实保存失败、重复请求、恢复后的下一次操作须保持明确合同"
+  ],
+  "areas": [
+    {
+      "name": "内容全链路",
+      "owner": "expanded_content",
+      "checks": [
+        "发布验证与签名",
+        "下载/取消/有限重试",
+        "安装-stage-激活-清理交接",
+        "冷启动媒体挂载/试用确认/回退",
+        "跨版本实际消费者缓存"
+      ]
+    },
+    {
+      "name": "存储与恢复",
+      "owner": "expanded_storage",
+      "checks": [
+        "旧档迁移",
+        "双槽与嵌套合同",
+        "清档失败/嵌套清档",
+        "结算通知内清档",
+        "回退后继续保存/重开"
+      ]
+    },
+    {
+      "name": "产品权益与启动",
+      "owner": "expanded_product",
+      "checks": [
+        "领奖/翻倍/展示/离页交接",
+        "签到日切及清档",
+        "签到等待与重复展示",
+        "隐私/ATT说明页动画与回调"
+      ]
+    },
+    {
+      "name": "实际游玩操作",
+      "owner": "root",
+      "checks": [
+        "连续手势与双击",
+        "批量清除/自动叉/锁叉回调",
+        "轴按钮状态限制",
+        "动画取消后的输入锁",
+        "自动完成隐藏/复用/销毁",
+        "多静音作用域与全局遮罩归属",
+        "实际销毁后的节点/协程/计时器释放",
+        "同类标叉等待正常结束/刷新/隐藏重开"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "E1",
+      "issue": "更新完成通知触发激活/确认时清理尚未stage的新版本",
+      "status": "fixed_and_verified",
+      "fix": "更新任务完成stage前不允许局间激活/启动确认清理已安装新版本，成功stage后统一清理。",
+      "horizontal_conclusion": "受控update_progress完成监听同步调用公开activate/confirm方法；默认静默监听不走此分支。",
+      "regressions": [
+        {
+          "script": "test_content_update_bootstrap.gd",
+          "result": "CONTENT_BOOTSTRAP_TESTS checks=20 failures=0; see content_delivery"
+        }
+      ]
+    },
+    {
+      "id": "E2",
+      "issue": "清档后旧结算/reset回执重新发布或回填旧状态",
+      "status": "fixed_and_verified",
+      "fix": "清档代次约束结算和reset结果发布；同步清档/嵌套清档后旧结果不回填会话资格、不重复收尾。",
+      "horizontal_conclusion": "覆盖结算通知、统计/SDK通知、失败清档中的成功清档和嵌套成功清档。",
+      "regressions": [
+        {
+          "script": "test_storage_reset_publication.gd",
+          "result": "STORAGE RESET PUBLICATION TESTS: 69 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E3",
+      "issue": "非法旧奖励元素/核心嵌套记录未在消费者前拒绝及坏新槽恢复",
+      "status": "fixed_and_verified",
+      "fix": "迁移前拒绝非法奖励行/uid；核心验证覆盖实际读取的嵌套形状；已知坏新槽可退回验证通过的旧快照，未知schema整体拒绝。",
+      "horizontal_conclusion": "包括双坏拒绝、未来版本拒绝、恢复后连续保存/重开。回退可能丢失最后不可验证的提交，不合成坏状态中的奖励事实。",
+      "regressions": [
+        {
+          "script": "test_storage_legacy_rejection.gd",
+          "result": "STORAGE LEGACY REJECTION TESTS: 35 assertions, 0 failures"
+        },
+        {
+          "script": "test_storage_semantic_recovery.gd",
+          "result": "STORAGE SEMANTIC RECOVERY TESTS: 232 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E4",
+      "issue": "奖励页/Render旧领取翻倍及关闭回调影响新展示",
+      "status": "fixed_and_verified",
+      "fix": "奖励展示自有代次及提交中保护；先setup再发布shown，旧领取/翻倍/隐藏回调不能领取、清空或关闭新奖励。",
+      "horizontal_conclusion": "真实页面连续展示、同uid刷新、提交通知和显示/关闭信号重入均覆盖。",
+      "regressions": [
+        {
+          "script": "test_product_reward_ownership.gd",
+          "result": "PRODUCT REWARD OWNERSHIP TESTS: 76 assertions, 0 failures"
+        },
+        {
+          "script": "test_storage_award_page.gd",
+          "result": "STORAGE AWARD PAGE TESTS: 19 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E5",
+      "issue": "签到清档后发布、旧开箱/点亮等待跨展示生效",
+      "status": "fixed_and_verified",
+      "fix": "签到提交捕获清档代次；开箱、点亮、切组礼包等待和输入按本次展示隔离。",
+      "horizontal_conclusion": "已显示缓存页面刷新不递增通用show_revision，因此页面在on_show管理自身展示代次，未改通用窗口合同。",
+      "regressions": [
+        {
+          "script": "test_product_reward_ownership.gd",
+          "result": "PRODUCT REWARD OWNERSHIP TESTS: 76 assertions, 0 failures"
+        },
+        {
+          "script": "test_storage_notification_streak.gd",
+          "result": "STORAGE NOTIFICATION STREAK TESTS: 63 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E6",
+      "issue": "隐私及ATT说明页旧动画/完成回调影响重开",
+      "status": "fixed_and_verified",
+      "fix": "隐私与ATT说明页的动画/完成回调按本次展示隔离，旧关闭不再消费新回调。",
+      "horizontal_conclusion": "实际隐私、ATT两个变体及Mock ATT三组路径；不是原生权限SDK验收。",
+      "regressions": [
+        {
+          "script": "test_ui_startup_dialog_lifecycle.gd",
+          "result": "UI STARTUP DIALOG LIFECYCLE TESTS: 23 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E7",
+      "issue": "旧批量棋盘操作在同步换页后继续发布和统计",
+      "status": "fixed_and_verified",
+      "fix": "连续棋盘动作在同步通知后检查页面代次与对局尝试，旧批次停止统计、历史和下一格发布。",
+      "horizontal_conclusion": "滑动、正确/错误双击、清除、自动叉、自动完成、锁叉真实通知内刷新；初始化预填不被entry_ready误挡。",
+      "regressions": [
+        {
+          "script": "test_game_operation_lifecycle.gd",
+          "result": "GAME OPERATION LIFECYCLE TESTS: 129 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E8",
+      "issue": "轴按钮遗漏错误反馈/终局/保存重试/自动完成状态限制",
+      "status": "fixed_and_verified",
+      "fix": "轴按钮遵守已有错误反馈、终局、结算保存重试、自动完成状态限制。",
+      "horizontal_conclusion": "既验四种阻止状态，也验普通逐轴打叉/撤叉和输入恢复。",
+      "regressions": [
+        {
+          "script": "test_game_operation_lifecycle.gd",
+          "result": "GAME OPERATION LIFECYCLE TESTS: 129 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E9",
+      "issue": "待锁叉被清除后留下不可操作空格",
+      "status": "fixed_and_verified",
+      "fix": "LOCK_X扩散每格处理后释放临时输入锁；待锁叉被清除也不会留下不可操作空格。",
+      "horizontal_conclusion": "永久LOCKED_MARK规则保持不变，只释放演出期间的临时锁。",
+      "regressions": [
+        {
+          "script": "test_game_operation_lifecycle.gd",
+          "result": "GAME OPERATION LIFECYCLE TESTS: 129 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E10",
+      "issue": "自动完成销毁/重开遗留全局遮罩或静音，旧流程可干扰新演出",
+      "status": "fixed_and_verified",
+      "fix": "自动完成拥有自己的遮罩和静音作用域，刷新/隐藏/销毁取消时仅释放自己的资源，旧流程不干扰新流程。",
+      "horizontal_conclusion": "真实按钮与调试入口、同页刷新、正常完成、重叠静音和旧tutorial开关均检查。",
+      "regressions": [
+        {
+          "script": "test_game_operation_lifecycle.gd",
+          "result": "GAME OPERATION LIFECYCLE TESTS: 129 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_settlement_recovery.gd",
+          "result": "GAME SETTLEMENT RECOVERY TESTS: 64 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E11",
+      "issue": "页面外策略浮层及自动完成/标叉销毁后的等待与匿名Callable残留",
+      "status": "fixed_and_verified",
+      "fix": "销毁时释放挂在当前场景的策略浮层；自动完成和五类标叉等待使用现有页面托管Timer，移除无用嵌套await及被取消协程中的匿名Callable。",
+      "horizontal_conclusion": "重复销毁采样、五类正常/刷新/隐藏重开共145断言；新增退出严格门禁，未泛改所有异步方法或动画节奏。",
+      "regressions": [
+        {
+          "script": "test_game_operation_lifecycle.gd",
+          "result": "GAME OPERATION LIFECYCLE TESTS: 129 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "E12",
+      "issue": "validator恢复legacy备份后未保留坏A/B槽revision水位，后续保存冲突",
+      "status": "fixed_and_verified",
+      "condition": "框架支持的legacy_path与slot_validator组合；当前产品core未配置legacy_path",
+      "origin": "交叉审查发现的本轮实现边界：新增槽验证与既有legacy回退组合，已在最终冻结前修复。",
+      "fix": "启用槽验证器时，legacy成功回退与普通槽同样保留可识别revision高水位，恢复后连续保存不再冲突。",
+      "horizontal_conclusion": "仅legacy_path+slot_validator组合；当前产品core未配置legacy_path。低/高legacy版本、两次保存、重开、保留旧源和无validator原语义均验。",
+      "regressions": [
+        {
+          "script": "test_storage_semantic_recovery.gd",
+          "result": "STORAGE SEMANTIC RECOVERY TESTS: 232 assertions, 0 failures"
+        }
+      ]
+    }
+  ],
+  "rejected_hypotheses": [
+    {
+      "hypothesis": "正常清档后奖励uid复用可让旧Render领取同号新奖励",
+      "reason": "reset_all保留award_sequence高水位，现有事实不支持该路径，因此不增加奖励epoch系统。"
+    }
+  ],
+  "acceptance": [
+    "确认缺陷有可复现证据与对应回归",
+    "同类调用链检查完成",
+    "原版行为保护不回退",
+    "冻结源码完整自包含回归和启动通过",
+    "内容完整专项/产品发布/Spine实测通过",
+    "源码指纹与验收副本一致",
+    "保留真实告警及外部环境边界"
+  ],
+  "integration_followup": {
+    "status": "fixed_and_verified",
+    "issue": "复活故障注入目标被新增磁盘槽校验覆盖",
+    "fix": "锁存目标到before_replace再消费；保留567项业务断言；其他验证器注入已横查"
+  },
+  "final_report": "expanded-audit-report.json",
+  "acceptance_result": {
+    "passed": true,
+    "source_frozen": true,
+    "full_steps": 67,
+    "source_files_matching_copy": 975
+  }
+}

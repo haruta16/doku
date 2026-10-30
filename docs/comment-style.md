@@ -1,7 +1,7 @@
 # 注释风格规范（本项目）
 
 > 参考样板：`~/workspace/wt_field/scene/game.gd`、`~/workspace/wt_field/scene/player.gd`
-> 本仓范例：`scripts/module/gameplay/model/cell_state.gd`、`scripts/module/gameplay/core/queendoku_core.gd`
+> 本仓范例：`products/meowdoku/gameplay/domain/cell_state.gd`、`products/meowdoku/gameplay/domain/queendoku_core.gd`
 > 校验工具：`python3 tools/check_comments_only.py <文件...>`
 
 ## 一、绝对红线（只加注释，不碰代码）

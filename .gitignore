@@ -1,9 +1,25 @@
 .godot/
 *.log
+__pycache__/
+*.pyc
 originals/
 .DS_Store
-# 忽略 .vscode 下的一切,但放行 settings.json。
-# 必须用 .vscode/*(而不是 .vscode/):父目录被整体排除时,! 无法把里面
-# 的文件捞回来。该文件用 ~/.godot-bin/ 下的版本化别名,与设备无关,可安全提交。
+# ---- 编辑器 ----
+
+# 编辑器配置目录。
+#
+# 这里必须写 `.vscode/*` 而不是 `.vscode/`：
+# git 的规则是"父目录一旦被排除，就不再进去看里面的否定规则"，
+# 而 `.vscode/` 排除的是【目录本身】，于是下面的 !.vscode/settings.json
+# 永远轮不到生效。写成 `.vscode/*` 排除的是【目录里的内容】，
+# 目录本身仍会被遍历，否定规则才有机会命中。
 .vscode/*
+
+# 【例外：.vscode/settings.json 要跟着仓库走】
+#
+# 本工程固定用 Godot 4.6，这是项目约定而不是个人偏好：Godot 版本漂移会踩到
+# class_name 全局类缓存那类"代码没问题但跑不起来"的环境型故障。
+# 所以把"用哪个 Godot"写进仓库，让所有人开工前自动对齐。
+#
+# 其余编辑器个人偏好（主题、字体、快捷键）留在 .vscode/ 里的其他文件，依然被忽略。
 !.vscode/settings.json

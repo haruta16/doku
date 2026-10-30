@@ -1,0 +1,326 @@
+{
+  "status": "closed_with_explicit_environment_boundaries",
+  "baseline": "tool-publication-consumers-report.json",
+  "baseline_source_backup": "/private/tmp/doku-closeout-baseline-5ztrmb78",
+  "scope": "现有 Meowdoku 产品与已实现框架的正确性、失败恢复和生命周期；保持原版玩法与用户指定收费。",
+  "excluded": [
+    "新玩法与新机关",
+    "代码热更",
+    "云存档/团队/排行榜/服务端防作弊/运营后台",
+    "生产CDN与公钥接入、原生SDK和真机验收"
+  ],
+  "product_invariants": [
+    "成功重新请求提示按次收费，应用该提示不再收费",
+    "无目标定位仍按原版扣费并统计，不虚构落子或历史",
+    "无可选撤销步骤不扣费；选中但格值无变化的步骤按原版收费",
+    "真实保存失败不发布未提交的状态；已有成功权益不可静默丢失",
+    "正常广告仅补充道具，不自动使用"
+  ],
+  "method": [
+    {
+      "stage": "固定范围",
+      "rule": "列出现有入口、持久状态、发布通知、异步等待和数据消费者；记录原行为，不随检查扩张功能。"
+    },
+    {
+      "stage": "建立不变量",
+      "rule": "逐条定义守恒、幂等、归属、时效、模型与视图一致性、内容合同及可重试性。"
+    },
+    {
+      "stage": "形成证据",
+      "rule": "故障假设必须落到具体调用链；使用隔离真实页面/模块复现，区分默认产品路径、实验配置、合法更新及受控重入。"
+    },
+    {
+      "stage": "横向排查",
+      "rule": "一个缺陷暴露的类型必须检查所有同类入口，而非仅修改复现函数；无证据风险不自动升格成缺陷。"
+    },
+    {
+      "stage": "最小修复",
+      "rule": "以现有层级和合同修复，避免引入无需求的框架抽象；修复前后对照原版行为。"
+    },
+    {
+      "stage": "分层验证",
+      "rule": "先定向故障/恢复回归，再检查相邻流程及独立边界；最终冻结源码跑完整自包含套件、启动检查和相关专项。"
+    },
+    {
+      "stage": "收敛验收",
+      "rule": "逐项记录已修、证据与未验证边界，核对测试副本/工作区指纹，更新同一清单；新增功能和猜测性重构不能延长本轮。"
+    }
+  ],
+  "test_dimensions": [
+    "正常成功",
+    "保存前失败/失败后恢复",
+    "重复与乱序通知",
+    "同步通知内重入",
+    "关闭/隐藏/遮挡/销毁",
+    "同页重开/新局/模式切换",
+    "缺省可选字段与无效输入",
+    "持久恢复与后续动作",
+    "原版收费及资格副作用"
+  ],
+  "items": [
+    {
+      "id": "R1",
+      "issue": "正常广告奖励登记失败丢失",
+      "status": "fixed_and_verified",
+      "owner": "reward_delivery",
+      "horizontal_scope": [
+        "正常奖励登记",
+        "正常回奖历史",
+        "补偿登记",
+        "领取失败",
+        "离页/重置/重复show_id"
+      ],
+      "priority": "P2",
+      "evidence_condition": "真实Mock激励广告 + 登记/领取阶段实际before_replace写失败；原生SDK未接入不影响该已复现业务链路。",
+      "fix": "有效广告回奖先按show_id交接待兑现权益；登记成功固定uid，领取失败只重试同笔，清档撤销旧代次。",
+      "horizontal_conclusion": "补发watchdog、每日自动标叉、宝箱翻倍与复活已有专属失败保留/重试，未改变这些产品语义。",
+      "regressions": [
+        {
+          "script": "test_game_tool_reward_delivery.gd",
+          "result": "GAME TOOL REWARD DELIVERY TESTS: 171 assertions, 0 failures"
+        },
+        {
+          "script": "test_storage_reward_registration.gd",
+          "result": "STORAGE REWARD REGISTRATION TESTS: 30 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_reward_requests.gd",
+          "result": "GAME REWARD REQUEST TESTS: 567 assertions, 0 failures"
+        },
+        {
+          "script": "test_storage_ad_identity.gd",
+          "result": "STORAGE AD IDENTITY TESTS: 63 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "issue": "终局结果发布重入/离页",
+      "status": "fixed_and_verified",
+      "owner": "root",
+      "horizontal_scope": [
+        "主线胜利/失败/主动退出/重开",
+        "每日胜利/失败/主动退出/重开",
+        "失败重试",
+        "重复结算与新代次"
+      ],
+      "priority": "P2",
+      "evidence_condition": "受控同步committed监听在真实主线/每日页面重入、离页或重开；当前生产监听主要刷新UI，不宣称普通点击必然触发。",
+      "fix": "主线/每日的胜利、失败、重开在首次建局前取得本次尝试发布权；旧页面结果不再表现，重复成功不累计统计，统计捕获原game_id。",
+      "horizontal_conclusion": "覆盖6个结算入口、首次懒建局、同步离页/重开、重复发布、重试、复活后的下一次失败；完成残局恢复也在提交后校验页面代次。",
+      "regressions": [
+        {
+          "script": "test_game_terminal_publication.gd",
+          "result": "GAME TERMINAL PUBLICATION TESTS: 160 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_settlement_recovery.gd",
+          "result": "GAME SETTLEMENT RECOVERY TESTS: 64 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_reward_requests.gd",
+          "result": "GAME REWARD REQUEST TESTS: 567 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "R3",
+      "issue": "事务消费遗漏has_used_tool",
+      "status": "fixed_and_verified",
+      "owner": "content_product_flags",
+      "horizontal_scope": [
+        "提示",
+        "定位",
+        "撤销",
+        "免费/失败/重复/空定位"
+      ],
+      "priority": "P3",
+      "evidence_condition": "真实付费提示/定位/撤销与默认首次道具引导；免费和保存失败须维持原行为。",
+      "fix": "has_used_tool与付费道具扣减/回执在同一事务保存；免费、失败和重复不引入新副作用。",
+      "horizontal_conclusion": "主线/每日×提示、有目标/空定位、撤销；旧setter的其他副作用已核对。原版按次收费与空定位收费保留。",
+      "regressions": [
+        {
+          "script": "test_game_product_tool_flags.gd",
+          "result": "GAME PRODUCT TOOL FLAG TESTS: 112 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_tool_costs.gd",
+          "result": "GAME TOOL COST TESTS: 67 assertions, 0 failures"
+        },
+        {
+          "script": "test_product_session.gd",
+          "result": "PRODUCT SESSION TESTS: 36 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "R4",
+      "issue": "生命预警延迟回调跨页面",
+      "status": "fixed_and_verified",
+      "owner": "root",
+      "horizontal_scope": [
+        "预警延迟与点击保护",
+        "失败/复活/离页",
+        "同类玩法定时器和输入锁"
+      ],
+      "priority": "P3",
+      "evidence_condition": "warn_life=1时真实错标后返回主页；遮挡/复活尝试的延迟反馈边界由受控真实页面操作验证。",
+      "fix": "生命预警的显示、解锁、输入与重置按页面及弹窗代次管理；普通错标/草稿错误的反馈计时绑定对局尝试，遮挡不中断业务解锁，离页/复活后的旧计时失效。",
+      "horizontal_conclusion": "生命预警1.2s和0.5s计时，以及主线/每日普通错标与草稿错误的4个0.4s/0.6s计时；只调整状态完成门卫，不泛改视觉helper。",
+      "regressions": [
+        {
+          "script": "test_game_warning_lifecycle.gd",
+          "result": "GAME WARNING LIFECYCLE TESTS: 126 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_page_lifecycle.gd",
+          "result": "GAME PAGE LIFECYCLE TESTS: 43 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_settlement_recovery.gd",
+          "result": "GAME SETTLEMENT RECOVERY TESTS: 64 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "R5",
+      "issue": "LK Modified与调试消费者缺省size",
+      "status": "fixed_and_verified",
+      "owner": "content_product_flags",
+      "horizontal_scope": [
+        "主线LK筛选",
+        "调试过滤/模拟统计",
+        "原始题库entry尺寸读取"
+      ],
+      "priority": "P3",
+      "evidence_condition": "发布校验允许省略size的合法LK改造题更新；内置题库有size，原流程会隐式跳过该题源并回退。",
+      "fix": "LK改造题主线筛选、preview和模拟器统计直接使用已验证regionMap尺寸，接受合法省略size的内容。",
+      "horizontal_conclusion": "90个尺寸/难度/strict题池身份和顺序，真实main游标与题源，真实preview。其他原始JSON入口已有回退或明确生成合同，无须改。",
+      "regressions": [
+        {
+          "script": "test_content_optional_dimensions.gd",
+          "result": "CONTENT OPTIONAL DIMENSION TESTS: 99 assertions, 0 failures"
+        },
+        {
+          "script": "test_game_bank_dimensions.gd",
+          "result": "GAME BANK DIMENSION TESTS: 254 assertions, 0 failures"
+        },
+        {
+          "script": "test_doku_level_selection.gd",
+          "result": "PASS: Level selection preview, deterministic seed, atomic commit, retries, daily downgrade and conflict guards"
+        }
+      ]
+    },
+    {
+      "id": "R6",
+      "issue": "设置页关闭协程污染重开",
+      "status": "fixed_and_verified",
+      "owner": "ui_boundaries",
+      "horizontal_scope": [
+        "设置页",
+        "其他产品on_hide异步收尾",
+        "原回调归属/销毁"
+      ],
+      "priority": "P3",
+      "evidence_condition": "真实设置页关闭动画未结束即重开，或visible回调重开；旧协程不得消费新回调。",
+      "fix": "Setting关闭捕获原回调，等待和visible通知后校验展示代次；玩法说明返回也校验双方代次。",
+      "horizontal_conclusion": "Language/HowToPlay/DailyAutoMark关闭后无旧副作用；Fail/Win/RateUs/Feedback/Confirm已有对应保护。",
+      "regressions": [
+        {
+          "script": "test_ui_popup_results.gd",
+          "result": "UI POPUP RESULTS TESTS: 69 assertions, 0 failures"
+        },
+        {
+          "script": "test_ui_lifecycle.gd",
+          "result": "UI LIFECYCLE TESTS: 35 assertions, 0 failures"
+        }
+      ]
+    },
+    {
+      "id": "R7",
+      "issue": "遮挡刷新重入使用旧栈",
+      "status": "fixed_and_verified",
+      "owner": "ui_boundaries",
+      "horizontal_scope": [
+        "visibility通知改栈",
+        "关闭/重开/销毁",
+        "层级/遮挡钩子/输入mask"
+      ],
+      "priority": "P3",
+      "evidence_condition": "框架支持的visibility与stack hook同步导航/销毁；当前默认产品无此自定义监听触发证据。",
+      "fix": "遮挡刷新合并重入、栈变化后重新遍历；关闭收尾防止恢复下层时重开/销毁上层污染新展示，保留mask与shown/hidden配对。",
+      "horizontal_conclusion": "覆盖可见性信号及stack hook内关闭/销毁/重开。异常循环监听采用每帧上限；未增加无生产用途的层状态系统。",
+      "regressions": [
+        {
+          "script": "test_ui_framework.gd",
+          "result": "UI FRAMEWORK TESTS: 259 assertions, 0 failures"
+        },
+        {
+          "script": "test_ui_lifecycle.gd",
+          "result": "UI LIFECYCLE TESTS: 35 assertions, 0 failures"
+        },
+        {
+          "script": "test_ui_safe_area.gd",
+          "result": "UI SAFE AREA TESTS: 53 assertions, 0 failures"
+        }
+      ]
+    }
+  ],
+  "acceptance": {
+    "required": [
+      "已确认条目修复并有对应回归",
+      "横向同类入口已记录结论",
+      "原版行为保护回归通过",
+      "完整自包含套件与600帧启动通过",
+      "相关专项按实际改动执行",
+      "源码与验收副本指纹一致",
+      "明确记录剩余边界与告警"
+    ],
+    "not_a_claim": "验收覆盖已声明的功能、条件和证据，不承诺数学意义的零缺陷。",
+    "passed": true,
+    "source_frozen": true,
+    "full_steps": 61,
+    "source_files_matching_copy": 963
+  },
+  "cross_review": [
+    {
+      "finding": "生命预警计时的visible门卫会在遮挡后留下锁",
+      "action": "状态完成按代次/revision/entry检查，显示与输入保留可见性检查；追加遮挡回归"
+    },
+    {
+      "finding": "首次懒建局提交通知可替换_business_session",
+      "action": "helper在ensure返回后、失败提示前检查代次；主线/每日全部终局入口追加真实建局重入"
+    },
+    {
+      "finding": "普通错标/草稿错误同类状态计时也依赖visible且缺attempt归属",
+      "action": "横向修复4闭包；复活后旧attempt不能提前清新锁或结算新尝试"
+    }
+  ],
+  "project_coverage": [
+    {
+      "area": "存储/经济/权益",
+      "verification": "完整自包含storage系列、round/product系列；定向广告历史/登记/领取失败及恢复；独立业务工程"
+    },
+    {
+      "area": "规则/玩法宿主",
+      "verification": "Doku board/actions/hints/tools/selection，RoundService与Block跨玩法示例完整自包含回归"
+    },
+    {
+      "area": "内容消费者",
+      "verification": "内容合同/候选目录/跨表/媒体/来源/教程与主线、每日、题库真实入口；合法省略size专项"
+    },
+    {
+      "area": "页面与输入",
+      "verification": "game入口/用例/状态恢复/结算/复活/收费/同步发布，main/daily切换、重开、隐藏、遮挡、销毁"
+    },
+    {
+      "area": "窗口框架",
+      "verification": "独立UI及真实产品5套件，创建/关闭/队列/遮挡/安全区/字号/弹窗回调"
+    },
+    {
+      "area": "开发与交付边界",
+      "verification": "架构依赖检查、开发工具release隔离、Python工具验收门禁、Godot导入与600帧启动；未改HTTP/PCK链路沿用历史专项证据"
+    }
+  ],
+  "final_report": "closeout-report.json"
+}

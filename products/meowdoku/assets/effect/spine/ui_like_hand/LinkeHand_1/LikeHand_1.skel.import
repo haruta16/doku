@@ -1,0 +1,14 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://cv40vt2hhhklp"
+path="res://.godot/imported/LikeHand_1.skel-df3039f8d4536d514e552c6519e04285.spskel"
+
+[deps]
+
+source_file="res://products/meowdoku/assets/effect/spine/ui_like_hand/LinkeHand_1/LikeHand_1.skel"
+dest_files=["res://.godot/imported/LikeHand_1.skel-df3039f8d4536d514e552c6519e04285.spskel"]
+
+[params]
+

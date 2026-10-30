@@ -3,8 +3,8 @@ extends EditorPlugin
 
 const MENU_LABEL := "Encrypt Level Banks"
 const KEY := "meowdoku-2026-bank-secret"
-const SOURCE_DIR := "res://assets/editor/levels"
-const RUNTIME_DIR := "res://assets/resources/levels"
+const SOURCE_DIR := "res://products/meowdoku/assets/editor/levels"
+const RUNTIME_DIR := "res://products/meowdoku/assets/resources/levels"
 
 
 func _enter_tree() -> void:

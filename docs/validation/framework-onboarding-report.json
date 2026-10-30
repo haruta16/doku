@@ -1,0 +1,497 @@
+{
+  "ok": true,
+  "date": "2026-10-29",
+  "scope": "Stage two: explicit ownership and usable standalone framework integration, without a multi-product platform.",
+  "baseline": {
+    "report": "extended-flows-report.json",
+    "fingerprints": "framework-source-sha256.json",
+    "files": 990,
+    "unchanged_files": 979,
+    "changed_or_relocated": [
+      "assets/prefab/pop_up_toast.tscn",
+      "scripts/app/features/setting/ui/setting_page.tscn",
+      "scripts/framework/ui/base/ui_frame_window.gd",
+      "scripts/framework/ui/common/pop_up_toast.gd",
+      "scripts/framework/ui/common/pop_up_toast.gd.uid",
+      "scripts/framework/ui/extensions/underline_link.gd",
+      "scripts/framework/ui/extensions/underline_link.gd.uid",
+      "tools/check_architecture.py",
+      "tools/run_validation.py",
+      "tools/validation/fixtures/recovered_relocations.json",
+      "tools/validation/test_validation_runner.py"
+    ]
+  },
+  "current_source_fingerprints": "framework-onboarding-source-sha256.json",
+  "source_files": 994,
+  "new_paths": [
+    "scripts/app/ui/common/pop_up_toast.gd",
+    "scripts/app/ui/common/pop_up_toast.gd.uid",
+    "scripts/app/ui/extensions/underline_link.gd",
+    "scripts/app/ui/extensions/underline_link.gd.uid",
+    "tools/run_framework_boundary_tests.py",
+    "tools/validation/test_architecture_boundary.py",
+    "tools/validation/fixtures/framework_consumer.gd",
+    "tools/validation/fixtures/framework_consumer.gd.uid"
+  ],
+  "ownership_corrections": [
+    {
+      "old": "scripts/framework/ui/extensions/underline_link.gd",
+      "new": "scripts/app/ui/extensions/underline_link.gd",
+      "uid": "uid://cdgm3cspjgljb",
+      "body_unchanged": true,
+      "uid_unique": true,
+      "sha256": "43a5b7d3f982fb71a8f299d8c7a04a76d0f93046caaa6f7cc4129b7579608064"
+    },
+    {
+      "old": "scripts/framework/ui/common/pop_up_toast.gd",
+      "new": "scripts/app/ui/common/pop_up_toast.gd",
+      "uid": "uid://b3q1gvq3oqyno",
+      "body_unchanged": true,
+      "uid_unique": true,
+      "sha256": "e420f548344609340c13de6e88e722eecd40ad6aa630282c0f3c9d5585cfcb11"
+    }
+  ],
+  "runtime_behavior_changed": false,
+  "other_runtime_change": "UIFrameWindow sound comment names the public window_open cue; executable body unchanged.",
+  "architecture_guard": {
+    "covers": "Explicit res:// framework/domain/gameplay references, including assets/addons. Content protocol permits only exact current dynamic templates/prefixes.",
+    "limitations": "Not a full dependency proof. Dynamic paths, runtime-injected resources and platforms require consumer-specific tests."
+  },
+  "documentation_sha256": {
+    "docs/README.md": "0b4a638a8c26026252222a10e4742029c5ee62c4855d0f71de91726c6b957e82",
+    "docs/framework-usage.md": "c402f9af193f4bb7ee6c7ea2fa5f9e210a5430bc1644d2cb7d116cbf9a879489",
+    "docs/framework-implementation.md": "5807cc8c00c714c1d1cbab40b734b98b5ae360715753c1ac7cb14a426cceebd0",
+    "scripts/framework/README.md": "bee1594468dd5a5c041c41b18e9bbeb26732be35a0bba7f823f3aa9642ea1a5a",
+    "scripts/app/README.md": "0be84f44be7b1ba3fe6cf28a8a834402010afa31b0742518cab2206c237d2964",
+    "scripts/gameplays/doku/README.md": "4077be2cbb8436ac6859d29040e8fd6bb4070fbc5adcd140331e62152ac0fd33"
+  },
+  "checks": {
+    "entire_public_framework": [
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-v8zquaiq/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-v8zquaiq/import.engine.log",
+          "--editor",
+          "--import"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-v8zquaiq/import.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Could not open 'user://' directory: 'user://'.",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ],
+        "log_sha256": "515ebe373832458491d6ad1f93cc90f4b79d418e2259930c508e4339cb717720"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-v8zquaiq/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-v8zquaiq/consumer.engine.log",
+          "--script",
+          "res://tools/validation/fixtures/framework_consumer.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-v8zquaiq/consumer.log",
+        "summary": "FRAMEWORK CONSUMER TESTS: 63 assertions, 0 failures",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "1adeb9a530793a0b09ecbd5b1a11e689e3762c284f8ea060e1af450af4986e4f"
+      }
+    ],
+    "independent_ui": [
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-q6otbksf/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-q6otbksf/import.engine.log",
+          "--editor",
+          "--import"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-q6otbksf/import.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Could not open 'user://' directory: 'user://'.",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ],
+        "log_sha256": "78c619b635fc62df9d9459a87f81d9b588560808c2d45dc6e28333fc5dcf8f55"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-q6otbksf/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-q6otbksf/test.engine.log",
+          "--script",
+          "res://tools/validation/test_ui_framework.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-ui-framework-q6otbksf/test.log",
+        "summary": "UI FRAMEWORK TESTS: 260 assertions, 0 failures (no Autoload)",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/UI Framework Tests.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "6ea479e4e014b2056e94e1c62042bde5f7250d9b710a06355ed2c90114133703"
+      }
+    ],
+    "independent_block": [
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-utwwkn_8/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-utwwkn_8/import.engine.log",
+          "--editor",
+          "--import"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-utwwkn_8/import.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Block Framework Example'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Block Framework Example.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Could not open 'user://' directory: 'user://'.",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ],
+        "log_sha256": "71de35946b4c274cdab6af0e5531c30fbe724a1db8608d72b1188ff5d9e333df"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-utwwkn_8/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-utwwkn_8/example.engine.log",
+          "--script",
+          "res://tools/validation/test_block_example.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-block-example-utwwkn_8/example.log",
+        "summary": "BLOCK EXAMPLE TESTS: 21 assertions, 0 failures",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Block Framework Example'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Block Framework Example.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "e8e4d10de8b1b6ac776bf972e8830c631f95c085723a7e24c2e59efe7ce750ae"
+      }
+    ],
+    "documentation_examples": [
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/private/tmp/doku-onboarding-doc-fsd9d_nf/project",
+          "--log-file",
+          "/private/tmp/doku-onboarding-doc-fsd9d_nf/import.engine.log",
+          "--editor",
+          "--import"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/private/tmp/doku-onboarding-doc-fsd9d_nf/import.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Could not open 'user://' directory: 'user://'.",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ],
+        "log_sha256": "117d908fb9bf49c72e907f64ea0f7f0449d3b28e5d24b6087eae9f317a204574"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/private/tmp/doku-onboarding-doc-fsd9d_nf/project",
+          "--log-file",
+          "/private/tmp/doku-onboarding-doc-fsd9d_nf/test.engine.log",
+          "--script",
+          "res://tools/validation/fixtures/framework_consumer.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/private/tmp/doku-onboarding-doc-fsd9d_nf/test.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Could not create directory: '/Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests'.",
+          "ERROR: Error attempting to create data dir: /Users/haruta/Library/Application Support/Godot/app_userdata/Framework Boundary Tests.",
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "f6753ae26ed5b095033e412cb68728295b00efb6c09ea812f516d9190412b663"
+      }
+    ],
+    "product_regressions": [
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/import.engine.log",
+          "--editor",
+          "--import"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/import.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ],
+        "log_sha256": "4612aea09539b84d89e25a2c00d048e02d3daf01d09da37ce0a483c5eae62f45"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-0.engine.log",
+          "--script",
+          "res://tools/validation/test_storage_preferences.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-0.log",
+        "summary": "STORAGE PREFERENCES TESTS: 142 assertions, 0 failures",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 12, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 13, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 16, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 17, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 17, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 20, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "4083bd0f1e32703317a694fc5953f12d1d875c386e926632627b85c4b77715dd"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-1.engine.log",
+          "--script",
+          "res://tools/validation/test_content_tutorial.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-1.log",
+        "summary": "CONTENT_TUTORIAL_TEST checks=21 failures=0",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ],
+        "log_sha256": "a89c661060d70a71cd8b91a51896d797e9ba687b95e73a78db44cbb132d902ca"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-2.engine.log",
+          "--script",
+          "res://tools/validation/test_ui_components.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-2.log",
+        "summary": "UI COMPONENT TESTS: 74 assertions, 0 failures",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "7270eba844cef50931529d88fab60412374b635cbcb87f16bc8183a91e34a5f7"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-3.engine.log",
+          "--script",
+          "res://tools/validation/test_ui_popup_results.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-3.log",
+        "summary": "UI POPUP RESULTS TESTS: 69 assertions, 0 failures",
+        "expected_test_errors": [
+          "ERROR: [AwardManager] 奖励尚未入账，保留待领取记录: { \"status\": \"write_failed\", \"revision\": 6, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "49bf902b393c4870e556c7a26da7374f14219a1b61bc71744049a7884239ddc7"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-4.engine.log",
+          "--script",
+          "res://tools/validation/test_ui_navigation_lifecycle.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/test-4.log",
+        "summary": "UI NAVIGATION LIFECYCLE TESTS: 26 assertions, 0 failures",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "d7e10ce81246ab35732b2ff36c5604d524e3417cea5365af605161c7a4891680"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/smoke.engine.log",
+          "--quit-after",
+          "600"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-3s10q31u/smoke.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ],
+        "log_sha256": "cf4a128c722e137ad11be00d64da5eec27f74a5b0bdce23db0ca4e0aeefdaa9e"
+      }
+    ],
+    "recovery_after_relocation": [
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-4f_r3myg/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-4f_r3myg/import.engine.log",
+          "--editor",
+          "--import"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-4f_r3myg/import.log",
+        "summary": "",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ],
+        "log_sha256": "fafc1c815a922060756cd712977e04464ac1e36f578bdd892f1ce99fb8ad4749"
+      },
+      {
+        "command": [
+          "/opt/homebrew/bin/godot-4.6.1",
+          "--headless",
+          "--path",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-4f_r3myg/project",
+          "--log-file",
+          "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-4f_r3myg/test-0.engine.log",
+          "--script",
+          "res://tools/validate_recovery.gd"
+        ],
+        "exit_code": 0,
+        "ok": true,
+        "log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-4f_r3myg/test-0.log",
+        "summary": "VALIDATION_OK: 257 recovered scripts, 74 scenes, 75 translations, 26 level banks, 20,746 records, and 20,710 solution entries",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "log_sha256": "6d720c88d79f285709bb2b57e042b812169e573662178dae2ab4a4bfe8fff255"
+      }
+    ]
+  },
+  "python_tests": {
+    "ok": true,
+    "count": 32,
+    "log": "/private/tmp/doku-stage2-python.log",
+    "sha256": "1957844cdf44a34a5182388fcc6114fd69779df46b44240ed9d8bf276aafb8a2"
+  },
+  "negative_control": {
+    "ok": true,
+    "injection": "undeclared product Autoload GameState",
+    "report": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-framework-boundary-negative-410hj9ta/report.json",
+    "report_sha256": "693e7d39bcfb1cfad109aa351e4ee3d6470864836b43a4f6a67dc40a76abe37f",
+    "note": "Intentionally injecting a product singleton into the public directory is rejected by isolated Godot validation."
+  },
+  "validation_limits": [
+    "No full 74-step suite rerun: scoped checks follow the previous complete acceptance.",
+    "Content runtime/delivery code unchanged; signature/HTTP/PCK/publication suites were not rerun.",
+    "Only tested custom Godot 4.6.1 desktop build; no new mobile/native SDK/CDN/visual acceptance.",
+    "Known tutorial and forced-startup shutdown warnings retained; none in new independent consumer or documentation examples.",
+    "Sandbox default-userdata/editor-setting errors remain narrowly classified environment diagnostics; business fixture data stays in temp directories."
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "command": [
+        "python3",
+        "/Users/haruta/workspace/doku/tools/content/build_channel.py",
+        "--product",
+        "test",
+        "--revision",
+        "3",
+        "--target",
+        "/private/tmp/content-tests-_bzpeymo/tampered-release",
+        "http://127.0.0.1:61454/http",
+        "--key",
+        "/private/tmp/content-tests-_bzpeymo/private.pem",
+        "--output",
+        "/private/tmp/content-tests-_bzpeymo/bad-channel-artifact",
+        "--allow-local-http"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": true,
+      "summary": [
+        "Channel publisher rejects modified payload before producing an artifact"
+      ]
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-_bzpeymo/step-0.engine.log",
+        "--path",
+        "/private/tmp/content-tests-_bzpeymo/project",
+        "--script",
+        "res://test.gd",
+        "--",
+        "/private/tmp/content-tests-_bzpeymo",
+        "http://127.0.0.1:61454/http"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_TESTS checks=51 failures=0"
+      ],
+      "log_sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-_bzpeymo/step-1.engine.log",
+        "--path",
+        "/private/tmp/content-tests-_bzpeymo/project",
+        "--script",
+        "res://updates.gd",
+        "--",
+        "/private/tmp/content-tests-_bzpeymo",
+        "http://127.0.0.1:61454"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_UPDATE_TESTS checks=48 failures=0"
+      ],
+      "log_sha256": "5ef7cfe280f214b813113f3ff5305defdba5528d40dd8d94be3e7716f60cdf4c"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-_bzpeymo/step-2.engine.log",
+        "--path",
+        "/private/tmp/content-tests-_bzpeymo/project",
+        "--script",
+        "res://boot-failure.gd",
+        "--",
+        "/private/tmp/content-tests-_bzpeymo"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOT_FAILURE passed: restart_required after expected image_decode"
+      ],
+      "log_sha256": "72d4b3525f2ef7a9ef4917be23b5753cbc70edcfdc5a2d6f92c06d4e5f5c63d7",
+      "expected_test_errors": [
+        "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+        "ERROR: Error loading image: 'res://content/test/broken-image/broken.png'."
+      ]
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-_bzpeymo/step-3.engine.log",
+        "--path",
+        "/private/tmp/content-tests-_bzpeymo/project",
+        "--script",
+        "res://boot-failure.gd",
+        "--",
+        "/private/tmp/content-tests-_bzpeymo",
+        "resume"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOT_FAILURE_COLD_RECOVERY passed: builtin without polluted process"
+      ],
+      "log_sha256": "cc52be13c20b7d65577a85d290f372786730c02657a663979cae12750be38df8"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-_bzpeymo/bootstrap-import.engine.log",
+        "--path",
+        "/private/tmp/content-tests-_bzpeymo/bootstrap-project",
+        "--editor",
+        "--import"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [],
+      "log_sha256": "46462c5b86a687d871e2445cb2e06612f0f888cd3489be2aec569ff3f872b3cf"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-_bzpeymo/bootstrap-first.engine.log",
+        "--path",
+        "/private/tmp/content-tests-_bzpeymo/bootstrap-project",
+        "--script",
+        "res://bootstrap-test.gd",
+        "--",
+        "/private/tmp/content-tests-_bzpeymo",
+        "http://127.0.0.1:61454"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOTSTRAP_TESTS checks=8 failures=0"
+      ],
+      "log_sha256": "9671394d9061ab809ec71790349b8b98c2be020bc20ab768ac6584e19ee422a3"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-_bzpeymo/bootstrap-resume.engine.log",
+        "--path",
+        "/private/tmp/content-tests-_bzpeymo/bootstrap-project",
+        "--script",
+        "res://bootstrap-test.gd",
+        "--",
+        "/private/tmp/content-tests-_bzpeymo",
+        "http://127.0.0.1:61454",
+        "resume"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOTSTRAP_TESTS checks=4 failures=0"
+      ],
+      "log_sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1"
+    }
+  ],
+  "scope": "Isolated projects; ephemeral keys; local HTTP faults and real Godot runtime; no mobile or production TLS validation.",
+  "product_publication_checks": [
+    {
+      "case": "catalog",
+      "ok": true,
+      "detail": "Fixed level resolves built-in puzzle, prefill, rules and reward before signing"
+    },
+    {
+      "case": "unknown-inherited-media",
+      "ok": true,
+      "detail": "JSON-only cannot assume that an earlier media release provides a new alias"
+    },
+    {
+      "case": "raw-correct",
+      "ok": true,
+      "detail": "Original 32×168 game/mark texture and a per-level alias pass the fixed binding contract"
+    },
+    {
+      "case": "per-level-home-slot",
+      "ok": true,
+      "detail": "Global home slot cannot pass publication as a per-level alias without a consumer"
+    },
+    {
+      "case": "gc-correct",
+      "ok": true,
+      "detail": "GC publication uses the same levels wrapper and per-entry rank as the actual consumer"
+    },
+    {
+      "case": "gc-wrong-shape",
+      "ok": true,
+      "detail": "Rank-keyed GC data is rejected instead of silently producing an empty runtime bank"
+    },
+    {
+      "case": "main-first-rank-missing",
+      "ok": true,
+      "detail": "Valid rank 2 puzzles cannot remove the first main level's rank 1 pool"
+    },
+    {
+      "case": "main-combined-source",
+      "ok": true,
+      "detail": "Main availability uses the union of eligible bank sources"
+    },
+    {
+      "case": "main-late-policy-missing",
+      "ok": true,
+      "detail": "An unreachable difficulty in a far-future size segment is rejected before signing"
+    },
+    {
+      "case": "main-ab-size-missing",
+      "ok": true,
+      "detail": "GamePage's size AB overrides share the publication availability contract"
+    },
+    {
+      "case": "daily-missing-rank",
+      "ok": true,
+      "detail": "Valid individual puzzles cannot remove a required daily difficulty pool"
+    },
+    {
+      "case": "daily-missing-tier",
+      "ok": true,
+      "detail": "A legal H tier does not satisfy the daily consumer's required N tier"
+    },
+    {
+      "case": "lk-invalid-date",
+      "ok": true,
+      "detail": "Consumed LK display metadata rejects wrong types with the exact field path"
+    },
+    {
+      "case": "lk-invalid-label",
+      "ok": true,
+      "detail": "Consumed LK display metadata rejects wrong types with the exact field path"
+    },
+    {
+      "case": "shortened-special-bank",
+      "ok": true,
+      "detail": "A bank-only release must preserve references inherited from the builtin policy"
+    },
+    {
+      "case": "special-bank-without-guide",
+      "ok": true,
+      "detail": "Ordinary SP replacement preserves level references without coupling to the client-owned tutorial"
+    },
+    {
+      "case": "special-valid-prefill",
+      "ok": true,
+      "detail": "SP prefill with an in-bounds answer coordinate passes the actual publication path"
+    },
+    {
+      "case": "special-malformed-prefill",
+      "ok": true,
+      "detail": "String prefill cannot be signed and delivered to a typed Array consumer"
+    },
+    {
+      "case": "special-wrong-prefill-answer",
+      "ok": true,
+      "detail": "A well-shaped SP coordinate that contradicts the answer is rejected before signing"
+    },
+    {
+      "case": "raw-wrong-size",
+      "ok": true,
+      "detail": "432×432 replacement for fixed 32×168 game/mark is rejected without final output"
+    },
+    {
+      "case": "spine-correct",
+      "ok": true,
+      "detail": "Original ui_cat_icon (maomi_fuor) exported to game/cat preserves required animations and skins"
+    },
+    {
+      "case": "spine-wrong-contract",
+      "ok": true,
+      "detail": "Valid exported ui_logo Spine cannot satisfy game/cat's animation/skin contract; no final output"
+    }
+  ],
+  "publication_evidence": {
+    "original_log": "/tmp/doku-main-publication-final.log",
+    "log_sha256": "04e7b6be5828c826d2b6b0080334409eeebc1ff15ae71a799428efa1287fb10a",
+    "observed": [
+      "PRODUCT_PUBLICATION_TESTS checks=22 failures=0"
+    ]
+  },
+  "spine": {
+    "ok": true,
+    "original_log": "/private/tmp/doku-review2-spine.log",
+    "log_sha256": "d48e3c5cfb4bca4fe3bd320972ef9e528ba2e421ff29edc057ab56844ea20acd",
+    "observed": [
+      "SPINE_CONTENT_TEST passed: signed export + safe mount + real Spine load + JSON inherits media",
+      "SPINE_CONTENT_COLD_RESUME passed: data=data-next media=spine"
+    ]
+  }
+}

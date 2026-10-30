@@ -6,6 +6,12 @@ const MCP_SCREENSHOT_PATH: String = "user://mcp_screenshot.png"
 
 
 func _ready() -> void:
+	# The editor shortcut must not consume player input or create screenshot files in release.
+	if not OS.is_debug_build():
+		process_mode = Node.PROCESS_MODE_DISABLED
+		set_process(false)
+		set_process_input(false)
+		return
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 

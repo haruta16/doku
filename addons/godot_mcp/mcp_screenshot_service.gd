@@ -7,6 +7,11 @@ const SCREENSHOT_PATH := "user://mcp_screenshot.png"
 
 
 func _ready() -> void:
+	if not OS.is_debug_build():
+		process_mode = Node.PROCESS_MODE_DISABLED
+		set_process(false)
+		set_process_input(false)
+		return
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 

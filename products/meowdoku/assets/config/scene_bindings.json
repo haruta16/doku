@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "resources": {
+    "res://products/meowdoku/assets/sprites/common/logo.png": {"kind": "textures", "slot": "ui/home/logo"},
+    "res://products/meowdoku/assets/sprites/home/daily_record.png": {"kind": "textures", "slot": "ui/home/daily_record"},
+    "res://products/meowdoku/assets/sprites/home/daily_base_top.png": {"kind": "textures", "slot": "ui/home/daily_base"},
+    "res://products/meowdoku/assets/sprites/game/icon_mark_white_2.png": {"kind": "textures", "slot": "game/mark"},
+    "res://products/meowdoku/assets/sprites/game/icon_mark_white_3.png": {"kind": "textures", "slot": "game/mark_alt"},
+    "res://products/meowdoku/assets/sprites/game/icon_mark_lock.png": {"kind": "textures", "slot": "game/mark_lock"},
+    "res://products/meowdoku/assets/sprites/game/tool_cat_item_prompt.png": {"kind": "textures", "slot": "game/hint_cat"},
+    "res://products/meowdoku/assets/effect/spine/ui_cat_icon/ui_cat_icon.tres": {"kind": "spine", "slot": "game/cat"},
+    "res://products/meowdoku/assets/effect/spine/ui_logo/ui_logo.tres": {"kind": "spine", "slot": "ui/home/logo_spine"}
+  }
+}

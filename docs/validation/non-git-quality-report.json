@@ -1,0 +1,315 @@
+{
+  "date": "2026-10-29",
+  "ok": true,
+  "scope": "Non-Git reliability and verification followup; product gameplay and charging decisions retained.",
+  "engine": "4.6.1.stable.custom_build.14d19694e",
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "changes": [
+    "Persist initial product state before exposing an opened core; failed first writes keep the same instance closed and retryable, preserving legacy files.",
+    "Bind automatic fixed-URL content updates to trusted release ID and raw manifest SHA-256; explicit immutable-version calls may omit both and do not claim freshness.",
+    "Require positive check counts, unique completion summaries, planned scripts/cases and complete child reports; test timeout, interruption, empty-fixture and aggregate failure paths.",
+    "Retain all exit diagnostics; allow only exact historically evidenced shutdown exceptions, reject new/changed/duplicate diagnostics including PCK proof warnings.",
+    "Provide quick/framework/all orchestration with saved evidence, input fingerprints, bounded process cleanup and explicit skipped/excluded scopes.",
+    "Use portable temporary fixtures and configurable engines for content tools; guard copied test projects, require fixtures and all content steps.",
+    "Clarify current architecture versus historical acceptance, command coverage, configuration responsibilities and prerequisites; fix the migration directory example."
+  ],
+  "preserved": [
+    "No Git index, branch, commit, cleanup or ignore-file changes.",
+    "No gameplay, pricing, rewards, level-selection or ad policy changes.",
+    "No split of atomic product storage, no forced migration of every board input, no deletion of optional reusable framework APIs.",
+    "No production CDN/public key/native SDK setup or code hot-update feature."
+  ],
+  "validation": {
+    "suite": "all",
+    "planned_groups": 12,
+    "executed_groups": 12,
+    "passed_groups": 12,
+    "excluded": [],
+    "not_executed": [],
+    "changed_inputs": [],
+    "unknown_engine_errors": 0,
+    "groups": [
+      {
+        "name": "architecture",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 0.181,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/architecture.log",
+        "log_sha256": "287fdd66d5f3c7eb15fa1fbb4f1343408a4b450ffebdbe07c038251e62085455"
+      },
+      {
+        "name": "python",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 1.348,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/python.log",
+        "log_sha256": "fcb248fd73762751ab37f4a2f585be51d21e60b123dd56082422a600223a2372",
+        "tests": 78,
+        "executed": 78,
+        "skipped": 0
+      },
+      {
+        "name": "framework",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 733.844,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/framework.log",
+        "log_sha256": "785ac0bf5a6974230ce39c3862f493d1c80e3097d40100bc884de49e48e4185b",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/framework-report.json",
+        "report_sha256": "e0c7ea9b71191469814f8ca24005abfaf8698b29026c77e0e6622b397d840bc9",
+        "process_steps": 76,
+        "counted_checks": 9089,
+        "script_processes": 73
+      },
+      {
+        "name": "framework_boundary",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 2.133,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/framework_boundary.log",
+        "log_sha256": "e8423d223e9aa69289cd402791f5e423c76682e21727aff71de14d80af987b2b",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/framework_boundary-report.json",
+        "report_sha256": "1cfd949d2c16b0a38e14ed74318ddd1dd728a005958fa391337a3fa5b3eb1219",
+        "process_steps": 2,
+        "counted_checks": 64,
+        "script_processes": 1
+      },
+      {
+        "name": "ui_boundary",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 2.895,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/ui_boundary.log",
+        "log_sha256": "a175d8d9adc5f16a0c366fd8a891c5ccc052ddd8b22ff96c6a25b734632793a3",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/ui_boundary-report.json",
+        "report_sha256": "046cf894d708b99c1cf68a27d7b7fbc3acf8f33241963b1275777b8f827ea917",
+        "process_steps": 2,
+        "counted_checks": 260,
+        "script_processes": 1
+      },
+      {
+        "name": "business_boundary",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 2.174,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/business_boundary.log",
+        "log_sha256": "1069c54aaaed1219e0b1e041476353a1c154dd553d3be129409e15ff16c3a3bb",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/business_boundary-report.json",
+        "report_sha256": "3c9ce1f017527a651a5003a75d24c939a38424950291d5c516b1ada6a6add1fd",
+        "process_steps": 3,
+        "counted_checks": 51,
+        "script_processes": 2
+      },
+      {
+        "name": "block",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 2.085,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/block.log",
+        "log_sha256": "8463255fa96e5320f8440c87a7ba5225b51e8e6295f57d57f89331a04e7672e4",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/block-report.json",
+        "report_sha256": "7b178e5b90be02667e55e0238bf4165ece01b8accc6ec57ceba937626b435b78",
+        "process_steps": 2,
+        "counted_checks": 21,
+        "script_processes": 1
+      },
+      {
+        "name": "development",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 29.74,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/development.log",
+        "log_sha256": "ecbed923adf9eff5f081965a0f5702ffc8529f4016616584af18ea8b3c241d8f",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/development-report.json",
+        "report_sha256": "6651c3136e1d7dae5b3e8ba1b624672eadeda872b180ddaa3c561e195279ca65",
+        "process_steps": 6,
+        "counted_checks": 65,
+        "script_processes": 2,
+        "branches": [
+          "debug",
+          "simulated_release"
+        ]
+      },
+      {
+        "name": "content",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 6.578,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/content.log",
+        "log_sha256": "ce8e54f063d143c6547ca9f793a94c7332ec72adfd3360fc27909ef028814228",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/content-report.json",
+        "report_sha256": "412536a858c2db6f0073e3cb236327bcda67c3174a3d665b15eed2b360547ad1",
+        "process_steps": 8,
+        "counted_checks": 140,
+        "script_processes": 6
+      },
+      {
+        "name": "publication",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 73.288,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/publication.log",
+        "log_sha256": "04e7b6be5828c826d2b6b0080334409eeebc1ff15ae71a799428efa1287fb10a",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/publication-report.json",
+        "report_sha256": "66e8efe20f766216d876ef7790151aeaca5f9466fdf7700e912df614495f900a",
+        "process_steps": 22,
+        "counted_checks": 0,
+        "script_processes": 0,
+        "publication_cases": [
+          "catalog",
+          "unknown-inherited-media",
+          "raw-correct",
+          "per-level-home-slot",
+          "gc-correct",
+          "gc-wrong-shape",
+          "main-first-rank-missing",
+          "main-combined-source",
+          "main-late-policy-missing",
+          "main-ab-size-missing",
+          "daily-missing-rank",
+          "daily-missing-tier",
+          "lk-invalid-date",
+          "lk-invalid-label",
+          "shortened-special-bank",
+          "special-bank-without-guide",
+          "special-valid-prefill",
+          "special-malformed-prefill",
+          "special-wrong-prefill-answer",
+          "raw-wrong-size",
+          "spine-correct",
+          "spine-wrong-contract"
+        ]
+      },
+      {
+        "name": "spine",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 7.922,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/spine.log",
+        "log_sha256": "69272b5c17908e82f65caa1049a4faa570156c4760bc205420db79c9309801b5",
+        "report": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/spine-report.json",
+        "report_sha256": "db2c0d45c41803cfeb3b41bdc929be996abe62c3f83b92e9326a18ba5097bfda",
+        "process_steps": 2,
+        "counted_checks": 6,
+        "script_processes": 2
+      },
+      {
+        "name": "pck",
+        "ok": true,
+        "exit_code": 0,
+        "elapsed_seconds": 16.885,
+        "log": "/private/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance/pck.log",
+        "log_sha256": "1434de2138edcc45da957e068d51cdfb565f55a56f27780803ad86289a8d1f6d",
+        "proof_cases": 2,
+        "checks_per_case": [
+          7,
+          8
+        ],
+        "engine_diagnostics": []
+      }
+    ],
+    "known_shutdown_processes": [
+      {
+        "group": "framework",
+        "case": "res://tools/validation/test_content_level_catalog.gd",
+        "diagnostics": [
+          "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ],
+        "evidence": [
+          "docs/validation/product-layout-migration-report.json",
+          "log_sha256=fc0674edb8814398c931038ff268e642bd76d706952c824a56df781586a6c491"
+        ]
+      },
+      {
+        "group": "framework",
+        "case": "res://tools/validation/test_content_tutorial.gd",
+        "diagnostics": [
+          "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ],
+        "evidence": [
+          "docs/validation/framework-onboarding-report.json",
+          "log_sha256=a89c661060d70a71cd8b91a51896d797e9ba687b95e73a78db44cbb132d902ca"
+        ]
+      },
+      {
+        "group": "framework",
+        "case": "res://tools/validation/test_doku_actions.gd",
+        "diagnostics": [
+          "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+          "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+        ],
+        "evidence": [
+          "docs/validation/product-layout-migration-report.json",
+          "log_sha256=1eeeb1342c6b2602059bb07be567370769880088a0e456726cef562223f7979f"
+        ]
+      },
+      {
+        "group": "framework",
+        "case": "res://tools/validation/test_game_page_lifecycle.gd",
+        "diagnostics": [
+          "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ],
+        "evidence": [
+          "docs/validation/product-layout-migration-report.json",
+          "log_sha256=779fc2cc346c92dc8b67c605885e000537cbb4ebb687ff13902664a3673750bb"
+        ]
+      },
+      {
+        "group": "framework",
+        "case": "res://tools/validation/test_game_recovery_localization.gd",
+        "diagnostics": [
+          "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ],
+        "evidence": [
+          "docs/validation/product-layout-migration-report.json",
+          "log_sha256=caf0af2d4f093dce341bfc01b36f8326fe2bc97f27c3016ca70884d69fa8dbd2"
+        ]
+      },
+      {
+        "group": "framework",
+        "case": "res://tools/validation/test_ui_components.gd",
+        "diagnostics": [
+          "WARNING: ObjectDB instances leaked at exit (run with --verbose for details)."
+        ],
+        "evidence": [
+          "docs/validation/framework-onboarding-report.json",
+          "log_sha256=7270eba844cef50931529d88fab60412374b635cbcb87f16bc8183a91e34a5f7"
+        ]
+      },
+      {
+        "group": "framework",
+        "case": "product-smoke-600",
+        "diagnostics": [
+          "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ],
+        "evidence": [
+          "docs/validation/framework-onboarding-report.json",
+          "log_sha256=cf4a128c722e137ad11be00d64da5eec27f74a5b0bdce23db0ca4e0aeefdaa9e"
+        ]
+      }
+    ]
+  },
+  "reproduce": "python3 -B tools/verify.py --suite all --godot /path/to/spine-godot",
+  "evidence": {
+    "workspace": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-quality-review-_jrvhkef/final-acceptance",
+    "unified_report_sha256": "12fc46e96b2f732d6650b78af8904f125bb04eacc2d5fde122fe9d982a12ec58",
+    "source_fingerprints": "non-git-quality-source-sha256.json",
+    "source_fingerprints_sha256": "7ef021bfcb03671c410b03c386dc0a3283e1bb0aa86c66d49584dca9521a72d5",
+    "captured_input_files": 2230,
+    "retention": "Detailed logs and child reports remain in the temporary evidence directory; this summary and source fingerprints are archived. The command regenerates a fresh evidence directory."
+  },
+  "limits": [
+    "No APK/native SDK/mobile-device or production CDN/TLS acceptance.",
+    "Development release checks simulate the build predicate; they do not export a release binary.",
+    "PCK proof checks content/UID behavior, not a production mobile package.",
+    "Recorded shutdown exceptions remain visible; passing does not mean leak-free.",
+    "This run used macOS; Windows/Linux portability changes were not executed on those platforms.",
+    "Existing shutdown diagnostics remain unresolved; no claim of leak-free operation or exhaustive defect removal.",
+    "Known shutdown cases and their exact diagnostics are listed above; gameplay checks are not a substitute for manual visual and mobile input acceptance."
+  ]
+}

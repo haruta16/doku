@@ -1,0 +1,67 @@
+{
+	"bounded_round": {
+		"actions": 64,
+		"namespaces": 1,
+		"record_bytes_after": 5212,
+		"record_bytes_before": 4788
+	},
+	"engine": "4.6.1-stable (custom_build)",
+	"kind": "desktop_file_commit_measurement",
+	"limitations": [
+		"not a mobile budget",
+		"includes encrypted double-slot scan/readback/rename",
+		"single-process synchronous workload; no forced power loss"
+	],
+	"platform": "macOS",
+	"samples_per_size": 12,
+	"sizes": [
+		{
+			"commit_us": {
+				"max": 1291,
+				"mean": 1276.33333333333,
+				"p50": 1282,
+				"p95": 1291
+			},
+			"encoded_state_bytes": 14320,
+			"record_count": 24,
+			"snapshot_us": {
+				"max": 9,
+				"mean": 8.66666666666667,
+				"p50": 9,
+				"p95": 9
+			}
+		},
+		{
+			"commit_us": {
+				"max": 15105,
+				"mean": 14882.25,
+				"p50": 14895,
+				"p95": 15105
+			},
+			"encoded_state_bytes": 229012,
+			"record_count": 384,
+			"snapshot_us": {
+				"max": 145,
+				"mean": 135.5,
+				"p50": 134,
+				"p95": 145
+			}
+		},
+		{
+			"commit_us": {
+				"max": 60557,
+				"mean": 58968.6666666667,
+				"p50": 58955,
+				"p95": 60557
+			},
+			"encoded_state_bytes": 918364,
+			"record_count": 1536,
+			"snapshot_us": {
+				"max": 581,
+				"mean": 521.916666666667,
+				"p50": 520,
+				"p95": 581
+			}
+		}
+	]
+}

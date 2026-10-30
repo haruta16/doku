@@ -1,8 +1,8 @@
 # Game Page 精读 — 三大系统的汇聚点
 
 > 文件：
-> - [scripts/module/game/view/game_page.gd](../../scripts/module/game/view/game_page.gd) — 正式关卡的 Game Page
-> - [scripts/module/game/view/base_game_page.gd](../../scripts/module/game/view/base_game_page.gd) — 所有游戏页面的公共基类
+> - [products/meowdoku/gameplay/presentation/main/view/game_page.gd](../../products/meowdoku/gameplay/presentation/main/view/game_page.gd) — 正式关卡的 Game Page
+> - [products/meowdoku/gameplay/presentation/main/view/base_game_page.gd](../../products/meowdoku/gameplay/presentation/main/view/base_game_page.gd) — 所有游戏页面的公共基类
 >
 > `GamePage extends BaseGamePage extends UIFrameWindow`。这两个文件是规则引擎（QueendokuCore）、输入系统（GestureRecognizer + CellAction）和棋盘渲染（BoardView）的**交汇点**。Game Page 不自己做判断——它负责**协调**：接收输入、调用规则引擎、更新渲染、管理状态。
 >

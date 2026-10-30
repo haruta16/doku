@@ -1,0 +1,195 @@
+{
+  "status": "closed_with_explicit_environment_boundaries",
+  "baseline": "expanded-audit-report.json",
+  "baseline_backup": "/private/tmp/doku-audit2-baseline-3g0al87_",
+  "scope": [
+    "实际手势输入在盘外/隐藏/遮挡/失焦/多事件下的边界",
+    "本地日历与日切、会话前后台及保存失败后的时间统计",
+    "通用业务端口与Block示例的重复/失败/切局/恢复后下一动作",
+    "首页转场、启动页收尾及音乐暂停恢复"
+  ],
+  "methodology": "../framework-implementation.md#8-有边界的排查与收尾方法",
+  "invariants": [
+    "保持原版提示按次收费、空定位收费及撤销既有边界",
+    "保留本地日期与已有日切产品政策",
+    "修复已有合同，不引入新玩法、原生SDK或通用抽象框架",
+    "只在隔离工程测试，不操作玩家存档"
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "issue": "首页转场的旧定时/动画结果跨展示生效，目标取消后首页不可操作",
+      "fix": "本次转场绑定首页代次；刷新/隐藏撤销监听；目标显示回调后重新校验归属，失败恢复首页。",
+      "status": "fixed_and_verified",
+      "regression": {
+        "check": "res://tools/validation/test_ui_navigation_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "UI NAVIGATION LIFECYCLE TESTS: 26 assertions, 0 failures",
+        "log": {
+          "path": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9zbit0jr/test-68.log",
+          "sha256": "d7e10ce81246ab35732b2ff36c5604d524e3417cea5365af605161c7a4891680"
+        },
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      "trigger": "退场计时/动画尚未收尾时刷新或关闭首页，或目标的同步显示监听取消页面。"
+    },
+    {
+      "id": "F2",
+      "issue": "启动页旧补间结束新展示，启动器漏掉同步完成或等待已取消页面",
+      "fix": "刷新先取消补间，拒绝非正/非有限时长；启动器按当前收尾状态等待，隐藏、刷新和销毁均退出。",
+      "status": "fixed_and_verified",
+      "regression": {
+        "check": "res://tools/validation/test_ui_navigation_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "UI NAVIGATION LIFECYCLE TESTS: 26 assertions, 0 failures",
+        "log": {
+          "path": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9zbit0jr/test-68.log",
+          "sha256": "d7e10ce81246ab35732b2ff36c5604d524e3417cea5365af605161c7a4891680"
+        },
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      "trigger": "收尾补间期间重显；force_complete同步完成、等待期间取消；可选等待参数非法。"
+    },
+    {
+      "id": "F3",
+      "issue": "交叠音效提前解除其他音效的BGM暂停，显式stop后永久保持暂停",
+      "fix": "闪避按播放器持有，自然结束/stop只释放自身；保留原续播实现与暂停期间的播放进度。",
+      "status": "fixed_and_verified",
+      "regression": {
+        "check": "res://tools/validation/test_product_audio_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PRODUCT AUDIO LIFECYCLE TESTS: 13 assertions, 0 failures",
+        "log": {
+          "path": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9zbit0jr/test-46.log",
+          "sha256": "640c9c8928876f0c42030db30cb6d9b840861a66c0b4cf3eb406adb524c8ba80"
+        },
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      "trigger": "启用BGM实验组且两个闪避音效交叠，或显式停止尚未完成的闪避音效。"
+    },
+    {
+      "id": "F4",
+      "issue": "会话重复焦点、写失败、同步重入及清档导致活跃时长丢失/重复/残留",
+      "fix": "采集与持久化分离，待存秒数可重试；通知幂等，提交前切开区间，清档使旧结果失效；提交期间读取投影按本地日期限定。",
+      "status": "fixed_and_verified",
+      "regression": {
+        "check": "res://tools/validation/test_product_active_session.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "PRODUCT ACTIVE SESSION TESTS: 60 assertions, 0 failures",
+        "log": {
+          "path": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9zbit0jr/test-45.log",
+          "sha256": "6b4802c80c2f1e27cd5b547c4f82cb1edb96ca0b43a34d46c263d47348f14158"
+        },
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 14, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 21, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 23, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 23, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      "trigger": "重复焦点通知、磁盘写失败、同步保存通知重入、成功清档或调试切会话。"
+    },
+    {
+      "id": "F5",
+      "issue": "Block旧回执覆盖新局/新存档，重开失败仍使用旧宿主，终态矛盾快照可恢复",
+      "fix": "会话按来源及序号接受结果；打开前清旧归属；模块检查finished与棋盘/队列一致。",
+      "status": "fixed_and_verified",
+      "regression": {
+        "check": "res://tools/validation/test_block_session_boundaries.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "BLOCK SESSION BOUNDARY TESTS: 56 assertions, 0 failures",
+        "log": {
+          "path": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9zbit0jr/test-2.log",
+          "sha256": "6d30d2c5a10af814c9746acfecc9fd60b3c49f4c82fee8da9be9b8e5d2ccb363"
+        },
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      "trigger": "Block示例会话在提交监听中切局/切档、同实例打开失败，或恢复类型正确但终态矛盾的快照；非当前Doku默认页面。"
+    },
+    {
+      "id": "F6",
+      "issue": "真实GUI输入取消/遮挡/失焦后仍沿旧笔画修改棋盘",
+      "fix": "详见输入领域证据与回归；只在当前GUI归属下派发移动，取消时保留已发生的笔画并清理识别器。",
+      "status": "fixed_and_verified",
+      "regression": {
+        "check": "res://tools/validation/test_game_input_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME INPUT LIFECYCLE TESTS: 359 assertions, 0 failures",
+        "log": {
+          "path": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9zbit0jr/test-31.log",
+          "sha256": "3b2f260689f98ef67a978ae58aaf124d7a3b68006252bdabec4d7afe2fac79df"
+        },
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      "trigger": "持笔期间弹出设置/挡板、隐藏或禁用棋盘、失焦/释放等输入归属改变；测试含真实Viewport事件及受控通知。"
+    },
+    {
+      "id": "F7",
+      "issue": "左/上盘外负坐标被截断为第0格",
+      "fix": "棋盘与防误触坐标解析使用向下取整及明确越界拒绝。",
+      "status": "fixed_and_verified",
+      "regression": {
+        "check": "res://tools/validation/test_game_input_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "summary": "GAME INPUT LIFECYCLE TESTS: 359 assertions, 0 failures",
+        "log": {
+          "path": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9zbit0jr/test-31.log",
+          "sha256": "3b2f260689f98ef67a978ae58aaf124d7a3b68006252bdabec4d7afe2fac79df"
+        },
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      "trigger": "棋盘边缘/盘外拖动产生左或上方小负本地坐标。"
+    }
+  ],
+  "rejected_or_unchanged": [
+    "本地日历、跨月/跨年/闰年及缓存每日入口新增45项通过，无需改日期规则。",
+    "RoundService/EconomyService候选失败后丢弃的合同有效；53项事务边界通过，不改公共提交模型。",
+    "Block原生拖放取消、失败后重拖及拖拽中换局通过，不改拖放表现脚本。",
+    "音乐开关/续播本身无需改动：初始恢复失败来自残留duck。实际引擎探针确认paused时playing=false而has_stream_playback=true；撤去不必要的续播改动，补播放对象身份保持用例。",
+    "首个导航测试把launcher静态预载于Autoload初始化之前而编译失败，已改为初始化后加载；该夹具错误未计入产品缺陷。"
+  ],
+  "acceptance": [
+    "确认项可复现，正常与失败路径有回归",
+    "横查同类入口并交叉审阅",
+    "冻结源码全套与启动通过",
+    "专项只按改动影响选择",
+    "源码指纹与成功验证副本一致",
+    "记录既有告警和实际环境边界"
+  ],
+  "root_targeted": {
+    "navigation": "26/0",
+    "audio": "13/0",
+    "root_counterproof": "navigation26/16; audio13/4; zero script errors"
+  },
+  "final_report": "extended-flows-report.json",
+  "acceptance_result": {
+    "passed": true,
+    "source_frozen": true,
+    "steps": 74,
+    "matching_inputs": 989
+  }
+}

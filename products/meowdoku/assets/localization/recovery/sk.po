@@ -1,0 +1,26 @@
+# Recovery prompts. Edit this PO directly; see README.md.
+msgid ""
+msgstr ""
+"Project-Id-Version: Meowdoku recovery prompts\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "RECOVERY_RESULT_TITLE"
+msgstr "Výsledok nebol uložený"
+
+msgid "RECOVERY_RESULT_BODY"
+msgstr "Skúste tento výsledok uložiť znova. Zatvorením sa vrátite na úvodnú obrazovku; neuložené výsledky sa môžu stratiť."
+
+msgid "RECOVERY_CHECKIN_TITLE"
+msgstr "Denné prihlásenie nebolo uložené"
+
+msgid "RECOVERY_CHECKIN_BODY"
+msgstr "Vaša výhra je uložená. Skúste denné prihlásenie znova alebo okno zatvorte a tentoraz ho preskočte."
+
+msgid "RECOVERY_CONTENT_ERROR"
+msgstr "Obsah hry sa nepodarilo načítať. Reštartujte hru."
+
+msgid "RECOVERY_SAVE_ERROR"
+msgstr "Akciu sa nepodarilo uložiť. Skúste to znova."

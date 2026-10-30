@@ -1,8 +1,8 @@
 extends SceneTree
 
 const BYTECODE_ROOT := "res://.autoconverted"
-const LEVEL_EDITOR_ROOT := "res://assets/editor/levels"
-const LEVEL_RUNTIME_ROOT := "res://assets/resources/levels"
+const LEVEL_EDITOR_ROOT := "res://products/meowdoku/assets/editor/levels"
+const LEVEL_RUNTIME_ROOT := "res://products/meowdoku/assets/resources/levels"
 const LEVEL_KEY := "meowdoku-2026-bank-secret"
 
 const EXPECTED_BYTECODE_SCRIPTS := 257
@@ -13,13 +13,18 @@ const EXPECTED_LEVEL_RECORDS := 20746
 const EXPECTED_SOLUTION_ENTRIES := 20710
 const EXPECTED_RUNTIME_REJECTED_SOLUTIONS := 63
 
+# 原 APK 身份保持不变；目录整理只更新显式迁移表，不复制旧文件或改写历史基线。
+const RELOCATION_MANIFEST := "res://tools/validation/fixtures/recovered_relocations.json"
+const SCENE_BASELINE := "res://tools/validation/fixtures/recovered_scenes.json"
+
 
 func _initialize() -> void:
 	var failures: Array[String] = []
+	var relocations := _load_relocations(failures)
 
 	_validate_main_scene(failures)
-	_validate_recovered_scripts(failures)
-	_validate_scenes(failures)
+	_validate_recovered_scripts(failures, relocations)
+	_validate_scenes(failures, relocations)
 	_validate_translations(failures)
 	_validate_level_banks(failures)
 	_validate_bank_api(failures)
@@ -45,7 +50,49 @@ func _validate_main_scene(failures: Array[String]) -> void:
 		failures.append("main scene failed to load: %s" % main_scene_path)
 
 
-func _validate_recovered_scripts(failures: Array[String]) -> void:
+func _load_relocations(failures: Array[String]) -> Dictionary:
+	var manifest: Variant = _parse_json_file(RELOCATION_MANIFEST)
+	if not manifest is Dictionary or manifest.get("schema") != 1 or not manifest.get("paths") is Dictionary:
+		failures.append("invalid recovery relocation manifest")
+		return {}
+
+	var originals: Dictionary = {}
+	for bytecode_path: String in _collect_files(BYTECODE_ROOT, ".gdc"):
+		originals[_original_script_path(bytecode_path)] = true
+	var baseline: Variant = _parse_json_file(SCENE_BASELINE)
+	if baseline is Dictionary and baseline.get("scenes") is Array:
+		for scene_path: Variant in baseline.scenes:
+			if scene_path is String:
+				originals[scene_path] = true
+
+	var relocations: Dictionary = {}
+	for original: Variant in manifest.paths:
+		var target: Variant = manifest.paths[original]
+		if not original is String or not originals.has(original):
+			failures.append("relocation has no recovered identity: %s" % str(original))
+			continue
+		if not target is String or not target.begins_with("res://") or target == original or target.get_extension() != original.get_extension():
+			failures.append("invalid relocation target for %s: %s" % [original, str(target)])
+			continue
+		relocations[original] = target
+		if not FileAccess.file_exists(target):
+			failures.append("relocation target is missing: %s -> %s" % [original, target])
+
+	# 包括未迁移身份，避免将两份原文件映射到同一实现而虚增恢复覆盖。
+	var targets: Dictionary = {}
+	for original: String in originals:
+		var target: String = relocations.get(original, original)
+		if targets.has(target):
+			failures.append("recovered identities share a target: %s and %s -> %s" % [targets[target], original, target])
+		targets[target] = original
+	return relocations
+
+
+func _original_script_path(bytecode_path: String) -> String:
+	return "res://" + bytecode_path.trim_prefix(BYTECODE_ROOT + "/").trim_suffix(".gdc") + ".gd"
+
+
+func _validate_recovered_scripts(failures: Array[String], relocations: Dictionary) -> void:
 	var bytecode_files := _collect_files(BYTECODE_ROOT, ".gdc")
 	if bytecode_files.size() != EXPECTED_BYTECODE_SCRIPTS:
 		failures.append(
@@ -56,10 +103,8 @@ func _validate_recovered_scripts(failures: Array[String]) -> void:
 		)
 
 	for bytecode_path in bytecode_files:
-		var source_path := (
-			bytecode_path.trim_prefix(BYTECODE_ROOT + "/").trim_suffix(".gdc") + ".gd"
-		)
-		source_path = "res://" + source_path
+		var original_path := _original_script_path(bytecode_path)
+		var source_path: String = relocations.get(original_path, original_path)
 		if not FileAccess.file_exists(source_path):
 			failures.append("recovered source is missing for %s" % bytecode_path)
 			continue
@@ -67,10 +112,23 @@ func _validate_recovered_scripts(failures: Array[String]) -> void:
 			failures.append("recovered script failed to load: %s" % source_path)
 
 
-func _validate_scenes(failures: Array[String]) -> void:
+func _validate_scenes(failures: Array[String], relocations: Dictionary) -> void:
 	var scene_files := _collect_files("res://", ".tscn", ["res://.godot", "res://.autoconverted"])
-	if scene_files.size() != EXPECTED_SCENES:
-		failures.append("expected %d scenes, got %d" % [EXPECTED_SCENES, scene_files.size()])
+	# 原场景身份必须全部存在；新增示例不计入原 APK 的 74 份。
+	var baseline: Variant = _parse_json_file(SCENE_BASELINE)
+	if not baseline is Dictionary or not baseline.get("scenes") is Array or baseline.scenes.size() != EXPECTED_SCENES:
+		failures.append("invalid recovered scene baseline")
+	else:
+		var seen: Dictionary = {}
+		for original_path: Variant in baseline.scenes:
+			if not original_path is String or seen.has(original_path):
+				failures.append("invalid or duplicate recovered scene identity: %s" % str(original_path))
+				continue
+			seen[original_path] = true
+			var scene_path: String = relocations.get(original_path, original_path)
+			if not scene_files.has(scene_path):
+				failures.append("recovered scene is missing: %s -> %s" % [original_path, scene_path])
+		print("SCENE_INFO: %d recovered scenes and %d additional scenes" % [EXPECTED_SCENES, scene_files.size() - EXPECTED_SCENES])
 
 	for scene_path in scene_files:
 		if not ResourceLoader.load(scene_path) is PackedScene:
@@ -78,7 +136,7 @@ func _validate_scenes(failures: Array[String]) -> void:
 
 
 func _validate_translations(failures: Array[String]) -> void:
-	var translation_files := _collect_files("res://assets/localization", ".translation")
+	var translation_files := _collect_files("res://products/meowdoku/assets/localization", ".translation")
 	if translation_files.size() != EXPECTED_TRANSLATIONS:
 		failures.append(
 			(

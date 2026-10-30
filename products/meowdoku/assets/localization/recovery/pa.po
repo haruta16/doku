@@ -1,0 +1,26 @@
+# Recovery prompts. Edit this PO directly; see README.md.
+msgid ""
+msgstr ""
+"Project-Id-Version: Meowdoku recovery prompts\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "RECOVERY_RESULT_TITLE"
+msgstr "ਨਤੀਜਾ ਸੇਵ ਨਹੀਂ ਹੋਇਆ"
+
+msgid "RECOVERY_RESULT_BODY"
+msgstr "ਇਸ ਨਤੀਜੇ ਨੂੰ ਦੁਬਾਰਾ ਸੇਵ ਕਰਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ। ਬੰਦ ਕਰਨ ਨਾਲ ਹੋਮ 'ਤੇ ਵਾਪਸ ਜਾਓਗੇ; ਸੇਵ ਨਾ ਹੋਏ ਨਤੀਜੇ ਗੁਆਚ ਸਕਦੇ ਹਨ।"
+
+msgid "RECOVERY_CHECKIN_TITLE"
+msgstr "ਰੋਜ਼ਾਨਾ ਚੈੱਕ-ਇਨ ਸੇਵ ਨਹੀਂ ਹੋਇਆ"
+
+msgid "RECOVERY_CHECKIN_BODY"
+msgstr "ਤੁਹਾਡੀ ਜਿੱਤ ਸੇਵ ਹੋ ਗਈ ਹੈ। ਰੋਜ਼ਾਨਾ ਚੈੱਕ-ਇਨ ਦੁਬਾਰਾ ਕਰੋ ਜਾਂ ਇਸ ਵਾਰ ਛੱਡਣ ਲਈ ਬੰਦ ਕਰੋ।"
+
+msgid "RECOVERY_CONTENT_ERROR"
+msgstr "ਗੇਮ ਦੀ ਸਮੱਗਰੀ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਗੇਮ ਮੁੜ ਸ਼ੁਰੂ ਕਰੋ।"
+
+msgid "RECOVERY_SAVE_ERROR"
+msgstr "ਕਾਰਵਾਈ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"

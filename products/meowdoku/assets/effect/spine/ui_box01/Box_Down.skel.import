@@ -1,0 +1,14 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://b4anrh2fnvsgn"
+path="res://.godot/imported/Box_Down.skel-f79d4b7fb013c51570c938216a8aef01.spskel"
+
+[deps]
+
+source_file="res://products/meowdoku/assets/effect/spine/ui_box01/Box_Down.skel"
+dest_files=["res://.godot/imported/Box_Down.skel-f79d4b7fb013c51570c938216a8aef01.spskel"]
+
+[params]
+

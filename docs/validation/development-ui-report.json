@@ -1,0 +1,333 @@
+{
+  "ok": true,
+  "date": "2026-10-27",
+  "scope": "Targeted UI return handling, existing retry translations, and runtime development-tool isolation. No translation resources or export profiles changed; no real player saves used.",
+  "targeted_integration": {
+    "command": "python3 tools/run_validation.py --script res://tools/validation/test_game_settlement_recovery.gd --script res://tools/validation/test_ui_popup_results.gd --script res://tools/validation/test_ui_lifecycle.gd --script res://tools/validation/test_storage_preferences.gd --smoke --timeout 180",
+    "steps": [
+      {
+        "check": "editor_import",
+        "ok": true,
+        "exit_code": 0,
+        "observed": [],
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9aah2g_0/import.log",
+        "log_sha256": "eef4b53f9d8966b8820c2218b5c582fa337981a76757676b19820aa473f7754f",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+          "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+          "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_game_settlement_recovery.gd",
+        "ok": true,
+        "exit_code": 0,
+        "observed": [
+          "GAME SETTLEMENT RECOVERY TESTS: 64 assertions, 0 failures"
+        ],
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9aah2g_0/test-0.log",
+        "log_sha256": "35d25cf7474d614314c0b8b7ab13c9fad5379110be074fcc74d9be1d54785082",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 14, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 14, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 21, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 21, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 27, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 27, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 33, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 33, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 33, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 40, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 40, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 40, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 48, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_ui_popup_results.gd",
+        "ok": true,
+        "exit_code": 0,
+        "observed": [
+          "UI POPUP RESULTS TESTS: 59 assertions, 0 failures"
+        ],
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9aah2g_0/test-1.log",
+        "log_sha256": "e5f85c8a558f8057ed2fc7913df4d760c441790b9fdd95fcc973ae569f6f46aa",
+        "expected_test_errors": [
+          "ERROR: [AwardManager] 奖励尚未入账，保留待领取记录: { \"status\": \"write_failed\", \"revision\": 6, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_ui_lifecycle.gd",
+        "ok": true,
+        "exit_code": 0,
+        "observed": [
+          "UI LIFECYCLE TESTS: 35 assertions, 0 failures"
+        ],
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9aah2g_0/test-2.log",
+        "log_sha256": "34d9ae815543cdce18a5918545b5bc8c525a43b23226529d06736a527861fd0a",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "res://tools/validation/test_storage_preferences.gd",
+        "ok": true,
+        "exit_code": 0,
+        "observed": [
+          "STORAGE PREFERENCES TESTS: 137 assertions, 0 failures"
+        ],
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9aah2g_0/test-3.log",
+        "log_sha256": "a392a61e1fca8d1fc6e87f4dd270d11888e14a90a47e3c6d7b59be4d7e972c34",
+        "expected_test_errors": [
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 5, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 8, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 10, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 11, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 12, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 13, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 16, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 17, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 17, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }",
+          "ERROR: [GameState] 保存未完成: { \"status\": \"write_failed\", \"revision\": 20, \"ok\": false, \"error\": \"write_failed\", \"detail\": \"注入替换前中断\" }"
+        ],
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ]
+      },
+      {
+        "check": "startup_600_frames",
+        "ok": true,
+        "exit_code": 0,
+        "observed": [],
+        "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-9aah2g_0/smoke.log",
+        "log_sha256": "9b82af0316eaf824610d4ab94b78be18d7c349cd93cd303010dfd4120a061e5d",
+        "environment_errors": [
+          "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+        ],
+        "shutdown_errors": [
+          "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+        ]
+      }
+    ]
+  },
+  "product_development_boundary": {
+    "command": "python3 tools/run_development_boundary_tests.py",
+    "scope": "Isolated userdata in each branch. The release branch replaces OS.is_debug_build() only in the seven listed product files; no exported release binary or mobile SDK is validated.",
+    "predicate_files": [
+      "scripts/app/bootstrap/launcher.gd",
+      "scripts/app/ui/ui_registry.gd",
+      "scripts/app/state/game_state.gd",
+      "scripts/gameplays/doku/presentation/main/view/game_page.gd",
+      "scripts/gameplays/doku/presentation/daily/view/daily_game_page.gd",
+      "scripts/gameplays/doku/presentation/board/board_view.gd",
+      "addons/cheat_manager/cheat_bus.gd"
+    ],
+    "branches": [
+      {
+        "mode": "debug",
+        "ok": true,
+        "steps": [
+          {
+            "check": "editor_import",
+            "ok": true,
+            "exit_code": 0,
+            "observed": [],
+            "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-5trdgd3y/debug/import.log",
+            "log_sha256": "164184378789ec5b3e1f49752afb3f0fb9b1acb588d9854507d7b1320dc66750",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+              "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+              "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+            ]
+          },
+          {
+            "check": "res://tools/validation/test_development_boundaries.gd",
+            "ok": true,
+            "exit_code": 0,
+            "observed": [
+              "DEVELOPMENT BOUNDARY TESTS: mode=debug 33 assertions, 0 failures"
+            ],
+            "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-5trdgd3y/debug/test.log",
+            "log_sha256": "c494036d8c00a72765909d15645b64efdfb8e79ef0f4fedf97091048fe061224",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+            ]
+          }
+        ]
+      },
+      {
+        "mode": "simulated_release",
+        "ok": true,
+        "steps": [
+          {
+            "check": "editor_import",
+            "ok": true,
+            "exit_code": 0,
+            "observed": [],
+            "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-5trdgd3y/simulated_release/import.log",
+            "log_sha256": "164184378789ec5b3e1f49752afb3f0fb9b1acb588d9854507d7b1320dc66750",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\"",
+              "ERROR: Cannot save file '/Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres'.",
+              "ERROR: Error saving editor settings to /Users/haruta/Library/Application Support/Godot/editor_settings-4.6.tres"
+            ]
+          },
+          {
+            "check": "res://tools/validation/test_development_boundaries.gd",
+            "ok": true,
+            "exit_code": 0,
+            "observed": [
+              "DEVELOPMENT BOUNDARY TESTS: mode=simulated_release 32 assertions, 0 failures"
+            ],
+            "original_log": "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-validation-development-5trdgd3y/simulated_release/test.log",
+            "log_sha256": "0000a976ac5abaa1c7655e561e918dac61383e5a44aca2b933e72479ddc88bdf",
+            "environment_errors": [
+              "ERROR: Condition \"ret != noErr\" is true. Returning: \"\""
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "python_regressions": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/validation -p 'test_*.py'",
+    "tests": 22,
+    "ok": true,
+    "development_service_assertions": {
+      "simulated_debug": 16,
+      "simulated_release": 15
+    },
+    "original_log": "/private/tmp/doku-development-python-accepted.log",
+    "log_sha256": "47a6d1af53589b073c98a0e429d79419116864c2910af7d6a6d1f79f0a160fec"
+  },
+  "reproduced_before_fix": [
+    {
+      "check": "confirm Escape and Android back",
+      "failed_assertions": 6,
+      "original_log": "/private/tmp/doku-confirm-escape-before.log",
+      "log_sha256": "0a3e85a573a6cd5c7ed20170d4a1142b0c3d8a716cb07efee60ac3585b26b9f7"
+    },
+    {
+      "check": "French terminal and Japanese check-in retry labels",
+      "failed_assertions": 6,
+      "original_log": "/private/tmp/doku-recovery-language-before.log",
+      "log_sha256": "8aaabb836ac4d999543a9e1d120f274035e9cb9c92e55d080c02cf30ceec8334"
+    },
+    {
+      "check": "development services simulated release",
+      "failed_assertions": 15,
+      "original_log": "/private/tmp/doku-development-tools-before.log",
+      "log_sha256": "1d45946e8d939267b7f7fdfb18573814206fa6ff252bc4e8f74e54d94edd9678"
+    },
+    {
+      "check": "product development boundaries simulated release",
+      "failed_assertions": 17,
+      "original_log": "/private/tmp/doku-development-boundary-before.log",
+      "log_sha256": "e005a6b8dee3cd661d0f8f574ec724987af69c9ccf96a8d7cc8c7a619445afe4"
+    }
+  ],
+  "source_files": 742,
+  "source_files_matching_latest_isolated_copy": 741,
+  "fingerprinted_not_executed": [
+    "export_presets.cfg"
+  ],
+  "changed_inputs": {
+    "addons/cheat_manager/cheat_bus.gd": {
+      "before": null,
+      "after": "378627aa48a2328cf3c8498747ddf7971a840e9fe415e3273b3045e7f195aae4"
+    },
+    "addons/godot_mcp/mcp_game_inspector_service.gd": {
+      "before": null,
+      "after": "6648481372c816086a08a0116807a8274e1ed2f460db4fa723feb9430010ab36"
+    },
+    "addons/godot_mcp/mcp_input_service.gd": {
+      "before": null,
+      "after": "636eb7d1d483c6b758cc5483df0323132d66f7deb763bfdc681ea1357d1d39f4"
+    },
+    "addons/godot_mcp/mcp_screenshot_service.gd": {
+      "before": null,
+      "after": "8b64a6ca2784a387a09a7d01ce27d4e78dc2218dc5a7578b8f09f5203253ed41"
+    },
+    "addons/screenshot_tool/screenshot_hotkey.gd": {
+      "before": null,
+      "after": "e6ef93e8ebfa904db7047d55ed3b8f8f244aa0c0942189410658d8369d1589b4"
+    },
+    "scripts/app/bootstrap/launcher.gd": {
+      "before": "ddc4cab4d45598c1d549d603535938f2a85e79257263d6e2e5893423c30da41b",
+      "after": "e12da722e486bbf2df4cf32a1df428ed393dcf6e951d0a84708fc5bc73f05568"
+    },
+    "scripts/app/diagnostics/debug_api_server_manager.gd": {
+      "before": "a56dd87c58306e39d580f86b0fb769ba514ce968ec24126dba3aa78e66fca133",
+      "after": "bd73dcfa3c0705cfb4f957549c267ad9f4866fd697c7c78683a77b85c2c2678e"
+    },
+    "scripts/app/state/game_state.gd": {
+      "before": "a8229a2698414da6d0a98f22eeb94ffaf5bbb68e077e7c3da1a4e0e2d5e2219a",
+      "after": "a9cbe7192dbfd3c01bf1f297b3d6d389f3b76f61753ad47e868ddc145b21741a"
+    },
+    "scripts/app/ui/common/confirm_dialog.gd": {
+      "before": "dfed689d2881c596a9a6e98d34e739b6cd1b1bd37949b569d847f24c1d4ea3f6",
+      "after": "e7255b979f5e6aca92c40d34c6c1d2fbc00b931accad3e057df03e23172e56d6"
+    },
+    "scripts/app/ui/ui_registry.gd": {
+      "before": "08bd72cf770c3d4fc888c1b820a76775b00d18cad391f659fa77bc68cfcb90de",
+      "after": "d48aac681198ff2032abdc0bb39de57798fd99947897653986586eb6b0ffe823"
+    },
+    "scripts/gameplays/doku/presentation/board/board_view.gd": {
+      "before": "1c78ebd27e872b917bc6e102ce5073eeea32c6a8a73d21ccc9c4f9fb4d004355",
+      "after": "75d14583311adab5dc0f295afd3a8d86d660e3cb2efcf30dc5c553597121d251"
+    },
+    "scripts/gameplays/doku/presentation/daily/view/daily_game_page.gd": {
+      "before": "44b2b244e2190e3725219e6f8ef8dc0daafb41b4edfb1da092a350c33b1310d5",
+      "after": "0364f7e9f4dbc52e753158862be02bfa70b3a9cbb9dc39f885b878e43ff22426"
+    },
+    "scripts/gameplays/doku/presentation/main/view/base_game_page.gd": {
+      "before": "b32b074fb7954381058c5d58e67fe31f9f91ec470275f300a5b4c95a67ff1bc3",
+      "after": "7ca7b8edc7e46c7b0a7023955621821b0c905612235e4e257d57c8fcd338c5ac"
+    },
+    "scripts/gameplays/doku/presentation/main/view/game_page.gd": {
+      "before": "539fec59d1507be3e9d5b9aaf2bf58713c2a408fab95828ee75b383214bc73db",
+      "after": "3e32fc16202e13e608f19174619696be8f152865b053bb43c95d76300864d46c"
+    },
+    "tools/run_development_boundary_tests.py": {
+      "before": null,
+      "after": "d3ba77e6de3f1a504035327075eaeb1b04568dc6e4f7c07bc53ab7eecff06c89"
+    },
+    "tools/validation/test_development_boundaries.gd": {
+      "before": null,
+      "after": "24501686983cef132e47abe23e93901fd63d65c9fe0b914754912b858a279a1b"
+    },
+    "tools/validation/test_development_boundaries.gd.uid": {
+      "before": null,
+      "after": "03e0f96488067d1228a3ff95b40f929ce0f1fe05f8255c13da97a29b9e7c34bb"
+    },
+    "tools/validation/test_development_tools.py": {
+      "before": null,
+      "after": "c452d7038a09c52668e26eba29cd5b95d6ca698306796d6682e3ed06a6787131"
+    },
+    "tools/validation/test_game_settlement_recovery.gd": {
+      "before": "f318ac1a47134e16954ca45a71a63dcd297da994ceac2074ac6e7fa8a96df332",
+      "after": "f743533946554e797a621eae0fbb7f0c45823b50a9a2d606cdea8e73000b79a7"
+    },
+    "tools/validation/test_ui_popup_results.gd": {
+      "before": "6aef7dcb8551287d868186f315d0f2404e0f6d995ef77dad47ace2b530ddf74c",
+      "after": "1de462227eb9f6d1ffee51bd33e4074c5f03c6ff62560546211b4a75ce14d760"
+    }
+  },
+  "translation_boundary": "Both recovery buttons use FAIL_TRY_AGAIN, present in all 75 existing OptimizedTranslation resources. Recovery titles/body have no corresponding translations; existing Chinese/English fallback retained. No resources rewritten.",
+  "limitations": [
+    "No real release binary or Android/iOS export was executed; build predicates were replaced only in temporary copies for release-branch checks.",
+    "Runtime services are disabled in release; their scripts and Autoload references remain in the project/package.",
+    "Full 40-step framework/content publishing suite was not rerun; this follow-up validates affected paths on top of the previous full acceptance.",
+    "Native screenshot pixels were not rendered; dispatch uses temporary capture probes. Existing environment/shutdown diagnostics remain classified in the logs."
+  ]
+}

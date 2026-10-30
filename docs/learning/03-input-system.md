@@ -1,17 +1,17 @@
 # 输入系统精读 — 触摸 → 棋盘操作
 
 > 文件：
-> - [scripts/module/game/input/cell_action.gd](../../scripts/module/game/input/cell_action.gd) — 操作数据包（3 种 Kind + 3 个工厂方法）
-> - [scripts/module/game/input/board_stroke_context.gd](../../scripts/module/game/input/board_stroke_context.gd) — 一次手势的状态
-> - [scripts/module/game/input/board_gesture_recognizer.gd](../../scripts/module/game/input/board_gesture_recognizer.gd) — 手势 → 操作的协调者
-> - [scripts/module/game/input/swipe_guard_recognizer.gd](../../scripts/module/game/input/swipe_guard_recognizer.gd) — 防误触层（继承 BoardGestureRecognizer）
-> - [scripts/module/game/input/board_input_scheme.gd](../../scripts/module/game/input/board_input_scheme.gd) — 模式切换（Normal / Draft）
-> - [scripts/module/game/input/operations/base_tap_operation.gd](../../scripts/module/game/input/operations/base_tap_operation.gd) — 点击操作基类
-> - [scripts/module/game/input/operations/normal_tap_operation.gd](../../scripts/module/game/input/operations/normal_tap_operation.gd) — 正式模式点击
-> - [scripts/module/game/input/operations/normal_swipe_operation.gd](../../scripts/module/game/input/operations/normal_swipe_operation.gd) — 正式模式滑动
-> - [scripts/module/game/input/operations/normal_double_tap_operation.gd](../../scripts/module/game/input/operations/normal_double_tap_operation.gd) — 正式模式双击
-> - [scripts/module/game/input/operations/draft_tap_operation.gd](../../scripts/module/game/input/operations/draft_tap_operation.gd) — 草稿模式点击
-> - [scripts/module/game/input/operations/draft_swipe_operation.gd](../../scripts/module/game/input/operations/draft_swipe_operation.gd) — 草稿模式滑动
+> - [products/meowdoku/gameplay/presentation/input/cell_action.gd](../../products/meowdoku/gameplay/presentation/input/cell_action.gd) — 操作数据包（3 种 Kind + 3 个工厂方法）
+> - [products/meowdoku/gameplay/presentation/input/board_stroke_context.gd](../../products/meowdoku/gameplay/presentation/input/board_stroke_context.gd) — 一次手势的状态
+> - [products/meowdoku/gameplay/presentation/input/board_gesture_recognizer.gd](../../products/meowdoku/gameplay/presentation/input/board_gesture_recognizer.gd) — 手势 → 操作的协调者
+> - [products/meowdoku/gameplay/presentation/input/swipe_guard_recognizer.gd](../../products/meowdoku/gameplay/presentation/input/swipe_guard_recognizer.gd) — 防误触层（继承 BoardGestureRecognizer）
+> - [products/meowdoku/gameplay/presentation/input/board_input_scheme.gd](../../products/meowdoku/gameplay/presentation/input/board_input_scheme.gd) — 模式切换（Normal / Draft）
+> - [products/meowdoku/gameplay/presentation/input/operations/base_tap_operation.gd](../../products/meowdoku/gameplay/presentation/input/operations/base_tap_operation.gd) — 点击操作基类
+> - [products/meowdoku/gameplay/presentation/input/operations/normal_tap_operation.gd](../../products/meowdoku/gameplay/presentation/input/operations/normal_tap_operation.gd) — 正式模式点击
+> - [products/meowdoku/gameplay/presentation/input/operations/normal_swipe_operation.gd](../../products/meowdoku/gameplay/presentation/input/operations/normal_swipe_operation.gd) — 正式模式滑动
+> - [products/meowdoku/gameplay/presentation/input/operations/normal_double_tap_operation.gd](../../products/meowdoku/gameplay/presentation/input/operations/normal_double_tap_operation.gd) — 正式模式双击
+> - [products/meowdoku/gameplay/presentation/input/operations/draft_tap_operation.gd](../../products/meowdoku/gameplay/presentation/input/operations/draft_tap_operation.gd) — 草稿模式点击
+> - [products/meowdoku/gameplay/presentation/input/operations/draft_swipe_operation.gd](../../products/meowdoku/gameplay/presentation/input/operations/draft_swipe_operation.gd) — 草稿模式滑动
 >
 > 这 11 个文件构成了 Meowdoku 的**输入系统**——把用户的触摸手势翻译成棋盘操作意图。它不碰棋盘渲染、不碰状态存储，只负责「判断玩家想干什么」。
 >

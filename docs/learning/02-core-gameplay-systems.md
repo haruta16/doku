@@ -1,8 +1,8 @@
 # 核心玩法系统精读 — 数据模型 & 规则引擎
 
 > 文件：
-> - [scripts/module/gameplay/model/cell_state.gd](../../scripts/module/gameplay/model/cell_state.gd) — 棋盘格子状态枚举（7 种状态 + 3 个判断函数）
-> - [scripts/module/gameplay/core/queendoku_core.gd](../../scripts/module/gameplay/core/queendoku_core.gd) — 游戏规则引擎（9 个 static 函数）
+> - [products/meowdoku/gameplay/domain/cell_state.gd](../../products/meowdoku/gameplay/domain/cell_state.gd) — 棋盘格子状态枚举（7 种状态 + 3 个判断函数）
+> - [products/meowdoku/gameplay/domain/queendoku_core.gd](../../products/meowdoku/gameplay/domain/queendoku_core.gd) — 游戏规则引擎（9 个 static 函数）
 >
 > 这两个文件构成了 Meowdoku 的**纯数据层**——不依赖 UI、不依赖节点树、不依赖场景。纯数据进、纯数据出。理解它们等于理解了整个游戏的规则。
 >

@@ -46,6 +46,8 @@ func clear_tabs() -> void:
 
 
 func issue(raw: String) -> void:
+	if not OS.is_debug_build() or OS.has_feature("rel"):
+		return
 	var parts := raw.strip_edges().split(" ", false)
 	if parts.is_empty():
 		return

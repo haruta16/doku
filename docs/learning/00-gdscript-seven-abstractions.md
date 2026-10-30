@@ -163,7 +163,7 @@ speed = 50
 
 | | 谁定义的 | 在哪定义的 |
 |---|---|---|
-| `movement_input` | 你 | [game_input_event.gd](../../scripts/game_input_event.gd) |
+| `movement_input` | 你 | `game_input_event.gd`（本文示意脚本，并非项目现有文件） |
 | `play` | Godot 引擎 | AnimatedSprite2D 类 |
 | `print` | Godot 引擎 | 全局内置 |
 
@@ -369,7 +369,7 @@ enum         ← 「下面要定义一组有关联的固定值」
 static       ← 「这个东西挂在蓝图上，不挂在实例上」
 ```
 
-修饰令不单独使用——它修饰声明令。`static var` = 蓝图级别的变量，`static func` = 蓝图级别的函数。详见 [基础概念](01-basic-concepts.md) 里 static 一节。
+修饰令不单独使用——它修饰声明令。`static var` = 蓝图级别的变量，`static func` = 蓝图级别的函数。本项目中的 static 函数可参照 [核心玩法系统精读](02-core-gameplay-systems.md)。
 
 ### 流程令 — 「控制执行的路线」
 

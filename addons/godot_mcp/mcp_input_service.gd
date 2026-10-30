@@ -10,6 +10,12 @@ var _sequence_frames_waited: int = 0
 
 
 func _ready() -> void:
+	# Keep the Autoload reference valid, but never poll or inject input in release builds.
+	if not OS.is_debug_build():
+		process_mode = Node.PROCESS_MODE_DISABLED
+		set_process(false)
+		set_process_input(false)
+		return
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 

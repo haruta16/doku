@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://ddcqyui17pmpk"
+path="res://.godot/imported/ui_guide_hand01.atlas-419c604a46b9b18bae0ed99ff28139f4.spatlas"
+
+[deps]
+
+source_file="res://products/meowdoku/assets/effect/texture/ui_hand/ui_guide_hand01.atlas"
+dest_files=["res://.godot/imported/ui_guide_hand01.atlas-419c604a46b9b18bae0ed99ff28139f4.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

@@ -1,0 +1,16 @@
+[
+  {"url":"https://example.com/releases/a","local":false,"allowed":true},
+  {"url":"https://EXAMPLE.com:443/releases/a/","local":false,"allowed":true},
+  {"url":"https://example.com:/releases/a","local":false,"allowed":false},
+  {"url":"http://localhost:8080/releases/a","local":true,"allowed":true},
+  {"url":"http://127.0.0.1:8080/releases/a","local":true,"allowed":true},
+  {"url":"http://LOCALHOST:8080/releases/a","local":true,"allowed":false},
+  {"url":"http://localhost:8080/releases/a","local":false,"allowed":false},
+  {"url":"http://example.com/releases/a","local":true,"allowed":false},
+  {"url":"https://example.com:0/releases/a","local":false,"allowed":false},
+  {"url":"https://example.com:65536/releases/a","local":false,"allowed":false},
+  {"url":"https://example.com/releases/a?version=2","local":false,"allowed":false},
+  {"url":"https://user@example.com/releases/a","local":false,"allowed":false},
+  {"url":"https://example.com/releases/a#hash","local":false,"allowed":false},
+  {"url":"https://example.com/releases/a b","local":false,"allowed":false}
+]

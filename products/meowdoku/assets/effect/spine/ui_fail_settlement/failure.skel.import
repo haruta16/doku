@@ -1,0 +1,14 @@
+[remap]
+
+importer="spine.skel"
+type="SpineSkeletonFileResource"
+uid="uid://buorfcaglxlus"
+path="res://.godot/imported/failure.skel-714e9858cc48f024497857b9bcf075b0.spskel"
+
+[deps]
+
+source_file="res://products/meowdoku/assets/effect/spine/ui_fail_settlement/failure.skel"
+dest_files=["res://.godot/imported/failure.skel-714e9858cc48f024497857b9bcf075b0.spskel"]
+
+[params]
+

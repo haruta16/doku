@@ -1,0 +1,26 @@
+# Recovery prompts. Edit this PO directly; see README.md.
+msgid ""
+msgstr ""
+"Project-Id-Version: Meowdoku recovery prompts\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "RECOVERY_RESULT_TITLE"
+msgstr "Risultato non salvato"
+
+msgid "RECOVERY_RESULT_BODY"
+msgstr "Prova di nuovo a salvare questo risultato. Chiudendo tornerai alla schermata iniziale; i risultati non salvati potrebbero andare persi."
+
+msgid "RECOVERY_CHECKIN_TITLE"
+msgstr "Accesso giornaliero non salvato"
+
+msgid "RECOVERY_CHECKIN_BODY"
+msgstr "La tua vittoria è stata salvata. Riprova a registrare l’accesso giornaliero o chiudi per saltarlo questa volta."
+
+msgid "RECOVERY_CONTENT_ERROR"
+msgstr "Impossibile caricare il contenuto del gioco. Riavvia il gioco."
+
+msgid "RECOVERY_SAVE_ERROR"
+msgstr "Impossibile salvare l’azione. Riprova."

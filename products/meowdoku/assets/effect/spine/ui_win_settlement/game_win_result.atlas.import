@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://cjb5lm4y4bnkv"
+path="res://.godot/imported/game_win_result.atlas-50fc75c60ecb991b8c4fd095e18a6b40.spatlas"
+
+[deps]
+
+source_file="res://products/meowdoku/assets/effect/spine/ui_win_settlement/game_win_result.atlas"
+dest_files=["res://.godot/imported/game_win_result.atlas-50fc75c60ecb991b8c4fd095e18a6b40.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"

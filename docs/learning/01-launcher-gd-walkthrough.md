@@ -1,6 +1,6 @@
 # launcher.gd 精读 — 应用启动全流程
 
-> 文件：[scripts/module/ui/panel/launcher.gd](../../scripts/module/ui/panel/launcher.gd)
+> 文件：[products/meowdoku/app/bootstrap/launcher.gd](../../products/meowdoku/app/bootstrap/launcher.gd)
 >
 > 这是整个 Meowdoku 应用的**大脑**。`_ready()` 是唯一入口，所有初始化逻辑从这里开始。
 >
@@ -26,9 +26,9 @@ extends Node
 ---
 
 ```gdscript
-const _CHEAT_COMMANDS: GDScript = preload("res://scripts/module/ui/panel/cheat_commands.gd")
+const _CHEAT_COMMANDS: GDScript = preload("res://products/meowdoku/app/diagnostics/cheat_commands.gd")
 const _CHEAT_OVERLAY: PackedScene = preload("res://addons/cheat_manager/cheat_overlay.tscn")
-const _SPLASH_SCENE: PackedScene = preload("res://scripts/module/splash/ui/splash_page.tscn")
+const _SPLASH_SCENE: PackedScene = preload("res://products/meowdoku/app/features/splash/ui/splash_page.tscn")
 ```
 
 **`preload` vs `load`**：`preload` 在**编译时**加载（快，但路径必须写死），`load` 在**运行时**加载（灵活，但慢）。这里路径都是固定的，所以用 `preload`。
@@ -508,7 +508,7 @@ func _register_legacy_pushes() -> void:
 
 **做了什么事**：准备 4 条中午文案 + 4 条晚上文案，然后注册到系统。
 
-**`tr("KEY")`**：Godot 的翻译函数。根据当前语言返回翻译后的文本。翻译内容在 `assets/localization/` 的 `.translation` 文件里。
+**`tr("KEY")`**：Godot 的翻译函数。根据当前语言返回翻译后的文本。翻译内容在 `products/meowdoku/assets/localization/` 的 `.translation` 文件里。
 
 **`range(1, 5)` 的陷阱**：`range(1, 5)` 是 `[1, 2, 3, 4]`，不包含 5。这和 Python 一样——左闭右开。
 

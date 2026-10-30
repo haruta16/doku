@@ -1,0 +1,579 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "command": [
+        "python3",
+        "/Users/haruta/workspace/doku/tools/content/build_channel.py",
+        "--product",
+        "test",
+        "--revision",
+        "3",
+        "--target",
+        "/private/tmp/content-tests-lzjgdoim/tampered-release",
+        "http://127.0.0.1:53458/http",
+        "--key",
+        "/private/tmp/content-tests-lzjgdoim/private.pem",
+        "--output",
+        "/private/tmp/content-tests-lzjgdoim/bad-channel-artifact",
+        "--allow-local-http"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": true,
+      "summary": [
+        "Channel publisher rejects modified payload before producing an artifact"
+      ]
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-lzjgdoim/step-0.engine.log",
+        "--path",
+        "/private/tmp/content-tests-lzjgdoim/project",
+        "--script",
+        "res://test.gd",
+        "--",
+        "/private/tmp/content-tests-lzjgdoim",
+        "http://127.0.0.1:53458/http"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_TESTS checks=51 failures=0"
+      ],
+      "log_sha256": "01bb9a7e1c93567cb7618f228851533c8077b336188207e7cee157af7c08123d"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-lzjgdoim/step-1.engine.log",
+        "--path",
+        "/private/tmp/content-tests-lzjgdoim/project",
+        "--script",
+        "res://updates.gd",
+        "--",
+        "/private/tmp/content-tests-lzjgdoim",
+        "http://127.0.0.1:53458"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_UPDATE_TESTS checks=48 failures=0"
+      ],
+      "log_sha256": "5ef7cfe280f214b813113f3ff5305defdba5528d40dd8d94be3e7716f60cdf4c"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-lzjgdoim/step-2.engine.log",
+        "--path",
+        "/private/tmp/content-tests-lzjgdoim/project",
+        "--script",
+        "res://boot-failure.gd",
+        "--",
+        "/private/tmp/content-tests-lzjgdoim"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOT_FAILURE passed: restart_required after expected image_decode"
+      ],
+      "log_sha256": "a52a69b9956b89bf2fbf774b48fee8a6c0eb6c8b374d9f3adc4d1e03e9594cec",
+      "expected_test_errors": [
+        "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+        "ERROR: Error loading image: 'res://content/test/broken-image/broken.png'."
+      ]
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-lzjgdoim/step-3.engine.log",
+        "--path",
+        "/private/tmp/content-tests-lzjgdoim/project",
+        "--script",
+        "res://boot-failure.gd",
+        "--",
+        "/private/tmp/content-tests-lzjgdoim",
+        "resume"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOT_FAILURE_COLD_RECOVERY passed: builtin without polluted process"
+      ],
+      "log_sha256": "cc52be13c20b7d65577a85d290f372786730c02657a663979cae12750be38df8"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-lzjgdoim/bootstrap-import.engine.log",
+        "--path",
+        "/private/tmp/content-tests-lzjgdoim/bootstrap-project",
+        "--editor",
+        "--import"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [],
+      "log_sha256": "1d9dff9871fb6d8f7a760d7f1cb1d33dc9399dc497b9578ab57ce255331cb1d4"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-lzjgdoim/bootstrap-first.engine.log",
+        "--path",
+        "/private/tmp/content-tests-lzjgdoim/bootstrap-project",
+        "--script",
+        "res://bootstrap-test.gd",
+        "--",
+        "/private/tmp/content-tests-lzjgdoim",
+        "http://127.0.0.1:53458"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOTSTRAP_TESTS checks=8 failures=0"
+      ],
+      "log_sha256": "9671394d9061ab809ec71790349b8b98c2be020bc20ab768ac6584e19ee422a3"
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--headless",
+        "--log-file",
+        "/private/tmp/content-tests-lzjgdoim/bootstrap-resume.engine.log",
+        "--path",
+        "/private/tmp/content-tests-lzjgdoim/bootstrap-project",
+        "--script",
+        "res://bootstrap-test.gd",
+        "--",
+        "/private/tmp/content-tests-lzjgdoim",
+        "http://127.0.0.1:53458",
+        "resume"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "summary": [
+        "CONTENT_BOOTSTRAP_TESTS checks=4 failures=0"
+      ],
+      "log_sha256": "adcba9c1eae8751fcf452e47372fe8c4926dcfafd24c67781e9240a4f30486b1"
+    }
+  ],
+  "scope": "Isolated projects; ephemeral keys; local HTTP faults and real Godot runtime; no mobile or production TLS validation.",
+  "product_publication_checks": [
+    {
+      "case": "catalog",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/catalog/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/catalog",
+        "--product",
+        "meowdoku",
+        "--release",
+        "catalog",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "expected_rejection": null,
+      "artifact_exists": true,
+      "summary": "Fixed level resolves built-in puzzle, prefill, rules and reward before signing",
+      "log_sha256": "e777fbbdfccdb68fe7400c9c2c1b85401de8cf73af78eac08f7e755590f48995"
+    },
+    {
+      "case": "unknown-inherited-media",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/unknown-inherited-media/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/unknown-inherited-media",
+        "--product",
+        "meowdoku",
+        "--release",
+        "unknown-inherited-media",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "level_media_missing:theme/tutorial/mark",
+      "artifact_exists": false,
+      "summary": "JSON-only cannot assume that an earlier media release provides a new alias",
+      "log_sha256": "b94a13f7a7f377625c7a1915af7de3d4142f74da903bb3150251e5a8d5da40cd"
+    },
+    {
+      "case": "raw-correct",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/raw-correct/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/raw-correct",
+        "--product",
+        "meowdoku",
+        "--release",
+        "raw-correct",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--raw-assets",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/raw"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "expected_rejection": null,
+      "artifact_exists": true,
+      "summary": "Original 32×168 game/mark texture and a per-level alias pass the fixed binding contract",
+      "log_sha256": "8c409ee17baaa34d4bba75cd942a742ba59fa6abd2c84bb7c0ade728b97f9465"
+    },
+    {
+      "case": "per-level-home-slot",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/per-level-home-slot/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/per-level-home-slot",
+        "--product",
+        "meowdoku",
+        "--release",
+        "per-level-home-slot",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--raw-assets",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/raw"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "content_schema:doku/level_catalog",
+      "artifact_exists": false,
+      "summary": "Global home slot cannot pass publication as a per-level alias without a consumer",
+      "log_sha256": "5f70cd7bc1ccbb166e73cb02c70d3bdd8436aa6631bae5926e31dd034c42e441"
+    },
+    {
+      "case": "gc-correct",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/gc-correct/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/gc-correct",
+        "--product",
+        "meowdoku",
+        "--release",
+        "gc-correct",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "expected_rejection": null,
+      "artifact_exists": true,
+      "summary": "GC publication uses the same levels wrapper and per-entry rank as the actual consumer",
+      "log_sha256": "ececb0d56944ca780c4bd60f80e2a913d5c9b18a24a6da9c8482ec74c1628f36"
+    },
+    {
+      "case": "gc-wrong-shape",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/gc-wrong-shape/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/gc-wrong-shape",
+        "--product",
+        "meowdoku",
+        "--release",
+        "gc-wrong-shape",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "content_schema:doku/levels/bankdatagc6x6",
+      "artifact_exists": false,
+      "summary": "Rank-keyed GC data is rejected instead of silently producing an empty runtime bank",
+      "log_sha256": "444f73924223216f9ffbb70b488a82877d45e1c9df01639295f3b2315c0f816a"
+    },
+    {
+      "case": "shortened-special-bank",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/shortened-special-bank/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/shortened-special-bank",
+        "--product",
+        "meowdoku",
+        "--release",
+        "shortened-special-bank",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "special_level_10:level_reference_missing",
+      "artifact_exists": false,
+      "summary": "A bank-only release must preserve references inherited from the builtin policy",
+      "log_sha256": "43565ca1608317d03fe0524dce3db44489271d0f56e7f23c5c0220c10ea888f4"
+    },
+    {
+      "case": "special-bank-without-guide",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/special-bank-without-guide/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/special-bank-without-guide",
+        "--product",
+        "meowdoku",
+        "--release",
+        "special-bank-without-guide",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "expected_rejection": null,
+      "artifact_exists": true,
+      "summary": "Ordinary SP replacement preserves level references without coupling to the client-owned tutorial",
+      "log_sha256": "229238cd21203ed8cced7119e7eeb899d22ba8a98d15560556abb9c7bd9db29f"
+    },
+    {
+      "case": "special-valid-prefill",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/special-valid-prefill/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/special-valid-prefill",
+        "--product",
+        "meowdoku",
+        "--release",
+        "special-valid-prefill",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "expected_rejection": null,
+      "artifact_exists": true,
+      "summary": "SP prefill with an in-bounds answer coordinate passes the actual publication path",
+      "log_sha256": "ba56785ec6d012530d2464a4d00d70119c9c918ea8e53853716a49584edce07b"
+    },
+    {
+      "case": "special-malformed-prefill",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/special-malformed-prefill/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/special-malformed-prefill",
+        "--product",
+        "meowdoku",
+        "--release",
+        "special-malformed-prefill",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "content_schema:doku/levels/bankdatasp",
+      "artifact_exists": false,
+      "summary": "String prefill cannot be signed and delivered to a typed Array consumer",
+      "log_sha256": "5ec26d90c561b1a29a47c966725e6d7518443d13e5fe7fd3dc433970235c2fe7"
+    },
+    {
+      "case": "special-wrong-prefill-answer",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/special-wrong-prefill-answer/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/special-wrong-prefill-answer",
+        "--product",
+        "meowdoku",
+        "--release",
+        "special-wrong-prefill-answer",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "content_schema:doku/levels/bankdatasp",
+      "artifact_exists": false,
+      "summary": "A well-shaped SP coordinate that contradicts the answer is rejected before signing",
+      "log_sha256": "464ca7fddfc96d423278734c538b927b047783f3e4facd1ada9e3828e4059c01"
+    },
+    {
+      "case": "raw-wrong-size",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/raw-wrong-size/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/raw-wrong-size",
+        "--product",
+        "meowdoku",
+        "--release",
+        "raw-wrong-size",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--raw-assets",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/raw"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "texture_binding_dimensions:game/mark",
+      "artifact_exists": false,
+      "summary": "432×432 replacement for fixed 32×168 game/mark is rejected without final output",
+      "log_sha256": "1677e0b7847b55759d85ca6c1509a26dcf97b6a91efde0d95a566f9b9f46fdbc"
+    },
+    {
+      "case": "spine-correct",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/spine-correct/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/spine-correct",
+        "--product",
+        "meowdoku",
+        "--release",
+        "spine-correct",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--spine-assets",
+        "/Users/haruta/workspace/doku/assets/effect/spine/ui_cat_icon"
+      ],
+      "exit_code": 0,
+      "ok": true,
+      "expected_rejection": null,
+      "artifact_exists": true,
+      "summary": "Original ui_cat_icon (maomi_fuor) exported to game/cat preserves required animations and skins",
+      "log_sha256": "7c8e5804c601862026a144fb327a71d471e861740a6173ec64c7155d89c0148d"
+    },
+    {
+      "case": "spine-wrong-contract",
+      "command": [
+        "/opt/homebrew/opt/python@3.13/bin/python3.13",
+        "/Users/haruta/workspace/doku/tools/content/build_release.py",
+        "--source",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/spine-wrong-contract/source",
+        "--output",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/releases/spine-wrong-contract",
+        "--product",
+        "meowdoku",
+        "--release",
+        "spine-wrong-contract",
+        "--runtime",
+        "godot-4.6.1-spine-4.2-data-v1",
+        "--key",
+        "/var/folders/ll/z395mhy543d0pf6985fpwpvw0000gn/T/doku-product-publication-s2r_z8nz/private.pem",
+        "--godot",
+        "/opt/homebrew/bin/godot-4.6.1",
+        "--spine-assets",
+        "/Users/haruta/workspace/doku/assets/effect/spine/ui_logo"
+      ],
+      "exit_code": 1,
+      "ok": true,
+      "expected_rejection": "spine_binding_contract:game/cat",
+      "artifact_exists": false,
+      "summary": "Valid exported ui_logo Spine cannot satisfy game/cat's animation/skin contract; no final output",
+      "log_sha256": "78453229867d86497baf00b7e3975e03cdf8f14af67c36260252af76bfe4a7b0"
+    }
+  ],
+  "latest_recheck": {
+    "date": "2026-10-27",
+    "content_delivery_steps": 8,
+    "publication_cases": 14,
+    "url_contract_cases": 14,
+    "spine_rerun": true,
+    "note": "重跑通用HTTP/取消/激活/trial回退、实际产品发布、Spine导出与第二进程恢复；内容工具/正式签名校验/PCK打包共享未知ERROR门禁。"
+  },
+  "spine_latest_evidence": {
+    "original_log": "/private/tmp/doku-content-closure-spine.log",
+    "log_sha256": "44579868402ed651241e362b8715827ec2ced38a162d4ba6bf4d25469e774d2c",
+    "ok": true
+  }
+}

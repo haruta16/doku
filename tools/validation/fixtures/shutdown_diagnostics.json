@@ -1,0 +1,73 @@
+{
+  "schema": 2,
+  "environment": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "godot_version": "4.6.1.stable.custom_build.14d19694e"
+  },
+  "environment_scope": "Exceptions require this OS family, current architecture and the engine version banner from the tested process. OS patch versions are not bound; missing or different identity does not inherit exceptions. This ledger is never refreshed automatically.",
+  "baselines": {
+    "res://tools/validation/test_content_level_catalog.gd": {
+      "diagnostics": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "report": "docs/validation/product-layout-migration-report.json",
+      "log_sha256": "fc0674edb8814398c931038ff268e642bd76d706952c824a56df781586a6c491",
+      "note": "Existing exit diagnostics retained as evidence, not a claim of clean shutdown. New messages, resource counts or duplicate occurrences fail."
+    },
+    "res://tools/validation/test_doku_actions.gd": {
+      "diagnostics": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 6 resources still in use at exit (run with --verbose for details)."
+      ],
+      "report": "docs/validation/product-layout-migration-report.json",
+      "log_sha256": "1eeeb1342c6b2602059bb07be567370769880088a0e456726cef562223f7979f",
+      "note": "Existing exit diagnostics retained as evidence, not a claim of clean shutdown. New messages, resource counts or duplicate occurrences fail."
+    },
+    "res://tools/validation/test_game_page_lifecycle.gd": {
+      "diagnostics": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "report": "docs/validation/product-layout-migration-report.json",
+      "log_sha256": "779fc2cc346c92dc8b67c605885e000537cbb4ebb687ff13902664a3673750bb",
+      "note": "Existing exit diagnostics retained as evidence, not a claim of clean shutdown. New messages, resource counts or duplicate occurrences fail."
+    },
+    "res://tools/validation/test_game_recovery_localization.gd": {
+      "diagnostics": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "report": "docs/validation/product-layout-migration-report.json",
+      "log_sha256": "caf0af2d4f093dce341bfc01b36f8326fe2bc97f27c3016ca70884d69fa8dbd2",
+      "note": "Existing exit diagnostics retained as evidence, not a claim of clean shutdown. New messages, resource counts or duplicate occurrences fail."
+    },
+    "res://tools/validation/test_ui_components.gd": {
+      "diagnostics": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details)."
+      ],
+      "report": "docs/validation/framework-onboarding-report.json",
+      "log_sha256": "7270eba844cef50931529d88fab60412374b635cbcb87f16bc8183a91e34a5f7",
+      "note": "Existing exit diagnostics retained as evidence, not a claim of clean shutdown. New messages, resource counts or duplicate occurrences fail."
+    },
+    "product-smoke-600": {
+      "diagnostics": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "report": "docs/validation/framework-onboarding-report.json",
+      "log_sha256": "cf4a128c722e137ad11be00d64da5eec27f74a5b0bdce23db0ca4e0aeefdaa9e",
+      "note": "Existing exit diagnostics retained as evidence, not a claim of clean shutdown. New messages, resource counts or duplicate occurrences fail."
+    },
+    "res://tools/validation/test_content_tutorial.gd": {
+      "diagnostics": [
+        "WARNING: ObjectDB instances leaked at exit (run with --verbose for details).",
+        "ERROR: 2 resources still in use at exit (run with --verbose for details)."
+      ],
+      "report": "docs/validation/framework-onboarding-report.json",
+      "log_sha256": "a89c661060d70a71cd8b91a51896d797e9ba687b95e73a78db44cbb132d902ca",
+      "note": "Existing exit diagnostics retained as evidence, not a claim of clean shutdown. New messages, resource counts or duplicate occurrences fail."
+    }
+  }
+}

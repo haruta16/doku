@@ -198,8 +198,8 @@ static func _register_in_ui_framework(scene_path: String) -> void:
 		return
 	var snake_name := file_name.replace("_page", "").replace("_dialog", "")
 	var const_name := snake_name.to_upper()
-	_ensure_ui_name_const("res://scripts/module/ui/ui_name.gd", const_name, snake_name)
-	_ensure_registry_entry("res://scripts/module/ui/ui_registry.gd", const_name, scene_path)
+	_ensure_ui_name_const("res://products/meowdoku/app/ui/ui_name.gd", const_name, snake_name)
+	_ensure_registry_entry("res://products/meowdoku/app/ui/ui_registry.gd", const_name, scene_path)
 
 
 static func _ensure_ui_name_const(path: String, const_name: String, value: String) -> void:
