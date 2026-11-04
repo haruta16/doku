@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c60b1awp614e6"
-path.bptc="res://.godot/imported/icon_no_wifi_slash.png-e92dc0b27657a9421deb8419240be9a1.bptc.ctex"
-path.astc="res://.godot/imported/icon_no_wifi_slash.png-e92dc0b27657a9421deb8419240be9a1.astc.ctex"
+path.bptc="res://.godot/imported/icon_no_wifi_slash.png-8e2c32480127d040a78c87153cf21d8b.bptc.ctex"
+path.astc="res://.godot/imported/icon_no_wifi_slash.png-8e2c32480127d040a78c87153cf21d8b.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/account/icon_no_wifi_slash.png"
-dest_files=["res://.godot/imported/icon_no_wifi_slash.png-e92dc0b27657a9421deb8419240be9a1.bptc.ctex", "res://.godot/imported/icon_no_wifi_slash.png-e92dc0b27657a9421deb8419240be9a1.astc.ctex"]
+dest_files=["res://.godot/imported/icon_no_wifi_slash.png-8e2c32480127d040a78c87153cf21d8b.bptc.ctex", "res://.godot/imported/icon_no_wifi_slash.png-8e2c32480127d040a78c87153cf21d8b.astc.ctex"]
 
 [params]
 

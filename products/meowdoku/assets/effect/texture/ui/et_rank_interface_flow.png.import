@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://3ld431cmfsjd"
-path.bptc="res://.godot/imported/et_rank_interface_flow.png-de54984eb6b4d4796f4c478919202dee.bptc.ctex"
-path.astc="res://.godot/imported/et_rank_interface_flow.png-de54984eb6b4d4796f4c478919202dee.astc.ctex"
+path.bptc="res://.godot/imported/et_rank_interface_flow.png-277d64b74637061821b7031ea23ae763.bptc.ctex"
+path.astc="res://.godot/imported/et_rank_interface_flow.png-277d64b74637061821b7031ea23ae763.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_rank_interface_flow.png"
-dest_files=["res://.godot/imported/et_rank_interface_flow.png-de54984eb6b4d4796f4c478919202dee.bptc.ctex", "res://.godot/imported/et_rank_interface_flow.png-de54984eb6b4d4796f4c478919202dee.astc.ctex"]
+dest_files=["res://.godot/imported/et_rank_interface_flow.png-277d64b74637061821b7031ea23ae763.bptc.ctex", "res://.godot/imported/et_rank_interface_flow.png-277d64b74637061821b7031ea23ae763.astc.ctex"]
 
 [params]
 

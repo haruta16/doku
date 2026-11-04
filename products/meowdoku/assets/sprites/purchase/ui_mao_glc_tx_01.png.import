@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bweyu2reawn1e"
-path.bptc="res://.godot/imported/ui_mao_glc_tx_01.png-a433056a3e77f23099438a5aa047a911.bptc.ctex"
-path.astc="res://.godot/imported/ui_mao_glc_tx_01.png-a433056a3e77f23099438a5aa047a911.astc.ctex"
+path.bptc="res://.godot/imported/ui_mao_glc_tx_01.png-a9ee018d4335d2e63989cefa85d2573a.bptc.ctex"
+path.astc="res://.godot/imported/ui_mao_glc_tx_01.png-a9ee018d4335d2e63989cefa85d2573a.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/ui_mao_glc_tx_01.png"
-dest_files=["res://.godot/imported/ui_mao_glc_tx_01.png-a433056a3e77f23099438a5aa047a911.bptc.ctex", "res://.godot/imported/ui_mao_glc_tx_01.png-a433056a3e77f23099438a5aa047a911.astc.ctex"]
+dest_files=["res://.godot/imported/ui_mao_glc_tx_01.png-a9ee018d4335d2e63989cefa85d2573a.bptc.ctex", "res://.godot/imported/ui_mao_glc_tx_01.png-a9ee018d4335d2e63989cefa85d2573a.astc.ctex"]
 
 [params]
 

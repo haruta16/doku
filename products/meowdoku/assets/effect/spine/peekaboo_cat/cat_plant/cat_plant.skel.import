@@ -3,12 +3,12 @@
 importer="spine.skel"
 type="SpineSkeletonFileResource"
 uid="uid://bvlyglt04w4lt"
-path="res://.godot/imported/cat_plant.skel-f5679e849487a8fcb86f96b34264f7a7.spskel"
+path="res://.godot/imported/cat_plant.skel-b15490dcd42078e32bf51223d01922b6.spskel"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/peekaboo_cat/cat_plant/cat_plant.skel"
-dest_files=["res://.godot/imported/cat_plant.skel-f5679e849487a8fcb86f96b34264f7a7.spskel"]
+dest_files=["res://.godot/imported/cat_plant.skel-b15490dcd42078e32bf51223d01922b6.spskel"]
 
 [params]
 

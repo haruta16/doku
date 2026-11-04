@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bv158su5lfny6"
-path="res://.godot/imported/GeomEN.ttf-89b7518706fc913dbbfac9cc85ae84cf.fontdata"
+path="res://.godot/imported/GeomEN.ttf-4071fd7d418c7eab04bdc15da8916237.fontdata"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/fonts/candidates/GeomEN.ttf"
-dest_files=["res://.godot/imported/GeomEN.ttf-89b7518706fc913dbbfac9cc85ae84cf.fontdata"]
+dest_files=["res://.godot/imported/GeomEN.ttf-4071fd7d418c7eab04bdc15da8916237.fontdata"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://h4wkvyg57yff"
-path.bptc="res://.godot/imported/icon_star.png-b48cfee2f8fb78074a7ce898a10a6bc1.bptc.ctex"
-path.astc="res://.godot/imported/icon_star.png-b48cfee2f8fb78074a7ce898a10a6bc1.astc.ctex"
+path.bptc="res://.godot/imported/icon_star.png-9343b9af9bd31db7938f398c96cab1d3.bptc.ctex"
+path.astc="res://.godot/imported/icon_star.png-9343b9af9bd31db7938f398c96cab1d3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/bullets/icon_star.png"
-dest_files=["res://.godot/imported/icon_star.png-b48cfee2f8fb78074a7ce898a10a6bc1.bptc.ctex", "res://.godot/imported/icon_star.png-b48cfee2f8fb78074a7ce898a10a6bc1.astc.ctex"]
+dest_files=["res://.godot/imported/icon_star.png-9343b9af9bd31db7938f398c96cab1d3.bptc.ctex", "res://.godot/imported/icon_star.png-9343b9af9bd31db7938f398c96cab1d3.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://darvvf6gsxtmk"
-path.bptc="res://.godot/imported/txt_ct_w_wow.png-0b5e5ba94ad7aa13ea51cd52b49c1718.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_wow.png-0b5e5ba94ad7aa13ea51cd52b49c1718.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_wow.png-d9d64928f6baf7437267679f1917195b.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_wow.png-d9d64928f6baf7437267679f1917195b.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_wow.png"
-dest_files=["res://.godot/imported/txt_ct_w_wow.png-0b5e5ba94ad7aa13ea51cd52b49c1718.bptc.ctex", "res://.godot/imported/txt_ct_w_wow.png-0b5e5ba94ad7aa13ea51cd52b49c1718.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_wow.png-d9d64928f6baf7437267679f1917195b.bptc.ctex", "res://.godot/imported/txt_ct_w_wow.png-d9d64928f6baf7437267679f1917195b.astc.ctex"]
 
 [params]
 

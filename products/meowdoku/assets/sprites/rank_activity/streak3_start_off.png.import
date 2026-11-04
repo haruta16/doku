@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bhsdofbdw0cvh"
-path.bptc="res://.godot/imported/streak3_start_off.png-106b9a4865212219a6f874da869a579c.bptc.ctex"
-path.astc="res://.godot/imported/streak3_start_off.png-106b9a4865212219a6f874da869a579c.astc.ctex"
+path.bptc="res://.godot/imported/streak3_start_off.png-cbccb4deb5a06f589e3545c079598fef.bptc.ctex"
+path.astc="res://.godot/imported/streak3_start_off.png-cbccb4deb5a06f589e3545c079598fef.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/streak3_start_off.png"
-dest_files=["res://.godot/imported/streak3_start_off.png-106b9a4865212219a6f874da869a579c.bptc.ctex", "res://.godot/imported/streak3_start_off.png-106b9a4865212219a6f874da869a579c.astc.ctex"]
+dest_files=["res://.godot/imported/streak3_start_off.png-cbccb4deb5a06f589e3545c079598fef.bptc.ctex", "res://.godot/imported/streak3_start_off.png-cbccb4deb5a06f589e3545c079598fef.astc.ctex"]
 
 [params]
 

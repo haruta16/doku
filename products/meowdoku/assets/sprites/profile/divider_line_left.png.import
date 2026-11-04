@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bajbg86k8vwle"
-path.bptc="res://.godot/imported/divider_line_left.png-2e88c90b0f7dddd1fdc9d1f4f1eb0185.bptc.ctex"
-path.astc="res://.godot/imported/divider_line_left.png-2e88c90b0f7dddd1fdc9d1f4f1eb0185.astc.ctex"
+path.bptc="res://.godot/imported/divider_line_left.png-58ed67b1253b742e9ec0da8898ed15e7.bptc.ctex"
+path.astc="res://.godot/imported/divider_line_left.png-58ed67b1253b742e9ec0da8898ed15e7.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/profile/divider_line_left.png"
-dest_files=["res://.godot/imported/divider_line_left.png-2e88c90b0f7dddd1fdc9d1f4f1eb0185.bptc.ctex", "res://.godot/imported/divider_line_left.png-2e88c90b0f7dddd1fdc9d1f4f1eb0185.astc.ctex"]
+dest_files=["res://.godot/imported/divider_line_left.png-58ed67b1253b742e9ec0da8898ed15e7.bptc.ctex", "res://.godot/imported/divider_line_left.png-58ed67b1253b742e9ec0da8898ed15e7.astc.ctex"]
 
 [params]
 

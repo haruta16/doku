@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2se6krac5861"
-path.bptc="res://.godot/imported/misc_ui_vram.png-e791436a93dcf4ef7b9301231530265e.bptc.ctex"
-path.astc="res://.godot/imported/misc_ui_vram.png-e791436a93dcf4ef7b9301231530265e.astc.ctex"
+path.bptc="res://.godot/imported/misc_ui_vram.png-e236f377bfe03d14497ad4984e696061.bptc.ctex"
+path.astc="res://.godot/imported/misc_ui_vram.png-e236f377bfe03d14497ad4984e696061.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/misc_ui_vram.png"
-dest_files=["res://.godot/imported/misc_ui_vram.png-e791436a93dcf4ef7b9301231530265e.bptc.ctex", "res://.godot/imported/misc_ui_vram.png-e791436a93dcf4ef7b9301231530265e.astc.ctex"]
+dest_files=["res://.godot/imported/misc_ui_vram.png-e236f377bfe03d14497ad4984e696061.bptc.ctex", "res://.godot/imported/misc_ui_vram.png-e236f377bfe03d14497ad4984e696061.astc.ctex"]
 
 [params]
 

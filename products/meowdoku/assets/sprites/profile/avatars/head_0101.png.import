@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dkin8a0m6lpqs"
-path="res://.godot/imported/head_0101.png-32fe104d7ce41ab9532b599b0082b94d.ctex"
+path="res://.godot/imported/head_0101.png-474681d7a824d9d42645dcbd8ccce430.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/profile/avatars/head_0101.png"
-dest_files=["res://.godot/imported/head_0101.png-32fe104d7ce41ab9532b599b0082b94d.ctex"]
+dest_files=["res://.godot/imported/head_0101.png-474681d7a824d9d42645dcbd8ccce430.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dqy2sr0qa004o"
-path.bptc="res://.godot/imported/white_fish_2.png-fead06cc6616403e3c1b6dc8caa4dd91.bptc.ctex"
-path.astc="res://.godot/imported/white_fish_2.png-fead06cc6616403e3c1b6dc8caa4dd91.astc.ctex"
+path.bptc="res://.godot/imported/white_fish_2.png-43b1be342d9c15f030da610bdada414e.bptc.ctex"
+path.astc="res://.godot/imported/white_fish_2.png-43b1be342d9c15f030da610bdada414e.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/white_fish_2.png"
-dest_files=["res://.godot/imported/white_fish_2.png-fead06cc6616403e3c1b6dc8caa4dd91.bptc.ctex", "res://.godot/imported/white_fish_2.png-fead06cc6616403e3c1b6dc8caa4dd91.astc.ctex"]
+dest_files=["res://.godot/imported/white_fish_2.png-43b1be342d9c15f030da610bdada414e.bptc.ctex", "res://.godot/imported/white_fish_2.png-43b1be342d9c15f030da610bdada414e.astc.ctex"]
 
 [params]
 

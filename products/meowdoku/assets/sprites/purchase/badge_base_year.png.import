@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://worbu7hytfeu"
-path="res://.godot/imported/badge_base_year.png-bc226791b634d75e945151b29d74357c.ctex"
+path="res://.godot/imported/badge_base_year.png-12bf6050eb81679d354df1d2a0d261e1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/badge_base_year.png"
-dest_files=["res://.godot/imported/badge_base_year.png-bc226791b634d75e945151b29d74357c.ctex"]
+dest_files=["res://.godot/imported/badge_base_year.png-12bf6050eb81679d354df1d2a0d261e1.ctex"]
 
 [params]
 

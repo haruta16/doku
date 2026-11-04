@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://dqwwkxq8ubs15"
-path="res://.godot/imported/rank_fish_collect_1.ogg-d992153a61ece14571f8962f62174f1e.oggvorbisstr"
+path="res://.godot/imported/rank_fish_collect_1.ogg-8b0e2d25c43108b215727f1aadc17bc7.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/rank_fish_collect_1.ogg"
-dest_files=["res://.godot/imported/rank_fish_collect_1.ogg-d992153a61ece14571f8962f62174f1e.oggvorbisstr"]
+dest_files=["res://.godot/imported/rank_fish_collect_1.ogg-8b0e2d25c43108b215727f1aadc17bc7.oggvorbisstr"]
 
 [params]
 

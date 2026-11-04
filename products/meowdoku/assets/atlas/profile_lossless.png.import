@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cijo3nty6rrfi"
-path.bptc="res://.godot/imported/profile_lossless.png-aafc91104cd4dbc5a6b559f46444d9ab.bptc.ctex"
-path.astc="res://.godot/imported/profile_lossless.png-aafc91104cd4dbc5a6b559f46444d9ab.astc.ctex"
+path.bptc="res://.godot/imported/profile_lossless.png-89230cc373fc13d474ce10531ab78303.bptc.ctex"
+path.astc="res://.godot/imported/profile_lossless.png-89230cc373fc13d474ce10531ab78303.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/profile_lossless.png"
-dest_files=["res://.godot/imported/profile_lossless.png-aafc91104cd4dbc5a6b559f46444d9ab.bptc.ctex", "res://.godot/imported/profile_lossless.png-aafc91104cd4dbc5a6b559f46444d9ab.astc.ctex"]
+dest_files=["res://.godot/imported/profile_lossless.png-89230cc373fc13d474ce10531ab78303.bptc.ctex", "res://.godot/imported/profile_lossless.png-89230cc373fc13d474ce10531ab78303.astc.ctex"]
 
 [params]
 

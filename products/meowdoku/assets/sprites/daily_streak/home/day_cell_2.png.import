@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dnebwrn8ivnbl"
-path.bptc="res://.godot/imported/day_cell_2.png-5af1eb715fee5bc76e7ba091c99ca4c6.bptc.ctex"
-path.astc="res://.godot/imported/day_cell_2.png-5af1eb715fee5bc76e7ba091c99ca4c6.astc.ctex"
+path.bptc="res://.godot/imported/day_cell_2.png-f8bc0d2e98b613d86750be80ed7d6fbb.bptc.ctex"
+path.astc="res://.godot/imported/day_cell_2.png-f8bc0d2e98b613d86750be80ed7d6fbb.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/home/day_cell_2.png"
-dest_files=["res://.godot/imported/day_cell_2.png-5af1eb715fee5bc76e7ba091c99ca4c6.bptc.ctex", "res://.godot/imported/day_cell_2.png-5af1eb715fee5bc76e7ba091c99ca4c6.astc.ctex"]
+dest_files=["res://.godot/imported/day_cell_2.png-f8bc0d2e98b613d86750be80ed7d6fbb.bptc.ctex", "res://.godot/imported/day_cell_2.png-f8bc0d2e98b613d86750be80ed7d6fbb.astc.ctex"]
 
 [params]
 

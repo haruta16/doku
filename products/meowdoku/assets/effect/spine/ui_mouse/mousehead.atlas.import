@@ -3,12 +3,12 @@
 importer="spine.atlas"
 type="SpineAtlasResource"
 uid="uid://c41ugdeg1e5sb"
-path="res://.godot/imported/mousehead.atlas-871563a24f63ec870cc525082572ef60.spatlas"
+path="res://.godot/imported/mousehead.atlas-02bad7297a6ee8ac93ebf3955ee2894d.spatlas"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_mouse/mousehead.atlas"
-dest_files=["res://.godot/imported/mousehead.atlas-871563a24f63ec870cc525082572ef60.spatlas"]
+dest_files=["res://.godot/imported/mousehead.atlas-02bad7297a6ee8ac93ebf3955ee2894d.spatlas"]
 
 [params]
 

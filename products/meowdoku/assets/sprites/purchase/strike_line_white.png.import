@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://jab874cv1i8w"
-path.bptc="res://.godot/imported/strike_line_white.png-37df96236e47b72c52fb421956a0816d.bptc.ctex"
-path.astc="res://.godot/imported/strike_line_white.png-37df96236e47b72c52fb421956a0816d.astc.ctex"
+path.bptc="res://.godot/imported/strike_line_white.png-0c3a5727031b770bd2aa511319e3a843.bptc.ctex"
+path.astc="res://.godot/imported/strike_line_white.png-0c3a5727031b770bd2aa511319e3a843.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/strike_line_white.png"
-dest_files=["res://.godot/imported/strike_line_white.png-37df96236e47b72c52fb421956a0816d.bptc.ctex", "res://.godot/imported/strike_line_white.png-37df96236e47b72c52fb421956a0816d.astc.ctex"]
+dest_files=["res://.godot/imported/strike_line_white.png-0c3a5727031b770bd2aa511319e3a843.bptc.ctex", "res://.godot/imported/strike_line_white.png-0c3a5727031b770bd2aa511319e3a843.astc.ctex"]
 
 [params]
 

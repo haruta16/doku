@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1plxs42wpegu"
-path.bptc="res://.godot/imported/et_rank_interface_flow_mask.png-00661d9b1e9de9324103301579979a5f.bptc.ctex"
-path.astc="res://.godot/imported/et_rank_interface_flow_mask.png-00661d9b1e9de9324103301579979a5f.astc.ctex"
+path.bptc="res://.godot/imported/et_rank_interface_flow_mask.png-52be9a9feb591eb02f5430e1cbc5c0df.bptc.ctex"
+path.astc="res://.godot/imported/et_rank_interface_flow_mask.png-52be9a9feb591eb02f5430e1cbc5c0df.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_rank_interface_flow_mask.png"
-dest_files=["res://.godot/imported/et_rank_interface_flow_mask.png-00661d9b1e9de9324103301579979a5f.bptc.ctex", "res://.godot/imported/et_rank_interface_flow_mask.png-00661d9b1e9de9324103301579979a5f.astc.ctex"]
+dest_files=["res://.godot/imported/et_rank_interface_flow_mask.png-52be9a9feb591eb02f5430e1cbc5c0df.bptc.ctex", "res://.godot/imported/et_rank_interface_flow_mask.png-52be9a9feb591eb02f5430e1cbc5c0df.astc.ctex"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://vq71j7smn08"
-path="res://.godot/imported/pass_page_settle.ogg-a2a4819502b9c1dd7116cc5277a9c27d.oggvorbisstr"
+path="res://.godot/imported/pass_page_settle.ogg-210179c6ae39e090e7e118ed158bbfd1.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/pass_page_settle.ogg"
-dest_files=["res://.godot/imported/pass_page_settle.ogg-a2a4819502b9c1dd7116cc5277a9c27d.oggvorbisstr"]
+dest_files=["res://.godot/imported/pass_page_settle.ogg-210179c6ae39e090e7e118ed158bbfd1.oggvorbisstr"]
 
 [params]
 

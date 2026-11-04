@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bkae8ufswovkx"
-path.bptc="res://.godot/imported/et_spotlight_lamp.png-da6b9b42e7f325a6bbd11f3265d1ed07.bptc.ctex"
-path.astc="res://.godot/imported/et_spotlight_lamp.png-da6b9b42e7f325a6bbd11f3265d1ed07.astc.ctex"
+path.bptc="res://.godot/imported/et_spotlight_lamp.png-0ce6edf7f431060e91a9340d2ec509e6.bptc.ctex"
+path.astc="res://.godot/imported/et_spotlight_lamp.png-0ce6edf7f431060e91a9340d2ec509e6.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/spotlight/et_spotlight_lamp.png"
-dest_files=["res://.godot/imported/et_spotlight_lamp.png-da6b9b42e7f325a6bbd11f3265d1ed07.bptc.ctex", "res://.godot/imported/et_spotlight_lamp.png-da6b9b42e7f325a6bbd11f3265d1ed07.astc.ctex"]
+dest_files=["res://.godot/imported/et_spotlight_lamp.png-0ce6edf7f431060e91a9340d2ec509e6.bptc.ctex", "res://.godot/imported/et_spotlight_lamp.png-0ce6edf7f431060e91a9340d2ec509e6.astc.ctex"]
 
 [params]
 

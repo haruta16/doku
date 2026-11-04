@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://drqtkce1ix3ho"
-path.bptc="res://.godot/imported/jp_text_vram.png-ebbcb18c45f0081f888e3926d8190902.bptc.ctex"
-path.astc="res://.godot/imported/jp_text_vram.png-ebbcb18c45f0081f888e3926d8190902.astc.ctex"
+path.bptc="res://.godot/imported/jp_text_vram.png-e842b83b06d142fe778ddf16af104c02.bptc.ctex"
+path.astc="res://.godot/imported/jp_text_vram.png-e842b83b06d142fe778ddf16af104c02.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/jp_text_vram.png"
-dest_files=["res://.godot/imported/jp_text_vram.png-ebbcb18c45f0081f888e3926d8190902.bptc.ctex", "res://.godot/imported/jp_text_vram.png-ebbcb18c45f0081f888e3926d8190902.astc.ctex"]
+dest_files=["res://.godot/imported/jp_text_vram.png-e842b83b06d142fe778ddf16af104c02.bptc.ctex", "res://.godot/imported/jp_text_vram.png-e842b83b06d142fe778ddf16af104c02.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtkfnnhkp8veq"
-path.bptc="res://.godot/imported/txt_ct_w_combo.png-c7f4c409035f06253f444b4392b70a5b.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_combo.png-c7f4c409035f06253f444b4392b70a5b.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_combo.png-e87197ce4a9acf8da674529937d6c2e2.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_combo.png-e87197ce4a9acf8da674529937d6c2e2.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_combo.png"
-dest_files=["res://.godot/imported/txt_ct_w_combo.png-c7f4c409035f06253f444b4392b70a5b.bptc.ctex", "res://.godot/imported/txt_ct_w_combo.png-c7f4c409035f06253f444b4392b70a5b.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_combo.png-e87197ce4a9acf8da674529937d6c2e2.bptc.ctex", "res://.godot/imported/txt_ct_w_combo.png-e87197ce4a9acf8da674529937d6c2e2.astc.ctex"]
 
 [params]
 

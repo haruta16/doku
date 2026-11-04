@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://baempba5b24u2"
-path.bptc="res://.godot/imported/calendar_decoration.png-d70f48c0d7dd2bf9d448c0027db6b0e7.bptc.ctex"
-path.astc="res://.godot/imported/calendar_decoration.png-d70f48c0d7dd2bf9d448c0027db6b0e7.astc.ctex"
+path.bptc="res://.godot/imported/calendar_decoration.png-d27f042187219697f1929ea60ecb52fa.bptc.ctex"
+path.astc="res://.godot/imported/calendar_decoration.png-d27f042187219697f1929ea60ecb52fa.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/success/calendar_decoration.png"
-dest_files=["res://.godot/imported/calendar_decoration.png-d70f48c0d7dd2bf9d448c0027db6b0e7.bptc.ctex", "res://.godot/imported/calendar_decoration.png-d70f48c0d7dd2bf9d448c0027db6b0e7.astc.ctex"]
+dest_files=["res://.godot/imported/calendar_decoration.png-d27f042187219697f1929ea60ecb52fa.bptc.ctex", "res://.godot/imported/calendar_decoration.png-d27f042187219697f1929ea60ecb52fa.astc.ctex"]
 
 [params]
 

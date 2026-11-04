@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vj4mot3k1bm0"
-path.bptc="res://.godot/imported/settings_card_month.png-4bf56b84f7f8f8826986e340e72ece64.bptc.ctex"
-path.astc="res://.godot/imported/settings_card_month.png-4bf56b84f7f8f8826986e340e72ece64.astc.ctex"
+path.bptc="res://.godot/imported/settings_card_month.png-bc7a02a579f0823025c6d3ac6a0cce21.bptc.ctex"
+path.astc="res://.godot/imported/settings_card_month.png-bc7a02a579f0823025c6d3ac6a0cce21.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/settings_card_month.png"
-dest_files=["res://.godot/imported/settings_card_month.png-4bf56b84f7f8f8826986e340e72ece64.bptc.ctex", "res://.godot/imported/settings_card_month.png-4bf56b84f7f8f8826986e340e72ece64.astc.ctex"]
+dest_files=["res://.godot/imported/settings_card_month.png-bc7a02a579f0823025c6d3ac6a0cce21.bptc.ctex", "res://.godot/imported/settings_card_month.png-bc7a02a579f0823025c6d3ac6a0cce21.astc.ctex"]
 
 [params]
 

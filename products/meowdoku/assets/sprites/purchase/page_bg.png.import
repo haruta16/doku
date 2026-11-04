@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bcs7jqdibywfa"
-path.bptc="res://.godot/imported/page_bg.png-4088ef4ac1f397fe2ea85ddf5231ed61.bptc.ctex"
-path.astc="res://.godot/imported/page_bg.png-4088ef4ac1f397fe2ea85ddf5231ed61.astc.ctex"
+path.bptc="res://.godot/imported/page_bg.png-7600fa18623d10f0dc5639ee339423a7.bptc.ctex"
+path.astc="res://.godot/imported/page_bg.png-7600fa18623d10f0dc5639ee339423a7.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/page_bg.png"
-dest_files=["res://.godot/imported/page_bg.png-4088ef4ac1f397fe2ea85ddf5231ed61.bptc.ctex", "res://.godot/imported/page_bg.png-4088ef4ac1f397fe2ea85ddf5231ed61.astc.ctex"]
+dest_files=["res://.godot/imported/page_bg.png-7600fa18623d10f0dc5639ee339423a7.bptc.ctex", "res://.godot/imported/page_bg.png-7600fa18623d10f0dc5639ee339423a7.astc.ctex"]
 
 [params]
 

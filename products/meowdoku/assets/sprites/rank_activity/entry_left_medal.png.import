@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cyd8aw1x0j8sj"
-path.bptc="res://.godot/imported/entry_left_medal.png-26c41dd6ce4a6e716b326be7be7471ce.bptc.ctex"
-path.astc="res://.godot/imported/entry_left_medal.png-26c41dd6ce4a6e716b326be7be7471ce.astc.ctex"
+path.bptc="res://.godot/imported/entry_left_medal.png-ee216b25d51ac88fcd8c68ce1c255023.bptc.ctex"
+path.astc="res://.godot/imported/entry_left_medal.png-ee216b25d51ac88fcd8c68ce1c255023.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/entry_left_medal.png"
-dest_files=["res://.godot/imported/entry_left_medal.png-26c41dd6ce4a6e716b326be7be7471ce.bptc.ctex", "res://.godot/imported/entry_left_medal.png-26c41dd6ce4a6e716b326be7be7471ce.astc.ctex"]
+dest_files=["res://.godot/imported/entry_left_medal.png-ee216b25d51ac88fcd8c68ce1c255023.bptc.ctex", "res://.godot/imported/entry_left_medal.png-ee216b25d51ac88fcd8c68ce1c255023.astc.ctex"]
 
 [params]
 

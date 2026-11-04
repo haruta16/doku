@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c4blsw4wpehl2"
-path.bptc="res://.godot/imported/home_companion_cat.png-32dccdcb2848382d0a1a4ba53355ea87.bptc.ctex"
-path.astc="res://.godot/imported/home_companion_cat.png-32dccdcb2848382d0a1a4ba53355ea87.astc.ctex"
+path.bptc="res://.godot/imported/home_companion_cat.png-3ad4938a96d93164f8db393513b101d3.bptc.ctex"
+path.astc="res://.godot/imported/home_companion_cat.png-3ad4938a96d93164f8db393513b101d3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/home_companion_cat/home_companion_cat.png"
-dest_files=["res://.godot/imported/home_companion_cat.png-32dccdcb2848382d0a1a4ba53355ea87.bptc.ctex", "res://.godot/imported/home_companion_cat.png-32dccdcb2848382d0a1a4ba53355ea87.astc.ctex"]
+dest_files=["res://.godot/imported/home_companion_cat.png-3ad4938a96d93164f8db393513b101d3.bptc.ctex", "res://.godot/imported/home_companion_cat.png-3ad4938a96d93164f8db393513b101d3.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://4bbhqvti58ux"
-path.bptc="res://.godot/imported/et_cell_02.png-fccf47d0789747ce4d4f38aba4a60e2d.bptc.ctex"
-path.astc="res://.godot/imported/et_cell_02.png-fccf47d0789747ce4d4f38aba4a60e2d.astc.ctex"
+path.bptc="res://.godot/imported/et_cell_02.png-519cf127536b41125daaff345ee6b447.bptc.ctex"
+path.astc="res://.godot/imported/et_cell_02.png-519cf127536b41125daaff345ee6b447.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_cell_02.png"
-dest_files=["res://.godot/imported/et_cell_02.png-fccf47d0789747ce4d4f38aba4a60e2d.bptc.ctex", "res://.godot/imported/et_cell_02.png-fccf47d0789747ce4d4f38aba4a60e2d.astc.ctex"]
+dest_files=["res://.godot/imported/et_cell_02.png-519cf127536b41125daaff345ee6b447.bptc.ctex", "res://.godot/imported/et_cell_02.png-519cf127536b41125daaff345ee6b447.astc.ctex"]
 
 [params]
 

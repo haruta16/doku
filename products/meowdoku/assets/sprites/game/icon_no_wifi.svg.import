@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dadesft5q3iim"
-path.s3tc="res://.godot/imported/icon_no_wifi.svg-15f2a63482a36b38471b2c9adf46af99.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_no_wifi.svg-15f2a63482a36b38471b2c9adf46af99.etc2.ctex"
+path.s3tc="res://.godot/imported/icon_no_wifi.svg-90ffc6821abef8780a84a5f8f695193d.s3tc.ctex"
+path.etc2="res://.godot/imported/icon_no_wifi.svg-90ffc6821abef8780a84a5f8f695193d.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/icon_no_wifi.svg"
-dest_files=["res://.godot/imported/icon_no_wifi.svg-15f2a63482a36b38471b2c9adf46af99.s3tc.ctex", "res://.godot/imported/icon_no_wifi.svg-15f2a63482a36b38471b2c9adf46af99.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_no_wifi.svg-90ffc6821abef8780a84a5f8f695193d.s3tc.ctex", "res://.godot/imported/icon_no_wifi.svg-90ffc6821abef8780a84a5f8f695193d.etc2.ctex"]
 
 [params]
 

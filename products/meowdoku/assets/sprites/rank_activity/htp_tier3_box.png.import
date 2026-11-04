@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dbteswm0jy62p"
-path="res://.godot/imported/htp_tier3_box.png-020ec0436ec43f14acdedd9972b0fdb5.ctex"
+path="res://.godot/imported/htp_tier3_box.png-464c535a9543c197c5b5e5ad938346fc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/htp_tier3_box.png"
-dest_files=["res://.godot/imported/htp_tier3_box.png-020ec0436ec43f14acdedd9972b0fdb5.ctex"]
+dest_files=["res://.godot/imported/htp_tier3_box.png-464c535a9543c197c5b5e5ad938346fc.ctex"]
 
 [params]
 

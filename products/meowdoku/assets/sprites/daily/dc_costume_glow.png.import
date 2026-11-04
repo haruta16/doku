@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ip24eti55sf2"
-path.bptc="res://.godot/imported/dc_costume_glow.png-e16107c4575448624a7b6b6f9994bb0e.bptc.ctex"
-path.astc="res://.godot/imported/dc_costume_glow.png-e16107c4575448624a7b6b6f9994bb0e.astc.ctex"
+path.bptc="res://.godot/imported/dc_costume_glow.png-a67735518ab10b2c875e84f0082f9964.bptc.ctex"
+path.astc="res://.godot/imported/dc_costume_glow.png-a67735518ab10b2c875e84f0082f9964.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily/dc_costume_glow.png"
-dest_files=["res://.godot/imported/dc_costume_glow.png-e16107c4575448624a7b6b6f9994bb0e.bptc.ctex", "res://.godot/imported/dc_costume_glow.png-e16107c4575448624a7b6b6f9994bb0e.astc.ctex"]
+dest_files=["res://.godot/imported/dc_costume_glow.png-a67735518ab10b2c875e84f0082f9964.bptc.ctex", "res://.godot/imported/dc_costume_glow.png-a67735518ab10b2c875e84f0082f9964.astc.ctex"]
 
 [params]
 

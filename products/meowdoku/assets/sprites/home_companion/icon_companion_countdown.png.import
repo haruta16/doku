@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cwjkqfm8pxfdo"
-path="res://.godot/imported/icon_companion_countdown.png-e201ab92bb439c86a55a967e7f681e4b.ctex"
+path="res://.godot/imported/icon_companion_countdown.png-d4082c42279b408276f1fdbd8145b571.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/icon_companion_countdown.png"
-dest_files=["res://.godot/imported/icon_companion_countdown.png-e201ab92bb439c86a55a967e7f681e4b.ctex"]
+dest_files=["res://.godot/imported/icon_companion_countdown.png-d4082c42279b408276f1fdbd8145b571.ctex"]
 
 [params]
 

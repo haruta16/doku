@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dd25i0jf1xsqk"
-path.bptc="res://.godot/imported/wool_unchecked.png-e609d4268daf3a5839133aea65d44866.bptc.ctex"
-path.astc="res://.godot/imported/wool_unchecked.png-e609d4268daf3a5839133aea65d44866.astc.ctex"
+path.bptc="res://.godot/imported/wool_unchecked.png-56ee5809c5dbe8d737056377f3732925.bptc.ctex"
+path.astc="res://.godot/imported/wool_unchecked.png-56ee5809c5dbe8d737056377f3732925.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/wool_unchecked.png"
-dest_files=["res://.godot/imported/wool_unchecked.png-e609d4268daf3a5839133aea65d44866.bptc.ctex", "res://.godot/imported/wool_unchecked.png-e609d4268daf3a5839133aea65d44866.astc.ctex"]
+dest_files=["res://.godot/imported/wool_unchecked.png-56ee5809c5dbe8d737056377f3732925.bptc.ctex", "res://.godot/imported/wool_unchecked.png-56ee5809c5dbe8d737056377f3732925.astc.ctex"]
 
 [params]
 

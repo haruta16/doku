@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://7f11ans4roun"
-path="res://.godot/imported/icon_companion_chest.png-734349c0f7fcb4620980e564db62edcf.ctex"
+path="res://.godot/imported/icon_companion_chest.png-bcb1d58412f3fa58672a8f8c4ca06a53.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/icon_companion_chest.png"
-dest_files=["res://.godot/imported/icon_companion_chest.png-734349c0f7fcb4620980e564db62edcf.ctex"]
+dest_files=["res://.godot/imported/icon_companion_chest.png-bcb1d58412f3fa58672a8f8c4ca06a53.ctex"]
 
 [params]
 

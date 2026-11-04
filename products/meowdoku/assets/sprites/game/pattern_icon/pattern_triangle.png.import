@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://77df7db5yw7t"
-path="res://.godot/imported/pattern_triangle.png-fade7b7131c4991bc2f60f10a190bd13.ctex"
+path="res://.godot/imported/pattern_triangle.png-c3054350a62b9027245f9e30eeb0f970.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/pattern_icon/pattern_triangle.png"
-dest_files=["res://.godot/imported/pattern_triangle.png-fade7b7131c4991bc2f60f10a190bd13.ctex"]
+dest_files=["res://.godot/imported/pattern_triangle.png-c3054350a62b9027245f9e30eeb0f970.ctex"]
 
 [params]
 

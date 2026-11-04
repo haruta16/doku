@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://rryla431vewi"
-path.bptc="res://.godot/imported/txt_ct_w_genius.png-13b82497dd70c48cd0602065076e1838.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_genius.png-13b82497dd70c48cd0602065076e1838.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_genius.png-262bc200272ac18d899abf62fc1ca23d.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_genius.png-262bc200272ac18d899abf62fc1ca23d.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_genius.png"
-dest_files=["res://.godot/imported/txt_ct_w_genius.png-13b82497dd70c48cd0602065076e1838.bptc.ctex", "res://.godot/imported/txt_ct_w_genius.png-13b82497dd70c48cd0602065076e1838.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_genius.png-262bc200272ac18d899abf62fc1ca23d.bptc.ctex", "res://.godot/imported/txt_ct_w_genius.png-262bc200272ac18d899abf62fc1ca23d.astc.ctex"]
 
 [params]
 

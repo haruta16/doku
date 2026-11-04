@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsjl8eofb6v6x"
-path.bptc="res://.godot/imported/settings_card_week.png-268422b193679724cd8ba03e7e0495c9.bptc.ctex"
-path.astc="res://.godot/imported/settings_card_week.png-268422b193679724cd8ba03e7e0495c9.astc.ctex"
+path.bptc="res://.godot/imported/settings_card_week.png-b80d9cb9d9c18fa0d54e08b762dc1ec3.bptc.ctex"
+path.astc="res://.godot/imported/settings_card_week.png-b80d9cb9d9c18fa0d54e08b762dc1ec3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/settings_card_week.png"
-dest_files=["res://.godot/imported/settings_card_week.png-268422b193679724cd8ba03e7e0495c9.bptc.ctex", "res://.godot/imported/settings_card_week.png-268422b193679724cd8ba03e7e0495c9.astc.ctex"]
+dest_files=["res://.godot/imported/settings_card_week.png-b80d9cb9d9c18fa0d54e08b762dc1ec3.bptc.ctex", "res://.godot/imported/settings_card_week.png-b80d9cb9d9c18fa0d54e08b762dc1ec3.astc.ctex"]
 
 [params]
 

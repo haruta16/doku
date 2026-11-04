@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dyot72kunnp2l"
-path.bptc="res://.godot/imported/et_glodenfish_001.png-ab7bc675dc5eed000124a410d38e2601.bptc.ctex"
-path.astc="res://.godot/imported/et_glodenfish_001.png-ab7bc675dc5eed000124a410d38e2601.astc.ctex"
+path.bptc="res://.godot/imported/et_glodenfish_001.png-e7228608baab1cdc8129bb47e26d8da5.bptc.ctex"
+path.astc="res://.godot/imported/et_glodenfish_001.png-e7228608baab1cdc8129bb47e26d8da5.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_glodenfish_001.png"
-dest_files=["res://.godot/imported/et_glodenfish_001.png-ab7bc675dc5eed000124a410d38e2601.bptc.ctex", "res://.godot/imported/et_glodenfish_001.png-ab7bc675dc5eed000124a410d38e2601.astc.ctex"]
+dest_files=["res://.godot/imported/et_glodenfish_001.png-e7228608baab1cdc8129bb47e26d8da5.bptc.ctex", "res://.godot/imported/et_glodenfish_001.png-e7228608baab1cdc8129bb47e26d8da5.astc.ctex"]
 
 [params]
 

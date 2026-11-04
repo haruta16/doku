@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckcxlg1sk36sv"
-path.bptc="res://.godot/imported/colorblind_off.png-da1b97124578212d0ef7b96b307b398e.bptc.ctex"
-path.astc="res://.godot/imported/colorblind_off.png-da1b97124578212d0ef7b96b307b398e.astc.ctex"
+path.bptc="res://.godot/imported/colorblind_off.png-821cd2ea2010e8557a204d8d150e1511.bptc.ctex"
+path.astc="res://.godot/imported/colorblind_off.png-821cd2ea2010e8557a204d8d150e1511.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/setting/colorblind_switch/colorblind_off.png"
-dest_files=["res://.godot/imported/colorblind_off.png-da1b97124578212d0ef7b96b307b398e.bptc.ctex", "res://.godot/imported/colorblind_off.png-da1b97124578212d0ef7b96b307b398e.astc.ctex"]
+dest_files=["res://.godot/imported/colorblind_off.png-821cd2ea2010e8557a204d8d150e1511.bptc.ctex", "res://.godot/imported/colorblind_off.png-821cd2ea2010e8557a204d8d150e1511.astc.ctex"]
 
 [params]
 

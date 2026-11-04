@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b74n22finryx4"
-path="res://.godot/imported/et_btn_fire.png-0ca501b85841038a80dca861e89fd55d.ctex"
+path="res://.godot/imported/et_btn_fire.png-d00a8207b46cfd28c63f77ec7cfade37.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_btn_fire.png"
-dest_files=["res://.godot/imported/et_btn_fire.png-0ca501b85841038a80dca861e89fd55d.ctex"]
+dest_files=["res://.godot/imported/et_btn_fire.png-d00a8207b46cfd28c63f77ec7cfade37.ctex"]
 
 [params]
 

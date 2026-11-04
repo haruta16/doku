@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b4sxqgf1fb82o"
-path.bptc="res://.godot/imported/icon_leaf.png-e3f23d35e10f1d04bd00099278f2a9c4.bptc.ctex"
-path.astc="res://.godot/imported/icon_leaf.png-e3f23d35e10f1d04bd00099278f2a9c4.astc.ctex"
+path.bptc="res://.godot/imported/icon_leaf.png-8eb5f95416e8781911c023db21db6be9.bptc.ctex"
+path.astc="res://.godot/imported/icon_leaf.png-8eb5f95416e8781911c023db21db6be9.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/bullets/icon_leaf.png"
-dest_files=["res://.godot/imported/icon_leaf.png-e3f23d35e10f1d04bd00099278f2a9c4.bptc.ctex", "res://.godot/imported/icon_leaf.png-e3f23d35e10f1d04bd00099278f2a9c4.astc.ctex"]
+dest_files=["res://.godot/imported/icon_leaf.png-8eb5f95416e8781911c023db21db6be9.bptc.ctex", "res://.godot/imported/icon_leaf.png-8eb5f95416e8781911c023db21db6be9.astc.ctex"]
 
 [params]
 

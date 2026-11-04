@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://u3w8hrb7djcy"
-path="res://.godot/imported/pass_anim_cat_win_1.ogg-0a818f10c27fcd2c8f6c9e3ec3b4d71a.oggvorbisstr"
+path="res://.godot/imported/pass_anim_cat_win_1.ogg-7678379c1df83fea0c6dcf3d738c8209.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/pass_anim_cat_win_1.ogg"
-dest_files=["res://.godot/imported/pass_anim_cat_win_1.ogg-0a818f10c27fcd2c8f6c9e3ec3b4d71a.oggvorbisstr"]
+dest_files=["res://.godot/imported/pass_anim_cat_win_1.ogg-7678379c1df83fea0c6dcf3d738c8209.oggvorbisstr"]
 
 [params]
 

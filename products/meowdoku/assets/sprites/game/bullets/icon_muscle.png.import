@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bfl3j1ony5cpa"
-path.bptc="res://.godot/imported/icon_muscle.png-1371641c9f77fea28d4a859dbfd31437.bptc.ctex"
-path.astc="res://.godot/imported/icon_muscle.png-1371641c9f77fea28d4a859dbfd31437.astc.ctex"
+path.bptc="res://.godot/imported/icon_muscle.png-c637f3ac7fa7779b05b87722b6514733.bptc.ctex"
+path.astc="res://.godot/imported/icon_muscle.png-c637f3ac7fa7779b05b87722b6514733.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/bullets/icon_muscle.png"
-dest_files=["res://.godot/imported/icon_muscle.png-1371641c9f77fea28d4a859dbfd31437.bptc.ctex", "res://.godot/imported/icon_muscle.png-1371641c9f77fea28d4a859dbfd31437.astc.ctex"]
+dest_files=["res://.godot/imported/icon_muscle.png-c637f3ac7fa7779b05b87722b6514733.bptc.ctex", "res://.godot/imported/icon_muscle.png-c637f3ac7fa7779b05b87722b6514733.astc.ctex"]
 
 [params]
 

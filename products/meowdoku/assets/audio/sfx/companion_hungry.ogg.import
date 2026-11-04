@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://d23opn2w7laoa"
-path="res://.godot/imported/companion_hungry.ogg-4b8b4187d3c1a3baac5d929e2f784f2c.oggvorbisstr"
+path="res://.godot/imported/companion_hungry.ogg-9d326964a64f48df68834fe3e63ac349.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/companion_hungry.ogg"
-dest_files=["res://.godot/imported/companion_hungry.ogg-4b8b4187d3c1a3baac5d929e2f784f2c.oggvorbisstr"]
+dest_files=["res://.godot/imported/companion_hungry.ogg-9d326964a64f48df68834fe3e63ac349.oggvorbisstr"]
 
 [params]
 

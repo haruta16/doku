@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cmxoy687pol3o"
-path="res://.godot/imported/pattern_sparkle.png-294f0425b3191bc59ff496a6f5e8c0ab.ctex"
+path="res://.godot/imported/pattern_sparkle.png-06b711109ea9155a07a857a66181ac2d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/pattern_icon/pattern_sparkle.png"
-dest_files=["res://.godot/imported/pattern_sparkle.png-294f0425b3191bc59ff496a6f5e8c0ab.ctex"]
+dest_files=["res://.godot/imported/pattern_sparkle.png-06b711109ea9155a07a857a66181ac2d.ctex"]
 
 [params]
 

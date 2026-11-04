@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dulcdnbscjewr"
-path="res://.godot/imported/top3_gold_base.png-f25620444a3070b2c723e4d29ac504dc.ctex"
+path="res://.godot/imported/top3_gold_base.png-4deae203713695bc4d3ac4137e3bd382.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/top3_gold_base.png"
-dest_files=["res://.godot/imported/top3_gold_base.png-f25620444a3070b2c723e4d29ac504dc.ctex"]
+dest_files=["res://.godot/imported/top3_gold_base.png-4deae203713695bc4d3ac4137e3bd382.ctex"]
 
 [params]
 

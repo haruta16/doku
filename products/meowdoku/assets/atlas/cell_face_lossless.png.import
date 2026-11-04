@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bk3dc6fprehh"
-path.bptc="res://.godot/imported/cell_face_lossless.png-a38f68869dc41b98719db146cb9616a3.bptc.ctex"
-path.astc="res://.godot/imported/cell_face_lossless.png-a38f68869dc41b98719db146cb9616a3.astc.ctex"
+path.bptc="res://.godot/imported/cell_face_lossless.png-c11799184365fea06e654d8ca5d6a55e.bptc.ctex"
+path.astc="res://.godot/imported/cell_face_lossless.png-c11799184365fea06e654d8ca5d6a55e.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/cell_face_lossless.png"
-dest_files=["res://.godot/imported/cell_face_lossless.png-a38f68869dc41b98719db146cb9616a3.bptc.ctex", "res://.godot/imported/cell_face_lossless.png-a38f68869dc41b98719db146cb9616a3.astc.ctex"]
+dest_files=["res://.godot/imported/cell_face_lossless.png-c11799184365fea06e654d8ca5d6a55e.bptc.ctex", "res://.godot/imported/cell_face_lossless.png-c11799184365fea06e654d8ca5d6a55e.astc.ctex"]
 
 [params]
 

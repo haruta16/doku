@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dcfwoqf41111t"
-path="res://.godot/imported/banner_halloween_intro.png-0c700f550b6fb476e86ee3ef045bfd42.ctex"
+path="res://.godot/imported/banner_halloween_intro.png-bbd155ce086d60d1ba1f74df3758c37f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/banner_halloween_intro.png"
-dest_files=["res://.godot/imported/banner_halloween_intro.png-0c700f550b6fb476e86ee3ef045bfd42.ctex"]
+dest_files=["res://.godot/imported/banner_halloween_intro.png-bbd155ce086d60d1ba1f74df3758c37f.ctex"]
 
 [params]
 

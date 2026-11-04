@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdsuedj4yq6yh"
-path="res://.godot/imported/streak3_mid_off.png-fef442cc82ee9b874454302b958758cb.ctex"
+path="res://.godot/imported/streak3_mid_off.png-2ec81adac2b9cff224a27e32b3cf822b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/streak3_mid_off.png"
-dest_files=["res://.godot/imported/streak3_mid_off.png-fef442cc82ee9b874454302b958758cb.ctex"]
+dest_files=["res://.godot/imported/streak3_mid_off.png-2ec81adac2b9cff224a27e32b3cf822b.ctex"]
 
 [params]
 

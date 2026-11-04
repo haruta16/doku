@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dyrbo2k7wo750"
-path.bptc="res://.godot/imported/et_shine_005.png-3983dfb8bef7d063a79a8cd98efb71fb.bptc.ctex"
-path.astc="res://.godot/imported/et_shine_005.png-3983dfb8bef7d063a79a8cd98efb71fb.astc.ctex"
+path.bptc="res://.godot/imported/et_shine_005.png-336a2a4469993a41bdaa21978371ee2a.bptc.ctex"
+path.astc="res://.godot/imported/et_shine_005.png-336a2a4469993a41bdaa21978371ee2a.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/shine/et_shine_005.png"
-dest_files=["res://.godot/imported/et_shine_005.png-3983dfb8bef7d063a79a8cd98efb71fb.bptc.ctex", "res://.godot/imported/et_shine_005.png-3983dfb8bef7d063a79a8cd98efb71fb.astc.ctex"]
+dest_files=["res://.godot/imported/et_shine_005.png-336a2a4469993a41bdaa21978371ee2a.bptc.ctex", "res://.godot/imported/et_shine_005.png-336a2a4469993a41bdaa21978371ee2a.astc.ctex"]
 
 [params]
 

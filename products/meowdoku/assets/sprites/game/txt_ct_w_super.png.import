@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b7xqbwoyif25x"
-path.bptc="res://.godot/imported/txt_ct_w_super.png-4a579047f40bf88b2ba34775e7de7596.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_super.png-4a579047f40bf88b2ba34775e7de7596.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_super.png-9efac5fca389265e4b82545816173230.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_super.png-9efac5fca389265e4b82545816173230.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_super.png"
-dest_files=["res://.godot/imported/txt_ct_w_super.png-4a579047f40bf88b2ba34775e7de7596.bptc.ctex", "res://.godot/imported/txt_ct_w_super.png-4a579047f40bf88b2ba34775e7de7596.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_super.png-9efac5fca389265e4b82545816173230.bptc.ctex", "res://.godot/imported/txt_ct_w_super.png-9efac5fca389265e4b82545816173230.astc.ctex"]
 
 [params]
 

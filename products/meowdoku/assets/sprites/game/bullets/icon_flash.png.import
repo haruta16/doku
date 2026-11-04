@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1fduw2wcptqp"
-path.bptc="res://.godot/imported/icon_flash.png-3caa1870ebcc699fda467eda1489bdb1.bptc.ctex"
-path.astc="res://.godot/imported/icon_flash.png-3caa1870ebcc699fda467eda1489bdb1.astc.ctex"
+path.bptc="res://.godot/imported/icon_flash.png-1de1c896ab6ae9b36e456b75dc269cdb.bptc.ctex"
+path.astc="res://.godot/imported/icon_flash.png-1de1c896ab6ae9b36e456b75dc269cdb.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/bullets/icon_flash.png"
-dest_files=["res://.godot/imported/icon_flash.png-3caa1870ebcc699fda467eda1489bdb1.bptc.ctex", "res://.godot/imported/icon_flash.png-3caa1870ebcc699fda467eda1489bdb1.astc.ctex"]
+dest_files=["res://.godot/imported/icon_flash.png-1de1c896ab6ae9b36e456b75dc269cdb.bptc.ctex", "res://.godot/imported/icon_flash.png-1de1c896ab6ae9b36e456b75dc269cdb.astc.ctex"]
 
 [params]
 

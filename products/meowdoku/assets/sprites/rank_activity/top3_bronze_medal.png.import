@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byb5yev5oywcb"
-path.bptc="res://.godot/imported/top3_bronze_medal.png-812e76237f4221480bab58825f003c1d.bptc.ctex"
-path.astc="res://.godot/imported/top3_bronze_medal.png-812e76237f4221480bab58825f003c1d.astc.ctex"
+path.bptc="res://.godot/imported/top3_bronze_medal.png-6eca9012fb17c0e2c8562f04b455d37f.bptc.ctex"
+path.astc="res://.godot/imported/top3_bronze_medal.png-6eca9012fb17c0e2c8562f04b455d37f.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/top3_bronze_medal.png"
-dest_files=["res://.godot/imported/top3_bronze_medal.png-812e76237f4221480bab58825f003c1d.bptc.ctex", "res://.godot/imported/top3_bronze_medal.png-812e76237f4221480bab58825f003c1d.astc.ctex"]
+dest_files=["res://.godot/imported/top3_bronze_medal.png-6eca9012fb17c0e2c8562f04b455d37f.bptc.ctex", "res://.godot/imported/top3_bronze_medal.png-6eca9012fb17c0e2c8562f04b455d37f.astc.ctex"]
 
 [params]
 

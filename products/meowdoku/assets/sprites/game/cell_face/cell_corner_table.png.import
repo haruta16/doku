@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8ksoab0voqyk"
-path="res://.godot/imported/cell_corner_table.png-fa121762ffd86f34cfe165fe2563655a.ctex"
+path="res://.godot/imported/cell_corner_table.png-dbed78890fcc2f554a5998b23814ee8c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/cell_face/cell_corner_table.png"
-dest_files=["res://.godot/imported/cell_corner_table.png-fa121762ffd86f34cfe165fe2563655a.ctex"]
+dest_files=["res://.godot/imported/cell_corner_table.png-dbed78890fcc2f554a5998b23814ee8c.ctex"]
 
 [params]
 

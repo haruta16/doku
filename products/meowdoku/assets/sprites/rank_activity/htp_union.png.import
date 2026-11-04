@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b81ktniwu44e3"
-path="res://.godot/imported/htp_union.png-c5232d7870747e90ca50e2b63c82210e.ctex"
+path="res://.godot/imported/htp_union.png-c77f15b5dbd92b352741370f05137f6d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/htp_union.png"
-dest_files=["res://.godot/imported/htp_union.png-c5232d7870747e90ca50e2b63c82210e.ctex"]
+dest_files=["res://.godot/imported/htp_union.png-c77f15b5dbd92b352741370f05137f6d.ctex"]
 
 [params]
 

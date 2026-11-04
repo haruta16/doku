@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b4sf4k7wy110d"
-path="res://.godot/imported/pattern_dot.png-8df469ab317c4bcefc080d72b58acddf.ctex"
+path="res://.godot/imported/pattern_dot.png-42a13ac47e69217cc2f67b0527b10959.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/pattern_icon/pattern_dot.png"
-dest_files=["res://.godot/imported/pattern_dot.png-8df469ab317c4bcefc080d72b58acddf.ctex"]
+dest_files=["res://.godot/imported/pattern_dot.png-42a13ac47e69217cc2f67b0527b10959.ctex"]
 
 [params]
 

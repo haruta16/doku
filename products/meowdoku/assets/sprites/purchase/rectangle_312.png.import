@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://y6hiytk6fbg6"
-path="res://.godot/imported/rectangle_312.png-efa59efafc68e6e1329968533cb92ae4.ctex"
+path="res://.godot/imported/rectangle_312.png-0bc431b87220af85d490e68674513870.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/rectangle_312.png"
-dest_files=["res://.godot/imported/rectangle_312.png-efa59efafc68e6e1329968533cb92ae4.ctex"]
+dest_files=["res://.godot/imported/rectangle_312.png-0bc431b87220af85d490e68674513870.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://qcmkd74718l5"
-path="res://.godot/imported/fish_count_bg_self.png-cc1fc261ad829856b06c0a34342abff6.ctex"
+path="res://.godot/imported/fish_count_bg_self.png-8f4da11b209977ec0d3b70f802f6bf9a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/fish_count_bg_self.png"
-dest_files=["res://.godot/imported/fish_count_bg_self.png-cc1fc261ad829856b06c0a34342abff6.ctex"]
+dest_files=["res://.godot/imported/fish_count_bg_self.png-8f4da11b209977ec0d3b70f802f6bf9a.ctex"]
 
 [params]
 

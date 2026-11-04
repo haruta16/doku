@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://s0rmrhxajhwd"
-path.bptc="res://.godot/imported/main_game_vram.png-9bec2c5e71c0fad0ed06156550e7cc58.bptc.ctex"
-path.astc="res://.godot/imported/main_game_vram.png-9bec2c5e71c0fad0ed06156550e7cc58.astc.ctex"
+path.bptc="res://.godot/imported/main_game_vram.png-9bee985f871932160b72877dbb0491db.bptc.ctex"
+path.astc="res://.godot/imported/main_game_vram.png-9bee985f871932160b72877dbb0491db.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/main_game_vram.png"
-dest_files=["res://.godot/imported/main_game_vram.png-9bec2c5e71c0fad0ed06156550e7cc58.bptc.ctex", "res://.godot/imported/main_game_vram.png-9bec2c5e71c0fad0ed06156550e7cc58.astc.ctex"]
+dest_files=["res://.godot/imported/main_game_vram.png-9bee985f871932160b72877dbb0491db.bptc.ctex", "res://.godot/imported/main_game_vram.png-9bee985f871932160b72877dbb0491db.astc.ctex"]
 
 [params]
 

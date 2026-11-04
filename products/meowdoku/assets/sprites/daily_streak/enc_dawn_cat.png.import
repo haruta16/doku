@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bfrqs7shrnk25"
-path="res://.godot/imported/enc_dawn_cat.png-0cfa3a6e3b51fcf1b8098a954532c7c2.ctex"
+path="res://.godot/imported/enc_dawn_cat.png-3163e64275c60cfe368fa14aa753ec22.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/enc_dawn_cat.png"
-dest_files=["res://.godot/imported/enc_dawn_cat.png-0cfa3a6e3b51fcf1b8098a954532c7c2.ctex"]
+dest_files=["res://.godot/imported/enc_dawn_cat.png-3163e64275c60cfe368fa14aa753ec22.ctex"]
 
 [params]
 

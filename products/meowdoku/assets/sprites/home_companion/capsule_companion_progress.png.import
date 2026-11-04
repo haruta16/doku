@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hbryirpdsbem"
-path="res://.godot/imported/capsule_companion_progress.png-7f4b8246d285862041d9186120e9b2f8.ctex"
+path="res://.godot/imported/capsule_companion_progress.png-11a7028136ff355a4c4d5798d0f607e1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/capsule_companion_progress.png"
-dest_files=["res://.godot/imported/capsule_companion_progress.png-7f4b8246d285862041d9186120e9b2f8.ctex"]
+dest_files=["res://.godot/imported/capsule_companion_progress.png-11a7028136ff355a4c4d5798d0f607e1.ctex"]
 
 [params]
 

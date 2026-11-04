@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bt7augcc8drgh"
-path.bptc="res://.godot/imported/mousehead.png-b329415836ebc79e6c5952c19994c1ff.bptc.ctex"
-path.astc="res://.godot/imported/mousehead.png-b329415836ebc79e6c5952c19994c1ff.astc.ctex"
+path.bptc="res://.godot/imported/mousehead.png-44171f1d7a4b18935b28b58a6f9fb44c.bptc.ctex"
+path.astc="res://.godot/imported/mousehead.png-44171f1d7a4b18935b28b58a6f9fb44c.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_mouse/mousehead.png"
-dest_files=["res://.godot/imported/mousehead.png-b329415836ebc79e6c5952c19994c1ff.bptc.ctex", "res://.godot/imported/mousehead.png-b329415836ebc79e6c5952c19994c1ff.astc.ctex"]
+dest_files=["res://.godot/imported/mousehead.png-44171f1d7a4b18935b28b58a6f9fb44c.bptc.ctex", "res://.godot/imported/mousehead.png-44171f1d7a4b18935b28b58a6f9fb44c.astc.ctex"]
 
 [params]
 

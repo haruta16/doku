@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ojxok2og3e13"
-path="res://.godot/imported/halloween_reward_tag.png-1b892235b2abc2a07f2fdf76e1697d27.ctex"
+path="res://.godot/imported/halloween_reward_tag.png-07e370965718c51fe2f637683146627b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/halloween_reward_tag.png"
-dest_files=["res://.godot/imported/halloween_reward_tag.png-1b892235b2abc2a07f2fdf76e1697d27.ctex"]
+dest_files=["res://.godot/imported/halloween_reward_tag.png-07e370965718c51fe2f637683146627b.ctex"]
 
 [params]
 

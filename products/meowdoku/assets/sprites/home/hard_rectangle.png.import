@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cemh7edw1e2r6"
-path.bptc="res://.godot/imported/hard_rectangle.png-2106069b30bf301510238f4d7a735b4f.bptc.ctex"
-path.astc="res://.godot/imported/hard_rectangle.png-2106069b30bf301510238f4d7a735b4f.astc.ctex"
+path.bptc="res://.godot/imported/hard_rectangle.png-71e11adc7c64591219b1c0a6b2bfc071.bptc.ctex"
+path.astc="res://.godot/imported/hard_rectangle.png-71e11adc7c64591219b1c0a6b2bfc071.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home/hard_rectangle.png"
-dest_files=["res://.godot/imported/hard_rectangle.png-2106069b30bf301510238f4d7a735b4f.bptc.ctex", "res://.godot/imported/hard_rectangle.png-2106069b30bf301510238f4d7a735b4f.astc.ctex"]
+dest_files=["res://.godot/imported/hard_rectangle.png-71e11adc7c64591219b1c0a6b2bfc071.bptc.ctex", "res://.godot/imported/hard_rectangle.png-71e11adc7c64591219b1c0a6b2bfc071.astc.ctex"]
 
 [params]
 

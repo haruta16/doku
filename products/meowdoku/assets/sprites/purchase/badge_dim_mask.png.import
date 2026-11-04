@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://uyvvoji8kswa"
-path.bptc="res://.godot/imported/badge_dim_mask.png-e6946856733d8e8def8018bedd43c0fe.bptc.ctex"
-path.astc="res://.godot/imported/badge_dim_mask.png-e6946856733d8e8def8018bedd43c0fe.astc.ctex"
+path.bptc="res://.godot/imported/badge_dim_mask.png-c0682b4f559c6933e59ffec417e0f418.bptc.ctex"
+path.astc="res://.godot/imported/badge_dim_mask.png-c0682b4f559c6933e59ffec417e0f418.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/badge_dim_mask.png"
-dest_files=["res://.godot/imported/badge_dim_mask.png-e6946856733d8e8def8018bedd43c0fe.bptc.ctex", "res://.godot/imported/badge_dim_mask.png-e6946856733d8e8def8018bedd43c0fe.astc.ctex"]
+dest_files=["res://.godot/imported/badge_dim_mask.png-c0682b4f559c6933e59ffec417e0f418.bptc.ctex", "res://.godot/imported/badge_dim_mask.png-c0682b4f559c6933e59ffec417e0f418.astc.ctex"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="spine.atlas"
 type="SpineAtlasResource"
 uid="uid://bbddwvpkh2g8a"
-path="res://.godot/imported/pass_anim_cat2.atlas-90ce73012d6444a042092231420ba3d1.spatlas"
+path="res://.godot/imported/pass_anim_cat2.atlas-8a3f816b801f6f4e4cc5a69d1f888ad2.spatlas"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/pass_anim_cat2/pass_anim_cat2.atlas"
-dest_files=["res://.godot/imported/pass_anim_cat2.atlas-90ce73012d6444a042092231420ba3d1.spatlas"]
+dest_files=["res://.godot/imported/pass_anim_cat2.atlas-8a3f816b801f6f4e4cc5a69d1f888ad2.spatlas"]
 
 [params]
 

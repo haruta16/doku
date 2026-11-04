@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://jmqls05wmcm3"
-path="res://.godot/imported/bgm_piano_fireplace.ogg-b42c11ac551eb8ced7c4d91989c489eb.oggvorbisstr"
+path="res://.godot/imported/bgm_piano_fireplace.ogg-dfeb5fdcd29f3c278719edce3a78ce7a.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/bgm/bgm_piano_fireplace.ogg"
-dest_files=["res://.godot/imported/bgm_piano_fireplace.ogg-b42c11ac551eb8ced7c4d91989c489eb.oggvorbisstr"]
+dest_files=["res://.godot/imported/bgm_piano_fireplace.ogg-dfeb5fdcd29f3c278719edce3a78ce7a.oggvorbisstr"]
 
 [params]
 

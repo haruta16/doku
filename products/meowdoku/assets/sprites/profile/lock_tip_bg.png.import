@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d23x5vjb16q6s"
-path="res://.godot/imported/lock_tip_bg.png-f970eca263b85155edd86583fe76766c.ctex"
+path="res://.godot/imported/lock_tip_bg.png-2480b13cd64923ca73fecb4667589db2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/profile/lock_tip_bg.png"
-dest_files=["res://.godot/imported/lock_tip_bg.png-f970eca263b85155edd86583fe76766c.ctex"]
+dest_files=["res://.godot/imported/lock_tip_bg.png-2480b13cd64923ca73fecb4667589db2.ctex"]
 
 [params]
 

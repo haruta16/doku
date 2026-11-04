@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c1h3doxxjfd0t"
-path.bptc="res://.godot/imported/rank_activity_vram.png-aea55bd2121ca9601c629838c669a61d.bptc.ctex"
-path.astc="res://.godot/imported/rank_activity_vram.png-aea55bd2121ca9601c629838c669a61d.astc.ctex"
+path.bptc="res://.godot/imported/rank_activity_vram.png-424146464d8129afeba0b48c30fbd026.bptc.ctex"
+path.astc="res://.godot/imported/rank_activity_vram.png-424146464d8129afeba0b48c30fbd026.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/rank_activity_vram.png"
-dest_files=["res://.godot/imported/rank_activity_vram.png-aea55bd2121ca9601c629838c669a61d.bptc.ctex", "res://.godot/imported/rank_activity_vram.png-aea55bd2121ca9601c629838c669a61d.astc.ctex"]
+dest_files=["res://.godot/imported/rank_activity_vram.png-424146464d8129afeba0b48c30fbd026.bptc.ctex", "res://.godot/imported/rank_activity_vram.png-424146464d8129afeba0b48c30fbd026.astc.ctex"]
 
 [params]
 

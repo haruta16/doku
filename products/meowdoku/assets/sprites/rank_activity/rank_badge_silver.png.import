@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1cmnnrqf6mem"
-path="res://.godot/imported/rank_badge_silver.png-2de01c509bdea21a21e19fc243bb805e.ctex"
+path="res://.godot/imported/rank_badge_silver.png-62a1b57860973f279e32ae83ab3c45df.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_badge_silver.png"
-dest_files=["res://.godot/imported/rank_badge_silver.png-2de01c509bdea21a21e19fc243bb805e.ctex"]
+dest_files=["res://.godot/imported/rank_badge_silver.png-62a1b57860973f279e32ae83ab3c45df.ctex"]
 
 [params]
 

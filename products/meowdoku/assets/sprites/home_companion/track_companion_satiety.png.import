@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bkr7lrjibr47r"
-path="res://.godot/imported/track_companion_satiety.png-2481d48459ded125ae84828520bbd964.ctex"
+path="res://.godot/imported/track_companion_satiety.png-b7e1283459a884f0dc23c70d1d85f9e2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/track_companion_satiety.png"
-dest_files=["res://.godot/imported/track_companion_satiety.png-2481d48459ded125ae84828520bbd964.ctex"]
+dest_files=["res://.godot/imported/track_companion_satiety.png-b7e1283459a884f0dc23c70d1d85f9e2.ctex"]
 
 [params]
 

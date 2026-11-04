@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dna06e6lhl0i7"
-path.bptc="res://.godot/imported/top3_fish_bg2.png-a88a55bbbb7937e1dc1b37609e9ef8f1.bptc.ctex"
-path.astc="res://.godot/imported/top3_fish_bg2.png-a88a55bbbb7937e1dc1b37609e9ef8f1.astc.ctex"
+path.bptc="res://.godot/imported/top3_fish_bg2.png-b0a6c5c3d348d6bb0810644729c2152d.bptc.ctex"
+path.astc="res://.godot/imported/top3_fish_bg2.png-b0a6c5c3d348d6bb0810644729c2152d.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/top3_fish_bg2.png"
-dest_files=["res://.godot/imported/top3_fish_bg2.png-a88a55bbbb7937e1dc1b37609e9ef8f1.bptc.ctex", "res://.godot/imported/top3_fish_bg2.png-a88a55bbbb7937e1dc1b37609e9ef8f1.astc.ctex"]
+dest_files=["res://.godot/imported/top3_fish_bg2.png-b0a6c5c3d348d6bb0810644729c2152d.bptc.ctex", "res://.godot/imported/top3_fish_bg2.png-b0a6c5c3d348d6bb0810644729c2152d.astc.ctex"]
 
 [params]
 

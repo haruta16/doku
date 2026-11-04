@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bi3pelcph05rb"
-path.bptc="res://.godot/imported/red1.png-a17c8498cd7459c40ee6beface361ad0.bptc.ctex"
-path.astc="res://.godot/imported/red1.png-a17c8498cd7459c40ee6beface361ad0.astc.ctex"
+path.bptc="res://.godot/imported/red1.png-c6ed3cb7db62e8ea154490e0b9674bc2.bptc.ctex"
+path.astc="res://.godot/imported/red1.png-c6ed3cb7db62e8ea154490e0b9674bc2.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_activity_offline_page/red1.png"
-dest_files=["res://.godot/imported/red1.png-a17c8498cd7459c40ee6beface361ad0.bptc.ctex", "res://.godot/imported/red1.png-a17c8498cd7459c40ee6beface361ad0.astc.ctex"]
+dest_files=["res://.godot/imported/red1.png-c6ed3cb7db62e8ea154490e0b9674bc2.bptc.ctex", "res://.godot/imported/red1.png-c6ed3cb7db62e8ea154490e0b9674bc2.astc.ctex"]
 
 [params]
 

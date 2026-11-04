@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bb2auc0exr3ul"
-path.bptc="res://.godot/imported/heart.png-7c53cfe6d15edd20642b45b6a256b66a.bptc.ctex"
-path.astc="res://.godot/imported/heart.png-7c53cfe6d15edd20642b45b6a256b66a.astc.ctex"
+path.bptc="res://.godot/imported/heart.png-64863aae99524673cb00a56667df08e3.bptc.ctex"
+path.astc="res://.godot/imported/heart.png-64863aae99524673cb00a56667df08e3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/privacy/privacy_dialog_v2/heart.png"
-dest_files=["res://.godot/imported/heart.png-7c53cfe6d15edd20642b45b6a256b66a.bptc.ctex", "res://.godot/imported/heart.png-7c53cfe6d15edd20642b45b6a256b66a.astc.ctex"]
+dest_files=["res://.godot/imported/heart.png-64863aae99524673cb00a56667df08e3.bptc.ctex", "res://.godot/imported/heart.png-64863aae99524673cb00a56667df08e3.astc.ctex"]
 
 [params]
 

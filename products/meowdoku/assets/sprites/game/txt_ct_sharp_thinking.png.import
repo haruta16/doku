@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ddtkr77ht4vwc"
-path.bptc="res://.godot/imported/txt_ct_sharp_thinking.png-0aabb95634c695a8cc48d4b15183ca5f.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_sharp_thinking.png-0aabb95634c695a8cc48d4b15183ca5f.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_sharp_thinking.png-ab71ef1ef0a9dc6e3a29d104ba9049d6.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_sharp_thinking.png-ab71ef1ef0a9dc6e3a29d104ba9049d6.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_sharp_thinking.png"
-dest_files=["res://.godot/imported/txt_ct_sharp_thinking.png-0aabb95634c695a8cc48d4b15183ca5f.bptc.ctex", "res://.godot/imported/txt_ct_sharp_thinking.png-0aabb95634c695a8cc48d4b15183ca5f.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_sharp_thinking.png-ab71ef1ef0a9dc6e3a29d104ba9049d6.bptc.ctex", "res://.godot/imported/txt_ct_sharp_thinking.png-ab71ef1ef0a9dc6e3a29d104ba9049d6.astc.ctex"]
 
 [params]
 

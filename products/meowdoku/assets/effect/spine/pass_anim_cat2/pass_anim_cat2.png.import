@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bvl1ylfccvc3u"
-path.bptc="res://.godot/imported/pass_anim_cat2.png-88549499d3208a27bc70b26f128f6ef2.bptc.ctex"
-path.astc="res://.godot/imported/pass_anim_cat2.png-88549499d3208a27bc70b26f128f6ef2.astc.ctex"
+path.bptc="res://.godot/imported/pass_anim_cat2.png-6c8959729cf4243266af5f37684af0b9.bptc.ctex"
+path.astc="res://.godot/imported/pass_anim_cat2.png-6c8959729cf4243266af5f37684af0b9.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/pass_anim_cat2/pass_anim_cat2.png"
-dest_files=["res://.godot/imported/pass_anim_cat2.png-88549499d3208a27bc70b26f128f6ef2.bptc.ctex", "res://.godot/imported/pass_anim_cat2.png-88549499d3208a27bc70b26f128f6ef2.astc.ctex"]
+dest_files=["res://.godot/imported/pass_anim_cat2.png-6c8959729cf4243266af5f37684af0b9.bptc.ctex", "res://.godot/imported/pass_anim_cat2.png-6c8959729cf4243266af5f37684af0b9.astc.ctex"]
 
 [params]
 

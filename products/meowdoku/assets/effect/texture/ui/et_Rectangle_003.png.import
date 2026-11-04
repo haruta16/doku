@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://r2svxwuhwdug"
-path.bptc="res://.godot/imported/et_Rectangle_003.png-8451547403aad95ede4fefd83f39dae7.bptc.ctex"
-path.astc="res://.godot/imported/et_Rectangle_003.png-8451547403aad95ede4fefd83f39dae7.astc.ctex"
+path.bptc="res://.godot/imported/et_Rectangle_003.png-1b709b1ce1cb43301d9929cf5c2270f3.bptc.ctex"
+path.astc="res://.godot/imported/et_Rectangle_003.png-1b709b1ce1cb43301d9929cf5c2270f3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_Rectangle_003.png"
-dest_files=["res://.godot/imported/et_Rectangle_003.png-8451547403aad95ede4fefd83f39dae7.bptc.ctex", "res://.godot/imported/et_Rectangle_003.png-8451547403aad95ede4fefd83f39dae7.astc.ctex"]
+dest_files=["res://.godot/imported/et_Rectangle_003.png-1b709b1ce1cb43301d9929cf5c2270f3.bptc.ctex", "res://.godot/imported/et_Rectangle_003.png-1b709b1ce1cb43301d9929cf5c2270f3.astc.ctex"]
 
 [params]
 

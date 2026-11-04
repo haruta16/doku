@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2ywaqabjtax7"
-path.bptc="res://.godot/imported/icon_timer_check.png-5e79beba37d0d47e7d18b42c32cffa56.bptc.ctex"
-path.astc="res://.godot/imported/icon_timer_check.png-5e79beba37d0d47e7d18b42c32cffa56.astc.ctex"
+path.bptc="res://.godot/imported/icon_timer_check.png-107220a3fe7c135577821e5da9bb66ea.bptc.ctex"
+path.astc="res://.godot/imported/icon_timer_check.png-107220a3fe7c135577821e5da9bb66ea.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily/icon_timer_check.png"
-dest_files=["res://.godot/imported/icon_timer_check.png-5e79beba37d0d47e7d18b42c32cffa56.bptc.ctex", "res://.godot/imported/icon_timer_check.png-5e79beba37d0d47e7d18b42c32cffa56.astc.ctex"]
+dest_files=["res://.godot/imported/icon_timer_check.png-107220a3fe7c135577821e5da9bb66ea.bptc.ctex", "res://.godot/imported/icon_timer_check.png-107220a3fe7c135577821e5da9bb66ea.astc.ctex"]
 
 [params]
 

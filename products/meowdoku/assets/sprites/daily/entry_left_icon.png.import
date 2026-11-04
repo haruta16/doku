@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://du5cljfa634gm"
-path.bptc="res://.godot/imported/entry_left_icon.png-e8d3e2c405c25443887298e8d57a27e8.bptc.ctex"
-path.astc="res://.godot/imported/entry_left_icon.png-e8d3e2c405c25443887298e8d57a27e8.astc.ctex"
+path.bptc="res://.godot/imported/entry_left_icon.png-9d41c8c1d34b1d94c6529573590b76f0.bptc.ctex"
+path.astc="res://.godot/imported/entry_left_icon.png-9d41c8c1d34b1d94c6529573590b76f0.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily/entry_left_icon.png"
-dest_files=["res://.godot/imported/entry_left_icon.png-e8d3e2c405c25443887298e8d57a27e8.bptc.ctex", "res://.godot/imported/entry_left_icon.png-e8d3e2c405c25443887298e8d57a27e8.astc.ctex"]
+dest_files=["res://.godot/imported/entry_left_icon.png-9d41c8c1d34b1d94c6529573590b76f0.bptc.ctex", "res://.godot/imported/entry_left_icon.png-9d41c8c1d34b1d94c6529573590b76f0.astc.ctex"]
 
 [params]
 

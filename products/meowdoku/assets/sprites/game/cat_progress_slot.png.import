@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://027x0mhob276"
-path.bptc="res://.godot/imported/cat_progress_slot.png-271ef04396ad8579c9fb4d1746140a33.bptc.ctex"
-path.astc="res://.godot/imported/cat_progress_slot.png-271ef04396ad8579c9fb4d1746140a33.astc.ctex"
+path.bptc="res://.godot/imported/cat_progress_slot.png-8c8287be0331d05413b8e373d8715cbb.bptc.ctex"
+path.astc="res://.godot/imported/cat_progress_slot.png-8c8287be0331d05413b8e373d8715cbb.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/cat_progress_slot.png"
-dest_files=["res://.godot/imported/cat_progress_slot.png-271ef04396ad8579c9fb4d1746140a33.bptc.ctex", "res://.godot/imported/cat_progress_slot.png-271ef04396ad8579c9fb4d1746140a33.astc.ctex"]
+dest_files=["res://.godot/imported/cat_progress_slot.png-8c8287be0331d05413b8e373d8715cbb.bptc.ctex", "res://.godot/imported/cat_progress_slot.png-8c8287be0331d05413b8e373d8715cbb.astc.ctex"]
 
 [params]
 

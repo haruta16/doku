@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bm1brsurn4eey"
-path.bptc="res://.godot/imported/award_podium_4_6.png-93524e2c12c14c12cba9134e41451b99.bptc.ctex"
-path.astc="res://.godot/imported/award_podium_4_6.png-93524e2c12c14c12cba9134e41451b99.astc.ctex"
+path.bptc="res://.godot/imported/award_podium_4_6.png-f8ea9dad794a114e24aff3b8045a123c.bptc.ctex"
+path.astc="res://.godot/imported/award_podium_4_6.png-f8ea9dad794a114e24aff3b8045a123c.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/award_podium_4_6.png"
-dest_files=["res://.godot/imported/award_podium_4_6.png-93524e2c12c14c12cba9134e41451b99.bptc.ctex", "res://.godot/imported/award_podium_4_6.png-93524e2c12c14c12cba9134e41451b99.astc.ctex"]
+dest_files=["res://.godot/imported/award_podium_4_6.png-f8ea9dad794a114e24aff3b8045a123c.bptc.ctex", "res://.godot/imported/award_podium_4_6.png-f8ea9dad794a114e24aff3b8045a123c.astc.ctex"]
 
 [params]
 

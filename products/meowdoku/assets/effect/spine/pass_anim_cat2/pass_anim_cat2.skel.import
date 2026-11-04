@@ -3,12 +3,12 @@
 importer="spine.skel"
 type="SpineSkeletonFileResource"
 uid="uid://gvof16rx2vr1"
-path="res://.godot/imported/pass_anim_cat2.skel-cb49e9dd1506f1b4bac4610c8ecbc867.spskel"
+path="res://.godot/imported/pass_anim_cat2.skel-799a419a89c9ebb1ecea2007af9c5a84.spskel"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/pass_anim_cat2/pass_anim_cat2.skel"
-dest_files=["res://.godot/imported/pass_anim_cat2.skel-cb49e9dd1506f1b4bac4610c8ecbc867.spskel"]
+dest_files=["res://.godot/imported/pass_anim_cat2.skel-799a419a89c9ebb1ecea2007af9c5a84.spskel"]
 
 [params]
 

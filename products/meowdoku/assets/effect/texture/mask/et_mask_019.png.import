@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bc1q0vj1rs31h"
-path.bptc="res://.godot/imported/et_mask_019.png-6beb99f73053e75cedabfae4126f85c8.bptc.ctex"
-path.astc="res://.godot/imported/et_mask_019.png-6beb99f73053e75cedabfae4126f85c8.astc.ctex"
+path.bptc="res://.godot/imported/et_mask_019.png-f3c39821ec37a01a182e6866b70e3fef.bptc.ctex"
+path.astc="res://.godot/imported/et_mask_019.png-f3c39821ec37a01a182e6866b70e3fef.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/mask/et_mask_019.png"
-dest_files=["res://.godot/imported/et_mask_019.png-6beb99f73053e75cedabfae4126f85c8.bptc.ctex", "res://.godot/imported/et_mask_019.png-6beb99f73053e75cedabfae4126f85c8.astc.ctex"]
+dest_files=["res://.godot/imported/et_mask_019.png-f3c39821ec37a01a182e6866b70e3fef.bptc.ctex", "res://.godot/imported/et_mask_019.png-f3c39821ec37a01a182e6866b70e3fef.astc.ctex"]
 
 [params]
 

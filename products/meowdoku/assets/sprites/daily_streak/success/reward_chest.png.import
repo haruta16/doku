@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://2710bk4bungt"
-path.bptc="res://.godot/imported/reward_chest.png-cd90d681a21f06e92a37e3e940661495.bptc.ctex"
-path.astc="res://.godot/imported/reward_chest.png-cd90d681a21f06e92a37e3e940661495.astc.ctex"
+path.bptc="res://.godot/imported/reward_chest.png-28b62025cbc2bb162de4589a9647ea35.bptc.ctex"
+path.astc="res://.godot/imported/reward_chest.png-28b62025cbc2bb162de4589a9647ea35.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/success/reward_chest.png"
-dest_files=["res://.godot/imported/reward_chest.png-cd90d681a21f06e92a37e3e940661495.bptc.ctex", "res://.godot/imported/reward_chest.png-cd90d681a21f06e92a37e3e940661495.astc.ctex"]
+dest_files=["res://.godot/imported/reward_chest.png-28b62025cbc2bb162de4589a9647ea35.bptc.ctex", "res://.godot/imported/reward_chest.png-28b62025cbc2bb162de4589a9647ea35.astc.ctex"]
 
 [params]
 

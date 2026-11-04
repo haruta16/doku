@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdu5753gv4ngm"
-path.bptc="res://.godot/imported/icon_back.png-681ea6eafb9d2b7b95181826a9a4a3f9.bptc.ctex"
-path.astc="res://.godot/imported/icon_back.png-681ea6eafb9d2b7b95181826a9a4a3f9.astc.ctex"
+path.bptc="res://.godot/imported/icon_back.png-3d7d253e93d1058b0d82178f6dd6b3a8.bptc.ctex"
+path.astc="res://.godot/imported/icon_back.png-3d7d253e93d1058b0d82178f6dd6b3a8.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/common/icon_back.png"
-dest_files=["res://.godot/imported/icon_back.png-681ea6eafb9d2b7b95181826a9a4a3f9.bptc.ctex", "res://.godot/imported/icon_back.png-681ea6eafb9d2b7b95181826a9a4a3f9.astc.ctex"]
+dest_files=["res://.godot/imported/icon_back.png-3d7d253e93d1058b0d82178f6dd6b3a8.bptc.ctex", "res://.godot/imported/icon_back.png-3d7d253e93d1058b0d82178f6dd6b3a8.astc.ctex"]
 
 [params]
 

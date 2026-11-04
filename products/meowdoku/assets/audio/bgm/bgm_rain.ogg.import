@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://c11iogawrca5m"
-path="res://.godot/imported/bgm_rain.ogg-1eb4b0c1f6c4338dc7de65428043e6df.oggvorbisstr"
+path="res://.godot/imported/bgm_rain.ogg-08933c6fc8673e93152bfc4729ea7885.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/bgm/bgm_rain.ogg"
-dest_files=["res://.godot/imported/bgm_rain.ogg-1eb4b0c1f6c4338dc7de65428043e6df.oggvorbisstr"]
+dest_files=["res://.godot/imported/bgm_rain.ogg-08933c6fc8673e93152bfc4729ea7885.oggvorbisstr"]
 
 [params]
 

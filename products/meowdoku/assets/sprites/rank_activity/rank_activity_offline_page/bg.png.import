@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://blgb3th64rois"
-path.bptc="res://.godot/imported/bg.png-bea683c46f599693397757445955c49f.bptc.ctex"
-path.astc="res://.godot/imported/bg.png-bea683c46f599693397757445955c49f.astc.ctex"
+path.bptc="res://.godot/imported/bg.png-3e60192892b0e3203949b097381adec5.bptc.ctex"
+path.astc="res://.godot/imported/bg.png-3e60192892b0e3203949b097381adec5.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_activity_offline_page/bg.png"
-dest_files=["res://.godot/imported/bg.png-bea683c46f599693397757445955c49f.bptc.ctex", "res://.godot/imported/bg.png-bea683c46f599693397757445955c49f.astc.ctex"]
+dest_files=["res://.godot/imported/bg.png-3e60192892b0e3203949b097381adec5.bptc.ctex", "res://.godot/imported/bg.png-3e60192892b0e3203949b097381adec5.astc.ctex"]
 
 [params]
 

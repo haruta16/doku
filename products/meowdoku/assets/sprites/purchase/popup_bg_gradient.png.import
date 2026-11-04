@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://duvmfocojow85"
-path.bptc="res://.godot/imported/popup_bg_gradient.png-75893072ae29337023b7da275296c6ca.bptc.ctex"
-path.astc="res://.godot/imported/popup_bg_gradient.png-75893072ae29337023b7da275296c6ca.astc.ctex"
+path.bptc="res://.godot/imported/popup_bg_gradient.png-8ea1a4ee17f2d497e769e22e1febc363.bptc.ctex"
+path.astc="res://.godot/imported/popup_bg_gradient.png-8ea1a4ee17f2d497e769e22e1febc363.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/popup_bg_gradient.png"
-dest_files=["res://.godot/imported/popup_bg_gradient.png-75893072ae29337023b7da275296c6ca.bptc.ctex", "res://.godot/imported/popup_bg_gradient.png-75893072ae29337023b7da275296c6ca.astc.ctex"]
+dest_files=["res://.godot/imported/popup_bg_gradient.png-8ea1a4ee17f2d497e769e22e1febc363.bptc.ctex", "res://.godot/imported/popup_bg_gradient.png-8ea1a4ee17f2d497e769e22e1febc363.astc.ctex"]
 
 [params]
 

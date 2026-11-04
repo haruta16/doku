@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ope2as5umw44"
-path.bptc="res://.godot/imported/rank_entry_podium_shadow.png-7b21e862d35ed4b593a7acd0e30470a1.bptc.ctex"
-path.astc="res://.godot/imported/rank_entry_podium_shadow.png-7b21e862d35ed4b593a7acd0e30470a1.astc.ctex"
+path.bptc="res://.godot/imported/rank_entry_podium_shadow.png-fd4bb97283a2237e096ddc1b0247cfca.bptc.ctex"
+path.astc="res://.godot/imported/rank_entry_podium_shadow.png-fd4bb97283a2237e096ddc1b0247cfca.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_entry_podium_shadow.png"
-dest_files=["res://.godot/imported/rank_entry_podium_shadow.png-7b21e862d35ed4b593a7acd0e30470a1.bptc.ctex", "res://.godot/imported/rank_entry_podium_shadow.png-7b21e862d35ed4b593a7acd0e30470a1.astc.ctex"]
+dest_files=["res://.godot/imported/rank_entry_podium_shadow.png-fd4bb97283a2237e096ddc1b0247cfca.bptc.ctex", "res://.godot/imported/rank_entry_podium_shadow.png-fd4bb97283a2237e096ddc1b0247cfca.astc.ctex"]
 
 [params]
 

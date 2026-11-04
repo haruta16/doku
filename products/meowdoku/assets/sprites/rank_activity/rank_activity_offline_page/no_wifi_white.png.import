@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2f4id8rx2tu4"
-path.bptc="res://.godot/imported/no_wifi_white.png-a9cf2fc3b9ad9255fbcf21c60c31b69e.bptc.ctex"
-path.astc="res://.godot/imported/no_wifi_white.png-a9cf2fc3b9ad9255fbcf21c60c31b69e.astc.ctex"
+path.bptc="res://.godot/imported/no_wifi_white.png-58f083c24a8248edf4db99ec4665e3a2.bptc.ctex"
+path.astc="res://.godot/imported/no_wifi_white.png-58f083c24a8248edf4db99ec4665e3a2.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_activity_offline_page/no_wifi_white.png"
-dest_files=["res://.godot/imported/no_wifi_white.png-a9cf2fc3b9ad9255fbcf21c60c31b69e.bptc.ctex", "res://.godot/imported/no_wifi_white.png-a9cf2fc3b9ad9255fbcf21c60c31b69e.astc.ctex"]
+dest_files=["res://.godot/imported/no_wifi_white.png-58f083c24a8248edf4db99ec4665e3a2.bptc.ctex", "res://.godot/imported/no_wifi_white.png-58f083c24a8248edf4db99ec4665e3a2.astc.ctex"]
 
 [params]
 

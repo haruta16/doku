@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dntqfovshiyms"
-path="res://.godot/imported/entry_left_open.png-62c7d3b3a71ae76269469978f5de1c17.ctex"
+path="res://.godot/imported/entry_left_open.png-1648c5ffe25b95da18b19b86e5bdfb40.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/entry_left_open.png"
-dest_files=["res://.godot/imported/entry_left_open.png-62c7d3b3a71ae76269469978f5de1c17.ctex"]
+dest_files=["res://.godot/imported/entry_left_open.png-1648c5ffe25b95da18b19b86e5bdfb40.ctex"]
 
 [params]
 

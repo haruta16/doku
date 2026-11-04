@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://co6k8cbsf37tj"
-path.bptc="res://.godot/imported/txt_ct_nice_patience.png-411adf7bbee0b0e2fc68852c76beeb12.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_nice_patience.png-411adf7bbee0b0e2fc68852c76beeb12.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_nice_patience.png-830aee8bd973448620cf1435ce1542d2.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_nice_patience.png-830aee8bd973448620cf1435ce1542d2.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_nice_patience.png"
-dest_files=["res://.godot/imported/txt_ct_nice_patience.png-411adf7bbee0b0e2fc68852c76beeb12.bptc.ctex", "res://.godot/imported/txt_ct_nice_patience.png-411adf7bbee0b0e2fc68852c76beeb12.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_nice_patience.png-830aee8bd973448620cf1435ce1542d2.bptc.ctex", "res://.godot/imported/txt_ct_nice_patience.png-830aee8bd973448620cf1435ce1542d2.astc.ctex"]
 
 [params]
 

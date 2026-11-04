@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://deqaef0bd0rl1"
-path.bptc="res://.godot/imported/home_companion_vram.png-1932a6e1f5952e958d11e991cba7c4a0.bptc.ctex"
-path.astc="res://.godot/imported/home_companion_vram.png-1932a6e1f5952e958d11e991cba7c4a0.astc.ctex"
+path.bptc="res://.godot/imported/home_companion_vram.png-847abe82d93a5763611bd0ceef882802.bptc.ctex"
+path.astc="res://.godot/imported/home_companion_vram.png-847abe82d93a5763611bd0ceef882802.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/home_companion_vram.png"
-dest_files=["res://.godot/imported/home_companion_vram.png-1932a6e1f5952e958d11e991cba7c4a0.bptc.ctex", "res://.godot/imported/home_companion_vram.png-1932a6e1f5952e958d11e991cba7c4a0.astc.ctex"]
+dest_files=["res://.godot/imported/home_companion_vram.png-847abe82d93a5763611bd0ceef882802.bptc.ctex", "res://.godot/imported/home_companion_vram.png-847abe82d93a5763611bd0ceef882802.astc.ctex"]
 
 [params]
 

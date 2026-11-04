@@ -3,12 +3,12 @@
 importer="spine.atlas"
 type="SpineAtlasResource"
 uid="uid://dj63qfhpd4i7j"
-path="res://.godot/imported/LikeHand_7.atlas-f2aff077de7ff339e394390046d7ea9d.spatlas"
+path="res://.godot/imported/LikeHand_7.atlas-c3ba5aee487baf5609cbe7d09606a6e9.spatlas"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_like_hand/LikeHand_7/LikeHand_7.atlas"
-dest_files=["res://.godot/imported/LikeHand_7.atlas-f2aff077de7ff339e394390046d7ea9d.spatlas"]
+dest_files=["res://.godot/imported/LikeHand_7.atlas-c3ba5aee487baf5609cbe7d09606a6e9.spatlas"]
 
 [params]
 

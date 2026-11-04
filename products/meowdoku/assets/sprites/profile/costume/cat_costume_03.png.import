@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cl75l3q2xmwu4"
-path.bptc="res://.godot/imported/cat_costume_03.png-153273d962dc1720bf30f7169355ebb3.bptc.ctex"
-path.astc="res://.godot/imported/cat_costume_03.png-153273d962dc1720bf30f7169355ebb3.astc.ctex"
+path.bptc="res://.godot/imported/cat_costume_03.png-38e303d79c6d45f9058e20cdb4cdf048.bptc.ctex"
+path.astc="res://.godot/imported/cat_costume_03.png-38e303d79c6d45f9058e20cdb4cdf048.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/profile/costume/cat_costume_03.png"
-dest_files=["res://.godot/imported/cat_costume_03.png-153273d962dc1720bf30f7169355ebb3.bptc.ctex", "res://.godot/imported/cat_costume_03.png-153273d962dc1720bf30f7169355ebb3.astc.ctex"]
+dest_files=["res://.godot/imported/cat_costume_03.png-38e303d79c6d45f9058e20cdb4cdf048.bptc.ctex", "res://.godot/imported/cat_costume_03.png-38e303d79c6d45f9058e20cdb4cdf048.astc.ctex"]
 
 [params]
 

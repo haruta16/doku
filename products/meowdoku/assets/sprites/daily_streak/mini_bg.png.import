@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8ng2flp52xmd"
-path="res://.godot/imported/mini_bg.png-36308b0c33715c22499751b0977faf62.ctex"
+path="res://.godot/imported/mini_bg.png-6e14af43b7f37bb03bcf3f359c12bf3d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/mini_bg.png"
-dest_files=["res://.godot/imported/mini_bg.png-36308b0c33715c22499751b0977faf62.ctex"]
+dest_files=["res://.godot/imported/mini_bg.png-6e14af43b7f37bb03bcf3f359c12bf3d.ctex"]
 
 [params]
 

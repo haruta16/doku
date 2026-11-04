@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ie3dv22r1x8x"
-path="res://.godot/imported/shape.png-5cde5e5c941661689965f3035bd17314.ctex"
+path="res://.godot/imported/shape.png-a1d584655c02afc74590e07993c08d96.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/splash/push_guide_exp1/shape.png"
-dest_files=["res://.godot/imported/shape.png-5cde5e5c941661689965f3035bd17314.ctex"]
+dest_files=["res://.godot/imported/shape.png-a1d584655c02afc74590e07993c08d96.ctex"]
 
 [params]
 

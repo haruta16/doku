@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cid0t061ityg0"
-path="res://.godot/imported/rank_row_self_shadow.png-092e9c4180c833f83fa55c3b8e4b6f23.ctex"
+path="res://.godot/imported/rank_row_self_shadow.png-cce6d889cf8d306cadbf72ab39dd007f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_row_self_shadow.png"
-dest_files=["res://.godot/imported/rank_row_self_shadow.png-092e9c4180c833f83fa55c3b8e4b6f23.ctex"]
+dest_files=["res://.godot/imported/rank_row_self_shadow.png-cce6d889cf8d306cadbf72ab39dd007f.ctex"]
 
 [params]
 

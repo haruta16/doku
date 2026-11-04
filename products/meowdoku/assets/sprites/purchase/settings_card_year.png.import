@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ch8366wx3ag6x"
-path.bptc="res://.godot/imported/settings_card_year.png-f61859be4b82b6e2000cffc36238f67c.bptc.ctex"
-path.astc="res://.godot/imported/settings_card_year.png-f61859be4b82b6e2000cffc36238f67c.astc.ctex"
+path.bptc="res://.godot/imported/settings_card_year.png-020b855952844a7225b27304a8b7b93c.bptc.ctex"
+path.astc="res://.godot/imported/settings_card_year.png-020b855952844a7225b27304a8b7b93c.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/settings_card_year.png"
-dest_files=["res://.godot/imported/settings_card_year.png-f61859be4b82b6e2000cffc36238f67c.bptc.ctex", "res://.godot/imported/settings_card_year.png-f61859be4b82b6e2000cffc36238f67c.astc.ctex"]
+dest_files=["res://.godot/imported/settings_card_year.png-020b855952844a7225b27304a8b7b93c.bptc.ctex", "res://.godot/imported/settings_card_year.png-020b855952844a7225b27304a8b7b93c.astc.ctex"]
 
 [params]
 

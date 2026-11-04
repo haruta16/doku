@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vq8vvqc2eu53"
-path.bptc="res://.godot/imported/icon_account_deleted.png-547234e24e3e5f2c8d49651d8068ce0f.bptc.ctex"
-path.astc="res://.godot/imported/icon_account_deleted.png-547234e24e3e5f2c8d49651d8068ce0f.astc.ctex"
+path.bptc="res://.godot/imported/icon_account_deleted.png-dc56eee63af1b350e20444a19c956503.bptc.ctex"
+path.astc="res://.godot/imported/icon_account_deleted.png-dc56eee63af1b350e20444a19c956503.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/account/icon_account_deleted.png"
-dest_files=["res://.godot/imported/icon_account_deleted.png-547234e24e3e5f2c8d49651d8068ce0f.bptc.ctex", "res://.godot/imported/icon_account_deleted.png-547234e24e3e5f2c8d49651d8068ce0f.astc.ctex"]
+dest_files=["res://.godot/imported/icon_account_deleted.png-dc56eee63af1b350e20444a19c956503.bptc.ctex", "res://.godot/imported/icon_account_deleted.png-dc56eee63af1b350e20444a19c956503.astc.ctex"]
 
 [params]
 

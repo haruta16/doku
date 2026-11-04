@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d01wk85srgk51"
-path.bptc="res://.godot/imported/single_rectangle_312.png-66747ea4b9ed17a1e7798630a2698647.bptc.ctex"
-path.astc="res://.godot/imported/single_rectangle_312.png-66747ea4b9ed17a1e7798630a2698647.astc.ctex"
+path.bptc="res://.godot/imported/single_rectangle_312.png-368ed698413040c5440f1def5a73c42d.bptc.ctex"
+path.astc="res://.godot/imported/single_rectangle_312.png-368ed698413040c5440f1def5a73c42d.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/single_rectangle_312.png"
-dest_files=["res://.godot/imported/single_rectangle_312.png-66747ea4b9ed17a1e7798630a2698647.bptc.ctex", "res://.godot/imported/single_rectangle_312.png-66747ea4b9ed17a1e7798630a2698647.astc.ctex"]
+dest_files=["res://.godot/imported/single_rectangle_312.png-368ed698413040c5440f1def5a73c42d.bptc.ctex", "res://.godot/imported/single_rectangle_312.png-368ed698413040c5440f1def5a73c42d.astc.ctex"]
 
 [params]
 

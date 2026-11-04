@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b4l2ae7er7d5e"
-path.bptc="res://.godot/imported/day_circle.png-2412771c73fefcc7f08d27d4fc805bdb.bptc.ctex"
-path.astc="res://.godot/imported/day_circle.png-2412771c73fefcc7f08d27d4fc805bdb.astc.ctex"
+path.bptc="res://.godot/imported/day_circle.png-0d45ddc5cf50ee2de9de1a4e94ee7a58.bptc.ctex"
+path.astc="res://.godot/imported/day_circle.png-0d45ddc5cf50ee2de9de1a4e94ee7a58.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/success/day_circle.png"
-dest_files=["res://.godot/imported/day_circle.png-2412771c73fefcc7f08d27d4fc805bdb.bptc.ctex", "res://.godot/imported/day_circle.png-2412771c73fefcc7f08d27d4fc805bdb.astc.ctex"]
+dest_files=["res://.godot/imported/day_circle.png-0d45ddc5cf50ee2de9de1a4e94ee7a58.bptc.ctex", "res://.godot/imported/day_circle.png-0d45ddc5cf50ee2de9de1a4e94ee7a58.astc.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cgswks6piidi"
-path="res://.godot/imported/icon_companion_progress_candy.png-cd103490c346b746d41db340e3cf377e.ctex"
+path="res://.godot/imported/icon_companion_progress_candy.png-52f73af8fca9d8ed115ba7adc2d4e014.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/icon_companion_progress_candy.png"
-dest_files=["res://.godot/imported/icon_companion_progress_candy.png-cd103490c346b746d41db340e3cf377e.ctex"]
+dest_files=["res://.godot/imported/icon_companion_progress_candy.png-52f73af8fca9d8ed115ba7adc2d4e014.ctex"]
 
 [params]
 

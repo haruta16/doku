@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://o7e6reocrli7"
-path="res://.godot/imported/icon_cross_white.png-8a933058475fbcc9f90154ec9e4f1677.ctex"
+path="res://.godot/imported/icon_cross_white.png-4e2e9a8faaa9b63d0f7f2faa984f36a4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/account/icon_cross_white.png"
-dest_files=["res://.godot/imported/icon_cross_white.png-8a933058475fbcc9f90154ec9e4f1677.ctex"]
+dest_files=["res://.godot/imported/icon_cross_white.png-4e2e9a8faaa9b63d0f7f2faa984f36a4.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://by5mk364s65ha"
-path.bptc="res://.godot/imported/txt_ct_steady_paws.png-a9ff373c2ce36151224cb29593ced4ea.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_steady_paws.png-a9ff373c2ce36151224cb29593ced4ea.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_steady_paws.png-9e78b835af9e616623122f1d8a52445a.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_steady_paws.png-9e78b835af9e616623122f1d8a52445a.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_steady_paws.png"
-dest_files=["res://.godot/imported/txt_ct_steady_paws.png-a9ff373c2ce36151224cb29593ced4ea.bptc.ctex", "res://.godot/imported/txt_ct_steady_paws.png-a9ff373c2ce36151224cb29593ced4ea.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_steady_paws.png-9e78b835af9e616623122f1d8a52445a.bptc.ctex", "res://.godot/imported/txt_ct_steady_paws.png-9e78b835af9e616623122f1d8a52445a.astc.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byu5stsli0ny"
-path="res://.godot/imported/cat_bg.png-4997040ce346601766c94b0842c2c8a2.ctex"
+path="res://.godot/imported/cat_bg.png-aa9237ac363bce43584d9fd5aec00555.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/cat_bg.png"
-dest_files=["res://.godot/imported/cat_bg.png-4997040ce346601766c94b0842c2c8a2.ctex"]
+dest_files=["res://.godot/imported/cat_bg.png-aa9237ac363bce43584d9fd5aec00555.ctex"]
 
 [params]
 

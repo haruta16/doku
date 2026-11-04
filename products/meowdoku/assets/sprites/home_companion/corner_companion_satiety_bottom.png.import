@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c8q8oe0u8rtxn"
-path="res://.godot/imported/corner_companion_satiety_bottom.png-6180f7303fd100e874bc833cb9c94a99.ctex"
+path="res://.godot/imported/corner_companion_satiety_bottom.png-916c26958a469164dfbe68256189fed2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/corner_companion_satiety_bottom.png"
-dest_files=["res://.godot/imported/corner_companion_satiety_bottom.png-6180f7303fd100e874bc833cb9c94a99.ctex"]
+dest_files=["res://.godot/imported/corner_companion_satiety_bottom.png-916c26958a469164dfbe68256189fed2.ctex"]
 
 [params]
 

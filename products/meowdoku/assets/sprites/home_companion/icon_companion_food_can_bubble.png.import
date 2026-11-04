@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://5vo3qom8uwgi"
-path="res://.godot/imported/icon_companion_food_can_bubble.png-beb1be7c4c948ffdbd78c8455ffa174d.ctex"
+path="res://.godot/imported/icon_companion_food_can_bubble.png-0dde1a8e119756e855dadae94036edea.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/icon_companion_food_can_bubble.png"
-dest_files=["res://.godot/imported/icon_companion_food_can_bubble.png-beb1be7c4c948ffdbd78c8455ffa174d.ctex"]
+dest_files=["res://.godot/imported/icon_companion_food_can_bubble.png-0dde1a8e119756e855dadae94036edea.ctex"]
 
 [params]
 

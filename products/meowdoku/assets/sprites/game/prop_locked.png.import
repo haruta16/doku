@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bhb2c47ngxldg"
-path="res://.godot/imported/prop_locked.png-e8de899454ff5b08b58302aba73cb7c0.ctex"
+path="res://.godot/imported/prop_locked.png-269f533238c8c40c68cfc60ca2db2d7d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/prop_locked.png"
-dest_files=["res://.godot/imported/prop_locked.png-e8de899454ff5b08b58302aba73cb7c0.ctex"]
+dest_files=["res://.godot/imported/prop_locked.png-269f533238c8c40c68cfc60ca2db2d7d.ctex"]
 
 [params]
 

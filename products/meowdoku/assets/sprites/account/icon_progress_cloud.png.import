@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2wylqreghij"
-path.bptc="res://.godot/imported/icon_progress_cloud.png-1f4672b900b41a3604205f66c47ed90b.bptc.ctex"
-path.astc="res://.godot/imported/icon_progress_cloud.png-1f4672b900b41a3604205f66c47ed90b.astc.ctex"
+path.bptc="res://.godot/imported/icon_progress_cloud.png-bcad4cd984e1e602d96c0c31f3d34027.bptc.ctex"
+path.astc="res://.godot/imported/icon_progress_cloud.png-bcad4cd984e1e602d96c0c31f3d34027.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/account/icon_progress_cloud.png"
-dest_files=["res://.godot/imported/icon_progress_cloud.png-1f4672b900b41a3604205f66c47ed90b.bptc.ctex", "res://.godot/imported/icon_progress_cloud.png-1f4672b900b41a3604205f66c47ed90b.astc.ctex"]
+dest_files=["res://.godot/imported/icon_progress_cloud.png-bcad4cd984e1e602d96c0c31f3d34027.bptc.ctex", "res://.godot/imported/icon_progress_cloud.png-bcad4cd984e1e602d96c0c31f3d34027.astc.ctex"]
 
 [params]
 

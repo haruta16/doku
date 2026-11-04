@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bxpscsy7ol6hk"
-path.bptc="res://.godot/imported/et_spotlight_beam.png-da147f69d01c4371fd20a4441700072e.bptc.ctex"
-path.astc="res://.godot/imported/et_spotlight_beam.png-da147f69d01c4371fd20a4441700072e.astc.ctex"
+path.bptc="res://.godot/imported/et_spotlight_beam.png-b7491989d991d3346c6be6c3f4b40693.bptc.ctex"
+path.astc="res://.godot/imported/et_spotlight_beam.png-b7491989d991d3346c6be6c3f4b40693.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/spotlight/et_spotlight_beam.png"
-dest_files=["res://.godot/imported/et_spotlight_beam.png-da147f69d01c4371fd20a4441700072e.bptc.ctex", "res://.godot/imported/et_spotlight_beam.png-da147f69d01c4371fd20a4441700072e.astc.ctex"]
+dest_files=["res://.godot/imported/et_spotlight_beam.png-b7491989d991d3346c6be6c3f4b40693.bptc.ctex", "res://.godot/imported/et_spotlight_beam.png-b7491989d991d3346c6be6c3f4b40693.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://4ofo3q7hd6pr"
-path.bptc="res://.godot/imported/ray_light001.png-4475d7bb53b807c79f4c0e3efd2064f2.bptc.ctex"
-path.astc="res://.godot/imported/ray_light001.png-4475d7bb53b807c79f4c0e3efd2064f2.astc.ctex"
+path.bptc="res://.godot/imported/ray_light001.png-6da8d45de2c637e8d3bf0a28c4f73e22.bptc.ctex"
+path.astc="res://.godot/imported/ray_light001.png-6da8d45de2c637e8d3bf0a28c4f73e22.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/win/ray_light001.png"
-dest_files=["res://.godot/imported/ray_light001.png-4475d7bb53b807c79f4c0e3efd2064f2.bptc.ctex", "res://.godot/imported/ray_light001.png-4475d7bb53b807c79f4c0e3efd2064f2.astc.ctex"]
+dest_files=["res://.godot/imported/ray_light001.png-6da8d45de2c637e8d3bf0a28c4f73e22.bptc.ctex", "res://.godot/imported/ray_light001.png-6da8d45de2c637e8d3bf0a28c4f73e22.astc.ctex"]
 
 [params]
 

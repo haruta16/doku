@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://do1e7bt0rx0y6"
-path.bptc="res://.godot/imported/txt_ct_w_cool.png-b34b53080e5be7630a7ca5994a6f5b96.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_cool.png-b34b53080e5be7630a7ca5994a6f5b96.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_cool.png-39916a028b64d5cd5ce0079da6f3b529.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_cool.png-39916a028b64d5cd5ce0079da6f3b529.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_cool.png"
-dest_files=["res://.godot/imported/txt_ct_w_cool.png-b34b53080e5be7630a7ca5994a6f5b96.bptc.ctex", "res://.godot/imported/txt_ct_w_cool.png-b34b53080e5be7630a7ca5994a6f5b96.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_cool.png-39916a028b64d5cd5ce0079da6f3b529.bptc.ctex", "res://.godot/imported/txt_ct_w_cool.png-39916a028b64d5cd5ce0079da6f3b529.astc.ctex"]
 
 [params]
 

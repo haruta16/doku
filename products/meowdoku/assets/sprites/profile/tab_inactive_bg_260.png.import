@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://de0oeosjv0tpk"
-path="res://.godot/imported/tab_inactive_bg_260.png-914fe73519503ead0c6c481825c37c8b.ctex"
+path="res://.godot/imported/tab_inactive_bg_260.png-e5c7d2f52fa961d1e585dd6337a5400e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/profile/tab_inactive_bg_260.png"
-dest_files=["res://.godot/imported/tab_inactive_bg_260.png-914fe73519503ead0c6c481825c37c8b.ctex"]
+dest_files=["res://.godot/imported/tab_inactive_bg_260.png-e5c7d2f52fa961d1e585dd6337a5400e.ctex"]
 
 [params]
 

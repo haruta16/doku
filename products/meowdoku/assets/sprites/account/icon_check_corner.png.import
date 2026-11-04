@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://chba34ldjpa1c"
-path="res://.godot/imported/icon_check_corner.png-24b47b3e7ec7a52eff509a6c8d01830d.ctex"
+path="res://.godot/imported/icon_check_corner.png-0cda0c6e1d46790a62bb827c8dadda16.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/account/icon_check_corner.png"
-dest_files=["res://.godot/imported/icon_check_corner.png-24b47b3e7ec7a52eff509a6c8d01830d.ctex"]
+dest_files=["res://.godot/imported/icon_check_corner.png-0cda0c6e1d46790a62bb827c8dadda16.ctex"]
 
 [params]
 

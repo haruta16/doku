@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://drb02krq02xvc"
-path.bptc="res://.godot/imported/change_banner_bar.png-30ce1c007c73c04e1d09fa1842b6aa73.bptc.ctex"
-path.astc="res://.godot/imported/change_banner_bar.png-30ce1c007c73c04e1d09fa1842b6aa73.astc.ctex"
+path.bptc="res://.godot/imported/change_banner_bar.png-b516e550f7a73ea238cb5c4f6c6ab4ea.bptc.ctex"
+path.astc="res://.godot/imported/change_banner_bar.png-b516e550f7a73ea238cb5c4f6c6ab4ea.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/change_banner_bar.png"
-dest_files=["res://.godot/imported/change_banner_bar.png-30ce1c007c73c04e1d09fa1842b6aa73.bptc.ctex", "res://.godot/imported/change_banner_bar.png-30ce1c007c73c04e1d09fa1842b6aa73.astc.ctex"]
+dest_files=["res://.godot/imported/change_banner_bar.png-b516e550f7a73ea238cb5c4f6c6ab4ea.bptc.ctex", "res://.godot/imported/change_banner_bar.png-b516e550f7a73ea238cb5c4f6c6ab4ea.astc.ctex"]
 
 [params]
 

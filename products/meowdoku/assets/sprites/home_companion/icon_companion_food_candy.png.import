@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c8hvuu1txmlxm"
-path.bptc="res://.godot/imported/icon_companion_food_candy.png-206496d6e44d26c14702859ad8d918b1.bptc.ctex"
-path.astc="res://.godot/imported/icon_companion_food_candy.png-206496d6e44d26c14702859ad8d918b1.astc.ctex"
+path.bptc="res://.godot/imported/icon_companion_food_candy.png-9f815b84d2e5d8f06365f032937103d4.bptc.ctex"
+path.astc="res://.godot/imported/icon_companion_food_candy.png-9f815b84d2e5d8f06365f032937103d4.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/icon_companion_food_candy.png"
-dest_files=["res://.godot/imported/icon_companion_food_candy.png-206496d6e44d26c14702859ad8d918b1.bptc.ctex", "res://.godot/imported/icon_companion_food_candy.png-206496d6e44d26c14702859ad8d918b1.astc.ctex"]
+dest_files=["res://.godot/imported/icon_companion_food_candy.png-9f815b84d2e5d8f06365f032937103d4.bptc.ctex", "res://.godot/imported/icon_companion_food_candy.png-9f815b84d2e5d8f06365f032937103d4.astc.ctex"]
 
 [params]
 

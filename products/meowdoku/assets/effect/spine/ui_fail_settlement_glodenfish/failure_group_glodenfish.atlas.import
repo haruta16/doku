@@ -3,12 +3,12 @@
 importer="spine.atlas"
 type="SpineAtlasResource"
 uid="uid://bb6k0y71kiuj8"
-path="res://.godot/imported/failure_group_glodenfish.atlas-23233b81a9d5778093747d3d0b6c10b5.spatlas"
+path="res://.godot/imported/failure_group_glodenfish.atlas-795541c75a2ec432c7906c2d68bd5bbf.spatlas"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_fail_settlement_glodenfish/failure_group_glodenfish.atlas"
-dest_files=["res://.godot/imported/failure_group_glodenfish.atlas-23233b81a9d5778093747d3d0b6c10b5.spatlas"]
+dest_files=["res://.godot/imported/failure_group_glodenfish.atlas-795541c75a2ec432c7906c2d68bd5bbf.spatlas"]
 
 [params]
 

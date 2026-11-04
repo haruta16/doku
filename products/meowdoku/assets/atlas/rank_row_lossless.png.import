@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cd5bwje1q5w0c"
-path.bptc="res://.godot/imported/rank_row_lossless.png-78c565fa81f894de1298e0e655b4d3a4.bptc.ctex"
-path.astc="res://.godot/imported/rank_row_lossless.png-78c565fa81f894de1298e0e655b4d3a4.astc.ctex"
+path.bptc="res://.godot/imported/rank_row_lossless.png-8963f17cce4e1d264a67f5e24cd4d523.bptc.ctex"
+path.astc="res://.godot/imported/rank_row_lossless.png-8963f17cce4e1d264a67f5e24cd4d523.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/rank_row_lossless.png"
-dest_files=["res://.godot/imported/rank_row_lossless.png-78c565fa81f894de1298e0e655b4d3a4.bptc.ctex", "res://.godot/imported/rank_row_lossless.png-78c565fa81f894de1298e0e655b4d3a4.astc.ctex"]
+dest_files=["res://.godot/imported/rank_row_lossless.png-8963f17cce4e1d264a67f5e24cd4d523.bptc.ctex", "res://.godot/imported/rank_row_lossless.png-8963f17cce4e1d264a67f5e24cd4d523.astc.ctex"]
 
 [params]
 

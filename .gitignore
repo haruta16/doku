@@ -23,3 +23,6 @@ originals/
 #
 # 其余编辑器个人偏好（主题、字体、快捷键）留在 .vscode/ 里的其他文件，依然被忽略。
 !.vscode/settings.json
+
+# 验收截图不参与运行时资源导入；保留截图原件，忽略编辑器已生成的旁文件。
+/docs/validation/migration-1.22-ui/*.png.import

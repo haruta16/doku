@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://li7hjgfo0qx"
-path.bptc="res://.godot/imported/btn.png-5155466d63cf86d0d10c222431978eff.bptc.ctex"
-path.astc="res://.godot/imported/btn.png-5155466d63cf86d0d10c222431978eff.astc.ctex"
+path.bptc="res://.godot/imported/btn.png-0e5bed995bddac70b46236ee78f021fe.bptc.ctex"
+path.astc="res://.godot/imported/btn.png-0e5bed995bddac70b46236ee78f021fe.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/privacy/privacy_dialog_v2/btn.png"
-dest_files=["res://.godot/imported/btn.png-5155466d63cf86d0d10c222431978eff.bptc.ctex", "res://.godot/imported/btn.png-5155466d63cf86d0d10c222431978eff.astc.ctex"]
+dest_files=["res://.godot/imported/btn.png-0e5bed995bddac70b46236ee78f021fe.bptc.ctex", "res://.godot/imported/btn.png-0e5bed995bddac70b46236ee78f021fe.astc.ctex"]
 
 [params]
 

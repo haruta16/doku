@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfx32y48jpdna"
-path.bptc="res://.godot/imported/et_cell_01.png-8ec1261c4adbfdaa0af7704d3c4ae0c7.bptc.ctex"
-path.astc="res://.godot/imported/et_cell_01.png-8ec1261c4adbfdaa0af7704d3c4ae0c7.astc.ctex"
+path.bptc="res://.godot/imported/et_cell_01.png-815f29ab7a97c3704ef71c1e74c964ce.bptc.ctex"
+path.astc="res://.godot/imported/et_cell_01.png-815f29ab7a97c3704ef71c1e74c964ce.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_cell_01.png"
-dest_files=["res://.godot/imported/et_cell_01.png-8ec1261c4adbfdaa0af7704d3c4ae0c7.bptc.ctex", "res://.godot/imported/et_cell_01.png-8ec1261c4adbfdaa0af7704d3c4ae0c7.astc.ctex"]
+dest_files=["res://.godot/imported/et_cell_01.png-815f29ab7a97c3704ef71c1e74c964ce.bptc.ctex", "res://.godot/imported/et_cell_01.png-815f29ab7a97c3704ef71c1e74c964ce.astc.ctex"]
 
 [params]
 

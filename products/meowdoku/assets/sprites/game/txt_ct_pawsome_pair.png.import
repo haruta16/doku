@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c6als3mttx7i2"
-path.bptc="res://.godot/imported/txt_ct_pawsome_pair.png-5f0f71d1c9fd6e243a427de04888f627.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_pawsome_pair.png-5f0f71d1c9fd6e243a427de04888f627.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_pawsome_pair.png-c11889e78f86cb7f6a84ec3917174648.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_pawsome_pair.png-c11889e78f86cb7f6a84ec3917174648.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_pawsome_pair.png"
-dest_files=["res://.godot/imported/txt_ct_pawsome_pair.png-5f0f71d1c9fd6e243a427de04888f627.bptc.ctex", "res://.godot/imported/txt_ct_pawsome_pair.png-5f0f71d1c9fd6e243a427de04888f627.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_pawsome_pair.png-c11889e78f86cb7f6a84ec3917174648.bptc.ctex", "res://.godot/imported/txt_ct_pawsome_pair.png-c11889e78f86cb7f6a84ec3917174648.astc.ctex"]
 
 [params]
 

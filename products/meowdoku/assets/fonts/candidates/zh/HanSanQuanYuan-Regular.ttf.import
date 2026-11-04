@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://xphamr1qnbyu"
-path="res://.godot/imported/HanSanQuanYuan-Regular.ttf-54c87c5ee80c2303f128516853754ef8.fontdata"
+path="res://.godot/imported/HanSanQuanYuan-Regular.ttf-ea11f0aba896bcb57e6bae8ae158856d.fontdata"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/fonts/candidates/zh/HanSanQuanYuan-Regular.ttf"
-dest_files=["res://.godot/imported/HanSanQuanYuan-Regular.ttf-54c87c5ee80c2303f128516853754ef8.fontdata"]
+dest_files=["res://.godot/imported/HanSanQuanYuan-Regular.ttf-ea11f0aba896bcb57e6bae8ae158856d.fontdata"]
 
 [params]
 

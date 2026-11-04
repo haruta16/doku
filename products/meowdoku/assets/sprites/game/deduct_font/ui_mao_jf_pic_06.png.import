@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://rurf0yih5xgd"
-path="res://.godot/imported/ui_mao_jf_pic_06.png-ca0ea9377ce0df7359529808a33c4d62.ctex"
+path="res://.godot/imported/ui_mao_jf_pic_06.png-4a18e7e03fa8bcd8fc782d8b29587561.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/deduct_font/ui_mao_jf_pic_06.png"
-dest_files=["res://.godot/imported/ui_mao_jf_pic_06.png-ca0ea9377ce0df7359529808a33c4d62.ctex"]
+dest_files=["res://.godot/imported/ui_mao_jf_pic_06.png-4a18e7e03fa8bcd8fc782d8b29587561.ctex"]
 
 [params]
 

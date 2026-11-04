@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://d2mvxgknmn6ci"
-path="res://.godot/imported/rank_box_open.ogg-50ac616c003e6c2d84c24a75ac9e8eea.oggvorbisstr"
+path="res://.godot/imported/rank_box_open.ogg-d8a9c127cbc5c8ebb0efd6613d8aa76d.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/rank_box_open.ogg"
-dest_files=["res://.godot/imported/rank_box_open.ogg-50ac616c003e6c2d84c24a75ac9e8eea.oggvorbisstr"]
+dest_files=["res://.godot/imported/rank_box_open.ogg-d8a9c127cbc5c8ebb0efd6613d8aa76d.oggvorbisstr"]
 
 [params]
 

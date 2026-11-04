@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdunyqgvk66kt"
-path.bptc="res://.godot/imported/txt_ct_paw_chain.png-c2b6f0a8ee044a731a72cb7308838322.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_paw_chain.png-c2b6f0a8ee044a731a72cb7308838322.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_paw_chain.png-128467d7c4ed301f7fc0013065daf036.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_paw_chain.png-128467d7c4ed301f7fc0013065daf036.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_paw_chain.png"
-dest_files=["res://.godot/imported/txt_ct_paw_chain.png-c2b6f0a8ee044a731a72cb7308838322.bptc.ctex", "res://.godot/imported/txt_ct_paw_chain.png-c2b6f0a8ee044a731a72cb7308838322.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_paw_chain.png-128467d7c4ed301f7fc0013065daf036.bptc.ctex", "res://.godot/imported/txt_ct_paw_chain.png-128467d7c4ed301f7fc0013065daf036.astc.ctex"]
 
 [params]
 

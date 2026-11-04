@@ -3,12 +3,12 @@
 importer="spine.atlas"
 type="SpineAtlasResource"
 uid="uid://crlvl2312lyw5"
-path="res://.godot/imported/cat_basket.atlas-c9fa812f3a75b5181c88ae3247a83563.spatlas"
+path="res://.godot/imported/cat_basket.atlas-de207e735ecb638001d47ce238f9b8ec.spatlas"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/peekaboo_cat/cat_basket/cat_basket.atlas"
-dest_files=["res://.godot/imported/cat_basket.atlas-c9fa812f3a75b5181c88ae3247a83563.spatlas"]
+dest_files=["res://.godot/imported/cat_basket.atlas-de207e735ecb638001d47ce238f9b8ec.spatlas"]
 
 [params]
 

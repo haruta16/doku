@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dcr0qyh6kstfm"
-path.bptc="res://.godot/imported/et_purchase_interface_flow_mask.png-9b00c5259dd817206e6b9ec811e6bf42.bptc.ctex"
-path.astc="res://.godot/imported/et_purchase_interface_flow_mask.png-9b00c5259dd817206e6b9ec811e6bf42.astc.ctex"
+path.bptc="res://.godot/imported/et_purchase_interface_flow_mask.png-40b08e97038000cdd7debf588ede66bd.bptc.ctex"
+path.astc="res://.godot/imported/et_purchase_interface_flow_mask.png-40b08e97038000cdd7debf588ede66bd.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_purchase_interface_flow_mask.png"
-dest_files=["res://.godot/imported/et_purchase_interface_flow_mask.png-9b00c5259dd817206e6b9ec811e6bf42.bptc.ctex", "res://.godot/imported/et_purchase_interface_flow_mask.png-9b00c5259dd817206e6b9ec811e6bf42.astc.ctex"]
+dest_files=["res://.godot/imported/et_purchase_interface_flow_mask.png-40b08e97038000cdd7debf588ede66bd.bptc.ctex", "res://.godot/imported/et_purchase_interface_flow_mask.png-40b08e97038000cdd7debf588ede66bd.astc.ctex"]
 
 [params]
 

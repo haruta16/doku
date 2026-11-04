@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7tribrfvy1qj"
-path.bptc="res://.godot/imported/halloween_reward_glow.png-206aa46e2ad6f21f86316ad51c24c1b3.bptc.ctex"
-path.astc="res://.godot/imported/halloween_reward_glow.png-206aa46e2ad6f21f86316ad51c24c1b3.astc.ctex"
+path.bptc="res://.godot/imported/halloween_reward_glow.png-e5f9a651a52d70427447214251c4346a.bptc.ctex"
+path.astc="res://.godot/imported/halloween_reward_glow.png-e5f9a651a52d70427447214251c4346a.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/halloween_reward_glow.png"
-dest_files=["res://.godot/imported/halloween_reward_glow.png-206aa46e2ad6f21f86316ad51c24c1b3.bptc.ctex", "res://.godot/imported/halloween_reward_glow.png-206aa46e2ad6f21f86316ad51c24c1b3.astc.ctex"]
+dest_files=["res://.godot/imported/halloween_reward_glow.png-e5f9a651a52d70427447214251c4346a.bptc.ctex", "res://.godot/imported/halloween_reward_glow.png-e5f9a651a52d70427447214251c4346a.astc.ctex"]
 
 [params]
 

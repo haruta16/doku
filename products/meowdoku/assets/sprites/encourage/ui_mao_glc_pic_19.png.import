@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cwawnkhpjli5s"
-path="res://.godot/imported/ui_mao_glc_pic_19.png-8bde9aa33aae53f4fda1dd0bf43eb45c.ctex"
+path="res://.godot/imported/ui_mao_glc_pic_19.png-60b068c87ee7599d613a5a8cf4e8606e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/encourage/ui_mao_glc_pic_19.png"
-dest_files=["res://.godot/imported/ui_mao_glc_pic_19.png-8bde9aa33aae53f4fda1dd0bf43eb45c.ctex"]
+dest_files=["res://.godot/imported/ui_mao_glc_pic_19.png-60b068c87ee7599d613a5a8cf4e8606e.ctex"]
 
 [params]
 

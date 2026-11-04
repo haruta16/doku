@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://br0lno428osbt"
-path.bptc="res://.godot/imported/txt_ct_w_expert.png-f914ee1614f0b201e3e69daa2bf3cd44.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_expert.png-f914ee1614f0b201e3e69daa2bf3cd44.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_expert.png-0c2f86f61fee5e0133fbd11210c550b3.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_expert.png-0c2f86f61fee5e0133fbd11210c550b3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_expert.png"
-dest_files=["res://.godot/imported/txt_ct_w_expert.png-f914ee1614f0b201e3e69daa2bf3cd44.bptc.ctex", "res://.godot/imported/txt_ct_w_expert.png-f914ee1614f0b201e3e69daa2bf3cd44.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_expert.png-0c2f86f61fee5e0133fbd11210c550b3.bptc.ctex", "res://.godot/imported/txt_ct_w_expert.png-0c2f86f61fee5e0133fbd11210c550b3.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bpyumv0mhclji"
-path.bptc="res://.godot/imported/icon_facebook.png-29c580a0c98dc84ca139c510e2b0b72c.bptc.ctex"
-path.astc="res://.godot/imported/icon_facebook.png-29c580a0c98dc84ca139c510e2b0b72c.astc.ctex"
+path.bptc="res://.godot/imported/icon_facebook.png-3517ab5584db561dc2699c41dac798cf.bptc.ctex"
+path.astc="res://.godot/imported/icon_facebook.png-3517ab5584db561dc2699c41dac798cf.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/account/icon_facebook.png"
-dest_files=["res://.godot/imported/icon_facebook.png-29c580a0c98dc84ca139c510e2b0b72c.bptc.ctex", "res://.godot/imported/icon_facebook.png-29c580a0c98dc84ca139c510e2b0b72c.astc.ctex"]
+dest_files=["res://.godot/imported/icon_facebook.png-3517ab5584db561dc2699c41dac798cf.bptc.ctex", "res://.godot/imported/icon_facebook.png-3517ab5584db561dc2699c41dac798cf.astc.ctex"]
 
 [params]
 

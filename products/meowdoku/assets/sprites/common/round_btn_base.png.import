@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cp5e2lcnxdfsk"
-path.bptc="res://.godot/imported/round_btn_base.png-04485a9b70a25dee2b4c58dc2146ce2b.bptc.ctex"
-path.astc="res://.godot/imported/round_btn_base.png-04485a9b70a25dee2b4c58dc2146ce2b.astc.ctex"
+path.bptc="res://.godot/imported/round_btn_base.png-b449c144883779ea7a40f68cd4bd0dc0.bptc.ctex"
+path.astc="res://.godot/imported/round_btn_base.png-b449c144883779ea7a40f68cd4bd0dc0.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/common/round_btn_base.png"
-dest_files=["res://.godot/imported/round_btn_base.png-04485a9b70a25dee2b4c58dc2146ce2b.bptc.ctex", "res://.godot/imported/round_btn_base.png-04485a9b70a25dee2b4c58dc2146ce2b.astc.ctex"]
+dest_files=["res://.godot/imported/round_btn_base.png-b449c144883779ea7a40f68cd4bd0dc0.bptc.ctex", "res://.godot/imported/round_btn_base.png-b449c144883779ea7a40f68cd4bd0dc0.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cm6igbl7mcbm3"
-path.bptc="res://.godot/imported/rectangle_361.png-49a6015df5926c14543914ea28337040.bptc.ctex"
-path.astc="res://.godot/imported/rectangle_361.png-49a6015df5926c14543914ea28337040.astc.ctex"
+path.bptc="res://.godot/imported/rectangle_361.png-eeef9f371d49e75d317105dc94074f6b.bptc.ctex"
+path.astc="res://.godot/imported/rectangle_361.png-eeef9f371d49e75d317105dc94074f6b.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/home/rectangle_361.png"
-dest_files=["res://.godot/imported/rectangle_361.png-49a6015df5926c14543914ea28337040.bptc.ctex", "res://.godot/imported/rectangle_361.png-49a6015df5926c14543914ea28337040.astc.ctex"]
+dest_files=["res://.godot/imported/rectangle_361.png-eeef9f371d49e75d317105dc94074f6b.bptc.ctex", "res://.godot/imported/rectangle_361.png-eeef9f371d49e75d317105dc94074f6b.astc.ctex"]
 
 [params]
 

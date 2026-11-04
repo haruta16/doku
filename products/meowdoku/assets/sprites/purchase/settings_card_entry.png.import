@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cjkebksiovvbu"
-path.bptc="res://.godot/imported/settings_card_entry.png-0b39fddaff5e9252d5fd851b9f1760cb.bptc.ctex"
-path.astc="res://.godot/imported/settings_card_entry.png-0b39fddaff5e9252d5fd851b9f1760cb.astc.ctex"
+path.bptc="res://.godot/imported/settings_card_entry.png-839fe3ce68ca21b5ae45b33b0b053be3.bptc.ctex"
+path.astc="res://.godot/imported/settings_card_entry.png-839fe3ce68ca21b5ae45b33b0b053be3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/settings_card_entry.png"
-dest_files=["res://.godot/imported/settings_card_entry.png-0b39fddaff5e9252d5fd851b9f1760cb.bptc.ctex", "res://.godot/imported/settings_card_entry.png-0b39fddaff5e9252d5fd851b9f1760cb.astc.ctex"]
+dest_files=["res://.godot/imported/settings_card_entry.png-839fe3ce68ca21b5ae45b33b0b053be3.bptc.ctex", "res://.godot/imported/settings_card_entry.png-839fe3ce68ca21b5ae45b33b0b053be3.astc.ctex"]
 
 [params]
 

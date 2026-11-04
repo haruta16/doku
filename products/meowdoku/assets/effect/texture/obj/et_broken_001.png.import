@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bivtkyr4dbl78"
-path.bptc="res://.godot/imported/et_broken_001.png-44838209fb8769f21debcdc39f1cbdac.bptc.ctex"
-path.astc="res://.godot/imported/et_broken_001.png-44838209fb8769f21debcdc39f1cbdac.astc.ctex"
+path.bptc="res://.godot/imported/et_broken_001.png-7c13e1427dd26e88ca088f9df0cb52c2.bptc.ctex"
+path.astc="res://.godot/imported/et_broken_001.png-7c13e1427dd26e88ca088f9df0cb52c2.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/obj/et_broken_001.png"
-dest_files=["res://.godot/imported/et_broken_001.png-44838209fb8769f21debcdc39f1cbdac.bptc.ctex", "res://.godot/imported/et_broken_001.png-44838209fb8769f21debcdc39f1cbdac.astc.ctex"]
+dest_files=["res://.godot/imported/et_broken_001.png-7c13e1427dd26e88ca088f9df0cb52c2.bptc.ctex", "res://.godot/imported/et_broken_001.png-7c13e1427dd26e88ca088f9df0cb52c2.astc.ctex"]
 
 [params]
 

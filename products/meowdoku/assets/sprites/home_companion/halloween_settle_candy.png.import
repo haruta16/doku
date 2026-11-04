@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://6nctu1emuf2t"
-path="res://.godot/imported/halloween_settle_candy.png-328e216abb996f42c6e523baa26b1c00.ctex"
+path="res://.godot/imported/halloween_settle_candy.png-5271a90b104d7b95926abe6703a0a1f6.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/halloween_settle_candy.png"
-dest_files=["res://.godot/imported/halloween_settle_candy.png-328e216abb996f42c6e523baa26b1c00.ctex"]
+dest_files=["res://.godot/imported/halloween_settle_candy.png-5271a90b104d7b95926abe6703a0a1f6.ctex"]
 
 [params]
 

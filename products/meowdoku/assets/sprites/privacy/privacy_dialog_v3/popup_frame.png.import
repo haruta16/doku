@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://qdo7b6k15jq2"
-path.bptc="res://.godot/imported/popup_frame.png-1f8277c8a8b3fdb65bbacf90f9868df9.bptc.ctex"
-path.astc="res://.godot/imported/popup_frame.png-1f8277c8a8b3fdb65bbacf90f9868df9.astc.ctex"
+path.bptc="res://.godot/imported/popup_frame.png-a99915bd299138991f6e63cab9b0c677.bptc.ctex"
+path.astc="res://.godot/imported/popup_frame.png-a99915bd299138991f6e63cab9b0c677.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/privacy/privacy_dialog_v3/popup_frame.png"
-dest_files=["res://.godot/imported/popup_frame.png-1f8277c8a8b3fdb65bbacf90f9868df9.bptc.ctex", "res://.godot/imported/popup_frame.png-1f8277c8a8b3fdb65bbacf90f9868df9.astc.ctex"]
+dest_files=["res://.godot/imported/popup_frame.png-a99915bd299138991f6e63cab9b0c677.bptc.ctex", "res://.godot/imported/popup_frame.png-a99915bd299138991f6e63cab9b0c677.astc.ctex"]
 
 [params]
 

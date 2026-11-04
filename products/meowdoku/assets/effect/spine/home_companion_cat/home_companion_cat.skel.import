@@ -3,12 +3,12 @@
 importer="spine.skel"
 type="SpineSkeletonFileResource"
 uid="uid://b2w31w7xjg5ni"
-path="res://.godot/imported/home_companion_cat.skel-805be9d1537e6ac33ddcd8cd28aee04d.spskel"
+path="res://.godot/imported/home_companion_cat.skel-5e2fa2da0c02d57117ac36d38d965bee.spskel"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/home_companion_cat/home_companion_cat.skel"
-dest_files=["res://.godot/imported/home_companion_cat.skel-805be9d1537e6ac33ddcd8cd28aee04d.spskel"]
+dest_files=["res://.godot/imported/home_companion_cat.skel-5e2fa2da0c02d57117ac36d38d965bee.spskel"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dx44s3kw4byi7"
-path="res://.godot/imported/award_podium_gold.png-e2c62ddf1bd877f2b3259f3c8e6345ea.ctex"
+path="res://.godot/imported/award_podium_gold.png-769f810958012bf5a58f6fa9fe3131fe.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/award_podium_gold.png"
-dest_files=["res://.godot/imported/award_podium_gold.png-e2c62ddf1bd877f2b3259f3c8e6345ea.ctex"]
+dest_files=["res://.godot/imported/award_podium_gold.png-769f810958012bf5a58f6fa9fe3131fe.ctex"]
 
 [params]
 

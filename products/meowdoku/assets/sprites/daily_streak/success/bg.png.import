@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bxaojph0nxe3r"
-path.bptc="res://.godot/imported/bg.png-be86027785ad4e4c4918078b6a09cd33.bptc.ctex"
-path.astc="res://.godot/imported/bg.png-be86027785ad4e4c4918078b6a09cd33.astc.ctex"
+path.bptc="res://.godot/imported/bg.png-208e75c89c6a3c5ef13f51a57828d38e.bptc.ctex"
+path.astc="res://.godot/imported/bg.png-208e75c89c6a3c5ef13f51a57828d38e.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/success/bg.png"
-dest_files=["res://.godot/imported/bg.png-be86027785ad4e4c4918078b6a09cd33.bptc.ctex", "res://.godot/imported/bg.png-be86027785ad4e4c4918078b6a09cd33.astc.ctex"]
+dest_files=["res://.godot/imported/bg.png-208e75c89c6a3c5ef13f51a57828d38e.bptc.ctex", "res://.godot/imported/bg.png-208e75c89c6a3c5ef13f51a57828d38e.astc.ctex"]
 
 [params]
 

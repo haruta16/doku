@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cpcxumk4irwku"
-path.bptc="res://.godot/imported/golden_fish_tutorial_card.png-ee35d28da0590e663300329a20a11d0c.bptc.ctex"
-path.astc="res://.godot/imported/golden_fish_tutorial_card.png-ee35d28da0590e663300329a20a11d0c.astc.ctex"
+path.bptc="res://.godot/imported/golden_fish_tutorial_card.png-28cba726ed73d40385785b626306abb8.bptc.ctex"
+path.astc="res://.godot/imported/golden_fish_tutorial_card.png-28cba726ed73d40385785b626306abb8.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/golden_fish_tutorial_card.png"
-dest_files=["res://.godot/imported/golden_fish_tutorial_card.png-ee35d28da0590e663300329a20a11d0c.bptc.ctex", "res://.godot/imported/golden_fish_tutorial_card.png-ee35d28da0590e663300329a20a11d0c.astc.ctex"]
+dest_files=["res://.godot/imported/golden_fish_tutorial_card.png-28cba726ed73d40385785b626306abb8.bptc.ctex", "res://.godot/imported/golden_fish_tutorial_card.png-28cba726ed73d40385785b626306abb8.astc.ctex"]
 
 [params]
 

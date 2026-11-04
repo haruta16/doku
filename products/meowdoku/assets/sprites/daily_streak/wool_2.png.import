@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bklibqjircapd"
-path.bptc="res://.godot/imported/wool_2.png-15d135b00fe3dd58c6c28b807428aeb6.bptc.ctex"
-path.astc="res://.godot/imported/wool_2.png-15d135b00fe3dd58c6c28b807428aeb6.astc.ctex"
+path.bptc="res://.godot/imported/wool_2.png-5f3ee70cdb2492f695ed27cb95c2610a.bptc.ctex"
+path.astc="res://.godot/imported/wool_2.png-5f3ee70cdb2492f695ed27cb95c2610a.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/wool_2.png"
-dest_files=["res://.godot/imported/wool_2.png-15d135b00fe3dd58c6c28b807428aeb6.bptc.ctex", "res://.godot/imported/wool_2.png-15d135b00fe3dd58c6c28b807428aeb6.astc.ctex"]
+dest_files=["res://.godot/imported/wool_2.png-5f3ee70cdb2492f695ed27cb95c2610a.bptc.ctex", "res://.godot/imported/wool_2.png-5f3ee70cdb2492f695ed27cb95c2610a.astc.ctex"]
 
 [params]
 

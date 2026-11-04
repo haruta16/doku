@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dck708rrp06nk"
-path="res://.godot/imported/icon_mark_white_G5_2.png-f4458550568cafdcfe7b6498bb1f2be5.ctex"
+path="res://.godot/imported/icon_mark_white_G5_2.png-af1a1f2cc710355a155abaa12d26301d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/icon_mark_white_G5_2.png"
-dest_files=["res://.godot/imported/icon_mark_white_G5_2.png-f4458550568cafdcfe7b6498bb1f2be5.ctex"]
+dest_files=["res://.godot/imported/icon_mark_white_G5_2.png-af1a1f2cc710355a155abaa12d26301d.ctex"]
 
 [params]
 

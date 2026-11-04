@@ -3,12 +3,12 @@
 importer="spine.atlas"
 type="SpineAtlasResource"
 uid="uid://d1bmmacrhgw2u"
-path="res://.godot/imported/home_companion_cat.atlas-cc1dcd8e4b04627fea284a9b06f058d5.spatlas"
+path="res://.godot/imported/home_companion_cat.atlas-87f6f81a337297a60e2a11750f2f0163.spatlas"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/home_companion_cat/home_companion_cat.atlas"
-dest_files=["res://.godot/imported/home_companion_cat.atlas-cc1dcd8e4b04627fea284a9b06f058d5.spatlas"]
+dest_files=["res://.godot/imported/home_companion_cat.atlas-87f6f81a337297a60e2a11750f2f0163.spatlas"]
 
 [params]
 

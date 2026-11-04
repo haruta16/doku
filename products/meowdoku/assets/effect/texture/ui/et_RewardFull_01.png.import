@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cp4xgc7tirfxs"
-path="res://.godot/imported/et_RewardFull_01.png-f027390288c45dcc59edf19bf222ec9d.ctex"
+path="res://.godot/imported/et_RewardFull_01.png-5ec752972cb7d3fa77e683ce4a2e8692.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_RewardFull_01.png"
-dest_files=["res://.godot/imported/et_RewardFull_01.png-f027390288c45dcc59edf19bf222ec9d.ctex"]
+dest_files=["res://.godot/imported/et_RewardFull_01.png-5ec752972cb7d3fa77e683ce4a2e8692.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://boply20l5tbmo"
-path.bptc="res://.godot/imported/group_40.png-f26d7700dee8774115337a4f095ec718.bptc.ctex"
-path.astc="res://.godot/imported/group_40.png-f26d7700dee8774115337a4f095ec718.astc.ctex"
+path.bptc="res://.godot/imported/group_40.png-19e77ca5cec451c0f3615bd05e0acd47.bptc.ctex"
+path.astc="res://.godot/imported/group_40.png-19e77ca5cec451c0f3615bd05e0acd47.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_activity_offline_page/group_40.png"
-dest_files=["res://.godot/imported/group_40.png-f26d7700dee8774115337a4f095ec718.bptc.ctex", "res://.godot/imported/group_40.png-f26d7700dee8774115337a4f095ec718.astc.ctex"]
+dest_files=["res://.godot/imported/group_40.png-19e77ca5cec451c0f3615bd05e0acd47.bptc.ctex", "res://.godot/imported/group_40.png-19e77ca5cec451c0f3615bd05e0acd47.astc.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c43efdiuck1sn"
-path="res://.godot/imported/txt_clear_jp.png-b6e3b1d22fc723e3c3ce10c9b0b6c855.ctex"
+path="res://.godot/imported/txt_clear_jp.png-56f7d7b205920993ba8ed1692b9e861f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_clear_jp.png"
-dest_files=["res://.godot/imported/txt_clear_jp.png-b6e3b1d22fc723e3c3ce10c9b0b6c855.ctex"]
+dest_files=["res://.godot/imported/txt_clear_jp.png-56f7d7b205920993ba8ed1692b9e861f.ctex"]
 
 [params]
 

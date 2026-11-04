@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://denlxna1emtpn"
-path.bptc="res://.godot/imported/streak_arrow.png-cf15560fea3932f9a75972747bfc7367.bptc.ctex"
-path.astc="res://.godot/imported/streak_arrow.png-cf15560fea3932f9a75972747bfc7367.astc.ctex"
+path.bptc="res://.godot/imported/streak_arrow.png-e56da0efc9165ca2a00267141216cb56.bptc.ctex"
+path.astc="res://.godot/imported/streak_arrow.png-e56da0efc9165ca2a00267141216cb56.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/streak_arrow.png"
-dest_files=["res://.godot/imported/streak_arrow.png-cf15560fea3932f9a75972747bfc7367.bptc.ctex", "res://.godot/imported/streak_arrow.png-cf15560fea3932f9a75972747bfc7367.astc.ctex"]
+dest_files=["res://.godot/imported/streak_arrow.png-e56da0efc9165ca2a00267141216cb56.bptc.ctex", "res://.godot/imported/streak_arrow.png-e56da0efc9165ca2a00267141216cb56.astc.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://je217bnp4ubg"
-path="res://.godot/imported/tail_companion_speech.png-f597e81907e5565d2f95c6aba77577c5.ctex"
+path="res://.godot/imported/tail_companion_speech.png-57e6202429001c9d8c1d624b046be046.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/tail_companion_speech.png"
-dest_files=["res://.godot/imported/tail_companion_speech.png-f597e81907e5565d2f95c6aba77577c5.ctex"]
+dest_files=["res://.godot/imported/tail_companion_speech.png-57e6202429001c9d8c1d624b046be046.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://3bt1e5eot5pg"
-path="res://.godot/imported/rank_fish_icon.png-e197aec30699fb207c7cc5779fd982b3.ctex"
+path="res://.godot/imported/rank_fish_icon.png-92bae3a06772427e9451a1151396ad3e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_fish_icon.png"
-dest_files=["res://.godot/imported/rank_fish_icon.png-e197aec30699fb207c7cc5779fd982b3.ctex"]
+dest_files=["res://.godot/imported/rank_fish_icon.png-92bae3a06772427e9451a1151396ad3e.ctex"]
 
 [params]
 

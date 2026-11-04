@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvw16deqmgsqp"
-path.bptc="res://.godot/imported/cat_plant.png-12977dd8dd4daa28200445f6d9390c9c.bptc.ctex"
-path.astc="res://.godot/imported/cat_plant.png-12977dd8dd4daa28200445f6d9390c9c.astc.ctex"
+path.bptc="res://.godot/imported/cat_plant.png-ec3c11563d4a8d3232252be975e3499e.bptc.ctex"
+path.astc="res://.godot/imported/cat_plant.png-ec3c11563d4a8d3232252be975e3499e.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/peekaboo_cat/cat_plant/cat_plant.png"
-dest_files=["res://.godot/imported/cat_plant.png-12977dd8dd4daa28200445f6d9390c9c.bptc.ctex", "res://.godot/imported/cat_plant.png-12977dd8dd4daa28200445f6d9390c9c.astc.ctex"]
+dest_files=["res://.godot/imported/cat_plant.png-ec3c11563d4a8d3232252be975e3499e.bptc.ctex", "res://.godot/imported/cat_plant.png-ec3c11563d4a8d3232252be975e3499e.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ywkmen3lgy38"
-path.bptc="res://.godot/imported/vector.png-72d51344fb2c2f734185cfced7c7a560.bptc.ctex"
-path.astc="res://.godot/imported/vector.png-72d51344fb2c2f734185cfced7c7a560.astc.ctex"
+path.bptc="res://.godot/imported/vector.png-452c28718f0f386b3b1eee4d0593ae46.bptc.ctex"
+path.astc="res://.godot/imported/vector.png-452c28718f0f386b3b1eee4d0593ae46.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/home/vector.png"
-dest_files=["res://.godot/imported/vector.png-72d51344fb2c2f734185cfced7c7a560.bptc.ctex", "res://.godot/imported/vector.png-72d51344fb2c2f734185cfced7c7a560.astc.ctex"]
+dest_files=["res://.godot/imported/vector.png-452c28718f0f386b3b1eee4d0593ae46.bptc.ctex", "res://.godot/imported/vector.png-452c28718f0f386b3b1eee4d0593ae46.astc.ctex"]
 
 [params]
 

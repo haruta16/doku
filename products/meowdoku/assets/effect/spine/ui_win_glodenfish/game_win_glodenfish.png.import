@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bw68vweml0tob"
-path.bptc="res://.godot/imported/game_win_glodenfish.png-ab50fb05eb16d504c0fae6106596bc26.bptc.ctex"
-path.astc="res://.godot/imported/game_win_glodenfish.png-ab50fb05eb16d504c0fae6106596bc26.astc.ctex"
+path.bptc="res://.godot/imported/game_win_glodenfish.png-6d248e2d61df86a8772ae85f85d5d337.bptc.ctex"
+path.astc="res://.godot/imported/game_win_glodenfish.png-6d248e2d61df86a8772ae85f85d5d337.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_win_glodenfish/game_win_glodenfish.png"
-dest_files=["res://.godot/imported/game_win_glodenfish.png-ab50fb05eb16d504c0fae6106596bc26.bptc.ctex", "res://.godot/imported/game_win_glodenfish.png-ab50fb05eb16d504c0fae6106596bc26.astc.ctex"]
+dest_files=["res://.godot/imported/game_win_glodenfish.png-6d248e2d61df86a8772ae85f85d5d337.bptc.ctex", "res://.godot/imported/game_win_glodenfish.png-6d248e2d61df86a8772ae85f85d5d337.astc.ctex"]
 
 [params]
 

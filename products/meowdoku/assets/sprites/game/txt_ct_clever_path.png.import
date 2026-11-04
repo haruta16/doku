@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckw8rj8sm8wnd"
-path.bptc="res://.godot/imported/txt_ct_clever_path.png-effc6c3520eb1a1bf36a689a9371c255.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_clever_path.png-effc6c3520eb1a1bf36a689a9371c255.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_clever_path.png-518fe75be93296956a271d05f1c3652b.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_clever_path.png-518fe75be93296956a271d05f1c3652b.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_clever_path.png"
-dest_files=["res://.godot/imported/txt_ct_clever_path.png-effc6c3520eb1a1bf36a689a9371c255.bptc.ctex", "res://.godot/imported/txt_ct_clever_path.png-effc6c3520eb1a1bf36a689a9371c255.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_clever_path.png-518fe75be93296956a271d05f1c3652b.bptc.ctex", "res://.godot/imported/txt_ct_clever_path.png-518fe75be93296956a271d05f1c3652b.astc.ctex"]
 
 [params]
 

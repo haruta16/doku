@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cs8naxhx01e1h"
-path.bptc="res://.godot/imported/border.png-41674fd89e9899df18457c8bff8636a2.bptc.ctex"
-path.astc="res://.godot/imported/border.png-41674fd89e9899df18457c8bff8636a2.astc.ctex"
+path.bptc="res://.godot/imported/border.png-ec9bbeb9a75e364b4f36971963ee7c37.bptc.ctex"
+path.astc="res://.godot/imported/border.png-ec9bbeb9a75e364b4f36971963ee7c37.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/setting/pattern_mode_switch/border.png"
-dest_files=["res://.godot/imported/border.png-41674fd89e9899df18457c8bff8636a2.bptc.ctex", "res://.godot/imported/border.png-41674fd89e9899df18457c8bff8636a2.astc.ctex"]
+dest_files=["res://.godot/imported/border.png-ec9bbeb9a75e364b4f36971963ee7c37.bptc.ctex", "res://.godot/imported/border.png-ec9bbeb9a75e364b4f36971963ee7c37.astc.ctex"]
 
 [params]
 

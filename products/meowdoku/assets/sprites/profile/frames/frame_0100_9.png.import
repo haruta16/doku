@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://co3gq4yr2ksr6"
-path="res://.godot/imported/frame_0100_9.png-fa2eef992fcacabf701fffcd95eff08d.ctex"
+path="res://.godot/imported/frame_0100_9.png-9fe40d8ec8748f38e07a139405b470fc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/profile/frames/frame_0100_9.png"
-dest_files=["res://.godot/imported/frame_0100_9.png-fa2eef992fcacabf701fffcd95eff08d.ctex"]
+dest_files=["res://.godot/imported/frame_0100_9.png-9fe40d8ec8748f38e07a139405b470fc.ctex"]
 
 [params]
 

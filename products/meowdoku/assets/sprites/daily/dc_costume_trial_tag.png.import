@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d4k3vay21lc4c"
-path="res://.godot/imported/dc_costume_trial_tag.png-a2f9d71195fa892a23f0a34b24d1668b.ctex"
+path="res://.godot/imported/dc_costume_trial_tag.png-39dae635903ec036affbed1afe0b9caa.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily/dc_costume_trial_tag.png"
-dest_files=["res://.godot/imported/dc_costume_trial_tag.png-a2f9d71195fa892a23f0a34b24d1668b.ctex"]
+dest_files=["res://.godot/imported/dc_costume_trial_tag.png-39dae635903ec036affbed1afe0b9caa.ctex"]
 
 [params]
 

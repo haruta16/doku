@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cv25sq0vxb6sl"
-path="res://.godot/imported/bg_9grid.png-66625759f9c9231ab7374350a1b7e386.ctex"
+path="res://.godot/imported/bg_9grid.png-1c80f454badc2c9934a8462a4a5120d8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/daily_streak/bg_9grid.png"
-dest_files=["res://.godot/imported/bg_9grid.png-66625759f9c9231ab7374350a1b7e386.ctex"]
+dest_files=["res://.godot/imported/bg_9grid.png-1c80f454badc2c9934a8462a4a5120d8.ctex"]
 
 [params]
 

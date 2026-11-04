@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://uy2iisb1o5wx"
-path="res://.godot/imported/icon_companion_reward_frame_avatar.png-2abaaff8edf1ddf8b3e72b2e9073799b.ctex"
+path="res://.godot/imported/icon_companion_reward_frame_avatar.png-1c5de3fed3c5992cf6de79ee37a02624.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/icon_companion_reward_frame_avatar.png"
-dest_files=["res://.godot/imported/icon_companion_reward_frame_avatar.png-2abaaff8edf1ddf8b3e72b2e9073799b.ctex"]
+dest_files=["res://.godot/imported/icon_companion_reward_frame_avatar.png-1c5de3fed3c5992cf6de79ee37a02624.ctex"]
 
 [params]
 

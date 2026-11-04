@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ow1hq8bg4gv5"
-path.bptc="res://.godot/imported/change_banner_glow.png-a14637c54ae7e6efa3ab597fb76036e7.bptc.ctex"
-path.astc="res://.godot/imported/change_banner_glow.png-a14637c54ae7e6efa3ab597fb76036e7.astc.ctex"
+path.bptc="res://.godot/imported/change_banner_glow.png-c39655960ef33e7fb881871597a2a355.bptc.ctex"
+path.astc="res://.godot/imported/change_banner_glow.png-c39655960ef33e7fb881871597a2a355.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/change_banner_glow.png"
-dest_files=["res://.godot/imported/change_banner_glow.png-a14637c54ae7e6efa3ab597fb76036e7.bptc.ctex", "res://.godot/imported/change_banner_glow.png-a14637c54ae7e6efa3ab597fb76036e7.astc.ctex"]
+dest_files=["res://.godot/imported/change_banner_glow.png-c39655960ef33e7fb881871597a2a355.bptc.ctex", "res://.godot/imported/change_banner_glow.png-c39655960ef33e7fb881871597a2a355.astc.ctex"]
 
 [params]
 

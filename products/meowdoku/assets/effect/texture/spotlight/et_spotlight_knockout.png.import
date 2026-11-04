@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://tukvsfaeqwj0"
-path.bptc="res://.godot/imported/et_spotlight_knockout.png-fdbb01b6e8c6b01576351c50128b28a7.bptc.ctex"
-path.astc="res://.godot/imported/et_spotlight_knockout.png-fdbb01b6e8c6b01576351c50128b28a7.astc.ctex"
+path.bptc="res://.godot/imported/et_spotlight_knockout.png-b0d5f2df40c41e02a26e72ae8c72d5a4.bptc.ctex"
+path.astc="res://.godot/imported/et_spotlight_knockout.png-b0d5f2df40c41e02a26e72ae8c72d5a4.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/spotlight/et_spotlight_knockout.png"
-dest_files=["res://.godot/imported/et_spotlight_knockout.png-fdbb01b6e8c6b01576351c50128b28a7.bptc.ctex", "res://.godot/imported/et_spotlight_knockout.png-fdbb01b6e8c6b01576351c50128b28a7.astc.ctex"]
+dest_files=["res://.godot/imported/et_spotlight_knockout.png-b0d5f2df40c41e02a26e72ae8c72d5a4.bptc.ctex", "res://.godot/imported/et_spotlight_knockout.png-b0d5f2df40c41e02a26e72ae8c72d5a4.astc.ctex"]
 
 [params]
 

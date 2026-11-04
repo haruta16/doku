@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://brra0ew36smu3"
-path.bptc="res://.godot/imported/RankBox.png-86cfe01c7ec91346de056337115b5450.bptc.ctex"
-path.astc="res://.godot/imported/RankBox.png-86cfe01c7ec91346de056337115b5450.astc.ctex"
+path.bptc="res://.godot/imported/RankBox.png-db214b305e6b7ecb3f7dbe66e21836e2.bptc.ctex"
+path.astc="res://.godot/imported/RankBox.png-db214b305e6b7ecb3f7dbe66e21836e2.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_box02/RankBox.png"
-dest_files=["res://.godot/imported/RankBox.png-86cfe01c7ec91346de056337115b5450.bptc.ctex", "res://.godot/imported/RankBox.png-86cfe01c7ec91346de056337115b5450.astc.ctex"]
+dest_files=["res://.godot/imported/RankBox.png-db214b305e6b7ecb3f7dbe66e21836e2.bptc.ctex", "res://.godot/imported/RankBox.png-db214b305e6b7ecb3f7dbe66e21836e2.astc.ctex"]
 
 [params]
 

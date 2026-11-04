@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dwhgsb06kgfq4"
-path.bptc="res://.godot/imported/cat_pot.png-b83ec61eefd038277f7bce848aaba287.bptc.ctex"
-path.astc="res://.godot/imported/cat_pot.png-b83ec61eefd038277f7bce848aaba287.astc.ctex"
+path.bptc="res://.godot/imported/cat_pot.png-3806da7f509da177a1b951cbc09da537.bptc.ctex"
+path.astc="res://.godot/imported/cat_pot.png-3806da7f509da177a1b951cbc09da537.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/peekaboo_cat/cat_pot/cat_pot.png"
-dest_files=["res://.godot/imported/cat_pot.png-b83ec61eefd038277f7bce848aaba287.bptc.ctex", "res://.godot/imported/cat_pot.png-b83ec61eefd038277f7bce848aaba287.astc.ctex"]
+dest_files=["res://.godot/imported/cat_pot.png-3806da7f509da177a1b951cbc09da537.bptc.ctex", "res://.godot/imported/cat_pot.png-3806da7f509da177a1b951cbc09da537.astc.ctex"]
 
 [params]
 

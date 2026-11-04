@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b5u5yg4ce0jxw"
-path="res://.godot/imported/arrow_open.png-61dbfd1eaa4a77cce230a14b78576b7c.ctex"
+path="res://.godot/imported/arrow_open.png-8c757584ee4d35e11aad8212eeb0b291.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/setting/language_switch/arrow_open.png"
-dest_files=["res://.godot/imported/arrow_open.png-61dbfd1eaa4a77cce230a14b78576b7c.ctex"]
+dest_files=["res://.godot/imported/arrow_open.png-8c757584ee4d35e11aad8212eeb0b291.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bk4wnmdww33ms"
-path.bptc="res://.godot/imported/et_double_fish_001.png-41d3ecfd579c2af3ee8ae76fba03d5a0.bptc.ctex"
-path.astc="res://.godot/imported/et_double_fish_001.png-41d3ecfd579c2af3ee8ae76fba03d5a0.astc.ctex"
+path.bptc="res://.godot/imported/et_double_fish_001.png-d18d968104aaf66193136f594096ccdf.bptc.ctex"
+path.astc="res://.godot/imported/et_double_fish_001.png-d18d968104aaf66193136f594096ccdf.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/obj/et_double_fish_001.png"
-dest_files=["res://.godot/imported/et_double_fish_001.png-41d3ecfd579c2af3ee8ae76fba03d5a0.bptc.ctex", "res://.godot/imported/et_double_fish_001.png-41d3ecfd579c2af3ee8ae76fba03d5a0.astc.ctex"]
+dest_files=["res://.godot/imported/et_double_fish_001.png-d18d968104aaf66193136f594096ccdf.bptc.ctex", "res://.godot/imported/et_double_fish_001.png-d18d968104aaf66193136f594096ccdf.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://j751bfsdrnbj"
-path.bptc="res://.godot/imported/et_star_004.png-67cf1c0806d18c39881d9bef3401ad02.bptc.ctex"
-path.astc="res://.godot/imported/et_star_004.png-67cf1c0806d18c39881d9bef3401ad02.astc.ctex"
+path.bptc="res://.godot/imported/et_star_004.png-cd2d3429ce1472229a0547a581825a23.bptc.ctex"
+path.astc="res://.godot/imported/et_star_004.png-cd2d3429ce1472229a0547a581825a23.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/star/et_star_004.png"
-dest_files=["res://.godot/imported/et_star_004.png-67cf1c0806d18c39881d9bef3401ad02.bptc.ctex", "res://.godot/imported/et_star_004.png-67cf1c0806d18c39881d9bef3401ad02.astc.ctex"]
+dest_files=["res://.godot/imported/et_star_004.png-cd2d3429ce1472229a0547a581825a23.bptc.ctex", "res://.godot/imported/et_star_004.png-cd2d3429ce1472229a0547a581825a23.astc.ctex"]
 
 [params]
 

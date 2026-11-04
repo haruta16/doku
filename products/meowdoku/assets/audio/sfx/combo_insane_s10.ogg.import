@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://c0v7yx0o4xl7m"
-path="res://.godot/imported/combo_insane_s10.ogg-44449637b61903bee859a6a6807c2dc9.oggvorbisstr"
+path="res://.godot/imported/combo_insane_s10.ogg-b666c5675eabe4be94dcec9eec905719.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/combo_insane_s10.ogg"
-dest_files=["res://.godot/imported/combo_insane_s10.ogg-44449637b61903bee859a6a6807c2dc9.oggvorbisstr"]
+dest_files=["res://.godot/imported/combo_insane_s10.ogg-b666c5675eabe4be94dcec9eec905719.oggvorbisstr"]
 
 [params]
 

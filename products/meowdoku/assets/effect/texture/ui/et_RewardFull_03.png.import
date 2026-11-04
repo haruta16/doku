@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://u3h2p0bjr1ro"
-path.bptc="res://.godot/imported/et_RewardFull_03.png-b10ca581e7417548367a84c734de8f37.bptc.ctex"
-path.astc="res://.godot/imported/et_RewardFull_03.png-b10ca581e7417548367a84c734de8f37.astc.ctex"
+path.bptc="res://.godot/imported/et_RewardFull_03.png-8161edef3f827f9394708757f466aff5.bptc.ctex"
+path.astc="res://.godot/imported/et_RewardFull_03.png-8161edef3f827f9394708757f466aff5.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_RewardFull_03.png"
-dest_files=["res://.godot/imported/et_RewardFull_03.png-b10ca581e7417548367a84c734de8f37.bptc.ctex", "res://.godot/imported/et_RewardFull_03.png-b10ca581e7417548367a84c734de8f37.astc.ctex"]
+dest_files=["res://.godot/imported/et_RewardFull_03.png-8161edef3f827f9394708757f466aff5.bptc.ctex", "res://.godot/imported/et_RewardFull_03.png-8161edef3f827f9394708757f466aff5.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cjoax6y202wok"
-path.bptc="res://.godot/imported/et_mask_streak5_end_021.png-a1371e21bba3e6396b6a26f905a4fb60.bptc.ctex"
-path.astc="res://.godot/imported/et_mask_streak5_end_021.png-a1371e21bba3e6396b6a26f905a4fb60.astc.ctex"
+path.bptc="res://.godot/imported/et_mask_streak5_end_021.png-59e98b50df02fba74b08c1310d150eaa.bptc.ctex"
+path.astc="res://.godot/imported/et_mask_streak5_end_021.png-59e98b50df02fba74b08c1310d150eaa.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/mask/et_mask_streak5_end_021.png"
-dest_files=["res://.godot/imported/et_mask_streak5_end_021.png-a1371e21bba3e6396b6a26f905a4fb60.bptc.ctex", "res://.godot/imported/et_mask_streak5_end_021.png-a1371e21bba3e6396b6a26f905a4fb60.astc.ctex"]
+dest_files=["res://.godot/imported/et_mask_streak5_end_021.png-59e98b50df02fba74b08c1310d150eaa.bptc.ctex", "res://.godot/imported/et_mask_streak5_end_021.png-59e98b50df02fba74b08c1310d150eaa.astc.ctex"]
 
 [params]
 

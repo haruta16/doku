@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8p6fl5fyt73c"
-path.bptc="res://.godot/imported/rankpage_background.png-bb94d710ec2387d068aaffe8bab44e39.bptc.ctex"
-path.astc="res://.godot/imported/rankpage_background.png-bb94d710ec2387d068aaffe8bab44e39.astc.ctex"
+path.bptc="res://.godot/imported/rankpage_background.png-d0bbf16e01157a6bcd7909d73727f5e7.bptc.ctex"
+path.astc="res://.godot/imported/rankpage_background.png-d0bbf16e01157a6bcd7909d73727f5e7.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rankpage_background.png"
-dest_files=["res://.godot/imported/rankpage_background.png-bb94d710ec2387d068aaffe8bab44e39.bptc.ctex", "res://.godot/imported/rankpage_background.png-bb94d710ec2387d068aaffe8bab44e39.astc.ctex"]
+dest_files=["res://.godot/imported/rankpage_background.png-d0bbf16e01157a6bcd7909d73727f5e7.bptc.ctex", "res://.godot/imported/rankpage_background.png-d0bbf16e01157a6bcd7909d73727f5e7.astc.ctex"]
 
 [params]
 

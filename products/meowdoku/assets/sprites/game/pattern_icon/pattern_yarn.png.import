@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://deyexkdf7xg6g"
-path="res://.godot/imported/pattern_yarn.png-10ce7ae355d016f3e4c131d826e03c9d.ctex"
+path="res://.godot/imported/pattern_yarn.png-57a082ccc938e69533007200db4e3ae6.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/pattern_icon/pattern_yarn.png"
-dest_files=["res://.godot/imported/pattern_yarn.png-10ce7ae355d016f3e4c131d826e03c9d.ctex"]
+dest_files=["res://.godot/imported/pattern_yarn.png-57a082ccc938e69533007200db4e3ae6.ctex"]
 
 [params]
 

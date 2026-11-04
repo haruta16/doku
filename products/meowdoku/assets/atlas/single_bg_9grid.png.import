@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dg7cqpcys8bd4"
-path.bptc="res://.godot/imported/single_bg_9grid.png-b40fa975ad01e75384406eb3435f1b4c.bptc.ctex"
-path.astc="res://.godot/imported/single_bg_9grid.png-b40fa975ad01e75384406eb3435f1b4c.astc.ctex"
+path.bptc="res://.godot/imported/single_bg_9grid.png-c9b34ce44ba9a99743f986b2019dbb90.bptc.ctex"
+path.astc="res://.godot/imported/single_bg_9grid.png-c9b34ce44ba9a99743f986b2019dbb90.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/atlas/single_bg_9grid.png"
-dest_files=["res://.godot/imported/single_bg_9grid.png-b40fa975ad01e75384406eb3435f1b4c.bptc.ctex", "res://.godot/imported/single_bg_9grid.png-b40fa975ad01e75384406eb3435f1b4c.astc.ctex"]
+dest_files=["res://.godot/imported/single_bg_9grid.png-c9b34ce44ba9a99743f986b2019dbb90.bptc.ctex", "res://.godot/imported/single_bg_9grid.png-c9b34ce44ba9a99743f986b2019dbb90.astc.ctex"]
 
 [params]
 

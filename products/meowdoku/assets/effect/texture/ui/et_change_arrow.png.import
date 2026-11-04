@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ilaik3cifkjq"
-path="res://.godot/imported/et_change_arrow.png-e94daefa9326318d6853442418778d1b.ctex"
+path="res://.godot/imported/et_change_arrow.png-f958387ced8ab8d9dc5b1915e7169aa2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_change_arrow.png"
-dest_files=["res://.godot/imported/et_change_arrow.png-e94daefa9326318d6853442418778d1b.ctex"]
+dest_files=["res://.godot/imported/et_change_arrow.png-f958387ced8ab8d9dc5b1915e7169aa2.ctex"]
 
 [params]
 

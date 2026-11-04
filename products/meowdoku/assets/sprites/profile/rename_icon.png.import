@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://duv8urb3mg7b6"
-path.bptc="res://.godot/imported/rename_icon.png-a10b123281b85b4da8598f54490d4ea4.bptc.ctex"
-path.astc="res://.godot/imported/rename_icon.png-a10b123281b85b4da8598f54490d4ea4.astc.ctex"
+path.bptc="res://.godot/imported/rename_icon.png-3173774ead1e65985a6bad1983b67ceb.bptc.ctex"
+path.astc="res://.godot/imported/rename_icon.png-3173774ead1e65985a6bad1983b67ceb.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/profile/rename_icon.png"
-dest_files=["res://.godot/imported/rename_icon.png-a10b123281b85b4da8598f54490d4ea4.bptc.ctex", "res://.godot/imported/rename_icon.png-a10b123281b85b4da8598f54490d4ea4.astc.ctex"]
+dest_files=["res://.godot/imported/rename_icon.png-3173774ead1e65985a6bad1983b67ceb.bptc.ctex", "res://.godot/imported/rename_icon.png-3173774ead1e65985a6bad1983b67ceb.astc.ctex"]
 
 [params]
 

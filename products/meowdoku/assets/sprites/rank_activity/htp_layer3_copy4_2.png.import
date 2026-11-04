@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d8yffxswt03v"
-path.bptc="res://.godot/imported/htp_layer3_copy4_2.png-7f8e489c2271eaea2aa3e1bd4924f6de.bptc.ctex"
-path.astc="res://.godot/imported/htp_layer3_copy4_2.png-7f8e489c2271eaea2aa3e1bd4924f6de.astc.ctex"
+path.bptc="res://.godot/imported/htp_layer3_copy4_2.png-bf5e497a9cc499f2471fb810a3bde44e.bptc.ctex"
+path.astc="res://.godot/imported/htp_layer3_copy4_2.png-bf5e497a9cc499f2471fb810a3bde44e.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/htp_layer3_copy4_2.png"
-dest_files=["res://.godot/imported/htp_layer3_copy4_2.png-7f8e489c2271eaea2aa3e1bd4924f6de.bptc.ctex", "res://.godot/imported/htp_layer3_copy4_2.png-7f8e489c2271eaea2aa3e1bd4924f6de.astc.ctex"]
+dest_files=["res://.godot/imported/htp_layer3_copy4_2.png-bf5e497a9cc499f2471fb810a3bde44e.bptc.ctex", "res://.godot/imported/htp_layer3_copy4_2.png-bf5e497a9cc499f2471fb810a3bde44e.astc.ctex"]
 
 [params]
 

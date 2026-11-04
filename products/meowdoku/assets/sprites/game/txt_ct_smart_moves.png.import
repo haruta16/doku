@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b7ag7lr4daju0"
-path.bptc="res://.godot/imported/txt_ct_smart_moves.png-041af19bc20163157401840872c3a1dd.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_smart_moves.png-041af19bc20163157401840872c3a1dd.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_smart_moves.png-0f9f81d5e909e26663c31a3b6465122c.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_smart_moves.png-0f9f81d5e909e26663c31a3b6465122c.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_smart_moves.png"
-dest_files=["res://.godot/imported/txt_ct_smart_moves.png-041af19bc20163157401840872c3a1dd.bptc.ctex", "res://.godot/imported/txt_ct_smart_moves.png-041af19bc20163157401840872c3a1dd.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_smart_moves.png-0f9f81d5e909e26663c31a3b6465122c.bptc.ctex", "res://.godot/imported/txt_ct_smart_moves.png-0f9f81d5e909e26663c31a3b6465122c.astc.ctex"]
 
 [params]
 

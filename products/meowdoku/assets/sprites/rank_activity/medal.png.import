@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dt25lmsxris21"
-path.bptc="res://.godot/imported/medal.png-4d226cc5227d4a3ba003ed2c7d31d557.bptc.ctex"
-path.astc="res://.godot/imported/medal.png-4d226cc5227d4a3ba003ed2c7d31d557.astc.ctex"
+path.bptc="res://.godot/imported/medal.png-eacafc19dc640592f55b31db051ac94f.bptc.ctex"
+path.astc="res://.godot/imported/medal.png-eacafc19dc640592f55b31db051ac94f.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/medal.png"
-dest_files=["res://.godot/imported/medal.png-4d226cc5227d4a3ba003ed2c7d31d557.bptc.ctex", "res://.godot/imported/medal.png-4d226cc5227d4a3ba003ed2c7d31d557.astc.ctex"]
+dest_files=["res://.godot/imported/medal.png-eacafc19dc640592f55b31db051ac94f.bptc.ctex", "res://.godot/imported/medal.png-eacafc19dc640592f55b31db051ac94f.astc.ctex"]
 
 [params]
 

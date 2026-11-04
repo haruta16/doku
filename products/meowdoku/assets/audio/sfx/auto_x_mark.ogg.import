@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://by76dpqh2iji1"
-path="res://.godot/imported/auto_x_mark.ogg-8ea6781cbccdd33ee9663cff9f690fa1.oggvorbisstr"
+path="res://.godot/imported/auto_x_mark.ogg-77fb011e51f3f463bc4d71a561848807.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/auto_x_mark.ogg"
-dest_files=["res://.godot/imported/auto_x_mark.ogg-8ea6781cbccdd33ee9663cff9f690fa1.oggvorbisstr"]
+dest_files=["res://.godot/imported/auto_x_mark.ogg-77fb011e51f3f463bc4d71a561848807.oggvorbisstr"]
 
 [params]
 

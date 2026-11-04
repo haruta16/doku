@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtvd3xi8wfceb"
-path.bptc="res://.godot/imported/et_trail_001.png-12e01507bf35018855518b8e4623e796.bptc.ctex"
-path.astc="res://.godot/imported/et_trail_001.png-12e01507bf35018855518b8e4623e796.astc.ctex"
+path.bptc="res://.godot/imported/et_trail_001.png-a58f7e24ae48aba02b1ac947dc685f1e.bptc.ctex"
+path.astc="res://.godot/imported/et_trail_001.png-a58f7e24ae48aba02b1ac947dc685f1e.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/trail/et_trail_001.png"
-dest_files=["res://.godot/imported/et_trail_001.png-12e01507bf35018855518b8e4623e796.bptc.ctex", "res://.godot/imported/et_trail_001.png-12e01507bf35018855518b8e4623e796.astc.ctex"]
+dest_files=["res://.godot/imported/et_trail_001.png-a58f7e24ae48aba02b1ac947dc685f1e.bptc.ctex", "res://.godot/imported/et_trail_001.png-a58f7e24ae48aba02b1ac947dc685f1e.astc.ctex"]
 
 [params]
 

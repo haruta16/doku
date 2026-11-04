@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://4drfa7n6ojq7"
-path.bptc="res://.godot/imported/et_golden_fish_full_001.png-1ff54c03f254a59ddbb396748d3ee99a.bptc.ctex"
-path.astc="res://.godot/imported/et_golden_fish_full_001.png-1ff54c03f254a59ddbb396748d3ee99a.astc.ctex"
+path.bptc="res://.godot/imported/et_golden_fish_full_001.png-ddadb1933a65735c9363ec6982c88fda.bptc.ctex"
+path.astc="res://.godot/imported/et_golden_fish_full_001.png-ddadb1933a65735c9363ec6982c88fda.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/obj/et_golden_fish_full_001.png"
-dest_files=["res://.godot/imported/et_golden_fish_full_001.png-1ff54c03f254a59ddbb396748d3ee99a.bptc.ctex", "res://.godot/imported/et_golden_fish_full_001.png-1ff54c03f254a59ddbb396748d3ee99a.astc.ctex"]
+dest_files=["res://.godot/imported/et_golden_fish_full_001.png-ddadb1933a65735c9363ec6982c88fda.bptc.ctex", "res://.godot/imported/et_golden_fish_full_001.png-ddadb1933a65735c9363ec6982c88fda.astc.ctex"]
 
 [params]
 

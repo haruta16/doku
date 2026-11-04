@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cu3o47f6o6vwy"
-path.bptc="res://.godot/imported/et_glow_007.png-651008c19a1817a3449c4904824ddeb6.bptc.ctex"
-path.astc="res://.godot/imported/et_glow_007.png-651008c19a1817a3449c4904824ddeb6.astc.ctex"
+path.bptc="res://.godot/imported/et_glow_007.png-0b7060f8e311f38a5b91c20faedefed4.bptc.ctex"
+path.astc="res://.godot/imported/et_glow_007.png-0b7060f8e311f38a5b91c20faedefed4.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/glow/et_glow_007.png"
-dest_files=["res://.godot/imported/et_glow_007.png-651008c19a1817a3449c4904824ddeb6.bptc.ctex", "res://.godot/imported/et_glow_007.png-651008c19a1817a3449c4904824ddeb6.astc.ctex"]
+dest_files=["res://.godot/imported/et_glow_007.png-0b7060f8e311f38a5b91c20faedefed4.bptc.ctex", "res://.godot/imported/et_glow_007.png-0b7060f8e311f38a5b91c20faedefed4.astc.ctex"]
 
 [params]
 

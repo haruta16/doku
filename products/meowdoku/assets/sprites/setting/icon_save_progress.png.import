@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://chjtcmeyiluvb"
-path.bptc="res://.godot/imported/icon_save_progress.png-ba0e859a7c2f1d52d557191851b4f7c3.bptc.ctex"
-path.astc="res://.godot/imported/icon_save_progress.png-ba0e859a7c2f1d52d557191851b4f7c3.astc.ctex"
+path.bptc="res://.godot/imported/icon_save_progress.png-6cffae8bd43d5e95ab0c0231dd8125da.bptc.ctex"
+path.astc="res://.godot/imported/icon_save_progress.png-6cffae8bd43d5e95ab0c0231dd8125da.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/setting/icon_save_progress.png"
-dest_files=["res://.godot/imported/icon_save_progress.png-ba0e859a7c2f1d52d557191851b4f7c3.bptc.ctex", "res://.godot/imported/icon_save_progress.png-ba0e859a7c2f1d52d557191851b4f7c3.astc.ctex"]
+dest_files=["res://.godot/imported/icon_save_progress.png-6cffae8bd43d5e95ab0c0231dd8125da.bptc.ctex", "res://.godot/imported/icon_save_progress.png-6cffae8bd43d5e95ab0c0231dd8125da.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://7k1ihqkvm1u1"
-path.bptc="res://.godot/imported/ui_mao_glc_tx02_copy_3.png-a18e2698c28be44fdd6029f353299b19.bptc.ctex"
-path.astc="res://.godot/imported/ui_mao_glc_tx02_copy_3.png-a18e2698c28be44fdd6029f353299b19.astc.ctex"
+path.bptc="res://.godot/imported/ui_mao_glc_tx02_copy_3.png-28d3e17013b2b77f86e31559386404cc.bptc.ctex"
+path.astc="res://.godot/imported/ui_mao_glc_tx02_copy_3.png-28d3e17013b2b77f86e31559386404cc.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/ui_mao_glc_tx02_copy_3.png"
-dest_files=["res://.godot/imported/ui_mao_glc_tx02_copy_3.png-a18e2698c28be44fdd6029f353299b19.bptc.ctex", "res://.godot/imported/ui_mao_glc_tx02_copy_3.png-a18e2698c28be44fdd6029f353299b19.astc.ctex"]
+dest_files=["res://.godot/imported/ui_mao_glc_tx02_copy_3.png-28d3e17013b2b77f86e31559386404cc.bptc.ctex", "res://.godot/imported/ui_mao_glc_tx02_copy_3.png-28d3e17013b2b77f86e31559386404cc.astc.ctex"]
 
 [params]
 

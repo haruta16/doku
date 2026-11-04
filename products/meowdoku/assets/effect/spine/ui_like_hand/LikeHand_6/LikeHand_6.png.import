@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1j5wes3a80wn"
-path="res://.godot/imported/LikeHand_6.png-18680c861b88a2a6b0ec3679a4e4708e.ctex"
+path="res://.godot/imported/LikeHand_6.png-fc401870c487cae38ae8943fb46cd3fa.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_like_hand/LikeHand_6/LikeHand_6.png"
-dest_files=["res://.godot/imported/LikeHand_6.png-18680c861b88a2a6b0ec3679a4e4708e.ctex"]
+dest_files=["res://.godot/imported/LikeHand_6.png-fc401870c487cae38ae8943fb46cd3fa.ctex"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bd5ff0apscqnf"
-path="res://.godot/imported/SourceHan-JP-VF.ttf-2608c3c2c6d77c51484ec636a121fb4f.fontdata"
+path="res://.godot/imported/SourceHan-JP-VF.ttf-1b89f72fc33d1711d97c528c62aa5304.fontdata"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/fonts/candidates/jp/SourceHan-JP-VF.ttf"
-dest_files=["res://.godot/imported/SourceHan-JP-VF.ttf-2608c3c2c6d77c51484ec636a121fb4f.fontdata"]
+dest_files=["res://.godot/imported/SourceHan-JP-VF.ttf-1b89f72fc33d1711d97c528c62aa5304.fontdata"]
 
 [params]
 

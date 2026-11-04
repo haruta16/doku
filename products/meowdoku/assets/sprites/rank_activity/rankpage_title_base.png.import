@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://db3l7g5aq3kyb"
-path="res://.godot/imported/rankpage_title_base.png-50184ba64c5a8cdd9cc91abc0f185345.ctex"
+path="res://.godot/imported/rankpage_title_base.png-167e5b9465e1acdeeb8676415b90bda7.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rankpage_title_base.png"
-dest_files=["res://.godot/imported/rankpage_title_base.png-50184ba64c5a8cdd9cc91abc0f185345.ctex"]
+dest_files=["res://.godot/imported/rankpage_title_base.png-167e5b9465e1acdeeb8676415b90bda7.ctex"]
 
 [params]
 

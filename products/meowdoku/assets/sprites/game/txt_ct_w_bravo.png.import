@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://deutr1uniyqwj"
-path.bptc="res://.godot/imported/txt_ct_w_bravo.png-5c8bfcd3d179fdb6677d43194a9bb493.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_bravo.png-5c8bfcd3d179fdb6677d43194a9bb493.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_bravo.png-52c1f15f7131eed2916f49e84011b127.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_bravo.png-52c1f15f7131eed2916f49e84011b127.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_bravo.png"
-dest_files=["res://.godot/imported/txt_ct_w_bravo.png-5c8bfcd3d179fdb6677d43194a9bb493.bptc.ctex", "res://.godot/imported/txt_ct_w_bravo.png-5c8bfcd3d179fdb6677d43194a9bb493.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_bravo.png-52c1f15f7131eed2916f49e84011b127.bptc.ctex", "res://.godot/imported/txt_ct_w_bravo.png-52c1f15f7131eed2916f49e84011b127.astc.ctex"]
 
 [params]
 

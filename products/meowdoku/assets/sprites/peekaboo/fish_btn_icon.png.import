@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bmmnejyh5kp8k"
-path.bptc="res://.godot/imported/fish_btn_icon.png-dfe0428fb74ea1988a3f02686a5ac269.bptc.ctex"
-path.astc="res://.godot/imported/fish_btn_icon.png-dfe0428fb74ea1988a3f02686a5ac269.astc.ctex"
+path.bptc="res://.godot/imported/fish_btn_icon.png-9c5689a5bb99be54d8c7c343e884e382.bptc.ctex"
+path.astc="res://.godot/imported/fish_btn_icon.png-9c5689a5bb99be54d8c7c343e884e382.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/peekaboo/fish_btn_icon.png"
-dest_files=["res://.godot/imported/fish_btn_icon.png-dfe0428fb74ea1988a3f02686a5ac269.bptc.ctex", "res://.godot/imported/fish_btn_icon.png-dfe0428fb74ea1988a3f02686a5ac269.astc.ctex"]
+dest_files=["res://.godot/imported/fish_btn_icon.png-9c5689a5bb99be54d8c7c343e884e382.bptc.ctex", "res://.godot/imported/fish_btn_icon.png-9c5689a5bb99be54d8c7c343e884e382.astc.ctex"]
 
 [params]
 

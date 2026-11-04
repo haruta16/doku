@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cls0e0v3bg2vn"
-path.bptc="res://.godot/imported/change_countdown_bg.png-e7c5a5cce9a481f151c6b5a9c01535cd.bptc.ctex"
-path.astc="res://.godot/imported/change_countdown_bg.png-e7c5a5cce9a481f151c6b5a9c01535cd.astc.ctex"
+path.bptc="res://.godot/imported/change_countdown_bg.png-3787cbab69f78a660c5155771ca4d960.bptc.ctex"
+path.astc="res://.godot/imported/change_countdown_bg.png-3787cbab69f78a660c5155771ca4d960.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/change_countdown_bg.png"
-dest_files=["res://.godot/imported/change_countdown_bg.png-e7c5a5cce9a481f151c6b5a9c01535cd.bptc.ctex", "res://.godot/imported/change_countdown_bg.png-e7c5a5cce9a481f151c6b5a9c01535cd.astc.ctex"]
+dest_files=["res://.godot/imported/change_countdown_bg.png-3787cbab69f78a660c5155771ca4d960.bptc.ctex", "res://.godot/imported/change_countdown_bg.png-3787cbab69f78a660c5155771ca4d960.astc.ctex"]
 
 [params]
 

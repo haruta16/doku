@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c40pixs6fnwcr"
-path.bptc="res://.godot/imported/et_fire_point.png-b3525d1c1fecf02e4cf891df4228d47f.bptc.ctex"
-path.astc="res://.godot/imported/et_fire_point.png-b3525d1c1fecf02e4cf891df4228d47f.astc.ctex"
+path.bptc="res://.godot/imported/et_fire_point.png-9d44e97fb35a6743beae0d1e870be0e5.bptc.ctex"
+path.astc="res://.godot/imported/et_fire_point.png-9d44e97fb35a6743beae0d1e870be0e5.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/ui/et_fire_point.png"
-dest_files=["res://.godot/imported/et_fire_point.png-b3525d1c1fecf02e4cf891df4228d47f.bptc.ctex", "res://.godot/imported/et_fire_point.png-b3525d1c1fecf02e4cf891df4228d47f.astc.ctex"]
+dest_files=["res://.godot/imported/et_fire_point.png-9d44e97fb35a6743beae0d1e870be0e5.bptc.ctex", "res://.godot/imported/et_fire_point.png-9d44e97fb35a6743beae0d1e870be0e5.astc.ctex"]
 
 [params]
 

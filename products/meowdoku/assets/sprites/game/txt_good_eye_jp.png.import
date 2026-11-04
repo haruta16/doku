@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hjh4n7y2wmte"
-path="res://.godot/imported/txt_good_eye_jp.png-9227ec81a3976c3f6adbae51ec215535.ctex"
+path="res://.godot/imported/txt_good_eye_jp.png-57b06e9f59addbc3f6ac3f1d39d2463c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_good_eye_jp.png"
-dest_files=["res://.godot/imported/txt_good_eye_jp.png-9227ec81a3976c3f6adbae51ec215535.ctex"]
+dest_files=["res://.godot/imported/txt_good_eye_jp.png-57b06e9f59addbc3f6ac3f1d39d2463c.ctex"]
 
 [params]
 

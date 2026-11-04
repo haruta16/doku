@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b7x7easy4fbas"
-path.bptc="res://.godot/imported/icon_heart_full.png-af40df52af64df1662834fc6ccde9ec3.bptc.ctex"
-path.astc="res://.godot/imported/icon_heart_full.png-af40df52af64df1662834fc6ccde9ec3.astc.ctex"
+path.bptc="res://.godot/imported/icon_heart_full.png-e474c9a04c80614c0f983d3b814fc2cf.bptc.ctex"
+path.astc="res://.godot/imported/icon_heart_full.png-e474c9a04c80614c0f983d3b814fc2cf.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/icon_heart_full.png"
-dest_files=["res://.godot/imported/icon_heart_full.png-af40df52af64df1662834fc6ccde9ec3.bptc.ctex", "res://.godot/imported/icon_heart_full.png-af40df52af64df1662834fc6ccde9ec3.astc.ctex"]
+dest_files=["res://.godot/imported/icon_heart_full.png-e474c9a04c80614c0f983d3b814fc2cf.bptc.ctex", "res://.godot/imported/icon_heart_full.png-e474c9a04c80614c0f983d3b814fc2cf.astc.ctex"]
 
 [params]
 

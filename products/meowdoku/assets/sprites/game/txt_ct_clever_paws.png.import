@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://boomf40jr75yp"
-path.bptc="res://.godot/imported/txt_ct_clever_paws.png-3deac84045bdfac0647fd952bdaf124d.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_clever_paws.png-3deac84045bdfac0647fd952bdaf124d.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_clever_paws.png-ed7d8a5c1e60a57a5d5eadd1a1e27f1b.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_clever_paws.png-ed7d8a5c1e60a57a5d5eadd1a1e27f1b.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_clever_paws.png"
-dest_files=["res://.godot/imported/txt_ct_clever_paws.png-3deac84045bdfac0647fd952bdaf124d.bptc.ctex", "res://.godot/imported/txt_ct_clever_paws.png-3deac84045bdfac0647fd952bdaf124d.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_clever_paws.png-ed7d8a5c1e60a57a5d5eadd1a1e27f1b.bptc.ctex", "res://.godot/imported/txt_ct_clever_paws.png-ed7d8a5c1e60a57a5d5eadd1a1e27f1b.astc.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://kcb0gl4btbvq"
-path="res://.godot/imported/txt_perfectly_marked_jp.png-483bb8514881dffeb32fcda2fd589f0d.ctex"
+path="res://.godot/imported/txt_perfectly_marked_jp.png-ff524387662670372f519b55acbcd3b0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_perfectly_marked_jp.png"
-dest_files=["res://.godot/imported/txt_perfectly_marked_jp.png-483bb8514881dffeb32fcda2fd589f0d.ctex"]
+dest_files=["res://.godot/imported/txt_perfectly_marked_jp.png-ff524387662670372f519b55acbcd3b0.ctex"]
 
 [params]
 

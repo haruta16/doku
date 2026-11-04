@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b60pd87mjc35u"
-path.bptc="res://.godot/imported/et_ribbon_star_001.png-0453e1f42ad9ce4ed06807a91d3f6722.bptc.ctex"
-path.astc="res://.godot/imported/et_ribbon_star_001.png-0453e1f42ad9ce4ed06807a91d3f6722.astc.ctex"
+path.bptc="res://.godot/imported/et_ribbon_star_001.png-ed6ac2582d4acdf443d23a9845547cb2.bptc.ctex"
+path.astc="res://.godot/imported/et_ribbon_star_001.png-ed6ac2582d4acdf443d23a9845547cb2.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/obj/et_ribbon_star_001.png"
-dest_files=["res://.godot/imported/et_ribbon_star_001.png-0453e1f42ad9ce4ed06807a91d3f6722.bptc.ctex", "res://.godot/imported/et_ribbon_star_001.png-0453e1f42ad9ce4ed06807a91d3f6722.astc.ctex"]
+dest_files=["res://.godot/imported/et_ribbon_star_001.png-ed6ac2582d4acdf443d23a9845547cb2.bptc.ctex", "res://.godot/imported/et_ribbon_star_001.png-ed6ac2582d4acdf443d23a9845547cb2.astc.ctex"]
 
 [params]
 

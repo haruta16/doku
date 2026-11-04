@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c5uu7lhejuk0w"
-path="res://.godot/imported/rectangle_284_shadow.png-cb2ad1034eaa4b6ac6c304154688a7e4.ctex"
+path="res://.godot/imported/rectangle_284_shadow.png-95c4ad13e1bb724ff5445cba269de1df.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/rectangle_284_shadow.png"
-dest_files=["res://.godot/imported/rectangle_284_shadow.png-cb2ad1034eaa4b6ac6c304154688a7e4.ctex"]
+dest_files=["res://.godot/imported/rectangle_284_shadow.png-95c4ad13e1bb724ff5445cba269de1df.ctex"]
 
 [params]
 

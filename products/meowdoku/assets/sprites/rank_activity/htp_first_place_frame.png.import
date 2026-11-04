@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bmkj4rnef1164"
-path="res://.godot/imported/htp_first_place_frame.png-a45fb47fb336f04413a170cf212a43d6.ctex"
+path="res://.godot/imported/htp_first_place_frame.png-04fbcc785f5c87aa8bb9afb18fe8e35b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/htp_first_place_frame.png"
-dest_files=["res://.godot/imported/htp_first_place_frame.png-a45fb47fb336f04413a170cf212a43d6.ctex"]
+dest_files=["res://.godot/imported/htp_first_place_frame.png-04fbcc785f5c87aa8bb9afb18fe8e35b.ctex"]
 
 [params]
 

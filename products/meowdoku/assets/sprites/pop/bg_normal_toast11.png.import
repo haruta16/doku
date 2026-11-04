@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://crxxhcw3pa8jo"
-path="res://.godot/imported/bg_normal_toast11.png-14092209c6f33d0079b4b73ac6a1ded4.ctex"
+path="res://.godot/imported/bg_normal_toast11.png-9ff3ae5ed7e8b7358d3be6144e929cf4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/pop/bg_normal_toast11.png"
-dest_files=["res://.godot/imported/bg_normal_toast11.png-14092209c6f33d0079b4b73ac6a1ded4.ctex"]
+dest_files=["res://.godot/imported/bg_normal_toast11.png-9ff3ae5ed7e8b7358d3be6144e929cf4.ctex"]
 
 [params]
 

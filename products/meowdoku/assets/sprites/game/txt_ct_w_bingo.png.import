@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dukrxb8v2ljcp"
-path.bptc="res://.godot/imported/txt_ct_w_bingo.png-1daed8c467059327adc45b3bac3d19f8.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_bingo.png-1daed8c467059327adc45b3bac3d19f8.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_bingo.png-9e8e612ff07aee18663b04c95b42580c.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_bingo.png-9e8e612ff07aee18663b04c95b42580c.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_bingo.png"
-dest_files=["res://.godot/imported/txt_ct_w_bingo.png-1daed8c467059327adc45b3bac3d19f8.bptc.ctex", "res://.godot/imported/txt_ct_w_bingo.png-1daed8c467059327adc45b3bac3d19f8.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_bingo.png-9e8e612ff07aee18663b04c95b42580c.bptc.ctex", "res://.godot/imported/txt_ct_w_bingo.png-9e8e612ff07aee18663b04c95b42580c.astc.ctex"]
 
 [params]
 

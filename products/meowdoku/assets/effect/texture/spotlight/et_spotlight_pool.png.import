@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://crtafov4e1cat"
-path.bptc="res://.godot/imported/et_spotlight_pool.png-52ef21ee54fbefcfb113b2c851c213b1.bptc.ctex"
-path.astc="res://.godot/imported/et_spotlight_pool.png-52ef21ee54fbefcfb113b2c851c213b1.astc.ctex"
+path.bptc="res://.godot/imported/et_spotlight_pool.png-2dab90f3d1e6227cd814aaa6af252b46.bptc.ctex"
+path.astc="res://.godot/imported/et_spotlight_pool.png-2dab90f3d1e6227cd814aaa6af252b46.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/spotlight/et_spotlight_pool.png"
-dest_files=["res://.godot/imported/et_spotlight_pool.png-52ef21ee54fbefcfb113b2c851c213b1.bptc.ctex", "res://.godot/imported/et_spotlight_pool.png-52ef21ee54fbefcfb113b2c851c213b1.astc.ctex"]
+dest_files=["res://.godot/imported/et_spotlight_pool.png-2dab90f3d1e6227cd814aaa6af252b46.bptc.ctex", "res://.godot/imported/et_spotlight_pool.png-2dab90f3d1e6227cd814aaa6af252b46.astc.ctex"]
 
 [params]
 

@@ -3,12 +3,12 @@
 importer="spine.atlas"
 type="SpineAtlasResource"
 uid="uid://cdb6fktjj0aif"
-path="res://.godot/imported/RankBox.atlas-8768df83a7faae870d8da5518c95a795.spatlas"
+path="res://.godot/imported/RankBox.atlas-57193461b4cb08a8a73f8c590660bd11.spatlas"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/ui_box02/RankBox.atlas"
-dest_files=["res://.godot/imported/RankBox.atlas-8768df83a7faae870d8da5518c95a795.spatlas"]
+dest_files=["res://.godot/imported/RankBox.atlas-57193461b4cb08a8a73f8c590660bd11.spatlas"]
 
 [params]
 

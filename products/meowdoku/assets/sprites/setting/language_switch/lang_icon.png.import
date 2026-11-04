@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0h06r435e8al"
-path="res://.godot/imported/lang_icon.png-019011175abd6e851ae1066ff1c55b14.ctex"
+path="res://.godot/imported/lang_icon.png-268eeb5ad9b9ef1c78bfb235770ece86.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/setting/language_switch/lang_icon.png"
-dest_files=["res://.godot/imported/lang_icon.png-019011175abd6e851ae1066ff1c55b14.ctex"]
+dest_files=["res://.godot/imported/lang_icon.png-268eeb5ad9b9ef1c78bfb235770ece86.ctex"]
 
 [params]
 

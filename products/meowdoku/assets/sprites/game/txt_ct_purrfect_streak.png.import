@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bgn2hghhxfoml"
-path.bptc="res://.godot/imported/txt_ct_purrfect_streak.png-946f3c5f736ed4532b1d976255667f8f.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_purrfect_streak.png-946f3c5f736ed4532b1d976255667f8f.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_purrfect_streak.png-f45c10280f6754a92c75fa5adc653050.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_purrfect_streak.png-f45c10280f6754a92c75fa5adc653050.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_purrfect_streak.png"
-dest_files=["res://.godot/imported/txt_ct_purrfect_streak.png-946f3c5f736ed4532b1d976255667f8f.bptc.ctex", "res://.godot/imported/txt_ct_purrfect_streak.png-946f3c5f736ed4532b1d976255667f8f.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_purrfect_streak.png-f45c10280f6754a92c75fa5adc653050.bptc.ctex", "res://.godot/imported/txt_ct_purrfect_streak.png-f45c10280f6754a92c75fa5adc653050.astc.ctex"]
 
 [params]
 

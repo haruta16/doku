@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cj44n114eahat"
-path="res://.godot/imported/capsule_companion_countdown.png-97ea5186f9c8e6ca075b4ea83ebce75d.ctex"
+path="res://.godot/imported/capsule_companion_countdown.png-6b0ad4bcffeb4a8e0e557a06d5168317.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/home_companion/capsule_companion_countdown.png"
-dest_files=["res://.godot/imported/capsule_companion_countdown.png-97ea5186f9c8e6ca075b4ea83ebce75d.ctex"]
+dest_files=["res://.godot/imported/capsule_companion_countdown.png-6b0ad4bcffeb4a8e0e557a06d5168317.ctex"]
 
 [params]
 

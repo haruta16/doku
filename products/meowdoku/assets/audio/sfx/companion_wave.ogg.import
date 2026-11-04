@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://ckm1b2k8yrdnc"
-path="res://.godot/imported/companion_wave.ogg-8a9c75c113f23e594a869aeac564edf5.oggvorbisstr"
+path="res://.godot/imported/companion_wave.ogg-51e3008dd9e4c968a249cd9b3f1bb8e2.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/companion_wave.ogg"
-dest_files=["res://.godot/imported/companion_wave.ogg-8a9c75c113f23e594a869aeac564edf5.oggvorbisstr"]
+dest_files=["res://.godot/imported/companion_wave.ogg-51e3008dd9e4c968a249cd9b3f1bb8e2.oggvorbisstr"]
 
 [params]
 

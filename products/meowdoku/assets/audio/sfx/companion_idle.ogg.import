@@ -3,12 +3,12 @@
 importer="oggvorbisstr"
 type="AudioStreamOggVorbis"
 uid="uid://bsp8mnlp70y8e"
-path="res://.godot/imported/companion_idle.ogg-ca79dcb6fdca3de060fb874aa4b6aa71.oggvorbisstr"
+path="res://.godot/imported/companion_idle.ogg-550536d2cab860bf84d32a93bbd36ffa.oggvorbisstr"
 
 [deps]
 
 source_file="res://products/meowdoku/assets/audio/sfx/companion_idle.ogg"
-dest_files=["res://.godot/imported/companion_idle.ogg-ca79dcb6fdca3de060fb874aa4b6aa71.oggvorbisstr"]
+dest_files=["res://.godot/imported/companion_idle.ogg-550536d2cab860bf84d32a93bbd36ffa.oggvorbisstr"]
 
 [params]
 

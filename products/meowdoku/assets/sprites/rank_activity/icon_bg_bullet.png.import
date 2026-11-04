@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhdvh2iixl78f"
-path.bptc="res://.godot/imported/icon_bg_bullet.png-1198fd73494215dd55677f543735df88.bptc.ctex"
-path.astc="res://.godot/imported/icon_bg_bullet.png-1198fd73494215dd55677f543735df88.astc.ctex"
+path.bptc="res://.godot/imported/icon_bg_bullet.png-3ce01cc52c177516fd04f4699cae6a16.bptc.ctex"
+path.astc="res://.godot/imported/icon_bg_bullet.png-3ce01cc52c177516fd04f4699cae6a16.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/icon_bg_bullet.png"
-dest_files=["res://.godot/imported/icon_bg_bullet.png-1198fd73494215dd55677f543735df88.bptc.ctex", "res://.godot/imported/icon_bg_bullet.png-1198fd73494215dd55677f543735df88.astc.ctex"]
+dest_files=["res://.godot/imported/icon_bg_bullet.png-3ce01cc52c177516fd04f4699cae6a16.bptc.ctex", "res://.godot/imported/icon_bg_bullet.png-3ce01cc52c177516fd04f4699cae6a16.astc.ctex"]
 
 [params]
 

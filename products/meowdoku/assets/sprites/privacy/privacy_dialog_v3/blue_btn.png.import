@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bav47rwlbnyiv"
-path.bptc="res://.godot/imported/blue_btn.png-a50d83700ac1dde64ce488d3dcb8f541.bptc.ctex"
-path.astc="res://.godot/imported/blue_btn.png-a50d83700ac1dde64ce488d3dcb8f541.astc.ctex"
+path.bptc="res://.godot/imported/blue_btn.png-e1ee5464717e5325f724552d37cf9d6d.bptc.ctex"
+path.astc="res://.godot/imported/blue_btn.png-e1ee5464717e5325f724552d37cf9d6d.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/privacy/privacy_dialog_v3/blue_btn.png"
-dest_files=["res://.godot/imported/blue_btn.png-a50d83700ac1dde64ce488d3dcb8f541.bptc.ctex", "res://.godot/imported/blue_btn.png-a50d83700ac1dde64ce488d3dcb8f541.astc.ctex"]
+dest_files=["res://.godot/imported/blue_btn.png-e1ee5464717e5325f724552d37cf9d6d.bptc.ctex", "res://.godot/imported/blue_btn.png-e1ee5464717e5325f724552d37cf9d6d.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://n0v5kh5f1emj"
-path.bptc="res://.godot/imported/et_line_005.png-e6a234db597050be296c8638279e38be.bptc.ctex"
-path.astc="res://.godot/imported/et_line_005.png-e6a234db597050be296c8638279e38be.astc.ctex"
+path.bptc="res://.godot/imported/et_line_005.png-c806288ac47db5749348a56b152291fe.bptc.ctex"
+path.astc="res://.godot/imported/et_line_005.png-c806288ac47db5749348a56b152291fe.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/texture/line/et_line_005.png"
-dest_files=["res://.godot/imported/et_line_005.png-e6a234db597050be296c8638279e38be.bptc.ctex", "res://.godot/imported/et_line_005.png-e6a234db597050be296c8638279e38be.astc.ctex"]
+dest_files=["res://.godot/imported/et_line_005.png-c806288ac47db5749348a56b152291fe.bptc.ctex", "res://.godot/imported/et_line_005.png-c806288ac47db5749348a56b152291fe.astc.ctex"]
 
 [params]
 

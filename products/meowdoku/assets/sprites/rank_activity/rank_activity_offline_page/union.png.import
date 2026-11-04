@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdenv4ae2kfl4"
-path.bptc="res://.godot/imported/union.png-c47cab9e46ab6d6645cd691fe843feca.bptc.ctex"
-path.astc="res://.godot/imported/union.png-c47cab9e46ab6d6645cd691fe843feca.astc.ctex"
+path.bptc="res://.godot/imported/union.png-53987a6068ca940ca8418cc64e1212c7.bptc.ctex"
+path.astc="res://.godot/imported/union.png-53987a6068ca940ca8418cc64e1212c7.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/rank_activity/rank_activity_offline_page/union.png"
-dest_files=["res://.godot/imported/union.png-c47cab9e46ab6d6645cd691fe843feca.bptc.ctex", "res://.godot/imported/union.png-c47cab9e46ab6d6645cd691fe843feca.astc.ctex"]
+dest_files=["res://.godot/imported/union.png-53987a6068ca940ca8418cc64e1212c7.bptc.ctex", "res://.godot/imported/union.png-53987a6068ca940ca8418cc64e1212c7.astc.ctex"]
 
 [params]
 

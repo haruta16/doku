@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b27y7oksvqu01"
-path.bptc="res://.godot/imported/cat_atlas_1.png-5c912a1d394855658d250ef5b94dd188.bptc.ctex"
-path.astc="res://.godot/imported/cat_atlas_1.png-5c912a1d394855658d250ef5b94dd188.astc.ctex"
+path.bptc="res://.godot/imported/cat_atlas_1.png-70610c60c21eef672835a3263a51d742.bptc.ctex"
+path.astc="res://.godot/imported/cat_atlas_1.png-70610c60c21eef672835a3263a51d742.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/cat/cat_atlas_1.png"
-dest_files=["res://.godot/imported/cat_atlas_1.png-5c912a1d394855658d250ef5b94dd188.bptc.ctex", "res://.godot/imported/cat_atlas_1.png-5c912a1d394855658d250ef5b94dd188.astc.ctex"]
+dest_files=["res://.godot/imported/cat_atlas_1.png-70610c60c21eef672835a3263a51d742.bptc.ctex", "res://.godot/imported/cat_atlas_1.png-70610c60c21eef672835a3263a51d742.astc.ctex"]
 
 [params]
 

@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://csqqlfwikgxhg"
-path.bptc="res://.godot/imported/benefit_icon_bg.png-774c27538a28719ce611073ce4746001.bptc.ctex"
-path.astc="res://.godot/imported/benefit_icon_bg.png-774c27538a28719ce611073ce4746001.astc.ctex"
+path.bptc="res://.godot/imported/benefit_icon_bg.png-3be679ea5eecd654355baf77330fae7d.bptc.ctex"
+path.astc="res://.godot/imported/benefit_icon_bg.png-3be679ea5eecd654355baf77330fae7d.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/benefit_icon_bg.png"
-dest_files=["res://.godot/imported/benefit_icon_bg.png-774c27538a28719ce611073ce4746001.bptc.ctex", "res://.godot/imported/benefit_icon_bg.png-774c27538a28719ce611073ce4746001.astc.ctex"]
+dest_files=["res://.godot/imported/benefit_icon_bg.png-3be679ea5eecd654355baf77330fae7d.bptc.ctex", "res://.godot/imported/benefit_icon_bg.png-3be679ea5eecd654355baf77330fae7d.astc.ctex"]
 
 [params]
 

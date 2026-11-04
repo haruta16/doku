@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dwflahdposoyv"
-path.bptc="res://.godot/imported/txt_ct_w_logic.png-a0151225b18b263855da40aaf721e57a.bptc.ctex"
-path.astc="res://.godot/imported/txt_ct_w_logic.png-a0151225b18b263855da40aaf721e57a.astc.ctex"
+path.bptc="res://.godot/imported/txt_ct_w_logic.png-6e9229f9b6821f2fd813d5bc4476de27.bptc.ctex"
+path.astc="res://.godot/imported/txt_ct_w_logic.png-6e9229f9b6821f2fd813d5bc4476de27.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/game/txt_ct_w_logic.png"
-dest_files=["res://.godot/imported/txt_ct_w_logic.png-a0151225b18b263855da40aaf721e57a.bptc.ctex", "res://.godot/imported/txt_ct_w_logic.png-a0151225b18b263855da40aaf721e57a.astc.ctex"]
+dest_files=["res://.godot/imported/txt_ct_w_logic.png-6e9229f9b6821f2fd813d5bc4476de27.bptc.ctex", "res://.godot/imported/txt_ct_w_logic.png-6e9229f9b6821f2fd813d5bc4476de27.astc.ctex"]
 
 [params]
 

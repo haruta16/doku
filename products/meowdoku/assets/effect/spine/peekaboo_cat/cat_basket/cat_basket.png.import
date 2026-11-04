@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdfiebcc6hv7m"
-path.bptc="res://.godot/imported/cat_basket.png-bef615a6008822a3a6712e74a61daccb.bptc.ctex"
-path.astc="res://.godot/imported/cat_basket.png-bef615a6008822a3a6712e74a61daccb.astc.ctex"
+path.bptc="res://.godot/imported/cat_basket.png-03795236ecdcbd775bee2432226e3468.bptc.ctex"
+path.astc="res://.godot/imported/cat_basket.png-03795236ecdcbd775bee2432226e3468.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/effect/spine/peekaboo_cat/cat_basket/cat_basket.png"
-dest_files=["res://.godot/imported/cat_basket.png-bef615a6008822a3a6712e74a61daccb.bptc.ctex", "res://.godot/imported/cat_basket.png-bef615a6008822a3a6712e74a61daccb.astc.ctex"]
+dest_files=["res://.godot/imported/cat_basket.png-03795236ecdcbd775bee2432226e3468.bptc.ctex", "res://.godot/imported/cat_basket.png-03795236ecdcbd775bee2432226e3468.astc.ctex"]
 
 [params]
 

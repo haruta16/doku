@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://28n8gdqwao6c"
-path.bptc="res://.godot/imported/pill_base_week.png-8c139aae775073a1d7eaf62c17bef8eb.bptc.ctex"
-path.astc="res://.godot/imported/pill_base_week.png-8c139aae775073a1d7eaf62c17bef8eb.astc.ctex"
+path.bptc="res://.godot/imported/pill_base_week.png-5bde3098ceaebacfbeaba110502e48d3.bptc.ctex"
+path.astc="res://.godot/imported/pill_base_week.png-5bde3098ceaebacfbeaba110502e48d3.astc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://products/meowdoku/assets/sprites/purchase/pill_base_week.png"
-dest_files=["res://.godot/imported/pill_base_week.png-8c139aae775073a1d7eaf62c17bef8eb.bptc.ctex", "res://.godot/imported/pill_base_week.png-8c139aae775073a1d7eaf62c17bef8eb.astc.ctex"]
+dest_files=["res://.godot/imported/pill_base_week.png-5bde3098ceaebacfbeaba110502e48d3.bptc.ctex", "res://.godot/imported/pill_base_week.png-5bde3098ceaebacfbeaba110502e48d3.astc.ctex"]
 
 [params]
 
