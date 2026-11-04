@@ -9,28 +9,32 @@ const Manifest = preload("res://scripts/framework/content/content_manifest.gd")
 const Channel = preload("res://scripts/framework/content/content_channel.gd")
 const Store = preload("res://scripts/framework/content/content_store.gd")
 
+## 进度同步通知：phase 区分发现/下载/安装/结束，监听者可以请求取消，不能把下载完成当作已激活。
 signal progress_changed(progress: Dictionary)
 
-var max_attempts: int = 3
-var timeout_seconds: float = 20.0
-var retry_delay_seconds: float = 0.25
-var _busy := false
-var _cancelled := false
-var _request: HTTPRequest
-var _progress: Dictionary = {}
-var _release: String = ""
-var _completed_bytes: int = 0
-var _total_bytes: int = 0
+var max_attempts: int = 3 # 每个 HTTP 文件请求的尝试次数；执行时限制到 1～5 次。
+var timeout_seconds: float = 20.0 # 每次 HTTP 请求超时秒数；执行时限制到 0.1～120 秒。
+var retry_delay_seconds: float = 0.25 # 有限指数退避的起始秒数；每轮等待仍允许取消。
+var _busy := false # 单任务占位；发现频道、下载、安装和最终清理属于同一次任务。
+var _cancelled := false # 当前任务取消标记；HTTP 取消后仍由外层流程统一清理临时目录。
+var _request: HTTPRequest # 当前活跃 HTTPRequest 子节点；cancel 可终止它，不直接发布结果。
+var _progress: Dictionary = {} # 最近一次进度快照；向监听者发布副本，避免外部改写任务统计。
+var _release: String = "" # 验签清单中的发布身份；清单尚未验证时为空。
+var _completed_bytes: int = 0 # 已经下载并核对哈希的载荷字节数，不包含当前未完成文件。
+var _total_bytes: int = 0 # 清单声明的载荷总字节数；不把频道和清单元数据计入。
 
 
+## 查询是否仍有交付任务占位；取消请求发出后，直到 _finish 清理完才变为 false。
 func is_busy() -> bool:
 	return _busy
 
 
+## 返回最近进度的深拷贝，供 UI 查询而不暴露内部可变字典。
 func progress_snapshot() -> Dictionary:
 	return _progress.duplicate(true)
 
 
+## 标记任务取消并终止当前 HTTP 请求；后续等待检查标记退出，统一结束入口负责清理目录。
 func cancel() -> void:
 	if not _busy:
 		return
@@ -39,6 +43,7 @@ func cancel() -> void:
 		_request.cancel_request()
 
 
+## 节点离树即请求取消；不会把未完成下载登记成 pending 或切换活动内容。
 func _exit_tree() -> void:
 	cancel()
 
@@ -56,6 +61,7 @@ func download_release(store: RefCounted, release_url: String, staging_root: Stri
 	return _finish(opened.work, result)
 
 
+## 要求 release 与清单 SHA 成对提供；都为空可表示由调用方自行选择版本，required=true 时禁止省略。
 static func release_identity(release: String, manifest_sha256: String, required: bool = false) -> Dictionary:
 	if release.is_empty() and manifest_sha256.is_empty():
 		return Manifest.failure("release_identity_required") if required else {"ok": true, "value": {}}
@@ -73,6 +79,7 @@ func download_from_channel(store: RefCounted, channel_url: String, channel: Stri
 	return _finish(opened.work, result)
 
 
+## 验证节点、单任务状态和 URL 后创建随机暂存目录，再清空本次统计并占位。
 func _begin(url: String, staging_root: String, allow_local_http: bool) -> Dictionary:
 	if _busy:
 		return Manifest.failure("download_busy")
@@ -92,6 +99,7 @@ func _begin(url: String, staging_root: String, allow_local_http: bool) -> Dictio
 	return {"ok": true, "work": work}
 
 
+## 递归清理本次暂存目录、释放忙状态并发布最终进度；安装成功仍由调用方另行 stage。
 func _finish(work: String, result: Dictionary) -> Dictionary:
 	Store._remove_tree(work)
 	_busy = false
@@ -100,6 +108,7 @@ func _finish(work: String, result: Dictionary) -> Dictionary:
 	return result
 
 
+## 下载并验证频道及签名，先持久化选择水位，再下载其绑定 release/清单哈希的发布。
 func _discover_and_download(store: RefCounted, base_url: String, channel: String, work: String, validator: Validation, allow_local_http: bool) -> Dictionary:
 	for metadata: Dictionary in [{"name": "channel.json", "limit": Channel.MAX_BYTES}, {"name": "channel.sig", "limit": 1024}]:
 		var fetched := await _fetch(base_url + "/" + metadata.name, work.path_join(metadata.name), metadata.limit, "discovering")
@@ -118,6 +127,8 @@ func _discover_and_download(store: RefCounted, base_url: String, channel: String
 	return result
 
 
+## 下载清单并验签/核对选定身份；已安装版本重验通过可复用，否则逐文件下载、校验后安装。
+## 每次可重入进度回调后仍可能收到取消；进入安装前再次检查，不发布半完成目录。
 func _download_into(store: RefCounted, base_url: String, work: String, validator: Validation, selected: Dictionary = {}, mismatch_error: String = "channel_release_mismatch") -> Dictionary:
 	for metadata: Dictionary in [{"name": "manifest.json", "limit": Manifest.MAX_MANIFEST_BYTES}, {"name": "manifest.sig", "limit": 1024}]:
 		var fetched := await _fetch(base_url + "/" + metadata.name, work.path_join(metadata.name), metadata.limit, "manifest")
@@ -184,6 +195,8 @@ func _fetch(url: String, target: String, byte_limit: int, phase: String) -> Dict
 	return Manifest.failure("download_attempts")
 
 
+## 执行一次禁重定向、禁压缩、限字节数的 HTTP 请求，先写 .part；成功才改名为待验证文件。
+## mailbox 由完成信号写入，逐帧轮询同时检查取消和节点存活，避免直接 await 一个可能永不发出的信号。
 func _fetch_once(url: String, target: String, byte_limit: int, phase: String, attempt: int) -> Dictionary:
 	var request := HTTPRequest.new()
 	request.timeout = clampf(timeout_seconds, 0.1, 120.0)
@@ -193,6 +206,7 @@ func _fetch_once(url: String, target: String, byte_limit: int, phase: String, at
 	request.download_file = target + ".part"
 	add_child(request)
 	_request = request
+	# Array 作为可变邮箱被 lambda 共享；回调只填结果，资源释放和重试决策仍留在外层任务。
 	var mailbox: Array = [null]
 	request.request_completed.connect(
 		func(result: int, status: int, _headers: PackedStringArray, _body: PackedByteArray) -> void:
@@ -232,6 +246,7 @@ func _fetch_once(url: String, target: String, byte_limit: int, phase: String, at
 	return {"ok": true, "error": ""}
 
 
+## 更新阶段、发布、文件、已验字节和尝试序号；发出独立快照供页面显示。
 func _emit_progress(phase: String, file: String = "", file_bytes: int = 0, attempt: int = 0) -> void:
 	_progress = {
 		"phase": phase, "release": _release, "file": file,
@@ -241,9 +256,11 @@ func _emit_progress(phase: String, file: String = "", file_bytes: int = 0, attem
 	progress_changed.emit(_progress.duplicate(true))
 
 
+## 统一取消回执：ok=false 且 cancelled=true，外层据此显示取消而非成功或普通失败。
 static func _cancel_result() -> Dictionary:
 	return {"ok": false, "error": "download_cancelled", "cancelled": true}
 
 
+## 复用频道入口的 URL 限制；测试 HTTP 也只允许显式开启后的 loopback 地址。
 static func _allowed_url(url: String, allow_local_http: bool) -> bool:
 	return Channel.allowed_url(url, allow_local_http)

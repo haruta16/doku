@@ -8,6 +8,6 @@ func on_stack_top() -> void:
 	pass
 
 
-## 被上层全屏窗口遮挡而隐藏时调用
+## 父窗口可在子窗口被遮挡时转发此钩子；本类不监听管理器窗口栈，也不自行改变可见性。
 func on_stack_bottom() -> void:
 	pass

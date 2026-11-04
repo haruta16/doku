@@ -179,16 +179,16 @@ var _entry_handlers: Dictionary = {} # 入口模式 → 初始化函数 的派�
 # ---- 残局快照落盘（防抖） ----
 var _endgame_persist_timer: Timer = null # 残局快照防抖定时器
 const ENDGAME_PERSIST_DEBOUNCE_SEC: float = 0.5 # 防抖窗口：0.5 秒内的多次改动合并成一次写档
-const ENDGAME_RETRY_LIMIT: int = 3
-var _endgame_save_failed: bool = false
-var _endgame_retry_count: int = 0
-var _endgame_closing: bool = false
+const ENDGAME_RETRY_LIMIT: int = 3 # 未离页时 checkpoint 保存失败的自动重试上限
+var _endgame_save_failed: bool = false # 当前代次是否已有保存失败，用于避免重复提示
+var _endgame_retry_count: int = 0 # 当前 checkpoint 连续重试次数，新操作或成功写入时归零
+var _endgame_closing: bool = false # 正在主线 on_hide 中，允许最后一次 sync 但不再排自动重试
 
 var _is_endgame_restore_session: bool = false # 本次 on_show 是否来自残局快照复原
 
-var _is_direct_open_session: bool = false
+var _is_direct_open_session: bool = false # 本次是否由直接入口打开，恢复或进入下一局时延续来源信息
 
-var _is_from_tutorial: bool = false
+var _is_from_tutorial: bool = false # 本次是否接续教程入口，内部重入时保持来源标志
 
 # ---- 入口动画与插屏广告等待 ----
 var _entry_anim_pending_state: Variant = null # 等插屏广告时的占位状态，null 表示没有在等
@@ -945,8 +945,10 @@ func _reset_flight_trails() -> void:
 	_center_relay_fish_nodes.clear()
 
 
-## 整理普通关及活动关入口参数，区分残局恢复、直接开局和教程，初始化本局反馈与模式。
+## 主线入场总流程：候选内处理重选/残局，校验题面并搭建棋盘，提交会话成功后再安排广告与入场表现。
+## 恢复与调试入口也汇入同一提交点；每次 await 后要确认仍是发起它的页面代次。
 func on_show(params: Dictionary = {}) -> void:
+	# 框架版本覆盖 super 前的准备；业务代次在 super 中才递增，二者用途不同。
 	var entry_presentation: int = get_presentation_revision()
 	_endgame_save_failed = false
 	_endgame_retry_count = 0
@@ -1097,6 +1099,7 @@ func on_show(params: Dictionary = {}) -> void:
 	if not _skip_dfld and not _page_state().is_daily_first_easy_available():
 		_page_state().advance_daily_first_easy_date()
 
+	# 可恢复旧局或需要重选时会内部再次 on_show；返回 true 后当前准备链必须立即结束。
 	if _try_consume_endgame_snapshot(params):
 		return
 
@@ -1140,6 +1143,7 @@ func on_show(params: Dictionary = {}) -> void:
 	_pre_cat_pend_snapshot = {}
 
 	var _entry_mode: EntryMode = _resolve_entry_mode(params)
+	# 入口模式只准备题目；任何取题或题面形状失败，都不能越过下面的统一提交点。
 	var _entry_setup_result: Variant = _entry_handlers[_entry_mode].call(params)
 	if _entry_mode == EntryMode.NORMAL and _entry_setup_result != true:
 		_fail_business_entry(OperationResult.failure("no_valid_level"))
@@ -1279,6 +1283,7 @@ func on_show(params: Dictionary = {}) -> void:
 	_refresh_life_bar_display()
 	_sync_tools_from_state()
 
+	# 等布局稳定后再建棋盘；期间页面可能被关闭或重开，下一行 guard 是本次准备的所有权检查。
 	await get_tree().process_frame
 	if not _is_current_entry(entry_generation):
 		return
@@ -1345,6 +1350,7 @@ func on_show(params: Dictionary = {}) -> void:
 
 	_seed_full_mark_fired_units_from_board()
 
+	# 棋盘、预填和恢复状态准备完成后才提交；提交失败不连接自动保存，也不发正式开局表现。
 	if not _commit_prepared_round(params, _entry_selection_plan):
 		return
 	_golden_fish_pre_cat.set_state(GameState)
@@ -1419,6 +1425,7 @@ func on_show(params: Dictionary = {}) -> void:
 		)
 	)
 
+	# 恢复到已完成的盘面仍走正常幂等胜利结算，不能因为之前尚未弹胜利页而丢失进度。
 	if QueendokuCore.is_complete(_board_view.get_board(), sz, _puzzle["regions"]):
 		_board_view.visible = true
 		_on_game_win()
@@ -1716,6 +1723,7 @@ func _setup_entry_debug_prebuilt(params: Dictionary) -> void:
 	_nav_total = 0
 
 
+## 在当前候选里按普通、回流、金鱼或颜色挑战策略取题；特殊题失败时允许候选内回退，返回空字典表示未交付。
 func _select_entry_for_level(
 	level_index: int,
 	rank_override: int,
@@ -1766,6 +1774,7 @@ func _select_entry_for_level(
 	return LevelSelector.select(level_index, rank_override, _pre_cat_pend_snapshot, false, _entry_state)
 
 
+## 读取选题结果并填入当前题面与选择计划；基础尺寸/答案不合法返回 false，正式写档留给统一开局提交。
 func _setup_entry_normal(params: Dictionary) -> bool:
 	var level_index: int = params.get("level_index", 1)
 	level_index = max(1, level_index)
@@ -1784,6 +1793,7 @@ func _setup_entry_normal(params: Dictionary) -> bool:
 		push_warning("GamePage: LevelSelector failed to deliver entry, level=%d" % level_index)
 		return false
 
+	# 策略产生的游标/进度变化仍在候选计划中，和题面一起保留到 _commit_prepared_round。
 	_entry_selection_plan = (lv_entry.get("_selection_plan", {}) as Dictionary).duplicate(true)
 	var lv_sz: int = int(lv_entry.get("size", 0))
 	if lv_sz == 0:
@@ -2000,6 +2010,8 @@ func _solution_to_bool_grid(sol: Array, sz: int) -> Array:
 	return grid
 
 
+## 先同步最后一帧主线 checkpoint，再由基类撤销展示；随后停止主线入场、飞行动画、保存定时器与教程提示。
+## 存档通知可能同步重开页面，因此每段清理都要确认没有接管新一代展示。
 func on_hide() -> void:
 	# 最后一帧的标记必须在失效展示会话前同步。
 	var generation: int = _business_generation
@@ -2010,6 +2022,7 @@ func on_hide() -> void:
 	_finish_rank_win_presentation(true)
 	if generation != _business_generation:
 		return
+	# 基类会递增一次业务代次；返回后只接受预期的 +1，额外变化说明清理期间又出现新展示。
 	super.on_hide()
 	if _business_generation != generation + 1:
 		return
@@ -2164,6 +2177,8 @@ func _snapshot_endgame_enabled(snapshot: Dictionary) -> bool:
 	return ABTestManager.normal_endgame_save.is_enabled()
 
 
+## 判断旧主线快照是否可恢复，必要时在候选内清理或重选；返回 true 表示已转交新的 on_show，原入口应停止。
+## 完整盘面也先恢复，再走同一个幂等结算入口，不能当作过期未完成题直接丢弃。
 func _try_consume_endgame_snapshot(params: Dictionary) -> bool:
 	var lv_idx: int = params.get("level_index", 0)
 	if (
@@ -2214,7 +2229,7 @@ func _try_consume_endgame_snapshot(params: Dictionary) -> bool:
 		_page_state().clear_endgame_snapshot()
 		return false
 	var board: Array = _reconstruct_board_for_check(snapshot, sz)
-	# A completed checkpoint is restored first, then settled through the same idempotent round service.
+	# 已完成快照先恢复，再交给同一个幂等对局服务结算；完成事实不能因未播放胜利页而丢失。
 	var _nes: NormalEndgameSaveConfig = ABTestManager.normal_endgame_save
 	# 长时间未登录可以重选未完成难题，不能丢弃杀端前已完成、尚未结算的胜利。
 	var _pending_stale: bool = not QueendokuCore.is_complete(board, sz, snapshot["regionMap"]) and StaleEndgameGate.is_pending_stale_discard()
@@ -2308,6 +2323,7 @@ func _try_consume_endgame_snapshot(params: Dictionary) -> bool:
 	var is_elo_delivery: bool = bool(snapshot.get("is_elo_delivery", false))
 	if ABTestManager.normal_level.is_elo_v2_active():
 		is_elo_delivery = is_elo_delivery and _has_valid_elo_v2_rating(snapshot)
+	# 把旧镜像转换为统一入场参数，继续沿用持久局身份和冻结策略；不要先清旧档再赌新提交成功。
 	var restore_params: Dictionary = {
 		"bank_mode": true,
 		"bank_size": sz,
@@ -2508,7 +2524,7 @@ func _reconstruct_board_for_check(snapshot: Dictionary, sz: int) -> Array:
 	return board
 
 
-## 只给普通主线挂上「格子变更 → 残局快照」
+## 提交成功后按本局保存策略接入主线格子变更监听；先断旧连接，调试入口不启用这条镜像保存链。
 func _setup_endgame_persist_for_normal_entry(params: Dictionary) -> void:
 	if _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
 		_board_view.cell_state_changed.disconnect(_persist_endgame_snapshot)
@@ -2667,6 +2683,7 @@ func on_stack_top() -> void:
 	_invoke_entry_ad_resume("interstitial_sub_closed")
 
 
+## 抢占待入场状态后断开广告等待，等容器排版一帧；只有原代次且会话已就绪才能播放开场。
 func _fire_entry_anim(source: String) -> void:
 	var generation: int = _business_generation
 	if _entry_anim_pending_state == null:
@@ -2699,6 +2716,7 @@ func _on_application_focus_in() -> void:
 	_invoke_entry_ad_resume("focus_in")
 
 
+## 切到后台时停止防抖并立即尝试保存当前主线快照，缩小被系统终止时丢失最后操作的窗口。
 func _on_application_focus_out() -> void:
 	super._on_application_focus_out()
 
@@ -2717,6 +2735,7 @@ func _on_application_focus_out() -> void:
 	)
 
 
+## 标记广告/订阅入场等待已结束，断开回调并取消确认计时器；迟到回调不能再恢复旧开场。
 func _cancel_pending_entry_animation_wait() -> void:
 	_entry_anim_await_stack_top = false
 	_entry_anim_waiting_ad = false
@@ -3168,6 +3187,7 @@ func _show_life_warning() -> void:
 	_show_bubble_tutorial(_WARN_LIFE_TEXT_KEY)
 
 
+## 取得提示互斥权后显示气泡，延迟开放关闭点击；延迟回调同时核对业务代次和提示版本。
 func _show_bubble_tutorial(text_key: String) -> void:
 	if _anim_tips == null:
 		return
@@ -3288,7 +3308,10 @@ func _input(event: InputEvent) -> void:
 	super._input(event)
 
 
+## 撤销当前提示版本并恢复触摸、遮罩和互斥权；若此前正在提示则发结束信号，供等待链退出。
+## 该结束信号也可来自取消，不应单凭它推断玩家已经完成教程。
 func _reset_life_warning() -> void:
+	# 先让旧延迟解锁回调失效，再发结束通知；收到通知的等待方仍需核对自己的页面代次。
 	_warn_revision += 1
 	_warn_click_allowed = false
 	var was_active: bool = _warn_phase != 0
@@ -3310,6 +3333,7 @@ func _reset_life_warning() -> void:
 		bubble_tutorial_finished.emit()
 
 
+## 失败请求入口；已经终局时忽略，其余通过基类转场令牌串行提交失败事实。
 func _on_game_fail() -> void:
 	if _is_complete:
 		return
@@ -3319,6 +3343,7 @@ func _on_revive_ad_started() -> void:
 	_board_view.revive_all_cat_to_idle()
 
 
+## 先在棋盘副本中撤掉草稿致命格，再把候选交给统一复活事务；提交成功前不改活棋盘。
 func _on_revive_requested(context: Dictionary = {}) -> void:
 	var restored_board: Array = _board_view.get_board().duplicate(true)
 	for cell: Vector2i in _draft_lethal_wrong_cells:
@@ -3379,6 +3404,7 @@ func _record_normal_pass_time(time_total: int) -> void:
 	)
 
 
+## 胜利请求入口；通过基类转场令牌防止多次完成检测同时结算同一次尝试。
 func _on_game_win() -> void:
 	if _is_complete:
 		return
@@ -3437,6 +3463,7 @@ func _is_no_mistake_level() -> bool:
 	return not GameState.has_wrong_cat_current_level()
 
 
+## 展示已经产生的签到/补签结果，并把父页面有效性传给子流程；返回 true 表示本轮流程走完，不代表新增了一笔奖励。
 func _try_run_streak_flow_after_win(_source: StringName, skip_cat_appear: bool = false) -> bool:
 	var generation: int = _business_generation
 	var has_revive: bool = StreakManager.has_pending_revive_decision()
@@ -4543,6 +4570,7 @@ func _build_puzzle_base() -> Dictionary:
 	}
 
 
+## 组装主线兼容恢复快照，包含盘面、计时/表现状态及持久 round/attempt 身份；本函数只构造数据，不写盘。
 func _build_endgame_snapshot(override: Dictionary = {}) -> Dictionary:
 	var base: Dictionary = _build_puzzle_base()
 	var sz: int = int(base["size"])
@@ -4681,7 +4709,7 @@ func _unlock_entry_buttons_after_toast(seq: int) -> void:
 	_unlock_entry_buttons()
 
 
-## 格子变更 → 残局快照：关键状态立刻写，其余延迟 0.5 秒写
+## 格子变更 → 残局快照：关键状态排本代次的延迟调用，其余延迟 0.5 秒合并；不在格子信号栈内直接重入保存。
 func _persist_endgame_snapshot(_r: int, _c: int, state: int, _source: int = 0) -> void:
 	if not _is_round_entry_ready() or _settlement_pending:
 		return
@@ -4694,6 +4722,7 @@ func _persist_endgame_snapshot(_r: int, _c: int, state: int, _source: int = 0) -
 		_endgame_persist_timer.start(ENDGAME_PERSIST_DEBOUNCE_SEC)
 
 
+## 对已就绪且未终局的主线会话执行 sync；关闭时只允许最后一次同步，不能因此消费工具或新建对局。
 func _flush_endgame_snapshot() -> void:
 	if _is_complete or not _entry_ready or _settlement_pending:
 		return
@@ -4702,6 +4731,7 @@ func _flush_endgame_snapshot() -> void:
 	_accept_checkpoint_write(result, generation)
 
 
+## 只处理原展示代次的写入结果；真实失败提示一次并有限重试，重试重新读取当前盘面。
 func _accept_checkpoint_write(result: Dictionary, generation: int) -> void:
 	if generation != _business_generation:
 		return
@@ -4709,6 +4739,7 @@ func _accept_checkpoint_write(result: Dictionary, generation: int) -> void:
 		_endgame_save_failed = false
 		_endgame_retry_count = 0
 		return
+	# 入口未就绪、动作在途或旧展示已失效属于时序拒绝，不当作存储损坏反复提示。
 	if result.get("error") in ["entry_not_ready", "action_in_flight", "stale_presentation"]:
 		return
 	if not _endgame_save_failed:
@@ -4720,6 +4751,7 @@ func _accept_checkpoint_write(result: Dictionary, generation: int) -> void:
 		_endgame_persist_timer.start(float(_endgame_retry_count))
 
 
+## 把待演出的错误格/生命等覆盖到运行态副本再同步；不为了提前保存而先修改可见棋盘。
 func save_endgame_snapshot(override: Dictionary = {}) -> void:
 	if _is_complete or not _is_round_entry_ready() or _settlement_pending:
 		return
@@ -5206,32 +5238,39 @@ func _apply_top_gap_for_short_screen() -> void:
 		return
 	ad_holder.custom_minimum_size.y = minf(ad_holder.custom_minimum_size.y, _AD_GAP_SQUEEZED)
 
+## 内部重选/恢复再次进入 on_show 时显式传递同一候选对象，保留此前尚未提交的准备变化。
 func _reenter_prepared(params: Dictionary) -> void:
 	params = params.duplicate(true)
 	params["_entry_candidate"] = _entry_state
 	on_show(params)
 
+## 正式主线且本局允许残局保存时返回兼容快照；预览或禁用保存时返回空字典。
 func _business_checkpoint() -> Dictionary:
 	if not bool(_gameplay_policy.get("normal_endgame_save", true)) or int(_level_config.get("level", 0)) <= 0:
 		return {}
 	return _build_endgame_snapshot()
 
+## 延迟保存入口只接受原业务代次；快速重开后旧任务不能把新局当作旧局保存。
 func _flush_endgame_for_generation(generation: int) -> void:
 	if _is_current_entry(generation):
 		_flush_endgame_snapshot()
 
+## 用 round/attempt 幂等键先提交胜利、奖励与最终盘面，再播放通关表现；失败进入保存重试，不先发奖或跳下一关。
 func _finish_game_win(transition: Dictionary) -> void:
 	var attempt_id: String = _business_settlement_id()
 	if attempt_id.is_empty() or not _is_current_round_transition(transition):
 		return
+	# 结束事件参数在提交前取快照，存档同步通知若重开，不能用新局信息上报旧局结算。
 	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.WIN)
 	var settled: Dictionary = _settle_current_main_or_preview(attempt_id, "win")
+	# 事实发布按成功/duplicate 判断；后面的页面动画另用 transition 验证归属。
 	_publish_round_end(settled, end_params)
 	if not _is_current_round_transition(transition):
 		return
 	if not settled.get("ok", false):
 		_retry_round_transition(transition, settled, _on_game_win)
 		return
+	# 只有持久结算成功后才接受最终分数并展示奖励；后续动画中断不回滚已保存胜利。
 	_accept_win_bonus(settled)
 	_level_config.merge(settled.get("presentation", {}), true)
 	# 杀端前已经落下最后一只猫的快照：统一结算所有1.22事实后直接进入新关，
@@ -5291,6 +5330,7 @@ func _finish_game_win(transition: Dictionary) -> void:
 		_endgame_persist_timer.stop()
 
 
+	# 自动补叉的盘面与加分已在胜利事务中提交，此处只播放对应表现。
 	await _play_auto_cross_bonus_sequence()
 	if not _is_current_round_transition(transition):
 		return
@@ -5363,6 +5403,7 @@ func _finish_game_win(transition: Dictionary) -> void:
 	_level_config["diffi"] = this_session_diffi if lv > 0 else 0
 	UIManager.show_ui(_win_ui_name(), {"level_config": _level_config, "board_view": _board_view})
 
+## 先提交失败及同题重试数据，成功后才停止本局并打开失败页；旧转场失效时不继续接线新弹窗。
 func _finish_game_fail(transition: Dictionary) -> void:
 	var attempt_id: String = _business_settlement_id()
 	if attempt_id.is_empty() or not _is_current_round_transition(transition):
@@ -5372,6 +5413,7 @@ func _finish_game_fail(transition: Dictionary) -> void:
 	_publish_round_end(settled, end_params)
 	if not _is_current_round_transition(transition):
 		return
+	# 存盘失败先重试，不能先把页面切成终局或打开失败页，否则用户会误以为已保存。
 	if not settled.get("ok", false):
 		_retry_round_transition(transition, settled, _on_game_fail)
 		return
@@ -5437,7 +5479,7 @@ func _finish_game_fail(transition: Dictionary) -> void:
 		fail.golden_fish_skipped.connect(_on_golden_fish_skipped)
 
 
-## 复活广告开始播放：先把猫恢复成待机动作
+## 构造同题重试参数，保留题面、冻结策略与来源；只组装字典，不在这里清局或写档。
 
 func _build_failed_retry_params() -> Dictionary:
 	var lv: int = int(_level_config.get("level", 0))
@@ -5493,6 +5535,7 @@ func _build_failed_retry_params() -> Dictionary:
 	retry_params["restore_kind"] = _level_kind
 	return retry_params
 
+## 冻结当前结算参数并分派正式主线或预览事务；胜利候选包含自动补叉加分，失败/退出使用当前运行态。
 func _settle_current_main_or_preview(attempt_id: String, outcome: String, retry_params: Dictionary = {}, extra_context: Dictionary = {}) -> Dictionary:
 	var level: int = int(_level_config.get("level", 0))
 	var context: Dictionary = {
@@ -5509,6 +5552,7 @@ func _settle_current_main_or_preview(attempt_id: String, outcome: String, retry_
 	context.merge(extra_context, true)
 	return GameState.settle_main_round(attempt_id, level, outcome, _win_business_runtime() if outcome == "win" else _business_runtime(), retry_params, context) if level > 0 else GameState.settle_preview_round(attempt_id, outcome, _win_business_runtime() if outcome == "win" else _business_runtime(), context)
 
+## 统一复活提交成功后的主线表现：重置本次尝试计时，恢复生命条、棋盘交互与广告；不在这里再次提交复活。
 func _present_revive() -> void:
 	_stat_start_ms = Time.get_ticks_msec() # 新尝试从恢复交互起计时；失败弹窗与广告不重复入账。
 	UIManager.hide_ui(UiName.FAIL)
@@ -5549,12 +5593,14 @@ func _normal_pass_time_context() -> Dictionary:
 		return {}
 	return {"level": lv, "size": int(_level_config.get("size", 0)), "rank": int(_level_config.get("rank", 0)), "sec": GameState.get_game_total_stat(Tracker.GameType.NORMAL, "time_total") + _current_round_time_sec()}
 
+## 先结算当前尝试的退出并保存同题参数，成功后以 RESTART 再入场；失败保留当前局并提供重试。
 func _restart_round(transition: Dictionary) -> void:
 	var attempt_id: String = _business_settlement_id()
 	if attempt_id.is_empty() or not _is_current_round_transition(transition):
 		return
 	var params: Dictionary = _build_failed_retry_params()
 	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.QUIT)
+	# 先保存当前尝试的退出事实；后续新入口成功提交时才原子重置新一轮统计。
 	var settled: Dictionary = _settle_current_main_or_preview(attempt_id, "quit", params, {"restart": true})
 	_publish_round_end(settled, end_params)
 	if not _is_current_round_transition(transition):
@@ -5571,7 +5617,7 @@ func _restart_round(transition: Dictionary) -> void:
 	params["_tracker_status"] = Tracker.GameStatus.RESTART
 	on_show(params)
 
-## Complete entry-time AB assignment before taking the independent selection snapshot.
+## 在建立独立选题候选前完成入口 AB 染色，避免染色提交后候选仍以旧状态为基线。
 func _prepare_entry_dyes(params: Dictionary) -> void:
 	_dye_game_start_normal(_resolve_entry_level(params))
 	var state: Object = params.get("_entry_candidate", GameState)

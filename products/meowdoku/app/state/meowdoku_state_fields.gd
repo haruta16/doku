@@ -1,8 +1,12 @@
-## 1.22 完整持久字段边界；从产品编码器逐项核对，未知扩展字段仍透传。
+## 1.22 状态字段的类型索引：供导入和核心候选校验使用，不保存玩家的实际值。
+## PROFILE_TYPES 沿用旧编码器命名；库存、统计等会被 MeowdokuStore 投影到各自分区。
+## 这是已知字段类型表，不是必填清单；未知扩展仍透传，具体取值规则由业务模块负责。
 class_name MeowdokuStateFields
 extends RefCounted
 
+# 旧 progress 的 211 项字段；TYPE_* 是 Godot Variant 类型编号，不能当作字段默认值。
 const PROFILE_TYPES := {
+	# 关卡进度与难度状态：策略、连续胜负和重试累计会共同影响后续选题。
 	"current_level": TYPE_INT,
 	"last_hard_level": TYPE_INT,
 	"tutorial_done": TYPE_BOOL,
@@ -12,6 +16,7 @@ const PROFILE_TYPES := {
 	"consecutive_fails": TYPE_INT,
 	"consecutive_retry_levels": TYPE_INT,
 	"retry_tracking_strategy": TYPE_INT,
+	# 不同题库/特殊替换策略各自维护游标；不能把所有 progress 字典合并成一个关号。
 	"bank_progress": TYPE_DICTIONARY,
 	"main_bank_progress": TYPE_DICTIONARY,
 	"lkmod_progress": TYPE_DICTIONARY,
@@ -35,11 +40,13 @@ const PROFILE_TYPES := {
 	"nl_v6_alternate_r4_level": TYPE_INT,
 	"nl_v6_pool_progress": TYPE_DICTIONARY,
 	"nl_v6_alt_state": TYPE_DICTIONARY,
+	# 一次性引导/权益标记，描述是否已经消费资格，并非当前页面是否可见。
 	"has_shown_rate_us": TYPE_BOOL,
 	"has_used_revive_free": TYPE_BOOL,
 	"warn_life_shown": TYPE_BOOL,
 	"life_plus_first_done": TYPE_BOOL,
 	"countdown_shown_levels": TYPE_DICTIONARY,
+	# 每日挑战的日期与成绩；elapsed_sec 单位秒，beat_percent 是百分比。
 	"daily_index": TYPE_INT,
 	"daily_completed_date": TYPE_STRING,
 	"max_daily_date": TYPE_STRING,
@@ -48,6 +55,7 @@ const PROFILE_TYPES := {
 	"daily_best_beat_percent": TYPE_FLOAT,
 	"daily_started_date": TYPE_STRING,
 	"daily_first_easy_date": TYPE_STRING,
+	# 旧统计编码字段；主线/每日累计和本局统计会分开存入 endgame.stats。
 	"game_total_stats": TYPE_DICTIONARY,
 	"main_game_total_stats": TYPE_DICTIONARY,
 	"daily_game_total_stats": TYPE_DICTIONARY,
@@ -55,11 +63,13 @@ const PROFILE_TYPES := {
 	"daily_game_round_stats": TYPE_DICTIONARY,
 	"main_game_id": TYPE_STRING,
 	"daily_game_id": TYPE_STRING,
+	# 旧库存字段入口；新核心由 inventory 拥有余额，profile 投影时会移除这些重复项。
 	"tool_locate": TYPE_INT,
 	"tool_hint": TYPE_INT,
 	"tool_mouse": TYPE_INT,
 	"tool_draft": TYPE_INT,
 	"tool_undo": TYPE_INT,
+	# 按 rank 维护 Elo 评分、局数及分段；active/attempt 则关联本次实际交付的题目。
 	"elo_rating_r3": TYPE_FLOAT,
 	"elo_rating_r4": TYPE_FLOAT,
 	"elo_rating_r5": TYPE_FLOAT,
@@ -82,6 +92,7 @@ const PROFILE_TYPES := {
 	"elo_v2_attempt": TYPE_DICTIONARY,
 	"elo_v2_won_styles": TYPE_ARRAY,
 	"elo_v2_source_selected_ids": TYPE_DICTIONARY,
+	# 启动、会话、语言与声音设置；日期字符串和时长数据不在此做业务计算。
 	"last_splash_date": TYPE_STRING,
 	"splash_durations": TYPE_ARRAY,
 	"apply_locale": TYPE_STRING,
@@ -99,6 +110,7 @@ const PROFILE_TYPES := {
 	"push_guide_last_date": TYPE_STRING,
 	"push_guide_shown_count": TYPE_INT,
 	"push_guide_popup_count": TYPE_INT,
+	# 按日胜利与重试锁题记录；retry_puzzle_params 保存同关重开需复用的题面参数。
 	"recent_win_counts_by_day": TYPE_DICTIONARY,
 	"last_main_win_date": TYPE_STRING,
 	"daily_first_win_entry_date": TYPE_STRING,
@@ -106,6 +118,7 @@ const PROFILE_TYPES := {
 	"retry_puzzle_params": TYPE_DICTIONARY,
 	"current_wrong_cat_num": TYPE_INT,
 	"insert_gf_wrong_cat_num": TYPE_INT,
+	# 预放猫资格与本局锁定结果；pending 表示下局可用，lock_* 表示已选定内容。
 	"pre_cat_fail_lv": TYPE_INT,
 	"pre_cat_fail_count": TYPE_INT,
 	"pre_cat_revived_this_level": TYPE_BOOL,
@@ -117,6 +130,7 @@ const PROFILE_TYPES := {
 	"pre_cat_lock_pos": TYPE_VECTOR2I,
 	"pre_cat_fx_played_lv": TYPE_INT,
 	"golden_fish_pre_cat_session": TYPE_DICTIONARY,
+	# 广告、教学、样式与授权引导的持久标志；保留记录不等于主动展示这些入口。
 	"has_shown_att_guide": TYPE_BOOL,
 	"interstitial_unlocked": TYPE_BOOL,
 	"banner_unlocked": TYPE_BOOL,
@@ -129,6 +143,7 @@ const PROFILE_TYPES := {
 	"music_entry_dot_dismissed": TYPE_BOOL,
 	"grt_level_d90_reported": TYPE_ARRAY,
 	"grt_reported_events": TYPE_ARRAY,
+	# 首次打开时间为毫秒；其后的题目历史、链式策略与会话计数有各自业务用途。
 	"first_open_time_ms": TYPE_INT,
 	"recent_puzzles": TYPE_ARRAY,
 	"endgame_snapshot": TYPE_DICTIONARY,
@@ -139,6 +154,7 @@ const PROFILE_TYPES := {
 	"last_day_session_count": TYPE_INT,
 	"active_days": TYPE_INT,
 	"last_login_date": TYPE_STRING,
+	# 回流保护保存原策略/DDA及当前保护关；退出保护时恢复原难度轨迹。
 	"returnee_group": TYPE_INT,
 	"returnee_from_endgame_save": TYPE_BOOL,
 	"returnee_remaining": TYPE_INT,
@@ -148,6 +164,7 @@ const PROFILE_TYPES := {
 	"returnee_current_level": TYPE_INT,
 	"returnee_lkmod_resume_level": TYPE_INT,
 	"returnee_frozen_dda": TYPE_DICTIONARY,
+	# 日内活动计数，today_active_sec/total_active_sec 单位秒；日切由业务候选统一处理。
 	"today_played_count": TYPE_INT,
 	"today_active_sec": TYPE_INT,
 	"today_cat_found": TYPE_INT,
@@ -158,13 +175,16 @@ const PROFILE_TYPES := {
 	"today_win_stats_group": TYPE_INT,
 	"total_active_sec": TYPE_INT,
 	"today_date": TYPE_STRING,
+	# 广告补偿待决记录与已登记奖励不是同一队列；in_flight_awards 会投影为 pending_awards。
 	"pending_rewards": TYPE_ARRAY,
 	"in_flight_awards": TYPE_ARRAY,
 	"reward_history_ts": TYPE_ARRAY,
 	"restored_today_count": TYPE_INT,
+	# 保留旧实验字段用于存档兼容，不表示 1.22 页面重新启用旧自动标记实验。
 	"daily_auto_mark_enabled": TYPE_BOOL,
 	"daily_auto_mark_free_consumed": TYPE_BOOL,
 	"saved_game_auto_mark": TYPE_INT,
+	# 保存的分组、用户标签与展示去重记录；具体本局规则另由对局快照冻结。
 	"saved_ab_groups": TYPE_DICTIONARY,
 	"saved_peek_ab_groups": TYPE_DICTIONARY,
 	"loading_page_test_force_longest_quote": TYPE_BOOL,
@@ -178,6 +198,7 @@ const PROFILE_TYPES := {
 	"has_assist_confirmed": TYPE_BOOL,
 	"toast_hold_text_sig": TYPE_INT,
 	"toast_shown_keys": TYPE_PACKED_STRING_ARRAY,
+	# 金鱼/一命关触发进度、连续胜负与题库去重；pending 是资格，delivered 是交付记录。
 	"golden_fish_streak_count": TYPE_INT,
 	"golden_fish_pending": TYPE_BOOL,
 	"golden_fish_tutorial_shown": TYPE_BOOL,
@@ -193,6 +214,7 @@ const PROFILE_TYPES := {
 	"onefish_shuffle_group": TYPE_INT,
 	"golden_fish_insert_delivered": TYPE_INT,
 	"golden_fish_career_count": TYPE_INT,
+	# 颜色挑战节奏及兼容的防打扰状态；显式迁移会清除已经退役的旧锁。
 	"cc_since_gf": TYPE_INT,
 	"cc_pending": TYPE_BOOL,
 	"cc_delivered": TYPE_INT,
@@ -202,6 +224,7 @@ const PROFILE_TYPES := {
 	"cc_defer_until": TYPE_INT,
 	"cc_disabled": TYPE_BOOL,
 	"pattern_mode_before_cc": TYPE_INT,
+	# 用户行为判断和尺寸策略历史；这些是选题依据，不能作为 UI 临时缓存随意清空。
 	"is_gamble_user": TYPE_INT,
 	"early_l1_l20_bits": TYPE_ARRAY,
 	"recent_hard_invalid_bits": TYPE_ARRAY,
@@ -213,9 +236,12 @@ const PROFILE_TYPES := {
 	"bsz11802_stuck_streak": TYPE_INT,
 	"g4_pressure_level_num": TYPE_INT,
 	"g4_defer_pending": TYPE_BOOL,
+	# 陪伴猫活动自身的数据字典；这里只验证外壳类型，细节交活动规则。
 	"home_companion_data": TYPE_DICTIONARY,
 }
 
+# 核心候选里的 round_runtime 字段类型；虽然叫 runtime，仍参与事务/恢复，不是 Node 或服务实例。
+# 含当前局 DDA、回流会话事实及展示缓存；其生命周期由产品决定，不能一律当作永久 profile。
 const RUNTIME_TYPES := {
 	"comeback_main_win_consumed": TYPE_BOOL,
 	"comeback_start_level": TYPE_INT,

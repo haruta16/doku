@@ -3,6 +3,8 @@ class_name MeowdokuSettlementRules
 extends RefCounted
 
 
+## 原地推进主线进度，再按新手区、干净通关、累计失败、连续重试和实验策略的顺序调整 DDA。
+## profile/runtime 均须来自候选，policy 由上层冻结；函数不保存状态，最后清理本局标记与重试题面。
 static func main_win(profile: Dictionary, runtime: Dictionary, level_num: int, policy: Dictionary) -> void:
 	var next_level: int = level_num + 1
 	if next_level > profile.current_level:
@@ -106,7 +108,7 @@ static func main_fail(profile: Dictionary, runtime: Dictionary, level_num: int, 
 
 	profile.last_level_clean_win = false
 
-	# 豁免局只写盘，不改 DDA 计数
+	# 豁免局保留上面的失败标记，不改 DDA 计数；是否写盘由外层事务决定。
 	if runtime.rnr_mod1_exempt:
 		return
 	if level_num >= 6:
@@ -173,6 +175,7 @@ static func finish_game(profile: Dictionary, today: String) -> void:
 	profile["today_played_count"] = int(profile.get("today_played_count", 0)) + 1
 
 
+## 原地记录指定挑战日期的成绩，并保留历史最高击败比例；调用方负责验证数据与提交。
 static func daily_win(profile: Dictionary, date: String, elapsed_sec: int, beat_percent: float) -> void:
 	profile["daily_completed_date"] = date
 	profile["daily_elapsed_sec"] = elapsed_sec

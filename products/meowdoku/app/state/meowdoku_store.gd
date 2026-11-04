@@ -8,11 +8,12 @@ const CoreStore = preload("res://scripts/framework/storage/local_core_store.gd")
 const Economy = preload("res://scripts/framework/application/economy_service.gd")
 const StateFields = preload("res://products/meowdoku/app/state/meowdoku_state_fields.gd")
 const AwardPolicy = preload("res://products/meowdoku/app/state/meowdoku_award_policy.gd")
-const SCHEMA: int = 2
-const PROFILE_TYPES: Dictionary = StateFields.PROFILE_TYPES
-const INVENTORY_DEFAULTS := {"locate": 5, "hint": 5, "undo": 3, "mouse": 2, "draft": 5}
-const FEATURE_IDS := ["streak", "identity", "purchase", "rank_activity", "robots", "account", "recommendation", "data_sync", "peekaboo"]
-const STREAK_TYPES := {"current_streak": TYPE_INT, "best_streak": TYPE_INT, "last_checkin_date": TYPE_STRING, "streak_start_weekday": TYPE_INT, "reward_cycle_day": TYPE_INT, "last_group": TYPE_INT, "pending_switch_page": TYPE_INT}
+const SCHEMA: int = 2 # Meowdoku 的业务 schema；公共 LocalCoreStore 只调用本类提供的迁移器。
+const PROFILE_TYPES: Dictionary = StateFields.PROFILE_TYPES # 已知旧字段的类型表；用于验证，未列出的扩展字段不因此被删除。
+const INVENTORY_DEFAULTS := {"locate": 5, "hint": 5, "undo": 3, "mouse": 2, "draft": 5} # 新安装/缺项迁移的库存默认值；旧 undo 保留数据兼容。
+const FEATURE_IDS := ["streak", "identity", "purchase", "rank_activity", "robots", "account", "recommendation", "data_sync", "peekaboo"] # 并入同一核心事务的功能分区名，不是独立存档路径。
+const STREAK_TYPES := {"current_streak": TYPE_INT, "best_streak": TYPE_INT, "last_checkin_date": TYPE_STRING, "streak_start_weekday": TYPE_INT, "reward_cycle_day": TYPE_INT, "last_group": TYPE_INT, "pending_switch_page": TYPE_INT} # 旧签到外壳中消费者直接读取的字段类型。
+# 旧 progress 键名 → 新 endgame.stats 键名；把统计、对局 ID 和步骤与普通 profile 分开投影。
 const ENDGAME_KEYS := {
 	"main_game_total_stats": "main_total", "daily_game_total_stats": "daily_total",
 	"main_game_round_stats": "main_round", "daily_game_round_stats": "daily_round",
@@ -20,19 +21,23 @@ const ENDGAME_KEYS := {
 	"main_solution_steps": "main_steps", "daily_solution_steps": "daily_steps",
 }
 
-var core: RefCounted
-var _password: String
-var files: RefCounted
+var core: RefCounted # 唯一业务状态端口；成功提交后才更新其权威内存。
+var _password: String # 用于旧加密推荐档的只读导入，与新 core 文件共用注入口令。
+var files: RefCounted # core_a/core_b 的文件层；产品业务通常通过 core 提交而非绕过验证。
 
 
+## 组装产品文件层与核心存档：目录/密码由宿主给出，schema 校验和迁移规则留在产品内。
 func _init(directory: String, password: String) -> void:
 	_password = password
 	files = FileStore.new(password, directory, true, directory.path_join("core_a.cfg"), directory.path_join("core_b.cfg"), directory.path_join("core_flag.txt"))
 	core = CoreStore.new(files, SCHEMA, validate_state, migrate_schema)
 
 
+## 优先打开现有核心档；仅确实缺失时读取旧玩家/残局/功能散档，合成候选并首次提交。
+## 返回明确结果；旧文件损坏会中止，成功导入也不删除或回写旧文件。
 func open(default_profile: ConfigFile, legacy_player: RefCounted, legacy_endgame: RefCounted, legacy_streak_path: String) -> Dictionary:
 	var existing: Dictionary = files.load_result()
+	# 已有核心档即使损坏也不能重新导入旧进度覆盖；恢复/升级/拒绝都交 core.open 明确处理。
 	if existing.get("status") != "missing":
 		return core.open()
 	var player: Dictionary = legacy_player.load_result()
@@ -65,10 +70,11 @@ func open(default_profile: ConfigFile, legacy_player: RefCounted, legacy_endgame
 		initial.pending_awards.append({"uid": uid, "items": [{"kind": "hint", "count": 2}, {"kind": "locate", "count": 2}], "display_type": 0, "reason": "switch_group", "bonus_reason": "", "doubled": false})
 		initial.features.streak["switch_award_uid"] = uid
 	initial["migration"] = {"legacy_imported": player.get("ok", false) or endgame.get("ok", false) or not streak.is_empty()}
+	# 首次核心档必须真实写成功才开放业务；写失败保留原散档，可再次尝试导入。
 	return core.open(initial, true)
 
 
-## 当前产品字段的编码边界；不创建新存档、不迁移奖励，也不重置其他核心分区。
+## 从 progress 配置提取 {profile, inventory} 的独立候选；不创建存档、不迁移奖励、不重置其他核心分区。
 static func capture_profile(profile_cfg: ConfigFile) -> Dictionary:
 	var profile: Dictionary = {}
 	if profile_cfg.has_section("progress"):
@@ -77,6 +83,7 @@ static func capture_profile(profile_cfg: ConfigFile) -> Dictionary:
 	var inventory: Dictionary = {}
 	for kind: String in INVENTORY_DEFAULTS:
 		inventory[kind] = profile.get("tool_" + kind, INVENTORY_DEFAULTS[kind])
+	# 库存、残局和待发队列各有权威分区；从 profile 去掉它们，避免两份字段各自变化。
 	for kind in inventory:
 		profile.erase("tool_" + kind)
 	profile.erase("endgame_snapshot")
@@ -88,7 +95,7 @@ static func capture_profile(profile_cfg: ConfigFile) -> Dictionary:
 	return {"profile": profile.duplicate(true), "inventory": inventory}
 
 
-## 只在核心存档不存在时使用：将旧文件及其独立残局、签到合并成初始核心状态。
+## 只在核心存档不存在时使用：把已读旧配置及独立残局、签到投影成初始核心字典；本函数不读写文件。
 static func from_legacy(profile_cfg: ConfigFile, endgame_cfg: ConfigFile, streak: Dictionary) -> Dictionary:
 	var fields: Dictionary = capture_profile(profile_cfg)
 	_migrate_color_challenge_quiet_rule(fields.profile)
@@ -97,6 +104,7 @@ static func from_legacy(profile_cfg: ConfigFile, endgame_cfg: ConfigFile, streak
 	var stats: Dictionary = {}
 	for key in ENDGAME_KEYS:
 		stats[ENDGAME_KEYS[key]] = profile_cfg.get_value("progress", key, "" if key.ends_with("_id") else {})
+	# 独立残局文件存在时，以它的快照和已提供统计覆盖更早的 progress 内嵌版本。
 	if endgame_cfg != null:
 		snapshot = endgame_cfg.get_value("snapshot", "data", {})
 		daily_snapshot = endgame_cfg.get_value("daily_snapshot", "data", {})
@@ -104,6 +112,7 @@ static func from_legacy(profile_cfg: ConfigFile, endgame_cfg: ConfigFile, streak
 			var stat_key: String = ENDGAME_KEYS[key]
 			stats[stat_key] = endgame_cfg.get_value("stats", stat_key, stats[stat_key])
 	var awards: Array = profile_cfg.get_value("progress", "in_flight_awards", []).duplicate(true)
+	# 沿用旧待发奖励最大的 uid 作为发号水位；新奖励不能从 1 开始与已有流水撞号。
 	var sequence: int = 0
 	for entry: Dictionary in awards:
 		sequence = maxi(sequence, int(entry.get("uid", 0)))
@@ -114,6 +123,7 @@ static func from_legacy(profile_cfg: ConfigFile, endgame_cfg: ConfigFile, streak
 	}
 
 
+## 把核心状态还原成旧 progress 命名的内存 ConfigFile，供 GameState 字段兼容层读取；不保存旧档。
 static func profile_config(state: Dictionary) -> ConfigFile:
 	var cfg := ConfigFile.new()
 	var profile: Dictionary = state.get("profile", {})
@@ -130,6 +140,8 @@ static func profile_config(state: Dictionary) -> ConfigFile:
 	return cfg
 
 
+## 校验核心状态的产品标识、分区形状、库存与奖励身份，再检查已知字段类型；空串表示可接受。
+## 这里只保证本层读取的结构安全，棋盘内容和具体业务规则仍由各自模块校验。
 static func validate_state(state: Dictionary) -> String:
 	if state.get("product") != "meowdoku":
 		return "存档 product 不匹配"
@@ -149,6 +161,7 @@ static func validate_state(state: Dictionary) -> String:
 	for key in state.claims:
 		if typeof(state.claims[key]) != TYPE_INT or state.claims[key] < 0 or state.claims[key] > state.award_sequence:
 			return "奖励业务凭证无效"
+	# 待发 uid 必须正数、唯一且不超过发号水位；claims 是长期业务键回执，不限于当前待发队列。
 	var seen: Dictionary = {}
 	for entry in state.pending_awards:
 		if not entry is Dictionary or typeof(entry.get("uid")) != TYPE_INT:
@@ -195,6 +208,7 @@ static func validate_state(state: Dictionary) -> String:
 			var content_error := _validate_present_fields(snapshot.get("content", {}), {"level": TYPE_INT, "gameplay_policy": TYPE_DICTIONARY, "level_definition": TYPE_DICTIONARY})
 			if not content_error.is_empty():
 				return "Doku 冻结内容类型不符: " + content_error
+	# 终局回执也会被清档和恢复逻辑直接读取，先验证外壳，防止运行时才对错误类型做字典访问。
 	if state.has("product_settlements"):
 		if not state.product_settlements is Dictionary:
 			return "结算记录结构无效"
@@ -215,6 +229,7 @@ static func validate_state(state: Dictionary) -> String:
 	return ""
 
 
+## 在投影旧散档之前检查字段和奖励流水的可消费类型，返回空串或原因；不修补坏值、不写盘。
 static func validate_legacy(profile_cfg: ConfigFile, endgame_cfg: ConfigFile, streak: Dictionary) -> String:
 	if profile_cfg.has_section("progress"):
 		for key in profile_cfg.get_section_keys("progress"):
@@ -245,10 +260,12 @@ static func _validate_present_fields(values: Dictionary, types: Dictionary) -> S
 	return ""
 
 
+## 一般要求精确类型；历史整数可作为浮点字段读取，避免把有效的 0/1 整数表示误判为损坏。
 static func _matches_type(value: Variant, expected: int) -> bool:
 	return typeof(value) == expected or (expected == TYPE_FLOAT and typeof(value) == TYPE_INT)
 
 
+## 创建各功能的空分区并复制签到数据，避免默认分区与输入签到共享可变字典。
 static func _feature_defaults(streak: Dictionary = {}) -> Dictionary:
 	var features: Dictionary = {}
 	for id: String in FEATURE_IDS:
@@ -261,6 +278,7 @@ static func _feature_defaults(streak: Dictionary = {}) -> Dictionary:
 static func migrate_schema(source_schema: int, target_schema: int, source: Dictionary) -> Dictionary:
 	if source_schema != 1 or target_schema != SCHEMA:
 		return Result.failure("schema_mismatch", "没有该 schema 的显式迁移")
+	# 迁移在副本上补缺项而非重建默认档；原关卡、奖励流水和对局回执都保留，落盘由核心层统一负责。
 	var state: Dictionary = source.duplicate(true)
 	if state.get("profile") is Dictionary:
 		_migrate_color_challenge_quiet_rule(state.profile)
@@ -315,6 +333,7 @@ func _read_legacy_features(root_path: String) -> Dictionary:
 			sections[section] = {}
 			for key: String in cfg.get_section_keys(section):
 				sections[section][key] = cfg.get_value(section, key)
+		# 已理解的字段进入业务分区，原始各节另外保留在 legacy_extensions，避免导入时丢弃未知扩展。
 		extensions[id] = sections.duplicate(true)
 		if id == "identity":
 			var data: Variant = sections.get("profile", {}).get("data", {})

@@ -3,6 +3,7 @@ class_name WidthOnlyContainer
 extends Container
 
 
+## 最小宽度取可见 Control 子节点中的最大值，高度固定为 0，让父容器不为这些子节点额外撑高。
 func _get_minimum_size() -> Vector2:
 	var width: float = 0.0
 	for child in get_children():
@@ -11,6 +12,7 @@ func _get_minimum_size() -> Vector2:
 	return Vector2(width, 0.0)
 
 
+## 父容器安排重新排序时，把每个可见 Control 铺满本容器宽度；较高子节点居中溢出，不反向抬高最小高度。
 func _notification(what: int) -> void:
 	if what != NOTIFICATION_SORT_CHILDREN:
 		return

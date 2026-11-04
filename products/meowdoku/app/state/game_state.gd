@@ -1,28 +1,27 @@
-## 全局玩家状态：集中维护关卡进度、选题游标、动态难度、道具、会话及回流活动。
-## 玩家档经 SaveStore 双槽落盘；普通与每日残局、解题步骤和局内统计单独写入残局档。
-## 选题结果由 finalize_selected_puzzle 提交，通关和失败统一结算；云端只同步明确导出的字段。
+## 玩家状态兼容门面（Autoload）：旧 getter/setter 读写成员字段，持久权威状态由 LocalCoreStore 管理。
+## profile、库存、普通/每日残局、奖励和活动合入 core_a/core_b 同一提交；旧玩家/残局散档只读导入。
+## 正式选题先生成冻结候选，完成搭盘后统一提交；结算先核对对局/尝试身份，成功后再发布信号和表现数据。
 extends Node
 
 signal all_data_reset # 全量重置（reset_all）后发出，让各模块清缓存
 
 # ---- 存档路径与口令 ----
-## 存档目录（玩家档 + 残局档都放这里）
-## 存档目录（两人档 + 残局档都放这里）
+## 当前 core 双槽和旧版导入文件共用此目录；下面 SAVE_PATH_* 指向旧格式，不是新业务写入目标。
 const SAVE_DIR := "user://save_store/"
-const SAVE_PATH_A := "user://save_store/save_a.cfg" # 双槽中的 A 槽
-const SAVE_PATH_B := "user://save_store/save_b.cfg" # 双槽中的 B 槽
-const SAVE_FLAG := "user://save_store/flag.txt" # 记录最后写成功的槽（A/B）
+const SAVE_PATH_A := "user://save_store/save_a.cfg" # 旧玩家 A 槽，仅供首次导入。
+const SAVE_PATH_B := "user://save_store/save_b.cfg" # 旧玩家 B 槽，仅供首次导入。
+const SAVE_FLAG := "user://save_store/flag.txt" # 旧双槽指示文件，供旧格式恢复选择。
 const SAVE_PATH_OLD := "user://save.cfg" # 旧版单文件存档，只用于迁移兜底
-const SAVE_PATH_ENDGAME := "user://save_store/endgame.cfg" # 残局档：残局快照 + 本局统计 + 对局 ID
+const SAVE_PATH_ENDGAME := "user://save_store/endgame.cfg" # 旧独立残局档；新核心将这些数据放进 endgame 分区。
 
 const SAVE_PASSWORD := "qd_x9K3mPv7RtN2sLwH8jFcZyA5eBkM1n" # 存档加密口令（ConfigFile 加密读写）
 
-# ---- 两个 SaveStore 实例（_ready 里创建） ----
-## 玩家档：双槽轮换 + 原子写
+# ---- 旧格式读取端口（_ready 里创建，仅传给 ProductStore 做首次导入） ----
+## 旧玩家双槽读取端口；实际新业务提交使用后面的 _core_store。
 var _player_store: SaveStore
-var _endgame_store: SaveStore # 残局档：单槽，不需要轮换
+var _endgame_store: SaveStore # 旧残局单槽读取端口，不再单独写入本局状态。
 
-var _endgame_dirty: bool = false # 残局档有未落盘的改动
+var _endgame_dirty: bool = false # 已接收统计尚未合并进核心存档；不代表页面整块棋盘等待隐式保存。
 var _endgame_coalesce_timer: Timer # 0.5 秒合并写盘定时器，避免高频统计每笔都写文件
 
 signal tool_count_changed(kind: String, count: int) # 道具数量变化时发出，局内 UI 监听刷新
@@ -123,7 +122,7 @@ var _daily_best_beat_percent: float = 0.0 # 历史最好击败百分比
 
 var _daily_started_date: String = "" # 本次每日挑战开始的日期
 
-# ---- 对局统计与对局 ID（这几个字段实际落在 endgame.cfg，玩家档里只写空值） ----
+# ---- 对局统计与对局 ID（旧命名成员；核心权威位置为 endgame.stats） ----
 ## 旧版汇总统计：已无 accessor，只做兼容读写
 var _game_total_stats: Dictionary = {}
 
@@ -489,7 +488,7 @@ var _session_interstitial_count: int = 0
 
 var _session_game_count: int = 0
 
-# ---- 结算文案的临时缓存（只为少算一次，不落盘） ----
+# ---- 展示用缓存（开局提示参与 round_runtime 投影；失败页坐标等仍只在会话内使用） ----
 ## 关卡 → 提示种类 → 开局提示的击败百分比
 var _start_toast_pct: Dictionary = {}
 
@@ -523,11 +522,11 @@ var _game_version_pre: String = ""
 const VERSION_1_14_0: String = "1.14.0"
 
 
-## 建立玩家档与残局档、创建半秒合并写盘定时器，迁移并加载旧档后注册云同步。
+## 以下核心端口负责持久权威状态；上面的旧成员是其兼容投影，不是另一套独立存档。
 
 
 ## 统一核心存档与旧框架 API 的兼容字段。
-signal storage_failed(result: Dictionary)
+signal storage_failed(result: Dictionary) # 核心提交失败时发出；监听可能同步重入，调用者返回后仍须核对所属代次。
 const ProgressState = preload("res://products/meowdoku/app/state/meowdoku_progress_state.gd")
 const ProductStore = preload("res://products/meowdoku/app/state/meowdoku_store.gd")
 const Economy = preload("res://scripts/framework/application/economy_service.gd")
@@ -535,24 +534,26 @@ const SettlementRules = preload("res://products/meowdoku/gameplay/application/me
 const Settlement = preload("res://products/meowdoku/gameplay/application/meowdoku_round_settlement.gd")
 const Result = preload("res://scripts/framework/operation_result.gd")
 const ROUND_RUNTIME_FIELDS := ["current_level_dirty", "current_level_retried", "demoted_this_level", "dda_tool_or_revive_used", "dda_revive_used", "dda_pending_demote", "is_daily_first_easy_level", "rnr_mod1_exempt", "rnr_g_prev_was_max"]
-var _product_store: RefCounted
-var _core_store: RefCounted
-var _economy_service: RefCounted
-var _storage_ready: bool = false
-var _own_core_commit: bool = false
-var _published_inventory: Dictionary = {}
-var _last_storage_result: Dictionary = {}
-var _published_selection_effect_key: String = ""
+var _product_store: RefCounted # Meowdoku schema、字段投影与旧档导入规则。
+var _core_store: RefCounted # 统一 snapshot/revision/commit 端口，持有最近成功提交的权威状态。
+var _economy_service: RefCounted # 与 _core_store 共用事务的奖励服务；资产类别规则由产品策略注入。
+var _storage_ready: bool = false # 核心成功打开后才可开始依赖存档的业务。
+var _own_core_commit: bool = false # 标识当前 commit 是否已包含本门面的待合并统计；通知前消费标记以隔离同步重入。
+var _published_inventory: Dictionary = {} # 上次已经通知 UI 的余额，不是另一份库存权威。
+var _last_storage_result: Dictionary = {} # 最近打开/提交的结果，供调用者显示错误或决定重试。
+var _published_selection_effect_key: String = "" # 本进程最后发布的 epoch/selection_id；防同一次选题效果重复或重入。
 var _reset_generation: int = 0 # 成功清档后，旧提交回执不能重新发布会话资格或 SDK 副作用
 var _pending_endgame_stats: Dictionary = {} # 已接收但尚未合并落盘的统计，不包含待提交的棋盘或设置
 var _rnr_mod1_exempt: bool = false # RnR 实验 mod1 豁免标记（通关只清理、不调档）
 var _rnr_g_prev_was_max: bool = false # 上一段 g 是否取到了最大策略层
 var _has_won_since_cold_start: bool = false # 冷启动后是否赢过（主页评分弹窗的前置条件）
 var _session_consecutive_wins: int = 0 # 本次会话连续通关数（胜利页展示）
-signal feature_state_changed(feature_id: String, data: Dictionary)
-var _published_features: Dictionary = {}
+signal feature_state_changed(feature_id: String, data: Dictionary) # 核心提交后的功能分区变化，data 给观察者独立副本。
+var _published_features: Dictionary = {} # 已通知的功能分区快照，用来比较是否需要发信号。
 
 
+## 建立旧档读取端口和统计合并计时器，再打开/迁移统一核心档并回填兼容字段。
+## 成功提交监听负责后续投影和通知；初始化后注册云导出接口，不因此主动启动云请求。
 func _ready() -> void:
 	_player_store = SaveStore.new(SAVE_PASSWORD, SAVE_DIR, true, SAVE_PATH_A, SAVE_PATH_B, SAVE_FLAG, SAVE_PATH_OLD)
 	_endgame_store = SaveStore.new(SAVE_PASSWORD, SAVE_DIR, false, SAVE_PATH_ENDGAME)
@@ -571,6 +572,7 @@ func _ready() -> void:
 		_published_inventory = _core_store.snapshot().get("inventory", {}).duplicate(true)
 	if not _storage_ready:
 		push_error("[GameState] 核心存档未能打开: " + str(_last_storage_result))
+	# 首次打开发生在连接信号之前，所以上面手动投影；此后所有成功提交都由同一监听回填。
 	_core_store.committed.connect(_on_core_committed)
 	_economy_service = Economy.new(_core_store, ProductStore.AwardPolicy.new())
 	_first_session_runtime = _is_first_session
@@ -1106,8 +1108,8 @@ func clear_loading_page_test_force_longest_quote() -> void:
 	_save_data()
 
 
-# ---- GRT 埋点去重（Tracker 调用；写盘以保证只报一次） ----
-## 某个 D90 关卡档位是否已上报过
+# ---- GRT 埋点去重（Tracker 调用） ----
+## 查询兼容字段中该 D90 档位是否已经登记上报。
 
 
 func has_grt_level_d90_reported(level: int) -> bool:
@@ -1253,8 +1255,8 @@ func set_daily_started_date(date: String) -> void:
 	_save_data()
 
 
-# ---- 对局统计与对局 ID（走 endgame 槽） ----
-## 跨局累计统计 +delta（走 endgame 槽，0.5 秒合并写盘）
+# ---- 对局统计与对局 ID（核心 endgame.stats 分区） ----
+## 接收跨局累计统计增量，并启动 0.5 秒合并提交；本次调用不代表已经落盘。
 
 
 func inc_game_total_stat(game_type: String, key: String, delta: int = 1) -> void:
@@ -1279,7 +1281,7 @@ func get_persisted_game_id(game_type: String) -> String:
 	return _main_game_id
 
 
-## 写入 game_id 并立即写 endgame 槽
+## 更新对局身份并立即请求核心保存；旧兼容接口不返回保存结果。
 
 
 func set_persisted_game_id(game_type: String, value: String) -> void:
@@ -1948,7 +1950,7 @@ func has_pending_rewards() -> bool:
 	return not _pending_rewards.is_empty()
 
 
-## 取待领取奖励列表（返回引用，调用方不要改）
+## 读取广告待补偿列表的深拷贝；它不同于 EconomyService 已登记的 pending_awards。
 
 
 func get_pending_rewards() -> Array:
@@ -1971,7 +1973,7 @@ func add_pending_reward(reward: Dictionary) -> Dictionary:
 	return commit_core_candidate(candidate, _core_store.revision())
 
 
-## 取走全部待领取奖励并清空（主页弹领取窗时调用）
+## 旧兼容入口：成功提交清空后才返回全部条目，失败返回空数组；正式找回领取走 claim_restored_rewards。
 
 
 func pop_all_pending_rewards() -> Array:
@@ -2630,14 +2632,14 @@ func get_in_flight_awards() -> Array:
 	return _in_flight_awards.duplicate(true)
 
 
-## 登记一条发放中的奖励
+## 已封存的直接队列写入口：只报错；奖励登记/入账必须走 EconomyService 的完整候选事务。
 
 
 func add_in_flight_award(_entry: Dictionary) -> void:
 	push_error("[GameState] 请使用 EconomyService.register_award 登记奖励")
 
 
-## 按 uid 移除发放中的奖励（从后往前找第一个匹配）
+## 已封存的直接队列写入口：只报错；奖励登记/入账必须走 EconomyService 的完整候选事务。
 
 
 func remove_in_flight_award(_uid: int) -> void:
@@ -4695,7 +4697,8 @@ func get_latest_selected_normal_level_group(level_num: int) -> int:
 	return -1
 
 
-## 深拷贝记录题目、选题时各游标和时间，同时设置重试锁题参数，最后统一写盘。
+## 旧选题记录兼容入口：更新历史和重试锁题后请求保存，不返回保存结果。
+## 正式开局使用 stage_round_selection + commit_core_candidate，把交付、初始残局与对局身份一起提交。
 
 
 func finalize_selected_puzzle(
@@ -4716,14 +4719,14 @@ func finalize_selected_puzzle(
 	_save_data()
 
 
-## 取残局快照（返回引用）
+## 读取兼容成员中的普通残局（返回引用）；外部读取不要直接修改，提交请使用候选或快照 setter。
 
 
 func get_endgame_snapshot() -> Dictionary:
 	return _endgame_snapshot
 
 
-## 为普通残局补应用版本号，保存传入字典引用并立即写入残局档。
+## 深拷贝普通残局到兼容字段，再经统一核心事务立即保存；返回保存是否成功，不另外写 endgame.cfg。
 
 
 func set_endgame_snapshot(snapshot: Dictionary) -> bool:
@@ -4731,7 +4734,7 @@ func set_endgame_snapshot(snapshot: Dictionary) -> bool:
 	return _save_endgame()
 
 
-## 清残局快照（本局真正结束/重开时调用）
+## 清普通残局并保存，原本为空则直接成功；完整终局还需走带身份的 settle_* 事务。
 
 
 func clear_endgame_snapshot() -> bool:
@@ -4741,14 +4744,14 @@ func clear_endgame_snapshot() -> bool:
 	return _save_endgame()
 
 
-## endgame 槽的 7 个字段是否全空（全空就直接删文件）
+## 读取兼容成员中的每日残局（返回引用）；其持久权威位置是核心 endgame.daily_snapshot。
 
 
 func get_daily_endgame_snapshot() -> Dictionary:
 	return _daily_endgame_snapshot
 
 
-## 为每日残局补应用版本号，立即写盘并记录关键局面摘要。
+## 把每日残局的深拷贝写入完整核心候选；提交失败不提前替换兼容字段，返回保存是否成功。
 
 
 func set_daily_endgame_snapshot(snapshot: Dictionary) -> bool:
@@ -4759,6 +4762,7 @@ func set_daily_endgame_snapshot(snapshot: Dictionary) -> bool:
 	return bool(commit_core_candidate(candidate, _core_store.revision()).get("ok", false))
 
 
+## 在完整核心候选里清每日残局，返回提交结果；不删除旧散档，不触碰主线残局。
 func clear_daily_endgame_snapshot() -> bool:
 	var candidate := get_core_candidate()
 	if candidate.is_empty():
@@ -4767,6 +4771,7 @@ func clear_daily_endgame_snapshot() -> bool:
 	return bool(commit_core_candidate(candidate, _core_store.revision()).get("ok", false))
 
 
+## 只检查当前兼容残局/统计/步骤/身份是否全部为空，不删除文件，也不判断核心其他分区是否为空。
 func _is_endgame_store_empty() -> bool:
 	return (
 		_endgame_snapshot.is_empty()
@@ -4782,7 +4787,7 @@ func _is_endgame_store_empty() -> bool:
 	)
 
 
-## 取消合并计时并立即保存普通及每日局状态；全部为空时删除单槽残局文件。
+## 兼容残局保存入口，转到统一核心事务；成功通知会清理合并标记，不删除旧残局文件。
 
 
 func _save_endgame() -> bool:
@@ -4793,6 +4798,7 @@ func _save_endgame() -> bool:
 
 
 func _request_save_endgame() -> void:
+	# 这份统计已经被业务接收；即使另一笔设置/库存写入失败，也不能把它当失败候选一并丢掉。
 	_endgame_dirty = true
 	_pending_endgame_stats = _capture_endgame_stats()
 	if _endgame_coalesce_timer != null and _endgame_coalesce_timer.is_stopped():
@@ -4814,7 +4820,7 @@ func _resolve_endgame_store() -> void:
 	_load_data()
 
 
-## 系统通知：切后台或收到关闭请求时，把还没落盘的 endgame 数据立刻写掉
+## 切后台/关闭请求时，尝试立即提交已接收但未合并的统计；失败仍按存储结果处理，不保证退出前必然成功。
 
 
 func _notification(what: int) -> void:
@@ -4844,11 +4850,14 @@ func on_level_won(
 	}, selection_plan)
 
 
+## 供快速跳关/模拟器保留旧用途：可把 selection_plan 与进度同次提交，返回是否完成。
+## 有计划时按 selection_id+outcome 去重；完整正式局的奖励/尝试校验仍走 settle_main_round。
 func _commit_legacy_progress(level_num: int, outcome: String, context: Dictionary, selection_plan: Dictionary) -> bool:
 	if not is_storage_ready() or level_num < 1:
 		return false
 	var generation: int = _reset_generation
 	var selection_guard: Dictionary = capture_selection_effect_context()
+	# 先捕获归属；commit 发出的同步通知可能完成清档，旧诊断收尾随后必须停止发布。
 	var selected_duplicate: bool = false
 	var candidate: Dictionary = get_core_candidate()
 	var revision: int = _core_store.revision()
@@ -4880,6 +4889,7 @@ func _commit_legacy_progress(level_num: int, outcome: String, context: Dictionar
 		candidate.features["diagnostic_progress"] = {"selection_id": selection_plan.selection_id, "outcome": outcome}
 	if not commit_core_candidate(candidate, revision).get("ok", false):
 		return false
+	# 选题效果晚于实际存档提交；仅准备计划或写入失败都不能触发标签刷新/无效推荐上报。
 	if not selection_plan.is_empty() and not selected_duplicate:
 		publish_selection_effects(selection_plan, selection_guard)
 	_publish_product_effects(staged.get("effects", []), generation)
@@ -5087,7 +5097,8 @@ func export_cloud_data() -> Dictionary:
 	return data
 
 
-## 仅在合并上下文明确采用云端时应用进度、道具和伙伴状态，保存后发出相应更新信号。
+## 旧单模块云合并兼容入口：仅 ctx.use_cloud 时改兼容字段、请求保存并发送更新通知；不返回提交结果。
+## 正式 DataSyncManager 使用 merge_cloud_root_candidate 合并四分区，成功后才确认同步基线。
 
 
 func merge_cloud_data(cloud_data: Dictionary, ctx: MergeContext = null) -> void:
@@ -5130,7 +5141,8 @@ func merge_cloud_data(cloud_data: Dictionary, ctx: MergeContext = null) -> void:
 	cloud_progress_restored.emit(_current_level)
 
 
-## 把持久化玩家字段写入 ConfigFile，再交双槽 SaveStore 保存；残局由独立入口负责。
+## 旧 setter 的统一保存入口：把兼容字段、残局和局内状态合入核心候选，再按当前 revision 提交。
+## 返回成功与否；失败由 commit_core_candidate 恢复持久投影，调用者不能把已改成员当作已保存。
 
 
 func _save_data() -> bool:
@@ -5139,11 +5151,13 @@ func _save_data() -> bool:
 	return bool(commit_core_candidate(get_core_candidate(), _core_store.revision()).get("ok", false))
 
 
+## 从已打开核心的权威快照重新回填成员；保留已经接收、尚未合并保存的独立统计。
 func _load_data() -> void:
 	if _core_store != null and _core_store.is_open():
 		_apply_core_snapshot(_core_store.snapshot(), true)
 
 
+## 保留旧调用形状的空入口；真实只读导入由 ProductStore.open 在核心档缺失时执行。
 func _migrate_legacy_save() -> void:
 	pass # ProductStore 只读导入；此兼容入口不得写旧档。
 
@@ -5214,10 +5228,13 @@ func reset_for_account_delete() -> bool:
 	return reset_all(kept)
 
 
+## 以产品默认字段构造全量重置候选，可按成员名保留指定字段；返回实际提交是否成功。
+## 保留奖励/对局发号水位，递增持久 epoch；成功后才发布新重置代次与 all_data_reset。
 func reset_all(preserve: Dictionary = {}) -> bool:
 	if not is_storage_ready():
 		return false
 	var generation: int = _reset_generation
+	# 重置先暂时重建兼容字段；保存失败会回投影核心数据，并恢复这里捕获的会话/展示状态。
 	var previous_runtime: Dictionary = _capture_round_runtime()
 	var previous_first_session: bool = _first_session_runtime
 	var previous_toasts: Dictionary = _start_toast_pct.duplicate(true)
@@ -5462,6 +5479,7 @@ func reset_all(preserve: Dictionary = {}) -> bool:
 	candidate["pending_awards"] = []
 	candidate["claims"] = {}
 	candidate["features"] = ProductStore._feature_defaults()
+	# 持久 epoch 与清空业务状态一同保存，旧异步请求即使稍后返回也不能归入新玩家状态。
 	candidate["storage_epoch"] = int(candidate.get("storage_epoch", 0)) + 1
 	# 保留每个玩法的发号水位；旧回调不能与重置后的第一局撞号。
 	for key in candidate.round_services:
@@ -5489,6 +5507,7 @@ func reset_all(preserve: Dictionary = {}) -> bool:
 	_daily_first_easy_available = false
 	_daily_first_easy_evaluated = false
 	_fail_text_revive_x.clear()
+	# 这个内存代次在提交成功后才推进；清缓存的观察者收到信号时已能读取新的核心状态。
 	_reset_generation += 1
 	VibrateManager.set_enabled(_vibration_on)
 	all_data_reset.emit()
@@ -5766,8 +5785,8 @@ func set_rule_info_bar_collapsed(value: bool) -> void:
 	_save_data()
 
 
-# ---- GRT 埋点去重（Tracker 调用；写盘以保证只报一次） ----
-## 某个 D90 关卡档位是否已上报过
+# ---- 每日入场兼容事务 ----
+## 保存旧自动标叉配置与可选的新每日身份/统计；相同候选不写盘，失败返回 entry_commit_failed。
 
 
 func commit_daily_entry(auto_mark_variant: int, new_game_id: String = "", started_date: String = "") -> Dictionary:
@@ -5787,13 +5806,14 @@ func commit_daily_entry(auto_mark_variant: int, new_game_id: String = "", starte
 	return result if result.get("ok", false) else Result.wrap_failure("entry_commit_failed", result)
 
 
-# ---- 对局统计与对局 ID（走 endgame 槽） ----
-## 跨局累计统计 +delta（走 endgame 槽，0.5 秒合并写盘）
+# ---- 广告找回的完整领取事务 ----
+## requests 携带原待补偿 entry；奖励、次数与队列移除同次提交，重复 show_id 不再领取。
 
 
 func claim_restored_rewards(requests: Array) -> Dictionary:
 	if requests.is_empty():
 		return Result.failure("empty_request", "", {"status": "empty_request"})
+	# 先按当前本地日期/正常发奖历史确定可补偿次数；实际领取仍要核对核心队列中的原 entry。
 	var remaining := get_restore_remaining_today(int(Time.get_unix_time_from_system()))
 	var candidate := get_core_candidate()
 	if candidate.is_empty():
@@ -5813,6 +5833,7 @@ func claim_restored_rewards(requests: Array) -> Dictionary:
 		if seen.has(key):
 			continue
 		seen[key] = true
+		# 同一广告回执已领取过则跳过；这是业务凭证去重，不依赖当前弹窗是否还存在。
 		if candidate.claims.has(key):
 			continue
 		if not queue.has(entry) or claimed >= remaining:
@@ -5830,6 +5851,7 @@ func claim_restored_rewards(requests: Array) -> Dictionary:
 		claimed += 1
 	if claimed == 0:
 		return {"ok": true, "status": "already_applied", "grants": []}
+	# 只移除本批实际到账的条目，未知来源/未来可恢复项仍留在队列；领取次数和资产共用一次提交。
 	candidate.profile["pending_rewards"] = queue
 	candidate.profile["restored_today_count"] = int(candidate.profile.get("restored_today_count", 0)) + claimed
 	var result := commit_core_candidate(candidate, _core_store.revision())
@@ -5840,7 +5862,7 @@ func claim_restored_rewards(requests: Array) -> Dictionary:
 	return result
 
 
-## 取今日会话数
+## 只在用户尚未手动改过时设置音乐默认值；通过偏好候选提交，不重新覆盖用户选择。
 
 
 func init_music_default(default_on: bool) -> void:
@@ -5851,7 +5873,7 @@ func init_music_default(default_on: bool) -> void:
 	_commit_preferences({"music_on": default_on})
 
 
-## 音效开关是否开启
+## 合并一组偏好到核心候选并保存；返回 bool，失败由统一提交入口恢复兼容字段。
 
 
 func _commit_preferences(values: Dictionary) -> bool:
@@ -5862,8 +5884,8 @@ func _commit_preferences(values: Dictionary) -> bool:
 	return bool(commit_core_candidate(candidate, _core_store.revision()).get("ok", false))
 
 
-# ================= 局内 DDA 标记与仅内存调试开关 =================
-## 正式构建始终关闭；debug 构建保留旧 rel 标签与内存开关的行为。
+# ================= 旧选题记录与进度兼容入口 =================
+## 记录一次题目和游标历史，返回先前同题记录的副本；调用保存但不返回其结果。
 
 
 func record_puzzle(
@@ -5896,7 +5918,7 @@ func record_puzzle(
 	return prev
 
 
-## 取最近出题记录的深拷贝
+## 旧进度规则兼容入口：只推进候选进度并提交；没有正式对局/尝试身份，不代替完整结算。
 
 
 func _apply_legacy_main_progress(level_num: int, outcome: String) -> void:
@@ -5922,7 +5944,8 @@ func _apply_legacy_main_progress(level_num: int, outcome: String) -> void:
 		_session_consecutive_wins = 0
 
 
-## 调试用：直接跳到某关，把策略层夹到该关允许区间并清空所有局内标记
+## 把本门面的旧命名成员编码成内存 ConfigFile；不写文件，后续由 ProductStore 拆到核心分区。
+## ConfigFile 可能仍引用数组/字典，不能把这一步当深拷贝；get_core_candidate 继续做隔离投影。
 
 
 func _encode_profile_config() -> ConfigFile:
@@ -5974,6 +5997,7 @@ func _encode_profile_config() -> ConfigFile:
 	cfg.set_value("progress", "daily_first_easy_date", _daily_first_easy_date)
 	cfg.set_value("progress", "game_total_stats", _game_total_stats)
 
+	# 旧键保留编码形状；真实统计和 ID 由 _capture_endgame 单独捕获，写入核心 endgame.stats。
 	cfg.set_value("progress", "main_game_total_stats", {})
 	cfg.set_value("progress", "daily_game_total_stats", {})
 	cfg.set_value("progress", "main_game_round_stats", {})
@@ -6149,7 +6173,8 @@ func _encode_profile_config() -> ConfigFile:
 	return cfg
 
 
-## 从玩家档恢复字段并兼容旧格式，最后读取独立残局槽；玩家档不可用时保留默认值。
+## 从已准备好的内存 ConfigFile 回填兼容成员，缺项使用产品默认值；不读取旧文件、不另写存档。
+## 核心快照通常先经 ProductStore.profile_config 转换，真实权威仍在 _core_store。
 
 
 func _apply_profile_config(cfg: ConfigFile) -> void:
@@ -6396,31 +6421,35 @@ func _apply_profile_config(cfg: ConfigFile) -> void:
 
 
 
-# ================= 存档迁移、日期与全量重置 =================
-## 迁移 user://save.cfg 时代的旧档：已有 flag 或没有旧档就跳过；迁移成功才写 flag
+	# 同一投影继续恢复每日残局和解题步骤；不是额外读取或迁移一个文件。
 	_daily_endgame_snapshot = cfg.get_value("progress", "daily_endgame_snapshot", {})
 	_main_solution_steps = cfg.get_value("progress", "main_solution_steps", {})
 	_daily_solution_steps = cfg.get_value("progress", "daily_solution_steps", {})
 
 
 
+## 返回核心端口供事务服务注入；页面含产品附加事实时，应走产品候选入口完成投影和提交后发布。
 func get_core_store() -> RefCounted:
 	return _core_store
 
 
+## 返回共享同一核心存档的奖励服务；登记/领取通过它维护 uid 和幂等业务键。
 func get_economy_service() -> RefCounted:
 	return _economy_service
 
 
+## 报告核心初始化是否成功，供页面/服务在开始存档业务前判断；不是上一笔写入的成功标记。
 func is_storage_ready() -> bool:
 	return _storage_ready
 
 
+## 返回最近打开/提交结果的深拷贝，供失败提示与诊断读取，不暴露可修改的内部结果对象。
 func get_last_storage_result() -> Dictionary:
 	return _last_storage_result.duplicate(true)
 
 
-## id 是一次生命耗尽/退出/通关尝试的稳定身份，复活后的下一尝试使用新 id。
+## 主线结算入口：round_id 包含父局身份与 /attempt#序号；同次保存重试复用身份，复活后递增尝试。
+## context 是本局表现/统计事实，真正校验、推进、奖励和持久回执集中在 _settle_round。
 
 
 func settle_main_round(round_id: String, level: int, outcome: String, runtime_snapshot: Dictionary = {}, retry_params: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
@@ -6429,12 +6458,14 @@ func settle_main_round(round_id: String, level: int, outcome: String, runtime_sn
 	return _settle_round(request)
 
 
+## 按每日日期和尝试身份构造结算请求，附加用时/击败百分比与业务上下文，返回统一事务结果。
 func settle_daily_round(round_id: String, date: String, outcome: String, elapsed_sec: int = 0, beat_percent: float = 0.0, runtime_snapshot: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	var request = Settlement.daily_round(round_id, date, outcome, elapsed_sec, beat_percent, runtime_snapshot)
 	request.context = context.duplicate(true)
 	return _settle_round(request)
 
 
+## 为预览局构造身份化结算；由统一请求规则保持预览与主线/每日资产进度隔离。
 func settle_preview_round(round_id: String, outcome: String, runtime_snapshot: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
 	var request = Settlement.preview_round(round_id, outcome, runtime_snapshot)
 	request.context = context.duplicate(true)
@@ -6448,6 +6479,8 @@ func settle_legacy_completed_main(level: int) -> Dictionary:
 	return _settle_round(Settlement.legacy_main(level))
 
 
+## 结算总入口：准备候选和冻结规则 → 验证身份并暂存玩法/奖励 → 合入活动统计 → 单次提交 → 发布。
+## 失败返回原结果；重复回执返回已存 presentation，不再次写盘或触发奖励表现。
 func _settle_round(request: MeowdokuRoundSettlement) -> Dictionary:
 	var generation: int = _reset_generation
 	var candidate := get_core_candidate()
@@ -6467,6 +6500,7 @@ func _settle_round(request: MeowdokuRoundSettlement) -> Dictionary:
 		if request.outcome == "win" and not candidate.profile.get("elo_v2_attempt", {}).is_empty():
 			candidate.profile.elo_v2_attempt["time_total"] = int(request.context.get("game_time_sec", request.context.get("time_total", 0)))
 			candidate.profile.elo_v2_attempt["full_hp"] = bool(request.context.get("full_hp", false))
+	# 请求先检查父局/尝试与重复回执，再推进玩法和奖励；它修改的仍只是私有候选。
 	var staged := request.stage(candidate, _economy_service, _today_str(), policy)
 	if not staged.ok:
 		return staged
@@ -6477,10 +6511,12 @@ func _settle_round(request: MeowdokuRoundSettlement) -> Dictionary:
 	var business: Dictionary = _stage_round_business(candidate, request, profile_before)
 	if not business.ok:
 		return business
+	# before/after 等展示事实也进入结算回执；恢复或重复结算直接取原值，不重新计算一次奖励。
 	candidate.product_settlements[slot]["presentation"] = business.presentation.duplicate(true)
 	var result := commit_core_candidate(candidate, expected_revision)
 	if not result.ok:
 		return result
+	# 落盘成功才进入外部发布；committed 信号若同步触发清档，当前结算不得再操作新状态。
 	if generation == _reset_generation:
 		_publish_settlement(request, staged.grants, generation)
 		if generation == _reset_generation and request.mode == "main" and not request.legacy_completed:
@@ -6497,6 +6533,7 @@ func _settle_round(request: MeowdokuRoundSettlement) -> Dictionary:
 	return result
 
 
+## 只在成功提交后更新会话内计数并发送领取/通关埋点；清档代次改变时停止旧结算后续发布。
 func _publish_settlement(request: MeowdokuRoundSettlement, grants: Array, generation: int) -> void:
 	for grant: Dictionary in grants:
 		Tracker.track_prop_get(str(grant.kind), str(grant.reason), int(grant.count), int(grant.balance))
@@ -6520,6 +6557,7 @@ func _publish_settlement(request: MeowdokuRoundSettlement, grants: Array, genera
 		_has_won_since_cold_start = true
 
 
+## 给旧结算规则生成当前 DDA 兼容参数；正式 1.22 主线另外要求保存的 selection_policy 驱动 ProgressState。
 func _settlement_dda_policy(level: int) -> Dictionary:
 	var next_level := level + 1
 	var next_is_hard: bool = LevelData.is_hard_level_group_j(next_level) if ABTestManager.rule_normal_rank.value() >= RuleNormalRankConfig.VALUE_GROUP_J else LevelData.is_hard_level(next_level)
@@ -6531,7 +6569,8 @@ func _settlement_dda_policy(level: int) -> Dictionary:
 	}
 
 
-## 将旧字段尚未合并的统计一起纳入候选，避免别的业务提交把它们覆盖。
+## 取完整核心副本并叠加当前兼容字段、已接收统计和局内状态，保留未由本门面编码的扩展分区。
+## 返回值不是已提交状态，也不会自动写盘；调用者修改后必须携带读取版本提交。
 
 
 func get_core_candidate() -> Dictionary:
@@ -6540,6 +6579,7 @@ func get_core_candidate() -> Dictionary:
 	var candidate: Dictionary = _core_store.snapshot()
 	var encoded := ProductStore.capture_profile(_encode_profile_config())
 	var profile: Dictionary = candidate.get("profile", {}).duplicate(true)
+	# 先从核心复制扩展字段，再叠加本门面认识的值；重新构建整个 profile 会丢未知/新增字段。
 	profile.merge(encoded.profile, true)
 	candidate["profile"] = profile
 	candidate["inventory"] = encoded.inventory
@@ -6548,6 +6588,7 @@ func get_core_candidate() -> Dictionary:
 	return candidate
 
 
+## 按类型表读取局内兼容成员，复制数组/字典，生成可随事务保存的 round_runtime；不访问文件。
 func _capture_round_runtime() -> Dictionary:
 	var runtime: Dictionary = {}
 	for field: String in ProductStore.StateFields.RUNTIME_TYPES:
@@ -6557,6 +6598,7 @@ func _capture_round_runtime() -> Dictionary:
 	return runtime
 
 
+## 将核心 round_runtime 回填局内成员，缺项恢复对应类型的空值，避免沿用上一份快照的旧标志。
 func _apply_round_runtime(runtime: Dictionary) -> void:
 	for field: String in ProductStore.StateFields.RUNTIME_TYPES:
 		var value: Variant = runtime.get(field)
@@ -6569,10 +6611,12 @@ func _apply_round_runtime(runtime: Dictionary) -> void:
 		set("_" + field, value)
 
 
+## 把普通/每日快照与统计打包为独立核心 endgame 分区；只复制，不调度保存。
 func _capture_endgame() -> Dictionary:
 	return {"snapshot": _endgame_snapshot.duplicate(true), "daily_snapshot": _daily_endgame_snapshot.duplicate(true), "stats": _capture_endgame_stats()}
 
 
+## 复制主线/每日累计、本局统计、解题步骤和 ID，供即时提交或半秒合并写使用。
 func _capture_endgame_stats() -> Dictionary:
 	return {
 		"main_total": _main_game_total_stats.duplicate(true), "daily_total": _daily_game_total_stats.duplicate(true),
@@ -6582,13 +6626,16 @@ func _capture_endgame_stats() -> Dictionary:
 	}
 
 
-## 选题装配属于产品服务；纯回合端口只通过本接口提交冻结计划。
+## 只暂存选题：先核对内容代次，再把冻结计划、交付记录和 checkpoint 合入调用方候选。
+## 返回 staging 结果而非落盘结果；纯回合端口通过注入接口调用，避免直接依赖内容单例。
 func stage_round_selection(candidate: Dictionary, plan: Dictionary, checkpoint: Dictionary) -> Dictionary:
 	if int(plan.get("content_generation", -1)) != ContentContext.generation():
 		return Result.failure("selection_content_changed")
 	return LevelData.stage_selected(candidate, plan, checkpoint)
 
 
+## 统一提交完整候选，expected_revision 必须来自准备时；成功由核心 committed 信号回填与通知。
+## 失败恢复权威字段并发 storage_failed；仅保护已接收统计与指定展示缓存，不保留失败候选的权益/DDA变化。
 func commit_core_candidate(candidate: Dictionary, expected_revision: int) -> Dictionary:
 	if _core_store == null or not _core_store.is_open():
 		return Result.failure("not_open", "核心存档不可用", {"status": "not_open"})
@@ -6597,6 +6644,7 @@ func commit_core_candidate(candidate: Dictionary, expected_revision: int) -> Dic
 	var presentation_cache: Dictionary = {}
 	for key: String in ["start_toast_pct", "start_toast_iq_idx", "start_toast_variant_idx", "start_toast_variant_pct", "dc_start_toast_pct"]:
 		presentation_cache[key] = get("_" + key).duplicate(true)
+	# 标明本次候选已包含待合并统计；_on_core_committed 会在通知前消费此标记，而不是回头清掉新统计。
 	_own_core_commit = true
 	var result: Dictionary = _core_store.commit(candidate, expected_revision)
 	_own_core_commit = false
@@ -6605,11 +6653,13 @@ func commit_core_candidate(candidate: Dictionary, expected_revision: int) -> Dic
 		_load_data()
 		for key: String in presentation_cache:
 			set("_" + key, presentation_cache[key])
+		# 先恢复兼容投影再通知失败，监听者读取到的是可继续操作的状态；通知本身也可能同步重入。
 		storage_failed.emit(result)
 		push_error("[GameState] 保存未完成: " + str(result))
 	return result
 
 
+## 把核心快照投影回旧成员；preserve_pending_stats 只覆盖已接收的统计区，不把失败棋盘或设置混回去。
 func _apply_core_snapshot(state: Dictionary, preserve_pending_stats: bool) -> void:
 	# 未落盘统计是已接收的独立操作；失败候选的棋盘、设置等仍恢复为权威快照。
 	if preserve_pending_stats and _endgame_dirty:
@@ -6619,6 +6669,8 @@ func _apply_core_snapshot(state: Dictionary, preserve_pending_stats: bool) -> vo
 	_apply_round_runtime(state.get("round_runtime", {}))
 
 
+## 响应核心成功提交：先处理统计归属、回填成员，再按差异发库存/功能/陪伴通知。
+## 信号是同步的，观察者可能提交更新版本；库存/功能逐项通知后核对 revision，停止剩余旧通知。
 func _on_core_committed(_revision: int) -> void:
 	# 独立库存提交与尚未合并的统计无关，保留后者直到其自己的合并写盘。
 	var own_commit: bool = _own_core_commit
@@ -6634,6 +6686,7 @@ func _on_core_committed(_revision: int) -> void:
 	var state: Dictionary = _core_store.snapshot()
 	_apply_core_snapshot(state, not own_commit)
 	_storage_ready = true
+	# 缓存记录的是已经通知过的值；只要监听者提交了新版本，剩余旧通知就不再继续发送。
 	var publication_revision: int = _core_store.revision()
 	for kind in state.inventory:
 		var count: int = int(state.inventory[kind])
@@ -6656,12 +6709,14 @@ func _on_core_committed(_revision: int) -> void:
 		home_companion_changed.emit()
 
 
+## 读取已提交签到分区的副本；未成功打开存档时返回空字典，不返回本地正在暂存的活动数据。
 func get_streak_data() -> Dictionary:
 	if _core_store == null or not _core_store.is_open():
 		return {}
 	return _core_store.snapshot().get("features", {}).get("streak", {}).duplicate(true)
 
 
+## 将签到字段合并到现有签到候选并提交；保留 data 未提供的字段，返回持久成功与否。
 func commit_streak_data(data: Dictionary) -> bool:
 	var candidate := get_core_candidate()
 	if candidate.is_empty():
@@ -6718,14 +6773,12 @@ func commit_streak_checkin(data: Dictionary, items: Array, reason: String, bonus
 			return staged
 		uid = int(staged.uid)
 	else:
+		# 没有实物奖励也要记签到业务凭证；uid=0 表示资格已处理，重试不能再次登记。
 		candidate.claims[key] = 0
 	var result := commit_core_candidate(candidate, _core_store.revision())
 	if result.get("ok", false):
 		result["uid"] = uid
 	return result
-
-
-## 本地日期字符串 YYYY-MM-DD，所有跨天判断都用它
 
 
 ## 模块读到的是统一提交点的副本，不能绕过事务修改其他模块。
@@ -6735,6 +6788,7 @@ func get_feature_state(feature_id: String) -> Dictionary:
 	return _core_store.snapshot().get("features", {}).get(feature_id, {}).duplicate(true)
 
 
+## 在调用方候选中替换一个注册功能分区，复制传入 data；只返回 staged，不写盘、不发布通知。
 func stage_feature_state(candidate: Dictionary, feature_id: String, data: Dictionary) -> Dictionary:
 	if feature_id not in ProductStore.FEATURE_IDS or not candidate.get("features") is Dictionary:
 		return Result.failure("invalid_feature", "未知业务分区")
@@ -6742,6 +6796,7 @@ func stage_feature_state(candidate: Dictionary, feature_id: String, data: Dictio
 	return Result.success({"status": "staged"})
 
 
+## 提交一个完整功能分区；值相同则直接返回 unchanged，写入时用指定 revision 或当前版本。
 func commit_feature_state(feature_id: String, data: Dictionary, expected_revision: int = -1) -> Dictionary:
 	var candidate := get_core_candidate()
 	if candidate.is_empty():
@@ -6763,6 +6818,7 @@ func commit_feature_award(feature_id: String, data: Dictionary, items: Array, di
 	if not staged.get("ok", false):
 		return staged
 	var award: Dictionary = _economy_service.stage_award(candidate, items, display_type, reason, bonus_reason, claim_key)
+	# 重复 claim_key 直接返回旧回执；不把本次传入的 feature 数据另行提交，避免重放改变既有资格。
 	if not award.get("ok", false) or award.get("duplicate", false):
 		return award
 	var result := commit_core_candidate(candidate, _core_store.revision())
@@ -6771,15 +6827,17 @@ func commit_feature_award(feature_id: String, data: Dictionary, items: Array, di
 	return result
 
 
+## 读取持久重置代次；异步工作可用它拒绝清档前结果，存档未准备好返回 -1。
 func get_storage_epoch() -> int:
 	return int(_core_store.snapshot().get("storage_epoch", 0)) if is_storage_ready() else -1
 
 
-## 端口可注入的提交后效果桥；纯业务端口不需要知道标签或推荐服务。
+## 在提交前捕获重置代次与持久 epoch，作为提交后选题效果的归属凭证；不发布任何效果。
 func capture_selection_effect_context() -> Dictionary:
 	return {"generation": _reset_generation, "storage_epoch": get_storage_epoch()}
 
 
+## 仅发布仍属本 epoch/重置代次、且是当前已提交 selection_id 的选题效果；相同键在本进程不重复发布。
 func publish_selection_effects(plan: Dictionary, guard: Dictionary) -> void:
 	var selection_id: String = str(plan.get("selection_id", ""))
 	if selection_id.is_empty() or int(guard.get("generation", -1)) != _reset_generation or int(guard.get("storage_epoch", -1)) != get_storage_epoch():
@@ -6794,10 +6852,12 @@ func publish_selection_effects(plan: Dictionary, guard: Dictionary) -> void:
 	_publish_product_effects(plan.get("effects", []), _reset_generation, selection_id)
 
 
+## 只读确认该 selection_id 仍是核心记录中的当前选题；准备过但未提交的计划不能通过。
 func _is_current_selection_effect(selection_id: String) -> bool:
 	return is_storage_ready() and str(_core_store.snapshot().get("features", {}).get("doku_selection", {}).get("selection_id", "")) == selection_id
 
 
+## 把提交后数据效果转换成信号、标签或推荐服务调用；每项开始前重验代次与可选 selection_id。
 func _publish_product_effects(effects: Array, generation: int, selection_id: String = "") -> void:
 	for effect: Dictionary in effects:
 		if generation != _reset_generation or (not selection_id.is_empty() and not _is_current_selection_effect(selection_id)):
@@ -6848,6 +6908,7 @@ func _stage_round_business(candidate: Dictionary, request: MeowdokuRoundSettleme
 	var total_key: String = "main_total" if request.mode == "main" else "daily_total"
 	var round_key: String = "main_round" if request.mode == "main" else "daily_round"
 	var total_stats: Dictionary = stats.get(total_key, {}).duplicate(true)
+	# elapsed_sec 是本次增量；兼容 game_time_sec 在主线表示累计值、每日表示此次增量，不能两者重复相加。
 	if context.has("elapsed_sec"):
 		total_stats["time_total"] = int(total_stats.get("time_total", 0)) + maxi(0, int(context.elapsed_sec))
 	elif context.has("game_time_sec"):
@@ -6885,6 +6946,7 @@ func _stage_round_business(candidate: Dictionary, request: MeowdokuRoundSettleme
 			companion = service.stage_main_win(candidate, str(context.get("game_id", request.round_id)), kind, context.get("win_date"))
 			if not companion.ok:
 				return companion
+			# 保存活动的胜利前快照给 UI 动画使用；动画读回执，不再自行推进陪伴进度。
 			presentation["companion_before_win"] = companion.get("before", {})
 			var normal: Dictionary = context.get("normal_pass_time", {})
 			if not normal.is_empty() and int(normal.get("size", 0)) > 0:
@@ -6949,12 +7011,14 @@ func merge_cloud_root_candidate(root: Dictionary, context: MergeContext) -> Dict
 	var streak: Dictionary = StreakManager.stage_cloud_merge(candidate, root.get("streak", {}), context)
 	if not streak.ok:
 		return streak
+	# 远端基线必须与四分区合并结果一起落盘；否则下次同步会以为本次失败的数据已经被接受。
 	candidate.features["data_sync"] = {"remote_root": JSON.stringify(root)}
 	var result: Dictionary = commit_core_candidate(candidate, revision)
 	if result.ok and context.use_cloud:
 		cloud_progress_restored.emit(_current_level)
 	return result
 
+## 按已保存选题策略准备特殊关跳过候选，再一次提交；返回 false 时页面应留在当前流程供重试。
 func _commit_special_skip(kind: String, level: int, group: int, entered: bool) -> bool:
 	var candidate: Dictionary = get_core_candidate()
 	var frozen: Dictionary = candidate.get("round_services", {}).get("doku/main", {}).get("snapshot", {}).get("content", {}).get("selection_policy", {})

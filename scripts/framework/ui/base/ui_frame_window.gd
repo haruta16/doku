@@ -93,7 +93,8 @@ func _play_open_animation() -> void:
 			)
 
 
-## 播关闭动画并 await 播完；没配置关闭动画名就直接返回
+## 播关闭动画并等待本次展示的完成信号；重开/销毁时等待取消，由管理器复查身份决定是否收尾。
+## 没配置关闭动画名就直接返回；单独停止动画不等同于动画正常结束。
 func _play_close_animation() -> void:
 	if close_anim_name.is_empty(): # 没配置关闭动画：立刻当作已播完
 		return

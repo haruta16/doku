@@ -28,7 +28,7 @@ extends Label
 
 
 # ================= 生命周期 =================
-## 进树就把可见字数置 0：彻底关掉内置排版，画面全交给 _draw
+## 进树就把可见字数置 0：关闭内置字形绘制，保留 Label 属性供自绘逻辑读取
 func _enter_tree() -> void:
 	visible_characters = 0
 
@@ -39,6 +39,7 @@ func _ready() -> void:
 		curve = _make_default_curve()
 
 
+## 排版并测量字形；超宽时重算较小字号，再按曲线采样放置各字，可选沿切线旋转。
 func _draw() -> void:
 	if visible_characters != 0:
 		visible_characters = 0
@@ -52,6 +53,7 @@ func _draw() -> void:
 	var font_size: int = _resolve_font_size()
 
 	var ts: TextServer = TextServerManager.get_primary_interface()
+	# 通过 TextLine/TextServer 取得排版后的字形，而非把字符串下标直接当作字体图集下标。
 	var line := TextLine.new()
 	line.add_string(display_text, font, font_size)
 	var glyphs: Array = ts.shaped_text_get_glyphs(line.get_rid())
@@ -74,6 +76,7 @@ func _draw() -> void:
 		if total_advance <= 0.0:
 			return
 
+	# 字体按基线绘制；用 ascent/descent 把垂直居中、底对齐转换成基线偏移。
 	var v_align_offset := 0.0
 	if vertical_alignment == VERTICAL_ALIGNMENT_CENTER:
 		v_align_offset = (
@@ -84,6 +87,7 @@ func _draw() -> void:
 
 	var x_scale: float = size.x if size.x > 0.0 else total_advance
 
+	# 整数缩小字号会留下宽度余量；此处放大字间推进距离填满控件，而不是拉伸字形图像。
 	var fill_scale := 1.0
 	var offset_x := 0.0
 	if effective_font_size < font_size and size.x > 0.0 and total_advance > 0.0:
@@ -100,6 +104,7 @@ func _draw() -> void:
 		var adv: float = g["advance"]
 		var glyph_w: float = adv * fill_scale
 		var x := offset_x + cumulative * fill_scale
+		# 以字形槽的中心位置采样曲线；0.5 是曲线基线，屏幕向下为正，所以高度偏移取负。
 		var t := clampf((x + glyph_w * 0.5) / x_scale, 0.0, 1.0)
 		var y := size.y * 0.5 - (curve.sample(t) - 0.5) * amplitude * 2.0 + v_align_offset
 		var glyph_offset: Vector2 = g["offset"]
@@ -112,6 +117,7 @@ func _draw() -> void:
 			_draw_glyph(g, pos, effective_font_size, ts)
 		cumulative += adv
 
+	# 自绘变换是画布状态；收尾必须恢复，避免最后一个字的旋转影响后续绘制命令。
 	if align_to_tangent:
 		draw_set_transform(Vector2.ZERO)
 

@@ -13,7 +13,7 @@ extends UIFrameWindow
 var _on_confirm: Callable # 点主行动按钮后的回调
 var _on_close: Callable # 点右上角关闭后的回调，可为空
 var _closing: bool = false # 退场动画是否已在播，用来防重复关闭
-var _presentation_revision: int = 0
+var _presentation_revision: int = 0 # 本弹窗内容/动画代次；open 和 on_hide 都递增，防止旧退场结束后关闭新内容。
 
 
 ## 初始化：给关闭按钮接上按下/抬起缩放反馈（基类提供）
@@ -52,7 +52,8 @@ func open(
 	_anim.play_section_with_markers("GenericPopup", &"", &"Mark")
 
 
-## 关闭弹窗：播「Mark → 结尾」的退场段，动画播完才真正隐藏；重复调用被 _closing 挡掉
+## 请求关闭：播放「Mark → 结尾」，等待动画停止且当前代次仍有效后发出 close_requested，由管理器隐藏。
+## 重复调用由 _closing 挡住；等待期间重新 open 或隐藏，旧流程便不再发出关闭请求。
 func close() -> void:
 	if _closing:
 		return
@@ -65,7 +66,7 @@ func close() -> void:
 		close_requested.emit()
 
 
-## 主行动按钮（场景里连的 tag_pressed）：先关闭，再走确认回调
+## 主行动按钮：先启动退场再立即调用确认回调，不等待动画结束；回调可以同步打开另一批内容。
 func _on_action_btn_pressed() -> void:
 	if _closing or not is_showing():
 		return
@@ -96,6 +97,7 @@ func on_hide() -> void:
 	_anim.stop()
 
 
+## 应用本次参数显式提供的按钮底色与图标；缺省项保留控件现值。
 func _apply_action_btn_look(params: Dictionary) -> void:
 	if params.has("btn_bg_color"):
 		_action_btn.bg_color = params["btn_bg_color"]

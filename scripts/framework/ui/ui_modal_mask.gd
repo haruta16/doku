@@ -3,13 +3,14 @@
 class_name UIModalMask
 extends Node
 
-var _primary: ColorRect
-var _secondary: ColorRect
-var _primary_tween: Tween
-var _secondary_tween: Tween
-var _requests: int = 0
+var _primary: ColorRect # 当前生效的黑色遮罩节点；显示/交接时由管理器决定其目标窗口。
+var _secondary: ColorRect # 交叉淡化的接班遮罩；多个模态窗口交接时可先淡入下一个目标。
+var _primary_tween: Tween # 主遮罩淡出/改透明度的补间，重入交接前先停止。
+var _secondary_tween: Tween # 副遮罩淡入补间；完成交接时可提升为主位。
+var _requests: int = 0 # 已申请且尚未完成关闭的模态窗口数；遮罩暂时不可见不代表请求归零。
 
 
+## 返回尚未释放的模态请求数；用于检查窗口开关是否成对，不等同于当前可见遮罩数量。
 func request_count() -> int:
 	return _requests
 
@@ -71,6 +72,7 @@ func restack(window: Control, opacity: float) -> void:
 	_primary.visible = true
 
 
+## 创建铺满父场景的黑色输入遮罩；STOP 吞掉点击，绝对 z 由后续定位设置。
 func _create_rect(parent: Node, rect_name: String) -> ColorRect:
 	var rect := ColorRect.new()
 	rect.name = rect_name
@@ -81,6 +83,7 @@ func _create_rect(parent: Node, rect_name: String) -> ColorRect:
 	return rect
 
 
+## 同时调整绘制 z 和同父节点顺序，让遮罩视觉与 GUI 命中都位于目标窗口下面。
 func _position_below(rect: ColorRect, window: Control) -> void:
 	rect.z_index = window.z_index - 1
 	var parent: Node = rect.get_parent()
@@ -91,6 +94,7 @@ func _position_below(rect: ColorRect, window: Control) -> void:
 		parent.move_child(rect, target)
 
 
+## 结束旧主补间后淡出当前主遮罩；完成回调持有本次 fading，避免主副交换后隐藏错对象。
 func _fade_out(duration: float) -> void:
 	_stop_primary_tween()
 	if duration <= 0.0:
@@ -119,18 +123,21 @@ func _promote_secondary() -> bool:
 	return true
 
 
+## 停止并清空主遮罩动画句柄，防止旧动画继续覆盖新交接状态。
 func _stop_primary_tween() -> void:
 	if _primary_tween != null and _primary_tween.is_valid():
 		_primary_tween.kill()
 	_primary_tween = null
 
 
+## 停止并清空副遮罩动画句柄；后续可重新分配副位或提升为主位。
 func _stop_secondary_tween() -> void:
 	if _secondary_tween != null and _secondary_tween.is_valid():
 		_secondary_tween.kill()
 	_secondary_tween = null
 
 
+## 管理器退出时停两路动画并释放遮罩节点；节点可能随 current_scene 提前释放，逐一检查有效性。
 func _exit_tree() -> void:
 	_stop_primary_tween()
 	_stop_secondary_tween()
@@ -141,10 +148,12 @@ func _exit_tree() -> void:
 		_secondary.queue_free()
 
 
+## 判断窗口是否在可见且有足够透明度的主遮罩下方；只是当前视觉覆盖判断，不是窗口生命周期状态。
 func covers_window(window: Control) -> bool:
 	return is_instance_valid(window) and is_instance_valid(_primary) and _primary.visible and _primary.color.a > 0.01 and window.z_index < _primary.z_index
 
 
+## 改变当前可见遮罩透明度；先接管正在交叉淡化的副位，避免两路 tween 同时写 alpha。
 func set_opacity(opacity: float, duration: float = 0.0) -> void:
 	if not is_instance_valid(_primary) or not _primary.visible:
 		return

@@ -8,22 +8,25 @@ const Manifest = preload("res://scripts/framework/content/content_manifest.gd")
 const RawPack = preload("res://scripts/framework/content/content_raw_pack.gd")
 const MediaMap = preload("res://scripts/framework/content/content_media_map.gd")
 
-var _root: String
-var _manifest: Dictionary
-var _json: Dictionary = {}
-var _validator: Validation
+var _root: String # 已安装发布的磁盘目录；JSON 在此读取，媒体 PCK 的身份也以此定位。
+var _manifest: Dictionary # 构造时复制的已验证清单；一个 Catalog 始终代表同一个发布。
+var _json: Dictionary = {} # 逻辑 ID → 已解析 JSON；对外返回深拷贝，调用方不能改动共享缓存。
+var _validator: Validation # 产品提供的逐文件/整目录/媒体校验入口；公共层不认识具体题库格式。
 
 
+## 绑定一个发布目录、清单副本和可选产品校验器；这里不自行验签或扫描文件。
 func _init(root: String = "", manifest: Dictionary = {}, validator: Validation = null) -> void:
 	_root = root
 	_manifest = manifest.duplicate(true)
 	_validator = validator
 
 
+## 读取此目录固定的发布身份，供对局记录来源或诊断回执引用。
 func release_id() -> String:
 	return str(_manifest.get("release", ""))
 
 
+## 返回清单深拷贝，防止消费者通过修改返回字典改变本目录的寻址规则。
 func manifest_snapshot() -> Dictionary:
 	return _manifest.duplicate(true)
 
@@ -45,6 +48,7 @@ func raw_asset_path(relative_path: String) -> Dictionary:
 	return Manifest.failure("no_raw_pack")
 
 
+## 先限制到当前已挂载发布的媒体路径，再解码为 Image；导出后原图不存在时从导入纹理取图。
 func load_image(relative_path: String) -> Dictionary:
 	var resolved := raw_asset_path(relative_path)
 	if not resolved.ok:
@@ -62,6 +66,7 @@ func load_image(relative_path: String) -> Dictionary:
 	return {"ok": true, "value": image, "error": ""}
 
 
+## 在当前发布命名空间内按扩展名解码 ogg/wav/mp3；不认识的格式或解码失败返回明确错误。
 func load_audio(relative_path: String) -> Dictionary:
 	var resolved := raw_asset_path(relative_path)
 	if not resolved.ok:
@@ -77,6 +82,7 @@ func load_audio(relative_path: String) -> Dictionary:
 	return {"ok": true, "value": stream, "error": ""}
 
 
+## 只加载当前 spine_pck 内的 .tres，并确认它是带 atlas 与 skeleton 依赖的 Spine 数据资源。
 func load_spine(relative_path: String) -> Dictionary:
 	if not Manifest.safe_relative_path(relative_path) or relative_path.get_extension() != "tres":
 		return Manifest.failure("spine_path")
@@ -129,6 +135,8 @@ func validate_registered_media() -> Dictionary:
 	return {"ok": true, "error": ""}
 
 
+## 按清单逻辑 ID 查找 JSON，首次读取先检查长度与 SHA-256，再解析并缓存；每次返回深拷贝。
+## 成功回执附 release 身份；未登记 ID 返回 unknown_content，已登记但损坏则保留具体失败原因。
 func read_json(logical_id: String) -> Dictionary:
 	if _json.has(logical_id):
 		return {"ok": true, "value": _json[logical_id].duplicate(true), "release": release_id(), "error": ""}

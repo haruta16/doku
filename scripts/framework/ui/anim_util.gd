@@ -26,6 +26,8 @@ static func play(player: AnimationPlayer, anim: StringName, reset: bool = true) 
 	player.advance(0.0) # 同样推进 0 秒，让第一帧就是新动画的姿态
 
 
+## 刷新动画轨道驱动的子 AnimationPlayer：推进 0 秒，让已开始的嵌套动画立即提交当前姿态。
+## 只处理当前动画中的 TYPE_ANIMATION 轨道；不会把整段动画快进到结束，也不发业务完成通知。
 static func commit_nested(player: AnimationPlayer) -> void:
 	if player == null or player.current_animation == &"":
 		return

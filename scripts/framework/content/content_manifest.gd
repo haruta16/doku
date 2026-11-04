@@ -2,14 +2,15 @@
 class_name ContentManifest
 extends RefCounted
 
-const MAX_MANIFEST_BYTES := 1024 * 1024
-const MAX_FILE_BYTES := 128 * 1024 * 1024
-const MAX_RELEASE_BYTES := 256 * 1024 * 1024
-const MAX_ENTRIES := 2048
-const FORMAT_VERSION := 1
-const RAW_EXTENSIONS := ["json", "png", "jpg", "jpeg", "webp", "ogg", "wav", "mp3"]
+const MAX_MANIFEST_BYTES := 1024 * 1024 # 签名清单最大 1 MiB；在验签/JSON 解析前限制输入。
+const MAX_FILE_BYTES := 128 * 1024 * 1024 # 清单单文件最大 128 MiB；下载端也按清单字节数设置硬上限。
+const MAX_RELEASE_BYTES := 256 * 1024 * 1024 # 一次发布声明的所有文件最多 256 MiB；与本地缓存总配额是两个限制。
+const MAX_ENTRIES := 2048 # 清单和 PCK 目录允许的最大条目数，限制遍历/解析规模。
+const FORMAT_VERSION := 1 # 本客户端认识的发布清单结构版本；不是产品存档 schema。
+const RAW_EXTENSIONS := ["json", "png", "jpg", "jpeg", "webp", "ogg", "wav", "mp3"] # raw_pck 可携带的原始数据/媒体后缀；没有脚本、场景或任意 Godot 资源。
 
 
+## 先限长并验证原始字节的签名，再解析和检查产品/runtime；成功返回独立清单副本。
 static func parse_verified(bytes: PackedByteArray, signature: PackedByteArray, public_key_pem: String, product: String, runtime: String) -> Dictionary:
 	if bytes.is_empty() or bytes.size() > MAX_MANIFEST_BYTES:
 		return failure("manifest_size")
@@ -81,6 +82,7 @@ static func validate(value: Dictionary, product: String, runtime: String) -> Dic
 	return {"ok": true, "value": value.duplicate(true), "error": ""}
 
 
+## 对实际落盘文件核对精确字节数和 SHA-256；读取不到或内容不同都失败。
 static func verify_file(path: String, entry: Dictionary) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
@@ -94,6 +96,7 @@ static func verify_file(path: String, entry: Dictionary) -> Dictionary:
 	return {"ok": true, "error": ""}
 
 
+## 计算原始字节的 SHA-256 二进制摘要；需要文本身份时由调用方转为十六进制。
 static func digest(bytes: PackedByteArray) -> PackedByteArray:
 	var hashing := HashingContext.new()
 	hashing.start(HashingContext.HASH_SHA256)
@@ -101,6 +104,7 @@ static func digest(bytes: PackedByteArray) -> PackedByteArray:
 	return hashing.finish()
 
 
+## 字段集合必须恰好相等，缺字段或多字段都拒绝；不允许未识别字段悄悄改变格式含义。
 static func exact_keys(value: Dictionary, keys: Array) -> bool:
 	if value.size() != keys.size():
 		return false
@@ -110,10 +114,12 @@ static func exact_keys(value: Dictionary, keys: Array) -> bool:
 	return true
 
 
+## 兼容 JSON 解析为 float 的整数值，拒绝小数和非有限值；具体范围由各字段检查。
 static func integer(value: Variant) -> bool:
 	return typeof(value) == TYPE_INT or (typeof(value) == TYPE_FLOAT and is_finite(value) and floor(value) == value)
 
 
+## 发布/产品短标识限定为 1～80 位小写字母、数字、短横线或下划线。
 static func identifier(value: String) -> bool:
 	if value.is_empty() or value.length() > 80:
 		return false
@@ -124,6 +130,8 @@ static func identifier(value: String) -> bool:
 	return true
 
 
+## 路径只允许小写 ASCII 名称与受限分段；拒绝绝对路径、反斜线、冒号、空段及点目录。
+## 用于把远端逻辑路径限制在发布自己的命名空间内，不进行文件系统访问。
 static func safe_relative_path(value: String) -> bool:
 	if value.is_empty() or value.length() > 240 or value.begins_with("/") or value.ends_with("/") or value.contains("\\") or value.contains(":"):
 		return false
@@ -137,6 +145,7 @@ static func safe_relative_path(value: String) -> bool:
 	return true
 
 
+## 要求 64 位小写十六进制文本；这里只检查表达形式，不计算或验证内容。
 static func is_sha256(value: String) -> bool:
 	if value.length() != 64:
 		return false
@@ -147,5 +156,6 @@ static func is_sha256(value: String) -> bool:
 	return true
 
 
+## 生成内容层最小失败回执，error 保留稳定原因供调用方选择重试/回退策略。
 static func failure(reason: String) -> Dictionary:
 	return {"ok": false, "error": reason}

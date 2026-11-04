@@ -8,20 +8,21 @@ const Rules = preload("res://products/meowdoku/gameplay/application/meowdoku_set
 const Definition = preload("res://products/meowdoku/gameplay/domain/doku_level_definition.gd")
 const DokuModule = preload("res://products/meowdoku/gameplay/domain/doku_round_module.gd")
 
-var round_id: String
-var mode: String
-var level: int = 0
-var date: String = ""
-var outcome: String
-var elapsed_sec: int = 0
-var beat_percent: float = 0.0
-var legacy_completed: bool = false
-var runtime_snapshot: Dictionary = {}
-var retry_params: Dictionary = {}
-var context: Dictionary = {}
-var progress_stager: Callable = Callable()
+var round_id: String # 结算身份：正常局含 /attempt# 尝试序号，旧档兼容另用 legacy-main 前缀。
+var mode: String # main/daily/preview，决定进度、奖励和回执槽位。
+var level: int = 0 # 主线关卡号；每日/预览通常为 0，主线用于拒绝迟到结算。
+var date: String = "" # 每日挑战归属日期，不是结算发生时的系统日期。
+var outcome: String # win/fail/quit；失败保留局以支持复活，其余结果封闭该局。
+var elapsed_sec: int = 0 # 每日成绩耗时（秒）；只在每日结算入口使用。
+var beat_percent: float = 0.0 # 每日击败比例；写入本次成绩并参与历史最高值比较。
+var legacy_completed: bool = false # 无业务局号的旧版完整残局兼容标记；不走正常局奖励。
+var runtime_snapshot: Dictionary = {} # 调用方提供的本次棋盘运行态副本，由规则模块校验并同步到候选。
+var retry_params: Dictionary = {} # 失败后恢复同题所需参数副本，随进度一同进入候选。
+var context: Dictionary = {} # 产品进度装配上下文；也暂存 committed_effects，供提交成功后发布。
+var progress_stager: Callable = Callable() # 主线新进度策略端口：只修改传入候选，返回 ok 与待发布 effects。
 
 
+## 建立主线结算请求，复制运行态与重试参数；构造本身不检查或改变存档。
 static func main_round(id: String, level_number: int, result: String, runtime: Dictionary = {}, retry: Dictionary = {}) -> MeowdokuRoundSettlement:
 	var request := MeowdokuRoundSettlement.new()
 	request.round_id = id
@@ -33,6 +34,7 @@ static func main_round(id: String, level_number: int, result: String, runtime: D
 	return request
 
 
+## 建立指定挑战日期的结算请求；日期与耗时由调用方提供，stage 时再校验。
 static func daily_round(id: String, day: String, result: String, elapsed: int, beat: float, runtime: Dictionary = {}) -> MeowdokuRoundSettlement:
 	var request := MeowdokuRoundSettlement.new()
 	request.round_id = id
@@ -45,6 +47,7 @@ static func daily_round(id: String, day: String, result: String, elapsed: int, b
 	return request
 
 
+## 建立预览模式结算请求；不发放主线奖励，仍使用宿主身份防止重复结算。
 static func preview_round(id: String, result: String, runtime: Dictionary = {}) -> MeowdokuRoundSettlement:
 	var request := MeowdokuRoundSettlement.new()
 	request.round_id = id
@@ -54,6 +57,7 @@ static func preview_round(id: String, result: String, runtime: Dictionary = {}) 
 	return request
 
 
+## 为旧版已完成主线残局建立兼容请求；stage 会验证当前关题面，不能仅凭此标记直接通关。
 static func legacy_main(level_number: int) -> MeowdokuRoundSettlement:
 	var request := main_round("legacy-main/" + str(level_number), level_number, "win")
 	request.legacy_completed = true
@@ -74,6 +78,8 @@ func saved_dda_policy(candidate: Dictionary) -> Dictionary:
 
 
 ## candidate 来自已校验的产品存档；主线需提供完整 DDA 策略，其余模式传空字典。
+## 按身份校验→进度→奖励→回执顺序暂存结果；返回 ok 仍需调用方提交，失败也不会回滚候选。
+## duplicate 表示已有相同结算回执，可直接复用，不再次推进进度或发奖。
 func stage(candidate: Dictionary, economy: RefCounted, today: String, dda_policy: Dictionary) -> Dictionary:
 	if legacy_completed and (candidate.is_empty() or level <= 0):
 		return _failure("invalid_legacy_completion")
@@ -107,6 +113,8 @@ func stage(candidate: Dictionary, economy: RefCounted, today: String, dda_policy
 	return Result.success({"duplicate": false, "grants": reward.grants})
 
 
+## 校验局号与连续尝试序号，先识别相同回执的重试，再检查当前局是否允许新的结算。
+## 正常请求把校验后的运行态写入候选；win 还须通过规则模块的完成判定，fail 保留局供后续复活。
 func _stage_round(candidate: Dictionary, previous: Dictionary, receipt: Dictionary) -> Dictionary:
 	var separator := round_id.rfind("/attempt#")
 	if separator < 0:
@@ -122,6 +130,7 @@ func _stage_round(candidate: Dictionary, previous: Dictionary, receipt: Dictiona
 	var content: Dictionary = active.get("snapshot", {}).get("content", {})
 	if mode == "main" and content.has("level") and int(content.level) != level:
 		return _failure("round_level_mismatch")
+	# 先认出已完成请求，才能让已 settled 的局重试返回成功；新请求仍须通过后面的 active 检查。
 	if previous.get("round_id", "") == parent_id:
 		var last_attempt := int(previous.get("last_attempt", -1))
 		if attempt == last_attempt:
@@ -178,6 +187,8 @@ func _stage_legacy(candidate: Dictionary, previous: Dictionary) -> Dictionary:
 	return Result.success({"parent_id": round_id, "attempt": 0})
 
 
+## 优先让产品进度端口处理新主线；旧档及其余模式走纯数据规则。
+## 这里只清理或修改候选残局，并记录待发布 effects；effects 还不是已对外发布的通知。
 func _stage_progress(candidate: Dictionary, today: String, dda_policy: Dictionary) -> Dictionary:
 	if mode == "main" and progress_stager.is_valid() and not legacy_completed:
 		var staged: Variant = progress_stager.call(candidate, level, outcome, context.duplicate(true))
@@ -209,6 +220,8 @@ func _stage_progress(candidate: Dictionary, today: String, dda_policy: Dictionar
 	return Result.success()
 
 
+## 从开局冻结的关卡定义取得主线通关奖励，在同一候选内登记并领取。
+## 非主线、未赢或旧档兼容均返回空奖励；失败返回时调用方必须丢弃整个结算候选。
 func _stage_reward(candidate: Dictionary, economy: RefCounted) -> Dictionary:
 	if mode != "main" or outcome != "win" or legacy_completed:
 		return Result.success({"grants": []})

@@ -43,7 +43,7 @@ var _rule_icon_text_fonts: Dictionary = {} # 字间距 → 字体副本缓存，
 @onready var _board_outer_glow: BoardOuterGlow = $Root/VBoxContainer/BoardContainer/BoardOuterGlow
 
 @onready var _anim_board_glow: AnimationPlayer = $AnimBoardGlow
-@onready var _board_view: BoardView = $Root/VBoxContainer/BoardContainer/BoardView # 棋盘视图：全盘状态的唯一真源
+@onready var _board_view: BoardView = $Root/VBoxContainer/BoardContainer/BoardView # 棋盘显示与输入入口，内部 DokuBoardState 接受已提交会话的领域盘面
 @onready var _clock_timer: Timer = $Root/ClockTimer # 对局计时器，由子类启动
 @onready var _hint_overlay: HintOverlay = $Root/HintOverlay # 提示浮层（说明文字 + 应用/关闭按钮）
 @onready var _rules_bg: Panel = $Root/VBoxContainer/RuleBar/Control/RulesBg # 规则条背景板
@@ -99,32 +99,32 @@ var _cat_progress_rotate_override: int = -1
 var _life_bar: HealthBarBase
 
 
-var _round_content_release: String = "builtin"
-var _round_policy: Dictionary = {}
-var _gameplay_policy: Dictionary = {}
-var _restored_gameplay_policy: Dictionary = {}
-var _round_content_provenance: Dictionary = {}
-var _business_action_in_flight: bool = false
-var _business_session: MeowdokuRoundSession
-var _business_restored_id: String = ""
-var _business_attempt_sequence: int = 0
+var _round_content_release: String = "builtin" # 本局内容发布版本；恢复时沿用保存值，而不是仅记录当前全局版本
+var _round_policy: Dictionary = {} # 本局冻结的内容规则配置，随上下文/快照传给业务服务
+var _gameplay_policy: Dictionary = {} # 本局已经解析的玩法开关，输入和业务计算使用这份快照
+var _restored_gameplay_policy: Dictionary = {} # 恢复入口带来的旧玩法快照，尚未解析时保留于此
+var _round_content_provenance: Dictionary = {} # 题库及策略来源证据，随局保存用于解释恢复内容
+var _business_action_in_flight: bool = false # 同步动作提交中的重入锁，防止存档信号再次提交另一个动作
+var _business_session: MeowdokuRoundSession # 本页持有的 RoundSession；隐藏保留引用但撤销操作资格，下次入场替换
+var _business_restored_id: String = "" # 恢复参数中的持久 round_id；空串表示让会话选择建局路径
+var _business_attempt_sequence: int = 0 # 持久局内的尝试序号，复活成功后推进；与页面展示代次不同
 var _business_generation: int = 0 # 页面代次，保护同步回调及异步表现；不是持久对局 ID
 var _business_latest_sequence: int = 0 # 本次展示已接收的最新成功回执
 var _business_presented_sequence: int = 0 # 同一回执的页面表现至多发布一次
 var _round_transition: Dictionary = {} # 同一次尝试的结算/重开，在提交及表现回调间保持单一发布者
 var _revive_request: Dictionary = {} # 同一次失败正在处理的复活及其待重试回奖
 var _entry_ready: bool = false # 本次题面与入场提交已完成；与动画、透明度和终局状态分别判断
-var _hint_token: String = ""
+var _hint_token: String = "" # 当前已提交提示的身份，换局时清空以拒绝旧提示应用
 var _settlement_pending: bool = false # 终局未保存：停止操作，等待明确重试或退出。
-var _settlement_retry_dialog: ConfirmDialog
-var _settlement_retry_revision: int = -1
-var _entry_error: Dictionary = {}
-var _entry_preparing: bool = true
-var _entry_state: DokuSelectionState
-var _entry_seed: int = 0
-var _entry_selection_plan: Dictionary = {}
-var _business_history: Array = []
-var _business_highlight_cursor: int = -1
+var _settlement_retry_dialog: ConfirmDialog # 本页打开的保存失败弹窗引用，只能清理自己那一轮展示
+var _settlement_retry_revision: int = -1 # 打开重试弹窗时的 presentation 版本，防止关掉被别人复用的 Confirm
+var _entry_error: Dictionary = {} # 本次入口准备失败详情，保留给阻塞/错误提示使用
+var _entry_preparing: bool = true # 候选准备阶段标记，统计采样不能读上一局的实时缓存
+var _entry_state: DokuSelectionState # 未提交的选题/进度候选，成功提交或入口失败后释放
+var _entry_seed: int = 0 # 本次候选选题随机种子，默认取微秒计时值
+var _entry_selection_plan: Dictionary = {} # 待随开局提交的选题计划，含恢复/重开及冻结选题策略
+var _business_history: Array = [] # 从回执或恢复参数接收的操作历史副本，随下一次动作提交
+var _business_highlight_cursor: int = -1 # 当前历史高亮游标，-1 表示没有高亮
 
 func _ready() -> void:
 	connect_managed(GameState.all_data_reset, _on_business_data_reset)
@@ -455,8 +455,10 @@ func _set_rect(node: Control, left: float, right: float, top: float, bottom: flo
 	node.offset_bottom = bottom
 
 
-## 恢复本局计分与计时状态，初始化规则、生命和棋盘交互，并更新异步演出令牌。
+## 共享入场准备：建立本次候选状态、恢复显示侧统计并重置旧表现；题目准备和正式开局提交由子类完成。
+## 此时尚未开放 _entry_ready，页面显示出来不代表棋盘已经允许操作。
 func on_show(params: Dictionary = {}) -> void:
+	# 先捕获框架展示版本；服务调用也可能同步 hide/reopen，不能等 await 才考虑重入。
 	var presentation: int = get_presentation_revision()
 	_reset_tool_reward_ad_opportunities()
 
@@ -470,6 +472,7 @@ func on_show(params: Dictionary = {}) -> void:
 	_round_doubletap_protect().reset_high_freq_state()
 	if presentation != get_presentation_revision():
 		return
+	# AB 入口染色先完成，再建立独立选题候选，避免染色写档使候选基线立刻过期。
 	_begin_business_entry(params)
 	if presentation != get_presentation_revision():
 		return
@@ -6060,7 +6063,10 @@ func _make_auto_cross_on_arrive(_total_gain: int) -> Callable:
 	return func() -> void:
 		if _is_current_entry(generation) and token == _auto_complete_token and is_instance_valid(_combo_feedback_view):
 			_combo_feedback_view.update_se_score(_score_model.score)
+## 使本次业务展示代次失效，再停止计时、输入、广告回调和临时表现；子类需要的最后一次存档应在 super 前完成。
+## 隐藏不删除持久对局，也不等于退出付费草稿；再次打开时由已提交会话恢复。
 func on_hide() -> void:
+	# 先让旧业务回调失效，再回收猫节点和临时输入状态；子类已在调用 super 前处理最后快照。
 	_invalidate_business_presentation()
 	_reset_tool_reward_ad_opportunities()
 
@@ -7674,18 +7680,22 @@ func get_solution_cat_positions() -> Array:
 			result.append({"x": screen_pos.x, "y": screen_pos.y})
 	return result
 
+## 返回本局玩法策略的深拷贝，供存档和结算携带；不把可变的页面字典直接交给外部。
 func _gameplay_policy_snapshot() -> Dictionary:
 	return _gameplay_policy.duplicate(true)
 
+## 子类提供页面恢复快照；基类返回空字典，表示没有额外的主线/每日兼容快照。
 func _business_checkpoint() -> Dictionary:
 	return {}
 
 
-## 准备开始或失败时保持不可操作；导航仍可用，重试由正常入场流程重新准备。
+## 入口提交已完成且窗口仍处于可用生命周期时返回 true；动画、遮挡与输入锁另行判断。
 
 func _is_round_entry_ready() -> bool:
 	return _entry_ready and is_inside_tree() and get_window_state() not in [WindowState.CLOSING, WindowState.HIDDEN, WindowState.DESTROYED]
 
+## 统一提交落子、工具、复活或同步操作；携带当前会话和展示身份，返回成功快照或失败结果。
+## 在途锁防同步重入；提交成功的事实不等于旧页面仍有资格播放对应动画。
 func _execute_business_action(kind: String, payload: Dictionary = {}, policy: Dictionary = {}, runtime_override: Dictionary = {}, closing_checkpoint: bool = false) -> Dictionary:
 	var generation: int = _business_generation
 	var base_sequence: int = _business_latest_sequence
@@ -7706,10 +7716,12 @@ func _execute_business_action(kind: String, payload: Dictionary = {}, policy: Di
 	if generation != _business_generation or (not _is_round_entry_ready() and not may_close_sync) or is_queued_for_deletion():
 		_business_action_in_flight = false
 		return OperationResult.failure("stale_presentation", "", {"presentation_generation": generation})
+	# 保留本次提交使用的会话实例；提交发出同步通知后，页面成员可能已指向另一局。
 	var session: MeowdokuRoundSession = _business_session
 	var runtime: Dictionary = _business_runtime()
 	runtime.merge(runtime_override, true)
 	var response: Dictionary = session.execute(kind, payload, runtime, _business_checkpoint(), policy)
+	# 这些字段只服务页面接收判断，不能替代业务层的 round_id/sequence 幂等身份。
 	response["presentation_generation"] = generation
 	response["presentation_base_sequence"] = base_sequence
 	response["presentation_session"] = session.get_instance_id()
@@ -7753,6 +7765,7 @@ func _is_current_business_response(response: Dictionary) -> bool:
 		and response.get("round_id") == _business_session.round_id() \
 		and int(response.sequence) == _business_latest_sequence
 
+## 为当前成功回执领取一次表现资格；同一 sequence 或更旧回执再次到达时返回 false。
 func _claim_business_presentation(response: Dictionary) -> bool:
 	if not response.get("ok", false) or not _is_current_business_response(response):
 		return false
@@ -7763,14 +7776,15 @@ func _claim_business_presentation(response: Dictionary) -> bool:
 	return true
 
 
-## 同一次失败的回奖串行处理到表现收尾。提交中的回奖只入队，失败后才用下一笔重试。
-## 遮挡不取消权益；离页/新代次作废旧队列。成功先更新活状态，再调用可能同步发信号的 UI。
+## 复活请求必须仍属于本代次、同次尝试且处于已失败终局；正常遮挡不取消请求资格。
 
 func _is_current_revive_failure(request: Dictionary) -> bool:
 	return request.generation == _business_generation and request.attempt == _business_attempt_sequence \
 		and _is_complete and _is_round_entry_ready() and not is_queued_for_deletion()
 
+## 用持久 round_id 加本次 attempt 序号生成结算幂等键；必要时确认会话，失败或代次变化返回空串。
 func _business_settlement_id() -> String:
+	# 复活会推进 attempt，同一个 round 的下一次失败因此有新结算键；保存重试仍使用原键。
 	if _business_session != null and not _business_session.round_id().is_empty():
 		return _business_session.round_id() + "/attempt#" + str(_business_attempt_sequence)
 	var generation: int = _business_generation
@@ -7792,10 +7806,12 @@ func _run_round_transition(action: Callable) -> void:
 	if not _is_round_entry_ready() or _settlement_pending or is_queued_for_deletion() or not _round_transition.is_empty():
 		return
 	var context: Dictionary = {"generation": _business_generation, "attempt": _business_attempt_sequence}
+	# 先占有转场再调用业务动作，提交期间同步触发另一终局入口也会被拒绝。
 	_round_transition = context
 	await action.call(context)
 	_release_round_transition(context)
 
+## 判断调用者是否仍持有同一字典令牌、页面代次和尝试序号；不以 visible 判断，正常遮挡仍可属于同局。
 func _is_current_round_transition(context: Dictionary) -> bool:
 	return (
 		is_same(_round_transition, context) and context.generation == _business_generation
@@ -7803,10 +7819,12 @@ func _is_current_round_transition(context: Dictionary) -> bool:
 		and not is_queued_for_deletion()
 	)
 
+## 只释放调用者自己持有的转场令牌；旧流程不能清掉同步重开后创建的新令牌。
 func _release_round_transition(context: Dictionary) -> void:
 	if is_same(_round_transition, context):
 		_round_transition = {}
 
+## 仅当前转场可进入重试；先释放本次令牌，再交给统一保存失败弹窗重新发起动作。
 func _retry_round_transition(context: Dictionary, result: Dictionary, retry: Callable) -> void:
 	if not _is_current_round_transition(context):
 		return
@@ -7825,7 +7843,7 @@ func _publish_round_end(result: Dictionary, params: Dictionary) -> void:
 	Tracker.track_game_end(params)
 
 
-## 终局没有可重复的普通按钮；保留当前棋盘，给出明确的保存重试与退出入口。
+## 清除本页的保存重试状态；仅弹窗实例与展示版本都匹配时才隐藏，避免关掉其他流程复用的 Confirm。
 
 func _clear_settlement_retry() -> void:
 	if is_instance_valid(_settlement_retry_dialog) and _settlement_retry_dialog.get_presentation_revision() == _settlement_retry_revision:
@@ -7835,7 +7853,7 @@ func _clear_settlement_retry() -> void:
 	_settlement_pending = false
 
 
-## 通关与签到是两次明确提交；签到失败留出重试，不能默默当作没有奖励。
+## 把业务失败映射为内容恢复错误或存储错误提示；这里只解释结果，不替服务补写进度。
 
 func _report_business_failure(result: Dictionary) -> void:
 	push_warning("[GameUseCase] " + OperationResult.describe(result))
@@ -7845,7 +7863,7 @@ func _report_business_failure(result: Dictionary) -> void:
 	Toast.popup("RECOVERY_SAVE_ERROR", self)
 
 
-## 按钮只显示产品价格；业务价格来自开关策略，不能由角标或样式决定。
+## 判断当前代次是否可呈现错误或重试 UI；与 _is_current_entry 不同，这里还要求页面 visible。
 
 func _is_current_business_generation(generation: int) -> bool:
 	return (
@@ -7854,12 +7872,13 @@ func _is_current_business_generation(generation: int) -> bool:
 	)
 
 
-## 隐藏/复用时取消异步表现；临时输入锁不能遗留到下一局。
+## 终局保存失败时暂停操作并提供明确重试/退出；闭包只对发起弹窗的业务代次有效。
 
 func _offer_settlement_retry(result: Dictionary, retry: Callable) -> void:
 	if _settlement_pending or not _is_current_business_generation(_business_generation):
 		return
 	push_warning("[GameSettlement] " + OperationResult.describe(result))
+	# 失败保留棋盘，但暂停继续操作和计时；否则玩家可能在未保存的终局上继续改状态。
 	_settlement_pending = true
 	_clock_timer.stop()
 	_like_hand_state["clock_paused"] = true
@@ -7887,12 +7906,16 @@ func _offer_settlement_retry(result: Dictionary, retry: Callable) -> void:
 	if _settlement_retry_dialog != null:
 		_settlement_retry_revision = _settlement_retry_dialog.get_presentation_revision()
 
+## 开局准备时返回独立选题候选，提交成功后返回 GameState；同名业务操作因此能在准备期只暂存变化。
 func _page_state() -> Object:
 	return _entry_state if _entry_state != null else GameState
 
+## 解析并保存本局玩法快照；显式恢复参数优先，其次沿用已有本局/恢复策略，避免恢复时重新套用全部实验值。
 func _freeze_gameplay_policy(params: Dictionary = {}) -> void:
 	_gameplay_policy = MeowdokuGameplayPolicy.resolve(params.get("gameplay_policy_snapshot", _gameplay_policy if not _gameplay_policy.is_empty() else _restored_gameplay_policy), ABTestManager, int(_level_config.get("level", 0)))
 
+## 撤销上次展示的临时状态与回奖订阅，创建本次选题候选并冻结内容/规则来源；此时不正式开局。
+## 内部重选可通过 _entry_candidate 延续同一候选，普通入口则新建；旧会话引用在这里释放，存档不会被此动作删除。
 func _begin_business_entry(params: Dictionary) -> void:
 	_cancel_auto_complete_resources()
 	_auto_complete_token += 1
@@ -7918,8 +7941,10 @@ func _begin_business_entry(params: Dictionary) -> void:
 	_entry_error = {}
 	_entry_preparing = true
 	_entry_ready = false
+	# 换展示先换业务代次；旧回执、广告权益队列和演出令牌都不能继续驱动这一局。
 	_business_generation += 1
 	_clear_settlement_retry()
+	# 这里只丢弃页面对旧会话的引用，不清业务层持久记录；恢复依靠 params 中的 round_id。
 	_business_session = null
 	_business_restored_id = str(params.get("business_round_id", ""))
 	_business_attempt_sequence = int(params.get("business_attempt_sequence", 0))
@@ -7943,6 +7968,7 @@ func _begin_business_entry(params: Dictionary) -> void:
 	_round_policy = (params.get("policy_snapshot", DokuPolicy.snapshot()) as Dictionary).duplicate(true)
 	_restored_gameplay_policy = (params.get("gameplay_policy_snapshot", {}) as Dictionary).duplicate(true)
 	_gameplay_policy = MeowdokuGameplayPolicy.resolve(_restored_gameplay_policy, ABTestManager, int(params.get("level_index", params.get("retry_level", GameState.get_current_level()))))
+	# 内部重选保留同一候选，否则创建新候选；后续 _page_state 的准备修改先留在这里。
 	_entry_state = params.get("_entry_candidate") as DokuSelectionState
 	if _entry_state == null:
 		_entry_state = LevelSelector.create_entry_state(_entry_seed)
@@ -7950,6 +7976,8 @@ func _begin_business_entry(params: Dictionary) -> void:
 	_board_view.visible = false
 	_board_view.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
+## 递增展示代次，丢弃未提交候选、转场与复活请求并断开回奖；迟到工作须检查代次才可继续。
+## 此处不删除持久对局，也不清空会话引用；下一次入场会替换引用，节点释放时成员才随之释放。
 func _invalidate_business_presentation() -> void:
 	_cancel_auto_complete_resources()
 	_entry_ready = false
@@ -7961,9 +7989,11 @@ func _invalidate_business_presentation() -> void:
 	_clear_settlement_retry()
 	UniKitManager.disconnect_reward_callbacks(self)
 
+## 检查入场工作是否仍属于当前代次且页面未关闭/销毁；允许准备阶段使用，也不因全屏遮挡而取消。
 func _is_current_entry(generation: int) -> bool:
 	return generation == _business_generation and is_inside_tree() and not is_queued_for_deletion() and get_window_state() not in [WindowState.CLOSING, WindowState.HIDDEN, WindowState.DESTROYED]
 
+## 把失败或尚未完成的入口停在不可操作状态：停钟、隐藏棋盘、取消笔画与动画；导航仍由页面提供。
 func _block_round_entry() -> void:
 	_entry_ready = false
 	_entry_anim_playing = true
@@ -7973,6 +8003,9 @@ func _block_round_entry() -> void:
 	_reset_all_touch_strokes()
 	_anim_player.stop()
 
+## 题面已经校验并装到棋盘后，组装选题计划并通过 RoundSession 原子开始或恢复对局；成功才开放 _entry_ready。
+## 返回 false 表示本次调用未取得就绪发布资格：实际失败锁入口，过期调用则不能操作新页面。
+## 准备候选不能在提交成功前写成正式选题进度或清掉旧存档。
 func _commit_prepared_round(params: Dictionary, selection_plan: Dictionary = {}) -> bool:
 	var generation: int = _business_generation
 	_freeze_gameplay_policy(params)
@@ -7990,17 +8023,20 @@ func _commit_prepared_round(params: Dictionary, selection_plan: Dictionary = {})
 	_entry_selection_plan["restart"] = _stat_status == Tracker.GameStatus.RESTART
 	if _stat_status == Tracker.GameStatus.NEW:
 		_entry_selection_plan["new_game_id"] = Tracker.create_game_id()
+	# 主线、每日、预览使用明确模式；预览不能误把题库浏览写成主线进度。
 	var mode: String = "daily" if _game_type() == Tracker.GameType.DAILY else ("main" if int(_level_config.get("level", 0)) > 0 else "preview")
 	_business_session = MeowdokuRoundSession.new(GameState, mode)
+	# 选题候选、对局创建/恢复和镜像 checkpoint 一起交给业务服务；成功前不开放棋盘。
 	var result: Dictionary = _business_session.ensure_started(_business_context(), _business_restored_id, _business_checkpoint(), _entry_selection_plan)
+	# 提交可能已成功，但同步通知若重开页面，旧调用只能结束，不能发布到新页面。
 	if not _is_current_entry(generation):
 		return false
 	if not result.get("ok", false):
 		_fail_business_entry(result)
 		return false
-	# Reload the committed game identity and steps once at entry; actions only refresh counters.
+	# 入场时从已提交状态接回 game_id 和步数；普通动作只同步计数，不重新生成游戏身份。
 	Tracker.accept_game_start(_game_type())
-	# The durable round is authoritative on resume, including paid actions not mirrored by old checkpoints.
+	# 恢复以持久 round 为准，包括旧镜像尚未跟上的付费操作结果。
 	_accept_business_model(result)
 	_board_view.refresh_from_model()
 	var saved: Dictionary = result.snapshot
@@ -8012,12 +8048,14 @@ func _commit_prepared_round(params: Dictionary, selection_plan: Dictionary = {})
 	if bool(saved.get("draft_active", false)):
 		_enter_draft_mode(false)
 	_level_config["gameplay_policy_snapshot"] = _gameplay_policy_snapshot()
+	# 成功后释放准备候选，后续动作改走正式会话；entry_ready 是业务就绪，不代表开场动画已结束。
 	_entry_state = null
 	_entry_selection_plan = {}
 	_entry_ready = true
 	_entry_preparing = false
 	return true
 
+## 保存入口失败详情、丢弃选题候选并锁住棋盘，再显示可读错误；不会把失败题面发布成可操作对局。
 func _fail_business_entry(result: Dictionary) -> void:
 	_entry_error = result.duplicate(true)
 	_entry_preparing = true
@@ -8026,6 +8064,7 @@ func _fail_business_entry(result: Dictionary) -> void:
 	_entry_selection_plan = {}
 	_report_business_failure(result)
 
+## 组装建局/恢复所需的题面、生命、历史和内容来源；带上冻结策略，让会话可解释这张棋盘。
 func _business_context() -> Dictionary:
 	return {
 		"board": _board_view.get_board(), "regions": _puzzle.get("regions", []),
@@ -8039,11 +8078,13 @@ func _business_context() -> Dictionary:
 			"level_definition": _level_config.get("level_definition", {}).duplicate(true), "level": _level_config.get("level", 0)},
 	}
 
+## 仅在入口已就绪且会话存在时确认持久对局；否则返回 entry_not_ready，不替半成品入口偷偷建局。
 func _ensure_business_round() -> Dictionary:
 	if not _is_round_entry_ready() or _business_session == null:
 		return OperationResult.failure("entry_not_ready")
 	return _business_session.ensure_started(_business_context(), _business_restored_id, _business_checkpoint())
 
+## 采集本次动作要提交的活棋盘、生命、历史和表现统计；冲突动画中的临时格值会还原为已发生的错误事实。
 func _business_runtime() -> Dictionary:
 	var board: Array = _board_view.get_board()
 	# 冲突演出尚未结束时，保存已发生的错猜事实，不把动画临时格值当最终状态。
@@ -8057,6 +8098,7 @@ func _business_runtime() -> Dictionary:
 func _tool_cost(kind: String) -> int:
 	return 0 if _is_free_kind(kind) else 1
 
+## 核对回执归属与成功状态；库存不足转向回奖入口，其他失败提示错误，成功回执只领取一次表现资格。
 func _accept_tool_result(response: Dictionary, kind: String) -> bool:
 	if not _is_current_business_response(response):
 		return false
@@ -8071,6 +8113,7 @@ func _accept_tool_result(response: Dictionary, kind: String) -> bool:
 	_accept_business_performance(response)
 	return true
 
+## 把当前成功回执的格子变化映射到棋盘表现与信号；每次可能重入的表现调用后重新检查归属。
 func _present_business_changes(response: Dictionary, source: int) -> bool:
 	if not response.get("ok", false) or not _is_current_business_response(response):
 		return false
@@ -8100,6 +8143,7 @@ func _present_business_changes(response: Dictionary, source: int) -> bool:
 		_board_view.cell_state_changed.emit(change.row, change.col, change.after, source)
 	return not transitions.is_empty() and _is_current_business_response(response)
 
+## 直接销毁也要撤销业务展示与鼠工具流程，释放独立策略浮层；不在析构钩子里伪造一次胜负结算。
 func on_destroy() -> void:
 	_invalidate_business_presentation()
 	_cancel_mouse_tool_flow()
@@ -8108,9 +8152,12 @@ func on_destroy() -> void:
 		_strategy_overlay.queue_free()
 	_strategy_overlay = null
 
+## 串行处理同次失败的复活请求；失败保留可重试机会，成功先接受新生命/尝试序号，再调用产品表现回调。
+## 同步重入只把权益放入本次队列；换局或离页后旧队列失效，不能清掉新局的请求。
 func _request_revive(context: Dictionary, runtime_override: Dictionary, present: Callable) -> void:
 	if not _is_complete or not _is_round_entry_ready() or is_queued_for_deletion():
 		return
+	# 同次失败处理期间收到另一权益先排队；不能并行增加生命或重复推进尝试号。
 	if not _revive_request.is_empty() and _revive_request.generation == _business_generation \
 		and _revive_request.attempt == _business_attempt_sequence:
 		_revive_request.pending.append(context.duplicate(true))
@@ -8133,6 +8180,7 @@ func _request_revive(context: Dictionary, runtime_override: Dictionary, present:
 		# 同一权益只发布新成功；重复回执不再执行表现或累计统计。
 		if revived.get("duplicate", false) or revived.get("restore_only", false):
 			break
+		# 先接受持久结果再调用 UI；表现回调即使离页，也不会丢掉已经提交的复活事实。
 		_accept_business_model(revived)
 		_board_view.refresh_from_model()
 		_business_attempt_sequence = int(revived.result.attempt_sequence)
@@ -8146,10 +8194,11 @@ func _request_revive(context: Dictionary, runtime_override: Dictionary, present:
 	if not failure.is_empty() and _is_current_revive_failure(request):
 		_report_business_failure(failure)
 
-## Publishing committed model is separate from animation; pausing/leaving cannot lose paid tool effects.
+## 接受已经提交的领域盘面与生命/历史，和动画播放分开；离页不能让已付费的工具结果依赖动画才生效。
 func _accept_business_model(response: Dictionary) -> void:
 	_accept_business_performance(response)
 	var saved: Dictionary = response.snapshot
+	# 先同步领域盘面，不依赖逐格动画播完；恢复时也以持久快照覆盖旧镜像的临时状态。
 	_board_view.get_board_state().apply_committed_board(saved.board, Time.get_ticks_msec())
 	_lives = int(saved.lives)
 	_life_cap = int(saved.get("life_cap", _life_cap))
@@ -8165,6 +8214,7 @@ func _note_committed_tool_use(vibrate: bool = true) -> void:
 	_note_wrong_zone_activity()
 	_record_elo_v2_action("tool")
 
+## 账号或本地聚合数据重置时撤销当前页面身份并锁住棋盘；旧会话不能继续向新数据提交动作。
 func _on_business_data_reset() -> void:
 	_invalidate_business_presentation()
 	_block_round_entry()
@@ -8179,6 +8229,7 @@ func _present_committed_cell(change: Dictionary, source: int) -> void:
 	_board_view.cell_state_changed.emit(row, col, int(change.after), source)
 
 
+## 收集随动作一起提交的分数、连击、步数和工具使用；准备期从候选恢复步数，避免读取上一局的埋点缓存。
 func _business_performance() -> Dictionary:
 	var steps: int = Tracker.get_stat("step_used")
 	if _entry_preparing:
@@ -8191,6 +8242,7 @@ func _business_performance() -> Dictionary:
 		"step_used": steps, "tool_used": _committed_tool_usage.duplicate(true),
 		"draft_elapsed_ms": _committed_draft_elapsed_ms + (maxi(0, Time.get_ticks_msec() - _draft_enter_ms) if _draft_mode and _draft_enter_ms > 0 else 0)}
 
+## 采用成功快照中的表现统计，重建本次回执的动画事件索引；同步已提交计数而不是再累加一次。
 func _accept_business_performance(response: Dictionary) -> void:
 	var saved: Dictionary = response.get("snapshot", {}).get("performance", {})
 	if saved.is_empty():
@@ -8212,6 +8264,7 @@ func _accept_business_performance(response: Dictionary) -> void:
 	Tracker.sync_committed_round_stats(_game_type())
 
 
+## 释放本页自动补叉演出的静音租约与遮罩持有权；先清拥有标记，避免重复释放。
 func _cancel_auto_complete_resources() -> void:
 	_auto_complete_silence = null
 	if _auto_complete_mask_owned:
@@ -8219,12 +8272,14 @@ func _cancel_auto_complete_resources() -> void:
 		UIMask.release()
 
 
+## 在终局提交前把自动补叉及其加分加入候选运行态；只改待提交副本，后续动画不负责再次记账。
 func _win_business_runtime() -> Dictionary:
 	var runtime: Dictionary = _business_runtime()
 	if _auto_cross_plan.is_empty() and not _auto_cross_committed:
 		var perfect: bool = bool(_win_encourage_snapshot.get("perfect", is_perfect_win()))
 		var full_hp: bool = bool(_win_encourage_snapshot.get("full_hp", is_full_hp_win()))
 		_auto_cross_plan = DokuRoundPerformance.win_bonus(runtime.board, _gameplay_policy_snapshot(), perfect, full_hp, _draft_used_this_level)
+	# 结算失败可复用同一奖励计划重试；复制 runtime.board 后填叉，避免提交前污染当前棋盘。
 	if not _auto_cross_plan.is_empty() and not _auto_cross_committed:
 		runtime.board = runtime.board.duplicate(true)
 		for cell: Vector2i in _auto_cross_plan.cells:
@@ -8234,6 +8289,7 @@ func _win_business_runtime() -> Dictionary:
 	return runtime
 
 
+## 成功结算后接受自动补叉的最终分数，并标记本次奖励已提交；重复回执不再应用。
 func _accept_win_bonus(result: Dictionary) -> void:
 	if not result.get("ok", false) or _auto_cross_committed or _auto_cross_plan.is_empty():
 		return
@@ -8241,6 +8297,7 @@ func _accept_win_bonus(result: Dictionary) -> void:
 	_score_model.score = int(_auto_cross_plan.score)
 
 
+## 按帧等待截止时间，期间持续检查入场代次；正常到时返回 true，离页或换代次返回 false。
 func _wait_business_delay(seconds: float, generation: int) -> bool:
 	var deadline: int = Time.get_ticks_msec() + int(maxf(0.0, seconds) * 1000.0)
 	while _is_current_entry(generation):
@@ -8250,10 +8307,13 @@ func _wait_business_delay(seconds: float, generation: int) -> bool:
 	return false
 
 
+## 等待指定子窗口本次展示隐藏；父页面失效、子窗口销毁或换展示版本返回 false。
+## 入口就没有该窗口时，仅在父页面仍有效时视为无需等待；调用者不能把取消当作业务完成。
 func _await_business_window(ui_name: StringName, generation: int) -> bool:
 	var window: UIFrameWindow = UIManager.get_ui(ui_name)
 	if not is_instance_valid(window):
 		return _is_current_entry(generation)
+	# 同名窗口可能在等待期间被刷新复用；必须等待原展示，而不是后来那一个。
 	var revision: int = window.get_presentation_revision()
 	while _is_current_entry(generation) and is_instance_valid(window) and not window.is_queued_for_deletion():
 		if window.get_presentation_revision() != revision:
@@ -8264,10 +8324,11 @@ func _await_business_window(ui_name: StringName, generation: int) -> bool:
 	return false
 
 
-## Rule interpreters are local to the round. Setting local fields bypasses AB registration,
-## debug persistence, switch tracking, and signals; value()/peek_value() cannot consult live AB.
-var _frozen_input_configs: Dictionary = {}
+## 输入规则解释器仅属于本局；本地设置字段不经过 AB 注册、调试写档、开关埋点或信号。
+## value()/peek_value() 因而读取冻结值，而不是随实时 AB 配置改变。
+var _frozen_input_configs: Dictionary = {} # 本局输入规则解释器缓存；入场时清空，不写回 ABTestManager
 
+## 用本局玩法值构造专属输入规则解释器并缓存；缺少冻结字段时回退到当前 AB 值，再写入解释器的本地覆盖。
 func _round_input_config(key: String) -> AbConfigBase:
 	var live: AbConfigBase = ABTestManager.get(key)
 	var value: Variant = _gameplay_policy[key] if _gameplay_policy.has(key) else live.value()
@@ -8279,14 +8340,18 @@ func _round_input_config(key: String) -> AbConfigBase:
 		_frozen_input_configs[key] = config
 	return config
 
+## 取得本局冻结的多点触摸解释器，不共享上一局的临时输入状态。
 func _round_multi_touch() -> MultiTouchConfig:
 	return _round_input_config("multi_touch") as MultiTouchConfig
 
+## 取得本局冻结的滑动规则解释器，供输入方案查询。
 func _round_swipe_logic() -> SwipeLogicConfig:
 	return _round_input_config("swipe_logic") as SwipeLogicConfig
 
+## 取得本局冻结的双击保护解释器，其高频状态由本局维护。
 func _round_doubletap_protect() -> DoubletapProtectConfig:
 	return _round_input_config("doubletap_protect") as DoubletapProtectConfig
 
+## 清掉当前局解释器的高频点击状态，不修改 AB 注册表或持久实验开关。
 func _reset_round_doubletap_state() -> void:
 	_round_doubletap_protect().reset_high_freq_state()

@@ -11,7 +11,7 @@ shader_type canvas_item;
 /// 屏幕 x=55/140/225 对应 UV.x=0.0745/0.5020/0.9294,与 (x-40)/200 逐项吻合。
 /// 反例:SCREEN_UV 是屏幕坐标(同场景下 x=55 → 0.1373 = 55/400),节点一动渐变就跟着漂。
 ///
-/// 与 assets/shaders/gradient_text.gdshader 的分工:那份走 VERTEX,给普通 Label 用
+/// 与 scripts/framework/ui/shaders/gradient_text.gdshader 的分工:那份走 VERTEX,给普通 Label 用
 /// (原生排版,支持多行 / autowrap / RichTextLabel);
 /// 本份走 UV,给「内部有 draw_set_transform 旋转」的自绘 Label(SingleLineGlyphLabel)用 ——
 /// draw_set_transform 的变换不进 VERTEX(实测 +100 平移后同一屏幕位置的 VERTEX.x
@@ -20,6 +20,7 @@ shader_type canvas_item;
 /// direction 分量约定取 0/1:(0,1)=上→下 (1,0)=左→右 (1,1)=左上→右下;
 /// 用「分量和」归一化,对角方向也恰好铺满。反方向请交换两端色,不传负分量。
 
+// 每个 CanvasGroup 层各有独立材质；这两个端点的 RGB 与 alpha 都参与插值。
 uniform vec4 gradient_start : source_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform vec4 gradient_end : source_color = vec4(0.55, 0.55, 0.55, 1.0);
 uniform vec2 gradient_direction = vec2(0.0, 1.0);
@@ -28,10 +29,11 @@ uniform vec2 gradient_direction = vec2(0.0, 1.0);
 /// —— 实测(Godot 4.6.1)在 CanvasGroup 上 texture(TEXTURE, UV) 拿不到该 buffer,
 /// src.a 恒为 1.0,于是输出一个铺满 buffer 区域的实心渐变矩形而不是字形
 /// (症状:每行不透明像素数恒定 = buffer 宽度,文字形状完全消失)。
-/// 同款用法见 assets/shaders/text_drop_shadow.gdshader。
+/// 同款用法可对照产品侧 products/meowdoku/assets/shaders/text_drop_shadow.gdshader。
 /// CanvasGroup 语义保证这里只读到自己子树的内容,不会读进场景里其它元素。
 uniform sampler2D group_buffer : hint_screen_texture, repeat_disable, filter_nearest;
 
+// 从已合成的层读取覆盖率，再用该层局部 UV 染色；字符内部旋转不改变这套渐变坐标。
 void fragment() {
 	// 字形覆盖率取自 buffer(SCREEN_UV 是读该 buffer 的正确坐标),
 	// 渐变位置取自 UV —— 两者刻意分工:

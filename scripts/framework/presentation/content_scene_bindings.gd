@@ -2,13 +2,14 @@
 class_name ContentSceneBindings
 extends RefCounted
 
-const PROPERTIES: Array[String] = ["texture", "icon", "texture_normal", "texture_pressed", "texture_hover", "texture_disabled", "skeleton_data_res"]
-const ORIGINALS: StringName = &"_content_binding_originals"
-static var _bindings: Dictionary = {}
-static var _loaded: bool = false
-static var _spine_checks: Dictionary = {}
+const PROPERTIES: Array[String] = ["texture", "icon", "texture_normal", "texture_pressed", "texture_hover", "texture_disabled", "skeleton_data_res"] # 允许替换的节点属性白名单；脚本、节点结构和任意其他属性不在此入口替换。
+const ORIGINALS: StringName = &"_content_binding_originals" # 节点元数据键；保存首次绑定前的内置资源，重复 apply 从它重新解析。
+static var _bindings: Dictionary = {} # 原始 res:// 资源路径 → {kind, slot}；由产品注册文件提供。
+static var _loaded: bool = false # 注册文件只在首次查询时读取；切换媒体目录不等于重新读取绑定表。
+static var _spine_checks: Dictionary = {} # 按原/新资源实例 ID 缓存动画与皮肤名称兼容性，避免每次遍历场景都重查。
 
 
+## 惰性读取产品配置的绑定表，过滤未知种类与不安全槽路径；返回深拷贝供调用方使用。
 static func registry() -> Dictionary:
 	if not _loaded:
 		_loaded = true
@@ -31,6 +32,8 @@ static func apply(root: Node, overrides: Dictionary = {}) -> void:
 	_apply_tree(root, bindings, overrides)
 
 
+## 遍历节点及后代，只替换白名单属性；槽缺失或兼容性失败时使用记录的原资源。
+## originals 保存最初的内置值，防止重复绑定时把上一次远端替换结果当成永久回退。
 static func _apply_tree(node: Node, bindings: Dictionary, overrides: Dictionary) -> void:
 	var originals: Dictionary = node.get_meta(ORIGINALS, {})
 	for property: Dictionary in node.get_property_list():
@@ -42,6 +45,7 @@ static func _apply_tree(node: Node, bindings: Dictionary, overrides: Dictionary)
 			original = node.get(name) as Resource
 		if original == null or not bindings.has(original.resource_path):
 			continue
+		# 先保留原资源再尝试替换；媒体读取失败不应破坏场景下一次回退的依据。
 		originals[name] = original
 		var binding: Dictionary = bindings[original.resource_path]
 		var slot: String = str(overrides.get(binding.slot, binding.slot))
@@ -94,6 +98,8 @@ static func spine_compatible(original: Resource, replacement: Resource) -> bool:
 	return valid
 
 
+## 安装前核对绑定槽：纹理尺寸必须与场景原资源相同，Spine 必须保留原动画和皮肤。
+## 普通槽缺失可沿用内置资源；显式 overrides 指定的槽缺失则失败，避免覆盖配置静默失效。
 static func validate_media(catalog: RefCounted, overrides: Dictionary = {}) -> Dictionary:
 	var mapping: Dictionary = catalog.read_json("media")
 	if not mapping.get("ok", false):

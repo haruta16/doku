@@ -15,12 +15,12 @@ extends Label
 		min_font_size = maxi(1, v)
 		_queue_refit()
 
-@export var fit_height_single_line: bool = true:
+@export var fit_height_single_line: bool = true: # 单行是否同时约束高度；false 只要求宽度能放下
 	set(v):
 		fit_height_single_line = v
 		_queue_refit()
 
-@export var layout_box_override: Vector2 = Vector2.ZERO:
+@export var layout_box_override: Vector2 = Vector2.ZERO: # 显式测量宽高（像素）；两分量都大于 0 才覆盖锚点布局
 	set(v):
 		layout_box_override = v
 		_queue_refit()
@@ -30,7 +30,7 @@ var _base_font_size: int = 0 # 缓存的基准（上限）字号；0 表示还�
 
 var _fitting: bool = false # 正在写 font_size 时的重入保护（写字号会触发 resized）
 var _refit_queued: bool = false # 已排队标记：把同一帧的多次请求合并成一次 call_deferred
-var _auto_fit_enabled: bool = true
+var _auto_fit_enabled: bool = true # 自动改字号的开关；排队入口仍可调用，实际计算在此开关处停止
 
 
 # ================= 生命周期 =================
@@ -60,6 +60,7 @@ func refit() -> void:
 	_apply_fit()
 
 
+## 先恢复上限字号，再排一次测量；停用自适应时只恢复字号，不继续缩小。
 func reset_font_size() -> void:
 	if _base_font_size <= 0:
 		_base_font_size = max_font_size if max_font_size > 0 else get_theme_font_size(&"font_size")
@@ -70,6 +71,7 @@ func reset_font_size() -> void:
 	_queue_refit()
 
 
+## 切换自动适配；禁用时保留当前字号，重新启用时按当前文案与布局补算。
 func set_auto_fit_enabled(enabled: bool) -> void:
 	if _auto_fit_enabled == enabled:
 		return
@@ -95,6 +97,8 @@ func _deferred_refit() -> void:
 	_apply_fit()
 
 
+## 在字号上下限内二分查找可用字号，再写入本节点的主题覆盖。
+## 最小字号是保底值；最小字号也放不下时仍保留它，不继续无限缩小。
 func _apply_fit() -> void:
 	if not _auto_fit_enabled or _fitting or not is_inside_tree():
 		return
@@ -115,6 +119,7 @@ func _apply_fit() -> void:
 
 	var wrap: bool = autowrap_mode != TextServer.AUTOWRAP_OFF
 
+	# 字号越大通常越难放下；可行时记录结果并向上半区搜索，不可行时缩小上界。
 	var lo_fs: int = min(min_font_size, _base_font_size)
 	var hi_fs: int = _base_font_size
 	var fs: int = lo_fs
@@ -126,6 +131,7 @@ func _apply_fit() -> void:
 		else:
 			hi_fs = mid - 1
 
+	# 写主题覆盖可能引发尺寸通知；用重入标记阻止这一轮计算再次进入自己。
 	_fitting = true
 	add_theme_font_size_override(&"font_size", fs)
 	_fitting = false
@@ -136,6 +142,7 @@ func _resolve_display_text() -> String:
 	return atr(text)
 
 
+## 取测量矩形：优先用显式覆盖值，否则由父尺寸、锚点和偏移计算，避免依赖尚未完成的自身布局。
 func _layout_box() -> Vector2:
 	if layout_box_override.x > 0.0 and layout_box_override.y > 0.0:
 		return layout_box_override
@@ -148,6 +155,8 @@ func _layout_box() -> Vector2:
 	return Vector2(w, h)
 
 
+## 判断一个候选字号是否放得下：换行文本用隐藏 Label 测高度，单行直接测宽高。
+## 按词换行还要检查最长单词的宽度，避免高度合格但某个长词横向溢出。
 func _text_fits(font: Font, txt: String, box: Vector2, fs: int, wrap: bool) -> bool:
 	if wrap:
 		var probe: Label = _ensure_probe()

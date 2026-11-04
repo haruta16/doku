@@ -5,6 +5,7 @@ class_name OperationResult
 extends RefCounted
 
 
+## 构造成功回执：保留调用方字段，强制 ok=true、error 为空；只浅拷贝外层字典。
 static func success(fields: Dictionary = {}) -> Dictionary:
 	var result := fields.duplicate()
 	result["ok"] = true
@@ -12,6 +13,7 @@ static func success(fields: Dictionary = {}) -> Dictionary:
 	return result
 
 
+## 构造失败回执：error_code 给程序分支判断，explanation 给日志；不在这里显示 UI 或执行回滚。
 static func failure(error_code: String, explanation: String = "", fields: Dictionary = {}) -> Dictionary:
 	var result := fields.duplicate()
 	result["ok"] = false
@@ -25,10 +27,12 @@ static func wrap_failure(error_code: String, cause: Dictionary, explanation: Str
 	return failure(error_code, explanation if not explanation.is_empty() else detail(cause), {"cause": cause.duplicate(true)})
 
 
+## 读取稳定错误码；缺少 error 时返回空串，不能用空串代替对 ok 的检查。
 static func code(result: Dictionary) -> String:
 	return str(result.get("error", ""))
 
 
+## 读取诊断文字；未提供时返回空串，由产品决定面向用户的提示。
 static func detail(result: Dictionary) -> String:
 	return str(result.get("detail", ""))
 

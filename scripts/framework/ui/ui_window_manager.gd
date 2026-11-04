@@ -6,7 +6,7 @@ extends Node
 var _announced_windows: Dictionary = {} # 已发布 shown 的窗口；同步取消显示时不发孤立 hidden。
 
 # ---- 注册表与缓存（key 是宿主提供的窗口名） ----
-var _registry: Dictionary = {} # 窗口名 -> 场景路径，由宿主配置
+var _registry: Dictionary = {} # 窗口名 → 场景路径或返回路径的 Callable；宿主在创建窗口前配置。
 var _cache: Dictionary = {} # 窗口名 -> 已实例化的 UIFrameWindow（常驻复用，隐藏不销毁）
 var _creating: Dictionary = {} # 创建中占位；同名同步重入返回 null，不能使用半初始化实例。
 var _stacks: Dictionary = {} # layer -> 该层窗口栈，数组尾部是栈顶（最后显示的那个）
@@ -16,12 +16,12 @@ var events: UIEvents = UIEvents.new() # 创建、显示，以及正常关闭/首
 var _modal_mask: UIModalMask = UIModalMask.new()
 
 # 可选的产品表现接入；省略时窗口仍可正常运行。
-var _sound_player: Callable
-var _scene_preparer: Callable
-var _is_disposing: bool = false
-var _refreshing_occlusion: bool = false
-var _occlusion_dirty: bool = false
-var _occlusion_retry_queued: bool = false
+var _sound_player: Callable # 可选逻辑音效回调；创建窗口时下传，不负责选择产品音频资源。
+var _scene_preparer: Callable # 可选产品场景准备回调；在入树前执行，可能同步请求导航/取消。
+var _is_disposing: bool = false # 管理器退出期间封住新建/显示入口，避免晚到的加载结果重新造窗口。
+var _refreshing_occlusion: bool = false # 遮挡重算正在执行；同步导航重入只置 dirty，不递归重算。
+var _occlusion_dirty: bool = false # 栈或可见性发生变化，需要重新从最新栈计算遮挡。
+var _occlusion_retry_queued: bool = false # 本帧重算次数耗尽后，只登记一次下一帧重试，避免无限同步循环。
 
 
 ## 首次创建窗口前配置一次；复制注册表，避免外部修改产生半更新状态。
@@ -34,6 +34,7 @@ func configure(registry: Dictionary, sound_player: Callable = Callable(), scene_
 	_scene_preparer = scene_preparer
 
 
+## 把模态遮罩控制器挂入管理器；实际遮罩节点按需创建在窗口所在场景。
 func _ready() -> void:
 	add_child(_modal_mask)
 
@@ -152,6 +153,7 @@ func _publish_hidden(ui_name: String, win: UIFrameWindow) -> void:
 
 
 # ================= 查询 =================
+## 只返回已创建且仍可用的缓存窗口；创建中、待删除或管理器退出时返回 null，不触发加载。
 func get_ui(ui_name: String) -> UIFrameWindow:
 	if _is_disposing or is_queued_for_deletion() or _creating.has(ui_name):
 		return null
@@ -161,6 +163,7 @@ func get_ui(ui_name: String) -> UIFrameWindow:
 	return null
 
 
+## 回调后的归属检查：同名缓存仍指向这个实例、管理器和窗口都在树内，才允许继续外层流程。
 func _is_live_window(ui_name: String, win: Variant) -> bool:
 	return not _is_disposing and not is_queued_for_deletion() and is_inside_tree() \
 		and is_instance_valid(win) and get_ui(ui_name) == win and win.is_inside_tree()
@@ -172,6 +175,7 @@ func has_ui(ui_name: String) -> bool:
 
 
 # ================= 批量收起 =================
+## 向所有逻辑上已显示的窗口发起关闭；各窗口退场可并行进行，本函数不等待它们全部结束。
 func hide_all() -> void:
 	for ui_name in _cache.keys():
 		var cached: Variant = _cache.get(ui_name, null)
@@ -190,6 +194,8 @@ func hide_all_except(names: Array[String]) -> void:
 
 
 # ================= 创建与缓存 =================
+## 复用有效缓存或同步加载场景；隐藏缓存的实际路径与动态路由不一致时先销毁再创建。
+## 已显示窗口保持当前实例，避免配置变化在用户操作途中直接换页。
 func _get_or_create(ui_name: String) -> UIFrameWindow:
 	if _creating.has(ui_name):
 		return null
@@ -234,6 +240,7 @@ func _pop_stack(layer: int, win: UIFrameWindow) -> void:
 
 
 # ================= 层级栈与遮挡 =================
+## 按逻辑层从低到高，再按各层栈顺序生成有效窗口快照；数组末尾是最上层。
 func _ordered_windows() -> Array[UIFrameWindow]:
 	var ordered: Array[UIFrameWindow] = []
 	var layers: Array = _stacks.keys()
@@ -264,11 +271,13 @@ func _refresh_occlusion() -> void:
 		get_tree().process_frame.connect(_retry_occlusion, CONNECT_ONE_SHOT)
 
 
+## 消费下一帧重算请求，重新恢复遮挡与遮罩；不沿用上一轮回调前的窗口快照。
 func _retry_occlusion() -> void:
 	_occlusion_retry_queued = false
 	_restore_stack_presentation()
 
 
+## 对一份栈快照从上往下计算可见性；任何同步回调改变归属或栈，都停止本轮等待重算。
 func _refresh_occlusion_pass() -> void:
 	var ordered: Array[UIFrameWindow] = _ordered_windows()
 	var occluded: bool = false
@@ -302,6 +311,7 @@ func _refresh_occlusion_pass() -> void:
 			occluded = true
 
 
+## 可见性/栈钩子调用后确认实例与显示身份仍有效；失效时置 dirty，由外层重新取快照。
 func _occlusion_callback_is_current(win: Variant, revision: int) -> bool:
 	if _is_disposing or _occlusion_dirty:
 		return false
@@ -427,7 +437,7 @@ func _apply_safe_area(_page_name: String, _node: Node) -> void:
 
 
 # ================= 异步加载 / 预热 =================
-var _loading: Dictionary = {} # 窗口名 -> 正在后台加载中，用来做并发去重
+var _loading: Dictionary = {} # 窗口名 → 本次已提交线程加载的具体路径；去重与退出收尾都用它。
 
 
 ## 异步版 show_ui：场景走线程加载，避免大页面同步 load 卡帧；已在加载中则等它结束
@@ -481,6 +491,7 @@ func warm_pool_async(ui_name: String) -> void:
 ## 线程加载场景并等到结束；_loading 在整个过程中占位去重
 func _load_scene_async(ui_name: String) -> PackedScene:
 	# 先占位，避免并发重复加载
+	# 把本次实际请求路径固定下来；退出时必须 get 同一资源，不能重新调用可能已变化的路由。
 	var path: String = _scene_path(ui_name)
 	_loading[ui_name] = path
 	# 发起线程加载并每帧轮询，直到状态不再是 IN_PROGRESS
@@ -514,6 +525,7 @@ func _create_and_cache(ui_name: String, packed: PackedScene) -> UIFrameWindow:
 		return cached
 	if _creating.has(ui_name) or _is_disposing:
 		return null
+	# 这份字典同时是创建身份和取消标记；is_same 比较对象身份，避免新请求误用旧流程回执。
 	var request := {"cancelled": false}
 	_creating[ui_name] = request
 	# 根节点必须是 UIFrameWindow，否则报错并释放（注册表和场景对不上时能立刻发现）
@@ -555,12 +567,14 @@ func _create_and_cache(ui_name: String, packed: PackedScene) -> UIFrameWindow:
 	return win if _is_live_window(ui_name, win) else null
 
 
+## 创建请求必须仍是同一份占位，且未取消、未退出、缓存仍归该实例；防止重入创建接管旧流程。
 func _creation_is_valid(ui_name: String, win: Variant, request: Dictionary) -> bool:
 	return not _is_disposing and not is_queued_for_deletion() and is_inside_tree() and is_same(_creating.get(ui_name), request) \
 		and not request.cancelled and is_instance_valid(win) and not win.is_queued_for_deletion() \
 		and _cache.get(ui_name) == win and win.get_window_state() != UIBaseWindow.WindowState.DESTROYED
 
 
+## 只撤销属于这次请求的占位与缓存；初始化过的窗口执行销毁钩子，再排队释放节点。
 func _discard_creation(ui_name: String, win: Variant, request: Dictionary) -> void:
 	if is_same(_creating.get(ui_name), request):
 		_creating.erase(ui_name)
@@ -590,6 +604,7 @@ func _on_window_exiting(ui_name: String, win: UIFrameWindow) -> void:
 		_publish_hidden(ui_name, win)
 
 
+## 窗口离树或延迟重试后，从最新栈重算可见性并把遮罩放回实际顶层模态窗口。
 func _restore_stack_presentation() -> void:
 	if _is_disposing or not is_inside_tree():
 		return
@@ -626,10 +641,12 @@ func _scene_path(ui_name: String) -> String:
 	return str(source.call()) if source is Callable else str(source)
 
 
+## 是否还有由本管理器发起的线程场景加载；不包含页面自己的业务请求。
 func is_any_loading() -> bool:
 	return not _loading.is_empty()
 
 
+## 从最高处查找可见窗口，可排除一个注册名；无可见窗口返回 null。
 func get_top_window(excluded_ui_name: StringName = &"") -> UIFrameWindow:
 	var ordered: Array[UIFrameWindow] = _ordered_windows()
 	for index in range(ordered.size() - 1, -1, -1):
@@ -639,20 +656,24 @@ func get_top_window(excluded_ui_name: StringName = &"") -> UIFrameWindow:
 	return null
 
 
+## 返回最上层可见窗口注册名；空栈返回空 StringName。
 func get_top_ui_name() -> StringName:
 	var win: UIFrameWindow = get_top_window()
 	return StringName(win._ui_name) if win != null else &""
 
 
+## 排除指定注册名后查询最上层可见页面；用于浮层判断其下方页面，无目标返回空串。
 func get_top_ui_name_excluding(excluded_ui_name: StringName) -> String:
 	var win: UIFrameWindow = get_top_window(excluded_ui_name)
 	return win._ui_name if win != null else ""
 
 
+## 按当前可见窗口顺序判断 win 是否顶层；不以它在某一逻辑层中的位置单独判断。
 func is_top_of_stack(win: UIFrameWindow) -> bool:
 	return get_top_window() == win
 
 
+## 沿控件父链找到所属 UIFrameWindow，再检查主模态遮罩是否覆盖它；找不到窗口则返回 false。
 func is_covered_by_mask(control: Control) -> bool:
 	var node: Node = control
 	while is_instance_valid(node) and not node is UIFrameWindow:
@@ -660,6 +681,7 @@ func is_covered_by_mask(control: Control) -> bool:
 	return _modal_mask.covers_window(node as Control) if is_instance_valid(node) else false
 
 
+## 更新已显示模态窗口的目标透明度；只有它当前拥有最上层遮罩时才立即改视觉。
 func set_window_mask_opacity(window: UIFrameWindow, opacity: float, duration: float = 0.0) -> void:
 	if not is_instance_valid(window) or not window.show_mask or not window.is_showing():
 		return
@@ -668,8 +690,11 @@ func set_window_mask_opacity(window: UIFrameWindow, opacity: float, duration: fl
 		_modal_mask.set_opacity(window.mask_opacity, duration)
 
 
+## 提前淡出当前遮罩，duration 单位为秒；只改表现，不释放任何窗口的遮罩请求。
 func fade_out_mask_early(duration: float = 0.2) -> void:
 	_modal_mask.set_opacity(0.0, duration)
+## 逐帧等待原实例离开显示栈；窗口被替换、重开、释放或管理器离树也结束等待。
+## 返回只表示这次等待结束，不保证原窗口正常隐藏；要销毁时还需检查身份和状态。
 func await_hidden(ui_name: StringName) -> void:
 	var win: UIFrameWindow = get_ui(ui_name)
 	if win == null:
@@ -679,6 +704,7 @@ func await_hidden(ui_name: StringName) -> void:
 		await get_tree().process_frame
 
 
+## 先请求关闭并等待退场，再核对同一实例/显示身份；只有仍处于 HIDDEN 才从缓存移除并销毁。
 func destroy_ui(ui_name: String) -> void:
 	var win: UIFrameWindow = get_ui(ui_name)
 	if win == null:
@@ -695,6 +721,7 @@ func destroy_ui(ui_name: String) -> void:
 		win.queue_free()
 
 
+## 依次等待白名单外窗口关闭；与 hide_all 的并行发起不同，后一个退场在前一个等待返回后开始。
 func hide_all_showing_except(names: Array) -> void:
 	for ui_name in _cache.keys():
 		var win: UIFrameWindow = get_ui(ui_name)

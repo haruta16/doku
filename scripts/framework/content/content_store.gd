@@ -9,21 +9,22 @@ const Catalog = preload("res://scripts/framework/content/content_catalog.gd")
 const RawPack = preload("res://scripts/framework/content/content_raw_pack.gd")
 const MediaMap = preload("res://scripts/framework/content/content_media_map.gd")
 const Channel = preload("res://scripts/framework/content/content_channel.gd")
-const DEFAULT_QUOTA := 768 * 1024 * 1024
-const RELEASE_POINTERS := ["active", "pending", "last_good", "trial", "rejected", "media_active", "media_last_good"]
+const DEFAULT_QUOTA := 768 * 1024 * 1024 # 内容缓存目录的默认总容量上限 768 MiB；不是单次发布或下载文件上限。
+const RELEASE_POINTERS := ["active", "pending", "last_good", "trial", "rejected", "media_active", "media_last_good"] # 激活状态里的发布引用字段；数据与媒体各有活动/回退身份，channel 另保存防旧水位。
 
-var _root: String
-var _product: String
-var _runtime: String
-var _public_key: String
-var _state: Dictionary
-var _generation := 0
-var _quota: int
-var _boot_started := false
-var _trial_started_release: String = ""
-var _validator: Validation
+var _root: String # 宿主指定的内容缓存根目录；与玩家业务存档目录分开。
+var _product: String # 预期产品身份；清单与频道必须匹配，避免混用其他产品资源。
+var _runtime: String # 当前运行时合同标识；只能接受相同 runtime 的清单/频道目标。
+var _public_key: String # 客户端只持有验签公钥；发布签名私钥不进入这个组件。
+var _state: Dictionary # 已成功写入的激活指针与频道水位；修改时先 duplicate，再 _commit_state。
+var _generation := 0 # 本地激活元数据提交序号；用于双槽择新，不是 release 名称或频道 revision。
+var _quota: int # 内容缓存总字节配额，安装前计算现有目录加待安装载荷的大小。
+var _boot_started := false # 冷启动入口只允许执行一次；启动后不再清理可能被任务使用的暂存目录。
+var _trial_started_release: String = "" # 本进程实际开始试运行的 release；防止确认磁盘残留的其他试运行身份。
+var _validator: Validation # 保存最近注入的产品内容校验器，后续重验仍使用同一合同。
 
 
+## 记录宿主身份/公钥/配额，建立空激活状态，再从两个元数据槽读取最新有效记录；不挂载 PCK。
 func _init(root: String, product: String, runtime: String, public_key_pem: String, quota_bytes: int = DEFAULT_QUOTA) -> void:
 	_root = root.trim_suffix("/")
 	_product = product
@@ -34,14 +35,17 @@ func _init(root: String, product: String, runtime: String, public_key_pem: Strin
 	_load_state()
 
 
+## 返回激活指针与频道水位的深拷贝；产品不能绕过提交直接修改活动版本。
 func state_snapshot() -> Dictionary:
 	return _state.duplicate(true)
 
 
+## 把已验证 release 标识映射到自有 releases 子目录；此函数只拼路径，校验在调用入口完成。
 func release_directory(release: String) -> String:
 	return _root.path_join("releases").path_join(release)
 
 
+## 用本实例固定的公钥、产品和 runtime 验证清单，避免调用方漏传身份约束。
 func verify_manifest(bytes: PackedByteArray, signature: PackedByteArray) -> Dictionary:
 	return Manifest.parse_verified(bytes, signature, _public_key, _product, _runtime)
 
@@ -125,6 +129,7 @@ func install(source: String, manifest_bytes: PackedByteArray, signature: PackedB
 	var checked := _verify_directory(source, manifest, validator)
 	if not checked.ok:
 		return checked
+	# 安装分两次验证：先验来源，再复制到 incoming 后重验，最后 rename 才对外形成完整发布目录。
 	var staging := _root.path_join("incoming_" + str(manifest.release))
 	if DirAccess.dir_exists_absolute(staging):
 		_remove_tree(staging)
@@ -147,6 +152,7 @@ func install(source: String, manifest_bytes: PackedByteArray, signature: PackedB
 	return {"ok": true, "release": manifest.release, "error": ""}
 
 
+## 重新读取本地清单/签名并检查全部载荷，成功返回绑定此发布的 Catalog；目录存在不等于可信。
 func verify_release(release: String, validator: Validation = null) -> Dictionary:
 	if validator != null:
 		_validator = validator
@@ -168,6 +174,8 @@ func verify_release(release: String, validator: Validation = null) -> Dictionary
 	return {"ok": true, "release": release, "value": parsed.value, "catalog": Catalog.new(directory, parsed.value, validator), "error": ""}
 
 
+## 把已安装且重验通过的发布记为 pending；只登记候选，当前活动版本和正在运行的对局不变。
+## 已有试运行时拒绝改候选；再次选择活动版本仅取消其他 pending，不制造重复激活。
 func stage(release: String, validator: Validation = null) -> Dictionary:
 	var checked := verify_release(release, validator)
 	if not checked.ok:
@@ -235,6 +243,7 @@ func begin_cold_start(validator: Validation = null) -> Dictionary:
 	if not next.pending.is_empty():
 		var candidate := verify_release(next.pending, validator)
 		if candidate.ok:
+			# 先把试运行身份写盘再挂载；若进程中断且未确认，下次启动才能识别未完成试运行并回退。
 			next.trial = next.pending
 			var recorded := _commit_state(next)
 			if not recorded.ok:
@@ -264,6 +273,8 @@ func begin_cold_start(validator: Validation = null) -> Dictionary:
 	return _active_or_fallback(validator)
 
 
+## 宿主确认本进程试运行成功后，将 trial 提升为 active 并更新数据回退指针；含 PCK 时也更新媒体指针。
+## 必须同时匹配磁盘 trial 和本进程 _trial_started_release；确认前还会重新验证发布。
 func confirm_healthy(release: String) -> Dictionary:
 	if _state.trial != release or release.is_empty() or _trial_started_release != release:
 		return Manifest.failure("trial_mismatch")
@@ -304,6 +315,8 @@ func prune_unreferenced(protected_releases: Array[String] = []) -> Dictionary:
 	return {"ok": true, "removed": removed, "error": ""}
 
 
+## 依次重验 active、last_good，失败则回内置数据；修复指针后返回目录与回退原因。
+## 媒体可沿用独立发布，但挂载失败必须返回错误，不能把已挂载坏包假装成内置启动成功。
 func _active_or_fallback(validator: Validation, reason: String = "") -> Dictionary:
 	for release: String in [_state.active, _state.last_good]:
 		if release.is_empty():
@@ -348,6 +361,8 @@ func _active_or_fallback(validator: Validation, reason: String = "") -> Dictiona
 	return builtin_result
 
 
+## 从媒体活动/回退发布中选择并挂载一个；实际资源消费校验失败后尝试持久化隔离状态，并要求重启。
+## 隔离状态写入失败会附带 state_error，不能把这次失败说成已经成功持久化隔离。
 func _mount_current_media() -> Dictionary:
 	for release: String in [_state.media_active, _state.media_last_good]:
 		if release.is_empty():
@@ -389,6 +404,7 @@ func _mount_current_media() -> Dictionary:
 	return {"ok": true, "error": ""}
 
 
+## 判断清单是否携带 raw_pck 或 spine_pck，供激活流程区分纯数据与需冷启动的资源包。
 static func _has_pack(manifest: Dictionary) -> bool:
 	for entry: Dictionary in manifest.files:
 		if entry.kind in ["raw_pck", "spine_pck"]:
@@ -396,6 +412,7 @@ static func _has_pack(manifest: Dictionary) -> bool:
 	return false
 
 
+## 挂载清单里唯一允许的资源包；纯 JSON 发布直接成功，不改变进程媒体挂载。
 func _mount(manifest: Dictionary) -> Dictionary:
 	for entry: Dictionary in manifest.files:
 		if entry.kind in ["raw_pck", "spine_pck"]:
@@ -403,6 +420,8 @@ func _mount(manifest: Dictionary) -> Dictionary:
 	return {"ok": true, "error": ""}
 
 
+## 逐文件核对字节与哈希，检查 PCK 目录，再执行产品 JSON/跨文件校验和媒体依赖闭包检查。
+## 此阶段只检查包目录，不把未知包挂入运行时。
 func _verify_directory(directory: String, manifest: Dictionary, validator: Validation) -> Dictionary:
 	var packed_paths: Dictionary = {}
 	var has_media := false
@@ -434,6 +453,8 @@ func _verify_directory(directory: String, manifest: Dictionary, validator: Valid
 	return {"ok": true, "error": ""}
 
 
+## 给候选激活状态增加 generation，写另一槽临时文件，回读完全一致后 rename；成功才更新内存。
+## payload 哈希用于检测本地写坏，不充当远端签名或反作弊凭证。
 func _commit_state(next: Dictionary) -> Dictionary:
 	if DirAccess.make_dir_recursive_absolute(_root) != OK:
 		return Manifest.failure("state_directory")
@@ -450,6 +471,8 @@ func _commit_state(next: Dictionary) -> Dictionary:
 	return {"ok": true, "error": ""}
 
 
+## 扫描两个激活元数据槽，检查 payload 哈希、字段和引用格式，选择 generation 最大的有效记录。
+## 旧元数据缺 channel 时只补空水位；内容发布本身仍在使用前单独验签与重验文件。
 func _load_state() -> void:
 	for slot in 2:
 		var path := _root.path_join("activation_%d.json" % slot)
@@ -483,6 +506,7 @@ func _load_state() -> void:
 			_state["channel"] = channel.duplicate(true)
 
 
+## 校验持久化频道水位的 id、正整数 revision 与 SHA 文本；空字典表示尚未选择频道。
 static func _valid_channel_state(channel: Dictionary) -> bool:
 	if channel.is_empty():
 		return true
@@ -496,6 +520,7 @@ static func _valid_channel_state(channel: Dictionary) -> bool:
 	)
 
 
+## 写入并 flush 指定字节，返回文件层错误状态；原子替换和回读核对由调用方完成。
 static func _write_bytes(path: String, bytes: PackedByteArray) -> bool:
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
@@ -507,6 +532,7 @@ static func _write_bytes(path: String, bytes: PackedByteArray) -> bool:
 	return success
 
 
+## 递归统计文件大小，目录符号链接不递归；用于安装前估算缓存配额。
 static func _directory_bytes(path: String) -> int:
 	var directory := DirAccess.open(path)
 	if directory == null:
@@ -522,6 +548,7 @@ static func _directory_bytes(path: String) -> int:
 	return total
 
 
+## 删除自有暂存/过期发布目录；子目录链接只删除链接本身，不递归进入外部目录。
 static func _remove_tree(path: String) -> void:
 	var directory := DirAccess.open(path)
 	if directory == null:

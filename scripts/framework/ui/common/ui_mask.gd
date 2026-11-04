@@ -1,5 +1,5 @@
 ## 全局输入遮罩：引用计数式的「挡点击」开关；只挡输入不做视觉（模态视觉遮罩由 UIModalMask 管理）
-## 调用方在长动画 / 异步流程前 acquire、结束后 release（如自动通关演示）
+## 调用方在长动画 / 异步流程前 acquire、结束或取消后配对 release（如自动通关演示）；这里不自动追踪任务归属。
 class_name UIMask
 extends RefCounted
 
@@ -22,7 +22,8 @@ static func release() -> void:
 		_hide()
 
 
-## 创建全屏透明 Control 吞掉所有输入；已存在则什么都不做
+## 创建全屏透明 Control，以 MOUSE_FILTER_STOP 阻挡落在它上的 GUI 点击；已存在则不重复创建。
+## 这不是全局输入锁，不代替键盘、系统返回或节点 _input 中的业务门禁。
 static func _show() -> void:
 	if _blocker != null:
 		return

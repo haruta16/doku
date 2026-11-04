@@ -1,11 +1,12 @@
-## 奖励总闸（Autoload 节点）：dispatch 登记奖励并选渲染形态，真正入账在 _persist_award
+## 奖励表现入口（Autoload）：dispatch 先持久登记待领流水，再为 uid 附加展示对象。
+## _persist_award 委托 EconomyService 一次提交资产和队列移除；本节点只在成功后记埋点、清表现缓存。
 extends Node
 
-# 展示形态：DIRECT 立即到账（无界面）/ STREAK_GIFT 走签到宝箱弹窗
+# 展示形态只决定何时演出/请求领取，资产入账和幂等仍由核心奖励事务保证。
 enum DisplayType {
 	DIRECT, # 直接入账，不弹界面
 	STREAK_GIFT, # 弹签到宝箱页，玩家操作后才入账
-	RANK_GIFT,
+	RANK_GIFT, # 排行礼包的展示形态，仍共用同一个领取 uid。
 }
 
 # ---- 渲染实现（按形态 preload，dispatch 时 new 出实例） ----
@@ -17,8 +18,8 @@ const _RENDER_STREAK_GIFT: Script = preload(
 const _RENDER_RANK_GIFT: Script = preload("res://products/meowdoku/app/features/award/render/award_render_rank_gift.gd")
 
 # ---- 运行时状态 ----
-var _renders: Dictionary = {} # uid → AwardRender 实例；入账后从这里移除
-var _generation: int = 0 # 清档会复用 uid；旧提交回执不得操作新档里的同号奖励
+var _renders: Dictionary = {} # uid → AwardRender 实例，仅为当前进程表现缓存；可由持久待发队列重新附加。
+var _generation: int = 0 # 清档后使旧表现/提交收尾失效，不能仅凭 uid 判断回调仍属当前玩家状态。
 
 
 # ================= 生命周期 =================
@@ -29,12 +30,13 @@ func _ready() -> void:
 	_sweep_in_flight_on_cold_start()
 
 
+## 清档通知先推进本节点代次，再丢弃 Render 缓存；只清运行时表现，不在此删除存档奖励。
 func _clear_runtime_awards() -> void:
 	_generation += 1
 	_renders.clear()
 
 
-## 扫描存档里的「中转队列」，逐笔直接入账（跳过界面）
+## 冷启动读取已登记待发流水，逐笔尝试直接领取；失败仍留队列，清档重入则停止旧扫描。
 func _sweep_in_flight_on_cold_start() -> void:
 	# 中转队列写进存档，进程被杀也还在
 	var generation: int = _generation
@@ -45,7 +47,8 @@ func _sweep_in_flight_on_cold_start() -> void:
 		_persist_award(int(entry.get("uid", -1)))
 
 
-## 派发一笔奖励：校验 → 记进中转队列 → 建 Render，返回 uid；失败返回 -1
+## 规范化条目 → 持久登记 → 附加 Render，返回 uid；登记失败或清档重入返回 -1。
+## claim_key 应代表稳定业务资格，重试复用同一键；uid 成功登记不等于所有展示形态都已实际入账。
 func dispatch(items: Array, display_type: int, reason: String, bonus_reason: String = "", claim_key: String = "") -> int:
 	var normalized := _items_to_dicts(items)
 	var generation: int = _generation
@@ -60,7 +63,7 @@ func dispatch(items: Array, display_type: int, reason: String, bonus_reason: Str
 	return uid
 
 
-## 为已经在业务事务中登记的奖励附加展示，不重复登记或生成流水。
+## 为已登记 uid 附加/复用展示，不重新生成流水；返回是否找到可附加奖励，不作为领取成功凭证。
 func attach_award(uid: int) -> bool:
 	if _renders.has(uid):
 		return true
@@ -68,12 +71,13 @@ func attach_award(uid: int) -> bool:
 	if entry.is_empty():
 		return false
 	var render: AwardRender = _make_render(int(entry.get("display_type", DisplayType.DIRECT)))
+	# 先注册再注入数据：DIRECT 的 set_info 会同步调用 show_award，可能在本函数返回前已经领取并移除缓存。
 	_renders[uid] = render
 	render.set_info(entry)
 	return true
 
 
-## 触发展示（STREAK_GIFT 这类要玩家操作的形态用）
+## 触发既有 Render 的表现；是否立即请求入账由具体形态决定，本函数不登记或重新创建奖励。
 func show_award(uid: int, display_params: Dictionary = {}) -> void:
 	# uid 不在说明已入账，或被冷启动清扫过
 	if not _renders.has(uid):
@@ -82,7 +86,7 @@ func show_award(uid: int, display_params: Dictionary = {}) -> void:
 	(_renders[uid] as AwardRender).show_award(display_params)
 
 
-## 注册「本笔奖励结束」回调，只触发一次（奖励入账后）
+## 给当前 Render 的结束信号挂一次性回调；这里只监听未来信号，不为已经结束/不存在的 Render 补调。
 func continue_when_award_end(uid: int, callback: Callable) -> void:
 	# 没有 Render 就没法挂回调
 	if not _renders.has(uid):
@@ -97,7 +101,7 @@ func continue_when_award_end(uid: int, callback: Callable) -> void:
 	)
 
 
-## 标记本笔奖励翻倍：入账时按 bonus_reason 再发一份
+## 持久确认本笔翻倍资格，返回保存是否成功；真正领取时按产品规则只为可翻倍资产多发一份。
 func double_award(uid: int) -> bool:
 	var generation: int = _generation
 	var result: Dictionary = GameState.get_economy_service().double_award(uid)
@@ -109,9 +113,11 @@ func double_award(uid: int) -> bool:
 	return true
 
 
-## 真正入账：写 GameState 道具数、记埋点、清中转队列；doubled 时再发一份
+## 委托核心一次完成资产入账和待发移除；写入失败返回 false，待发资格保留，可用原 uid 重试。
+## 成功后才按实际 grants 记道具/头像框埋点并移除 Render；重复领取回执没有 grants，不会重复记到账。
 func _persist_award(uid: int) -> bool:
 	var generation: int = _generation
+	# 先捕获代次再提交；保存成功的同步通知也可能清档，旧收尾不能删新状态的表现或继续记领取事件。
 	var result: Dictionary = GameState.get_economy_service().claim_award(uid)
 	if generation != _generation:
 		return false
@@ -141,7 +147,7 @@ func _make_render(display_type: int) -> AwardRender:
 			return _RENDER_DIRECT.new() as AwardRender
 
 
-## 把入参统一成 Dictionary 数组（AwardItem → dict，Dictionary 原样保留）
+## 把 AwardItem 转成字典、已有字典深拷贝；发现不支持的条目就返回空数组，交登记校验拒绝整笔奖励。
 func _items_to_dicts(items: Array) -> Array:
 	var out: Array = []
 	for it in items:

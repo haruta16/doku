@@ -71,6 +71,7 @@ func _deferred_fit() -> void:
 
 ## 子容器可能晚于本组完成排序；实际文字宽度变化后再次合并测量。
 func _watch_labels() -> Array[Node]:
+	# 递归收集真实标签并排除测量探针；每次重算再扫描，因此后来加入的标签也能纳入组。
 	var labels: Array[Node] = find_children("*", "Label", true, false)
 	labels = labels.filter(func(n: Node) -> bool: return n != _probe)
 	for label: Label in labels:

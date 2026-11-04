@@ -10,7 +10,7 @@ var _pending_recheck: bool = false # 标记还需要再复查一次（二次排�
 
 
 # ================= 生命周期与同步 =================
-## 进树：锁死 fit_content、关滚动、开裁剪，接尺寸变化并延迟同步一次
+## 进树：关闭引擎自动 fit_content，改由本类回写最小高度；关滚动、开裁剪并延迟同步一次
 func _ready() -> void:
 	fit_content = false # 高度自己算，不用引擎的 fit_content
 
@@ -60,6 +60,7 @@ func _sync() -> void:
 	var h: float = get_content_height() - sep # 内容高度把最后一段行距也算进去了，要减掉
 	custom_minimum_size = Vector2(custom_minimum_size.x, maxf(h, 0.0)) # 只改高度，横向最小宽度保持原样
 
+	# 这里安排的是有限的两轮排版，不是每帧反复测量；第一轮改高度后再校正一次。
 	var do_recheck: bool = not _pending_recheck # 第一次写入可能让文本重排，所以再安排一次复查
 	_pending_recheck = false
 	_syncing = false

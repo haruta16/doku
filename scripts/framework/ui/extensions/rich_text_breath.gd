@@ -19,6 +19,7 @@ func _process_custom_fx(char_fx: CharFXTransform) -> bool:
 
 	char_fx.transform = char_fx.transform.scaled_local(Vector2(s, s)) # 绕字形自身原点缩放
 
+	# 整组位置补偿依赖调用方提供的 count/char_w，是等宽估算，不重新读取真实排版宽度。
 	if group:
 		var anchor: float = (count - 1) * 0.5 if count > 0 else 0.0 # 以组中心为锚：按下标把字往外推，抵消缩放造成的间距变化
 		char_fx.offset.x += (char_fx.relative_index - anchor) * char_w * (s - 1.0)

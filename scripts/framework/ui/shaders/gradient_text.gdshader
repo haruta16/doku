@@ -14,15 +14,16 @@ shader_type canvas_item;
 /// 映射语义(重要):渐变按**节点矩形**归一化(同 CSS background-clip:text 的元素盒语义),
 /// 不是文字墨迹范围 —— 行盒含 ascent/descent 空隙(拉丁字形墨迹约占行盒 50~80%),
 /// 且文字因 alignment 居中/偏移时墨迹落在渐变中段。表现为端点色不满幅,是预期行为;
-/// 要端点更满就把节点框做紧(或按视觉调 start/end 色)。引擎无逐 glyph 墨迹边界 API,
+/// 要端点更满就把节点框做紧(或按视觉调 start/end 色)。本实现不读取逐字墨迹范围,
 /// 不做墨迹级映射。
 ///
 /// 注意(整体染色):shader 作用于该节点的全部绘制输出 —— Label 的 shadow /
 /// outline 会被一并染成渐变色。需要「渐变字 + 纯色描边」时叠放两个同 text 的
 /// Label:底层开 outline 且 font_color 透明,顶层用渐变。
 ///
-/// 配套脚本:scripts/module/ui/extensions/gradient_label.gd(自动建 material + 同步 uniform)。
+/// 配套脚本:scripts/framework/ui/extensions/gradient_label.gd(自动建 material + 同步 uniform)。
 
+// 两端仅提供 RGB；输出 alpha 沿用 COLOR 与字体图集，不使用这两个颜色的 alpha。
 uniform vec4 start_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
 uniform vec4 end_color : source_color = vec4(0.55, 0.55, 0.55, 1.0);
 uniform vec2 direction = vec2(0.0, 1.0);
@@ -30,14 +31,16 @@ uniform vec2 direction = vec2(0.0, 1.0);
 // 节点尺寸(局部空间),由脚本在 size 变化时同步;0 会被钳到 0.001 防除零
 uniform vec2 rect_size = vec2(100.0, 100.0);
 
-varying float grad_t;
+varying float grad_t; // 顶点阶段计算的渐变比例，由 GPU 插值传给片元阶段
 
+// 把局部像素坐标归一化到节点矩形；按方向投影后得到 0..1 的颜色混合比例。
 void vertex() {
 	vec2 safe_size = vec2(max(rect_size.x, 0.001), max(rect_size.y, 0.001));
 	float sum = max(direction.x + direction.y, 0.001);
 	grad_t = clamp(dot(VERTEX / safe_size, direction) / sum, 0.0, 1.0);
 }
 
+// 仅替换字形的颜色来源，纹理覆盖率和节点透明度仍按原有乘法参与输出。
 void fragment() {
 	vec4 tex = texture(TEXTURE, UV);
 	vec3 grad_rgb = mix(start_color.rgb, end_color.rgb, grad_t);

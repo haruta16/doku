@@ -5,9 +5,11 @@ class_name ContentRawPack
 extends RefCounted
 
 const Manifest = preload("res://scripts/framework/content/content_manifest.gd")
-static var _mounted_path: String = ""
+static var _mounted_path: String = "" # 当前进程唯一已挂载的包路径；不支持卸载或热切换到另一个包。
 
 
+## 只读解析 PCK v3 头和目录：验证边界、命名空间、后缀、重复路径及禁用特性，再按 profile 检查依赖。
+## 成功只返回包内条目表，不执行挂载；整包签名/哈希由外层清单验证负责。
 static func inspect(path: String, product: String, release: String, profile: String = "raw_pck") -> Dictionary:
 	if profile not in ["raw_pck", "spine_pck"]:
 		return Manifest.failure("pack_profile")
@@ -49,6 +51,7 @@ static func inspect(path: String, product: String, release: String, profile: Str
 		var size := file.get_64()
 		file.get_buffer(16) # 整包 SHA-256 由外层验证；这里不把 PCK 的 MD5 当认证。
 		var flags := file.get_32()
+		# 普通条目必须位于 product/release 自有目录；Spine 仅另放行经过闭包核对的导入缓存文件。
 		var namespaced := resource_path.begins_with(prefix) and Manifest.safe_relative_path(resource_path)
 		var imported := profile == "spine_pck" and resource_path.begins_with(".godot/imported/") and Manifest.safe_relative_path(resource_path.trim_prefix(".godot/imported/")) and not resource_path.trim_prefix(".godot/imported/").contains("/")
 		if (not namespaced and not imported) or paths.has("res://" + resource_path):
@@ -85,6 +88,7 @@ static func mount_once(path: String, product: String, release: String, profile: 
 	return {"ok": true, "value": check.value, "error": ""}
 
 
+## 读取本进程已经挂载的唯一 PCK 路径；空串表示尚未成功挂载。
 static func mounted_path() -> String:
 	return _mounted_path
 
@@ -114,7 +118,7 @@ static func _validate_spine(file: FileAccess, paths: Dictionary, prefix: String)
 				return Manifest.failure("import_metadata")
 			file.seek(entry.offset)
 			var text := file.get_buffer(entry.bytes).get_string_from_utf8()
-			# Generated import files are primitive configuration data; reject serialized object constructors.
+			# 导入元数据仅允许普通配置值；拒绝序列化对象构造，避免把配置解析变成任意资源/对象实例化入口。
 			if text.contains("Object(") or text.contains("Resource(") or text.contains("ExtResource(") or text.contains("SubResource("):
 				return Manifest.failure("import_metadata")
 			var config := ConfigFile.new()
@@ -129,7 +133,7 @@ static func _validate_spine(file: FileAccess, paths: Dictionary, prefix: String)
 			var expected: String = "res://.godot/imported/" + source.get_file() + "-" + source.md5_text() + "." + str(kind[2])
 			if config.get_value("remap", "importer", "") != kind[0] or config.get_value("remap", "type", "") != kind[1] or config.get_value("remap", "path", "") != expected:
 				return Manifest.failure("import_mapping")
-			# Godot's exporter may strip editor-only [deps]; identity is derived from the signed .import path.
+			# 导出器可能删除仅供编辑器使用的 [deps]；默认来源仍由已签名的 .import 路径推导。
 			if config.get_value("deps", "source_file", source) != source or not paths.has(expected):
 				return Manifest.failure("import_dependency")
 			var destinations: Variant = config.get_value("deps", "dest_files", [expected])
@@ -151,6 +155,7 @@ static func _validate_spine(file: FileAccess, paths: Dictionary, prefix: String)
 			return Manifest.failure("unexpected_spine_source")
 	if skeleton_count == 0:
 		return Manifest.failure("spine_template_missing")
+	# 反向检查闭包：包里每个导入缓存都必须有受信的 .import 引用，不能夹带无关导入资源。
 	for path: String in paths:
 		if path.begins_with("res://.godot/imported/") and not imported_references.has(path):
 			return Manifest.failure("unreferenced_import")

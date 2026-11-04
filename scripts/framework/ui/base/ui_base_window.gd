@@ -5,19 +5,20 @@ extends Control
 enum WindowState { INVALID, CREATING, SHOWING, HIDDEN, CLOSING, DESTROYED } # 窗口状态：INVALID 未创建 / CREATING 创建中 / SHOWING 显示中 / HIDDEN 已创建未显示 / CLOSING 关闭动画中 / DESTROYED 已销毁
 
 var _window_state: int = WindowState.INVALID # 当前状态；只由 UIWindowManager 和本类的 _do_* 改写，外部用下面三个查询函数读
+## 兼容页面读取的显示代次别名；只映射 _show_revision，不另保存一份身份。
 var _show_version: int:
 	get:
 		return _show_revision
 
 var _window_presentation_revision: int = 0 # 每次刷新展示内容递增，独立于显示栈所有权。
-var _presentation_waits: Array[PresentationWait] = []
+var _presentation_waits: Array[PresentationWait] = [] # 当前展示登记的等待对象；刷新/重开/销毁时摘下整批并返回取消结果。
 var _show_revision: int = 0 # 每次显示递增；旧的异步关闭不能收尾到后来显示的同一实例
 
 # 声音提示是窗口语义；具体音频资源与开关由宿主决定。
-const SOUND_BUTTON_CLICK: StringName = &"button_click"
-const SOUND_WINDOW_OPEN: StringName = &"window_open"
-var _sound_player: Callable
-var _scene_preparer: Callable
+const SOUND_BUTTON_CLICK: StringName = &"button_click" # 按钮按下的逻辑音效名；具体资源与静音规则由宿主提供。
+const SOUND_WINDOW_OPEN: StringName = &"window_open" # 窗口打开的逻辑音效名，不把产品音频路径写进公共基类。
+var _sound_player: Callable # 宿主注入的声音回调；子窗口继承它，不直接访问声音 Autoload。
+var _scene_preparer: Callable # 宿主注入的场景准备回调；负责产品资源绑定等，可能同步重入窗口管理。
 
 
 ## 由创建窗口的管理器配置；子窗口自动沿用同一组可选回调。
@@ -26,6 +27,7 @@ func configure_ui(sound_player: Callable = Callable(), scene_preparer: Callable 
 	_scene_preparer = scene_preparer
 
 
+## 把逻辑提示音交给宿主；未配置回调时安静跳过，不强制独立消费者接入音频系统。
 func _play_ui_sound(cue: StringName) -> void:
 	if _sound_player.is_valid():
 		_sound_player.call(cue)
@@ -101,10 +103,11 @@ func _do_hide() -> void:
 func _do_destroy() -> void:
 	if _window_state == WindowState.DESTROYED:
 		return
-	# A packed-scene/template instance may be freed before _do_create initializes hooks.
+	# 场景模板可能从未初始化就被释放；这类对象不能调用依赖 on_create 初始化的产品销毁钩子。
 	var lifecycle_started: bool = _window_state != WindowState.INVALID or is_inside_tree() or is_node_ready()
 	_show_revision += 1
 	_window_presentation_revision += 1
+	# 先让身份与状态失效，再同步结束等待；被唤醒的父层不能把销毁误判为动画正常结束。
 	_window_state = WindowState.DESTROYED
 	_cancel_presentation_waits()
 	if not is_instance_valid(self):
@@ -126,7 +129,7 @@ func on_create() -> void:
 	pass
 
 
-## 生命周期钩子②：每次显示都会调；对已显示的窗口重复 show，UIWindowManager 只调它不走 _do_show
+## 生命周期钩子②：显示或刷新内容时调用；已显示窗口重复 show 先经 _do_refresh 取消旧等待，再调本钩子。
 func on_show(params: Dictionary = {}) -> void:
 	pass
 
@@ -366,6 +369,7 @@ func destroy_child(child: UIChildWindow) -> void:
 	_destroy_child_now(child)
 
 
+## 先解除父窗口所有权，再执行子窗口幂等销毁；真正节点释放推迟到帧末。
 func _destroy_child_now(child: UIChildWindow) -> void:
 	_managed_children.erase(child)
 	if not is_instance_valid(child):
@@ -438,18 +442,18 @@ func _ready() -> void:
 	set_process(false)
 
 
-## 节点被删除时兜底拆掉所有子窗口，防止子窗口泄漏
+## 直接 free/queue_free 也进入统一销毁流程；幂等检查避免与管理器的主动销毁重复调用钩子。
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
-		# Use the same idempotent teardown before tree_exiting: marking only the
-		# state here would make the manager skip the actual on_destroy hook.
+		# 不能只标记 DESTROYED：管理器看到该状态会跳过清理，导致 on_destroy 永远没有执行。
 		_do_destroy()
 
-## Read-only lifecycle identity for canceling delayed work on a cached window.
+## 返回本次内容展示的身份；缓存对象相同不代表展示相同，刷新也会使旧身份失效。
+## 子类使用该身份检查延迟结果，不应覆写成局部动画计数，否则管理器无法判断关闭归属。
 func get_presentation_revision() -> int:
 	return _window_presentation_revision
 
-## Dynamic descendants inherit the same content preparation and sound policy as scene children.
+## 给后创建的控件应用同一套场景准备和声音策略，补上静态场景初始化后才出现的子树。
 func initialize_dynamic_widget(root: Control) -> void:
 	if not is_instance_valid(root):
 		return
@@ -467,13 +471,15 @@ func _do_refresh(params: Dictionary = {}) -> void:
 		on_show(params)
 
 
-## A wait belongs to one presentation, including its closing animation.
+## 判断身份是否仍属当前展示；正常关闭动画仍属于本次展示，隐藏/销毁/换代后返回 false。
 func is_presentation_current(revision: int) -> bool:
 	return is_instance_valid(self) and not is_queued_for_deletion() and revision == _window_presentation_revision \
 		and _window_state in [WindowState.SHOWING, WindowState.CLOSING]
 
 
-## Cancellation returns false synchronously before a refreshed/destroyed owner continues.
+## 等待信号，但只接受登记时的展示身份；来源信号参数不向调用方转发，返回值只表达完成/取消。
+## 刷新、重开或销毁会同步以 false 结束旧等待，调用方必须据此停止业务后续。
+## 来源独立销毁或停止发信号不会自动取消；需由调用方保证来源生命周期或另设取消条件。
 func wait_presentation_signal(source: Signal, revision: int = -1) -> bool:
 	if revision < 0:
 		revision = _window_presentation_revision
@@ -487,7 +493,9 @@ func wait_presentation_signal(source: Signal, revision: int = -1) -> bool:
 	return await pending.completed
 
 
-## The predicate being true means completion; cancellation is never completion.
+## 逐帧检查完成条件；predicate 为 true 且展示仍有效才成功，展示或谓词失效返回 false。
+## 条件未达成时还需留在树内才能等待下一帧；已经完成的条件不依赖这个逐帧等待前提。
+## 条件调用本身可能触发刷新/销毁，所以调用后再次核对身份；这里不把“取消”当作条件达成。
 func wait_presentation_until(predicate: Callable, revision: int = -1) -> bool:
 	if revision < 0:
 		revision = _window_presentation_revision
@@ -502,26 +510,31 @@ func wait_presentation_until(predicate: Callable, revision: int = -1) -> bool:
 	return false
 
 
+## 等待已结算时从本窗口登记表移除；由 PresentationWait 在发完成信号之前调用。
 func _forget_presentation_wait(pending: PresentationWait) -> void:
 	_presentation_waits.erase(pending)
 
 
+## 同步取消旧展示登记的全部等待；先分离列表以允许取消回调安全地登记新等待。
 func _cancel_presentation_waits() -> void:
-	# Callbacks can register waits for a new presentation while these finish.
+	# 先换空登记表，再结束旧等待；取消回调可能同步创建新展示的等待，不能把新等待一起清掉。
 	var previous: Array[PresentationWait] = _presentation_waits
 	_presentation_waits = []
 	for pending in previous:
 		pending.finish(false)
 
 
+# 单次等待的连接与结算状态独立保存；弱持有窗口，避免“窗口→等待→窗口”的强引用环。
 class PresentationWait extends RefCounted:
 	signal completed(success: bool)
-	var _owner: WeakRef
-	var _source: Signal
-	var _callback: Callable
-	var _revision: int
-	var _settled: bool = false
+	var _owner: WeakRef # 窗口弱引用；不能因等待存在而阻止窗口释放。
+	var _source: Signal # 正在订阅的外部信号；结算前主动断开。
+	var _callback: Callable # 保存实际连接的适配回调，断开时必须使用同一 Callable。
+	var _revision: int # 登记时的展示身份，与窗口对象存活是两个不同条件。
+	var _settled: bool = false # 完成/取消共用一次性开关，重入调用不会重复 emit。
 
+	## 用弱引用记住所属窗口，记录展示身份，并连接来源信号；连接失败交给调用方取消。
+	## 按来源信号的参数数量 unbind，使零参数/多参数信号都能进入同一个完成回调。
 	func arm(owner: UIBaseWindow, source: Signal, revision: int) -> bool:
 		_owner = weakref(owner)
 		_source = source
@@ -534,16 +547,18 @@ class PresentationWait extends RefCounted:
 		_callback = _on_source.unbind(argument_count) if argument_count > 0 else _on_source
 		return _source.connect(_callback) == OK
 
+	## 来源信号到达时尝试正常完成；是否仍属当前展示在 finish 中最后确认。
 	func _on_source() -> void:
 		finish(true)
 
+	## 至多结算一次：先解除连接和持有关系，再通知父层等待；success=true 还必须同时满足当前展示有效。
 	func finish(success: bool) -> void:
 		if _settled:
 			return
 		_settled = true
 		var owner: UIBaseWindow = _owner.get_ref() as UIBaseWindow
 		var current: bool = is_instance_valid(owner) and owner.is_presentation_current(_revision)
-		# Disconnect and detach BEFORE emission can synchronously re-enter the owner.
+		# 先断来源信号、从 owner 摘除并清引用，再发完成；监听者可能在 emit 中同步刷新或销毁窗口。
 		if is_instance_valid(_source.get_object()) and _source.is_connected(_callback):
 			_source.disconnect(_callback)
 		_source = Signal()

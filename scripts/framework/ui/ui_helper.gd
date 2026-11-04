@@ -36,6 +36,7 @@ static func play_release_scale(node: CanvasItem, base_scale: Vector2 = Vector2.O
 	node.set_meta(_PRESS_SCALE_TWEEN_META, t)
 
 
+## 取消按压/回弹补间并立即恢复基准缩放；虚拟列表回收单元时用它清除旧按压外观。
 static func reset_press_scale(node: CanvasItem, base_scale: Vector2 = Vector2.ONE) -> void:
 	if not is_instance_valid(node):
 		return
@@ -61,6 +62,7 @@ static func _ensure_center_pivot(node: CanvasItem) -> void:
 		(node as Control).pivot_offset_ratio = Vector2(0.5, 0.5)
 
 
+## 结束元数据记录的旧补间并删掉句柄；后续反馈可以重新接管同一节点的 scale。
 static func _kill_press_scale_tween(node: CanvasItem) -> void:
 	if not node.has_meta(_PRESS_SCALE_TWEEN_META):
 		return

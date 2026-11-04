@@ -31,14 +31,14 @@ var _start_unix: float = 0.0 # 计时起点（Unix 秒）；广告占用的时�
 var _start_date: String = "" # 开局日期 yyyy-mm-dd，通关时写进存档
 var _ad_show_unix: float = 0.0 # 广告开始播放的时刻，> 0 表示有一段广告时长待扣除
 
-var _dc_restore_snapshot: Dictionary = {}
+var _dc_restore_snapshot: Dictionary = {} # 本次入场选中的每日快照副本；空字典走新题准备
 
-var _clock_base_sec: float = 0.0
-var _terminal_elapsed_sec: int = -1
+var _clock_base_sec: float = 0.0 # 恢复时已有的耗时（秒），重新锚定时扣回起点
+var _terminal_elapsed_sec: int = -1 # 首次胜利尝试冻结的秒数；重试保存不把弹窗等待计入成绩，-1 表示未冻结
 
 @onready var _back_setting_header: BackAndSettingHeader = $Root/VBoxContainer/Header
 
-var _entry_btn_lock_seq: int = 0 # 锁按钮的次数，只累加不做判断（排查动画重入用）
+var _entry_btn_lock_seq: int = 0 # 入场按钮锁序号；旧 toast/动画解锁回调必须匹配当前序号
 
 var _in_game_costume_id: int = CostumeCatalog.DEFAULT_COSTUME_ID
 
@@ -53,6 +53,7 @@ func _game_type() -> String:
 	return Tracker.GameType.DAILY
 
 
+## 连接每日页面表现与广告计时观察者，创建归本节点所有的快照防抖 Timer；业务会话在 on_show 后段提交。
 func _ready() -> void:
 	super._ready()
 	_life_bar.refresh(_lives)
@@ -76,7 +77,10 @@ func _ready() -> void:
 	add_child(_endgame_save_timer)
 
 
+## 每日入场总流程：判定新局/重开/重玩或合法恢复，准备题面与棋盘，再提交独立 daily 会话，最后安排教程和广告。
+## 框架 presentation 版本保护整个展示，business generation 保护本次对局；同步通知和 await 后都可能需要复核。
 func on_show(params: Dictionary = {}) -> void:
+	# 先绑定本轮框架展示，再调用会染色、恢复或触发存档通知的服务；不能用重入后的新版本冒充旧请求。
 	var entry_presentation: int = get_presentation_revision()
 	_stop_entry_animation()
 	_dc_cancel_inter_wait()
@@ -91,6 +95,7 @@ func on_show(params: Dictionary = {}) -> void:
 	ABTestManager.dye_at_game_start_dc()
 
 	params = params.duplicate()
+	# 这里只选择并复制可恢复数据，不提前清旧快照；后面选题/建盘失败仍能保留恢复机会。
 	_dc_restore_snapshot = _resolve_endgame_restore(params)
 	_clock_base_sec = 0.0
 	if not _dc_restore_snapshot.is_empty():
@@ -277,11 +282,13 @@ func on_show(params: Dictionary = {}) -> void:
 		return
 
 	_freeze_gameplay_policy(params)
+	# 日期、重玩/恢复标记先进入候选；正式 daily 开局成功前不推进 live 的每日状态。
 	_entry_state.stage_daily_entry(_start_date, _stat_status == Tracker.GameStatus.REPLAY, not _dc_restore_snapshot.is_empty(), int(_gameplay_policy.get("auto_mark_variant", 0)))
 	var daily_plan: Dictionary = LevelSelector.prepare_existing_entry(_entry_state, 0, _level_config)
 	daily_plan["restart"] = _stat_status == Tracker.GameStatus.RESTART
 	if _stat_status == Tracker.GameStatus.REPLAY:
 		daily_plan["new_game_id"] = Tracker.create_game_id()
+	# 提交中的通知可能已打开新展示；只有仍拥有本轮入口时才能停止动画，不能误停新页。
 	if not _commit_prepared_round(params, daily_plan):
 		if entry_presentation == get_presentation_revision() and _is_current_entry(generation):
 			_stop_entry_animation()
@@ -333,6 +340,7 @@ func on_show(params: Dictionary = {}) -> void:
 		)
 	)
 
+	# 教程属于开局后的展示流程；取消后先核对页面身份，不让旧协程接着弹广告。
 	await _maybe_show_costume_tutorial()
 	if entry_presentation != get_presentation_revision() or not _is_current_entry(generation):
 		return
@@ -372,10 +380,12 @@ func on_show(params: Dictionary = {}) -> void:
 	_show_banner_if_eligible("daily")
 
 
+## 停止每日入口动画并在基类撤销业务代次前保存最后快照，随后断开持久化与广告等待；重开不沿用旧计时回调。
 func on_hide() -> void:
 	_stop_entry_animation()
 	if _endgame_save_timer != null:
 		_endgame_save_timer.stop()
+	# 先保存再断监听、撤销基类代次；keep_saved_session 避免退出清理改写原快照的会话归属。
 	if _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
 		_flush_endgame_snapshot(true)
 		_disconnect_endgame_persist()
@@ -395,6 +405,7 @@ func on_hide() -> void:
 	_dc_cancel_late_ad_watch()
 
 
+## 按当前 Unix 起点计算已用整秒，最小为 0；恢复时的已用时长已折入起点。
 func _get_elapsed_sec() -> int:
 	return maxi(0, int(Time.get_unix_time_from_system() - _start_unix))
 
@@ -434,6 +445,7 @@ func _apply_elapsed_to_label(sec: int) -> void:
 		_timer_label.add_theme_font_size_override("font_size", 50)
 
 
+## 切后台先执行共享时钟收尾，再停防抖并尝试写入每日恢复快照。
 func _on_application_focus_out() -> void:
 	super._on_application_focus_out()
 
@@ -442,11 +454,12 @@ func _on_application_focus_out() -> void:
 	_flush_endgame_snapshot()
 
 
-const _ENDGAME_SAVE_DEBOUNCE_SEC: float = 0.5
+const _ENDGAME_SAVE_DEBOUNCE_SEC: float = 0.5 # 普通标记变化的快照合并窗口（秒）
 
-var _endgame_save_timer: Timer = null
+var _endgame_save_timer: Timer = null # 本节点拥有的一次性防抖 Timer，离页停止、节点释放时随之释放
 
 
+## 判断当前每日局是否应保留镜像快照：需已就绪、仍为当天、开启功能、非调试/重玩且当天尚未完成。
 func _endgame_persist_active() -> bool:
 	if not _entry_ready or _start_date != _local_date_string():
 		return false
@@ -459,11 +472,13 @@ func _endgame_persist_active() -> bool:
 	return GameState.get_daily_completed_date() != _start_date
 
 
+## 接入每日格子变更保存监听；重复调用不增加第二条连接。
 func _connect_endgame_persist() -> void:
 	if not _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
 		_board_view.cell_state_changed.connect(_persist_endgame_snapshot)
 
 
+## 停止延迟保存并断开格子监听；结算后不再让旧格子动画重写每日快照。
 func _disconnect_endgame_persist() -> void:
 	if _endgame_save_timer != null:
 		_endgame_save_timer.stop()
@@ -474,6 +489,7 @@ func _disconnect_endgame_persist() -> void:
 		_board_view.cell_state_changed.disconnect(_persist_endgame_snapshot)
 
 
+## 忽略恢复来源的格子通知；猫/错误格排本代次的延迟保存，其余变更合并到防抖计时器。
 func _persist_endgame_snapshot(_row: int, _col: int, state: int, source: int) -> void:
 	if source == BoardView.ChangeSource.RESTORE:
 		return
@@ -484,6 +500,8 @@ func _persist_endgame_snapshot(_row: int, _col: int, state: int, source: int) ->
 		_endgame_save_timer.start()
 
 
+## 构造并提交每日镜像快照；没有进度时提交清除，写失败显示错误，不假装本次已保存。
+## 离页可沿用原 session_id；兼容镜像保存与胜负结算分开，终局不会通过这条链重复结算。
 func _flush_endgame_snapshot(keep_saved_session: bool = false) -> void:
 	if _is_complete or not _endgame_persist_active():
 		return
@@ -497,6 +515,7 @@ func _flush_endgame_snapshot(keep_saved_session: bool = false) -> void:
 		if not saved_session.is_empty():
 			override["session_id"] = saved_session
 	var snapshot: Dictionary = _build_endgame_snapshot(override)
+	# 没有玩家进度只请求清镜像；不先清再写，写失败由 GameState 保留原聚合状态。
 	if not DailyEndgameSnapshot.has_progress(snapshot):
 		if not GameState.clear_daily_endgame_snapshot():
 			_report_business_failure(OperationResult.failure("daily_snapshot_save_failed"))
@@ -505,12 +524,14 @@ func _flush_endgame_snapshot(keep_saved_session: bool = false) -> void:
 		_report_business_failure(OperationResult.failure("daily_snapshot_save_failed"))
 
 
+## 停止每日防抖后请求清除镜像快照；这个包装不返回存储结果，正式胜利清理由结算事务完成。
 func _clear_endgame_snapshot() -> void:
 	if _endgame_save_timer != null:
 		_endgame_save_timer.stop()
 	GameState.clear_daily_endgame_snapshot()
 
 
+## 把棋盘分解为猫、标记和错误坐标，允许临时覆盖待表现格值；不直接修改棋盘。
 func _collect_board_cells(override_cells: Dictionary = {}) -> Dictionary:
 	var board: Array = _board_view.get_board()
 	var cells: Dictionary = _snapshot_cell_overrides(override_cells)
@@ -533,6 +554,7 @@ func _collect_board_cells(override_cells: Dictionary = {}) -> Dictionary:
 	return {"placed_cats": placed_cats, "marks": marks, "errors": errors}
 
 
+## 构造每日恢复数据，并附上业务 round/attempt、历史及冻结内容策略；只组装字典，不在这里落盘。
 func _build_endgame_snapshot(override: Dictionary = {}) -> Dictionary:
 	var override_cells: Dictionary = override.get("cells", {})
 	var score_state: Dictionary = {
@@ -560,6 +582,7 @@ func _build_endgame_snapshot(override: Dictionary = {}) -> Dictionary:
 		_get_elapsed_sec(),
 		toast_state
 	)
+	# 应用会话 session_id 用于每日恢复策略；business_round_id 则标识持久对局，两者不能混用。
 	snapshot["business_round_id"] = _business_session.round_id() if _business_session != null else _business_restored_id
 	snapshot["business_attempt_sequence"] = _business_attempt_sequence
 	snapshot["step_history"] = _business_history.duplicate(true)
@@ -579,6 +602,7 @@ func _local_date_string() -> String:
 	)
 
 
+## 把日期、会话策略、重开/重玩意图与生命上限交给快照校验；可恢复则返回副本，否则返回空字典且不先清旧档。
 func _resolve_endgame_restore(params: Dictionary) -> Dictionary:
 	if DailyGamePage.debug_day_override >= 0:
 		return {}
@@ -604,6 +628,7 @@ func _resolve_endgame_restore(params: Dictionary) -> Dictionary:
 	return {}
 
 
+## 从已校验快照恢复题面和配置并规范整数类型，不重新从当天题库选择，避免恢复成另一题。
 func _apply_snapshot_puzzle() -> void:
 	var saved_config: Dictionary = _dc_restore_snapshot["level_config"]
 	_level_config = saved_config.duplicate(true)
@@ -633,6 +658,7 @@ func _apply_snapshot_puzzle() -> void:
 	}
 
 
+## 以 RESTORE 来源填回猫、标记和错误格并初始化演出触发记录；这些恢复通知不视为玩家新操作。
 func _restore_board_from_snapshot() -> void:
 	if _dc_restore_snapshot.is_empty():
 		return
@@ -658,6 +684,7 @@ func _restore_board_from_snapshot() -> void:
 	_seed_full_mark_fired_units_from_board("每日残局复原")
 
 
+## 将尚在错猜动画中的格子按 ERROR 保存，同时带上已扣生命和清零连击；保存失败保留错误提示。
 func _save_endgame_for_pending_wrong_guess(row: int, col: int) -> void:
 	if not _board_view.cell_state_changed.is_connected(_persist_endgame_snapshot):
 		return
@@ -1028,6 +1055,7 @@ func _unlock_entry_buttons() -> void:
 	_back_setting_header.unlock_buttons()
 
 
+## 把每日重开交给共享转场令牌，防止双击或同步回调重复结算。
 func _on_restart_requested() -> void:
 	await _run_round_transition(_restart_daily_round)
 
@@ -1046,12 +1074,14 @@ func _reward_pos_for(kind: String) -> String:
 	return Tracker.AdPos.PROPS_DAILY_HINT
 
 
+## 每日失败入口；已终局或正在等待保存重试时忽略，通过共享转场令牌串行结算。
 func _on_game_fail() -> void:
 	if _is_complete or _settlement_pending:
 		return
 	await _run_round_transition(_finish_daily_fail)
 
 
+## 按每日日期与同次尝试幂等键提交失败，成功后才停保存、计时并打开每日失败页。
 func _finish_daily_fail(context: Dictionary) -> void:
 	var settlement_id: String = _business_settlement_id()
 	if not _is_current_round_transition(context):
@@ -1111,6 +1141,7 @@ func _on_revive_ad_started() -> void:
 	_board_view.revive_all_cat_to_idle()
 
 
+## 在盘面副本中撤回草稿致命格，再交给共享复活事务；生命与尝试号成功提交后才恢复页面。
 func _on_revive_requested(revive_context: Dictionary = {}) -> void:
 	var board: Array = _board_view.get_board().duplicate(true)
 	for pos: Vector2i in _draft_lethal_wrong_cells:
@@ -1118,8 +1149,10 @@ func _on_revive_requested(revive_context: Dictionary = {}) -> void:
 	_request_revive(revive_context, {"board": board}, _present_daily_revive)
 
 
+## 复活提交成功后恢复每日交互与计时，再接回保存监听并排一笔本代次快照。
 func _present_daily_revive() -> void:
 	var generation: int = _business_generation
+	# 隐藏失败弹窗也能同步触发外部逻辑；返回后重新验代次和就绪状态再恢复交互。
 	UIManager.hide_ui(UiName.DAILY_FAIL)
 	if not _is_current_entry(generation) or not _is_round_entry_ready() or _is_complete:
 		return
@@ -1152,13 +1185,16 @@ func _is_no_mistake_level() -> bool:
 	return _mistake_count == 0
 
 
+## 每日胜利入口；尚未结算的同一次尝试由共享令牌独占，避免完成信号重入。
 func _on_game_win() -> void:
 	if _is_complete or _settlement_pending:
 		return
 	await _run_round_transition(_finish_daily_win)
 
 
+## 先冻结终局用时并原子提交每日结果、统计、服装资格和最终盘面；成功回执决定后续展示，保存失败保留重试。
 func _finish_daily_win(context: Dictionary) -> void:
+	# 第一次胜利请求固定成绩用时，后续保存重试不把等待确认的时间算进挑战成绩。
 	if _terminal_elapsed_sec < 0:
 		_terminal_elapsed_sec = _get_elapsed_sec()
 	var settlement_id: String = _business_settlement_id()
@@ -1171,6 +1207,7 @@ func _finish_daily_win(context: Dictionary) -> void:
 		raw_percent = DailyStats.beat_percent(elapsed_sec, int(_level_config.get("rank", 4)), int(_level_config.get("size", 12)), ABTestManager.dc_beat_percent.is_anchor_curve())
 		_level_config["beat_percent"] = raw_percent
 	var end_params: Dictionary = _build_game_end_params(Tracker.GameResult.WIN)
+	# 每日完成、今日统计、签到/服装资格与快照清理由统一候选结算处理，UI 只接收其展示数据。
 	var settled: Dictionary = GameState.settle_daily_round(settlement_id, _start_date, "win", elapsed_sec, raw_percent, _win_business_runtime(), _daily_settlement_context())
 	_publish_round_end(settled, end_params)
 	if not _is_current_round_transition(context):
@@ -1206,6 +1243,7 @@ func _finish_daily_win(context: Dictionary) -> void:
 	if not _is_current_round_transition(context):
 		return
 
+	# 服装是否解锁来自成功回执；这里不再调用 ProfileService 旁路发放一次。
 	var costume_unlocked: bool = bool(presentation.get("costume_unlocked", false))
 
 	_level_config["costume_unlock_pending"] = costume_unlocked
@@ -1250,13 +1288,15 @@ func _win_ui_name() -> StringName:
 	return UiName.DAILY_WIN
 
 
-const _TUTORIAL_CLOSE_TIMEOUT_SEC: float = 60.0
+const _TUTORIAL_CLOSE_TIMEOUT_SEC: float = 60.0 # 教程等待上限（秒）；超时放行入场但不记已完成
 
 
 func in_game_costume_id() -> int:
 	return _in_game_costume_id
 
 
+## 展示结算已授予的服装，不在弹窗动画中发奖；无待展示或父局失效返回 false。
+## 子窗口关闭、销毁或换展示版本都结束等待，返回 true 只表示父局仍在并已尝试展示。
 func _run_costume_unlock_flow() -> bool:
 	var generation: int = _business_generation
 	if not bool(_level_config.get("costume_unlock_pending", false)):
@@ -1284,6 +1324,8 @@ func _run_costume_unlock_flow() -> bool:
 	return true
 
 
+## 暂停每日时钟并等待本次教程正常关闭；父页取消、子页销毁/刷新或超时均不能记为教程完成。
+## 等待由本页 presentation 管理，子页通过 WeakRef 查询；正常完成且身份仍匹配才持久标记已看。
 func _maybe_show_costume_tutorial() -> void:
 	var generation: int = _business_generation
 	var presentation_revision: int = get_presentation_revision()
@@ -1319,11 +1361,13 @@ func _maybe_show_costume_tutorial() -> void:
 		_start_clock_after_tutorial()
 		return
 	var tutorial_revision: int = tutorial_page.get_presentation_revision()
+	# 闭包只捕获 WeakRef，避免子页先释放时仍捕获失效 Node；每帧再取当前实例。
 	var tutorial_ref: WeakRef = weakref(tutorial_page)
 	tutorial_page.tutorial_closed.connect(on_closed, CONNECT_ONE_SHOT)
 
 	var clock: Tween = create_tween()
 	clock.tween_interval(_TUTORIAL_CLOSE_TIMEOUT_SEC + 1.0)
+	# predicate 为 true 表示这次等待可结束，可能是正常关闭也可能是取消/超时，不能直接当成教程完成。
 	var wait_completed: bool = await wait_presentation_until(func() -> bool:
 		var current_tutorial: UIFrameWindow = tutorial_ref.get_ref() as UIFrameWindow
 		return state["closed"] or not is_instance_valid(current_tutorial) \
@@ -1339,7 +1383,8 @@ func _maybe_show_costume_tutorial() -> void:
 		return
 	_start_clock_after_tutorial()
 	if not is_instance_valid(tutorial_page) or tutorial_page.get_presentation_revision() != tutorial_revision:
-		return # The child was cancelled; resume play without recording tutorial completion.
+		return # 子页取消或被复用：恢复游戏即可，不能记为正常完成教程。
+	# 只有原子页仍有效且真正发出 tutorial_closed 才记已看；超时只恢复游戏，不消耗教程资格。
 	if not state["closed"]:
 		push_error("DailyGamePage: dc_costume 教学页 tutorial_closed 超时未到,放行进关编排")
 		return
@@ -1350,22 +1395,26 @@ func _life_capsule_for_tutorial() -> Control:
 	return get_node_or_null("Root/VBoxContainer/CatHeartRow/HeartBg") as Control
 
 
+## 停止文字计时心跳并按恢复基数重新锚定时间；教程占用的时长由结束后的再次锚定排除。
 func _hold_clock_for_tutorial() -> void:
 	_clock_timer.stop()
 	_anchor_clock()
 
 
+## 教程正常结束或子页取消后，按恢复基数重新锚定并启动每日显示计时。
 func _start_clock_after_tutorial() -> void:
 	_anchor_clock()
 	_refresh_timer_label()
 	_clock_timer.start()
 
 
+## 关闭每日胜利页，以重玩参数重新进入每日页；重玩与未完成挑战的残局恢复有不同保存规则。
 func _on_win_replay_requested() -> void:
 	UIManager.hide_ui(UiName.DAILY_WIN)
 	UIManager.show_ui(UiName.DAILY_GAME, DcReplayFlow.enter_params())
 
 
+## 按当前局身份展示签到/补签结果；子流程和延迟持续检查父代次，取消后不继续打开后续窗口。
 func _try_run_streak_flow_after_win(_source: StringName, skip_cat_appear: bool = false) -> bool:
 	var generation: int = _business_generation
 	var has_revive: bool = StreakManager.has_pending_revive_decision()
@@ -1732,8 +1781,9 @@ func _set_short_screen_compaction(on: bool) -> void:
 	_short_screen_applied = on
 
 
+## 按日期偏移选择题池及八种变换，逐个跳过非法题面；全部候选都失败时返回 false，不能复用上一局题目。
 func _prepare_daily_puzzle(current_lv: int, day_offset: int) -> bool:
-	# Reused pages must not expose previous puzzle metadata when every new candidate is invalid.
+	# 页面会缓存复用；先清本次准备字段，整池失败时不能泄露上一局题面为新题。
 	_puzzle = {}
 	_level_config = {}
 	# 每道题有 8 种等价变换（镜像 × 4 个旋转）。
@@ -1872,6 +1922,7 @@ func _prepare_daily_puzzle(current_lv: int, day_offset: int) -> bool:
 
 	return true
 
+## 递增按钮锁序号，断开旧入场完成信号并停动画；旧解锁回调即使稍后返回也不能接管新一轮入口。
 func _stop_entry_animation() -> void:
 	_entry_btn_lock_seq += 1
 	_entry_anim_playing = false
@@ -1885,17 +1936,20 @@ func _stop_entry_animation() -> void:
 	_unlock_entry_buttons()
 
 
+## 返回会话提交时携带的每日兼容快照；关闭保存、重玩、调试或无题面时返回空字典。
 func _business_checkpoint() -> Dictionary:
 	if not ABTestManager.dc_endgame_save.is_enabled() or _stat_status == Tracker.GameStatus.REPLAY or DailyGamePage.debug_day_override >= 0 or _puzzle.is_empty():
 		return {}
 	return _build_endgame_snapshot()
 
 
+## 防抖之外的延迟写入只接受当前业务代次，旧局通知在重开后直接丢弃。
 func _flush_endgame_for_generation(generation: int) -> void:
 	if _is_current_entry(generation):
 		_flush_endgame_snapshot()
 
 
+## 先提交当前每日尝试的退出，成功后清理表现并以 RESTART 再入场；失败不提前清空当前局。
 func _restart_daily_round(context: Dictionary) -> void:
 	var settlement_id: String = _business_settlement_id()
 	if not _is_current_round_transition(context):
@@ -1903,6 +1957,7 @@ func _restart_daily_round(context: Dictionary) -> void:
 	var settled: bool = not settlement_id.is_empty() and LevelOps.confirm_level_failed_daily(_build_game_end_params(Tracker.GameResult.QUIT), settlement_id, _start_date, _business_runtime())
 	if not _is_current_round_transition(context):
 		return
+	# 退出结算失败时仍保留当前棋盘；成功才清页面分数并准备新的每日尝试。
 	if not settled:
 		_report_business_failure({"error": "settlement_failed"})
 		return
@@ -1920,6 +1975,7 @@ func _restart_daily_round(context: Dictionary) -> void:
 	on_show({"_tracker_status": Tracker.GameStatus.RESTART})
 
 
+## 把本局猫/标记增量、服装资格与用时交给每日结算服务；页面只提供输入，不自行累加这些奖励事实。
 func _daily_settlement_context() -> Dictionary:
 	return {"today_cat_delta": _board_view.count_cat_cells(), "today_mark_delta": today_mark_cell_count(),
 		"pass_text": int(ABTestManager.pass_text.value()), "costume_id": _in_game_costume_id,

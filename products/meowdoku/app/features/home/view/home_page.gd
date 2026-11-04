@@ -143,7 +143,7 @@ var _rank_session_waiting_for_setting: bool = false
 var _rank_open_popup_deferred: bool = false
 
 var _rank_layout_locked: bool = false
-var _popup_queue: UIPopupQueue = UIPopupQueue.new()
+var _popup_queue: UIPopupQueue = UIPopupQueue.new() # 首页持有的串行弹窗队列；清空队列须配合取消当前等待，才能让正在运行的队列项退出。
 
 const HOME_RESTORE_DELAY: float = 0.4 # 漏奖补发判定前的延迟（秒）
 
@@ -161,14 +161,15 @@ var _setting_anchor_queued: bool = false
 var _bottom_layout_queued: bool = false
 
 
-var _restore_offer: Dictionary = {}
-var _exit_finished: Callable
-var _home_dye_timer: Timer
+var _restore_offer: Dictionary = {} # 当前漏奖补发演出的 page/revision/callback 身份；不能用窗口实例单独判定是否仍为同一批。
+var _exit_finished: Callable # 本次退场连接的回调，绑定首页代次；清理时用同一 Callable 精确断开。
+var _home_dye_timer: Timer # 本次首页停留十秒的实验触发器；离开/重置时停止。
 signal _home_popup_wait_tick
 
-var _home_popup_waiters: int = 0
-var _home_generation: int = 0
+var _home_popup_waiters: int = 0 # 共享等待信号的活动等待数；归零才断开逐帧驱动。
+var _home_generation: int = 0 # 首页业务流程代次，显示、隐藏、销毁或数据重置都会更新，旧协程须检查此身份。
 
+## 建立节点存活期的监听与动态头像控件；每次显示才需要的刷新与托管监听留给 on_show。
 func _ready() -> void:
 	connect_managed(GameState.all_data_reset, _on_home_data_reset)
 	_bind_setting_anchor_updates()
@@ -390,6 +391,7 @@ func _fit_daily_btn_font() -> void:
 
 
 ## 刷新入口与陪伴策略，建立活动弹窗队列，再按推送或残局直开条件决定后续入口。
+## 显示或刷新都先作废上一代等待；managed 连接负责生命周期去重，首页代次负责业务协程归属。
 func on_show(_params: Dictionary = {}) -> void:
 	_cancel_exit()
 	_cancel_restore_offer()
@@ -500,26 +502,31 @@ func on_show(_params: Dictionary = {}) -> void:
 	_popup_queue.flush()
 
 
+## 弹窗队列排空后延后尝试陪伴入场；携带代次，避免这一帧中首页重开后继续旧请求。
 func _on_popup_queue_drained() -> void:
 	if _companion_entry_pending:
 		_try_begin_companion_entry.bind(_companion_entry_generation).call_deferred()
 
 
+## 覆盖窗口隐藏后延后刷新声音，再尝试恢复等待中的陪伴入场。
 func _on_companion_cover_hidden(_ui_name: String, _window: UIFrameWindow) -> void:
 	_sync_companion_sound.call_deferred()
 	_on_popup_queue_drained()
 
 
+## 覆盖窗口出现时立即更新陪伴声音，避免被遮挡首页仍继续发声。
 func _on_companion_cover_shown(_ui_name: String, _window: UIFrameWindow) -> void:
 	_sync_companion_sound()
 
 
+## 只有首页正在展示、未退场且位于栈顶时允许陪伴声音；遮挡与隐藏都关闭声音。
 func _sync_companion_sound() -> void:
 	_companion.cat.set_sound_enabled(
 		is_showing() and not _is_exiting and UIManager.get_top_window() == self
 	)
 
 
+## 校验陪伴代次、首页栈顶身份和队列空闲，再消费入场待办并排入教学。
 func _try_begin_companion_entry(generation: int) -> void:
 	if generation != _companion_entry_generation or not _companion_entry_pending:
 		return
@@ -552,6 +559,7 @@ func _enqueue_companion_guide(tutorial: bool) -> void:
 	_popup_queue.enqueue(entry)
 
 
+## 展示陪伴引导并等待本次弹窗结束；恢复后同时校验首页与陪伴代次，才记录教学结果或转场。
 func _show_companion_guide(tutorial: bool) -> void:
 	var home_generation: int = _home_generation
 	if not is_showing() or _is_exiting or not _companion.has_companion():
@@ -672,6 +680,7 @@ func _show_companion_end_popup() -> void:
 		return
 
 
+## 顺序演出尚待展示的奖励档位，每档再次检查领取状态与页面归属；本函数只协调演出完成标记。
 func _show_companion_rewards() -> void:
 	var home_generation: int = _home_generation
 	var pending: Array[int] = _companion.pending_reward_presentations()
@@ -700,6 +709,7 @@ func _show_companion_rewards() -> void:
 		_companion.set_interaction_enabled(true)
 
 
+## 替换上一轮计时器，为当前首页代次安排一次十秒触发；旧计时器先停再释放。
 func _fire_home_10s_dye() -> void:
 	if is_instance_valid(_home_dye_timer):
 		_home_dye_timer.stop()
@@ -710,12 +720,14 @@ func _fire_home_10s_dye() -> void:
 	_home_dye_timer.timeout.connect(_on_home_dye_timeout.bind(_home_generation), CONNECT_ONE_SHOT)
 	_home_dye_timer.start(10.0)
 
+## 计时结束仍属于当前首页流程才触发实验染色，迟到回调直接忽略。
 func _on_home_dye_timeout(generation: int) -> void:
 	if _home_flow_valid(generation):
 		ABTestManager.dye_at_home_page_10s()
 
 
 
+## 首页回到栈顶时恢复声音和等待中的陪伴入场，修正入口显示，并尝试延后的排行弹窗。
 func on_stack_top() -> void:
 	_sync_companion_sound()
 	_on_popup_queue_drained()
@@ -728,6 +740,7 @@ func on_stack_top() -> void:
 		_enqueue_deferred_rank_open_popup.call_deferred()
 
 
+## 首页仍保留在栈中但被覆盖时关闭陪伴声音；不将遮挡误当作完整离开。
 func on_stack_bottom() -> void:
 	_companion.cat.set_sound_enabled(false)
 
@@ -1391,6 +1404,7 @@ func _apply_all_switch_keys_to_current() -> void:
 					cfg.consume_switch()
 
 
+## 检查漏奖队列中是否有可补发广告位且当日还有额度；这里只决定是否安排演出，不发放奖励。
 func _should_show_ad_reward_restored() -> bool:
 	if not GameState.has_pending_rewards():
 		return false
@@ -1408,6 +1422,8 @@ func _should_show_ad_reward_restored() -> bool:
 	return true
 
 
+## 延迟后重新核对待补发队列和当日额度，按最新批次合并道具并打开领取页。
+## 等待绑定首页代次与 offer 修订号；领取信号只结束本次演出等待，实际领取由补发页及存档事务处理。
 func _show_ad_reward_restored() -> void:
 	if not _restore_offer.is_empty():
 		return
@@ -1471,11 +1487,12 @@ func _show_ad_reward_restored() -> void:
 	page.collected.connect(callback, CONNECT_ONE_SHOT)
 	while not result.done and _home_flow_valid(home_generation) and is_instance_valid(page) and page.is_showing() and page.get_offer_revision() == revision:
 		await get_tree().process_frame
-	# Exact offer identity matters: collected listeners may synchronously open a new batch.
+	# collected 的监听者可能同步打开新批次；只有仍持有同一 offer 字典时，旧流程才有权清理它。
 	if is_same(_restore_offer, offer):
 		_cancel_restore_offer(not _home_flow_valid(home_generation))
 
 
+## 先移走当前 offer，再断开其领取回调；仅在页面仍展示同一修订号时才可代它隐藏。
 func _cancel_restore_offer(hide_page: bool = true) -> void:
 	var offer: Dictionary = _restore_offer
 	_restore_offer = {}
@@ -1750,6 +1767,8 @@ func _enqueue_deferred_rank_open_popup() -> void:
 		_popup_queue.flush()
 
 
+## 停止计时与转场，先更新首页代次再唤醒旧等待，并结束陪伴、躲猫猫和待弹窗流程。
+## 窗口会被缓存复用，隐藏时必须释放本次展示的状态，不能等到节点销毁才清理。
 func on_hide() -> void:
 	if is_instance_valid(_home_dye_timer):
 		_home_dye_timer.stop()
@@ -1831,6 +1850,7 @@ func _on_settings_btn_pressed() -> void:
 	UIManager.show_ui(UiName.SETTING)
 
 
+## 打开资料页并等待当前演出结束；首页已换代或离开时，不再刷新旧首页头像。
 func _on_avatar_btn_pressed() -> void:
 	var home_generation: int = _home_generation
 	Tracker.track_btn_click(Tracker.Btn.SELF_INFO, self)
@@ -1906,11 +1926,13 @@ func _on_start_btn_pressed() -> void:
 	enter_main_level()
 
 
+## 记录开始/续玩入口埋点，并以当前关卡号请求首页退场转入主线。
 func enter_main_level() -> void:
 	Tracker.track_btn_click(_start_btn_name(), self)
 	_exit_to_page("game", {"level_index": GameState.get_current_level()})
 
 
+## 直接显示主线覆盖首页，成功调用展示后隐藏仍在显示的首页；用于无需首页退场动画的入口。
 func _enter_main_level_covering() -> void:
 	Tracker.track_btn_click(_start_btn_name(), self)
 	UIManager.show_ui(UiName.GAME, {"level_index": GameState.get_current_level()})
@@ -1931,6 +1953,8 @@ func _on_daily_btn_pressed() -> void:
 	)
 
 
+## 开始一次带首页代次的退场，动画到 Entry 时再打开目标页，结束时决定隐藏或恢复首页。
+## 重复点击不创建第二次转场；延迟回调不能只检查节点存在，还须确认原代次仍拥有转场。
 func _exit_to_page(page_name: String, params: Dictionary) -> void:
 	# 防重入：一次只允许一次转场
 	if _is_exiting or not is_showing():
@@ -1955,12 +1979,13 @@ func _exit_to_page(page_name: String, params: Dictionary) -> void:
 	get_tree().create_timer(entry_delay).timeout.connect(_on_entry_reached.bind(revision))
 
 
+## 退场到达开页时点后显示目标页，再检查同步展示监听是否已取消转场，最后把首页抬到目标上方。
 func _on_entry_reached(revision: int) -> void:
 	# 已经开过或节点已出树就不重复处理
 	if not _is_current_exit(revision) or _new_page_node != null:
 		return
 
-	# show_ui 会缓存复用页面，重复调用只是重新 on_show
+	# show_ui 会缓存复用页面；已显示窗口走刷新生命周期，也可能同步触发其他页面操作。
 	var target: Node = UIManager.show_ui(_pending_page, _pending_params)
 	# show_ui 的同步监听允许取消目标或重新显示首页。
 	if not _is_current_exit(revision):
@@ -2749,9 +2774,11 @@ func _is_normal_home_overlay(hovered: Control) -> bool:
 		node = node.get_parent()
 	return false
 
+## 校验首页业务等待的完整归属：同一代次、仍在树中且显示、未销毁也未转场。
 func _home_flow_valid(generation: int) -> bool:
 	return generation == _home_generation and is_inside_tree() and is_showing() and not is_queued_for_deletion() and not _is_exiting
 
+## 节点销毁前同步唤醒并结束首页等待，停止计时和转场；不能指望销毁后的下一帧替它收尾。
 func on_destroy() -> void:
 	if is_instance_valid(_home_dye_timer):
 		_home_dye_timer.stop()
@@ -2762,6 +2789,7 @@ func on_destroy() -> void:
 	PeekabooFlow.cancel(self)
 	_popup_queue.clear()
 
+## 全量换档时立即作废首页旧流程，撤销补发与待弹窗，防止旧账号/旧存档的等待继续操作新数据。
 func _on_home_data_reset() -> void:
 	if is_instance_valid(_home_dye_timer):
 		_home_dye_timer.stop()
@@ -2773,6 +2801,7 @@ func _on_home_data_reset() -> void:
 	_popup_queue.clear()
 
 
+## 断开本轮动画完成回调并清空转场目标；已经安排的定时回调仍会到达，但须通过代次与转场状态检查。
 func _cancel_exit() -> void:
 	if is_instance_valid(_anim):
 		if _exit_finished.is_valid() and _anim.animation_finished.is_connected(_exit_finished):
@@ -2785,19 +2814,19 @@ func _cancel_exit() -> void:
 	_pending_params = {}
 
 
+## 验证退场归属；目标页覆盖首页时首页可暂时不可见，因此使用窗口状态而非 visible 判断。
 func _is_current_exit(revision: int) -> bool:
 	# 目标页已显示时首页可能被遮挡，不能把 visible 当作转场所有权。
 	return revision == _home_generation and _is_exiting and is_showing() and is_inside_tree() and not is_queued_for_deletion()
 
 
-## 动画到点：打开目标页，并把首页抬到它上面，让退场动画盖住新页
-
-
-## 首页失效即交还队列，不能一直等另一个仍显示的窗口。
+## 等待指定窗口的当前演出结束；首页失效、弹窗隐藏/释放或刷新为另一批内容都会结束等待。
+## 多个等待共享帧驱动并用计数断开连接；返回不代表用户确认，调用者还需检查归属和业务结果。
 func _await_home_popup(name: StringName, generation: int) -> void:
 	var window: UIFrameWindow = UIManager.get_ui(name)
 	if window == null or not _home_flow_valid(generation):
 		return
+	# 同一缓存窗口可以展示多批内容；记录演出修订号，避免旧队列项等到下一批弹窗关闭才返回。
 	var revision: int = window.get_presentation_revision()
 	var tree: SceneTree = get_tree()
 	_home_popup_waiters += 1
@@ -2810,11 +2839,13 @@ func _await_home_popup(name: StringName, generation: int) -> void:
 		tree.process_frame.disconnect(_on_home_popup_wait_frame)
 
 
+## 将 SceneTree 的逐帧信号转成首页私有唤醒点，取消时也可同步发出同一个信号。
 func _on_home_popup_wait_frame() -> void:
 	_home_popup_wait_tick.emit()
 
 
-## 先作废旧代次和待排队任务，再同步展开等待中的父协程；不能等页面销毁后的下一帧。
+## 调用者须先更新首页代次；这里清空待排队任务，再同步唤醒等待中的父协程，使其自行检查失效退出。
+## 不能只清队列或等待下一帧，否则正在 await 的队列项可能滞留到页面销毁后。
 func _cancel_home_popup_waits() -> void:
 	_popup_queue.clear()
 	_home_popup_wait_tick.emit()

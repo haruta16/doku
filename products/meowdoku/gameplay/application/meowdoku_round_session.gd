@@ -13,24 +13,30 @@ const States = preload("res://products/meowdoku/gameplay/domain/cell_state.gd")
 ## 非空选题计划另需 stage_round_selection(candidate, plan, checkpoint)，由产品装配内容版本与策略。
 ## 现有 GameState 与无场景的 RefCounted 适配器均可接入；这里不需要 Node 生命周期。
 class ProductPort extends RefCounted:
-	var state: Object
-	var checkpoint: Dictionary = {}
-	var selection_plan: Dictionary = {}
-	var key: String
+	var state: Object # 产品状态端口；会话存活期间由接入方保证可用，不是页面节点。
+	var checkpoint: Dictionary = {} # 本次操作提交时要同步的页面残局副本；业务棋盘字段以宿主结果为准。
+	var selection_plan: Dictionary = {} # 尚未接受的开局选题计划；失败保留供原请求重试，成功后清空。
+	var key: String # round_services 中的模式槽位，例如 doku/main；不同模式各自保存当前局。
 
+	## 绑定产品状态与模式槽位；这里只保存引用，不打开存档或创建新局。
 	func _init(product_state: Object, mode: String) -> void:
 		state = product_state
 		key = "doku/" + mode
 
+	## 由产品端口决定存档是否可用；宿主以此阻止未就绪状态上的事务。
 	func is_open() -> bool:
 		return state.is_storage_ready()
 
+	## 读取正式存档当前版本，用于提交时检查候选是否仍基于同一份状态。
 	func revision() -> int:
 		return state.get_core_store().revision()
 
+	## 向产品端口取得可独立修改的候选快照；不把页面内存当作正式存档。
 	func snapshot() -> Dictionary:
 		return state.get_core_candidate()
 
+	## 补入产品专属的选题、统计、活动事实与残局镜像，再一次提交整个候选。
+	## 任何补入步骤失败都直接返回，调用方须丢弃已部分修改的候选；只有提交成功才发布选题表现副作用。
 	func commit(candidate: Dictionary, expected: int) -> Dictionary:
 		var committed_plan: Dictionary = selection_plan.duplicate(true)
 		var selected_duplicate: bool = false
@@ -125,19 +131,21 @@ class ProductPort extends RefCounted:
 		var effect_guard: Dictionary = {}
 		if not committed_plan.is_empty() and state.has_method("capture_selection_effect_context"):
 			effect_guard = state.capture_selection_effect_context()
+		# 提交会同步通知监听者，可能发生换档或新选题；先保存发布归属，之后由产品端口检查是否仍有效。
 		var committed: Dictionary = state.commit_core_candidate(candidate, expected)
 		if committed.get("ok", false) and not selected_duplicate and not committed_plan.is_empty() and state.has_method("publish_selection_effects"):
 			state.publish_selection_effects(committed_plan, effect_guard)
 		return committed
 
-var _port: ProductPort
-var _host: RefCounted
-var _mode: String
-var _round_id: String = ""
-var _next_sequence: int = 1
-var _start_sequence: int = 0
+var _port: ProductPort # 产品事务端口；宿主只通过它访问候选与正式提交。
+var _host: RefCounted # 通用 RoundService，负责请求身份、模块调用和提交顺序。
+var _mode: String # main/daily/preview 模式；决定宿主槽位和产品统计归属。
+var _round_id: String = "" # 首次成功后固定为这一局；不能将旧会话复用于另一局。
+var _next_sequence: int = 1 # 下一次动作请求序号；失败不推进，-1 表示序号耗尽。
+var _start_sequence: int = 0 # 本次开局请求身份；首次计算后保留，写入失败重试仍用同一序号。
 
 
+## 为一个模式建立独立宿主，并注册 Doku 规则模块；真正开局由 ensure_started 提交。
 func _init(product_state: Object, mode: String) -> void:
 	_mode = mode
 	_port = ProductPort.new(product_state, mode)
@@ -145,11 +153,14 @@ func _init(product_state: Object, mode: String) -> void:
 	_host.register_module("doku", Module.new())
 
 
+## 返回本会话已接受的业务局号；空串表示尚未成功开局或恢复。
 func round_id() -> String:
 	return _round_id
 
 
 ## 恢复只接受快照携带的局号和同一题面；同题重开仍然是新局。
+## 选题计划或残局中的冻结策略写入开局上下文，避免进行中的局跟随新配置变化。
+## 已绑定局号时只确认当前局仍有效；未绑定时恢复匹配局，或以固定开局序号尝试创建新局。
 func ensure_started(context: Dictionary, restored_id: String = "", checkpoint: Dictionary = {}, selection_plan: Dictionary = {}) -> Dictionary:
 	_port.selection_plan = selection_plan.duplicate(true)
 	context = context.duplicate(true)
@@ -195,6 +206,7 @@ func ensure_started(context: Dictionary, restored_id: String = "", checkpoint: D
 		return resumed
 	if not previous.get("ok", false) and previous.get("error") != "missing":
 		return previous
+	# 开局序号只在第一次尝试计算；若落盘失败，重试必须沿用原身份，不能另开一局。
 	if _start_sequence == 0:
 		_start_sequence = int(previous.get("start_sequence", 0)) + 1
 	var result: Dictionary = _host.start("doku", _mode, _start_sequence, context)
@@ -204,6 +216,8 @@ func ensure_started(context: Dictionary, restored_id: String = "", checkpoint: D
 	return result
 
 
+## 以本会话固定局号和下一序号执行动作；只有成功回执才推进本地游标。
+## 失败保持序号供重试；重复成功标为 restore_only，让页面恢复已提交状态，避免重播一次性表现。
 func execute(kind: String, payload: Dictionary, runtime: Dictionary, checkpoint: Dictionary = {}, policy: Dictionary = {}) -> Dictionary:
 	if _round_id.is_empty():
 		return Result.failure("round_not_started")
@@ -216,6 +230,7 @@ func execute(kind: String, payload: Dictionary, runtime: Dictionary, checkpoint:
 	return result
 
 
+## 接受同一局的单调回执游标；同步提交通知可能重入并先推进更远，旧调用返回时不得覆盖它。
 func _accept(result: Dictionary) -> void:
 	var accepted_round: String = str(result.round_id)
 	var next_sequence: int = int(result.next_sequence)
@@ -230,7 +245,8 @@ func _accept(result: Dictionary) -> void:
 	_next_sequence = next_sequence
 
 
-## 同一次写盘保存提示结果和旧残局，避免扣费成功但棋盘/撤销记录仍在上一状态。
+## 把已计算的业务快照覆盖到页面残局副本，返回可随候选一同提交的兼容镜像；本函数不写盘。
+## 分数、生命、棋盘与冻结选题策略以业务记录为准；其余冻结字段保留传入残局值，撤销历史按动作类型同步。
 static func mirror_checkpoint(checkpoint: Dictionary, record: Dictionary) -> Dictionary:
 	var result: Dictionary = checkpoint.duplicate(true)
 	if record.is_empty():
